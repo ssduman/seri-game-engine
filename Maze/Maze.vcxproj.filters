@@ -41,9 +41,6 @@
     <ClInclude Include="shaders\Shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="textures\stb_image.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="textures\TextureManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>

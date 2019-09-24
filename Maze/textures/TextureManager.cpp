@@ -1,7 +1,7 @@
 #include "TextureManager.h"
 
 #define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
+#include "stb_image/stb_image.h"
 
 TextureManager::TextureManager(const char *path) {
 	stbi_set_flip_vertically_on_load(true);

@@ -76,7 +76,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)libraries\GLFW\include;$(SolutionDir)libraries\GLEW\include;$(SolutionDir)libraries\external</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)libraries\GLFW\include;$(SolutionDir)libraries\GLEW\include;$(SolutionDir)libraries\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -104,7 +104,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)libraries\GLFW\include;$(SolutionDir)libraries\GLEW\include;$(SolutionDir)libraries\external</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)libraries\GLFW\include;$(SolutionDir)libraries\GLEW\include;$(SolutionDir)libraries\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -144,7 +144,6 @@
     <ClInclude Include="Maze.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="shaders\Shader.h" />
-    <ClInclude Include="textures\stb_image.h" />
     <ClInclude Include="textures\TextureManager.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
