@@ -39,7 +39,7 @@ int main(void) {
 	mouseCurrentPosY = thisWindow.getMouseY();
 
 	newMaze *maze;
-	int mazeWidth = 20;		// only works same width-height size
+	int mazeWidth = 20;
 	int mazeHeight = 20;
 	int cubeThickness = 5.0f;	// cubes will be 10.0f x 10.0f x 10.f
 	maze = new newMaze(cubeThickness, mazeWidth, mazeHeight);
