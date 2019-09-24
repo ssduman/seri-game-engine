@@ -3,7 +3,7 @@ a simple 3D OpenGL game
 ## Specifications: ##
 * Solves the maze tree with DFS
 * Program runs up to 120x120 maze (around 29.000 blocks)
-* Maze algorithm from: https://github.com/norvig/pytudes/blob/master/ipynb/Maze.ipynb
+* Maze generator algorithm from: https://github.com/norvig/pytudes/blob/master/ipynb/Maze.ipynb
 ## Dependencies: ##
 * [GLFW](https://www.glfw.org "GLFW")
 * [GLEW](http://glew.sourceforge.net "GLEW")
