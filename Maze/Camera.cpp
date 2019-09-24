@@ -1,7 +1,7 @@
 #include "Camera.h"
 
 Camera::Camera(glm::vec3 positionCamera, float aspect) {
-	shader = new Shader("source/shaders/basic_vs.shader", "source/shaders/basic_fs.shader");
+	shader = new Shader("shaders/basic_vs.shader", "shaders/basic_fs.shader");
 	shader->bind();
 
 	perspectiveMatrix = glm::perspective(30.0f, aspect, 0.1f, 1000.0f);

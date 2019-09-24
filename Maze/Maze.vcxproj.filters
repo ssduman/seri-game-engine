@@ -15,66 +15,66 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\Camera.cpp">
+    <ClCompile Include="shaders\Shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\main.cpp">
+    <ClCompile Include="textures\TextureManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\Renderer.cpp">
+    <ClCompile Include="Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\Window.cpp">
+    <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\shaders\Shader.cpp">
+    <ClCompile Include="Maze.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\textures\TextureManager.cpp">
+    <ClCompile Include="Renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\Maze.cpp">
+    <ClCompile Include="Window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\Camera.h">
+    <ClInclude Include="shaders\Shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\Renderer.h">
+    <ClInclude Include="textures\stb_image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\Window.h">
+    <ClInclude Include="textures\TextureManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\shaders\Shader.h">
+    <ClInclude Include="Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\textures\stb_image.h">
+    <ClInclude Include="Maze.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\textures\TextureManager.h">
+    <ClInclude Include="Renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\Maze.h">
+    <ClInclude Include="Window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="source\shaders\basic_fs.shader" />
-    <None Include="source\shaders\basic_vs.shader" />
+    <None Include="shaders\basic_fs.shader" />
+    <None Include="shaders\basic_vs.shader" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="source\textures\escape.png">
+    <Image Include="textures\escape.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="source\textures\pass.png">
+    <Image Include="textures\pass.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="source\textures\wall.png">
+    <Image Include="textures\wall.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="source\textures\wallParallel.png">
+    <Image Include="textures\wallParallel.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

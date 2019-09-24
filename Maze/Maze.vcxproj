@@ -131,32 +131,32 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="source\Camera.cpp" />
-    <ClCompile Include="source\main.cpp" />
-    <ClCompile Include="source\Maze.cpp" />
-    <ClCompile Include="source\Renderer.cpp" />
-    <ClCompile Include="source\shaders\Shader.cpp" />
-    <ClCompile Include="source\textures\TextureManager.cpp" />
-    <ClCompile Include="source\Window.cpp" />
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Maze.cpp" />
+    <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="shaders\Shader.cpp" />
+    <ClCompile Include="textures\TextureManager.cpp" />
+    <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\Camera.h" />
-    <ClInclude Include="source\Maze.h" />
-    <ClInclude Include="source\Renderer.h" />
-    <ClInclude Include="source\shaders\Shader.h" />
-    <ClInclude Include="source\textures\stb_image.h" />
-    <ClInclude Include="source\textures\TextureManager.h" />
-    <ClInclude Include="source\Window.h" />
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="Maze.h" />
+    <ClInclude Include="Renderer.h" />
+    <ClInclude Include="shaders\Shader.h" />
+    <ClInclude Include="textures\stb_image.h" />
+    <ClInclude Include="textures\TextureManager.h" />
+    <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="source\shaders\basic_fs.shader" />
-    <None Include="source\shaders\basic_vs.shader" />
+    <None Include="shaders\basic_fs.shader" />
+    <None Include="shaders\basic_vs.shader" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="source\textures\escape.png" />
-    <Image Include="source\textures\pass.png" />
-    <Image Include="source\textures\wall.png" />
-    <Image Include="source\textures\wallParallel.png" />
+    <Image Include="textures\escape.png" />
+    <Image Include="textures\pass.png" />
+    <Image Include="textures\wall.png" />
+    <Image Include="textures\wallParallel.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
