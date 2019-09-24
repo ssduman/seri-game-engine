@@ -30,16 +30,21 @@ void Camera::keyboardControl(GLFWwindow *window) {
 		glfwSetWindowShouldClose(window, true);
 	}
 
-	//if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
-	//	escape();
-	//}
-
 	if ((glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS) && (check)) {
 		cheat = (cheat == false) ? true : false;
 		check = false;
+		movementSpeed = 0.3f;
 	}
 	if (glfwGetKey(window, GLFW_KEY_C) == GLFW_RELEASE) {
 		check = true;
+	}
+	if ((glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) && (cheat)) {
+		movementSpeed += 0.2f;
+	}
+	if ((glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) && (cheat)) {
+		if (movementSpeed > 0.3f) {
+			movementSpeed -= 0.2f;
+		}
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {

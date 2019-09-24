@@ -427,6 +427,8 @@ std::vector<std::vector<std::tuple<int, int, bool, bool, bool, bool>>> newMaze::
 		tempStr.clear();
 	}
 
+	std::cout << "ver: " << verticalCount << "hor: " << horizontalCount << std::endl;
+
 	verticalWallRender->init(verticalCount, verticalWallPosition);
 	horizontalWallRender->init(horizontalCount, horizontalWallPosition);
 	passRender->init(width * height, passPosition);

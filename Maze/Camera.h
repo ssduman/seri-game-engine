@@ -18,9 +18,6 @@
 
 class Camera {
 private:
-	enum Direction {UP, DOWN, RIGHT, LEFT};
-	Direction direction;
-
 	Shader *shader;
 
 	glm::mat4 perspectiveMatrix;
