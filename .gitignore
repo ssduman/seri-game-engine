@@ -14,7 +14,7 @@
 *.userprefs
 
 # 3rd libraries
-/libraries/
+libraries/
 
 # Build results
 [Dd]ebug/
