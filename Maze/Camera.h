@@ -38,7 +38,7 @@ private:
 	bool cheat = false;
 	bool check = true;
 
-	newMaze *maze;
+	Maze *maze;
 	int mazeWidth, mazeHeight;
 	float cubeThickness;
 	std::vector<glm::vec3> verticalWallPosition;
@@ -54,7 +54,7 @@ public:
 	void mouseControl(GLFWwindow *window, double deltaX, double deltaY);
 	void keyboardControl(GLFWwindow *window);
 	void update();
-	void setMaze(newMaze *mazeFromMain) { maze = mazeFromMain; }
+	void setMaze(Maze *mazeFromMain) { maze = mazeFromMain; }
 	void setMazeWidth(int w) { mazeWidth = w; }
 	void setMazeHeight(int h) { mazeHeight = h; }
 	void setCubeThickness(int t) { cubeThickness = t; }

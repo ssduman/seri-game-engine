@@ -38,11 +38,11 @@ int main(void) {
 	mouseCurrentPosX = thisWindow.getMouseX();
 	mouseCurrentPosY = thisWindow.getMouseY();
 
-	newMaze *maze;
-	int mazeWidth = 25;
-	int mazeHeight = 25;
+	Maze *maze;
+	int mazeWidth = 150;
+	int mazeHeight = 150;
 	int cubeThickness = 5.0f;	// cubes will be 10.0f x 10.0f x 10.f
-	maze = new newMaze(cubeThickness, mazeWidth, mazeHeight);
+	maze = new Maze(cubeThickness, mazeWidth, mazeHeight);
 
 	glm::vec3 cameraPosition = glm::vec3((mazeWidth - 1) * cubeThickness * 2, -cubeThickness / 2, -cubeThickness * 4);
 	camera = new Camera(cameraPosition, aspect);
@@ -62,21 +62,13 @@ int main(void) {
 		glClearColor(0.4f, 0.4f, 0.4f, 1.0f);
 
 		if ((glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) && (check)) {
-			if (escaping == false) {
-				escaping = true;
-			}
-			else {
-				escaping = false;
-			}
+			escaping = escaping == false ? true : false;
 			check = false;
 		}
 		if (glfwGetKey(window, GLFW_KEY_E) == GLFW_RELEASE) {
 			check = true;
 		}
 		
-		camera->keyboardControl(window);
-		camera->update();
-
 		if (escaping == false) {
 			maze->display(false);
 		}
@@ -84,7 +76,8 @@ int main(void) {
 			maze->display(true);
 		}
 
-		//maze->display();
+		camera->keyboardControl(window);
+		camera->update();
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
