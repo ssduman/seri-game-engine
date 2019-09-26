@@ -22,7 +22,7 @@ Maze::Maze(int thickness, int width, int height) {
 	randomMaze();
 	positions();
 	//printMazeToConsole();
-	
+
 	std::vector<std::vector<bool>> table(height, std::vector<bool>(width, false));
 	visitedTable = table;
 
@@ -42,7 +42,7 @@ void Maze::escapeBlocks() {
 	float t = thickness * 2;
 	for (int y = 0; y < height; y++) {
 		for (int x = 0; x < width; x++) {
-			if (visitedTable[x][y] == false) {
+			if (visitedTable[y][x] == false) {
 				nonEscapePosition.push_back(glm::vec3(x * t, t / 2.0f, t * (height - 1) - y * t));
 			}
 			else {
@@ -106,6 +106,26 @@ struct Node *Maze::mazeTree(struct Node *root, int posX, int posY) {
 }
 
 void Maze::DeepFirstSearch(struct Node *root) {
+	/*
+	(-t,-t)----------------------> +X
+	  |
+	  |		o  o--o--o--o--o
+	  |		|            a |
+	  |		o  o--o--o--o  o
+	  |		|  |   b    |  |
+	  |		o  o--o--o  o  o
+	  |		|        |     |
+	  |		o  o--o  o--o--o
+	  |		|  |  |        |
+	  |		o  o  o--o--o  o
+	  |		|     |        |
+	  |		o--o--o--o--o  o
+	  |				  (camera)
+	  +Y
+	  a at (4,0), b at (1,2)
+	  starting from (0,0), to reach exit (4,4) we should either go as far as right and as far as down
+	  and left and up or as far as down and as far as right and left and up. 
+	*/
 	if (root == NULL) {
 		return;
 	}
@@ -155,9 +175,14 @@ void Maze::DeepFirstSearch(struct Node *root) {
 }
 
 void Maze::removeDeadEnd() {
+	/*
+	if current location has no access to next location, delete current location and back to begining.
+	if location has no access to next location, algorithm encountures a dead-end and jump back other
+	possible routes. this function removes dead-ends
+	*/
 	std::vector<std::pair<int, int>>::iterator it = path.begin();
 	for (int x = 0; it != path.end() - 1; it++) {
-		visitedTable[it->first][it->second] = true;
+		visitedTable[it->second][it->first] = true;
 		bool right = std::get<2>(mazeMapTree[makeNodeKey(std::make_pair(it->first, it->second))]);
 		bool left = std::get<3>(mazeMapTree[makeNodeKey(std::make_pair(it->first, it->second))]);
 		bool down = std::get<4>(mazeMapTree[makeNodeKey(std::make_pair(it->first, it->second))]);
@@ -185,13 +210,13 @@ void Maze::removeDeadEnd() {
 			}
 		}
 		if (del == true) {
-			visitedTable[it->first][it->second] = false;
+			visitedTable[it->second][it->first] = false;
 			path.erase(it);
 			it = path.begin();
 		}
 
 	}
-	visitedTable[it->first][it->second] = true;
+	visitedTable[it->second][it->first] = true;
 }
 
 void Maze::squaresMap() {
@@ -249,11 +274,7 @@ void Maze::randomMaze() {
 	std::vector<std::pair<int, int>> frontier;
 	frontier.push_back(std::make_pair(root.first, root.second));
 
-	int x = 0;
-	int y = 0;
-	int z = 0;
 	while (!nodesMap.empty()) {
-		x++;
 		std::pair<int, int> node = frontier.back();
 		frontier.pop_back();
 
@@ -261,7 +282,6 @@ void Maze::randomMaze() {
 		std::vector<std::pair<int, int>> nbrs = intersectionMap(temp);
 
 		if (!nbrs.empty()) {
-			y++;
 			int random = std::rand() % nbrs.size();
 			std::pair<int, int> nbr = nbrs[random];
 
@@ -270,7 +290,6 @@ void Maze::randomMaze() {
 
 			if (nodesMap.find(makeNodeKey(std::make_pair(nbr.first, nbr.second))) != nodesMap.end()) {
 				nodesMap.erase(makeNodeKey(std::make_pair(nbr.first, nbr.second)));
-				z++;
 			}
 
 			frontier.push_back(node);
@@ -314,8 +333,8 @@ std::string Maze::makeNodeKey(std::pair<int, char> pair) {
 }
 
 std::string Maze::makeKey(std::vector<std::pair<int, int>> edge) {
-	std::string key = std::to_string(edge[0].first) + ", " + std::to_string(edge[0].second) + ", " +
-		std::to_string(edge[1].first) + ", " + std::to_string(edge[1].second);
+	std::string key = std::to_string(edge[0].first) + " " + std::to_string(edge[0].second) + " " +
+		std::to_string(edge[1].first) + " " + std::to_string(edge[1].second);
 	return key;
 }
 

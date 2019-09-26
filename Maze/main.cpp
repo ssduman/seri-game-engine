@@ -7,14 +7,11 @@
 #include "Maze.h"
 #include "Camera.h"
 
-#include <iostream>
-
 /* --TODO--
 1- restart game
 2- add light
-3- user input, maze size, sensitivity
+3- user input-> maze size, sensitivity...
 4- win situation
-5- only work same widht and height 
 */
 
 double mouseCurrentPosX, mouseCurrentPosY;
@@ -39,11 +36,12 @@ int main(void) {
 	mouseCurrentPosY = thisWindow.getMouseY();
 
 	Maze *maze;
-	int mazeWidth = 150;
-	int mazeHeight = 150;
+	int mazeWidth = 50;
+	int mazeHeight = 50;
 	int cubeThickness = 5.0f;	// cubes will be 10.0f x 10.0f x 10.f
 	maze = new Maze(cubeThickness, mazeWidth, mazeHeight);
 
+	// camera looks towards maze enterance
 	glm::vec3 cameraPosition = glm::vec3((mazeWidth - 1) * cubeThickness * 2, -cubeThickness / 2, -cubeThickness * 4);
 	camera = new Camera(cameraPosition, aspect);
 	camera->setMaze(maze);
@@ -55,8 +53,8 @@ int main(void) {
 
 	glfwSetCursorPosCallback(window, mouseMoveCallback);
 
-	int escaping = false;
-	int check = true;
+	int escaping = false;	// shows escape path
+	int check = true;		// helper for escaping variable
 	while (!glfwWindowShouldClose(window)) {
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 		glClearColor(0.4f, 0.4f, 0.4f, 1.0f);
