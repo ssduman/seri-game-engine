@@ -122,7 +122,7 @@ void Maze::DeepFirstSearch(struct Node *root) {
 	  |		o--o--o--o--o  o
 	  |				  (camera)
 	  +Y
-	  a at (4,0), b at (1,2)
+	  a at (4,0), b at (2,1)
 	  starting from (0,0), to reach exit (4,4) we should either go as far as right and as far as down
 	  and left and up or as far as down and as far as right and left and up. 
 	*/
@@ -223,7 +223,7 @@ void Maze::squaresMap() {
 	int count = 0;
 	for (int x = 0; x < width; x++) {
 		for (int y = 0; y < height; y++) {
-			std::pair<int, char> temp(x, y);
+			std::pair<int, int> temp(x, y);
 			nodesMap[makeNodeKey(temp)] = temp;
 		}
 	}
@@ -326,7 +326,7 @@ void Maze::display(bool escaping) {
 	}
 }
 
-std::string Maze::makeNodeKey(std::pair<int, char> pair) {
+std::string Maze::makeNodeKey(std::pair<int, int> pair) {
 	std::string key = std::to_string(pair.first) + ", " + std::to_string(pair.second);
 
 	return key;
@@ -420,6 +420,8 @@ void Maze::positions() {
 			mazeMapTree[makeNodeKey(std::make_pair(x, y))] = tempTuple;
 		}
 	}
+
+	std::cout << "total blocks: " << verticalCount + horizontalCount + width * height << std::endl;
 
 	verticalWallRender->init(verticalCount, verticalWallPosition);
 	horizontalWallRender->init(horizontalCount, horizontalWallPosition);

@@ -21,7 +21,7 @@ private:
 	Shader *shader;
 
 	glm::mat4 perspectiveMatrix;
-	glm::mat4 view;
+	glm::mat4 view, initView;
 	glm::mat4 mvp;
 
 	glm::vec3 cameraPosition;
@@ -54,6 +54,8 @@ public:
 	void mouseControl(GLFWwindow *window, double deltaX, double deltaY);
 	void keyboardControl(GLFWwindow *window);
 	void update();
+	void setCameraPos(glm::vec3 pos);
+	glm::vec3 getCameraPos() { return  cameraPosition; }
 	void setMaze(Maze *mazeFromMain) { maze = mazeFromMain; }
 	void setMazeWidth(int w) { mazeWidth = w; }
 	void setMazeHeight(int h) { mazeHeight = h; }

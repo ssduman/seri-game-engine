@@ -13,8 +13,17 @@ Camera::Camera(glm::vec3 positionCamera, float aspect) {
 	updateVectors();
 
 	view = glm::lookAt(cameraPosition, cameraPosition + Front, Up);
+	initView = view;
 	mvp = glm::mat4(perspectiveMatrix * view);
 
+	update();
+}
+
+void Camera::setCameraPos(glm::vec3 pos) {
+	cameraPosition = pos;
+	view = initView;
+	Pitch = 0.0f; Roll = 0.0f; Yaw = 90.0f;
+	updateVectors();
 	update();
 }
 

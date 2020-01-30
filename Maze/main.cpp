@@ -8,15 +8,19 @@
 #include "Camera.h"
 
 /* --TODO--
-1- restart game
-2- add light
-3- user input-> maze size, sensitivity...
-4- win situation
+1- add light
+2- user input-> maze size, sensitivity...
 */
 
 double mouseCurrentPosX, mouseCurrentPosY;
 
 Camera *camera;
+glm::vec3 cameraPosition;
+
+int mazeWidth = 10;
+int mazeHeight = 10;
+int thickness = 5.0f;	// cubes will be 10.0f x 10.0f x 10.f
+Maze *maze;
 
 void mouseMoveCallback(GLFWwindow *window, double mouseXPos, double mouseYPos) {
 	double deltaX = mouseXPos - mouseCurrentPosX;
@@ -28,51 +32,72 @@ void mouseMoveCallback(GLFWwindow *window, double mouseXPos, double mouseYPos) {
 	mouseCurrentPosY = mouseYPos;
 }
 
+void win(float &r, float &g, float & b) {
+	glm::vec3 pos = camera->getCameraPos();
+	int t1 = thickness, t2 = thickness * 2, h = mazeHeight;
+	bool x = pos.x >= -thickness && pos.x <= thickness;
+	bool z = pos.z >= (h - 2) * t2 + t1 && pos.z <= (h - 1) * t2 + t1;
+	if (x && z) { r = 0.2f; g = 0.8f; b = 0.4f; }
+	else { r = 0.4f; g = 0.4f; b = 0.4f; }
+}
+
+void keyboardControl(GLFWwindow *window, bool &escaping, bool &restart, bool &checkE, bool &checkR) {
+	if ((glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) && (checkE)) {
+		escaping = escaping == false ? true : false;
+		checkE = false;
+	}
+	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_RELEASE) {
+		checkE = true;
+	}
+
+	if ((glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) && (checkR)) {
+		camera->setCameraPos(cameraPosition);
+		delete maze;
+		maze = new Maze(thickness, mazeWidth, mazeHeight);
+		camera->setVerticalWallPos(maze->getVerticalWallPosition());
+		camera->setHorizontalWallPos(maze->getHorizontalWallPosition());
+		checkR = false;
+	}
+	if (glfwGetKey(window, GLFW_KEY_R) == GLFW_RELEASE) {
+		checkR = true;
+	}
+}
+
 int main(void) {
-	Window thisWindow(true);
+	Window thisWindow(false);
 	GLFWwindow *window = thisWindow.getWindow();
 	float aspect = ((float)thisWindow.getWidth()) / thisWindow.getHeight();
 	mouseCurrentPosX = thisWindow.getMouseX();
 	mouseCurrentPosY = thisWindow.getMouseY();
 
-	Maze *maze;
-	int mazeWidth = 50;
-	int mazeHeight = 50;
-	int cubeThickness = 5.0f;	// cubes will be 10.0f x 10.0f x 10.f
-	maze = new Maze(cubeThickness, mazeWidth, mazeHeight);
+	maze = new Maze(thickness, mazeWidth, mazeHeight);
 
 	// camera looks towards maze enterance
-	glm::vec3 cameraPosition = glm::vec3((mazeWidth - 1) * cubeThickness * 2, -cubeThickness / 2, -cubeThickness * 4);
+	cameraPosition = glm::vec3((mazeWidth - 1) * thickness * 2, -thickness / 2, -thickness * 4);
 	camera = new Camera(cameraPosition, aspect);
-	camera->setMaze(maze);
 	camera->setMazeWidth(mazeWidth);
 	camera->setMazeHeight(mazeHeight);
-	camera->setCubeThickness(cubeThickness);
+	camera->setCubeThickness(thickness);
 	camera->setVerticalWallPos(maze->getVerticalWallPosition());
 	camera->setHorizontalWallPos(maze->getHorizontalWallPosition());
 
 	glfwSetCursorPosCallback(window, mouseMoveCallback);
 
-	int escaping = false;	// shows escape path
-	int check = true;		// helper for escaping variable
+	float r = 0.4f, g = 0.4f, b = 0.4f;
+
+	bool escaping = false;	// shows escape path
+	bool checkE = true;		// helper for escaping variable
+	bool restart = false;
+	bool checkR = true;		// helper for restart variable
 	while (!glfwWindowShouldClose(window)) {
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-		glClearColor(0.4f, 0.4f, 0.4f, 1.0f);
+		glClearColor(r, g, b, 1.0f);
 
-		if ((glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) && (check)) {
-			escaping = escaping == false ? true : false;
-			check = false;
-		}
-		if (glfwGetKey(window, GLFW_KEY_E) == GLFW_RELEASE) {
-			check = true;
-		}
-		
-		if (escaping == false) {
-			maze->display(false);
-		}
-		else {
-			maze->display(true);
-		}
+		win(r, g, b);
+
+		keyboardControl(window, escaping, restart, checkE, checkR);
+
+		(escaping == false) ? maze->display(false) : maze->display(true);
 
 		camera->keyboardControl(window);
 		camera->update();

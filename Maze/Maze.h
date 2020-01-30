@@ -57,7 +57,7 @@ private:
 	std::vector<std::pair<int, int>> Edge(std::pair<int, int> node1, std::pair<int, int> node2);
 	void randomMaze();
 	void positions();
-	std::string makeNodeKey(std::pair<int, char> pair);
+	std::string makeNodeKey(std::pair<int, int> pair);
 	std::string makeKey(std::vector<std::pair<int, int>> edge);
 
 public:
