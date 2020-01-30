@@ -1,8 +1,9 @@
 # Maze
 a simple 3D OpenGL game
 ## Specifications: ##
-* Solves the maze tree with DFS
-* Program runs up to 120x120 maze (around 29.000 blocks)
+* Solves the maze tree with iteration method and makes the path green
+* Program runs up to 1500x1500+ maze (around 4.500.000 blocks)
+* Detects whether if you solve the maze
 * Maze generator algorithm from: https://github.com/norvig/pytudes/blob/master/ipynb/Maze.ipynb
 ## Dependencies: ##
 * [GLFW](https://www.glfw.org "GLFW")
@@ -13,5 +14,6 @@ a simple 3D OpenGL game
 Create a file named libraries and copy dependencies into it. Click solution (if needed, change solution platform) and run.
 ## Control: ##
 * Press 'C' for cheat mode on/off
-* While cheat mode on, use arrow keys for speed up or down
+* if cheat mode is on, use arrow keys for speed up or down and also do not affect restarting (stay same position)
 * Press 'E' for escape path on/off
+* Press 'R' for restart, generates new maze and camera goes default starting point
