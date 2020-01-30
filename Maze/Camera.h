@@ -55,12 +55,12 @@ public:
 	void keyboardControl(GLFWwindow *window);
 	void update();
 	void setCameraPos(glm::vec3 pos);
-	glm::vec3 getCameraPos() { return  cameraPosition; }
-	void setMaze(Maze *mazeFromMain) { maze = mazeFromMain; }
-	void setMazeWidth(int w) { mazeWidth = w; }
-	void setMazeHeight(int h) { mazeHeight = h; }
-	void setCubeThickness(int t) { cubeThickness = t; }
-	void setVerticalWallPos(std::vector<glm::vec3> p) { verticalWallPosition = p; }
-	void setHorizontalWallPos(std::vector<glm::vec3> p) { horizontalWallPosition = p; }
+	glm::vec3 getCameraPos() { return cameraPosition; }
+	void setDimensions(int w, int h, int t) {
+		mazeWidth = w; mazeHeight = h; cubeThickness = t;
+	}
+	void setWallPos(std::vector<glm::vec3> vp, std::vector<glm::vec3> hp) {
+		verticalWallPosition = vp; horizontalWallPosition = hp;
+	}
 	glm::mat4 getMVP();
 };

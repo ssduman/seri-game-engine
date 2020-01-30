@@ -15,40 +15,25 @@
 #include "textures/TextureManager.h"
 #include "Renderer.h"
 
-struct Node {
-	int x;
-	int y;
-	struct Node *right;
-	struct Node *down;
-	struct Node *left;
-	struct Node *up;
-};
-
-class Maze { 
+class Maze {
 private:
 	TextureManager *passTexture, *wallTexture, *wallRerticalTexture, *escapeTexture, *nonEscapeTexture;
 	Renderer *verticalWallRender, *horizontalWallRender, *passRender, *escapeRender, *nonEscapeRender;
-	
+
 	std::vector<glm::vec3> verticalWallPosition;
 	std::vector<glm::vec3> horizontalWallPosition;
 	std::vector<glm::vec3> passPosition;
 	std::vector<glm::vec3> escapePosition;
 	std::vector<glm::vec3> nonEscapePosition;
 
-	int passCount, width, height, thickness, verticalCount, horizontalCount;
+	int passCount = 0, width, height, thickness, verticalCount, horizontalCount;
 
 	std::unordered_map<std::string, std::vector<std::pair<int, int>>> mazeMap;
 	std::unordered_map<std::string, std::pair<int, int>> nodesMap;
 	std::unordered_map<std::string, std::tuple<int, int, bool, bool, bool, bool>> mazeMapTree;
 
-	std::vector<std::pair<int, int>> visited;
 	std::vector<std::vector<bool>> visitedTable;
-	Node *newNode(int x, int y);
-	Node *mazeTree(Node *node, int x, int y);
-	std::vector<std::pair<int, int>> path;
-	bool found = false;
-	void DeepFirstSearch(struct Node *root);
-	void removeDeadEnd();
+	void solveMaze();
 	void escapeBlocks();
 
 	void squaresMap();
@@ -66,10 +51,7 @@ public:
 	bool findHorizontalWall(int x, int y);
 	void printMazeToConsole();
 	void display(bool escaping);
-	int getVerticalCount() { return verticalCount; }
-	int getHorizontalCount() { return horizontalCount; }
 	std::vector<glm::vec3> getVerticalWallPosition() { return verticalWallPosition; }
 	std::vector<glm::vec3> getHorizontalWallPosition() { return horizontalWallPosition; }
-	std::vector<std::pair<int, int>> getExitPath() { return path; }
 };
 

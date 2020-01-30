@@ -17,10 +17,10 @@ double mouseCurrentPosX, mouseCurrentPosY;
 Camera *camera;
 glm::vec3 cameraPosition;
 
-int mazeWidth = 10;
-int mazeHeight = 10;
-int thickness = 5.0f;	// cubes will be 10.0f x 10.0f x 10.f
 Maze *maze;
+int mazeWidth = 50;
+int mazeHeight = 50;
+int thickness = 5.0f;	// cubes will be 10.0f x 10.0f x 10.f
 
 void mouseMoveCallback(GLFWwindow *window, double mouseXPos, double mouseYPos) {
 	double deltaX = mouseXPos - mouseCurrentPosX;
@@ -54,9 +54,9 @@ void keyboardControl(GLFWwindow *window, bool &escaping, bool &restart, bool &ch
 		camera->setCameraPos(cameraPosition);
 		delete maze;
 		maze = new Maze(thickness, mazeWidth, mazeHeight);
-		camera->setVerticalWallPos(maze->getVerticalWallPosition());
-		camera->setHorizontalWallPos(maze->getHorizontalWallPosition());
+		camera->setWallPos(maze->getVerticalWallPosition(), maze->getHorizontalWallPosition());
 		checkR = false;
+		escaping = false;
 	}
 	if (glfwGetKey(window, GLFW_KEY_R) == GLFW_RELEASE) {
 		checkR = true;
@@ -64,7 +64,7 @@ void keyboardControl(GLFWwindow *window, bool &escaping, bool &restart, bool &ch
 }
 
 int main(void) {
-	Window thisWindow(false);
+	Window thisWindow(true);
 	GLFWwindow *window = thisWindow.getWindow();
 	float aspect = ((float)thisWindow.getWidth()) / thisWindow.getHeight();
 	mouseCurrentPosX = thisWindow.getMouseX();
@@ -75,11 +75,8 @@ int main(void) {
 	// camera looks towards maze enterance
 	cameraPosition = glm::vec3((mazeWidth - 1) * thickness * 2, -thickness / 2, -thickness * 4);
 	camera = new Camera(cameraPosition, aspect);
-	camera->setMazeWidth(mazeWidth);
-	camera->setMazeHeight(mazeHeight);
-	camera->setCubeThickness(thickness);
-	camera->setVerticalWallPos(maze->getVerticalWallPosition());
-	camera->setHorizontalWallPos(maze->getHorizontalWallPosition());
+	camera->setDimensions(mazeWidth, mazeHeight, thickness);
+	camera->setWallPos(maze->getVerticalWallPosition(), maze->getHorizontalWallPosition());
 
 	glfwSetCursorPosCallback(window, mouseMoveCallback);
 

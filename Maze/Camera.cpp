@@ -20,11 +20,13 @@ Camera::Camera(glm::vec3 positionCamera, float aspect) {
 }
 
 void Camera::setCameraPos(glm::vec3 pos) {
-	cameraPosition = pos;
-	view = initView;
-	Pitch = 0.0f; Roll = 0.0f; Yaw = 90.0f;
-	updateVectors();
-	update();
+	if (!cheat) {
+		cameraPosition = pos;
+		view = initView;
+		Pitch = 0.0f; Roll = 0.0f; Yaw = 90.0f;
+		updateVectors();
+		update();
+	}
 }
 
 glm::vec3 Camera::projectionVector(glm::vec3 Front, glm::vec3 Right) {
@@ -132,7 +134,7 @@ bool Camera::canIPass(glm::vec3 position) {
 	bool cond3 = currentX < cubeThickness * 2 * mazeWidth - cubeThickness;	// right bound
 	bool cond4 = currentXPosAtMaze >= 0 && currentXPosAtMaze < mazeWidth;	// legal index
 	bool cond5 = currentYPosAtMaze >= 0 && currentYPosAtMaze < mazeHeight;	// legal index
-	
+
 	if (cond1 && cond2 && cond3 & cond4 && cond5) {
 		std::vector<glm::vec3>::iterator it1;
 		std::vector<glm::vec3>::iterator it2;
@@ -157,7 +159,7 @@ bool Camera::canIPass(glm::vec3 position) {
 		  |		|     |        |
 		  |		o--o--o--o--o  o
 		  |				  (camera)
-	    (-t,-t)----------------------> +X
+		(-t,-t)----------------------> +X
 
 		t is the thickness of the cubes. cubes becomes (t*2)x(t*2)x(t*2) cubes.
 		so origin of the schema is middle point of the first rendered cube.
@@ -165,8 +167,8 @@ bool Camera::canIPass(glm::vec3 position) {
 		most lower right   vertical wall ("|",    red walls) is located at (-t * (width - 1), 0, 0)
 		most lower  left horizontal wall ("--", black walls) is located at (0, 0, -t)
 		most lower right horizontal wall ("--", black walls) is located at (0, 0, -t * (width - 2))
-		x and z of next set of walls increases by t*2   
-		
+		x and z of next set of walls increases by t*2
+
 		at first  row we search (t * c, 0, 0)  for vertical wall,    c -> [-1, width - 1]
 		at first  row we search (0, 0, t * c)  for horizontal wall,  c -> [-1, width - 1]
 		at second row we search (t * c, 0, 10) for vertical wall,    c -> [-1, width - 1]

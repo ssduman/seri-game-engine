@@ -26,197 +26,96 @@ Maze::Maze(int thickness, int width, int height) {
 	std::vector<std::vector<bool>> table(height, std::vector<bool>(width, false));
 	visitedTable = table;
 
-	struct Node *root = newNode(0, 0);
-	root = mazeTree(root, 0, 0);
-
-	visitedTable = table;
-	DeepFirstSearch(root);
-
-	visitedTable = table;
-	removeDeadEnd();
+	solveMaze();
 	escapeBlocks();
 }
 
 void Maze::escapeBlocks() {
-	int escapeCount = path.size();
 	float t = thickness * 2;
 	for (int y = 0; y < height; y++) {
 		for (int x = 0; x < width; x++) {
 			if (visitedTable[y][x] == false) {
 				nonEscapePosition.push_back(glm::vec3(x * t, t / 2.0f, t * (height - 1) - y * t));
 			}
-			else {
+			else {	// this is the way of exit
 				escapePosition.push_back(glm::vec3(x * t, t / 2.0f, t * (height - 1) - y * t));
 			}
 		}
 	}
-	
-	escapeRender->init(escapeCount, escapePosition);
-	nonEscapeRender->init(width * height - escapeCount, nonEscapePosition);
+
+	escapeRender->init(passCount, escapePosition);
+	nonEscapeRender->init(width * height - passCount, nonEscapePosition);
+
+	visitedTable.clear();
+	escapePosition.clear();
+	nonEscapePosition.clear();
 }
 
-struct Node *Maze::newNode(int x, int y) {
-	struct Node *node = new Node();
-	node->x = x;
-	node->y = y;
-	node->right = NULL;
-	node->down = NULL;
-	node->left = NULL;
-	node->up = NULL;
+void Maze::solveMaze() {
+	int posX = 0, posY = 0;
+	while (!((posX == width - 1) && (posY == height - 1))) {
+		std::string key = makeNodeKey(std::make_pair(posX, posY));
+		bool right = std::get<2>(mazeMapTree[key]);	// neighbors of the tile
+		bool down = std::get<3>(mazeMapTree[key]);	// which way is open?
+		bool left = std::get<4>(mazeMapTree[key]);
+		bool up = std::get<5>(mazeMapTree[key]);
 
-	return node;
-}
-
-struct Node *Maze::mazeTree(struct Node *root, int posX, int posY) {
-	bool right = std::get<2>(mazeMapTree[makeNodeKey(std::make_pair(posX, posY))]);
-	bool left = std::get<3>(mazeMapTree[makeNodeKey(std::make_pair(posX, posY))]);
-	bool down = std::get<4>(mazeMapTree[makeNodeKey(std::make_pair(posX, posY))]);
-	bool up = std::get<5>(mazeMapTree[makeNodeKey(std::make_pair(posX, posY))]);
-
-	if ((posX == width - 1) && (posY == height - 1)) {
-		return root;
-	}
-	else if ((posX < width) && (posY < height)) {
-		if ((right) && (!visitedTable[posY][posX + 1])) {
-			visitedTable[posY][posX + 1] = true;
-			root->right = newNode(posX + 1, posY);
-			mazeTree(root->right, posX + 1, posY);
-		}
-
-		if ((down) && (!visitedTable[posY + 1][posX])) {
-			visitedTable[posY + 1][posX] = true;
-			root->down = newNode(posX, posY + 1);
-			mazeTree(root->down, posX, posY + 1);
-		}
-
-		if ((left) && (!visitedTable[posY][posX - 1])) {
-			visitedTable[posY][posX - 1] = true;
-			root->left = newNode(posX - 1, posY);
-			mazeTree(root->left, posX - 1, posY);
-		}
-
-		if ((up) && (!visitedTable[posY - 1][posX])) {
-			visitedTable[posY - 1][posX] = true;
-			root->up = newNode(posX, posY - 1);
-			mazeTree(root->up, posX, posY - 1);
-		}
-	}
-
-	return root;
-}
-
-void Maze::DeepFirstSearch(struct Node *root) {
-	/*
-	(-t,-t)----------------------> +X
-	  |
-	  |		o  o--o--o--o--o
-	  |		|            a |
-	  |		o  o--o--o--o  o
-	  |		|  |   b    |  |
-	  |		o  o--o--o  o  o
-	  |		|        |     |
-	  |		o  o--o  o--o--o
-	  |		|  |  |        |
-	  |		o  o  o--o--o  o
-	  |		|     |        |
-	  |		o--o--o--o--o  o
-	  |				  (camera)
-	  +Y
-	  a at (4,0), b at (2,1)
-	  starting from (0,0), to reach exit (4,4) we should either go as far as right and as far as down
-	  and left and up or as far as down and as far as right and left and up. 
-	*/
-	if (root == NULL) {
-		return;
-	}
-	if ((root->x == width - 1) && (root->y == height - 1)) {
-		found = true;
-		path.push_back(std::make_pair(width - 1, height - 1));
-		return;
-	}
-	else {
-		bool right = std::get<2>(mazeMapTree[makeNodeKey(std::make_pair(root->y, root->x))]);
-		bool left = std::get<3>(mazeMapTree[makeNodeKey(std::make_pair(root->y, root->x))]);
-		bool down = std::get<4>(mazeMapTree[makeNodeKey(std::make_pair(root->y, root->x))]);
-		bool up = std::get<5>(mazeMapTree[makeNodeKey(std::make_pair(root->y, root->x))]);
-
-		if (found == false) {
-			if (visitedTable[root->y][root->x] == false) {
-				path.push_back(std::make_pair(root->x, root->y));
-				visitedTable[root->y][root->x] = true;
+		bool cond1 = (right + left + down + up == 1);	// dead-end
+		bool cond2 = (right + left + down + up == 0);	// dead-end, second encounter
+		if ((cond1 || cond2) && ((posX != 0) || (posY != 0))) { // dead-end, removing by steping back
+			passCount--;
+			visitedTable[posY][posX] = false;
+			if (right) {
+				posX++;	// step back
+				std::string key = makeNodeKey(std::make_pair(posX, posY));	// find neighbors of new tile
+				std::get<4>(mazeMapTree[key]) = false;	// assing as no way to get old positions
 			}
-			DeepFirstSearch(root->right);
-		}
-
-		if (found == false) {
-			if (visitedTable[root->y][root->x] == false) {
-				path.push_back(std::make_pair(root->x, root->y));
-				visitedTable[root->y][root->x] = true;
+			else if (down) {
+				posY++;
+				std::string key = makeNodeKey(std::make_pair(posX, posY));
+				std::get<5>(mazeMapTree[key]) = false;
 			}
-			DeepFirstSearch(root->down);
-		}
-
-		if (found == false) {
-			if (visitedTable[root->y][root->x] == false) {
-				path.push_back(std::make_pair(root->x, root->y));
-				visitedTable[root->y][root->x] = true;
+			else if (left) {
+				posX--;
+				std::string key = makeNodeKey(std::make_pair(posX, posY));
+				std::get<2>(mazeMapTree[key]) = false;
 			}
-			DeepFirstSearch(root->left);
-		}
-
-		if (found == false) {
-			if (visitedTable[root->y][root->x] == false) {
-				path.push_back(std::make_pair(root->x, root->y));
-				visitedTable[root->y][root->x] = true;
+			else if (up) {
+				posY--;
+				std::string key = makeNodeKey(std::make_pair(posX, posY));
+				std::get<3>(mazeMapTree[key]) = false;
 			}
-			DeepFirstSearch(root->up);
+		}
+		else {
+			if ((right) && (!visitedTable[posY][posX + 1])) {
+				visitedTable[posY][posX + 1] = true;
+				posX++;
+				passCount++;
+			}
+			else if ((down) && (!visitedTable[posY + 1][posX])) {
+				visitedTable[posY + 1][posX] = true;
+				posY++;
+				passCount++;
+			}
+			else if ((left) && (!visitedTable[posY][posX - 1])) {
+				visitedTable[posY][posX - 1] = true;
+				posX--;
+				passCount++;
+			}
+			else if ((up) && (!visitedTable[posY - 1][posX])) {
+				visitedTable[posY - 1][posX] = true;
+				posY--;
+				passCount++;
+			}
 		}
 	}
-}
+	visitedTable[0][0] = true;	// enterence
+	visitedTable[height - 1][width - 1] = true;	// exit
+	passCount++;
 
-void Maze::removeDeadEnd() {
-	/*
-	if current location has no access to next location, delete current location and back to begining.
-	if location has no access to next location, algorithm encountures a dead-end and jump back other
-	possible routes. this function removes dead-ends
-	*/
-	std::vector<std::pair<int, int>>::iterator it = path.begin();
-	for (int x = 0; it != path.end() - 1; it++) {
-		visitedTable[it->second][it->first] = true;
-		bool right = std::get<2>(mazeMapTree[makeNodeKey(std::make_pair(it->first, it->second))]);
-		bool left = std::get<3>(mazeMapTree[makeNodeKey(std::make_pair(it->first, it->second))]);
-		bool down = std::get<4>(mazeMapTree[makeNodeKey(std::make_pair(it->first, it->second))]);
-		bool up = std::get<5>(mazeMapTree[makeNodeKey(std::make_pair(it->first, it->second))]);
-		bool del = true;
-
-		if (right) {
-			if ((it->first + 1 == (it + 1)->first) && (it->second == (it + 1)->second)) {
-				del = false;
-			}
-		}
-		if (left) {
-			if ((it->first - 1 == (it + 1)->first) && (it->second == (it + 1)->second)) {
-				del = false;
-			}
-		}
-		if (down) {
-			if ((it->first == (it + 1)->first) && (it->second + 1 == (it + 1)->second)) {
-				del = false;
-			}
-		}
-		if (up) {
-			if ((it->first == (it + 1)->first) && (it->second - 1 == (it + 1)->second)) {
-				del = false;
-			}
-		}
-		if (del == true) {
-			visitedTable[it->second][it->first] = false;
-			path.erase(it);
-			it = path.begin();
-		}
-
-	}
-	visitedTable[it->second][it->first] = true;
+	mazeMapTree.clear();
+	nodesMap.clear();
+	mazeMap.clear();
 }
 
 void Maze::squaresMap() {
@@ -265,7 +164,7 @@ std::vector<std::pair<int, int>> Maze::Edge(std::pair<int, int> node1, std::pair
 
 void Maze::randomMaze() {
 	squaresMap();
-	
+
 	int randomX = std::rand() % width;
 	int randomY = std::rand() % height;
 	std::pair<int, int> root = nodesMap[makeNodeKey(std::make_pair(randomX, randomY))];
@@ -305,7 +204,7 @@ void Maze::display(bool escaping) {
 	wallRerticalTexture->bind();
 	verticalWallRender->render();
 	wallRerticalTexture->unbind();
-	
+
 	wallTexture->bind();
 	horizontalWallRender->render();
 	wallTexture->unbind();
@@ -406,7 +305,7 @@ void Maze::positions() {
 			}
 			if (findVerticalWall(x, y) != true) {
 				verticalWallPosition.push_back(glm::vec3(x * t + t / 2, 0.0f, t * (height - 1) - y * t));
-				verticalCount++; 
+				verticalCount++;
 			}
 			if (findHorizontalWall(x, y) != true) {
 				horizontalWallPosition.push_back(glm::vec3(x * t, 0.0f, t * (height - 1) - (y * t + t / 2)));
@@ -414,9 +313,9 @@ void Maze::positions() {
 			}
 			passPosition.push_back(glm::vec3(x * t, t / 2.0f, y * t));
 
-			// r, l, d, u
-			tempTuple = std::make_tuple(x, y, findVerticalWall(x, y), findVerticalWall(x - 1, y),
-				findHorizontalWall(x, y), findHorizontalWall(x, y - 1));
+			// r, d, l, u
+			tempTuple = std::make_tuple(x, y, findVerticalWall(x, y), findHorizontalWall(x, y), 
+				findVerticalWall(x - 1, y), findHorizontalWall(x, y - 1));
 			mazeMapTree[makeNodeKey(std::make_pair(x, y))] = tempTuple;
 		}
 	}
@@ -426,4 +325,6 @@ void Maze::positions() {
 	verticalWallRender->init(verticalCount, verticalWallPosition);
 	horizontalWallRender->init(horizontalCount, horizontalWallPosition);
 	passRender->init(width * height, passPosition);
+
+	passPosition.clear();
 }
