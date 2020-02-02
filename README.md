@@ -14,6 +14,22 @@ a simple 3D OpenGL game
 Create a file named libraries and copy dependencies into it. Click solution (if needed, change solution platform) and run.
 ## Control: ##
 * Press 'C' for cheat mode on/off
-* if cheat mode is on, use arrow keys for speed up or down and also do not affect restarting (stay same position)
+* If cheat mode is on, use arrow keys for speed up or down and also do not affect restarting (stay same position)
 * Press 'E' for escape path on/off
 * Press 'R' for restart, generates new maze and camera goes default starting point
+
+
+<table border=0>
+    <tr>  
+        <td> <p>
+          <img src="https://github.com/perought/maze-game/blob/master/test/start.png" alt="starting point" width="384" height="216">
+          <i> starting point <i>
+        </p> </td> 
+        <td> <p>
+          <img src="https://github.com/perought/maze-game/blob/master/test/passage-solution.png" alt="sol" width="384" height="216">
+          <i> solution <i>
+        </p> </td>     
+    </tr>
+</table>
+
+<i> see test/ for more image <i>
