@@ -17,18 +17,19 @@ Create a file named libraries and copy dependencies into it. Click solution (if 
 * If cheat mode is on, use arrow keys for speed up or down and also do not affect restarting (stay same position)
 * Press 'E' for escape path on/off
 * Press 'R' for restart, generates new maze and camera goes default starting point
-
-
-<table border=0>
-    <tr>  
-        <td> <p>
-          <img src="https://github.com/perought/maze-game/blob/master/test/start.png" alt="starting point" width="384" height="216">
-          <i> starting point <i>
-        </p> </td> 
-        <td> <p>
-          <img src="https://github.com/perought/maze-game/blob/master/test/passage-solution.png" alt="sol" width="384" height="216">
-          <i> solution <i>
-        </p> </td>     
+        
+<table >
+    <tr>
+        <td align="center">
+            <img src="https://github.com/perought/maze-game/blob/master/test/start.png" alt="starting" width="384" height="216"> 
+            <br/>
+            <i>starting point<i>
+        </td>
+        <td align="center">
+            <img src="https://github.com/perought/maze-game/blob/master/test/passage-solution.png" alt="sol" width="384" height="216"> 
+            <br/>
+            <i>exit way<i>
+        </td>
     </tr>
 </table>
 
