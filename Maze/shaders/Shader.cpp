@@ -33,11 +33,6 @@ void Shader::bind() {
 
 void Shader::unbind() {
 	glUseProgram(0);
-
-}
-
-void Shader::setUmat4f(const std::string &name, const glm::mat4 &value) const {
-	glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, &value[0][0]);
 }
 
 std::string Shader::loadshader(const std::string &path) {

@@ -2,6 +2,7 @@
 
 Camera::Camera(glm::vec3 positionCamera, float aspect) {
 	shader = new Shader("shaders/basic_vs.shader", "shaders/basic_fs.shader");
+
 	shader->bind();
 
 	perspectiveMatrix = glm::perspective(30.0f, aspect, 0.1f, 1000.0f);
@@ -226,10 +227,13 @@ void Camera::updateVectors() {
 	Up = glm::normalize(glm::cross(Right, Front));
 }
 
-glm::mat4 Camera::getMVP() {
-	return glm::mat4(perspectiveMatrix * view);
-}
-
 void Camera::update() {
-	shader->setUmat4f("mvp", getMVP());
+	shader->bind();
+	shader->setMat4("model", getModel());
+	shader->setMat4("view", view);
+	shader->setMat4("projection", perspectiveMatrix);
+
+	shader->setFloat("ambientS", ambient);
+	shader->setVec3("lightPos", glm::vec3(0, 10, 0));
+	shader->setVec3("viewPos", glm::vec3(0, 10, 0));
 }

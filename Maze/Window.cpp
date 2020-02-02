@@ -24,9 +24,9 @@ Window::Window(bool fullscreen) {
 		this->height = heightTemp;
 	}
 	else {
-		this->window = glfwCreateWindow(1200, 1000, "Maze", NULL, NULL);
-		this->width = 1200;
-		this->height = 1000;
+		this->window = glfwCreateWindow(1280, 720, "Maze", NULL, NULL);
+		this->width = 1280;
+		this->height = 720;
 	}
 
 	if (!window) {
@@ -45,7 +45,12 @@ Window::Window(bool fullscreen) {
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	//glEnable(GL_CULL_FACE);
+	//glCullFace(GL_FRONT);
+	//glFrontFace(GL_CW);
+	//glFrontFace(GL_CCW);
+	//glCullFace(GL_BACK);
 
 	setCursorPosMiddle();
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);

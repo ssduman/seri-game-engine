@@ -32,7 +32,8 @@ private:
 	glm::vec3 Right;
 	glm::vec3 Up;
 
-	float t = 0.0f;
+	glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
+	float t = 0.0f, ambient = 0.7f;
 	float Pitch = 0.0f, Roll = 0.0f, Yaw = 90.0f;
 	float movementSpeed = 0.3f, currentSpeed = 0.0f, sensitivity = 0.04f;
 	bool cheat = false;
@@ -55,12 +56,18 @@ public:
 	void keyboardControl(GLFWwindow *window);
 	void update();
 	void setCameraPos(glm::vec3 pos);
-	glm::vec3 getCameraPos() { return cameraPosition; }
 	void setDimensions(int w, int h, int t) {
 		mazeWidth = w; mazeHeight = h; cubeThickness = t;
 	}
 	void setWallPos(std::vector<glm::vec3> vp, std::vector<glm::vec3> hp) {
 		verticalWallPosition = vp; horizontalWallPosition = hp;
 	}
-	glm::mat4 getMVP();
+	glm::vec3 getCameraPos() { return cameraPosition; }
+	glm::mat4 getMVP() { return glm::mat4(perspectiveMatrix * view); }
+	glm::mat4 getModel() { return glm::mat4(1.0f); }
+	glm::mat4 getView() { return view; }
+	glm::mat4 getProjection() { return perspectiveMatrix; }
+
+	float getAmbient() { return ambient; }
+	void adjustAmbient(float adj) { ambient += adj; }
 };

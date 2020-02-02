@@ -1,11 +1,11 @@
 #include "Maze.h"
 
 Maze::Maze(int thickness, int width, int height) {
-	wallTexture = new TextureManager("textures/wall.png");
-	wallRerticalTexture = new TextureManager("textures/wallParallel.png");
-	passTexture = new TextureManager("textures/pass.png");
+	wallTexture = new TextureManager("textures/wall1.png");
+	wallRerticalTexture = new TextureManager("textures/wall2.png");
+	passTexture = new TextureManager("textures/passage.png");
 	escapeTexture = new TextureManager("textures/escape.png");
-	nonEscapeTexture = new TextureManager("textures/pass.png");
+	nonEscapeTexture = new TextureManager("textures/nonescape.png");
 
 	verticalWallRender = new Renderer(thickness, 0.2f, thickness);
 	horizontalWallRender = new Renderer(thickness, thickness, 0.2f);
@@ -314,7 +314,7 @@ void Maze::positions() {
 			passPosition.push_back(glm::vec3(x * t, t / 2.0f, y * t));
 
 			// r, d, l, u
-			tempTuple = std::make_tuple(x, y, findVerticalWall(x, y), findHorizontalWall(x, y), 
+			tempTuple = std::make_tuple(x, y, findVerticalWall(x, y), findHorizontalWall(x, y),
 				findVerticalWall(x - 1, y), findHorizontalWall(x, y - 1));
 			mazeMapTree[makeNodeKey(std::make_pair(x, y))] = tempTuple;
 		}

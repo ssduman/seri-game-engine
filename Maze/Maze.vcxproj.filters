@@ -36,6 +36,12 @@
     <ClCompile Include="Window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Skybox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="shaders\Shader.h">
@@ -56,10 +62,20 @@
     <ClInclude Include="Window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Skybox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\basic_fs.shader" />
     <None Include="shaders\basic_vs.shader" />
+    <None Include="shaders\skybox_vs.shader" />
+    <None Include="shaders\skybox_fs.shader" />
+    <None Include="shaders\light_vs.shader" />
+    <None Include="shaders\light_fs.shader" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="textures\escape.png">
@@ -68,10 +84,37 @@
     <Image Include="textures\pass.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="textures\wall.png">
+    <Image Include="textures\wallParallel.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="textures\wallParallel.png">
+    <Image Include="textures\wall1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="textures\wall2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="textures\passage.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="textures\nonescape.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="textures\skybox\back.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="textures\skybox\bottom.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="textures\skybox\front.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="textures\skybox\left.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="textures\skybox\right.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="textures\skybox\top.jpg">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

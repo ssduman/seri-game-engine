@@ -132,29 +132,46 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Light.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Maze.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="shaders\Shader.cpp" />
+    <ClCompile Include="Skybox.cpp" />
     <ClCompile Include="textures\TextureManager.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Light.h" />
     <ClInclude Include="Maze.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="shaders\Shader.h" />
+    <ClInclude Include="Skybox.h" />
     <ClInclude Include="textures\TextureManager.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\basic_fs.shader" />
     <None Include="shaders\basic_vs.shader" />
+    <None Include="shaders\light_fs.shader" />
+    <None Include="shaders\light_vs.shader" />
+    <None Include="shaders\skybox_fs.shader" />
+    <None Include="shaders\skybox_vs.shader" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="textures\escape.png" />
+    <Image Include="textures\nonescape.png" />
     <Image Include="textures\pass.png" />
-    <Image Include="textures\wall.png" />
+    <Image Include="textures\passage.png" />
+    <Image Include="textures\skybox\back.jpg" />
+    <Image Include="textures\skybox\bottom.jpg" />
+    <Image Include="textures\skybox\front.jpg" />
+    <Image Include="textures\skybox\left.jpg" />
+    <Image Include="textures\skybox\right.jpg" />
+    <Image Include="textures\skybox\top.jpg" />
+    <Image Include="textures\wall1.png" />
+    <Image Include="textures\wall2.png" />
     <Image Include="textures\wallParallel.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
