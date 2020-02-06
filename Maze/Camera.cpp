@@ -1,13 +1,17 @@
 #include "Camera.h"
 
-Camera::Camera(glm::vec3 positionCamera, float aspect) {
+Camera::Camera(glm::vec3 positionCamera, float aspect, bool p) {
 	shader = new Shader("shaders/basic_vs.shader", "shaders/basic_fs.shader");
-
 	shader->bind();
+	shader->setVec3("lightPos", glm::vec3(0, 10, 0));
+	shader->setVec3("viewPos", glm::vec3(0, 10, 0));
+
+	play = p;
 
 	perspectiveMatrix = glm::perspective(30.0f, aspect, 0.1f, 1000.0f);
 
 	cameraPosition = positionCamera;
+	initCameraPos = cameraPosition;
 	cameraPositionTemp = cameraPosition;
 	Up = cameraUp;
 
@@ -17,16 +21,16 @@ Camera::Camera(glm::vec3 positionCamera, float aspect) {
 	initView = view;
 	mvp = glm::mat4(perspectiveMatrix * view);
 
-	update();
+	update(play);
 }
 
-void Camera::setCameraPos(glm::vec3 pos) {
+void Camera::setCameraPos(glm::vec3 pos) {	// setting position after restart
 	if (!cheat) {
 		cameraPosition = pos;
 		view = initView;
 		Pitch = 0.0f; Roll = 0.0f; Yaw = 90.0f;
 		updateVectors();
-		update();
+		update(play);
 	}
 }
 
@@ -38,9 +42,34 @@ glm::vec3 Camera::projectionVector(glm::vec3 Front, glm::vec3 Right) {
 	return ((u * v) / pow(glm::length(u), 2)) * u;
 }
 
-void Camera::keyboardControl(GLFWwindow *window) {
+void Camera::keyboardControl(GLFWwindow *window, Maze **maze, bool &play, bool &escaping, bool &restart) {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 		glfwSetWindowShouldClose(window, true);
+	}
+	if (play == false) {
+		view = glm::lookAt(cameraPosition, cameraPosition + Front, Up);
+		return;
+	}
+
+	if ((glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) && (checkE)) {
+		escaping = escaping == false ? true : false;
+		checkE = false;
+	}
+	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_RELEASE) {
+		checkE = true;
+	}
+
+	if ((glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) && (checkR)) {
+		setCameraPos(initCameraPos);
+		delete *maze;
+		*maze = new Maze(cubeThickness, mazeWidth, mazeHeight);
+		setWallPos((*maze)->getVerticalWallPosition(), (*maze)->getHorizontalWallPosition());
+		restart = true;
+		checkR = false;
+		escaping = false;
+	}
+	if (glfwGetKey(window, GLFW_KEY_R) == GLFW_RELEASE) {
+		checkR = true;
 	}
 
 	if ((glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS) && (check)) {
@@ -51,6 +80,7 @@ void Camera::keyboardControl(GLFWwindow *window) {
 	if (glfwGetKey(window, GLFW_KEY_C) == GLFW_RELEASE) {
 		check = true;
 	}
+
 	if ((glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) && (cheat)) {
 		movementSpeed += 0.2f;
 	}
@@ -227,13 +257,28 @@ void Camera::updateVectors() {
 	Up = glm::normalize(glm::cross(Right, Front));
 }
 
-void Camera::update() {
+void Camera::update(bool p) {
+	play = p;
+
 	shader->bind();
-	shader->setMat4("model", getModel());
+
+	if (!play) {	// at the beginning, maze is rotating circular
+		dx += 0.01f;
+		if (dx >= 360) dx = 0.0f;
+
+		float t = cubeThickness;
+		glm::vec3 center = glm::vec3(0.0f, -t / 2, 0.0f);
+		glm::mat4 trans = glm::rotate(dx, center);
+		glm::mat4 myMatrix = glm::translate(getModel(), glm::vec3(-(mazeWidth / 2) * t * 2, -t / 2, -(mazeHeight / 2) * t * 2));
+
+		shader->setMat4("model", trans * myMatrix);
+	}
+	else {
+		shader->setMat4("model", getModel());
+	}
+
 	shader->setMat4("view", view);
 	shader->setMat4("projection", perspectiveMatrix);
 
 	shader->setFloat("ambientS", ambient);
-	shader->setVec3("lightPos", glm::vec3(0, 10, 0));
-	shader->setVec3("viewPos", glm::vec3(0, 10, 0));
 }

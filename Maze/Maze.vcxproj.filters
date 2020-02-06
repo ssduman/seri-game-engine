@@ -42,6 +42,12 @@
     <ClCompile Include="Light.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Typer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="shaders\Shader.h">
@@ -68,6 +74,12 @@
     <ClInclude Include="Light.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Typer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\basic_fs.shader" />
@@ -76,15 +88,13 @@
     <None Include="shaders\skybox_fs.shader" />
     <None Include="shaders\light_vs.shader" />
     <None Include="shaders\light_fs.shader" />
+    <None Include="shaders\typer_vs.shader" />
+    <None Include="shaders\typer_fs.shader" />
+    <None Include="shaders\game_fs.shader" />
+    <None Include="shaders\game_vs.shader" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="textures\escape.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="textures\pass.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="textures\wallParallel.png">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="textures\wall1.png">
@@ -115,6 +125,9 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="textures\skybox\top.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="textures\gameWindow.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

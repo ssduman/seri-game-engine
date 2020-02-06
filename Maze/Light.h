@@ -57,6 +57,4 @@ private:
 public:
 	Light();
 	void light(glm::vec3 pos, glm::mat4 view, glm::mat4 projection);
-	float getAmbient() { return ambient; }
-	void adjustAmbient(float adj) { ambient += adj; }
 };

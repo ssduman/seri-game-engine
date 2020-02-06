@@ -5,14 +5,11 @@
 
 #include "glm/glm.hpp"
 #include "glm/gtx/transform.hpp"
-#include "glm/gtx/transform.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
 #include "shaders/Shader.h"
 
 #include <iostream>
-#include <cmath>
-#include <vector>
 
 #include "Maze.h"
 
@@ -25,6 +22,7 @@ private:
 	glm::mat4 mvp;
 
 	glm::vec3 cameraPosition;
+	glm::vec3 initCameraPos;
 	glm::vec3 cameraPositionTemp;
 	glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
@@ -36,10 +34,11 @@ private:
 	float t = 0.0f, ambient = 0.7f;
 	float Pitch = 0.0f, Roll = 0.0f, Yaw = 90.0f;
 	float movementSpeed = 0.3f, currentSpeed = 0.0f, sensitivity = 0.04f;
-	bool cheat = false;
-	bool check = true;
+	float dx = 0.0f;
+	bool cheat = false, check = true;
+	float checkE = true, checkR = true;
+	bool play;
 
-	Maze *maze;
 	int mazeWidth, mazeHeight;
 	float cubeThickness;
 	std::vector<glm::vec3> verticalWallPosition;
@@ -51,10 +50,10 @@ private:
 	glm::vec3 projectionVector(glm::vec3 Front, glm::vec3 Right);
 
 public:
-	Camera(glm::vec3 positionCamera, float aspect);
+	Camera(glm::vec3 positionCamera, float aspect, bool p);
 	void mouseControl(GLFWwindow *window, double deltaX, double deltaY);
-	void keyboardControl(GLFWwindow *window);
-	void update();
+	void keyboardControl(GLFWwindow *window, Maze **maze, bool &play, bool &escaping, bool &restart);
+	void update(bool play);
 	void setCameraPos(glm::vec3 pos);
 	void setDimensions(int w, int h, int t) {
 		mazeWidth = w; mazeHeight = h; cubeThickness = t;
@@ -66,6 +65,7 @@ public:
 	glm::mat4 getMVP() { return glm::mat4(perspectiveMatrix * view); }
 	glm::mat4 getModel() { return glm::mat4(1.0f); }
 	glm::mat4 getView() { return view; }
+	void setView(glm::mat4 v) { view = v; }
 	glm::mat4 getProjection() { return perspectiveMatrix; }
 
 	float getAmbient() { return ambient; }

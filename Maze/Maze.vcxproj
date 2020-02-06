@@ -76,13 +76,13 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)libraries\GLFW\include;$(SolutionDir)libraries\GLEW\include;$(SolutionDir)libraries\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)libraries\GLFW\include;$(SolutionDir)libraries\GLEW\include;$(SolutionDir)libraries\freetype;$(SolutionDir)libraries\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>$(SolutionDir)libraries\GLFW\lib-vc2019;$(SolutionDir)libraries\GLEW\lib\Release\Win32</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;User32.lib;Gdi32.lib;Shell32.lib;glew32s.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)libraries\GLFW\lib-vc2019;$(SolutionDir)libraries\freetype;$(SolutionDir)libraries\GLEW\lib\Release\Win32</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;User32.lib;Gdi32.lib;Shell32.lib;glew32s.lib;freetype.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -104,15 +104,15 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)libraries\GLFW\include;$(SolutionDir)libraries\GLEW\include;$(SolutionDir)libraries\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)libraries\GLFW\include;$(SolutionDir)libraries\GLEW\include;$(SolutionDir)libraries\freetype;$(SolutionDir)libraries\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(SolutionDir)libraries\GLFW\lib-vc2019;$(SolutionDir)libraries\GLEW\lib\Release\Win32</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;User32.lib;Gdi32.lib;Shell32.lib;glew32s.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)libraries\GLFW\lib-vc2019;$(SolutionDir)libraries\freetype;$(SolutionDir)libraries\GLEW\lib\Release\Win32</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;User32.lib;Gdi32.lib;Shell32.lib;glew32s.lib;freetype.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -136,9 +136,11 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Maze.cpp" />
     <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="Game.cpp" />
     <ClCompile Include="shaders\Shader.cpp" />
     <ClCompile Include="Skybox.cpp" />
     <ClCompile Include="textures\TextureManager.cpp" />
+    <ClCompile Include="Typer.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -146,23 +148,29 @@
     <ClInclude Include="Light.h" />
     <ClInclude Include="Maze.h" />
     <ClInclude Include="Renderer.h" />
+    <ClInclude Include="Game.h" />
     <ClInclude Include="shaders\Shader.h" />
     <ClInclude Include="Skybox.h" />
     <ClInclude Include="textures\TextureManager.h" />
+    <ClInclude Include="Typer.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\basic_fs.shader" />
     <None Include="shaders\basic_vs.shader" />
+    <None Include="shaders\game_fs.shader" />
+    <None Include="shaders\game_vs.shader" />
     <None Include="shaders\light_fs.shader" />
     <None Include="shaders\light_vs.shader" />
     <None Include="shaders\skybox_fs.shader" />
     <None Include="shaders\skybox_vs.shader" />
+    <None Include="shaders\typer_fs.shader" />
+    <None Include="shaders\typer_vs.shader" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="textures\escape.png" />
+    <Image Include="textures\gameWindow.png" />
     <Image Include="textures\nonescape.png" />
-    <Image Include="textures\pass.png" />
     <Image Include="textures\passage.png" />
     <Image Include="textures\skybox\back.jpg" />
     <Image Include="textures\skybox\bottom.jpg" />
@@ -172,7 +180,6 @@
     <Image Include="textures\skybox\top.jpg" />
     <Image Include="textures\wall1.png" />
     <Image Include="textures\wall2.png" />
-    <Image Include="textures\wallParallel.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

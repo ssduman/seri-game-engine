@@ -14,7 +14,7 @@ Light::Light() {
 
 void Light::light(glm::vec3 pos, glm::mat4 view, glm::mat4 projection) {
 	lightShader->bind();
-	lightShader->setVec3("pos", pos);
+	lightShader->setVec3("pos", pos + glm::vec3(0, -10, 20));
 	lightShader->setMat4("projection", projection);
 	lightShader->setMat4("view", view);
 	lightShader->setMat4("model", glm::mat4(1.0f));
