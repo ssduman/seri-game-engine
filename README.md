@@ -32,7 +32,7 @@ build. Make sure create a file named *fonts* and copy any font into it named *ar
         <td align="center">
             <img src="https://github.com/perought/maze-game/blob/master/test/user-input.png" alt="user-input" width="384" height="216">
             <br />
-            <i> give maze size, a 20x20 maze maze is moving circularly <i>
+            <i> give maze size, a 20x20 maze is moving circularly <i>
         </td>
         <td align="center">
             <img src="https://github.com/perought/maze-game/blob/master/test/start.png" alt="starting" width="384" height="216">
@@ -54,4 +54,4 @@ build. Make sure create a file named *fonts* and copy any font into it named *ar
     </tr>
 </table>
 
-<i> see test/ for more image <i>
+<i> see test/ for more images <i>
