@@ -8,6 +8,7 @@
 * A light source is above the entrance
 * Renders text on the screen 
 * Quickly change textures, skyboxes or font
+* Font form: https://flightcoded.itch.io/dungeonfont
 * Maze generator algorithm from: https://github.com/norvig/pytudes/blob/master/ipynb/Maze.ipynb
 ## Dependencies: ##
 * <a href="https://www.glfw.org"> GLFW </a> 
@@ -17,8 +18,7 @@
 * <a href="https://www.freetype.org/"> freetype </a> 
 ## Run: ##
 Create a file named *libraries* and copy dependencies into it. Click to solution (if needed, change solution platform) and 
-build. Make sure create a file named *fonts* and copy any font into it named *arial.ttf*. Next, copy *shaders/*, *textures/*,
-*fonts/* and *freetype.dll* next to the *Maze.exe*, run and enjoy!
+build. Next, copy *shaders/*, *textures/* and *freetype.dll* next to the *Maze.exe*, run and enjoy!
 ## Control: ##
 * Write the maze size (Format of maze size should be "*width***x***height*") and hit enter 
 * Press 'C' for cheat mode on/off 
@@ -48,6 +48,18 @@ build. Make sure create a file named *fonts* and copy any font into it named *ar
         </td>
         <td align="center">
             <img src="https://github.com/perought/maze-game/blob/master/test/solved.png" alt="solved" width="384" height="216">
+            <br />
+            <i> reached exit <i>
+        </td>
+    </tr>
+    <tr>
+        <td align="center">
+            <img src="https://github.com/perought/maze-game/blob/master/test/user-input-new-font.png" alt="new-font" width="384" height="216">
+            <br />
+            <i> exit way <i>
+        </td>
+        <td align="center">
+            <img src="https://github.com/perought/maze-game/blob/master/test/solved-new-font.png" alt="solved-new-font" width="384" height="216">
             <br />
             <i> reached exit <i>
         </td>
