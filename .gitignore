@@ -14,8 +14,12 @@
 *.userprefs
 /Maze/fonts
 
+# 3rd Party Libraries
+[Ll]ibraries/
+
 # Build results
-libraries/
+[Ii]ntermediate/
+[Aa]rtifact/
 [Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
