@@ -16,8 +16,8 @@ uniform mat4 view;
 uniform mat4 model;
 
 void main() {
-    vs_out.FragPos = vec3(model * vec4(aPos + move, 1.0));    
+    vs_out.FragPos = vec3(model * vec4(aPos + move, 1.0));
     vs_out.Normal = transpose(inverse(mat3(model))) * aNormal;
     vs_out.TexCoords = aTexCoords;
-    gl_Position = projection * view * model * vec4(aPos + move, 1.0); 
+    gl_Position = projection * view * model * vec4(aPos + move, 1.0);
 }

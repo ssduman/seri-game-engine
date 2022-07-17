@@ -17,7 +17,7 @@
 #include "shaders/Shader.h"
 
 struct Character {
-    unsigned int TextureID; 
+    unsigned int TextureID;
     glm::ivec2 Size;
     glm::ivec2 Bearing;
     unsigned int Advance;
@@ -25,7 +25,7 @@ struct Character {
 
 class Typer {
 private:
-    Shader *shader;
+    Shader* shader;
     glm::mat4 projection;
     float width, height;
     std::map<char, Character> Characters;

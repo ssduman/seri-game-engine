@@ -4,11 +4,11 @@
 
 class TextureManager {
 private:
-	unsigned int ID;
+    unsigned int ID;
 
 public:
-	TextureManager(const char *path);
-	~TextureManager();
-	void bind();
-	void unbind();
+    TextureManager(const char* path);
+    ~TextureManager();
+    void bind();
+    void unbind();
 };
