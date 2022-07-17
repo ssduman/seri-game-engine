@@ -12,7 +12,7 @@ Typer::Typer(int w, int h) {
         std::cout << "ERROR -> FT_Init_FreeType" << std::endl;
     }
 
-    if (FT_New_Face(ft, "fonts/arial.ttf", 0, &face)) {
+    if (FT_New_Face(ft, "fonts/DungeonFont.ttf", 0, &face)) {
         std::cout << "ERROR -> FT_New_Face" << std::endl;
     }
 
