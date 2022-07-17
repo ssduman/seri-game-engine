@@ -1,20 +1,18 @@
 #pragma once
 
-#include <iostream>
-#include <map>
-#include <string>
+#include "shaders/Shader.h"
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-
-#include "ft2build.h"
+#include <glm/glm.hpp>
+#include <glm/gtx/transform.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <ft2build.h>
 #include FT_FREETYPE_H
 
-#include "glm/glm.hpp"
-#include "glm/gtx/transform.hpp"
-#include "glm/gtc/matrix_transform.hpp"
-
-#include "shaders/Shader.h"
+#include <map>
+#include <iostream>
+#include <string>
 
 struct Character {
     unsigned int TextureID;

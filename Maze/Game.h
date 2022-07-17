@@ -1,18 +1,17 @@
 #pragma once
 
-#include <iostream>
-#include <string>
-#include <vector>
-#include <ctime>
+#include "shaders/Shader.h"
+#include "Typer.h"
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-
-#include "glm/glm.hpp"
+#include <glm/glm.hpp>
 #include <stb_image.h>
 
-#include "shaders/Shader.h"
-#include "Typer.h"
+#include <ctime>
+#include <string>
+#include <vector>
+#include <iostream>
 
 class Game {
 private:

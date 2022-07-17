@@ -1,19 +1,19 @@
 #pragma once
 
+#include "Renderer.h"
+#include "textures/TextureManager.h"
+
+#include <glm/glm.hpp>
+
+#include <tuple>
 #include <vector> 
-#include <iterator> 
-#include <algorithm>
 #include <random>
 #include <time.h>
-#include <unordered_map>
-#include <tuple>
 #include <string>
 #include <iostream>
-
-#include "glm/glm.hpp"
-
-#include "textures/TextureManager.h"
-#include "Renderer.h"
+#include <iterator>
+#include <algorithm>
+#include <unordered_map>
 
 class Maze {
 private:

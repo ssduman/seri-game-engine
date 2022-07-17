@@ -1,10 +1,10 @@
 #pragma once
 
+#include "shaders/Shader.h"
+
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-
-#include "glm/glm.hpp"
-#include "shaders/Shader.h"
+#include <glm/glm.hpp>
 
 class Light {
 private:

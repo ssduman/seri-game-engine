@@ -1,14 +1,14 @@
 #pragma once
 
+#include "shaders/Shader.h"
+
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
+#include <stb_image.h>
 
 #include <vector>
 #include <string>
-
-#include <stb_image.h>
-#include "shaders/Shader.h"
-#include "glm/glm.hpp"
 
 class Skybox {
 private:

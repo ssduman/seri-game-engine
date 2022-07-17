@@ -1,14 +1,13 @@
-﻿#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-
-#include "glm/glm.hpp"
-
-#include "Window.h"
+﻿#include "Window.h"
 #include "Maze.h"
 #include "Camera.h"
 #include "Skybox.h"
 #include "Light.h"
 #include "Game.h"
+
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
 
 double mouseCurrentPosX, mouseCurrentPosY;
 

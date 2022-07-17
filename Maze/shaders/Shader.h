@@ -1,11 +1,10 @@
 #pragma once
 
 #include <GL/glew.h>
+#include <glm/glm.hpp>
 
-#include "glm/glm.hpp"
-
-#include <fstream>
 #include <string>
+#include <fstream>
 #include <sstream>
 #include <iostream>
 
