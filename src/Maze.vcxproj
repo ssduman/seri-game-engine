@@ -100,6 +100,15 @@
       <AdditionalLibraryDirectories>$(SolutionDir)libraries\freetype\win32;$(SolutionDir)libraries\glew-2.1.0\lib\Release\Win32;$(SolutionDir)libraries\glfw-3.3.7.bin.WIN32\lib-vc2022</AdditionalLibraryDirectories>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;User32.lib;Gdi32.lib;Shell32.lib;glew32s.lib;freetype.lib</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>xcopy /y /i /e /r /q "$(SolutionDir)src\fonts" "$(SolutionDir)artifact\$(Configuration)-$(Platform)\fonts"
+xcopy /y /i /e /r /q "$(SolutionDir)src\shaders" "$(SolutionDir)artifact\$(Configuration)-$(Platform)\shaders"
+xcopy /y /i /e /r /q "$(SolutionDir)src\textures" "$(SolutionDir)artifact\$(Configuration)-$(Platform)\textures"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -116,6 +125,15 @@
       <AdditionalLibraryDirectories>$(SolutionDir)libraries\freetype\win64;$(SolutionDir)libraries\glew-2.1.0\lib\Release\x64;$(SolutionDir)libraries\glfw-3.3.7.bin.WIN64\lib-vc2022</AdditionalLibraryDirectories>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;User32.lib;Gdi32.lib;Shell32.lib;glew32s.lib;freetype.lib</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>xcopy /y /i /e /r /q "$(SolutionDir)src\fonts" "$(SolutionDir)artifact\$(Configuration)-$(Platform)\fonts"
+xcopy /y /i /e /r /q "$(SolutionDir)src\shaders" "$(SolutionDir)artifact\$(Configuration)-$(Platform)\shaders"
+xcopy /y /i /e /r /q "$(SolutionDir)src\textures" "$(SolutionDir)artifact\$(Configuration)-$(Platform)\textures"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -136,6 +154,15 @@
       <AdditionalLibraryDirectories>$(SolutionDir)libraries\freetype\win32;$(SolutionDir)libraries\glew-2.1.0\lib\Release\Win32;$(SolutionDir)libraries\glfw-3.3.7.bin.WIN32\lib-vc2022</AdditionalLibraryDirectories>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;User32.lib;Gdi32.lib;Shell32.lib;glew32s.lib;freetype.lib</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>xcopy /y /i /e /r /q "$(SolutionDir)src\fonts" "$(SolutionDir)artifact\$(Configuration)-$(Platform)\fonts"
+xcopy /y /i /e /r /q "$(SolutionDir)src\shaders" "$(SolutionDir)artifact\$(Configuration)-$(Platform)\shaders"
+xcopy /y /i /e /r /q "$(SolutionDir)src\textures" "$(SolutionDir)artifact\$(Configuration)-$(Platform)\textures"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -156,6 +183,15 @@
       <AdditionalDependencies>glfw3.lib;opengl32.lib;User32.lib;Gdi32.lib;Shell32.lib;glew32s.lib;freetype.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)libraries\freetype\win64;$(SolutionDir)libraries\glew-2.1.0\lib\Release\x64;$(SolutionDir)libraries\glfw-3.3.7.bin.WIN64\lib-vc2022</AdditionalLibraryDirectories>
     </Link>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>xcopy /y /i /e /r /q "$(SolutionDir)src\fonts" "$(SolutionDir)artifact\$(Configuration)-$(Platform)\fonts"
+xcopy /y /i /e /r /q "$(SolutionDir)src\shaders" "$(SolutionDir)artifact\$(Configuration)-$(Platform)\shaders"
+xcopy /y /i /e /r /q "$(SolutionDir)src\textures" "$(SolutionDir)artifact\$(Configuration)-$(Platform)\textures"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
@@ -164,9 +200,9 @@
     <ClCompile Include="Maze.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Game.cpp" />
-    <ClCompile Include="shaders\Shader.cpp" />
+    <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Skybox.cpp" />
-    <ClCompile Include="textures\TextureManager.cpp" />
+    <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="Typer.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
@@ -176,9 +212,9 @@
     <ClInclude Include="Maze.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Game.h" />
-    <ClInclude Include="shaders\Shader.h" />
+    <ClInclude Include="Shader.h" />
     <ClInclude Include="Skybox.h" />
-    <ClInclude Include="textures\TextureManager.h" />
+    <ClInclude Include="TextureManager.h" />
     <ClInclude Include="Typer.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>

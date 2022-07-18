@@ -1,6 +1,6 @@
 #pragma once
 
-#include "shaders/Shader.h"
+#include "Shader.h"
 #include "Typer.h"
 
 #include <GL/glew.h>

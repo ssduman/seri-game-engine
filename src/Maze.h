@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Renderer.h"
-#include "textures/TextureManager.h"
+#include "TextureManager.h"
 
 #include <glm/glm.hpp>
 

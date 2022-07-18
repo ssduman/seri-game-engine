@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Maze.h"
-#include "shaders/Shader.h"
+#include "Shader.h"
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
