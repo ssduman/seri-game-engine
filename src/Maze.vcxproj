@@ -234,20 +234,6 @@ xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win64\freetype.dll" "$(So
     <None Include="shaders\typer_fs.shader" />
     <None Include="shaders\typer_vs.shader" />
   </ItemGroup>
-  <ItemGroup>
-    <Image Include="textures\escape.png" />
-    <Image Include="textures\gameWindow.png" />
-    <Image Include="textures\nonescape.png" />
-    <Image Include="textures\passage.png" />
-    <Image Include="textures\skybox\back.jpg" />
-    <Image Include="textures\skybox\bottom.jpg" />
-    <Image Include="textures\skybox\front.jpg" />
-    <Image Include="textures\skybox\left.jpg" />
-    <Image Include="textures\skybox\right.jpg" />
-    <Image Include="textures\skybox\top.jpg" />
-    <Image Include="textures\wall1.png" />
-    <Image Include="textures\wall2.png" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

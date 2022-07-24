@@ -1,134 +1,127 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="Renderer">
+      <UniqueIdentifier>{ca71c88d-7fa6-4bfb-910c-1fc63920275d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files">
+    <Filter Include="Light">
+      <UniqueIdentifier>{80c8d598-f8f5-459b-9aad-4cf796b9ee32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{30d1a3b2-5843-48a8-b202-58c410c6754b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\Shader Programs">
+      <UniqueIdentifier>{c9f29f65-4e60-40f8-8722-f85407bdcd7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Camera">
+      <UniqueIdentifier>{4d509874-8ef0-4cd9-b13b-73121234c67e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Texture">
+      <UniqueIdentifier>{36a31718-783d-4566-8048-2d96bcceb246}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Window">
+      <UniqueIdentifier>{14b194df-12b7-4c6a-a390-d21df65d1108}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Shader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TextureManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Maze.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Renderer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Window.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Skybox.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Renderer</Filter>
     </ClCompile>
     <ClCompile Include="Light.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Light</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Skybox.cpp">
+      <Filter>Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureManager.cpp">
+      <Filter>Texture</Filter>
     </ClCompile>
     <ClCompile Include="Typer.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>Window</Filter>
+    </ClCompile>
+    <ClCompile Include="Maze.cpp">
+      <Filter>Game</Filter>
     </ClCompile>
     <ClCompile Include="Game.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Game</Filter>
     </ClCompile>
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Shader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TextureManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Maze.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Window.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Skybox.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Light.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Typer.h">
-      <Filter>Header Files</Filter>
+      <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="Game.h">
-      <Filter>Header Files</Filter>
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Typer.h">
+      <Filter>Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureManager.h">
+      <Filter>Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Skybox.h">
+      <Filter>Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Window.h">
+      <Filter>Window</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\basic_fs.shader" />
-    <None Include="shaders\basic_vs.shader" />
-    <None Include="shaders\skybox_vs.shader" />
-    <None Include="shaders\skybox_fs.shader" />
-    <None Include="shaders\light_vs.shader" />
-    <None Include="shaders\light_fs.shader" />
-    <None Include="shaders\typer_vs.shader" />
-    <None Include="shaders\typer_fs.shader" />
-    <None Include="shaders\game_fs.shader" />
-    <None Include="shaders\game_vs.shader" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="textures\escape.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="textures\wall1.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="textures\wall2.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="textures\passage.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="textures\nonescape.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="textures\skybox\back.jpg">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="textures\skybox\bottom.jpg">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="textures\skybox\front.jpg">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="textures\skybox\left.jpg">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="textures\skybox\right.jpg">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="textures\skybox\top.jpg">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="textures\gameWindow.png">
-      <Filter>Resource Files</Filter>
-    </Image>
+    <None Include="shaders\basic_fs.shader">
+      <Filter>Shader\Shader Programs</Filter>
+    </None>
+    <None Include="shaders\basic_vs.shader">
+      <Filter>Shader\Shader Programs</Filter>
+    </None>
+    <None Include="shaders\game_fs.shader">
+      <Filter>Shader\Shader Programs</Filter>
+    </None>
+    <None Include="shaders\game_vs.shader">
+      <Filter>Shader\Shader Programs</Filter>
+    </None>
+    <None Include="shaders\light_fs.shader">
+      <Filter>Shader\Shader Programs</Filter>
+    </None>
+    <None Include="shaders\light_vs.shader">
+      <Filter>Shader\Shader Programs</Filter>
+    </None>
+    <None Include="shaders\skybox_fs.shader">
+      <Filter>Shader\Shader Programs</Filter>
+    </None>
+    <None Include="shaders\skybox_vs.shader">
+      <Filter>Shader\Shader Programs</Filter>
+    </None>
+    <None Include="shaders\typer_fs.shader">
+      <Filter>Shader\Shader Programs</Filter>
+    </None>
+    <None Include="shaders\typer_vs.shader">
+      <Filter>Shader\Shader Programs</Filter>
+    </None>
   </ItemGroup>
 </Project>
