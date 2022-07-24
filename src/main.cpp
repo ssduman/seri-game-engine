@@ -29,7 +29,7 @@ void charCallback(GLFWwindow* window, unsigned int c);
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 bool win();
 
-int main(void) {
+int main(int argc, char** argv) {
     Window thisWindow(true); // play fullscreen for full functionality
     GLFWwindow* window = thisWindow.getWindow();
 
