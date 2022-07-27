@@ -133,10 +133,10 @@
     <ClInclude Include="Window.h">
       <Filter>Window</Filter>
     </ClInclude>
-    <ClInclude Include="IControler.h">
+    <ClInclude Include="IControl.h">
       <Filter>Control</Filter>
     </ClInclude>
-    <ClInclude Include="Controller.h">
+    <ClInclude Include="Control.h">
       <Filter>Control</Filter>
     </ClInclude>
     <ClInclude Include="GUI.h">
