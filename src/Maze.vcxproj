@@ -231,6 +231,7 @@ xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win64\freetype.dll" "$(So
     <ClInclude Include="..\libraries\imgui-1.88\imstb_truetype.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Controller.h" />
+    <ClInclude Include="Entity.h" />
     <ClInclude Include="IControler.h" />
     <ClInclude Include="GUI.h" />
     <ClInclude Include="Light.h" />

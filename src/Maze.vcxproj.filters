@@ -178,6 +178,9 @@
     <ClInclude Include="..\libraries\imgui-1.88\imgui_impl_glfw.h">
       <Filter>GUI\ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>Entity</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\basic_fs.shader">

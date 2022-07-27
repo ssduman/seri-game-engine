@@ -14,8 +14,10 @@ private:
     std::string loadshader(const std::string& path);
 
 public:
+    Shader() = default;
     Shader(const std::string& vs_path, const std::string& fs_path);
     ~Shader();
+    void init(const std::string& vs_path, const std::string& fs_path);
     void bind();
     void unbind();
     void setInt(const std::string& name, int value) const {

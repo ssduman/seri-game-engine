@@ -12,6 +12,12 @@ public:
     GUI(Window window) : _window(window) {
     };
 
+    ~GUI() {
+        ImGui_ImplOpenGL3_Shutdown();
+        ImGui_ImplGlfw_Shutdown();
+        ImGui::DestroyContext();
+    }
+
     void init() override {
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
@@ -19,6 +25,8 @@ public:
         ImGuiIO& io = ImGui::GetIO();
         io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
         io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+        io.Fonts->AddFontFromFileTTF(font_filename, 20.0f);
+
         ImGui::StyleColorsDark();
 
         ImGui_ImplGlfw_InitForOpenGL(_window.getWindow(), true);
@@ -43,4 +51,5 @@ private:
     Window _window;
     bool show_demo_window = true;
     const char* glsl_version = "#version 130";
+    const char* font_filename = "fonts/DungeonFont.ttf";
 };
