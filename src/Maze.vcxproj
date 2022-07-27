@@ -91,14 +91,14 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)libraries\glm;$(SolutionDir)libraries\freetype;$(SolutionDir)libraries\stb_image;$(SolutionDir)libraries\glew-2.1.0\include;$(SolutionDir)libraries\freeglut-3.2.2\include;$(SolutionDir)libraries\glfw-3.3.7.bin.WIN32\include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>GLEW_STATIC;FREEGLUT_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)libraries\glm;$(SolutionDir)libraries\freetype;$(SolutionDir)libraries\stb_image;$(SolutionDir)libraries\glew-2.1.0\include;$(SolutionDir)libraries\glfw-3.3.7.bin.WIN32\include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>$(SolutionDir)libraries\freetype\win32;$(SolutionDir)libraries\freeglut-3.2.2\lib\x86;$(SolutionDir)libraries\glew-2.1.0\lib\Release\Win32;$(SolutionDir)libraries\glfw-3.3.7.bin.WIN32\lib-vc2022</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;User32.lib;Gdi32.lib;Shell32.lib;glew32s.lib;freetype.lib;freeglut_staticd.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)libraries\freetype\win32;$(SolutionDir)libraries\glew-2.1.0\lib\Release\Win32;$(SolutionDir)libraries\glfw-3.3.7.bin.WIN32\lib-vc2022</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;User32.lib;Gdi32.lib;Shell32.lib;glew32s.lib;freetype.lib</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>
@@ -118,13 +118,13 @@ xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win32\freetype.dll" "$(So
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)libraries\glm;$(SolutionDir)libraries\freetype;$(SolutionDir)libraries\stb_image;$(SolutionDir)libraries\glew-2.1.0\include;$(SolutionDir)libraries\freeglut-3.2.2\include;$(SolutionDir)libraries\glfw-3.3.7.bin.WIN64\include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>GLEW_STATIC;FREEGLUT_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)libraries\glm;$(SolutionDir)libraries\freetype;$(SolutionDir)libraries\stb_image;$(SolutionDir)libraries\glew-2.1.0\include;$(SolutionDir)libraries\glfw-3.3.7.bin.WIN64\include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>$(SolutionDir)libraries\freetype\win64;$(SolutionDir)libraries\freeglut-3.2.2\lib\x64;$(SolutionDir)libraries\glew-2.1.0\lib\Release\x64;$(SolutionDir)libraries\glfw-3.3.7.bin.WIN64\lib-vc2022</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;User32.lib;Gdi32.lib;Shell32.lib;glew32s.lib;freetype.lib;freeglut_staticd.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)libraries\freetype\win64;$(SolutionDir)libraries\glew-2.1.0\lib\Release\x64;$(SolutionDir)libraries\glfw-3.3.7.bin.WIN64\lib-vc2022</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;User32.lib;Gdi32.lib;Shell32.lib;glew32s.lib;freetype.lib</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>
@@ -145,16 +145,16 @@ xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win64\freetype.dll" "$(So
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)libraries\glm;$(SolutionDir)libraries\freetype;$(SolutionDir)libraries\stb_image;$(SolutionDir)libraries\glew-2.1.0\include;$(SolutionDir)libraries\freeglut-3.2.2\include;$(SolutionDir)libraries\glfw-3.3.7.bin.WIN32\include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>GLEW_STATIC;FREEGLUT_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)libraries\glm;$(SolutionDir)libraries\freetype;$(SolutionDir)libraries\stb_image;$(SolutionDir)libraries\glew-2.1.0\include;$(SolutionDir)libraries\glfw-3.3.7.bin.WIN32\include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(SolutionDir)libraries\freetype\win32;$(SolutionDir)libraries\freeglut-3.2.2\lib\x86;$(SolutionDir)libraries\glew-2.1.0\lib\Release\Win32;$(SolutionDir)libraries\glfw-3.3.7.bin.WIN32\lib-vc2022</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;User32.lib;Gdi32.lib;Shell32.lib;glew32s.lib;freetype.lib;freeglut_staticd.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)libraries\freetype\win32;$(SolutionDir)libraries\glew-2.1.0\lib\Release\Win32;$(SolutionDir)libraries\glfw-3.3.7.bin.WIN32\lib-vc2022</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;User32.lib;Gdi32.lib;Shell32.lib;glew32s.lib;freetype.lib</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>
@@ -176,15 +176,15 @@ xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win32\freetype.dll" "$(So
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)libraries\glm;$(SolutionDir)libraries\freetype;$(SolutionDir)libraries\stb_image;$(SolutionDir)libraries\glew-2.1.0\include;$(SolutionDir)libraries\freeglut-3.2.2\include;$(SolutionDir)libraries\glfw-3.3.7.bin.WIN64\include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>GLEW_STATIC;FREEGLUT_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)libraries\glm;$(SolutionDir)libraries\freetype;$(SolutionDir)libraries\stb_image;$(SolutionDir)libraries\glew-2.1.0\include;$(SolutionDir)libraries\glfw-3.3.7.bin.WIN64\include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;User32.lib;Gdi32.lib;Shell32.lib;glew32s.lib;freetype.lib;freeglut_staticd.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)libraries\freetype\win64;$(SolutionDir)libraries\freeglut-3.2.2\lib\x64;$(SolutionDir)libraries\glew-2.1.0\lib\Release\x64;$(SolutionDir)libraries\glfw-3.3.7.bin.WIN64\lib-vc2022</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;User32.lib;Gdi32.lib;Shell32.lib;glew32s.lib;freetype.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)libraries\freetype\win64;$(SolutionDir)libraries\glew-2.1.0\lib\Release\x64;$(SolutionDir)libraries\glfw-3.3.7.bin.WIN64\lib-vc2022</AdditionalLibraryDirectories>
     </Link>
     <PreBuildEvent>
       <Command>
