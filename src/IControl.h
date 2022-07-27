@@ -18,13 +18,17 @@ public:
 
     virtual void registerControls() = 0;
 
-    virtual void charCallback(GLFWwindow* window, unsigned int c) = 0;
+    virtual void charCallback(GLFWwindow* window, unsigned int codepoint) = 0;
 
-    virtual void scrollCallback(GLFWwindow* window, double x, double y) = 0;
+    virtual void cursorPosCallback(GLFWwindow* window, double xpos, double ypos) = 0;
 
-    virtual void cursorPosCallback(GLFWwindow* window, double mouseXPos, double mouseYPos) = 0;
+    virtual void scrollCallback(GLFWwindow* window, double xoffset, double yoffset) = 0;
 
-    virtual void keyCallback(GLFWwindow* window, int key, int scanCode, int action, int mods) = 0;
+    virtual void framebufferSizeCallback(GLFWwindow* window, int width, int height) = 0;
+
+    virtual void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods) = 0;
+
+    virtual void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) = 0;
 
     inline std::string getUserInput() {
         return userInput;

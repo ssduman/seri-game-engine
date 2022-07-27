@@ -1,11 +1,6 @@
 #include "Window.h"
 
-void mouseCallback(GLFWwindow* window, int button, int action, int mods) {
-    if ((button == GLFW_MOUSE_BUTTON_LEFT) && (action == GLFW_PRESS)) {
-    }
-}
-
-Window::Window(bool fullscreen) {
+Window::Window(bool fullscreen, int w, int h) {
     if (!glfwInit()) {
         std::cout << "glfwInit error" << std::endl;
         exit(-1);
@@ -24,9 +19,9 @@ Window::Window(bool fullscreen) {
         this->height = heightTemp;
     }
     else {
-        this->window = glfwCreateWindow(1280, 720, "Maze", NULL, NULL);
-        this->width = 1280;
-        this->height = 720;
+        this->window = glfwCreateWindow(w, h, "Maze", NULL, NULL);
+        this->width = w;
+        this->height = h;
     }
 
     if (!window) {
@@ -52,10 +47,8 @@ Window::Window(bool fullscreen) {
     //glFrontFace(GL_CCW);
     //glCullFace(GL_BACK);
 
-    setCursorPosMiddle();
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-
-    glfwSetMouseButtonCallback(window, mouseCallback);
+    //setCursorPosMiddle();
+    //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
 
 int Window::getWidth() {

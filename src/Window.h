@@ -12,7 +12,7 @@ private:
     double mouseX = 0, mouseY = 0;
     GLFWwindow* window;
 public:
-    Window(bool fullscreen);
+    Window(bool fullscreen, int w = 1280, int h = 720);
     int getWidth();
     int getHeight();
     double getMouseX();
