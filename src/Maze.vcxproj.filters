@@ -26,6 +26,24 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
+    <Filter Include="Control">
+      <UniqueIdentifier>{b6d352b1-10dc-4bd8-bdd6-9daea4096984}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUI">
+      <UniqueIdentifier>{fbbe1c49-dbb0-4abd-ba8c-5030a0171fa7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUI\ImGui">
+      <UniqueIdentifier>{a42b8323-057f-43b2-9696-86324bd78d0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object">
+      <UniqueIdentifier>{1729e664-b4ae-4839-8518-2c8b65241e03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shape">
+      <UniqueIdentifier>{7800b6ea-53e7-4977-bc21-e08e9399299f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Entity">
+      <UniqueIdentifier>{bb34bab2-9a88-415e-befd-596a962ff565}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Renderer.cpp">
@@ -59,6 +77,30 @@
       <Filter>Game</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="..\libraries\imgui-1.88\imgui_impl_opengl3.cpp">
+      <Filter>GUI\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libraries\imgui-1.88\imgui_impl_win32.cpp">
+      <Filter>GUI\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libraries\imgui-1.88\imgui_tables.cpp">
+      <Filter>GUI\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libraries\imgui-1.88\imgui_widgets.cpp">
+      <Filter>GUI\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libraries\imgui-1.88\imgui.cpp">
+      <Filter>GUI\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libraries\imgui-1.88\imgui_demo.cpp">
+      <Filter>GUI\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libraries\imgui-1.88\imgui_draw.cpp">
+      <Filter>GUI\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libraries\imgui-1.88\imgui_impl_glfw.cpp">
+      <Filter>GUI\ImGui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Maze.h">
@@ -91,6 +133,51 @@
     <ClInclude Include="Window.h">
       <Filter>Window</Filter>
     </ClInclude>
+    <ClInclude Include="IControler.h">
+      <Filter>Control</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller.h">
+      <Filter>Control</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Triangle.h">
+      <Filter>Shape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libraries\imgui-1.88\imgui_impl_opengl3.h">
+      <Filter>GUI\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libraries\imgui-1.88\imgui_impl_opengl3_loader.h">
+      <Filter>GUI\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libraries\imgui-1.88\imgui_impl_win32.h">
+      <Filter>GUI\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libraries\imgui-1.88\imgui_internal.h">
+      <Filter>GUI\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libraries\imgui-1.88\imstb_rectpack.h">
+      <Filter>GUI\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libraries\imgui-1.88\imstb_textedit.h">
+      <Filter>GUI\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libraries\imgui-1.88\imstb_truetype.h">
+      <Filter>GUI\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libraries\imgui-1.88\imconfig.h">
+      <Filter>GUI\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libraries\imgui-1.88\imgui.h">
+      <Filter>GUI\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libraries\imgui-1.88\imgui_impl_glfw.h">
+      <Filter>GUI\ImGui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\basic_fs.shader">
@@ -121,6 +208,12 @@
       <Filter>Shader\Shader Programs</Filter>
     </None>
     <None Include="shaders\typer_vs.shader">
+      <Filter>Shader\Shader Programs</Filter>
+    </None>
+    <None Include="shaders\ex_vs.shader">
+      <Filter>Shader\Shader Programs</Filter>
+    </None>
+    <None Include="shaders\ex_fs.shader">
       <Filter>Shader\Shader Programs</Filter>
     </None>
   </ItemGroup>
