@@ -9,8 +9,7 @@
 
 class GUI : public Object {
 public:
-    GUI(Window window) : _window(window) {
-    }
+    GUI(Window window) : _window(window) {}
 
     ~GUI() {
         ImGui_ImplOpenGL3_Shutdown();

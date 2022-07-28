@@ -51,7 +51,7 @@ public:
 
     void init() override {
         // generating buffers, binding buffers, storing buffers, configuring attributes, unbinding buffers
-        
+
         // generate vao
         glGenBuffers(1, &_VBO);
         // generate vbo
@@ -65,7 +65,7 @@ public:
         glBindBuffer(GL_ARRAY_BUFFER, _VBO);
         // bind ebo
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
-        
+
         // store vbo data
         glBufferData(GL_ARRAY_BUFFER, _vertices.size() * sizeof(GLfloat), _vertices.data(), GL_STATIC_DRAW);
         // store ebo data

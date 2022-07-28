@@ -11,8 +11,7 @@ public:
     IControl(Window window) :
         _window(window),
         mouseCurrentPosX(_window.getMouseX()),
-        mouseCurrentPosY(_window.getMouseY()) {
-    }
+        mouseCurrentPosY(_window.getMouseY()) {}
 
     virtual ~IControl() = default;
 

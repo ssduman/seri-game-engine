@@ -5,7 +5,7 @@
 class Object {
 public:
     virtual ~Object() {}
-    
+
     virtual void init() = 0;
 
     virtual void update() = 0;

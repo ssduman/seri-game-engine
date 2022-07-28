@@ -50,12 +50,12 @@ public:
 
     void init() override {
         // generating buffers, binding buffers, storing buffers, configuring attributes, unbinding buffers
-        
+
         // generate vao
         glGenBuffers(1, &_VBO);
         // generate vbo
         glGenVertexArrays(1, &_VAO);
-        
+
         // bind vao
         glBindVertexArray(_VAO);
         // bind vbo
@@ -73,7 +73,7 @@ public:
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
         // defined in shader -> layout(location = 1) in vec3 aColor;
         glEnableVertexAttribArray(1);
-        
+
         // unbind vao
         glBindVertexArray(0);
         // unbind vbo

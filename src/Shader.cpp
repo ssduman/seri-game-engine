@@ -36,14 +36,12 @@ void Shader::unbind() {
 }
 
 std::string Shader::loadshader(const std::string& path) {
-    std::ifstream stream(path);
-    std::string line;
     std::stringstream ss;
-
-    while (getline(stream, line)) {
-        ss << line << "\n";
-    }
-
+    std::ifstream shaderFile(path);
+    if (shaderFile.is_open()) {
+        ss << shaderFile.rdbuf();
+        shaderFile.close();
+    } else {}
     return ss.str();
 }
 
