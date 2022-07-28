@@ -67,9 +67,6 @@
     <ClCompile Include="Typer.cpp">
       <Filter>Texture</Filter>
     </ClCompile>
-    <ClCompile Include="Window.cpp">
-      <Filter>Window</Filter>
-    </ClCompile>
     <ClCompile Include="Maze.cpp">
       <Filter>Game</Filter>
     </ClCompile>

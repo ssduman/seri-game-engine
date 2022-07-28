@@ -216,7 +216,6 @@ xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win64\freetype.dll" "$(So
     <ClCompile Include="Skybox.cpp" />
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="Typer.cpp" />
-    <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\libraries\imgui-1.88\imconfig.h" />
