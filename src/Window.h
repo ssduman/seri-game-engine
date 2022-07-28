@@ -20,6 +20,7 @@ public:
             std::cerr << "glfwInit error" << std::endl;
             exit(-1);
         }
+        std::cout << "gflw version '" << glfwGetVersionString() << "' init succeeded" << std::endl;
 
         glfwSetErrorCallback(
             [](int error, const char* description) {

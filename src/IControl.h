@@ -3,6 +3,7 @@
 #include "Window.h"
 
 #include <string>
+#include <vector>
 
 class IControl {
 public:
@@ -30,7 +31,11 @@ public:
     virtual void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) = 0;
 
     inline std::string getUserInput() {
-        return userInput;
+        std::string userInputString;
+        for (const auto& userInput : userInputVector) {
+            userInputString += userInput;
+        }
+        return userInputString;
     }
 
     inline double getMouseCurrentPosX() {
@@ -43,7 +48,7 @@ public:
 
 protected:
     Window _window;
-    std::string userInput;
     double mouseCurrentPosX;
     double mouseCurrentPosY;
+    std::vector<std::string> userInputVector;
 };

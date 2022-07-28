@@ -63,7 +63,9 @@ public:
     }
 
     void charCallback(GLFWwindow* window, unsigned int codepoint) override {
-        userInput += (unsigned char)codepoint; // TODO: support for unicode
+        char string[5] = "";
+        encode_utf8(string, codepoint);
+        userInputVector.push_back(std::string(string));
     }
 
     void cursorPosCallback(GLFWwindow* window, double xpos, double ypos) override {
@@ -87,10 +89,10 @@ public:
 
     void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) override {
         if ((key == GLFW_KEY_ENTER) && (action == GLFW_PRESS)) {
-            userInput = "";
+            userInputVector.clear();
         } else if ((key == GLFW_KEY_BACKSPACE) && (action == GLFW_PRESS)) {
-            if (userInput.size() > 0) {
-                userInput.pop_back();
+            if (userInputVector.size() > 0) {
+                userInputVector.pop_back();
             }
         } else if ((key == GLFW_KEY_ESCAPE) && (action == GLFW_PRESS)) {
             glfwSetWindowShouldClose(window, GLFW_TRUE);
@@ -102,5 +104,26 @@ public:
     }
 
 private:
+    size_t encode_utf8(char* s, unsigned int ch) {
+        size_t count = 0;
+
+        if (ch < 0x80)
+            s[count++] = (char)ch;
+        else if (ch < 0x800) {
+            s[count++] = (ch >> 6) | 0xc0;
+            s[count++] = (ch & 0x3f) | 0x80;
+        } else if (ch < 0x10000) {
+            s[count++] = (ch >> 12) | 0xe0;
+            s[count++] = ((ch >> 6) & 0x3f) | 0x80;
+            s[count++] = (ch & 0x3f) | 0x80;
+        } else if (ch < 0x110000) {
+            s[count++] = (ch >> 18) | 0xf0;
+            s[count++] = ((ch >> 12) & 0x3f) | 0x80;
+            s[count++] = ((ch >> 6) & 0x3f) | 0x80;
+            s[count++] = (ch & 0x3f) | 0x80;
+        }
+
+        return count;
+    }
 
 };
