@@ -16,13 +16,13 @@ class Window {
 public:
     Window(WindowProperties windowProperties) : _windowProperties(windowProperties) {
         if (!glfwInit()) {
-            std::cout << "glfwInit error" << std::endl;
+            std::cerr << "glfwInit error" << std::endl;
             exit(-1);
         }
 
         glfwSetErrorCallback(
             [](int error, const char* description) {
-                fprintf(stderr, "glfw error: %s\n", description);
+                std::cerr << "glfw error: " << description << std::endl;
             }
         );
 
@@ -40,7 +40,7 @@ public:
 
         if (!_window) {
             glfwTerminate();
-            std::cout << "window error" << std::endl;
+            std::cerr << "window creating error" << std::endl;
             exit(-1);
         }
 
@@ -48,9 +48,15 @@ public:
         glfwSwapInterval(1);
 
         if (glewInit() != GLEW_OK) {
-            std::cout << "glewInit Error" << std::endl;
+            std::cerr << "glewInit error" << std::endl;
             exit(-1);
         }
+
+        glfwSetWindowCloseCallback(_window,
+            [](GLFWwindow* window) {
+                std::cerr << "window is attempting to close" << std::endl;
+            }
+        );
 
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
