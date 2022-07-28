@@ -15,7 +15,7 @@ public:
 
     virtual ~IControl() = default;
 
-    virtual void registerControls() = 0;
+    virtual void initControls() = 0;
 
     virtual void charCallback(GLFWwindow* window, unsigned int codepoint) = 0;
 

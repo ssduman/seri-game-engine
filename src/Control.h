@@ -1,8 +1,6 @@
 #pragma once
 #pragma warning(disable: 4100)
 
-#include "Game.h"
-#include "Camera.h"
 #include "Window.h"
 #include "IControl.h"
 
@@ -14,7 +12,7 @@ public:
 
     ~Control() = default;
 
-    void registerControls() override {
+    void initControls() override {
         glfwSetCharCallback(_window.getWindow(),
             [](GLFWwindow* window, unsigned int codepoint) {
                 if (auto control = static_cast<Control*>(glfwGetWindowUserPointer(window))) {
@@ -95,7 +93,7 @@ public:
                 userInput.pop_back();
             }
         } else if ((key == GLFW_KEY_ESCAPE) && (action == GLFW_PRESS)) {
-            exit(0);
+            glfwSetWindowShouldClose(window, GLFW_TRUE);
         }
 
         if (action == GLFW_RELEASE) {

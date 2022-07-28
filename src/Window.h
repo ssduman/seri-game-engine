@@ -1,4 +1,5 @@
 #pragma once
+#pragma warning(disable: 4100)
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -22,7 +23,7 @@ public:
 
         glfwSetErrorCallback(
             [](int error, const char* description) {
-                std::cerr << "glfw error: " << description << std::endl;
+                std::cerr << "glfw error " << error << ": " << description << std::endl;
             }
         );
 
@@ -97,6 +98,10 @@ public:
         return _window;
     }
 
+    inline double getTime() {
+        return glfwGetTime();
+    }
+
 private:
     inline void getMousePosition() {
         glfwGetCursorPos(_window, &_mouseXPosition, &_mouseYPosition);
@@ -106,12 +111,6 @@ private:
     double _mouseYPosition = 0;
     GLFWwindow* _window = nullptr;
     WindowProperties _windowProperties;
-    /*
-    int _windowWidth = 0;
-    int _windowHeight = 0;
-    bool _isFullscreen = false;
-    const char* _windowTitle = nullptr;
-    */
 
 };
 
