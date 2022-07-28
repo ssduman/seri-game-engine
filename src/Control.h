@@ -76,8 +76,7 @@ public:
         mouseCurrentPosY = ypos;
     }
 
-    void scrollCallback(GLFWwindow* window, double xoffset, double yoffset) override {
-    }
+    void scrollCallback(GLFWwindow* window, double xoffset, double yoffset) override {}
 
     void framebufferSizeCallback(GLFWwindow* window, int width, int height) override {
         glViewport(0, 0, width, height);

@@ -6,6 +6,12 @@ Window::Window(bool fullscreen, int w, int h) {
         exit(-1);
     }
 
+    glfwSetErrorCallback(
+        [](int error, const char* description) {
+            fprintf(stderr, "GLFW Error: %s\n", description);
+        }
+    );
+
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -17,8 +23,7 @@ Window::Window(bool fullscreen, int w, int h) {
         this->window = glfwCreateWindow(widthTemp, heightTemp, "Maze", glfwGetPrimaryMonitor(), NULL);
         this->width = widthTemp;
         this->height = heightTemp;
-    }
-    else {
+    } else {
         this->window = glfwCreateWindow(w, h, "Maze", NULL, NULL);
         this->width = w;
         this->height = h;
