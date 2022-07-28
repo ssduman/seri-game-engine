@@ -9,7 +9,7 @@ class Control : public IControl {
 public:
     Control(Window window) : IControl(window) {
         glfwSetWindowUserPointer(_window.getWindow(), static_cast<void*>(this));
-    };
+    }
 
     ~Control() = default;
 
@@ -85,7 +85,7 @@ public:
     void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods) override {
         if ((button == GLFW_MOUSE_BUTTON_LEFT) && (action == GLFW_PRESS)) {
         }
-    };
+    }
 
     void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) override {
         if ((key == GLFW_KEY_ENTER) && (action == GLFW_PRESS)) {

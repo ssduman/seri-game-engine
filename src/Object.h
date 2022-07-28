@@ -1,8 +1,10 @@
 #pragma once
 
+#include <iostream>
+
 class Object {
 public:
-    virtual ~Object() {};
+    virtual ~Object() {}
     
     virtual void init() = 0;
 
