@@ -1,13 +1,9 @@
-﻿#include "GUI.h"
+﻿#include "Window.h"
+#include "GUI.h"
 #include "Shader.h"
-#include "Window.h"
 #include "Control.h"
 #include "Triangle.h"
 #include "Rectangle.h"
-
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
 
 #include <locale.h>
 

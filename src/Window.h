@@ -28,9 +28,10 @@ public:
             }
         );
 
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
         if (_windowProperties.isFullscreen) {
             int monXPos, monYPos;
@@ -39,7 +40,6 @@ public:
         } else {
             _window = glfwCreateWindow(_windowProperties.windowWidth, _windowProperties.windowHeight, _windowProperties.windowTitle, NULL, NULL);
         }
-
         if (!_window) {
             glfwTerminate();
             std::cerr << "window creating error" << std::endl;
@@ -53,6 +53,7 @@ public:
             std::cerr << "glewInit error" << std::endl;
             exit(-1);
         }
+        std::cout << "glew version '" << glewGetString(GLEW_VERSION) << "' init succeeded" << std::endl;
 
         glfwSetWindowCloseCallback(_window,
             [](GLFWwindow* window) {
