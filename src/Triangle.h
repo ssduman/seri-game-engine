@@ -8,8 +8,8 @@ public:
     Triangle(int windowWidth, int windowHeight) : Entity(windowWidth, windowHeight) {}
 
     ~Triangle() {
-        glDeleteBuffers(1, &VBO);
-        glDeleteVertexArrays(1, &VAO);
+        glDeleteVertexArrays(1, &_VAO);
+        glDeleteBuffers(1, &_VBO);
     }
 
     void initShader(const std::string& vs_path, const std::string& fs_path) override {
@@ -29,51 +29,55 @@ public:
         _colors = colors;
 
         for (int i = 0; i < 3; i++) {
-            vertices.push_back(viewportCoordinates[i].x);
-            vertices.push_back(viewportCoordinates[i].y);
-            vertices.push_back(viewportCoordinates[i].z);
+            _vertices.push_back(viewportCoordinates[i].x);
+            _vertices.push_back(viewportCoordinates[i].y);
+            _vertices.push_back(viewportCoordinates[i].z);
 
-            vertices.push_back(colors[i].x);
-            vertices.push_back(colors[i].y);
-            vertices.push_back(colors[i].z);
+            _vertices.push_back(colors[i].x);
+            _vertices.push_back(colors[i].y);
+            _vertices.push_back(colors[i].z);
         }
 
         for (int i = 0; i < 3; i++) {
             std::cout
                 << "["
-                << vertices[i * 6 + 0] << ", " << vertices[i * 6 + 1] << ", " << vertices[i * 6 + 2]
+                << _vertices[i * 6 + 0] << ", " << _vertices[i * 6 + 1] << ", " << _vertices[i * 6 + 2]
                 << "], ["
-                << vertices[i * 6 + 3] << ", " << vertices[i * 6 + 4] << ", " << vertices[i * 6 + 5]
+                << _vertices[i * 6 + 3] << ", " << _vertices[i * 6 + 4] << ", " << _vertices[i * 6 + 5]
                 << "]\n";
         }
     }
 
     void init() override {
-        // generate vao
-        glGenBuffers(1, &VBO);
-        // generate vbo
-        glGenVertexArrays(1, &VAO);
+        // generating buffers, binding buffers, storing buffers, configuring attributes, unbinding buffers
         
-        // bind the vao first, then bind vbo, then store vbo buffer, then configure vertex attributes.
-        glBindVertexArray(VAO);
-
+        // generate vao
+        glGenBuffers(1, &_VBO);
+        // generate vbo
+        glGenVertexArrays(1, &_VAO);
+        
+        // bind vao
+        glBindVertexArray(_VAO);
         // bind vbo
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        glBindBuffer(GL_ARRAY_BUFFER, _VBO);
 
-        // create and store data
-        glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(GLfloat), vertices.data(), GL_STATIC_DRAW);
+        // store vbo data
+        glBufferData(GL_ARRAY_BUFFER, _vertices.size() * sizeof(GLfloat), _vertices.data(), GL_STATIC_DRAW);
 
-        // position attribute
+        // configure position attribute
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (void*)0);
         // defined in shader -> layout(location = 0) in vec3 aPos;
         glEnableVertexAttribArray(0);
 
-        // color attribute
+        // configure color attribute
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
         // defined in shader -> layout(location = 1) in vec3 aColor;
         glEnableVertexAttribArray(1);
         
-        // glBindVertexArray(0);
+        // unbind vao
+        glBindVertexArray(0);
+        // unbind vbo
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 
     void update() override {
@@ -82,15 +86,15 @@ public:
 
     void render() override {
         _shader.bind();
-        glBindVertexArray(VAO);
+        glBindVertexArray(_VAO);
         glDrawArrays(GL_TRIANGLES, 0, 3);
     }
 
 private:
     Shader _shader;
-    unsigned int VAO = 0;
-    unsigned int VBO = 0;
-    std::vector<GLfloat> vertices;
+    unsigned int _VAO = 0;
+    unsigned int _VBO = 0;
+    std::vector<GLfloat> _vertices;
     std::vector<glm::vec3> _viewportCoordinates;
     std::vector<glm::vec3> _colors;
 };
