@@ -26,7 +26,8 @@ private:
     std::vector<glm::vec3> escapePosition;
     std::vector<glm::vec3> nonEscapePosition;
 
-    int passCount = 0, width, height, thickness, verticalCount, horizontalCount;
+    float width, height, thickness;
+    int passCount = 0, verticalCount, horizontalCount;
 
     std::unordered_map<std::string, std::vector<std::pair<int, int>>> mazeMap;
     std::unordered_map<std::string, std::pair<int, int>> nodesMap;
@@ -46,7 +47,7 @@ private:
     std::string makeKey(std::vector<std::pair<int, int>> edge);
 
 public:
-    Maze(int thickness, int width, int height);
+    Maze(float thickness, float width, float height);
     bool findVerticalWall(int x, int y);
     bool findHorizontalWall(int x, int y);
     void printMazeToConsole();

@@ -1,6 +1,6 @@
 #include "Maze.h"
 
-Maze::Maze(int thickness, int width, int height) {
+Maze::Maze(float thickness, float width, float height) {
     wallTexture = new TextureManager("textures/wall1.png");
     wallRerticalTexture = new TextureManager("textures/wall2.png");
     passTexture = new TextureManager("textures/passage.png");
@@ -54,11 +54,11 @@ void Maze::escapeBlocks() {
 void Maze::solveMaze() {
     int posX = 0, posY = 0;
     while (!((posX == width - 1) && (posY == height - 1))) {
-        std::string key = makeNodeKey(std::make_pair(posX, posY));
-        bool right = std::get<2>(mazeMapTree[key]); // neighbors of the tile
-        bool down = std::get<3>(mazeMapTree[key]);  // which way is open?
-        bool left = std::get<4>(mazeMapTree[key]);
-        bool up = std::get<5>(mazeMapTree[key]);
+        std::string nodeKey = makeNodeKey(std::make_pair(posX, posY));
+        bool right = std::get<2>(mazeMapTree[nodeKey]); // neighbors of the tile
+        bool down = std::get<3>(mazeMapTree[nodeKey]);  // which way is open?
+        bool left = std::get<4>(mazeMapTree[nodeKey]);
+        bool up = std::get<5>(mazeMapTree[nodeKey]);
 
         bool cond1 = (right + left + down + up == 1); // dead-end
         bool cond2 = (right + left + down + up == 0); // dead-end, second encounter
@@ -119,7 +119,6 @@ void Maze::solveMaze() {
 }
 
 void Maze::squaresMap() {
-    int count = 0;
     for (int x = 0; x < width; x++) {
         for (int y = 0; y < height; y++) {
             std::pair<int, int> temp(x, y);
@@ -144,8 +143,8 @@ std::vector<std::pair<int, int>> Maze::neighbors4(std::pair<int, int> square) {
 
 std::vector<std::pair<int, int>> Maze::intersectionMap(std::vector<std::pair<int, int>> v) {
     std::vector<std::pair<int, int>> inter;
-    std::vector<std::pair<int, int>>::iterator it = v.begin();
-    for (int x = 0; it != v.end(); it++) {
+    std::vector<std::pair<int, int>>::iterator it;
+    for (it = v.begin(); it != v.end(); it++) {
         if (nodesMap.find(makeNodeKey(std::make_pair(it->first, it->second))) != nodesMap.end()) {
             inter.push_back(std::make_pair(it->first, it->second));
         }
@@ -165,8 +164,8 @@ std::vector<std::pair<int, int>> Maze::Edge(std::pair<int, int> node1, std::pair
 void Maze::randomMaze() {
     squaresMap();
 
-    int randomX = std::rand() % width;
-    int randomY = std::rand() % height;
+    int randomX = std::rand() % (int)width;
+    int randomY = std::rand() % (int)height;
     std::pair<int, int> root = nodesMap[makeNodeKey(std::make_pair(randomX, randomY))];
     nodesMap.erase(makeNodeKey(std::make_pair(randomX, randomY)));
 

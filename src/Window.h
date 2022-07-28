@@ -63,14 +63,7 @@ public:
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        //glEnable(GL_CULL_FACE);
-        //glCullFace(GL_FRONT);
-        //glFrontFace(GL_CW);
-        //glFrontFace(GL_CCW);
-        //glCullFace(GL_BACK);
-
-        //setCursorPosMiddle();
-        //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
 
     inline int getWidth() {

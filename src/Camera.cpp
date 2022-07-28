@@ -34,19 +34,19 @@ void Camera::setCameraPos(glm::vec3 pos) { // setting position after restart
     }
 }
 
-glm::vec3 Camera::projectionVector(glm::vec3 Front, glm::vec3 Right) {
+glm::vec3 Camera::projectionVector(glm::vec3 front, glm::vec3 right) {
     // using for walking same speed for any angles
-    glm::vec3 u = glm::cross(cameraUp, Right);
-    glm::vec3 v = Front;
+    glm::vec3 u = glm::cross(cameraUp, right);
+    glm::vec3 v = front;
 
     return ((u * v) / float(pow(glm::length(u), 2)) * u);
 }
 
-void Camera::keyboardControl(GLFWwindow* window, Maze** maze, bool& play, bool& escaping, bool& restart) {
+void Camera::keyboardControl(GLFWwindow* window, Maze** maze, bool& play_, bool& escaping, bool& restart) {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, true);
     }
-    if (play == false) {
+    if (play_ == false) {
         view = glm::lookAt(cameraPosition, cameraPosition + Front, Up);
         return;
     }
@@ -157,8 +157,8 @@ bool Camera::canIPass(glm::vec3 position) {
     float currentZ = position.z;
 
     // coordinat based location to index based location
-    int currentXPosAtMaze = (currentX - (-cubeThickness)) / (cubeThickness * 2);
-    int currentYPosAtMaze = (currentZ - (-cubeThickness)) / (cubeThickness * 2);
+    float currentXPosAtMaze = (currentX - (-cubeThickness)) / (cubeThickness * 2);
+    float currentYPosAtMaze = (currentZ - (-cubeThickness)) / (cubeThickness * 2);
 
     bool cond1 = currentZ > -cubeThickness; // lower bound
     bool cond2 = currentZ < cubeThickness * 2 * mazeHeight - cubeThickness; // upper bound
@@ -226,8 +226,8 @@ bool Camera::canIPass(glm::vec3 position) {
 }
 
 void Camera::mouseControl(GLFWwindow* window, double deltaX, double deltaY) {
-    Yaw += deltaX * sensitivity;
-    Pitch += deltaY * sensitivity;
+    Yaw += (float)deltaX * sensitivity;
+    Pitch += (float)deltaY * sensitivity;
 
     if (Pitch > 89) {
         Pitch = 89;
@@ -266,7 +266,7 @@ void Camera::update(bool p) {
         dx += 0.01f;
         if (dx >= 360) dx = 0.0f;
 
-        float t = cubeThickness;
+        t = cubeThickness;
         glm::vec3 center = glm::vec3(0.0f, -t / 2, 0.0f);
         glm::mat4 trans = glm::rotate(dx, center);
         glm::mat4 myMatrix = glm::translate(getModel(), glm::vec3(-(mazeWidth / 2) * t * 2, -t / 2, -(mazeHeight / 2) * t * 2));

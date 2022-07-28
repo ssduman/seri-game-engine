@@ -37,8 +37,7 @@ private:
     float checkE = true, checkR = true;
     bool play;
 
-    int mazeWidth, mazeHeight;
-    float cubeThickness;
+    float mazeWidth, mazeHeight, cubeThickness;
     std::vector<glm::vec3> verticalWallPosition;
     std::vector<glm::vec3> horizontalWallPosition;
     std::vector<std::pair<int, int>> path;
@@ -53,8 +52,8 @@ public:
     void keyboardControl(GLFWwindow* window, Maze** maze, bool& play, bool& escaping, bool& restart);
     void update(bool play);
     void setCameraPos(glm::vec3 pos);
-    void setDimensions(int w, int h, int t) {
-        mazeWidth = w; mazeHeight = h; cubeThickness = t;
+    void setDimensions(float w, float h, float th) {
+        mazeWidth = w; mazeHeight = h; cubeThickness = th;
     }
     void setWallPos(std::vector<glm::vec3> vp, std::vector<glm::vec3> hp) {
         verticalWallPosition = vp; horizontalWallPosition = hp;

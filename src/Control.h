@@ -1,5 +1,6 @@
 #pragma once
 #pragma warning(disable: 4100)
+#pragma warning(disable: 4244)
 
 #include "Window.h"
 #include "IControl.h"
