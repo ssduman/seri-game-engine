@@ -1,4 +1,5 @@
 #pragma once
+#pragma warning(disable: 4100)
 
 #include "Game.h"
 #include "Camera.h"
@@ -64,12 +65,12 @@ public:
     }
 
     void charCallback(GLFWwindow* window, unsigned int codepoint) override {
-        userInput += codepoint;
+        userInput += (unsigned char)codepoint; // TODO: support for unicode
     }
 
     void cursorPosCallback(GLFWwindow* window, double xpos, double ypos) override {
-        double deltaX = xpos - mouseCurrentPosX;
-        double deltaY = ypos - mouseCurrentPosY;
+        //double deltaX = xpos - mouseCurrentPosX;
+        //double deltaY = ypos - mouseCurrentPosY;
 
         mouseCurrentPosX = xpos;
         mouseCurrentPosY = ypos;
@@ -96,6 +97,10 @@ public:
             }
         } else if ((key == GLFW_KEY_ESCAPE) && (action == GLFW_PRESS)) {
             exit(0);
+        }
+
+        if (action == GLFW_RELEASE) {
+            std::cout << "userInput: " << getUserInput() << std::endl;
         }
     }
 

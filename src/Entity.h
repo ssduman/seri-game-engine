@@ -28,11 +28,11 @@ protected:
     }
 
     inline float mapPositionWidth(float x) {
-        return map(x, minViewportValue, _windowWidth, clipWorldRange[0], clipWorldRange[1]);
+        return map(x, minViewportValue, (float)_windowWidth, clipWorldRange[0], clipWorldRange[1]);
     }
 
     inline float mapPositionHeight(float x) {
-        return map(x, minViewportValue, _windowHeight, clipWorldRange[0], clipWorldRange[1]);
+        return map(x, minViewportValue, (float)_windowHeight, clipWorldRange[0], clipWorldRange[1]);
     }
 
     inline float mapColor(float x) {
