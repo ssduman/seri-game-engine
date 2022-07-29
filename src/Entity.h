@@ -1,19 +1,63 @@
 #pragma once
 
 #include "Object.h"
+#include "Window.h"
+#include "Shader.h"
 
 #include <glm/glm.hpp>
 
 #include <string>
 #include <vector>
 
+struct EntityProperties {
+    std::vector<glm::vec3> viewportCoordinates;
+    std::vector<glm::vec3> colors;
+
+    // GL_POINTS, GL_LINES, GL_LINE_STRIP, GL_LINE_LOOP, GL_TRIANGLES, GL_TRIANGLE_STRIP, GL_TRIANGLE_FAN,
+    int drawMode = GL_TRIANGLES;
+
+    std::vector<glm::vec3> clipCoordinates;
+    std::vector<glm::vec3> vertexColors;
+};
+
 class Entity : public Object {
 public:
-    Entity(int windowWidth, int windowHeight) : _windowWidth(windowWidth), _windowHeight(windowHeight) {}
+    Entity(const WindowProperties& windowProperties) : _windowProperties(windowProperties) {}
 
     virtual void initShader(const std::string& vs_path, const std::string& fs_path) = 0;
 
-    virtual void setProperties(std::vector<glm::vec3>& viewportCoordinates, std::vector<glm::vec3>& colors) = 0;
+    virtual void setProperties(EntityProperties& entityProperties, std::vector<GLfloat>& vertices) {
+        entityProperties.clipCoordinates = entityProperties.viewportCoordinates;
+        entityProperties.vertexColors = entityProperties.colors;
+
+        for (auto& coordinate : entityProperties.clipCoordinates) {
+            viewportToClipCoordinate(coordinate);
+        }
+
+        for (auto& color : entityProperties.vertexColors) {
+            mapRGBColor(color);
+        }
+
+        auto vertexCount = entityProperties.clipCoordinates.size();
+        for (int i = 0; i < vertexCount; i++) {
+            vertices.push_back(entityProperties.clipCoordinates[i].x);
+            vertices.push_back(entityProperties.clipCoordinates[i].y);
+            vertices.push_back(entityProperties.clipCoordinates[i].z);
+
+            vertices.push_back(entityProperties.vertexColors[i].x);
+            vertices.push_back(entityProperties.vertexColors[i].y);
+            vertices.push_back(entityProperties.vertexColors[i].z);
+        }
+
+        //for (int i = 0; i < vertexCount; i++) {
+        //    std::cout
+        //        << "["
+        //        << vertices[i * 6 + 0] << ", " << vertices[i * 6 + 1] << ", " << vertices[i * 6 + 2]
+        //        << "], ["
+        //        << vertices[i * 6 + 3] << ", " << vertices[i * 6 + 4] << ", " << vertices[i * 6 + 5]
+        //        << "]\n";
+        //}
+    };
 
 protected:
     void viewportToClipCoordinate(glm::vec3& viewportCoordinate) {
@@ -28,11 +72,11 @@ protected:
     }
 
     inline float mapPositionWidth(float x) {
-        return map(x, minViewportValue, (float)_windowWidth, clipWorldRange[0], clipWorldRange[1]);
+        return map(x, minViewportValue, (float)_windowProperties.windowWidth, clipWorldRange[0], clipWorldRange[1]);
     }
 
     inline float mapPositionHeight(float x) {
-        return map(x, minViewportValue, (float)_windowHeight, clipWorldRange[0], clipWorldRange[1]);
+        return map(x, minViewportValue, (float)_windowProperties.windowHeight, clipWorldRange[0], clipWorldRange[1]);
     }
 
     inline float mapColor(float x) {
@@ -43,7 +87,7 @@ protected:
         return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
     }
 
-    int _windowWidth, _windowHeight;
+    const WindowProperties& _windowProperties;
 
 private:
     float minViewportValue = 0.0f;

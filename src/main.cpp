@@ -10,38 +10,32 @@
 int main(int argc, char** argv) {
     setlocale(LC_ALL, "en_US.UTF-8");
 
-    const char* title = "Maze";
-    bool fullscreen = false;
-    int windowWidth = 1280;
-    int windowHeight = 720;
-    WindowProperties windowProperties = { title, fullscreen, windowWidth, windowHeight };
-
-    Window gameWindow(std::move(windowProperties));
-    GLFWwindow* window = gameWindow.getWindow();
-    windowWidth = gameWindow.getWidth();
-    windowHeight = gameWindow.getHeight();
+    WindowProperties windowProperties = { /*title*/ "Maze", /*fullscreen*/ false, /*w*/ 1280, /*h*/ 720 };
+    Window gameWindow(windowProperties);
 
     Control control(gameWindow);
-    control.initControls();
+    control.init();
 
     GUI gui(gameWindow);
     gui.init();
 
-    Triangle triangle(windowWidth, windowHeight);
-    std::vector<glm::vec3> triangePosition{ glm::vec3{ 960, 180, 0 }, glm::vec3{ 320, 180, 0 }, glm::vec3{ 640, 540, 0 } };
-    std::vector<glm::vec3> triangeColor{ glm::vec3{ 255, 0, 0 }, glm::vec3{ 0, 255, 0 }, glm::vec3{ 0, 0, 255 } };
-    triangle.setProperties(triangePosition, triangeColor);
+    EntityProperties triangleProperties = {
+        { glm::vec3{ 960, 180, 0 }, glm::vec3{ 320, 180, 0 }, glm::vec3{ 640, 540, 0 } },
+        { glm::vec3{ 255, 0, 0 }, glm::vec3{ 0, 255, 0 }, glm::vec3{ 0, 0, 255 } },
+    };
+    Triangle triangle(windowProperties, triangleProperties);
     triangle.initShader("shaders/ex_vs.shader", "shaders/ex_fs.shader");
     triangle.init();
 
-    Rectangle rectangle(windowWidth, windowHeight);
-    std::vector<glm::vec3> rectanglePosition{ glm::vec3{ 320, 180, 0 }, glm::vec3{ 320, 540, 0 }, glm::vec3{ 960, 540, 0 }, glm::vec3{ 960, 180, 0 } };
-    std::vector<glm::vec3> rectangleColor{ glm::vec3{ 255, 0, 0 }, glm::vec3{ 0, 255, 0 }, glm::vec3{ 0, 0, 255 }, glm::vec3{ 255, 255, 255 } };
-    rectangle.setProperties(rectanglePosition, rectangleColor);
+    EntityProperties rectangleProperties = {
+        { glm::vec3{ 320, 180, 0 }, glm::vec3{ 320, 540, 0 }, glm::vec3{ 960, 540, 0 }, glm::vec3{ 960, 180, 0 } },
+        { glm::vec3{ 255, 0, 0 }, glm::vec3{ 0, 255, 0 }, glm::vec3{ 0, 0, 255 }, glm::vec3{ 255, 255, 255 } },
+    };
+    Rectangle rectangle(windowProperties, rectangleProperties);
     rectangle.initShader("shaders/ex_vs.shader", "shaders/ex_fs.shader");
     rectangle.init();
 
-    while (!glfwWindowShouldClose(window)) {
+    while (!glfwWindowShouldClose(gameWindow.getWindow())) {
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -55,10 +49,10 @@ int main(int argc, char** argv) {
         gui.render();
 
         glfwPollEvents();
-        glfwSwapBuffers(window);
+        glfwSwapBuffers(gameWindow.getWindow());
     }
 
-    glfwDestroyWindow(window);
+    glfwDestroyWindow(gameWindow.getWindow());
     glfwTerminate();
 
     return 0;
