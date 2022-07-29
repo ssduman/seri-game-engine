@@ -44,6 +44,9 @@
     <Filter Include="Entity">
       <UniqueIdentifier>{bb34bab2-9a88-415e-befd-596a962ff565}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Command">
+      <UniqueIdentifier>{d3abd013-d6c0-4e07-9c1f-3d2cc5a9e74a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Renderer.cpp">
@@ -97,6 +100,9 @@
     </ClCompile>
     <ClCompile Include="..\libraries\imgui-1.88\imgui_impl_glfw.cpp">
       <Filter>GUI\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="MoveCommand.h">
+      <Filter>Command</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -180,6 +186,15 @@
     </ClInclude>
     <ClInclude Include="Rectangle.h">
       <Filter>Shape</Filter>
+    </ClInclude>
+    <ClInclude Include="InputHandler.h">
+      <Filter>Control</Filter>
+    </ClInclude>
+    <ClInclude Include="JumpCommand.h">
+      <Filter>Command</Filter>
+    </ClInclude>
+    <ClInclude Include="ICommand.h">
+      <Filter>Command</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

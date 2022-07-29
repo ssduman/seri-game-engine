@@ -210,6 +210,7 @@ xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win64\freetype.dll" "$(So
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Maze.cpp" />
+    <ClCompile Include="MoveCommand.h" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Shader.cpp" />
@@ -231,8 +232,11 @@ xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win64\freetype.dll" "$(So
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Control.h" />
     <ClInclude Include="Entity.h" />
+    <ClInclude Include="ICommand.h" />
     <ClInclude Include="IControl.h" />
     <ClInclude Include="GUI.h" />
+    <ClInclude Include="InputHandler.h" />
+    <ClInclude Include="JumpCommand.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="Maze.h" />
     <ClInclude Include="Object.h" />

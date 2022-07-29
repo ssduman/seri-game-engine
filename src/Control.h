@@ -4,16 +4,17 @@
 
 #include "Window.h"
 #include "IControl.h"
+#include "InputHandler.h"
 
 class Control : public IControl {
 public:
-    Control(Window window) : IControl(window) {
+    Control(Window window) : IControl(window), _inputHandler() {
         glfwSetWindowUserPointer(_window.getWindow(), static_cast<void*>(this));
     }
 
     ~Control() = default;
 
-    void initControls() override {
+    void init() override {
         glfwSetCharCallback(_window.getWindow(),
             [](GLFWwindow* window, unsigned int codepoint) {
                 if (auto control = static_cast<Control*>(glfwGetWindowUserPointer(window))) {
@@ -80,6 +81,8 @@ public:
     void scrollCallback(GLFWwindow* window, double xoffset, double yoffset) override {}
 
     void framebufferSizeCallback(GLFWwindow* window, int width, int height) override {
+        _window.getWidth() = width;
+        _window.getHeight() = height;
         glViewport(0, 0, width, height);
     }
 
@@ -89,6 +92,11 @@ public:
     }
 
     void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) override {
+        ICommand* command = _inputHandler.handleInput(key, scancode, action, mods);
+        if (command) {
+            command->execute();
+        }
+
         if ((key == GLFW_KEY_ENTER) && (action == GLFW_PRESS)) {
             userInputVector.clear();
         } else if ((key == GLFW_KEY_BACKSPACE) && (action == GLFW_PRESS)) {
@@ -102,6 +110,10 @@ public:
         if (action == GLFW_RELEASE) {
             std::cout << "userInput: " << getUserInput() << std::endl;
         }
+    }
+
+    void setInputHandler(InputHandler inputHandler) {
+        _inputHandler = inputHandler;
     }
 
 private:
@@ -127,4 +139,5 @@ private:
         return count;
     }
 
+    InputHandler _inputHandler;
 };

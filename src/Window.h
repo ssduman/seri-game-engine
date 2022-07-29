@@ -15,7 +15,7 @@ struct WindowProperties {
 
 class Window {
 public:
-    Window(WindowProperties windowProperties) : _windowProperties(windowProperties) {
+    Window(WindowProperties& windowProperties) : _windowProperties(windowProperties) {
         if (!glfwInit()) {
             std::cerr << "glfwInit error" << std::endl;
             exit(-1);
@@ -67,11 +67,11 @@ public:
         //glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
 
-    inline int getWidth() {
+    inline int& getWidth() {
         return _windowProperties.windowWidth;
     }
 
-    inline int getHeight() {
+    inline int& getHeight() {
         return _windowProperties.windowHeight;
     }
 
@@ -105,7 +105,7 @@ private:
     double _mouseXPosition = 0;
     double _mouseYPosition = 0;
     GLFWwindow* _window = nullptr;
-    WindowProperties _windowProperties;
+    WindowProperties& _windowProperties;
 
 };
 
