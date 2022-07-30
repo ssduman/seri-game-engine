@@ -1,6 +1,5 @@
 ﻿#include "Window.h"
 #include "GUI.h"
-#include "Shader.h"
 #include "Control.h"
 #include "Triangle.h"
 #include "Rectangle.h"

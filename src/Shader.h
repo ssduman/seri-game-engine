@@ -107,8 +107,8 @@ private:
         }
     }
 
-    int _errorStatusSuccess;
-    char _errorStatusLog[512];
+    int _errorStatusSuccess = -1;
+    char _errorStatusLog[512] = {};
     unsigned int _program = 0;
     unsigned int _vertexShader = 0;
     unsigned int _fragmentShader = 0;
