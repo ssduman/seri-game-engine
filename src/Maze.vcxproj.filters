@@ -61,7 +61,7 @@
     <ClCompile Include="Skybox.cpp">
       <Filter>Texture</Filter>
     </ClCompile>
-    <ClCompile Include="TextureManager.cpp">
+    <ClCompile Include="Texture.cpp">
       <Filter>Texture</Filter>
     </ClCompile>
     <ClCompile Include="Typer.cpp">
@@ -124,7 +124,7 @@
     <ClInclude Include="Typer.h">
       <Filter>Texture</Filter>
     </ClInclude>
-    <ClInclude Include="TextureManager.h">
+    <ClInclude Include="Texture.h">
       <Filter>Texture</Filter>
     </ClInclude>
     <ClInclude Include="Skybox.h">

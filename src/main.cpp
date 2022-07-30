@@ -24,6 +24,7 @@ int main(int argc, char** argv) {
     };
     Triangle triangle(windowProperties, triangleProperties);
     triangle.initShader("shaders/ex_vs.shader", "shaders/ex_fs.shader");
+    triangle.initTexture("textures/passage.png");
     triangle.init();
 
     EntityProperties rectangleProperties = {
@@ -32,6 +33,7 @@ int main(int argc, char** argv) {
     };
     Rectangle rectangle(windowProperties, rectangleProperties);
     rectangle.initShader("shaders/ex_vs.shader", "shaders/ex_fs.shader");
+    rectangle.initTexture("textures/wall1.png");
     rectangle.init();
 
     while (!glfwWindowShouldClose(gameWindow.getWindow())) {

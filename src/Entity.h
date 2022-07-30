@@ -3,15 +3,25 @@
 #include "Object.h"
 #include "Window.h"
 #include "Shader.h"
+#include "Texture.h"
 
 #include <glm/glm.hpp>
 
 #include <string>
 #include <vector>
 
+enum class ShapeType {
+    TRIANGLE,
+    RECTANGLE,
+    UNKNOWN,
+};
+
 struct EntityProperties {
     std::vector<glm::vec3> viewportCoordinates;
     std::vector<glm::vec3> colors;
+    std::vector<glm::vec2> textureCoordinates = {
+        glm::vec2{ 1.0f, 1.0f, }, glm::vec2{ 1.0f, 0.0f, }, glm::vec2{ 0.0f, 0.0f, }, glm::vec2{ 0.0f, 1.0f, },
+    };
 
     // GL_POINTS, GL_LINES, GL_LINE_STRIP, GL_LINE_LOOP, GL_TRIANGLES, GL_TRIANGLE_STRIP, GL_TRIANGLE_FAN,
     int drawMode = GL_TRIANGLES;
@@ -24,7 +34,13 @@ class Entity : public Object {
 public:
     Entity(const WindowProperties& windowProperties) : _windowProperties(windowProperties) {}
 
-    virtual void initShader(const std::string& vs_path, const std::string& fs_path) = 0;
+    virtual void initShader(const std::string& vsCodePath, const std::string& fsCodePath) {
+        _shader.init(vsCodePath, fsCodePath);
+    }
+
+    virtual void initTexture(const std::string& texturePath) {
+        _texture.init(texturePath);
+    }
 
     virtual void setProperties(EntityProperties& entityProperties, std::vector<GLfloat>& vertices) {
         entityProperties.clipCoordinates = entityProperties.viewportCoordinates;
@@ -47,6 +63,9 @@ public:
             vertices.push_back(entityProperties.vertexColors[i].x);
             vertices.push_back(entityProperties.vertexColors[i].y);
             vertices.push_back(entityProperties.vertexColors[i].z);
+
+            vertices.push_back(entityProperties.textureCoordinates[i].x);
+            vertices.push_back(entityProperties.textureCoordinates[i].y);
         }
 
         //for (int i = 0; i < vertexCount; i++) {
@@ -87,7 +106,11 @@ protected:
         return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
     }
 
+    ShapeType _shapeType = ShapeType::UNKNOWN;
     const WindowProperties& _windowProperties;
+    Shader _shader;
+    Texture _texture;
+    int _stride = 8;
 
 private:
     float minViewportValue = 0.0f;

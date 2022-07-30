@@ -1,11 +1,11 @@
 #include "Maze.h"
 
 Maze::Maze(float thickness, float width, float height) {
-    wallTexture = new TextureManager("textures/wall1.png");
-    wallRerticalTexture = new TextureManager("textures/wall2.png");
-    passTexture = new TextureManager("textures/passage.png");
-    escapeTexture = new TextureManager("textures/escape.png");
-    nonEscapeTexture = new TextureManager("textures/nonescape.png");
+    wallTexture = new Texture("textures/wall1.png");
+    wallRerticalTexture = new Texture("textures/wall2.png");
+    passTexture = new Texture("textures/passage.png");
+    escapeTexture = new Texture("textures/escape.png");
+    nonEscapeTexture = new Texture("textures/nonescape.png");
 
     verticalWallRender = new Renderer(thickness, 0.2f, thickness);
     horizontalWallRender = new Renderer(thickness, thickness, 0.2f);

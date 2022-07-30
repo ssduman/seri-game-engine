@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Renderer.h"
-#include "TextureManager.h"
+#include "Texture.h"
 
 #include <glm/glm.hpp>
 
@@ -17,7 +17,7 @@
 
 class Maze {
 private:
-    TextureManager* passTexture, * wallTexture, * wallRerticalTexture, * escapeTexture, * nonEscapeTexture;
+    Texture* passTexture, * wallTexture, * wallRerticalTexture, * escapeTexture, * nonEscapeTexture;
     Renderer* verticalWallRender, * horizontalWallRender, * passRender, * escapeRender, * nonEscapeRender;
 
     std::vector<glm::vec3> verticalWallPosition;

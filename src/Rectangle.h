@@ -6,6 +6,7 @@ class Rectangle : public Entity {
 public:
     Rectangle(const WindowProperties& windowProperties, EntityProperties& rectangleProperties) :
         Entity(windowProperties), _rectangleProperties(rectangleProperties) {
+        _shapeType = ShapeType::RECTANGLE;
         setProperties(_rectangleProperties, _vertices);
     }
 
@@ -13,10 +14,6 @@ public:
         glDeleteVertexArrays(1, &_VAO);
         glDeleteBuffers(1, &_VBO);
         glDeleteBuffers(1, &_EBO);
-    }
-
-    void initShader(const std::string& vs_path, const std::string& fs_path) override {
-        _shader.init(vs_path, fs_path);
     }
 
     void init() override {
@@ -42,14 +39,19 @@ public:
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, _indices.size() * sizeof(GLuint), _indices.data(), GL_STATIC_DRAW);
 
         // configure position attribute
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (void*)0);
-        // defined in shader -> layout(location = 0) in vec3 aPos;
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, _stride * sizeof(GLfloat), (void*)0);
+        // location defined in shader
         glEnableVertexAttribArray(0);
 
         // configure color attribute
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
-        // defined in shader -> layout(location = 1) in vec3 aColor;
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, _stride * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
+        // location defined in shader
         glEnableVertexAttribArray(1);
+
+        // configure texture attribute
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, _stride * sizeof(GLfloat), (void*)(6 * sizeof(GLfloat)));
+        // location defined in shader
+        glEnableVertexAttribArray(2);
 
         // unbind vao
         glBindVertexArray(0);
@@ -61,12 +63,12 @@ public:
 
     void render() override {
         _shader.use();
+        _texture.bind();
         glBindVertexArray(_VAO);
         glDrawElements(_rectangleProperties.drawMode, 6, GL_UNSIGNED_INT, 0);
     }
 
 private:
-    Shader _shader;
     unsigned int _VAO = 0;
     unsigned int _VBO = 0;
     unsigned int _EBO = 0;
