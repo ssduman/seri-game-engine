@@ -1,8 +1,9 @@
 #include "Camera.h"
 
 Camera::Camera(glm::vec3 positionCamera, float aspect, bool p) {
-    shader = new Shader("shaders/basic_vs.shader", "shaders/basic_fs.shader");
-    shader->bind();
+    shader = new Shader();
+    shader->init("shaders/basic_vs.shader", "shaders/basic_fs.shader");
+    shader->use();
     shader->setVec3("lightPos", glm::vec3(0, 10, 0));
     shader->setVec3("viewPos", glm::vec3(0, 10, 0));
 
@@ -260,7 +261,7 @@ void Camera::updateVectors() {
 void Camera::update(bool p) {
     play = p;
 
-    shader->bind();
+    shader->use();
 
     if (!play) { // at the beginning, maze is rotating circular
         dx += 0.01f;

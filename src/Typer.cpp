@@ -3,9 +3,10 @@
 Typer::Typer(int w, int h) {
     width = w;
     height = h;
-    shader = new Shader("shaders/typer_vs.shader", "shaders/typer_fs.shader");
+    shader = new Shader();
+    shader->init("shaders/typer_vs.shader", "shaders/typer_fs.shader");
     projection = glm::ortho(0.0f, (float)width, 0.0f, (float)height);
-    shader->bind();
+    shader->use();
     shader->setMat4("projection", projection);
 
     if (FT_Init_FreeType(&ft)) {
@@ -67,7 +68,7 @@ Typer::Typer(int w, int h) {
 }
 
 void Typer::renderText(std::string text, float x, float y, float scale, glm::vec3 color) {
-    shader->bind();
+    shader->use();
     shader->setVec3("textColor", color.x, color.y, color.z);
     glActiveTexture(GL_TEXTURE0);
     glBindVertexArray(VAO);

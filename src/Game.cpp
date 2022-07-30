@@ -9,10 +9,11 @@ Game::Game(float w, float h) {
     vertices[1] = vertices[5] = vertices[13] = h / (6 * (float)(w) / h);
     vertices[4] = vertices[8] = vertices[20] = w / 6;
 
-    shader = new Shader("shaders/game_vs.shader", "shaders/game_fs.shader");
+    shader = new Shader();
+    shader->init("shaders/game_vs.shader", "shaders/game_fs.shader");
     typer = new Typer(width, height);
 
-    shader->bind();
+    shader->use();
     projection = glm::ortho(0.0f, (float)width, 0.0f, (float)height);
     shader->setMat4("projection", projection);
 
@@ -53,7 +54,7 @@ void Game::display(std::string userInput, bool play, bool& restart, bool exit) {
         stopwatch(restart);
         return;
     }
-    shader->bind();
+    shader->use();
     glActiveTexture(GL_TEXTURE0);
     glBindVertexArray(VAO);
     glBindTexture(GL_TEXTURE_2D, texture);

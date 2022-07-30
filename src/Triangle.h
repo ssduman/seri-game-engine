@@ -53,7 +53,7 @@ public:
     void update() override {}
 
     void render() override {
-        _shader.bind();
+        _shader.use();
         glBindVertexArray(_VAO);
         glDrawArrays(_triangleProperties.drawMode, 0, 3);
     }

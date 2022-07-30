@@ -1,7 +1,8 @@
 #include "Skybox.h"
 
 Skybox::Skybox() {
-    skyboxShader = new Shader("shaders/skybox_vs.shader", "shaders/skybox_fs.shader");
+    skyboxShader = new Shader();
+    skyboxShader->init("shaders/skybox_vs.shader", "shaders/skybox_fs.shader");
 
     glGenVertexArrays(1, &skyboxVAO);
     glGenBuffers(1, &skyboxVBO);
@@ -41,7 +42,7 @@ void Skybox::loadCubemap(std::vector<std::string> faces) {
 
 void Skybox::display(glm::mat4 view, glm::mat4 projection) {
     glDepthFunc(GL_LEQUAL);
-    skyboxShader->bind();
+    skyboxShader->use();
     skyboxShader->setMat4("view", glm::mat4(glm::mat3(view)));
     skyboxShader->setMat4("projection", projection);
     glBindVertexArray(skyboxVAO);

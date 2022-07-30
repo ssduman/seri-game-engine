@@ -60,7 +60,7 @@ public:
     void update() override {}
 
     void render() override {
-        _shader.bind();
+        _shader.use();
         glBindVertexArray(_VAO);
         glDrawElements(_rectangleProperties.drawMode, 6, GL_UNSIGNED_INT, 0);
     }

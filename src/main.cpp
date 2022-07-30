@@ -94,8 +94,8 @@ int main(int argc, char** argv) {
 //    bool fullscreen = true;
 //    int windowWidth = 1280;
 //    int windowHeight = 720;
-//    WindowProperties windowProperties = { title, fullscreen, windowWidth, windowHeight };
-//    Window thisWindow(std::move(windowProperties));
+//    WindowProperties windowProperties = { /*title*/ "Maze", /*fullscreen*/ false, /*w*/ 1280, /*h*/ 720 };
+//    Window thisWindow(windowProperties);
 //    GLFWwindow* window = thisWindow.getWindow();
 //
 //    width = (float)thisWindow.getWidth();
