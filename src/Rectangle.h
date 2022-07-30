@@ -23,9 +23,9 @@ public:
         // generating buffers, binding buffers, storing buffers, configuring attributes, unbinding buffers
 
         // generate vao
-        glGenBuffers(1, &_VBO);
-        // generate vbo
         glGenVertexArrays(1, &_VAO);
+        // generate vbo
+        glGenBuffers(1, &_VBO);
         // generate ebo
         glGenBuffers(1, &_EBO);
 
