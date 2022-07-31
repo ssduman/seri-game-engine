@@ -47,6 +47,12 @@
     <Filter Include="Command">
       <UniqueIdentifier>{d3abd013-d6c0-4e07-9c1f-3d2cc5a9e74a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Math">
+      <UniqueIdentifier>{210c29a3-6645-41b1-897d-d34707583a3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util">
+      <UniqueIdentifier>{24c34095-f7f6-4812-acaa-02e419c70b59}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Renderer.cpp">
@@ -192,6 +198,15 @@
     </ClInclude>
     <ClInclude Include="ICommand.h">
       <Filter>Command</Filter>
+    </ClInclude>
+    <ClInclude Include="Vec3.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Util.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Mat3.h">
+      <Filter>Math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
