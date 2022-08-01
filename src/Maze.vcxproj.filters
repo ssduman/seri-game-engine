@@ -208,6 +208,12 @@
     <ClInclude Include="Mat3.h">
       <Filter>Math</Filter>
     </ClInclude>
+    <ClInclude Include="Vec4.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Mat4.h">
+      <Filter>Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\basic_fs.shader">

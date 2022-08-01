@@ -238,6 +238,7 @@ xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win64\freetype.dll" "$(So
     <ClInclude Include="JumpCommand.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="Mat3.h" />
+    <ClInclude Include="Mat4.h" />
     <ClInclude Include="Maze.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Rectangle.h" />
@@ -250,6 +251,7 @@ xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win64\freetype.dll" "$(So
     <ClInclude Include="Typer.h" />
     <ClInclude Include="Util.h" />
     <ClInclude Include="Vec3.h" />
+    <ClInclude Include="Vec4.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>

@@ -195,6 +195,51 @@ public:
         return Vec3{ rows[0][index], rows[1][index], rows[2][index] };
     }
 
+    /* transformations */
+
+    inline Vec3<float> multiply(Vec3<T>& rhs) {
+        return Vec3<float>(
+            getRow(0).dot(rhs),
+            getRow(1).dot(rhs),
+            getRow(2).dot(rhs)
+        );
+    }
+    inline Vec3<float> scale(Vec3<T>& rhs) {
+        return multiply(rhs);
+    }
+
+    inline Vec3<float> translate(Vec3<T>& rhs) {
+        return multiply(rhs);
+    }
+
+    /* static transformations */
+
+    inline static Vec3<float> multiply(Mat3<T>& mat3, Vec3<T>& vec3) {
+        return Vec3<float>(
+            mat3.getRow(0).dot(vec3),
+            mat3.getRow(1).dot(vec3),
+            mat3.getRow(2).dot(vec3)
+        );
+    }
+
+    inline static Vec3<float> scale(Vec3<T>& vec3, Vec3<T>& scaler) {
+        Mat3 mat3{ 1.0f };
+        mat3.rows[0].x = scaler[0];
+        mat3.rows[1].y = scaler[1];
+        mat3.rows[2].z = scaler[2];
+        return multiply(mat3, vec3);
+    }
+
+    inline static Vec3<float> translate(Vec3<T>& vec3, Vec3<T>& translator) {
+        Mat3 mat3{ 1.0f };
+        mat3.rows[0].z = translator[0];
+        mat3.rows[1].z = translator[1];
+        mat3.rows[2].z = translator[2];
+        return multiply(mat3, vec3);
+    }
+
+    /* operations */
+
     inline Mat3<float> multiply(Mat3<T>& rhs) {
         return Mat3<float>(
             Vec3<float>{ getRow(0).dot(rhs.getCol(0)), getRow(0).dot(rhs.getCol(1)), getRow(0).dot(rhs.getCol(2)) },
