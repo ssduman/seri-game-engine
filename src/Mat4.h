@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Vec4.h"
+#include "Util.h"
 
 #include <cmath>
 #include <iostream>
@@ -235,7 +236,7 @@ public:
             1
         );
     }
-    
+
     inline Vec4<float> scale(Vec3<T>& rhs) {
         return multiply(rhs);
     }
@@ -251,19 +252,6 @@ public:
     inline Vec4<float> translate(Vec4<T>& rhs) {
         return multiply(rhs);
     }
-
-    inline Vec4<float> rotateX() {
-        return Vec4{};
-    }
-
-    inline Vec4<float> rotateY() {
-        return Vec4{};
-    }
-
-    inline Vec4<float> rotateZ() {
-        return Vec4{};
-    }
-
 
     /* static transformations */
 
@@ -301,16 +289,43 @@ public:
         return multiply(mat4, vec3);
     }
 
-    inline static Vec4<float> rotateX(Vec3<T>& vec3, Vec3<T>& rotator) {
-        return Vec4{};
+    inline static Vec4<float> rotateX(Vec3<T>& vec3, float angle) {
+        float theta = Util::toRadian(angle);
+        float cosTheta = cos(theta);
+        float sinTheta = sin(theta);
+
+        Mat4 mat4{ 1.0f };
+        mat4.rows[1].y = cosTheta;
+        mat4.rows[1].z = -sinTheta;
+        mat4.rows[2].y = sinTheta;
+        mat4.rows[2].z = cosTheta;
+        return multiply(mat4, vec3);
     }
 
-    inline static Vec4<float> rotateY(Vec3<T>& vec3, Vec3<T>& rotator) {
-        return Vec4{};
+    inline static Vec4<float> rotateY(Vec3<T>& vec3, float angle) {
+        float theta = Util::toRadian(angle);
+        float cosTheta = cos(theta);
+        float sinTheta = sin(theta);
+
+        Mat4 mat4{ 1.0f };
+        mat4.rows[0].x = cosTheta;
+        mat4.rows[0].z = sinTheta;
+        mat4.rows[2].x = -sinTheta;
+        mat4.rows[2].z = cosTheta;
+        return multiply(mat4, vec3);
     }
 
-    inline static Vec4<float> rotateZ(Vec3<T>& vec3, Vec3<T>& rotator) {
-        return Vec4{};
+    inline static Vec4<float> rotateZ(Vec3<T>& vec3, float angle) {
+        float theta = Util::toRadian(angle);
+        float cosTheta = cos(theta);
+        float sinTheta = sin(theta);
+
+        Mat4 mat4{ 1.0f };
+        mat4.rows[0].x = cosTheta;
+        mat4.rows[0].y = -sinTheta;
+        mat4.rows[1].x = sinTheta;
+        mat4.rows[1].y = cosTheta;
+        return multiply(mat4, vec3);
     }
 
     /* combinations */
