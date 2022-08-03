@@ -78,6 +78,10 @@ public:
         //}
     };
 
+    inline const Shader& getShader() {
+        return _shader;
+    }
+
 protected:
     void viewportToClipCoordinate(glm::vec3& viewportCoordinate) {
         viewportCoordinate.x = mapPositionWidth(viewportCoordinate.x);

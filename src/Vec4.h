@@ -195,6 +195,13 @@ public:
         return ((*this) * rhs).sum();
     }
 
+    /* util */
+
+    template <typename T>
+    static inline glm::vec4 toGLMVec4(Vec4<T> vec4) {
+        return glm::vec4{ vec4.x, vec4.y, vec4.z, vec4.w };
+    }
+
     T x = 0;
     T y = 0;
     T z = 0;

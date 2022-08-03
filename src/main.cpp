@@ -3,6 +3,11 @@
 #include "Control.h"
 #include "Triangle.h"
 #include "Rectangle.h"
+#include "Mat4.h"
+
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include <locale.h>
 
@@ -40,11 +45,24 @@ int main(int argc, char** argv) {
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        //glm::mat4 transform_glm = glm::mat4(1.0f);
+        //transform_glm = glm::scale(transform_glm, glm::vec3(0.5, 0.5, 0.5));
+        //transform_glm = glm::translate(transform_glm, glm::vec3(0.5f, -0.5f, 0.0f));
+        //transform_glm = glm::rotate(transform_glm, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+
+        Mat4 transform_mat4{ 1.0f };
+        transform_mat4 = Mat4<float>::scale(transform_mat4, Vec3<float>{ 0.5, 0.5, 0.5 });
+        transform_mat4 = Mat4<float>::translate(transform_mat4, Vec3<float>{ 0.5f, -0.5f, 0.0f });
+        glm::mat4 transform_mat4_glm = Mat4<float>::toGLMMat4(transform_mat4);
+        //transform_mat4_glm = glm::rotate(transform_mat4_glm, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+
+        triangle.getShader().setMat4("u_transform", transform_mat4_glm);
+
         triangle.update();
         triangle.render();
 
-        rectangle.update();
-        rectangle.render();
+        //rectangle.update();
+        //rectangle.render();
 
         gui.update();
         gui.render();

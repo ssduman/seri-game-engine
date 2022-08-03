@@ -273,20 +273,19 @@ public:
         );
     }
 
-    inline static Vec4<float> scale(Vec3<T>& vec3, Vec3<T>& scaler) {
-        Mat4 mat4{ 1.0f };
-        mat4.rows[0].x = scaler[0];
-        mat4.rows[1].y = scaler[1];
-        mat4.rows[2].z = scaler[2];
-        return multiply(mat4, vec3);
+    inline static Mat4<float> scale(Mat4<T>& mat4, Vec3<T> scaler) {
+        Mat4 temp{ 1.0f };
+        temp.rows[0] = mat4[0] * scaler[0];
+        temp.rows[1] = mat4[1] * scaler[1];
+        temp.rows[2] = mat4[2] * scaler[2];
+        temp.rows[3] = mat4[3];
+        return temp;
     }
 
-    inline static Vec4<float> translate(Vec3<T>& vec3, Vec3<T>& translator) {
-        Mat4 mat4{ 1.0f };
-        mat4.rows[0].z = translator[0];
-        mat4.rows[1].z = translator[1];
-        mat4.rows[2].z = translator[2];
-        return multiply(mat4, vec3);
+    inline static Mat4<float> translate(Mat4<T>& mat4, Vec3<T> translator) {
+        Mat4 temp{ mat4 };
+        temp[3] = mat4[0] * translator[0] + mat4[1] * translator[1] + mat4[2] * translator[2] + mat4[3];
+        return temp;
     }
 
     inline static Vec4<float> rotateX(Vec3<T>& vec3, float angle) {
@@ -336,6 +335,18 @@ public:
             Vec4<float>{ getRow(1).dot(rhs.getCol(0)), getRow(1).dot(rhs.getCol(1)), getRow(1).dot(rhs.getCol(2)), getRow(1).dot(rhs.getCol(3)) },
             Vec4<float>{ getRow(2).dot(rhs.getCol(0)), getRow(2).dot(rhs.getCol(1)), getRow(2).dot(rhs.getCol(2)), getRow(2).dot(rhs.getCol(3)) },
             Vec4<float>{ getRow(3).dot(rhs.getCol(0)), getRow(3).dot(rhs.getCol(1)), getRow(3).dot(rhs.getCol(2)), getRow(3).dot(rhs.getCol(3)) }
+        );
+    }
+
+    /* util */
+
+    template <typename T = float>
+    static inline glm::mat4 toGLMMat4(Mat4<float>& rhs) {
+        return glm::mat4(
+            Vec4<T>::toGLMVec4(rhs.rows[0]),
+            Vec4<T>::toGLMVec4(rhs.rows[1]),
+            Vec4<T>::toGLMVec4(rhs.rows[2]),
+            Vec4<T>::toGLMVec4(rhs.rows[3])
         );
     }
 
