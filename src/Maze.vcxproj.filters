@@ -53,6 +53,9 @@
     <Filter Include="Util">
       <UniqueIdentifier>{24c34095-f7f6-4812-acaa-02e419c70b59}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Layer">
+      <UniqueIdentifier>{ba210aaf-6d82-43ed-b978-2dff13a7db7f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Renderer.cpp">
@@ -213,6 +216,9 @@
     </ClInclude>
     <ClInclude Include="Mat4.h">
       <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Layer.h">
+      <Filter>Layer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

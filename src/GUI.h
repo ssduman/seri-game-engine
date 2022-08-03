@@ -1,15 +1,15 @@
 #pragma once
 
-#include "Object.h"
+#include "Entity.h"
 #include "Window.h"
 
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 
-class GUI : public Object {
+class GUI : public Entity {
 public:
-    GUI(Window window) : _window(window) {}
+    GUI(Window window) : Entity({}), _window(window) {}
 
     ~GUI() {
         ImGui_ImplOpenGL3_Shutdown();

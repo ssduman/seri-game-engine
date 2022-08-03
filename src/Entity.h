@@ -78,7 +78,7 @@ public:
         //}
     };
 
-    inline const Shader& getShader() {
+    inline Shader& getShader() {
         return _shader;
     }
 

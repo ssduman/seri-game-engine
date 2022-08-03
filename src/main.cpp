@@ -4,6 +4,7 @@
 #include "Triangle.h"
 #include "Rectangle.h"
 #include "Mat4.h"
+#include "Layer.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -20,8 +21,12 @@ int main(int argc, char** argv) {
     Control control(gameWindow);
     control.init();
 
+    Layer layers;
+
     GUI gui(gameWindow);
     gui.init();
+
+    glm::mat4 transform_glm = glm::mat4(1.0f);
 
     EntityProperties triangleProperties = {
         { glm::vec3{ 960, 180, 0 }, glm::vec3{ 320, 180, 0 }, glm::vec3{ 640, 540, 0 } },
@@ -31,6 +36,8 @@ int main(int argc, char** argv) {
     triangle.initShader("shaders/ex_vs.shader", "shaders/ex_fs.shader");
     triangle.initTexture("textures/passage.png");
     triangle.init();
+    triangle.getShader().use();
+    triangle.getShader().setMat4("u_transform", transform_glm);
 
     EntityProperties rectangleProperties = {
         { glm::vec3{ 320, 180, 0 }, glm::vec3{ 320, 540, 0 }, glm::vec3{ 960, 540, 0 }, glm::vec3{ 960, 180, 0 } },
@@ -40,32 +47,21 @@ int main(int argc, char** argv) {
     rectangle.initShader("shaders/ex_vs.shader", "shaders/ex_fs.shader");
     rectangle.initTexture("textures/wall1.png");
     rectangle.init();
+    rectangle.getShader().use();
+    rectangle.getShader().setMat4("u_transform", transform_glm);
+
+    layers.addLayer(&triangle);
+    layers.addLayer(&rectangle);
+    layers.addLayer(&gui);
 
     while (!glfwWindowShouldClose(gameWindow.getWindow())) {
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        //glm::mat4 transform_glm = glm::mat4(1.0f);
-        //transform_glm = glm::scale(transform_glm, glm::vec3(0.5, 0.5, 0.5));
-        //transform_glm = glm::translate(transform_glm, glm::vec3(0.5f, -0.5f, 0.0f));
-        //transform_glm = glm::rotate(transform_glm, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
-
-        Mat4 transform_mat4{ 1.0f };
-        transform_mat4 = Mat4<float>::scale(transform_mat4, Vec3<float>{ 0.5, 0.5, 0.5 });
-        transform_mat4 = Mat4<float>::translate(transform_mat4, Vec3<float>{ 0.5f, -0.5f, 0.0f });
-        glm::mat4 transform_mat4_glm = Mat4<float>::toGLMMat4(transform_mat4);
-        //transform_mat4_glm = glm::rotate(transform_mat4_glm, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
-
-        triangle.getShader().setMat4("u_transform", transform_mat4_glm);
-
-        triangle.update();
-        triangle.render();
-
-        //rectangle.update();
-        //rectangle.render();
-
-        gui.update();
-        gui.render();
+        for (auto entity : layers.getLayers()) {
+            entity->update();
+            entity->render();
+        }
 
         glfwPollEvents();
         glfwSwapBuffers(gameWindow.getWindow());
