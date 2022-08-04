@@ -12,6 +12,11 @@ public:
 
     virtual void render() = 0;
 
+    void display() {
+        update();
+        render();
+    }
+
 private:
 
 };

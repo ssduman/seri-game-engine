@@ -59,8 +59,7 @@ int main(int argc, char** argv) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         for (auto entity : layers.getLayers()) {
-            entity->update();
-            entity->render();
+            entity->display();
         }
 
         glfwPollEvents();
