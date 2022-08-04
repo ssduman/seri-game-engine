@@ -1,15 +1,15 @@
 #pragma once
 
-#include "Entity.h"
+#include "Object.h"
 #include "Window.h"
 
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 
-class GUI : public Entity {
+class GUI : public Object {
 public:
-    GUI(Window window) : Entity({}), _window(window) {}
+    GUI(Window window) : _window(window) {}
 
     ~GUI() {
         ImGui_ImplOpenGL3_Shutdown();
@@ -24,7 +24,7 @@ public:
         ImGuiIO& io = ImGui::GetIO();
         io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
         io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
-        io.Fonts->AddFontFromFileTTF(font_filename, 20.0f);
+        //io.Fonts->AddFontFromFileTTF(font_filename, 20.0f);
 
         ImGui::StyleColorsDark();
 
