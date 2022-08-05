@@ -5,6 +5,7 @@
 #include "Rectangle.h"
 #include "Mat4.h"
 #include "Layer.h"
+#include "Factory.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -26,32 +27,11 @@ int main(int argc, char** argv) {
     GUI gui(gameWindow);
     gui.init();
 
-    glm::mat4 transform_glm = glm::mat4(1.0f);
-
-    EntityProperties triangleProperties = {
-        { glm::vec3{ 960, 180, 0 }, glm::vec3{ 320, 180, 0 }, glm::vec3{ 640, 540, 0 } },
-        { glm::vec3{ 255, 0, 0 }, glm::vec3{ 0, 255, 0 }, glm::vec3{ 0, 0, 255 } },
-    };
-    Triangle triangle(windowProperties, triangleProperties);
-    triangle.initShader("shaders/ex_vs.shader", "shaders/ex_fs.shader");
-    triangle.initTexture("textures/passage.png");
-    triangle.init();
-    triangle.getShader().use();
-    triangle.getShader().setMat4("u_transform", transform_glm);
-
-    EntityProperties rectangleProperties = {
-        { glm::vec3{ 320, 180, 0 }, glm::vec3{ 320, 540, 0 }, glm::vec3{ 960, 540, 0 }, glm::vec3{ 960, 180, 0 } },
-        { glm::vec3{ 255, 0, 0 }, glm::vec3{ 0, 255, 0 }, glm::vec3{ 0, 0, 255 }, glm::vec3{ 255, 255, 255 } },
-    };
-    Rectangle rectangle(windowProperties, rectangleProperties);
-    rectangle.initShader("shaders/ex_vs.shader", "shaders/ex_fs.shader");
-    rectangle.initTexture("textures/wall1.png");
-    rectangle.init();
-    rectangle.getShader().use();
-    rectangle.getShader().setMat4("u_transform", transform_glm);
-
-    layers.addLayer(&triangle);
-    layers.addLayer(&rectangle);
+    Triangle* triangle = (Triangle*)Factory::Create(windowProperties, EntityType::TRIANGLE);
+    Rectangle* rectangle = (Rectangle*)Factory::Create(windowProperties, EntityType::RECTANGLE);
+    
+    layers.addLayer(triangle);
+    layers.addLayer(rectangle);
     layers.addLayer(&gui);
 
     while (!glfwWindowShouldClose(gameWindow.getWindow())) {

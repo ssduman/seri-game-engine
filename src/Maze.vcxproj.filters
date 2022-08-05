@@ -56,6 +56,9 @@
     <Filter Include="Layer">
       <UniqueIdentifier>{ba210aaf-6d82-43ed-b978-2dff13a7db7f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Factory">
+      <UniqueIdentifier>{6de68790-b6e4-428d-950b-4ef8fe49ea7f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Renderer.cpp">
@@ -219,6 +222,9 @@
     </ClInclude>
     <ClInclude Include="Layer.h">
       <Filter>Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="Factory.h">
+      <Filter>Factory</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

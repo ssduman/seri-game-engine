@@ -6,7 +6,7 @@ class Triangle : public Entity {
 public:
     Triangle(const WindowProperties& windowProperties, EntityProperties& triangleProperties) :
         Entity(windowProperties), _triangleProperties(triangleProperties) {
-        _shapeType = ShapeType::TRIANGLE;
+        _EntityType = EntityType::TRIANGLE;
         setProperties(_triangleProperties, _vertices);
     }
 

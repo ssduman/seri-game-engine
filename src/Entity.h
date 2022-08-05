@@ -10,7 +10,7 @@
 #include <string>
 #include <vector>
 
-enum class ShapeType {
+enum class EntityType {
     TRIANGLE,
     RECTANGLE,
     UNKNOWN,
@@ -110,7 +110,7 @@ protected:
         return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
     }
 
-    ShapeType _shapeType = ShapeType::UNKNOWN;
+    EntityType _EntityType = EntityType::UNKNOWN;
     const WindowProperties& _windowProperties;
     Shader _shader;
     Texture _texture;
