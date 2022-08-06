@@ -1,8 +1,11 @@
 #pragma once
 
+#include "Util.h"
 #include "Entity.h"
 #include "Triangle.h"
 #include "Rectangle.h"
+
+#include <stdlib.h>
 
 class Factory {
 public:
@@ -13,8 +16,8 @@ public:
             case EntityType::TRIANGLE:
             {
                 EntityProperties triangleProperties = {
-                    { glm::vec3{ 960, 180, 0 }, glm::vec3{ 320, 180, 0 }, glm::vec3{ 640, 540, 0 } },
-                    { glm::vec3{ 255, 0, 0 }, glm::vec3{ 0, 255, 0 }, glm::vec3{ 0, 0, 255 } },
+                    { glm::vec3{ -0.5f, -0.5f, 0 }, glm::vec3{ 0, 0.5f, 0 }, glm::vec3{ 0.5f, -0.5f, 0 } },
+                    { glm::vec3{ glm::linearRand(0.0f, 1.0f), 0, 0 }, glm::vec3{ 0, 1.0f, 0 }, glm::vec3{ 0, 0, 1.0f } },
                 };
                 Triangle* triangle = new Triangle(windowProperties, triangleProperties);
                 triangle->initShader("shaders/ex_vs.shader", "shaders/ex_fs.shader");
@@ -22,14 +25,15 @@ public:
                 triangle->init();
                 triangle->getShader().use();
                 triangle->getShader().setMat4("u_transform", glm::mat4(1.0f));
+                triangle->getShader().disuse();
 
                 return triangle;
             }
             case EntityType::RECTANGLE:
             {
                 EntityProperties rectangleProperties = {
-                    { glm::vec3{ 320, 180, 0 }, glm::vec3{ 320, 540, 0 }, glm::vec3{ 960, 540, 0 }, glm::vec3{ 960, 180, 0 } },
-                    { glm::vec3{ 255, 0, 0 }, glm::vec3{ 0, 255, 0 }, glm::vec3{ 0, 0, 255 }, glm::vec3{ 255, 255, 255 } },
+                    { glm::vec3{ -0.5f, -0.5f, 0 }, glm::vec3{ -0.5f, 0.5f, 0 }, glm::vec3{ 0.5f, 0.5f, 0 }, glm::vec3{ 0.5f, -0.5f, 0 } },
+                    { glm::vec3{ glm::linearRand(0.0f, 1.0f), 0, 0 }, glm::vec3{ 0, 1.0f, 0 }, glm::vec3{ 0, 0, 1.0f }, glm::vec3{ 1.0f, 1.0f, 1.0f } },
                 };
                 Rectangle* rectangle = new Rectangle(windowProperties, rectangleProperties);
                 rectangle->initShader("shaders/ex_vs.shader", "shaders/ex_fs.shader");
@@ -37,6 +41,7 @@ public:
                 rectangle->init();
                 rectangle->getShader().use();
                 rectangle->getShader().setMat4("u_transform", glm::mat4(1.0f));
+                rectangle->getShader().disuse();
 
                 return rectangle;
             }
@@ -49,7 +54,6 @@ public:
                 return nullptr;
             }
         }
-        return nullptr;
     }
 
 private:

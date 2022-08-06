@@ -2,6 +2,8 @@
 
 #include "Object.h"
 #include "Window.h"
+#include "Factory.h"
+#include "Layer.h"
 
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
@@ -9,7 +11,7 @@
 
 class GUI : public Object {
 public:
-    GUI(Window window) : _window(window) {}
+    GUI(Window window, Layer* layers) : _window(window), _layers(layers) {}
 
     ~GUI() {
         ImGui_ImplOpenGL3_Shutdown();
@@ -36,9 +38,52 @@ public:
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
-        if (show_demo_window) {
-            ImGui::ShowDemoWindow(&show_demo_window);
+
+        ImGuiWindowFlags window_flags = 0;
+        window_flags |= ImGuiWindowFlags_MenuBar;
+
+        const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
+        ImGui::SetNextWindowPos(ImVec2(main_viewport->WorkPos.x + 650, main_viewport->WorkPos.y + 20), ImGuiCond_FirstUseEver);
+        ImGui::SetNextWindowSize(ImVec2(550, 680), ImGuiCond_FirstUseEver);
+
+        static bool no_open = true;
+        if (!ImGui::Begin("Maze", &no_open, window_flags)) {
+            ImGui::End();
+            return;
         }
+
+        ImGui::PushItemWidth(ImGui::GetFontSize() * -12);
+
+        static bool show_app_main_menu_bar = false;
+        static bool show_app_example_menu_bar = false;
+        if (ImGui::BeginMenuBar()) {
+            if (ImGui::BeginMenu("Menu")) {
+                ImGui::MenuItem("Option 1", nullptr, &show_app_main_menu_bar);
+                ImGui::EndMenu();
+            }
+            if (ImGui::BeginMenu("Settings")) {
+                ImGui::MenuItem("Setting 1", nullptr, &show_app_example_menu_bar);
+                ImGui::EndMenu();
+            }
+            ImGui::EndMenuBar();
+        }
+
+        ImGui::Separator();
+
+        ImGui::Text("Maze");
+        if (ImGui::Button("Create triangle")) {
+            _layers->addLayer(Factory::Create({}, EntityType::TRIANGLE));
+        }
+        if (ImGui::Button("Create rectangle")) {
+            _layers->addLayer(Factory::Create({}, EntityType::RECTANGLE));
+        }
+        if (ImGui::Button("Delete entity")) {
+            _layers->deleteLayer();
+        }
+
+        ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+
+        ImGui::End();
     }
 
     void render() override {
@@ -48,6 +93,7 @@ public:
 
 private:
     Window _window;
+    Layer* _layers;
     bool show_demo_window = true;
     const char* glsl_version = "#version 130";
     const char* font_filename = "fonts/DungeonFont.ttf";

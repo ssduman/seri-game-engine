@@ -2,23 +2,27 @@
 
 #include "Object.h"
 
-#include <vector>
+#include <deque>
 
 class Layer {
 public:
     Layer() = default;
 
     void addLayer(Object* entity) {
-        _layers.push_back(entity);
+        _layers.push_front(entity);
     }
 
-    void deleteLayer() {}
+    void deleteLayer() {
+        if (!_layers.empty()) {
+            _layers.pop_front();
+        }
+    }
 
-    std::vector<Object*> getLayers() {
+    std::deque<Object*> getLayers() {
         return _layers;
     }
 
 private:
-    std::vector<Object*> _layers = {};
+    std::deque<Object*> _layers{};
 
 };

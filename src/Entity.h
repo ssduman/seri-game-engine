@@ -46,13 +46,13 @@ public:
         entityProperties.clipCoordinates = entityProperties.viewportCoordinates;
         entityProperties.vertexColors = entityProperties.colors;
 
-        for (auto& coordinate : entityProperties.clipCoordinates) {
-            viewportToClipCoordinate(coordinate);
-        }
+        //for (auto& coordinate : entityProperties.clipCoordinates) {
+        //    viewportToClipCoordinate(coordinate);
+        //}
 
-        for (auto& color : entityProperties.vertexColors) {
-            mapRGBColor(color);
-        }
+        //for (auto& color : entityProperties.vertexColors) {
+        //    mapRGBColor(color);
+        //}
 
         auto vertexCount = entityProperties.clipCoordinates.size();
         for (int i = 0; i < vertexCount; i++) {

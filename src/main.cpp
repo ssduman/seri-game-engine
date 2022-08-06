@@ -1,4 +1,5 @@
 ﻿#include "Window.h"
+#include "Util.h"
 #include "GUI.h"
 #include "Control.h"
 #include "Triangle.h"
@@ -6,12 +7,6 @@
 #include "Mat4.h"
 #include "Layer.h"
 #include "Factory.h"
-
-#include <glm/glm.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-
-#include <locale.h>
 
 int main(int argc, char** argv) {
     setlocale(LC_ALL, "en_US.UTF-8");
@@ -24,15 +19,14 @@ int main(int argc, char** argv) {
 
     Layer layers;
 
-    GUI gui(gameWindow);
+    GUI gui(gameWindow, &layers);
     gui.init();
 
     Triangle* triangle = (Triangle*)Factory::Create(windowProperties, EntityType::TRIANGLE);
     Rectangle* rectangle = (Rectangle*)Factory::Create(windowProperties, EntityType::RECTANGLE);
-    
-    layers.addLayer(triangle);
+
     layers.addLayer(rectangle);
-    layers.addLayer(&gui);
+    layers.addLayer(triangle);
 
     while (!glfwWindowShouldClose(gameWindow.getWindow())) {
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -41,6 +35,8 @@ int main(int argc, char** argv) {
         for (auto entity : layers.getLayers()) {
             entity->display();
         }
+
+        gui.display();
 
         glfwPollEvents();
         glfwSwapBuffers(gameWindow.getWindow());
