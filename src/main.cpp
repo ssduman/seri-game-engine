@@ -2,8 +2,6 @@
 #include "Util.h"
 #include "GUI.h"
 #include "Control.h"
-#include "Triangle.h"
-#include "Rectangle.h"
 #include "Mat4.h"
 #include "Layer.h"
 #include "Factory.h"
@@ -22,17 +20,17 @@ int main(int argc, char** argv) {
     GUI gui(gameWindow, &layers);
     gui.init();
 
-    Triangle* triangle = (Triangle*)Factory::Create(windowProperties, EntityType::TRIANGLE);
-    Rectangle* rectangle = (Rectangle*)Factory::Create(windowProperties, EntityType::RECTANGLE);
-
-    layers.addLayer(rectangle);
-    layers.addLayer(triangle);
+    glPointSize(10.0f);
+    glLineWidth(10.0f);
 
     while (!glfwWindowShouldClose(gameWindow.getWindow())) {
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         for (auto entity : layers.getLayers()) {
+            //Mat4<float> trans{ 1.0f };
+            //trans = Mat4<float>::rotate(trans, 45.0f, { 0.0f, 0.0f, 1.0f });
+            //entity->getShader().setMat4("u_transform", trans);
             entity->display();
         }
 

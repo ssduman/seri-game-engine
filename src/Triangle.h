@@ -7,7 +7,7 @@ public:
     Triangle(const WindowProperties& windowProperties, EntityProperties& triangleProperties) :
         Entity(windowProperties), _triangleProperties(triangleProperties) {
         _EntityType = EntityType::TRIANGLE;
-        setProperties(_triangleProperties, _vertices);
+        setProperties(_triangleProperties);
     }
 
     ~Triangle() {
@@ -28,7 +28,7 @@ public:
         // bind vbo
         glBindBuffer(GL_ARRAY_BUFFER, _VBO);
 
-        // store vbo data
+        // store vbo data for entity
         glBufferData(GL_ARRAY_BUFFER, _vertices.size() * sizeof(GLfloat), _vertices.data(), GL_STATIC_DRAW);
 
         // configure position attribute
@@ -42,7 +42,7 @@ public:
         glEnableVertexAttribArray(1);
 
         // configure texture attribute
-        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, _stride * sizeof(GLfloat), (void*)(6 * sizeof(GLfloat)));
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0 * sizeof(GLfloat), (void*)(_texStart * sizeof(GLfloat)));
         // location defined in shader
         glEnableVertexAttribArray(2);
 
@@ -58,12 +58,12 @@ public:
         _shader.use();
         _texture.bind();
         glBindVertexArray(_VAO);
-        glDrawArrays(_triangleProperties.drawMode, 0, 3);
+        glDrawArrays(_triangleProperties.drawMode, 0, _renderCount);
     }
 
 private:
     unsigned int _VAO = 0;
     unsigned int _VBO = 0;
-    std::vector<GLfloat> _vertices;
+    GLsizei _renderCount = 3;
     EntityProperties _triangleProperties;
 };

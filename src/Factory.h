@@ -6,6 +6,7 @@
 #include "Line.h"
 #include "Triangle.h"
 #include "Rectangle.h"
+#include "Circle.h"
 
 #include <stdlib.h>
 
@@ -14,15 +15,28 @@ public:
     virtual ~Factory() = default;
 
     static Entity* Create(const WindowProperties& windowProperties, EntityType entityType) {
+        glm::vec3 minColor = glm::vec3{ 0.0f, 0.0f, 0.0f };
+        glm::vec3 maxColor = glm::vec3{ 1.0f, 1.0f, 1.0f };
+
         switch (entityType) {
             case EntityType::POINT:
             {
-                EntityProperties pointProperties = {
-                    { glm::vec3{ -0.5f, -0.5f, 0 }, glm::vec3{ 0, 0.5f, 0 }, glm::vec3{ 0.5f, -0.5f, 0 } },
-                    { glm::vec3{ glm::linearRand(0.0f, 1.0f), 0, 0 }, glm::vec3{ 0, 1.0f, 0 }, glm::vec3{ 0, 0, 1.0f } },
+                auto cx = 0.0f;
+                auto cy = 0.0f;
+                auto cr = 0.5f;
+                auto num_segments = 40;
+                std::vector<glm::vec3> pointCoordinates{};
+                std::vector<glm::vec3> pointColors{};
+                for (int i = 0; i < num_segments; i++) {
+                    float theta = 2.0f * PI * float(i) / float(num_segments);
+                    float x = cr * cosf(theta);
+                    float y = cr * sinf(theta);
+                    pointCoordinates.push_back(glm::vec3{ x + cx, y + cy, 0.0f });
+                    pointColors.push_back(glm::linearRand(minColor, maxColor));
                 };
+                EntityProperties pointProperties{ pointCoordinates, pointColors };
                 pointProperties.drawMode = GL_POINTS;
-                Line* point = new Line(windowProperties, pointProperties);
+                Point* point = new Point(windowProperties, pointProperties);
                 point->initShader("shaders/ex_vs.shader", "shaders/ex_fs.shader");
                 point->initTexture("textures/passage.png");
                 point->init();
@@ -36,10 +50,10 @@ public:
             {
                 EntityProperties lineProperties = {
                     { glm::vec3{ -0.5f, -0.5f, 0 }, glm::vec3{ 0, 0.5f, 0 }, glm::vec3{ 0.5f, -0.5f, 0 } },
-                    { glm::vec3{ glm::linearRand(0.0f, 1.0f), 0, 0 }, glm::vec3{ 0, 1.0f, 0 }, glm::vec3{ 0, 0, 1.0f } },
+                    { glm::linearRand(minColor, maxColor), glm::linearRand(minColor, maxColor), glm::linearRand(minColor, maxColor) },
                 };
                 lineProperties.drawMode = GL_LINE_LOOP; // GL_LINES GL_LINE_STRIP GL_LINE_LOOP
-                Line* line = new Line(windowProperties, lineProperties);
+                Circle* line = new Circle(windowProperties, lineProperties);
                 line->initShader("shaders/ex_vs.shader", "shaders/ex_fs.shader");
                 line->initTexture("textures/passage.png");
                 line->init();
@@ -53,7 +67,7 @@ public:
             {
                 EntityProperties triangleProperties = {
                     { glm::vec3{ -0.5f, -0.5f, 0 }, glm::vec3{ 0, 0.5f, 0 }, glm::vec3{ 0.5f, -0.5f, 0 } },
-                    { glm::vec3{ glm::linearRand(0.0f, 1.0f), 0, 0 }, glm::vec3{ 0, 1.0f, 0 }, glm::vec3{ 0, 0, 1.0f } },
+                    { glm::linearRand(minColor, maxColor), glm::linearRand(minColor, maxColor), glm::linearRand(minColor, maxColor) },
                 };
                 Triangle* triangle = new Triangle(windowProperties, triangleProperties);
                 triangle->initShader("shaders/ex_vs.shader", "shaders/ex_fs.shader");
@@ -69,7 +83,7 @@ public:
             {
                 EntityProperties rectangleProperties = {
                     { glm::vec3{ -0.5f, -0.5f, 0 }, glm::vec3{ -0.5f, 0.5f, 0 }, glm::vec3{ 0.5f, 0.5f, 0 }, glm::vec3{ 0.5f, -0.5f, 0 } },
-                    { glm::vec3{ glm::linearRand(0.0f, 1.0f), 0, 0 }, glm::vec3{ 0, 1.0f, 0 }, glm::vec3{ 0, 0, 1.0f }, glm::vec3{ 1.0f, 1.0f, 1.0f } },
+                    { glm::linearRand(minColor, maxColor), glm::linearRand(minColor, maxColor), glm::linearRand(minColor, maxColor), glm::linearRand(minColor, maxColor) },
                 };
                 Rectangle* rectangle = new Rectangle(windowProperties, rectangleProperties);
                 rectangle->initShader("shaders/ex_vs.shader", "shaders/ex_fs.shader");
@@ -82,7 +96,32 @@ public:
                 return rectangle;
             }
             case EntityType::CIRCLE:
-                return nullptr;
+            {
+                auto cx = 0.0f;
+                auto cy = 0.0f;
+                auto cr = 0.5f;
+                auto num_segments = 40;
+                std::vector<glm::vec3> circleCoordinates{};
+                std::vector<glm::vec3> circleColors{};
+                for (int i = 0; i < num_segments; i++) {
+                    float theta = 2.0f * PI * float(i) / float(num_segments);
+                    float x = cr * cosf(theta);
+                    float y = cr * sinf(theta);
+                    circleCoordinates.push_back(glm::vec3{ x + cx, y + cy, 0.0f });
+                    circleColors.push_back(glm::linearRand(minColor, maxColor));
+                };
+                EntityProperties circleProperties{ circleCoordinates, circleColors };
+                circleProperties.drawMode = GL_TRIANGLE_FAN;
+                Circle* circle = new Circle(windowProperties, circleProperties);
+                circle->initShader("shaders/ex_vs.shader", "shaders/ex_fs.shader");
+                circle->initTexture("textures/passage.png");
+                circle->init();
+                circle->getShader().use();
+                circle->getShader().setMat4("u_transform", glm::mat4(1.0f));
+                circle->getShader().disuse();
+
+                return circle;
+            }
             default:
             {
                 return nullptr;

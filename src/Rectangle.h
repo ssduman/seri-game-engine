@@ -7,7 +7,7 @@ public:
     Rectangle(const WindowProperties& windowProperties, EntityProperties& rectangleProperties) :
         Entity(windowProperties), _rectangleProperties(rectangleProperties) {
         _EntityType = EntityType::RECTANGLE;
-        setProperties(_rectangleProperties, _vertices);
+        setProperties(_rectangleProperties);
     }
 
     ~Rectangle() {
@@ -49,7 +49,7 @@ public:
         glEnableVertexAttribArray(1);
 
         // configure texture attribute
-        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, _stride * sizeof(GLfloat), (void*)(6 * sizeof(GLfloat)));
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0 * sizeof(GLfloat), (void*)(_texStart * sizeof(GLfloat)));
         // location defined in shader
         glEnableVertexAttribArray(2);
 
@@ -65,14 +65,14 @@ public:
         _shader.use();
         _texture.bind();
         glBindVertexArray(_VAO);
-        glDrawElements(_rectangleProperties.drawMode, 6, GL_UNSIGNED_INT, 0);
+        glDrawElements(_rectangleProperties.drawMode, _renderCount, GL_UNSIGNED_INT, 0);
     }
 
 private:
     unsigned int _VAO = 0;
     unsigned int _VBO = 0;
     unsigned int _EBO = 0;
-    std::vector<GLfloat> _vertices;
+    GLsizei _renderCount = 6;
     std::vector<GLuint> _indices = {
         0, 1, 3, // first triangle
         1, 2, 3, // second triangle

@@ -83,6 +83,9 @@ public:
         if (ImGui::Button("Create rectangle")) {
             _layers->addLayer(Factory::Create({}, EntityType::RECTANGLE));
         }
+        if (ImGui::Button("Create circle")) {
+            _layers->addLayer(Factory::Create({}, EntityType::CIRCLE));
+        }
         if (ImGui::Button("Delete entity")) {
             _layers->deleteLayer();
         }

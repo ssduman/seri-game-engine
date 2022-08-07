@@ -45,7 +45,7 @@ public:
         _texture.init(texturePath);
     }
 
-    virtual void setProperties(EntityProperties& entityProperties, std::vector<GLfloat>& vertices) {
+    virtual void setProperties(EntityProperties& entityProperties) {
         entityProperties.clipCoordinates = entityProperties.viewportCoordinates;
         entityProperties.vertexColors = entityProperties.colors;
 
@@ -59,24 +59,28 @@ public:
 
         auto vertexCount = entityProperties.clipCoordinates.size();
         for (int i = 0; i < vertexCount; i++) {
-            vertices.push_back(entityProperties.clipCoordinates[i].x);
-            vertices.push_back(entityProperties.clipCoordinates[i].y);
-            vertices.push_back(entityProperties.clipCoordinates[i].z);
+            _vertices.push_back(entityProperties.clipCoordinates[i].x);
+            _vertices.push_back(entityProperties.clipCoordinates[i].y);
+            _vertices.push_back(entityProperties.clipCoordinates[i].z);
 
-            vertices.push_back(entityProperties.vertexColors[i].x);
-            vertices.push_back(entityProperties.vertexColors[i].y);
-            vertices.push_back(entityProperties.vertexColors[i].z);
-
-            vertices.push_back(entityProperties.textureCoordinates[i].x);
-            vertices.push_back(entityProperties.textureCoordinates[i].y);
+            _vertices.push_back(entityProperties.vertexColors[i].x);
+            _vertices.push_back(entityProperties.vertexColors[i].y);
+            _vertices.push_back(entityProperties.vertexColors[i].z);
         }
+
+        for (int i = 0; i < 4; i++) {
+            _vertices.push_back(entityProperties.textureCoordinates[i].x);
+            _vertices.push_back(entityProperties.textureCoordinates[i].y);
+        }
+
+        _texStart = static_cast<int>(_vertices.size()) - 8;
 
         //for (int i = 0; i < vertexCount; i++) {
         //    std::cout
         //        << "["
-        //        << vertices[i * 6 + 0] << ", " << vertices[i * 6 + 1] << ", " << vertices[i * 6 + 2]
+        //        << _vertices[i * 6 + 0] << ", " << _vertices[i * 6 + 1] << ", " << _vertices[i * 6 + 2]
         //        << "], ["
-        //        << vertices[i * 6 + 3] << ", " << vertices[i * 6 + 4] << ", " << vertices[i * 6 + 5]
+        //        << _vertices[i * 6 + 3] << ", " << _vertices[i * 6 + 4] << ", " << _vertices[i * 6 + 5]
         //        << "]\n";
         //}
     };
@@ -117,7 +121,9 @@ protected:
     const WindowProperties& _windowProperties;
     Shader _shader;
     Texture _texture;
-    int _stride = 8;
+    std::vector<GLfloat> _vertices;
+    int _stride = 6;
+    int _texStart = 0;
 
 private:
     float minViewportValue = 0.0f;

@@ -7,7 +7,8 @@ public:
     Line(const WindowProperties& windowProperties, EntityProperties& lineProperties) :
         Entity(windowProperties), _lineProperties(lineProperties) {
         _EntityType = EntityType::LINE;
-        setProperties(_lineProperties, _vertices);
+        setProperties(_lineProperties);
+        _renderCount = (GLsizei)_lineProperties.viewportCoordinates.size();
     }
 
     ~Line() {
@@ -42,7 +43,7 @@ public:
         glEnableVertexAttribArray(1);
 
         // configure texture attribute
-        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, _stride * sizeof(GLfloat), (void*)(6 * sizeof(GLfloat)));
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0 * sizeof(GLfloat), (void*)(_texStart * sizeof(GLfloat)));
         // location defined in shader
         glEnableVertexAttribArray(2);
 
@@ -58,12 +59,12 @@ public:
         _shader.use();
         _texture.bind();
         glBindVertexArray(_VAO);
-        glDrawArrays(_lineProperties.drawMode, 0, _lineProperties.viewportCoordinates.size());
+        glDrawArrays(_lineProperties.drawMode, 0, _renderCount);
     }
 
 private:
     unsigned int _VAO = 0;
     unsigned int _VBO = 0;
-    std::vector<GLfloat> _vertices;
+    GLsizei _renderCount = 0;
     EntityProperties _lineProperties;
 };

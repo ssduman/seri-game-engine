@@ -7,7 +7,8 @@ public:
     Circle(const WindowProperties& windowProperties, EntityProperties& circleProperties) :
         Entity(windowProperties), _circleProperties(circleProperties) {
         _EntityType = EntityType::CIRCLE;
-        setProperties(_circleProperties, _vertices);
+        setProperties(_circleProperties);
+        _renderCount = (GLsizei)_circleProperties.viewportCoordinates.size();
     }
 
     ~Circle() {
@@ -32,17 +33,17 @@ public:
         glBufferData(GL_ARRAY_BUFFER, _vertices.size() * sizeof(GLfloat), _vertices.data(), GL_STATIC_DRAW);
 
         // configure position attribute
-        glVertexAttribCircleer(0, 3, GL_FLOAT, GL_FALSE, _stride * sizeof(GLfloat), (void*)0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, _stride * sizeof(GLfloat), (void*)0);
         // location defined in shader
         glEnableVertexAttribArray(0);
 
         // configure color attribute
-        glVertexAttribCircleer(1, 3, GL_FLOAT, GL_FALSE, _stride * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, _stride * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
         // location defined in shader
         glEnableVertexAttribArray(1);
 
         // configure texture attribute
-        glVertexAttribCircleer(2, 2, GL_FLOAT, GL_FALSE, _stride * sizeof(GLfloat), (void*)(6 * sizeof(GLfloat)));
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0 * sizeof(GLfloat), (void*)(_texStart * sizeof(GLfloat)));
         // location defined in shader
         glEnableVertexAttribArray(2);
 
@@ -58,12 +59,12 @@ public:
         _shader.use();
         _texture.bind();
         glBindVertexArray(_VAO);
-        glDrawArrays(_circleProperties.drawMode, 0, _circleProperties.viewportCoordinates.size());
+        glDrawArrays(_circleProperties.drawMode, 0, _renderCount);
     }
 
 private:
     unsigned int _VAO = 0;
     unsigned int _VBO = 0;
-    std::vector<GLfloat> _vertices;
+    GLsizei _renderCount = 0;
     EntityProperties _circleProperties;
 };
