@@ -14,7 +14,9 @@ public:
 
     void deleteLayer() {
         if (!_layers.empty()) {
+            Entity* temp = _layers.front();
             _layers.pop_front();
+            delete temp;
         }
     }
 
