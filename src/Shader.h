@@ -8,6 +8,12 @@
 #include <sstream>
 #include <iostream>
 
+template <typename T>
+class Vec3;
+
+template <typename T>
+class Mat4;
+
 class Shader {
 public:
     Shader() = default;
@@ -63,15 +69,25 @@ public:
         glUniform1f(getUniformLocation(name), value);
     }
 
-    void setVec3(const std::string& name, const glm::vec3& value) const {
-        glUniform3fv(getUniformLocation(name), 1, &value[0]);
-    }
-
     void setVec3(const std::string& name, float x, float y, float z) const {
         glUniform3f(getUniformLocation(name), x, y, z);
     }
 
+    void setVec3(const std::string& name, const glm::vec3& value) const {
+        glUniform3fv(getUniformLocation(name), 1, &value[0]);
+    }
+
+    template <typename T = float>
+    void setVec3(const std::string& name, Vec3<T>& value) const {
+        glUniform3fv(getUniformLocation(name), 1, &value[0]);
+    }
+
     void setMat4(const std::string& name, const glm::mat4& mat) const {
+        glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, &mat[0][0]);
+    }
+
+    template <typename T = float>
+    void setMat4(const std::string& name, Mat4<T>& mat) const {
         glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, &mat[0][0]);
     }
 
