@@ -184,7 +184,7 @@ public:
     }
 
     inline float norm() {
-        return (float)sqrt((float)pow(x, 2) + (float)pow(y, 2) + (float)pow(z, 2) + (float)pow(w, 2));
+        return (float)sqrt(dot(*this));
     }
 
     inline Vec4<T> normalize() {
@@ -193,6 +193,14 @@ public:
 
     inline float dot(const Vec4<T>& rhs) {
         return ((*this) * rhs).sum();
+    }
+
+    inline float distance(const Vec4<T>& rhs) {
+        return (float)sqrt(dot((*this) - rhs));
+    }
+
+    inline float angle(const Vec4<T>& rhs) {
+        return (float)dot(rhs) / (norm() * rhs.norm());
     }
 
     /* util */

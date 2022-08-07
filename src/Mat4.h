@@ -288,43 +288,33 @@ public:
         return temp;
     }
 
-    inline static Vec4<float> rotateX(Vec3<T>& vec3, float angle) {
+    inline static Mat4<float> rotate(Mat4<T>& mat4, float angle, Vec3<T> axis) {
         float theta = Util::toRadian(angle);
         float cosTheta = cos(theta);
         float sinTheta = sin(theta);
 
-        Mat4 mat4{ 1.0f };
-        mat4.rows[1].y = cosTheta;
-        mat4.rows[1].z = -sinTheta;
-        mat4.rows[2].y = sinTheta;
-        mat4.rows[2].z = cosTheta;
-        return multiply(mat4, vec3);
-    }
+        Vec3<float> axisNormalized(axis.normalize());
+        Vec3<float> tempAxis((1.0f - cosTheta) * axisNormalized);
 
-    inline static Vec4<float> rotateY(Vec3<T>& vec3, float angle) {
-        float theta = Util::toRadian(angle);
-        float cosTheta = cos(theta);
-        float sinTheta = sin(theta);
+        Mat4<float> rotationMat;
+        rotationMat[0][0] = cosTheta + tempAxis[0] * axisNormalized[0];
+        rotationMat[0][1] = tempAxis[0] * axisNormalized[1] + sinTheta * axisNormalized[2];
+        rotationMat[0][2] = tempAxis[0] * axisNormalized[2] - sinTheta * axisNormalized[1];
 
-        Mat4 mat4{ 1.0f };
-        mat4.rows[0].x = cosTheta;
-        mat4.rows[0].z = sinTheta;
-        mat4.rows[2].x = -sinTheta;
-        mat4.rows[2].z = cosTheta;
-        return multiply(mat4, vec3);
-    }
+        rotationMat[1][0] = tempAxis[1] * axisNormalized[0] - sinTheta * axisNormalized[2];
+        rotationMat[1][1] = cosTheta + tempAxis[1] * axisNormalized[1];
+        rotationMat[1][2] = tempAxis[1] * axisNormalized[2] + sinTheta * axisNormalized[0];
 
-    inline static Vec4<float> rotateZ(Vec3<T>& vec3, float angle) {
-        float theta = Util::toRadian(angle);
-        float cosTheta = cos(theta);
-        float sinTheta = sin(theta);
+        rotationMat[2][0] = tempAxis[2] * axisNormalized[0] + sinTheta * axisNormalized[1];
+        rotationMat[2][1] = tempAxis[2] * axisNormalized[1] - sinTheta * axisNormalized[0];
+        rotationMat[2][2] = cosTheta + tempAxis[2] * axisNormalized[2];
 
-        Mat4 mat4{ 1.0f };
-        mat4.rows[0].x = cosTheta;
-        mat4.rows[0].y = -sinTheta;
-        mat4.rows[1].x = sinTheta;
-        mat4.rows[1].y = cosTheta;
-        return multiply(mat4, vec3);
+        Mat4<float> temp;
+        temp[0] = mat4[0] * rotationMat[0][0] + mat4[1] * rotationMat[0][1] + mat4[2] * rotationMat[0][2];
+        temp[1] = mat4[0] * rotationMat[1][0] + mat4[1] * rotationMat[1][1] + mat4[2] * rotationMat[1][2];
+        temp[2] = mat4[0] * rotationMat[2][0] + mat4[1] * rotationMat[2][1] + mat4[2] * rotationMat[2][2];
+        temp[3] = mat4[3];
+        return temp;
     }
 
     /* combinations */

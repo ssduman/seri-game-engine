@@ -157,7 +157,7 @@ public:
     }
 
     inline float norm() {
-        return (float)sqrt((float)pow(x, 2) + (float)pow(y, 2) + (float)pow(z, 2));
+        return (float)sqrt(dot(*this));
     }
 
     inline Vec3<T> normalize() {
@@ -173,6 +173,14 @@ public:
         auto c_y = z * rhs.x - x * rhs.z;
         auto c_z = x * rhs.y - y * rhs.x;
         return Vec3{ c_x, c_y, c_z };
+    }
+
+    inline float distance(const Vec3<T>& rhs) {
+        return (float)sqrt(dot((*this) - rhs));
+    }
+
+    inline float angle(const Vec3<T>& rhs) {
+        return (float)dot(rhs) / (norm() * rhs.norm());
     }
 
     T x = 0;
