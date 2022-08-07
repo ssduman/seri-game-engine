@@ -26,7 +26,7 @@ public:
         ImGuiIO& io = ImGui::GetIO();
         io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
         io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
-        //io.Fonts->AddFontFromFileTTF(font_filename, 20.0f);
+        io.Fonts->AddFontFromFileTTF(font_filename, 20.0f);
 
         ImGui::StyleColorsDark();
 
@@ -71,6 +71,12 @@ public:
         ImGui::Separator();
 
         ImGui::Text("Maze");
+        if (ImGui::Button("Create point")) {
+            _layers->addLayer(Factory::Create({}, EntityType::POINT));
+        }
+        if (ImGui::Button("Create line")) {
+            _layers->addLayer(Factory::Create({}, EntityType::LINE));
+        }
         if (ImGui::Button("Create triangle")) {
             _layers->addLayer(Factory::Create({}, EntityType::TRIANGLE));
         }
@@ -96,5 +102,5 @@ private:
     Layer* _layers;
     bool show_demo_window = true;
     const char* glsl_version = "#version 130";
-    const char* font_filename = "fonts/DungeonFont.ttf";
+    const char* font_filename = "fonts/En Bloc.ttf";
 };

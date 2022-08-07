@@ -226,6 +226,15 @@
     <ClInclude Include="Factory.h">
       <Filter>Factory</Filter>
     </ClInclude>
+    <ClInclude Include="Point.h">
+      <Filter>Shape</Filter>
+    </ClInclude>
+    <ClInclude Include="Line.h">
+      <Filter>Shape</Filter>
+    </ClInclude>
+    <ClInclude Include="Circle.h">
+      <Filter>Shape</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\basic_fs.shader">

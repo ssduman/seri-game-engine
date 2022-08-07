@@ -11,8 +11,11 @@
 #include <vector>
 
 enum class EntityType {
+    POINT,
+    LINE,
     TRIANGLE,
     RECTANGLE,
+    CIRCLE,
     UNKNOWN,
 };
 

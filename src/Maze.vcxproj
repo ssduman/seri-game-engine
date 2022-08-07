@@ -229,6 +229,7 @@ xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win64\freetype.dll" "$(So
     <ClInclude Include="..\libraries\imgui-1.88\imstb_textedit.h" />
     <ClInclude Include="..\libraries\imgui-1.88\imstb_truetype.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Circle.h" />
     <ClInclude Include="Control.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Factory.h" />
@@ -239,10 +240,12 @@ xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win64\freetype.dll" "$(So
     <ClInclude Include="JumpCommand.h" />
     <ClInclude Include="Layer.h" />
     <ClInclude Include="Light.h" />
+    <ClInclude Include="Line.h" />
     <ClInclude Include="Mat3.h" />
     <ClInclude Include="Mat4.h" />
     <ClInclude Include="Maze.h" />
     <ClInclude Include="Object.h" />
+    <ClInclude Include="Point.h" />
     <ClInclude Include="Rectangle.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Game.h" />
