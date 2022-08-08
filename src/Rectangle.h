@@ -4,9 +4,8 @@
 
 class Rectangle : public Entity {
 public:
-    Rectangle(const WindowProperties& windowProperties, EntityProperties& rectangleProperties) :
-        Entity(windowProperties), _rectangleProperties(rectangleProperties) {
-        _EntityType = EntityType::RECTANGLE;
+    Rectangle(EntityProperties& rectangleProperties) : _rectangleProperties(rectangleProperties) {
+        _entityType = EntityType::RECTANGLE;
         setProperties(_rectangleProperties);
     }
 

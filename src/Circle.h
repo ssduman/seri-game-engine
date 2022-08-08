@@ -4,9 +4,8 @@
 
 class Circle : public Entity {
 public:
-    Circle(const WindowProperties& windowProperties, EntityProperties& circleProperties) :
-        Entity(windowProperties), _circleProperties(circleProperties) {
-        _EntityType = EntityType::CIRCLE;
+    Circle(EntityProperties& circleProperties) : _circleProperties(circleProperties) {
+        _entityType = EntityType::CIRCLE;
         setProperties(_circleProperties);
         _renderCount = (GLsizei)_circleProperties.viewportCoordinates.size();
     }

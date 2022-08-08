@@ -72,19 +72,19 @@ public:
 
         ImGui::Text("Maze");
         if (ImGui::Button("Create point")) {
-            _layers->addLayer(Factory::Create({}, EntityType::POINT));
+            _layers->addLayer(Factory::Create(EntityType::POINT));
         }
         if (ImGui::Button("Create line")) {
-            _layers->addLayer(Factory::Create({}, EntityType::LINE));
+            _layers->addLayer(Factory::Create(EntityType::LINE));
         }
         if (ImGui::Button("Create triangle")) {
-            _layers->addLayer(Factory::Create({}, EntityType::TRIANGLE));
+            _layers->addLayer(Factory::Create(EntityType::TRIANGLE));
         }
         if (ImGui::Button("Create rectangle")) {
-            _layers->addLayer(Factory::Create({}, EntityType::RECTANGLE));
+            _layers->addLayer(Factory::Create(EntityType::RECTANGLE));
         }
         if (ImGui::Button("Create circle")) {
-            _layers->addLayer(Factory::Create({}, EntityType::CIRCLE));
+            _layers->addLayer(Factory::Create(EntityType::CIRCLE));
         }
         if (ImGui::Button("Delete entity")) {
             _layers->deleteLayer();

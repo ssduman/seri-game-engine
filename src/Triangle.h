@@ -4,9 +4,8 @@
 
 class Triangle : public Entity {
 public:
-    Triangle(const WindowProperties& windowProperties, EntityProperties& triangleProperties) :
-        Entity(windowProperties), _triangleProperties(triangleProperties) {
-        _EntityType = EntityType::TRIANGLE;
+    Triangle(EntityProperties& triangleProperties) : _triangleProperties(triangleProperties) {
+        _entityType = EntityType::TRIANGLE;
         setProperties(_triangleProperties);
     }
 

@@ -14,7 +14,7 @@ class Factory {
 public:
     virtual ~Factory() = default;
 
-    static Entity* Create(const WindowProperties& windowProperties, EntityType entityType) {
+    static Entity* Create(EntityType entityType) {
         glm::vec3 minColor = glm::vec3{ 0.0f, 0.0f, 0.0f };
         glm::vec3 maxColor = glm::vec3{ 1.0f, 1.0f, 1.0f };
 
@@ -36,7 +36,7 @@ public:
                 };
                 EntityProperties pointProperties{ pointCoordinates, pointColors };
                 pointProperties.drawMode = GL_POINTS;
-                Point* point = new Point(windowProperties, pointProperties);
+                Point* point = new Point(pointProperties);
                 point->initShader("shaders/ex_vs.shader", "shaders/ex_fs.shader");
                 point->initTexture("textures/passage.png");
                 point->init();
@@ -53,7 +53,7 @@ public:
                     { glm::linearRand(minColor, maxColor), glm::linearRand(minColor, maxColor), glm::linearRand(minColor, maxColor) },
                 };
                 lineProperties.drawMode = GL_LINE_LOOP; // GL_LINES GL_LINE_STRIP GL_LINE_LOOP
-                Circle* line = new Circle(windowProperties, lineProperties);
+                Circle* line = new Circle(lineProperties);
                 line->initShader("shaders/ex_vs.shader", "shaders/ex_fs.shader");
                 line->initTexture("textures/passage.png");
                 line->init();
@@ -69,7 +69,7 @@ public:
                     { glm::vec3{ -0.5f, -0.5f, 0 }, glm::vec3{ 0, 0.5f, 0 }, glm::vec3{ 0.5f, -0.5f, 0 } },
                     { glm::linearRand(minColor, maxColor), glm::linearRand(minColor, maxColor), glm::linearRand(minColor, maxColor) },
                 };
-                Triangle* triangle = new Triangle(windowProperties, triangleProperties);
+                Triangle* triangle = new Triangle(triangleProperties);
                 triangle->initShader("shaders/ex_vs.shader", "shaders/ex_fs.shader");
                 triangle->initTexture("textures/passage.png");
                 triangle->init();
@@ -85,7 +85,7 @@ public:
                     { glm::vec3{ -0.5f, -0.5f, 0 }, glm::vec3{ -0.5f, 0.5f, 0 }, glm::vec3{ 0.5f, 0.5f, 0 }, glm::vec3{ 0.5f, -0.5f, 0 } },
                     { glm::linearRand(minColor, maxColor), glm::linearRand(minColor, maxColor), glm::linearRand(minColor, maxColor), glm::linearRand(minColor, maxColor) },
                 };
-                Rectangle* rectangle = new Rectangle(windowProperties, rectangleProperties);
+                Rectangle* rectangle = new Rectangle(rectangleProperties);
                 rectangle->initShader("shaders/ex_vs.shader", "shaders/ex_fs.shader");
                 rectangle->initTexture("textures/wall1.png");
                 rectangle->init();
@@ -112,7 +112,7 @@ public:
                 };
                 EntityProperties circleProperties{ circleCoordinates, circleColors };
                 circleProperties.drawMode = GL_TRIANGLE_FAN;
-                Circle* circle = new Circle(windowProperties, circleProperties);
+                Circle* circle = new Circle(circleProperties);
                 circle->initShader("shaders/ex_vs.shader", "shaders/ex_fs.shader");
                 circle->initTexture("textures/passage.png");
                 circle->init();

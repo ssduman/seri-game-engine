@@ -4,9 +4,8 @@
 
 class Point : public Entity {
 public:
-    Point(const WindowProperties& windowProperties, EntityProperties& pointProperties) :
-        Entity(windowProperties), _pointProperties(pointProperties) {
-        _EntityType = EntityType::POINT;
+    Point(EntityProperties& pointProperties) : _pointProperties(pointProperties) {
+        _entityType = EntityType::POINT;
         setProperties(_pointProperties);
         _renderCount = (GLsizei)_pointProperties.viewportCoordinates.size();
     }
