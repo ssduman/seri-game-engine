@@ -5,7 +5,8 @@
 class MoveCommand : public ICommand {
 public:
     MoveCommand(Entity* entity, glm::vec3 moveUnit) : _entity(entity), _moveUnit(moveUnit) {};
-    ~MoveCommand() = default;
+
+    virtual ~MoveCommand() {}
 
     void execute() override {}
 

@@ -13,7 +13,7 @@ class GUI : public Object {
 public:
     GUI(Window window, Layer* layers) : _window(window), _layers(layers) {}
 
-    ~GUI() {
+    virtual ~GUI() {
         ImGui_ImplOpenGL3_Shutdown();
         ImGui_ImplGlfw_Shutdown();
         ImGui::DestroyContext();

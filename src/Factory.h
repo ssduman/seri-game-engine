@@ -12,7 +12,7 @@
 
 class Factory {
 public:
-    virtual ~Factory() = default;
+    virtual ~Factory() = 0;
 
     static Entity* Create(EntityType entityType) {
         glm::vec3 minColor = glm::vec3{ 0.0f, 0.0f, 0.0f };

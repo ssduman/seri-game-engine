@@ -12,7 +12,7 @@ public:
         glfwSetWindowUserPointer(_window.getWindow(), static_cast<void*>(this));
     }
 
-    ~Control() = default;
+    virtual ~Control() {}
 
     void init() override {
         glfwSetCharCallback(_window.getWindow(),

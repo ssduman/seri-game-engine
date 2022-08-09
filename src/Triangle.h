@@ -9,7 +9,7 @@ public:
         setProperties(_triangleProperties);
     }
 
-    ~Triangle() {
+    virtual ~Triangle() {
         glDeleteVertexArrays(1, &_VAO);
         glDeleteBuffers(1, &_VBO);
     }

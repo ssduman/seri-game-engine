@@ -10,7 +10,7 @@ public:
         _renderCount = (GLsizei)_circleProperties.viewportCoordinates.size();
     }
 
-    ~Circle() {
+    virtual ~Circle() {
         glDeleteVertexArrays(1, &_VAO);
         glDeleteBuffers(1, &_VBO);
     }

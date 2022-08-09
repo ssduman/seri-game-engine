@@ -7,14 +7,12 @@
 
 class IControl {
 public:
-    IControl() = default;
-
     IControl(Window window) :
         _window(window),
         mouseCurrentPosX(_window.getMouseX()),
         mouseCurrentPosY(_window.getMouseY()) {}
 
-    virtual ~IControl() = default;
+    virtual ~IControl() {}
 
     virtual void init() = 0;
 

@@ -10,7 +10,7 @@ public:
         _renderCount = (GLsizei)_lineProperties.viewportCoordinates.size();
     }
 
-    ~Line() {
+    virtual ~Line() {
         glDeleteVertexArrays(1, &_VAO);
         glDeleteBuffers(1, &_VBO);
     }

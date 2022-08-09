@@ -37,6 +37,8 @@ class Entity : public Object {
 public:
     Entity() = default;
 
+    virtual ~Entity() {}
+
     virtual void initShader(const std::string& vsCodePath, const std::string& fsCodePath) {
         _shader.init(vsCodePath, fsCodePath);
     }
