@@ -12,6 +12,6 @@ out vec2 sent_texCoord;
 void main() {
     sent_color = in_color;
     sent_texCoord = in_texCoord;
-    
+
     gl_Position = u_transform * vec4(in_coord, 1.0);
 }

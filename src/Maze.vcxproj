@@ -262,8 +262,8 @@ xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win64\freetype.dll" "$(So
   <ItemGroup>
     <None Include="shaders\basic_fs.shader" />
     <None Include="shaders\basic_vs.shader" />
-    <None Include="shaders\ex_fs.shader" />
-    <None Include="shaders\ex_vs.shader" />
+    <None Include="shaders\entity_fs.shader" />
+    <None Include="shaders\entity_vs.shader" />
     <None Include="shaders\game_fs.shader" />
     <None Include="shaders\game_vs.shader" />
     <None Include="shaders\light_fs.shader" />

@@ -267,10 +267,10 @@
     <None Include="shaders\typer_vs.shader">
       <Filter>Shader\Shader Programs</Filter>
     </None>
-    <None Include="shaders\ex_vs.shader">
+    <None Include="shaders\entity_vs.shader">
       <Filter>Shader\Shader Programs</Filter>
     </None>
-    <None Include="shaders\ex_fs.shader">
+    <None Include="shaders\entity_fs.shader">
       <Filter>Shader\Shader Programs</Filter>
     </None>
   </ItemGroup>
