@@ -61,6 +61,10 @@ public:
         return glGetUniformLocation(_program, name.c_str());
     }
 
+    void setBool(const std::string& name, bool value) const {
+        glUniform1i(getUniformLocation(name), value);
+    }
+
     void setInt(const std::string& name, int value) const {
         glUniform1i(getUniformLocation(name), value);
     }

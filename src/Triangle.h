@@ -40,10 +40,12 @@ public:
         // location defined in shader
         glEnableVertexAttribArray(1);
 
-        // configure texture attribute
-        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0 * sizeof(GLfloat), (void*)(_texStart * sizeof(GLfloat)));
-        // location defined in shader
-        glEnableVertexAttribArray(2);
+        if (_useTexture) {
+            // configure texture attribute
+            glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0 * sizeof(GLfloat), (void*)(_texStart * sizeof(GLfloat)));
+            // location defined in shader
+            glEnableVertexAttribArray(2);
+        }
 
         // unbind vao
         glBindVertexArray(0);

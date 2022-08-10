@@ -44,6 +44,10 @@ public:
     }
 
     virtual void initTexture(const std::string& texturePath) {
+        _useTexture = true;
+        _shader.use();
+        _shader.setBool("u_useTexture", true);
+        _shader.disuse();
         _texture.init(texturePath);
     }
 
@@ -81,6 +85,7 @@ protected:
     std::vector<GLfloat> _vertices;
     int _stride = 6;
     int _texStart = 0;
+    bool _useTexture = false;
 
 private:
 

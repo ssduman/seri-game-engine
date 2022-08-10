@@ -38,7 +38,6 @@ public:
                 pointProperties.drawMode = GL_POINTS;
                 Point* point = new Point(pointProperties);
                 point->initShader("shaders/ex_vs.shader", "shaders/ex_fs.shader");
-                point->initTexture("textures/passage.png");
                 point->init();
                 point->getShader().use();
                 point->getShader().setMat4("u_transform", glm::mat4(1.0f));
@@ -55,7 +54,9 @@ public:
                 lineProperties.drawMode = GL_LINE_LOOP; // GL_LINES GL_LINE_STRIP GL_LINE_LOOP
                 Circle* line = new Circle(lineProperties);
                 line->initShader("shaders/ex_vs.shader", "shaders/ex_fs.shader");
-                line->initTexture("textures/passage.png");
+                if (glm::linearRand(0.0f, 1.0f) >= 0.5f) {
+                    line->initTexture("textures/passage.png");
+                }
                 line->init();
                 line->getShader().use();
                 line->getShader().setMat4("u_transform", glm::mat4(1.0f));
@@ -71,7 +72,9 @@ public:
                 };
                 Triangle* triangle = new Triangle(triangleProperties);
                 triangle->initShader("shaders/ex_vs.shader", "shaders/ex_fs.shader");
-                triangle->initTexture("textures/passage.png");
+                if (glm::linearRand(0.0f, 1.0f) >= 0.5f) {
+                    triangle->initTexture("textures/passage.png");
+                }
                 triangle->init();
                 triangle->getShader().use();
                 triangle->getShader().setMat4("u_transform", glm::mat4(1.0f));
@@ -87,7 +90,9 @@ public:
                 };
                 Rectangle* rectangle = new Rectangle(rectangleProperties);
                 rectangle->initShader("shaders/ex_vs.shader", "shaders/ex_fs.shader");
-                rectangle->initTexture("textures/wall1.png");
+                if (glm::linearRand(0.0f, 1.0f) >= 0.5f) {
+                    rectangle->initTexture("textures/wall1.png");
+                }
                 rectangle->init();
                 rectangle->getShader().use();
                 rectangle->getShader().setMat4("u_transform", glm::mat4(1.0f));
@@ -114,7 +119,9 @@ public:
                 circleProperties.drawMode = GL_TRIANGLE_FAN;
                 Circle* circle = new Circle(circleProperties);
                 circle->initShader("shaders/ex_vs.shader", "shaders/ex_fs.shader");
-                circle->initTexture("textures/passage.png");
+                if (glm::linearRand(0.0f, 1.0f) >= 0.5f) {
+                    circle->initTexture("textures/passage.png");
+                }
                 circle->init();
                 circle->getShader().use();
                 circle->getShader().setMat4("u_transform", glm::mat4(1.0f));
