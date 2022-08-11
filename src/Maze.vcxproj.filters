@@ -59,6 +59,18 @@
     <Filter Include="Factory">
       <UniqueIdentifier>{6de68790-b6e4-428d-950b-4ef8fe49ea7f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Transform">
+      <UniqueIdentifier>{25fec7f2-5ac2-4bd8-949b-87171dc0e877}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sprite">
+      <UniqueIdentifier>{e27bbb7b-6b65-4d18-8483-e9fb4f14db75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Color">
+      <UniqueIdentifier>{418ba81c-3444-4152-8737-9a384251e455}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script">
+      <UniqueIdentifier>{1a8714b5-b3e2-4fd2-843b-fa3d331cf33c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Renderer.cpp">
@@ -234,6 +246,18 @@
     </ClInclude>
     <ClInclude Include="Circle.h">
       <Filter>Shape</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="Sprite.h">
+      <Filter>Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="Color.h">
+      <Filter>Color</Filter>
+    </ClInclude>
+    <ClInclude Include="Script.h">
+      <Filter>Script</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
