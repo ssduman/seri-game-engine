@@ -34,14 +34,10 @@ public:
                     pointCoordinates.push_back(glm::vec3{ x + cx, y + cy, 0.0f });
                     pointColors.push_back(glm::linearRand(minColor, maxColor));
                 };
-                EntityProperties pointProperties{ pointCoordinates, pointColors };
-                pointProperties.drawMode = GL_POINTS;
+                EntityProperties pointProperties{ pointCoordinates, pointColors, GL_POINTS };
                 Point* point = new Point(pointProperties);
                 point->initShader("shaders/entity_vs.shader", "shaders/entity_fs.shader");
                 point->init();
-                point->getShader().use();
-                point->getShader().setMat4("u_transform", glm::mat4(1.0f));
-                point->getShader().disuse();
 
                 return point;
             }
@@ -50,17 +46,14 @@ public:
                 EntityProperties lineProperties = {
                     { glm::vec3{ -0.5f, -0.5f, 0 }, glm::vec3{ 0, 0.5f, 0 }, glm::vec3{ 0.5f, -0.5f, 0 } },
                     { glm::linearRand(minColor, maxColor), glm::linearRand(minColor, maxColor), glm::linearRand(minColor, maxColor) },
+                    GL_LINE_LOOP // GL_LINES GL_LINE_STRIP GL_LINE_LOOP
                 };
-                lineProperties.drawMode = GL_LINE_LOOP; // GL_LINES GL_LINE_STRIP GL_LINE_LOOP
                 Circle* line = new Circle(lineProperties);
                 line->initShader("shaders/entity_vs.shader", "shaders/entity_fs.shader");
                 if (glm::linearRand(0.0f, 1.0f) >= 0.5f) {
                     line->initTexture("textures/passage.png");
                 }
                 line->init();
-                line->getShader().use();
-                line->getShader().setMat4("u_transform", glm::mat4(1.0f));
-                line->getShader().disuse();
 
                 return line;
             }
@@ -76,9 +69,6 @@ public:
                     triangle->initTexture("textures/passage.png");
                 }
                 triangle->init();
-                triangle->getShader().use();
-                triangle->getShader().setMat4("u_transform", glm::mat4(1.0f));
-                triangle->getShader().disuse();
 
                 return triangle;
             }
@@ -94,9 +84,6 @@ public:
                     rectangle->initTexture("textures/wall1.png");
                 }
                 rectangle->init();
-                rectangle->getShader().use();
-                rectangle->getShader().setMat4("u_transform", glm::mat4(1.0f));
-                rectangle->getShader().disuse();
 
                 return rectangle;
             }
@@ -115,17 +102,13 @@ public:
                     circleCoordinates.push_back(glm::vec3{ x + cx, y + cy, 0.0f });
                     circleColors.push_back(glm::linearRand(minColor, maxColor));
                 };
-                EntityProperties circleProperties{ circleCoordinates, circleColors };
-                circleProperties.drawMode = GL_TRIANGLE_FAN;
+                EntityProperties circleProperties{ circleCoordinates, circleColors, GL_TRIANGLE_FAN };
                 Circle* circle = new Circle(circleProperties);
                 circle->initShader("shaders/entity_vs.shader", "shaders/entity_fs.shader");
                 if (glm::linearRand(0.0f, 1.0f) >= 0.5f) {
                     circle->initTexture("textures/passage.png");
                 }
                 circle->init();
-                circle->getShader().use();
-                circle->getShader().setMat4("u_transform", glm::mat4(1.0f));
-                circle->getShader().disuse();
 
                 return circle;
             }

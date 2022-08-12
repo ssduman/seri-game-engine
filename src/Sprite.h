@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Color.h"
+
 #include <glm/glm.hpp>
 
 #include <vector>
@@ -15,6 +17,8 @@ public:
     }
 
 private:
+    Color _color;
+    //Texture _texture;
     std::vector<glm::vec2> _textureCoordinates{
         glm::vec2{ 1.0f, 1.0f }, glm::vec2{ 1.0f, 0.0f }, glm::vec2{ 0.0f, 0.0f }, glm::vec2{ 0.0f, 1.0f }
     };

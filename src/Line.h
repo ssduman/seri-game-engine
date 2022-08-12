@@ -7,7 +7,7 @@ public:
     Line(EntityProperties& lineProperties) : _lineProperties(lineProperties) {
         _entityType = EntityType::LINE;
         setProperties(_lineProperties);
-        _renderCount = (GLsizei)_lineProperties.viewportCoordinates.size();
+        _renderCount = (GLsizei)_lineProperties.coordinates.size();
     }
 
     virtual ~Line() {

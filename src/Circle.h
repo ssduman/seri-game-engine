@@ -7,7 +7,7 @@ public:
     Circle(EntityProperties& circleProperties) : _circleProperties(circleProperties) {
         _entityType = EntityType::CIRCLE;
         setProperties(_circleProperties);
-        _renderCount = (GLsizei)_circleProperties.viewportCoordinates.size();
+        _renderCount = (GLsizei)_circleProperties.coordinates.size();
     }
 
     virtual ~Circle() {

@@ -7,7 +7,7 @@ public:
     Point(EntityProperties& pointProperties) : _pointProperties(pointProperties) {
         _entityType = EntityType::POINT;
         setProperties(_pointProperties);
-        _renderCount = (GLsizei)_pointProperties.viewportCoordinates.size();
+        _renderCount = (GLsizei)_pointProperties.coordinates.size();
     }
 
     virtual ~Point() {

@@ -10,10 +10,10 @@ public:
 
     ~Color() = default;
 
-    std::vector<glm::vec3>& getColors() {
-        return _colors;
+    glm::vec3& getColor() {
+        return _color;
     }
 
 private:
-    std::vector<glm::vec3> _colors;
+    glm::vec3 _color{ 1.0f, 1.0f, 1.0f };
 };
