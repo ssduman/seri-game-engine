@@ -4,6 +4,7 @@
 #include "Window.h"
 #include "Shader.h"
 #include "Texture.h"
+#include "Transform.h"
 
 #include <glm/glm.hpp>
 
@@ -70,11 +71,16 @@ public:
         _texStart = static_cast<int>(_vertices.size()) - 8;
     };
 
+    inline Transform& getTransform() {
+        return _transform;
+    }
+
     inline Shader& getShader() {
         return _shader;
     }
 
 protected:
+    Transform _transform;
     EntityType _entityType = EntityType::UNKNOWN;
     Shader _shader;
     Texture _texture;

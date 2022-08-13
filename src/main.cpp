@@ -28,10 +28,8 @@ int main(int argc, char** argv) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         for (auto entity : layers.getLayers()) {
-            //Mat4<float> trans{ 1.0f };
-            //trans = Mat4<float>::rotate(trans, 45.0f, { 0.0f, 0.0f, 1.0f });
-            //entity->getShader().setMat4("u_transform", trans);
             entity->display();
+            gui.registerEntity(entity);
         }
 
         gui.display();

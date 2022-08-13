@@ -23,15 +23,18 @@ public:
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
 
-        ImGuiIO& io = ImGui::GetIO();
-        io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-        io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
-        io.Fonts->AddFontFromFileTTF(font_filename, 20.0f);
+        _io = &ImGui::GetIO();
+        _io->ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+        _io->ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+        _io->Fonts->AddFontFromFileTTF(font_filename, 20.0f);
 
         ImGui::StyleColorsDark();
 
         ImGui_ImplGlfw_InitForOpenGL(_window.getWindow(), true);
         ImGui_ImplOpenGL3_Init(glsl_version);
+
+        _window_flags = 0;
+        _window_flags |= ImGuiWindowFlags_MenuBar;
     }
 
     void update() override {
@@ -39,15 +42,8 @@ public:
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        ImGuiWindowFlags window_flags = 0;
-        window_flags |= ImGuiWindowFlags_MenuBar;
-
-        const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
-        ImGui::SetNextWindowPos(ImVec2(main_viewport->WorkPos.x + 650, main_viewport->WorkPos.y + 20), ImGuiCond_FirstUseEver);
-        ImGui::SetNextWindowSize(ImVec2(550, 680), ImGuiCond_FirstUseEver);
-
         static bool no_open = true;
-        if (!ImGui::Begin("Maze", &no_open, window_flags)) {
+        if (!ImGui::Begin("Maze", &no_open, _window_flags)) {
             ImGui::End();
             return;
         }
@@ -90,6 +86,27 @@ public:
             _layers->deleteLayer();
         }
 
+        ImGui::Separator();
+
+        ImGui::CheckboxFlags("io.ConfigFlags: NavEnableKeyboard", &_io->ConfigFlags, ImGuiConfigFlags_NavEnableKeyboard);
+        ImGui::SameLine(); HelpMarker("Enable keyboard controls.");
+
+        ImGui::Separator();
+
+        static char str0[128] = "Entity";
+        ImGui::InputText("name", str0, IM_ARRAYSIZE(str0));
+
+        ImGui::Separator();
+
+        if (_currentEntity) {
+            ImGui::SliderFloat3("position", &_currentEntity->getTransform()._position[0], -1.0f, 1.0f, "%.4f");
+            ImGui::SliderFloat3("rotation", &_currentEntity->getTransform()._rotation[0], -180.0f, 180.0f, "%.4f");
+            ImGui::SliderFloat3("scale", &_currentEntity->getTransform()._scale[0], 0.0f, 100.0f, "%.4f");
+            ImGui::Separator();
+
+            _currentEntity->getShader().setMat4("u_transform", _currentEntity->getTransform().apply());
+        }
+
         ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
         ImGui::End();
@@ -100,7 +117,25 @@ public:
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     }
 
+    void registerEntity(Entity* entity) {
+        _currentEntity = entity;
+    }
+
 private:
+    void HelpMarker(const char* desc) {
+        ImGui::TextDisabled("(?)");
+        if (ImGui::IsItemHovered()) {
+            ImGui::BeginTooltip();
+            ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+            ImGui::TextUnformatted(desc);
+            ImGui::PopTextWrapPos();
+            ImGui::EndTooltip();
+        }
+    }
+
+    ImGuiIO* _io = nullptr;
+    ImGuiWindowFlags _window_flags = 0;
+    Entity* _currentEntity = nullptr;
     Window _window;
     Layer* _layers;
     bool show_demo_window = true;
