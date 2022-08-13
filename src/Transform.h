@@ -17,9 +17,9 @@ public:
     glm::mat4& apply() {
         _transform = glm::mat4{ 1.0f };
         _transform = glm::scale(_transform, _scale);
-        _transform = glm::rotate(_transform, _rotation.x, { 1.0f, 0.0f, 0.0f });
-        _transform = glm::rotate(_transform, _rotation.y, { 0.0f, 1.0f, 0.0f });
-        _transform = glm::rotate(_transform, _rotation.z, { 0.0f, 0.0f, 1.0f });
+        _transform = glm::rotate(_transform, glm::radians(_rotation.x), { 1.0f, 0.0f, 0.0f });
+        _transform = glm::rotate(_transform, glm::radians(_rotation.y), { 0.0f, 1.0f, 0.0f });
+        _transform = glm::rotate(_transform, glm::radians(_rotation.z), { 0.0f, 0.0f, 1.0f });
         _transform = glm::translate(_transform, _position);
         return _transform;
     }

@@ -19,6 +19,7 @@ enum class EntityType {
     TRIANGLE,
     RECTANGLE,
     CIRCLE,
+    CUBE,
     UNKNOWN,
 };
 
@@ -27,8 +28,8 @@ struct EntityProperties {
     std::vector<glm::vec3> colors;
     int drawMode = GL_TRIANGLES;
 
-    std::vector<glm::vec2> textureCoordinates() {
-        return { glm::vec2{ 1.0f, 1.0f }, glm::vec2{ 1.0f, 0.0f }, glm::vec2{ 0.0f, 0.0f }, glm::vec2{ 0.0f, 1.0f } };
+    std::vector<glm::vec2> textureCoordinates{
+        glm::vec2{ 1.0f, 1.0f }, glm::vec2{ 1.0f, 0.0f }, glm::vec2{ 0.0f, 0.0f }, glm::vec2{ 0.0f, 1.0f }
     };
 };
 
@@ -70,12 +71,13 @@ public:
             _vertices.push_back(entityProperties.colors[i].z);
         }
 
-        for (int i = 0; i < 4; i++) {
-            _vertices.push_back(entityProperties.textureCoordinates()[i].x);
-            _vertices.push_back(entityProperties.textureCoordinates()[i].y);
+        auto textureCount = entityProperties.textureCoordinates.size();
+        for (int i = 0; i < textureCount; i++) {
+            _vertices.push_back(entityProperties.textureCoordinates[i].x);
+            _vertices.push_back(entityProperties.textureCoordinates[i].y);
         }
 
-        _texStart = static_cast<int>(_vertices.size()) - 8;
+        _texStart = static_cast<int>(_vertices.size()) - textureCount * 2;
     };
 
     void init() override {

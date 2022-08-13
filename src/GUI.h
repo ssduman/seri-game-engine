@@ -83,7 +83,11 @@ public:
         if (ImGui::Button("Create circle")) {
             _layers->addLayer(Factory::Create(EntityType::CIRCLE, _camera));
         }
+        if (ImGui::Button("Create cube")) {
+            _layers->addLayer(Factory::Create(EntityType::CUBE, _camera));
+        }
         if (ImGui::Button("Delete entity")) {
+            _currentEntity = nullptr;
             _layers->deleteLayer();
         }
 

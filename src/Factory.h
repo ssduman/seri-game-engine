@@ -7,6 +7,7 @@
 #include "Triangle.h"
 #include "Rectangle.h"
 #include "Circle.h"
+#include "Cube.h"
 #include "Camera.h"
 
 #include <stdlib.h>
@@ -117,6 +118,103 @@ public:
                 circle->init();
 
                 return circle;
+            }
+            case EntityType::CUBE:
+            {
+                std::vector<glm::vec3> cubeCoordinates{
+                    { -0.5f, -0.5f, -0.5f, },
+                    { 0.5f, -0.5f, -0.5f, },
+                    { 0.5f, 0.5f, -0.5f, },
+                    { 0.5f, 0.5f, -0.5f, },
+                    { -0.5f, 0.5f, -0.5f, },
+                    { -0.5f, -0.5f, -0.5f, },
+
+                    { -0.5f, -0.5f, 0.5f, },
+                    { 0.5f, -0.5f, 0.5f, },
+                    { 0.5f, 0.5f, 0.5f, },
+                    { 0.5f, 0.5f, 0.5f, },
+                    { -0.5f, 0.5f, 0.5f, },
+                    { -0.5f, -0.5f, 0.5f, },
+
+                    { -0.5f, 0.5f, 0.5f, },
+                    { -0.5f, 0.5f, -0.5f, },
+                    { -0.5f, -0.5f, -0.5f, },
+                    { -0.5f, -0.5f, -0.5f, },
+                    { -0.5f, -0.5f, 0.5f, },
+                    { -0.5f, 0.5f, 0.5f, },
+
+                    { 0.5f, 0.5f, 0.5f, },
+                    { 0.5f, 0.5f, -0.5f, },
+                    { 0.5f, -0.5f, -0.5f, },
+                    { 0.5f, -0.5f, -0.5f, },
+                    { 0.5f, -0.5f, 0.5f, },
+                    { 0.5f, 0.5f, 0.5f, },
+
+                    { -0.5f, -0.5f, -0.5f, },
+                    { 0.5f, -0.5f, -0.5f, },
+                    { 0.5f, -0.5f, 0.5f, },
+                    { 0.5f, -0.5f, 0.5f, },
+                    { -0.5f, -0.5f, 0.5f, },
+                    { -0.5f, -0.5f, -0.5f, },
+
+                    { -0.5f, 0.5f, -0.5f, },
+                    { 0.5f, 0.5f, -0.5f, },
+                    { 0.5f, 0.5f, 0.5f, },
+                    { 0.5f, 0.5f, 0.5f, },
+                    { -0.5f, 0.5f, 0.5f, },
+                    { -0.5f, 0.5f, -0.5f, },
+                };
+                std::vector<glm::vec2> textureCoordinates{
+                    { 0.0f, 0.0f },
+                    { 1.0f, 0.0f },
+                    { 1.0f, 1.0f },
+                    { 1.0f, 1.0f },
+                    { 0.0f, 1.0f },
+                    { 0.0f, 0.0f },
+
+                    { 0.0f, 0.0f },
+                    { 1.0f, 0.0f },
+                    { 1.0f, 1.0f },
+                    { 1.0f, 1.0f },
+                    { 0.0f, 1.0f },
+                    { 0.0f, 0.0f },
+
+                    { 1.0f, 0.0f },
+                    { 1.0f, 1.0f },
+                    { 0.0f, 1.0f },
+                    { 0.0f, 1.0f },
+                    { 0.0f, 0.0f },
+                    { 1.0f, 0.0f },
+
+                    { 1.0f, 0.0f },
+                    { 1.0f, 1.0f },
+                    { 0.0f, 1.0f },
+                    { 0.0f, 1.0f },
+                    { 0.0f, 0.0f },
+                    { 1.0f, 0.0f },
+
+                    { 0.0f, 1.0f },
+                    { 1.0f, 1.0f },
+                    { 1.0f, 0.0f },
+                    { 1.0f, 0.0f },
+                    { 0.0f, 0.0f },
+                    { 0.0f, 1.0f },
+
+                    { 0.0f, 1.0f },
+                    { 1.0f, 1.0f },
+                    { 1.0f, 0.0f },
+                    { 1.0f, 0.0f },
+                    { 0.0f, 0.0f },
+                    { 0.0f, 1.0f },
+                };
+                EntityProperties cubeProperties{ cubeCoordinates, cubeCoordinates, GL_TRIANGLES, textureCoordinates };
+                Cube* cube = new Cube(cubeProperties);
+                cube->initShader("shaders/entity_vs.shader", "shaders/entity_fs.shader");
+                cube->initTexture("textures/wall2.png");
+                cube->initCamera(camera);
+                cube->init();
+
+                return cube;
             }
             default:
             {
