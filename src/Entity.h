@@ -5,6 +5,7 @@
 #include "Shader.h"
 #include "Texture.h"
 #include "Transform.h"
+#include "Color.h"
 
 #include <glm/glm.hpp>
 
@@ -71,8 +72,69 @@ public:
         _texStart = static_cast<int>(_vertices.size()) - 8;
     };
 
+    void init() override {
+        // generating buffers, binding buffers, storing buffers, configuring attributes, unbinding buffers
+
+        // generate vao
+        glGenVertexArrays(1, &_VAO);
+        // generate vbo
+        glGenBuffers(1, &_VBO);
+        if (_entityType == EntityType::RECTANGLE) {
+            // generate ebo
+            glGenBuffers(1, &_EBO);
+        }
+
+        // bind vao
+        glBindVertexArray(_VAO);
+        // bind vbo
+        glBindBuffer(GL_ARRAY_BUFFER, _VBO);
+        if (_entityType == EntityType::RECTANGLE) {
+            // bind ebo
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
+        }
+
+        // store vbo data for entity
+        glBufferData(GL_ARRAY_BUFFER, _vertices.size() * sizeof(GLfloat), _vertices.data(), GL_STATIC_DRAW);
+        if (_entityType == EntityType::RECTANGLE) {
+            // store ebo data
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER, _indices.size() * sizeof(GLuint), _indices.data(), GL_STATIC_DRAW);
+        }
+
+        // configure position attribute
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, _stride * sizeof(GLfloat), (void*)0);
+        // location defined in shader
+        glEnableVertexAttribArray(0);
+
+        if (_useSingleColor) {
+            _shader.use();
+            _shader.setVec4("u_color", glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f });
+            _shader.disuse();
+        } else {
+            // configure color attribute
+            glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, _stride * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
+            // location defined in shader
+            glEnableVertexAttribArray(1);
+        }
+
+        if (_useTexture) {
+            // configure texture attribute
+            glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0 * sizeof(GLfloat), (void*)(_texStart * sizeof(GLfloat)));
+            // location defined in shader
+            glEnableVertexAttribArray(2);
+        }
+
+        // unbind vao
+        glBindVertexArray(0);
+        // unbind vbo
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+    }
+
     inline Transform& getTransform() {
         return _transform;
+    }
+
+    inline Color& getColor() {
+        return _color;
     }
 
     inline Shader& getShader() {
@@ -81,13 +143,19 @@ public:
 
 protected:
     Transform _transform;
+    Color _color;
     EntityType _entityType = EntityType::UNKNOWN;
     Shader _shader;
     Texture _texture;
     std::vector<GLfloat> _vertices;
+    std::vector<GLuint> _indices{ 0, 1, 3, 1, 2, 3 };
     int _stride = 6;
     int _texStart = 0;
     bool _useTexture = false;
+    bool _useSingleColor = true;
+    unsigned int _VAO = 0;
+    unsigned int _VBO = 0;
+    unsigned int _EBO = 0;
 
 private:
 

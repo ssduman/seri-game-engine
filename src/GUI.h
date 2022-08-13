@@ -105,6 +105,9 @@ public:
             ImGui::Separator();
 
             _currentEntity->getShader().setMat4("u_transform", _currentEntity->getTransform().apply());
+
+            ImGui::ColorEdit4("color", &_currentEntity->getColor()._color[0]);
+            _currentEntity->getShader().setVec4("u_color", _currentEntity->getColor()._color);
         }
 
         ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);

@@ -10,10 +10,8 @@ public:
 
     ~Color() = default;
 
-    glm::vec3& getColor() {
-        return _color;
-    }
+    glm::vec4 _color{ 1.0f, 1.0f, 1.0f, 1.0f };
 
 private:
-    glm::vec3 _color{ 1.0f, 1.0f, 1.0f };
+
 };
