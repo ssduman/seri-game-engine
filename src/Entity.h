@@ -3,6 +3,7 @@
 #include "Object.h"
 #include "Window.h"
 #include "Shader.h"
+#include "Camera.h"
 #include "Texture.h"
 #include "Transform.h"
 #include "Color.h"
@@ -39,9 +40,6 @@ public:
 
     virtual void initShader(const std::string& vsCodePath, const std::string& fsCodePath) {
         _shader.init(vsCodePath, fsCodePath);
-        _shader.use();
-        _shader.setMat4("u_transform", glm::mat4(1.0f));
-        _shader.disuse();
     }
 
     virtual void initTexture(const std::string& texturePath) {
@@ -50,6 +48,14 @@ public:
         _shader.setBool("u_useTexture", true);
         _shader.disuse();
         _texture.init(texturePath);
+    }
+
+    virtual void initCamera(Camera* camera) {
+        _shader.use();
+        _shader.setMat4("u_model", glm::mat4{ 1.0f });
+        _shader.setMat4("u_view", camera->_view);
+        _shader.setMat4("u_projection", camera->_projection);
+        _shader.disuse();
     }
 
     virtual void setProperties(EntityProperties& entityProperties) {

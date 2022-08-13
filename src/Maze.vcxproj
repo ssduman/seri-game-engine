@@ -206,7 +206,7 @@ xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win64\freetype.dll" "$(So
     <ClCompile Include="..\libraries\imgui-1.88\imgui_impl_win32.cpp" />
     <ClCompile Include="..\libraries\imgui-1.88\imgui_tables.cpp" />
     <ClCompile Include="..\libraries\imgui-1.88\imgui_widgets.cpp" />
-    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CameraOld.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Maze.cpp" />
@@ -229,6 +229,7 @@ xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win64\freetype.dll" "$(So
     <ClInclude Include="..\libraries\imgui-1.88\imstb_textedit.h" />
     <ClInclude Include="..\libraries\imgui-1.88\imstb_truetype.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="CameraOld.h" />
     <ClInclude Include="Circle.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="Control.h" />

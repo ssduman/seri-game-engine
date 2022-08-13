@@ -79,7 +79,7 @@
     <ClCompile Include="Light.cpp">
       <Filter>Light</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
+    <ClCompile Include="CameraOld.cpp">
       <Filter>Camera</Filter>
     </ClCompile>
     <ClCompile Include="Skybox.cpp">
@@ -142,7 +142,7 @@
     <ClInclude Include="Shader.h">
       <Filter>Shader</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.h">
+    <ClInclude Include="CameraOld.h">
       <Filter>Camera</Filter>
     </ClInclude>
     <ClInclude Include="Typer.h">
@@ -258,6 +258,9 @@
     </ClInclude>
     <ClInclude Include="Script.h">
       <Filter>Script</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

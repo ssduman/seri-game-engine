@@ -1,6 +1,6 @@
-#include "Camera.h"
+#include "CameraOld.h"
 
-Camera::Camera(glm::vec3 positionCamera, float aspect, bool p) {
+CameraOld::CameraOld(glm::vec3 positionCamera, float aspect, bool p) {
     shader = new Shader();
     shader->init("shaders/basic_vs.shader", "shaders/basic_fs.shader");
     shader->use();
@@ -25,7 +25,7 @@ Camera::Camera(glm::vec3 positionCamera, float aspect, bool p) {
     update(play);
 }
 
-void Camera::setCameraPos(glm::vec3 pos) { // setting position after restart
+void CameraOld::setCameraPos(glm::vec3 pos) { // setting position after restart
     if (!cheat) {
         cameraPosition = pos;
         view = initView;
@@ -35,7 +35,7 @@ void Camera::setCameraPos(glm::vec3 pos) { // setting position after restart
     }
 }
 
-glm::vec3 Camera::projectionVector(glm::vec3 front, glm::vec3 right) {
+glm::vec3 CameraOld::projectionVector(glm::vec3 front, glm::vec3 right) {
     // using for walking same speed for any angles
     glm::vec3 u = glm::cross(cameraUp, right);
     glm::vec3 v = front;
@@ -43,7 +43,7 @@ glm::vec3 Camera::projectionVector(glm::vec3 front, glm::vec3 right) {
     return ((u * v) / float(pow(glm::length(u), 2)) * u);
 }
 
-void Camera::keyboardControl(GLFWwindow* window, Maze** maze, bool& play_, bool& escaping, bool& restart) {
+void CameraOld::keyboardControl(GLFWwindow* window, Maze** maze, bool& play_, bool& escaping, bool& restart) {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, true);
     }
@@ -153,7 +153,7 @@ void Camera::keyboardControl(GLFWwindow* window, Maze** maze, bool& play_, bool&
     view = glm::lookAt(cameraPosition, cameraPosition + Front, Up);
 }
 
-bool Camera::canIPass(glm::vec3 position) {
+bool CameraOld::canIPass(glm::vec3 position) {
     float currentX = position.x;
     float currentZ = position.z;
 
@@ -226,7 +226,7 @@ bool Camera::canIPass(glm::vec3 position) {
     return false;
 }
 
-void Camera::mouseControl(GLFWwindow* window, double deltaX, double deltaY) {
+void CameraOld::mouseControl(GLFWwindow* window, double deltaX, double deltaY) {
     Yaw += (float)deltaX * sensitivity;
     Pitch += (float)deltaY * sensitivity;
 
@@ -247,7 +247,7 @@ void Camera::mouseControl(GLFWwindow* window, double deltaX, double deltaY) {
     updateVectors();
 }
 
-void Camera::updateVectors() {
+void CameraOld::updateVectors() {
     glm::vec3 eulerAngle;
     eulerAngle.x = -cos(glm::radians(Pitch)) * cos(glm::radians(Yaw));
     eulerAngle.y = sin(glm::radians(Pitch));
@@ -258,7 +258,7 @@ void Camera::updateVectors() {
     Up = glm::normalize(glm::cross(Right, Front));
 }
 
-void Camera::update(bool p) {
+void CameraOld::update(bool p) {
     play = p;
 
     shader->use();

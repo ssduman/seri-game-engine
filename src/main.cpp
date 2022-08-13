@@ -4,13 +4,18 @@
 #include "Control.h"
 #include "Mat4.h"
 #include "Layer.h"
+#include "Camera.h"
 #include "Factory.h"
 
 int main(int argc, char** argv) {
     setlocale(LC_ALL, "en_US.UTF-8");
 
-    WindowProperties windowProperties = { /*title*/ "Maze", /*fullscreen*/ false, /*w*/ 1280, /*h*/ 720 };
+    WindowProperties windowProperties{ /*title*/ "Maze", /*fullscreen*/ false, /*w*/ 1280, /*h*/ 720 };
     Window gameWindow(windowProperties);
+
+    CameraProperties cameraProperties;
+    cameraProperties.aspect = static_cast<float>(windowProperties.windowWidth / windowProperties.windowHeight);
+    std::shared_ptr<Camera> camera = std::make_shared<Camera>(cameraProperties);
 
     Control control(gameWindow);
     control.init();
@@ -19,6 +24,7 @@ int main(int argc, char** argv) {
 
     GUI gui(gameWindow, &layers);
     gui.init();
+    gui.registerCamera(camera.get());
 
     glPointSize(10.0f);
     glLineWidth(10.0f);
@@ -47,7 +53,7 @@ int main(int argc, char** argv) {
 //#include "Game.h"
 //#include "Maze.h"
 //#include "Light.h"
-//#include "Camera.h"
+//#include "CameraOld.h"
 //#include "Skybox.h"
 //#include "Window.h"
 //
@@ -57,7 +63,7 @@ int main(int argc, char** argv) {
 //
 //double mouseCurrentPosX, mouseCurrentPosY;
 //
-//Camera* camera;
+//CameraOld* camera;
 //glm::vec3 cameraPosition;
 //
 //Maze* maze;
@@ -98,7 +104,7 @@ int main(int argc, char** argv) {
 //    maze = new Maze(thickness, mazeWidth, mazeHeight);
 //
 //    cameraPosition = glm::vec3(0, -thickness * 5, -thickness * 4 - mazeHeight * thickness);
-//    camera = new Camera(cameraPosition, ((float)width) / height, play);
+//    camera = new CameraOld(cameraPosition, ((float)width) / height, play);
 //    camera->setDimensions(mazeWidth, mazeHeight, thickness);
 //    camera->setWallPos(maze->getVerticalWallPosition(), maze->getHorizontalWallPosition());
 //
@@ -181,7 +187,7 @@ int main(int argc, char** argv) {
 //        maze = new Maze(thickness, mazeWidth, mazeHeight);
 //
 //        cameraPosition = glm::vec3((mazeWidth - 1) * thickness * 2, -thickness / 2, -thickness * 4); // enterence
-//        camera = new Camera(cameraPosition, ((float)width) / height, play);
+//        camera = new CameraOld(cameraPosition, ((float)width) / height, play);
 //        camera->setDimensions(mazeWidth, mazeHeight, thickness);
 //        camera->setWallPos(maze->getVerticalWallPosition(), maze->getHorizontalWallPosition());
 //    } else if ((key == GLFW_KEY_BACKSPACE) && (action == GLFW_PRESS)) {

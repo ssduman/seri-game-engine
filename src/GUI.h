@@ -4,6 +4,7 @@
 #include "Window.h"
 #include "Factory.h"
 #include "Layer.h"
+#include "Camera.h"
 
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
@@ -68,19 +69,19 @@ public:
 
         ImGui::Text("Maze");
         if (ImGui::Button("Create point")) {
-            _layers->addLayer(Factory::Create(EntityType::POINT));
+            _layers->addLayer(Factory::Create(EntityType::POINT, _camera));
         }
         if (ImGui::Button("Create line")) {
-            _layers->addLayer(Factory::Create(EntityType::LINE));
+            _layers->addLayer(Factory::Create(EntityType::LINE, _camera));
         }
         if (ImGui::Button("Create triangle")) {
-            _layers->addLayer(Factory::Create(EntityType::TRIANGLE));
+            _layers->addLayer(Factory::Create(EntityType::TRIANGLE, _camera));
         }
         if (ImGui::Button("Create rectangle")) {
-            _layers->addLayer(Factory::Create(EntityType::RECTANGLE));
+            _layers->addLayer(Factory::Create(EntityType::RECTANGLE, _camera));
         }
         if (ImGui::Button("Create circle")) {
-            _layers->addLayer(Factory::Create(EntityType::CIRCLE));
+            _layers->addLayer(Factory::Create(EntityType::CIRCLE, _camera));
         }
         if (ImGui::Button("Delete entity")) {
             _layers->deleteLayer();
@@ -104,7 +105,7 @@ public:
             ImGui::SliderFloat3("scale", &_currentEntity->getTransform()._scale[0], 0.0f, 100.0f, "%.4f");
             ImGui::Separator();
 
-            _currentEntity->getShader().setMat4("u_transform", _currentEntity->getTransform().apply());
+            _currentEntity->getShader().setMat4("u_model", _currentEntity->getTransform().apply());
 
             ImGui::ColorEdit4("color", &_currentEntity->getColor()._color[0]);
             _currentEntity->getShader().setVec4("u_color", _currentEntity->getColor()._color);
@@ -124,6 +125,10 @@ public:
         _currentEntity = entity;
     }
 
+    void registerCamera(Camera* camera) {
+        _camera = camera;
+    }
+
 private:
     void HelpMarker(const char* desc) {
         ImGui::TextDisabled("(?)");
@@ -141,6 +146,7 @@ private:
     Entity* _currentEntity = nullptr;
     Window _window;
     Layer* _layers;
+    Camera* _camera;
     bool show_demo_window = true;
     const char* glsl_version = "#version 130";
     const char* font_filename = "fonts/En Bloc.ttf";

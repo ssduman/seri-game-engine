@@ -7,6 +7,7 @@
 #include "Triangle.h"
 #include "Rectangle.h"
 #include "Circle.h"
+#include "Camera.h"
 
 #include <stdlib.h>
 
@@ -14,7 +15,7 @@ class Factory {
 public:
     virtual ~Factory() = 0;
 
-    static Entity* Create(EntityType entityType) {
+    static Entity* Create(EntityType entityType, Camera* camera) {
         glm::vec3 minColor = glm::vec3{ 0.0f, 0.0f, 0.0f };
         glm::vec3 maxColor = glm::vec3{ 1.0f, 1.0f, 1.0f };
 
@@ -37,6 +38,7 @@ public:
                 EntityProperties pointProperties{ pointCoordinates, pointColors, GL_POINTS };
                 Point* point = new Point(pointProperties);
                 point->initShader("shaders/entity_vs.shader", "shaders/entity_fs.shader");
+                point->initCamera(camera);
                 point->init();
 
                 return point;
@@ -53,6 +55,7 @@ public:
                 if (glm::linearRand(0.0f, 1.0f) >= 0.5f) {
                     line->initTexture("textures/passage.png");
                 }
+                line->initCamera(camera);
                 line->init();
 
                 return line;
@@ -68,6 +71,7 @@ public:
                 if (glm::linearRand(0.0f, 1.0f) >= 0.5f) {
                     triangle->initTexture("textures/passage.png");
                 }
+                triangle->initCamera(camera);
                 triangle->init();
 
                 return triangle;
@@ -83,6 +87,7 @@ public:
                 if (glm::linearRand(0.0f, 1.0f) >= 0.5f) {
                     rectangle->initTexture("textures/wall1.png");
                 }
+                rectangle->initCamera(camera);
                 rectangle->init();
 
                 return rectangle;
@@ -108,6 +113,7 @@ public:
                 if (glm::linearRand(0.0f, 1.0f) >= 0.5f) {
                     circle->initTexture("textures/passage.png");
                 }
+                circle->initCamera(camera);
                 circle->init();
 
                 return circle;
