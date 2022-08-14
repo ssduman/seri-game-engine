@@ -4,10 +4,23 @@
 
 class InputHandler {
 public:
-    InputHandler() = default;
+    InputHandler(Camera* camera) : _camera(camera) {}
     ~InputHandler() = default;
 
     ICommand* handleInput(int key, int scancode, int action, int mods) {
+        if (isPressing(key, action, GLFW_KEY_W)) {
+            _camera->handleInput(CameraMovement::FORWARD);
+        }
+        if (isPressing(key, action, GLFW_KEY_S)) {
+            _camera->handleInput(CameraMovement::BACKWARD);
+        }
+        if (isPressing(key, action, GLFW_KEY_A)) {
+            _camera->handleInput(CameraMovement::LEFT);
+        }
+        if (isPressing(key, action, GLFW_KEY_D)) {
+            _camera->handleInput(CameraMovement::RIGHT);
+        }
+
         if (isPressed(key, action, GLFW_KEY_X)) {
             return _x;
         }
@@ -71,18 +84,26 @@ private:
         return false;
     }
 
-    ICommand* _x;
-    ICommand* _y;
-    ICommand* _enter;
-    ICommand* _space;
-    ICommand* _escape;
-    ICommand* _arrowUp;
-    ICommand* _arrowDown;
-    ICommand* _arrowLeft;
-    ICommand* _arrowRight;
+    bool isPressing(int key, int action, int target) {
+        if ((key == target) && (action == GLFW_PRESS || action == GLFW_RELEASE || action == GLFW_REPEAT)) {
+            return true;
+        }
+        return false;
+    }
 
-    ICommand* _press;
-    ICommand* _repeat;
-    ICommand* _release;
+    Camera* _camera;
 
+    ICommand* _x = nullptr;
+    ICommand* _y = nullptr;
+    ICommand* _enter = nullptr;
+    ICommand* _space = nullptr;
+    ICommand* _escape = nullptr;
+    ICommand* _arrowUp = nullptr;
+    ICommand* _arrowDown = nullptr;
+    ICommand* _arrowLeft = nullptr;
+    ICommand* _arrowRight = nullptr;
+
+    ICommand* _press = nullptr;
+    ICommand* _repeat = nullptr;
+    ICommand* _release = nullptr;
 };

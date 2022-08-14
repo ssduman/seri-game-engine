@@ -17,7 +17,7 @@ int main(int argc, char** argv) {
     cameraProperties.aspect = static_cast<float>(windowProperties.windowWidth / windowProperties.windowHeight);
     std::shared_ptr<Camera> camera = std::make_shared<Camera>(cameraProperties);
 
-    Control control(gameWindow);
+    Control control(gameWindow, camera.get());
     control.init();
 
     Layer layers;

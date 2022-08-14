@@ -122,9 +122,6 @@
     <ClCompile Include="..\libraries\imgui-1.88\imgui_impl_glfw.cpp">
       <Filter>GUI\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="MoveCommand.h">
-      <Filter>Command</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Maze.h">

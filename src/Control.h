@@ -8,7 +8,7 @@
 
 class Control : public IControl {
 public:
-    Control(Window window) : IControl(window), _inputHandler() {
+    Control(Window window, Camera* camera) : IControl(window), _camera(camera), _inputHandler(camera) {
         glfwSetWindowUserPointer(_window.getWindow(), static_cast<void*>(this));
     }
 
@@ -140,4 +140,5 @@ private:
     }
 
     InputHandler _inputHandler;
+    Camera* _camera;
 };

@@ -77,7 +77,7 @@ public:
             _vertices.push_back(entityProperties.textureCoordinates[i].y);
         }
 
-        _texStart = static_cast<int>(_vertices.size()) - textureCount * 2;
+        _texStart = static_cast<int>(_vertices.size() - textureCount * 2);
     }
 
     void init() override {
