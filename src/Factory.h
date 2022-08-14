@@ -16,7 +16,7 @@ class Factory {
 public:
     virtual ~Factory() = 0;
 
-    static Entity* Create(EntityType entityType, Camera* camera) {
+    static Entity* CreateEntity(Camera* camera, EntityType entityType) {
         glm::vec3 minColor = glm::vec3{ 0.0f, 0.0f, 0.0f };
         glm::vec3 maxColor = glm::vec3{ 1.0f, 1.0f, 1.0f };
 

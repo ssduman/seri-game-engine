@@ -69,22 +69,22 @@ public:
 
         ImGui::Text("Maze");
         if (ImGui::Button("Create point")) {
-            _layers->addLayer(Factory::Create(EntityType::POINT, _camera));
+            _layers->addLayer(Factory::CreateEntity(_camera, EntityType::POINT));
         }
         if (ImGui::Button("Create line")) {
-            _layers->addLayer(Factory::Create(EntityType::LINE, _camera));
+            _layers->addLayer(Factory::CreateEntity(_camera, EntityType::LINE));
         }
         if (ImGui::Button("Create triangle")) {
-            _layers->addLayer(Factory::Create(EntityType::TRIANGLE, _camera));
+            _layers->addLayer(Factory::CreateEntity(_camera, EntityType::TRIANGLE));
         }
         if (ImGui::Button("Create rectangle")) {
-            _layers->addLayer(Factory::Create(EntityType::RECTANGLE, _camera));
+            _layers->addLayer(Factory::CreateEntity(_camera, EntityType::RECTANGLE));
         }
         if (ImGui::Button("Create circle")) {
-            _layers->addLayer(Factory::Create(EntityType::CIRCLE, _camera));
+            _layers->addLayer(Factory::CreateEntity(_camera, EntityType::CIRCLE));
         }
         if (ImGui::Button("Create cube")) {
-            _layers->addLayer(Factory::Create(EntityType::CUBE, _camera));
+            _layers->addLayer(Factory::CreateEntity(_camera, EntityType::CUBE));
         }
         if (ImGui::Button("Delete entity")) {
             _currentEntity = nullptr;
@@ -145,12 +145,12 @@ private:
         }
     }
 
+    Window _window;
+    Layer* _layers = nullptr;
+    Camera* _camera = nullptr;
+    Entity* _currentEntity = nullptr;
     ImGuiIO* _io = nullptr;
     ImGuiWindowFlags _window_flags = 0;
-    Entity* _currentEntity = nullptr;
-    Window _window;
-    Layer* _layers;
-    Camera* _camera;
     bool show_demo_window = true;
     const char* glsl_version = "#version 130";
     const char* font_filename = "fonts/En Bloc.ttf";

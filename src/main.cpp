@@ -44,6 +44,8 @@ int main(int argc, char** argv) {
         glfwSwapBuffers(gameWindow.getWindow());
     }
 
+    camera.reset();
+
     glfwDestroyWindow(gameWindow.getWindow());
     glfwTerminate();
 

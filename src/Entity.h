@@ -78,7 +78,7 @@ public:
         }
 
         _texStart = static_cast<int>(_vertices.size()) - textureCount * 2;
-    };
+    }
 
     void init() override {
         // generating buffers, binding buffers, storing buffers, configuring attributes, unbinding buffers
