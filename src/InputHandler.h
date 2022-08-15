@@ -85,7 +85,7 @@ private:
     }
 
     bool isPressing(int key, int action, int target) {
-        if ((key == target) && (action == GLFW_PRESS || action == GLFW_RELEASE || action == GLFW_REPEAT)) {
+        if ((key == target) && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
             return true;
         }
         return false;

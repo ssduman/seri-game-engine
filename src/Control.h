@@ -76,6 +76,8 @@ public:
 
         mouseCurrentPosX = xpos;
         mouseCurrentPosY = ypos;
+
+        _camera->handleMouse(xpos, ypos);
     }
 
     void scrollCallback(GLFWwindow* window, double xoffset, double yoffset) override {}
