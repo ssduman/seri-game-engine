@@ -1,16 +1,16 @@
 #pragma once
 
-#include "Window.h"
+#include "WindowManager.h"
 
 #include <string>
 #include <vector>
 
 class IControl {
 public:
-    IControl(Window window) :
-        _window(window),
-        mouseCurrentPosX(_window.getMouseX()),
-        mouseCurrentPosY(_window.getMouseY()) {}
+    IControl(WindowManager windowManager) :
+        _windowManager(windowManager),
+        mouseCurrentPosX(_windowManager.getMouseX()),
+        mouseCurrentPosY(_windowManager.getMouseY()) {}
 
     virtual ~IControl() {}
 
@@ -45,7 +45,7 @@ public:
     }
 
 protected:
-    Window _window;
+    WindowManager _windowManager;
     double mouseCurrentPosX;
     double mouseCurrentPosY;
     std::vector<std::string> userInputVector;

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Object.h"
-#include "Window.h"
+#include "WindowManager.h"
 #include "Factory.h"
 #include "Layer.h"
 #include "Camera.h"
@@ -12,7 +12,7 @@
 
 class GUI : public Object {
 public:
-    GUI(Window window, Layer* layers) : _window(window), _layers(layers) {}
+    GUI(WindowManager windowManager, Layer* layers) : _windowManager(windowManager), _layers(layers) {}
 
     virtual ~GUI() {
         ImGui_ImplOpenGL3_Shutdown();
@@ -31,7 +31,7 @@ public:
 
         ImGui::StyleColorsDark();
 
-        ImGui_ImplGlfw_InitForOpenGL(_window.getWindow(), true);
+        ImGui_ImplGlfw_InitForOpenGL(_windowManager.getWindow(), true);
         ImGui_ImplOpenGL3_Init(glsl_version);
 
         _window_flags = 0;
@@ -94,10 +94,10 @@ public:
         ImGui::Separator();
 
         if (ImGui::Button("Enable cursor")) {
-            _window.enableCursor();
+            _windowManager.enableCursor();
         }
         if (ImGui::Button("Disable cursor")) {
-            _window.disableCursor();
+            _windowManager.disableCursor();
         }
 
         ImGui::Separator();
@@ -159,7 +159,7 @@ private:
         }
     }
 
-    Window _window;
+    WindowManager _windowManager;
     Layer* _layers = nullptr;
     Camera* _camera = nullptr;
     Entity* _currentEntity = nullptr;

@@ -1,4 +1,4 @@
-﻿#include "Window.h"
+﻿#include "WindowManager.h"
 #include "Util.h"
 #include "GUI.h"
 #include "Control.h"
@@ -11,29 +11,29 @@ int main(int argc, char** argv) {
     setlocale(LC_ALL, "en_US.UTF-8");
 
     WindowProperties windowProperties{ /*title*/ "Maze", /*fullscreen*/ false, /*w*/ 1280, /*h*/ 720 };
-    Window gameWindow(windowProperties);
+    WindowManager windowManager(windowProperties);
 
     CameraProperties cameraProperties;
     cameraProperties.aspect = static_cast<float>(windowProperties.windowWidth / windowProperties.windowHeight);
     std::shared_ptr<Camera> camera = std::make_shared<Camera>(cameraProperties);
 
-    Control control(gameWindow, camera.get());
+    Control control(windowManager, camera.get());
     control.init();
 
     Layer layers;
 
-    GUI gui(gameWindow, &layers);
+    GUI gui(windowManager, &layers);
     gui.init();
     gui.registerCamera(camera.get());
 
     glPointSize(10.0f);
     glLineWidth(10.0f);
 
-    while (!glfwWindowShouldClose(gameWindow.getWindow())) {
+    while (!glfwWindowShouldClose(windowManager.getWindow())) {
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        control.processInput(gameWindow.updateDeltaTime());
+        control.processInput(windowManager.updateDeltaTime());
 
         for (auto entity : layers.getLayers()) {
             entity->display();
@@ -43,12 +43,12 @@ int main(int argc, char** argv) {
         gui.display();
 
         glfwPollEvents();
-        glfwSwapBuffers(gameWindow.getWindow());
+        glfwSwapBuffers(windowManager.getWindow());
     }
 
     camera.reset();
 
-    glfwDestroyWindow(gameWindow.getWindow());
+    glfwDestroyWindow(windowManager.getWindow());
     glfwTerminate();
 
     return 0;
@@ -59,7 +59,7 @@ int main(int argc, char** argv) {
 //#include "Light.h"
 //#include "CameraOld.h"
 //#include "Skybox.h"
-//#include "Window.h"
+//#include "WindowManager.h"
 //
 //#include <GL/glew.h>
 //#include <GLFW/glfw3.h>
@@ -91,14 +91,14 @@ int main(int argc, char** argv) {
 //    int windowWidth = 1280;
 //    int windowHeight = 720;
 //    WindowProperties windowProperties = { /*title*/ "Maze", /*fullscreen*/ false, /*w*/ 1280, /*h*/ 720 };
-//    Window thisWindow(windowProperties);
-//    GLFWwindow* window = thisWindow.getWindow();
+//    WindowManager windowManager(windowProperties);
+//    GLFWwindow* window = windowManager.getWindow();
 //
-//    width = (float)thisWindow.getWidth();
-//    height = (float)thisWindow.getHeight();
+//    width = (float)windowManager.getWidth();
+//    height = (float)windowManager.getHeight();
 //
-//    mouseCurrentPosX = thisWindow.getMouseX();
-//    mouseCurrentPosY = thisWindow.getMouseY();
+//    mouseCurrentPosX = windowManager.getMouseX();
+//    mouseCurrentPosY = windowManager.getMouseY();
 //
 //    glfwSetCursorPosCallback(window, mouseMoveCallback);
 //    glfwSetScrollCallback(window, mouseScrollCallback);

@@ -13,9 +13,9 @@ struct WindowProperties {
     int windowHeight = 720;
 };
 
-class Window {
+class WindowManager {
 public:
-    Window(WindowProperties& windowProperties) : _windowProperties(windowProperties) {
+    WindowManager(WindowProperties& windowProperties) : _windowProperties(windowProperties) {
         if (!glfwInit()) {
             std::cerr << "glfwInit error" << std::endl;
             exit(-1);

@@ -2,20 +2,20 @@
 #pragma warning(disable: 4100)
 #pragma warning(disable: 4244)
 
-#include "Window.h"
+#include "WindowManager.h"
 #include "IControl.h"
 #include "InputHandler.h"
 
 class Control : public IControl {
 public:
-    Control(Window window, Camera* camera) : IControl(window), _camera(camera), _inputHandler(camera) {
-        glfwSetWindowUserPointer(_window.getWindow(), static_cast<void*>(this));
+    Control(WindowManager windowManager, Camera* camera) : IControl(windowManager), _camera(camera), _inputHandler(camera) {
+        glfwSetWindowUserPointer(_windowManager.getWindow(), static_cast<void*>(this));
     }
 
     virtual ~Control() {}
 
     void init() override {
-        glfwSetCharCallback(_window.getWindow(),
+        glfwSetCharCallback(_windowManager.getWindow(),
             [](GLFWwindow* window, unsigned int codepoint) {
                 if (auto control = static_cast<Control*>(glfwGetWindowUserPointer(window))) {
                     control->charCallback(window, codepoint);
@@ -23,7 +23,7 @@ public:
             }
         );
 
-        glfwSetMouseButtonCallback(_window.getWindow(),
+        glfwSetMouseButtonCallback(_windowManager.getWindow(),
             [](GLFWwindow* window, int button, int action, int mods) {
                 if (auto control = static_cast<Control*>(glfwGetWindowUserPointer(window))) {
                     control->mouseButtonCallback(window, button, action, mods);
@@ -31,7 +31,7 @@ public:
             }
         );
 
-        glfwSetScrollCallback(_window.getWindow(),
+        glfwSetScrollCallback(_windowManager.getWindow(),
             [](GLFWwindow* window, double xoffset, double yoffset) {
                 if (auto control = static_cast<Control*>(glfwGetWindowUserPointer(window))) {
                     control->scrollCallback(window, xoffset, yoffset);
@@ -39,7 +39,7 @@ public:
             }
         );
 
-        glfwSetFramebufferSizeCallback(_window.getWindow(),
+        glfwSetFramebufferSizeCallback(_windowManager.getWindow(),
             [](GLFWwindow* window, int width, int height) {
                 if (auto control = static_cast<Control*>(glfwGetWindowUserPointer(window))) {
                     control->framebufferSizeCallback(window, width, height);
@@ -47,7 +47,7 @@ public:
             }
         );
 
-        glfwSetCursorPosCallback(_window.getWindow(),
+        glfwSetCursorPosCallback(_windowManager.getWindow(),
             [](GLFWwindow* window, double xpos, double ypos) {
                 if (auto control = static_cast<Control*>(glfwGetWindowUserPointer(window))) {
                     control->cursorPosCallback(window, xpos, ypos);
@@ -55,7 +55,7 @@ public:
             }
         );
 
-        glfwSetKeyCallback(_window.getWindow(),
+        glfwSetKeyCallback(_windowManager.getWindow(),
             [](GLFWwindow* window, int key, int scancode, int action, int mods) {
                 if (auto control = static_cast<Control*>(glfwGetWindowUserPointer(window))) {
                     control->keyCallback(window, key, scancode, action, mods);
@@ -83,8 +83,8 @@ public:
     void scrollCallback(GLFWwindow* window, double xoffset, double yoffset) override {}
 
     void framebufferSizeCallback(GLFWwindow* window, int width, int height) override {
-        _window.getWidth() = width;
-        _window.getHeight() = height;
+        _windowManager.getWidth() = width;
+        _windowManager.getHeight() = height;
         glViewport(0, 0, width, height);
     }
 
@@ -115,7 +115,7 @@ public:
     }
 
     void processInput(float deltaTime) {
-        GLFWwindow* window = _window.getWindow();
+        GLFWwindow* window = _windowManager.getWindow();
 
         if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
             glfwSetWindowShouldClose(window, GLFW_TRUE);

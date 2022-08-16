@@ -151,7 +151,7 @@
     <ClInclude Include="Skybox.h">
       <Filter>Texture</Filter>
     </ClInclude>
-    <ClInclude Include="Window.h">
+    <ClInclude Include="WindowManager.h">
       <Filter>Window</Filter>
     </ClInclude>
     <ClInclude Include="IControl.h">

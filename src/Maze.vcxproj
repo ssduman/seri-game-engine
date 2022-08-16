@@ -262,7 +262,7 @@ xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win64\freetype.dll" "$(So
     <ClInclude Include="Util.h" />
     <ClInclude Include="Vec3.h" />
     <ClInclude Include="Vec4.h" />
-    <ClInclude Include="Window.h" />
+    <ClInclude Include="WindowManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\basic_fs.shader" />

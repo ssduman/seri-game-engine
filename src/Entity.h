@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Object.h"
-#include "Window.h"
+#include "WindowManager.h"
 #include "Shader.h"
 #include "Camera.h"
 #include "Texture.h"
