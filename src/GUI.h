@@ -12,7 +12,7 @@
 
 class GUI : public Object {
 public:
-    GUI(WindowManager windowManager, Layer* layers) : _windowManager(windowManager), _layers(layers) {}
+    GUI(WindowManager* windowManager, Layer* layers) : _windowManager(windowManager), _layers(layers) {}
 
     virtual ~GUI() {
         ImGui_ImplOpenGL3_Shutdown();
@@ -31,7 +31,7 @@ public:
 
         ImGui::StyleColorsDark();
 
-        ImGui_ImplGlfw_InitForOpenGL(_windowManager.getWindow(), true);
+        ImGui_ImplGlfw_InitForOpenGL(_windowManager->getWindow(), true);
         ImGui_ImplOpenGL3_Init(glsl_version);
 
         _window_flags = 0;
@@ -94,10 +94,10 @@ public:
         ImGui::Separator();
 
         if (ImGui::Button("Enable cursor")) {
-            _windowManager.enableCursor();
+            _windowManager->enableCursor();
         }
         if (ImGui::Button("Disable cursor")) {
-            _windowManager.disableCursor();
+            _windowManager->disableCursor();
         }
 
         ImGui::Separator();
@@ -159,7 +159,7 @@ private:
         }
     }
 
-    WindowManager _windowManager;
+    WindowManager* _windowManager = nullptr;;
     Layer* _layers = nullptr;
     Camera* _camera = nullptr;
     Entity* _currentEntity = nullptr;

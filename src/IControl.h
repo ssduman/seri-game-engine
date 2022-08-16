@@ -7,10 +7,10 @@
 
 class IControl {
 public:
-    IControl(WindowManager windowManager) :
+    IControl(WindowManager* windowManager) :
         _windowManager(windowManager),
-        mouseCurrentPosX(_windowManager.getMouseX()),
-        mouseCurrentPosY(_windowManager.getMouseY()) {}
+        mouseCurrentPosX(_windowManager->getMouseX()),
+        mouseCurrentPosY(_windowManager->getMouseY()) {}
 
     virtual ~IControl() {}
 
@@ -45,7 +45,7 @@ public:
     }
 
 protected:
-    WindowManager _windowManager;
+    WindowManager* _windowManager = nullptr;
     double mouseCurrentPosX;
     double mouseCurrentPosY;
     std::vector<std::string> userInputVector;

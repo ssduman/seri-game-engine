@@ -66,6 +66,11 @@ public:
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 
+    ~WindowManager() {
+        glfwDestroyWindow(_window);
+        glfwTerminate();
+    }
+
     inline int& getWidth() {
         return _windowProperties.windowWidth;
     }

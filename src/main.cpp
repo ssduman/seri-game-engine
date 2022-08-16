@@ -11,29 +11,29 @@ int main(int argc, char** argv) {
     setlocale(LC_ALL, "en_US.UTF-8");
 
     WindowProperties windowProperties{ /*title*/ "Maze", /*fullscreen*/ false, /*w*/ 1280, /*h*/ 720 };
-    WindowManager windowManager(windowProperties);
+    std::unique_ptr<WindowManager> windowManager = std::make_unique<WindowManager>(windowProperties);
 
     CameraProperties cameraProperties;
     cameraProperties.aspect = static_cast<float>(windowProperties.windowWidth / windowProperties.windowHeight);
     std::shared_ptr<Camera> camera = std::make_shared<Camera>(cameraProperties);
 
-    Control control(windowManager, camera.get());
+    Control control(windowManager.get(), camera.get());
     control.init();
 
     Layer layers;
 
-    GUI gui(windowManager, &layers);
+    GUI gui(windowManager.get(), &layers);
     gui.init();
     gui.registerCamera(camera.get());
 
     glPointSize(10.0f);
     glLineWidth(10.0f);
 
-    while (!glfwWindowShouldClose(windowManager.getWindow())) {
+    while (!glfwWindowShouldClose(windowManager->getWindow())) {
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        control.processInput(windowManager.updateDeltaTime());
+        control.processInput(windowManager->updateDeltaTime());
 
         for (auto entity : layers.getLayers()) {
             entity->display();
@@ -43,13 +43,8 @@ int main(int argc, char** argv) {
         gui.display();
 
         glfwPollEvents();
-        glfwSwapBuffers(windowManager.getWindow());
+        glfwSwapBuffers(windowManager->getWindow());
     }
-
-    camera.reset();
-
-    glfwDestroyWindow(windowManager.getWindow());
-    glfwTerminate();
 
     return 0;
 }
