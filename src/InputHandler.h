@@ -8,19 +8,6 @@ public:
     ~InputHandler() = default;
 
     ICommand* handleInput(int key, int scancode, int action, int mods) {
-        if (isPressing(key, action, GLFW_KEY_W)) {
-            _camera->handleInput(CameraMovement::FORWARD);
-        }
-        if (isPressing(key, action, GLFW_KEY_S)) {
-            _camera->handleInput(CameraMovement::BACKWARD);
-        }
-        if (isPressing(key, action, GLFW_KEY_A)) {
-            _camera->handleInput(CameraMovement::LEFT);
-        }
-        if (isPressing(key, action, GLFW_KEY_D)) {
-            _camera->handleInput(CameraMovement::RIGHT);
-        }
-
         if (isPressed(key, action, GLFW_KEY_X)) {
             return _x;
         }

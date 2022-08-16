@@ -113,7 +113,9 @@ public:
 
             ImGui::ColorEdit4("color", &_currentEntity->getColor()._color[0]);
             _currentEntity->getShader().setVec4("u_color", _currentEntity->getColor()._color);
-            
+
+            ImGui::SliderFloat("speed", &_camera->getSpeed(), 0.0f, 100.0f, "%.4f");
+
             ImGui::SliderFloat3("camera", &_camera->_cameraProperties.position[0], 0.0f, 100.0f, "%.4f");
             _currentEntity->getShader().setMat4("u_view", _camera->view());
         }

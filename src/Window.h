@@ -64,7 +64,6 @@ public:
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        //glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
 
     inline int& getWidth() {
@@ -85,8 +84,14 @@ public:
         return _mouseYPosition;
     }
 
+    inline void setCursorPos(double xpos, double ypos) {
+        glfwSetCursorPos(_window, xpos, ypos);
+    }
+
     inline void setCursorPosMiddle() {
-        glfwSetCursorPos(_window, (double)_windowProperties.windowWidth / 2.0, (double)_windowProperties.windowHeight / 2.0);
+        auto xmid = _windowProperties.windowWidth / 2.0;
+        auto ymid = _windowProperties.windowHeight / 2.0;
+        setCursorPos(xmid, ymid);
     }
 
     inline GLFWwindow* getWindow() {
@@ -97,13 +102,35 @@ public:
         return glfwGetTime();
     }
 
+    inline float updateDeltaTime() {
+        auto currentFrame = getTime();
+        _deltaTime = currentFrame - _lastFrame;
+        _lastFrame = currentFrame;
+
+        return static_cast<float>(_deltaTime);
+    }
+
+    inline void enableCursor() {
+        glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    }
+
+    inline void hideCursor() {
+        glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+    }
+
+    inline void disableCursor() {
+        glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    }
+
 private:
     inline void getMousePosition() {
         glfwGetCursorPos(_window, &_mouseXPosition, &_mouseYPosition);
     }
 
-    double _mouseXPosition = 0;
-    double _mouseYPosition = 0;
+    double _lastFrame = 0.0;
+    double _deltaTime = 0.0;
+    double _mouseXPosition = 0.0;
+    double _mouseYPosition = 0.0;
     GLFWwindow* _window = nullptr;
     WindowProperties& _windowProperties;
 

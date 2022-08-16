@@ -109,8 +109,29 @@ public:
             glfwSetWindowShouldClose(window, GLFW_TRUE);
         }
 
-        if (action == GLFW_RELEASE) {
-            std::cout << "userInput: " << getUserInput() << std::endl;
+        //if (action == GLFW_RELEASE) {
+        //    std::cout << "userInput: " << getUserInput() << std::endl;
+        //}
+    }
+
+    void processInput(float deltaTime) {
+        GLFWwindow* window = _window.getWindow();
+
+        if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+            glfwSetWindowShouldClose(window, GLFW_TRUE);
+        }
+
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+            _camera->handleInput(deltaTime, CameraMovement::FORWARD);
+        }
+        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+            _camera->handleInput(deltaTime, CameraMovement::BACKWARD);
+        }
+        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+            _camera->handleInput(deltaTime, CameraMovement::LEFT);
+        }
+        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+            _camera->handleInput(deltaTime, CameraMovement::RIGHT);
         }
     }
 
@@ -141,6 +162,6 @@ private:
         return count;
     }
 
-    InputHandler _inputHandler;
     Camera* _camera;
+    InputHandler _inputHandler;
 };

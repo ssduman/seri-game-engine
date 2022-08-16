@@ -38,8 +38,8 @@ public:
 
     ~Camera() = default;
 
-    void handleInput(CameraMovement cameraMovement) {
-        float velocity = 0.1f;
+    void handleInput(float deltaTime, CameraMovement cameraMovement) {
+        float velocity = _speed * deltaTime;
         if (cameraMovement == CameraMovement::FORWARD) {
             _cameraProperties.position += _cameraProperties.front * velocity;
         }
@@ -110,6 +110,10 @@ public:
             _cameraProperties.far
         );
         return _projection;
+    }
+
+    float& getSpeed() {
+        return _speed;
     }
 
     glm::mat4 _view{};
