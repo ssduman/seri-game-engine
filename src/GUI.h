@@ -93,6 +93,15 @@ public:
 
         ImGui::Separator();
 
+        if (ImGui::Button("Enable cursor")) {
+            _window.enableCursor();
+        }
+        if (ImGui::Button("Disable cursor")) {
+            _window.disableCursor();
+        }
+
+        ImGui::Separator();
+
         ImGui::CheckboxFlags("io.ConfigFlags: NavEnableKeyboard", &_io->ConfigFlags, ImGuiConfigFlags_NavEnableKeyboard);
         ImGui::SameLine(); HelpMarker("Enable keyboard controls.");
 
