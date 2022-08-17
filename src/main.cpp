@@ -6,6 +6,7 @@
 #include "Layer.h"
 #include "Camera.h"
 #include "Factory.h"
+#include "Logger.h"
 
 int main(int argc, char** argv) {
     setlocale(LC_ALL, "en_US.UTF-8");
@@ -29,6 +30,8 @@ int main(int argc, char** argv) {
     glPointSize(10.0f);
     glLineWidth(10.0f);
 
+    LOGGER(info, "starting game loop");
+
     while (!glfwWindowShouldClose(windowManager->getWindow())) {
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -45,6 +48,8 @@ int main(int argc, char** argv) {
         glfwPollEvents();
         glfwSwapBuffers(windowManager->getWindow());
     }
+
+    LOGGER(info, "game loop stopped");
 
     return 0;
 }

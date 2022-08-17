@@ -1,6 +1,8 @@
 #pragma once
 #pragma warning(disable: 4100)
 
+#include "Logger.h"
+
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
@@ -17,14 +19,14 @@ class WindowManager {
 public:
     WindowManager(WindowProperties& windowProperties) : _windowProperties(windowProperties) {
         if (!glfwInit()) {
-            std::cerr << "glfwInit error" << std::endl;
+            LOGGER(error, "glfwInit error");
             exit(-1);
         }
-        std::cout << "gflw version '" << glfwGetVersionString() << "' init succeeded" << std::endl;
+        LOGGER(info, "gflw version '" << glfwGetVersionString() << "' init succeeded");
 
         glfwSetErrorCallback(
             [](int error, const char* description) {
-                std::cerr << "glfw error " << error << ": " << description << std::endl;
+                LOGGER(error, "glfw error " << error << ": " << description);
             }
         );
 
@@ -42,7 +44,7 @@ public:
         }
         if (!_window) {
             glfwTerminate();
-            std::cerr << "window creating error" << std::endl;
+            LOGGER(error, "window creating error");
             exit(-1);
         }
 
@@ -50,14 +52,14 @@ public:
         glfwSwapInterval(1);
 
         if (glewInit() != GLEW_OK) {
-            std::cerr << "glewInit error" << std::endl;
+            LOGGER(error, "glewInit error");
             exit(-1);
         }
-        std::cout << "glew version '" << glewGetString(GLEW_VERSION) << "' init succeeded" << std::endl;
+        LOGGER(info, "glew version '" << glewGetString(GLEW_VERSION) << "' init succeeded");
 
         glfwSetWindowCloseCallback(_window,
             [](GLFWwindow* window) {
-                std::cerr << "window is attempting to close" << std::endl;
+                LOGGER(info, "window is attempting to close");
             }
         );
 
@@ -69,6 +71,8 @@ public:
     ~WindowManager() {
         glfwDestroyWindow(_window);
         glfwTerminate();
+
+        LOGGER(info, "window destroyed and terminated successfully");
     }
 
     inline int& getWidth() {

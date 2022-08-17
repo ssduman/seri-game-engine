@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Logger.h"
+
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 
@@ -131,7 +133,7 @@ private:
         glGetShaderiv(_s, GL_COMPILE_STATUS, &_errorStatusSuccess);
         if (!_errorStatusSuccess) {
             glGetShaderInfoLog(_s, 512, NULL, _errorStatusLog);
-            std::cerr << "error: shader compilation failed: " << _errorStatusLog << std::endl;
+            LOGGER(error, "error: shader compilation failed: " << _errorStatusLog);
         }
     }
 
@@ -139,7 +141,7 @@ private:
         glGetProgramiv(_program, GL_LINK_STATUS, &_errorStatusSuccess);
         if (!_errorStatusSuccess) {
             glGetShaderInfoLog(_program, 512, NULL, _errorStatusLog);
-            std::cerr << "error: program linking failed: " << _errorStatusLog << std::endl;
+            LOGGER(error, "error: program linking failed: " << _errorStatusLog);
         }
     }
 

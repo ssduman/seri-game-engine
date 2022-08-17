@@ -71,6 +71,9 @@
     <Filter Include="Script">
       <UniqueIdentifier>{1a8714b5-b3e2-4fd2-843b-fa3d331cf33c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Logger">
+      <UniqueIdentifier>{4c591272-0692-469a-8a9d-0b217cff7ca3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Renderer.cpp">
@@ -261,6 +264,9 @@
     </ClInclude>
     <ClInclude Include="Cube.h">
       <Filter>Shape</Filter>
+    </ClInclude>
+    <ClInclude Include="Logger.h">
+      <Filter>Logger</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
