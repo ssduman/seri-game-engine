@@ -9,6 +9,7 @@
 #include "Circle.h"
 #include "Cube.h"
 #include "Camera.h"
+#include "Logger.h"
 
 #include <stdlib.h>
 
@@ -42,6 +43,8 @@ public:
                 point->initCamera(camera);
                 point->init();
 
+                LOGGER(debug, "point created");
+
                 return point;
             }
             case EntityType::LINE:
@@ -59,6 +62,8 @@ public:
                 line->initCamera(camera);
                 line->init();
 
+                LOGGER(debug, "line created");
+
                 return line;
             }
             case EntityType::TRIANGLE:
@@ -75,6 +80,8 @@ public:
                 triangle->initCamera(camera);
                 triangle->init();
 
+                LOGGER(debug, "triangle created");
+
                 return triangle;
             }
             case EntityType::RECTANGLE:
@@ -90,6 +97,8 @@ public:
                 }
                 rectangle->initCamera(camera);
                 rectangle->init();
+
+                LOGGER(debug, "rectangle created");
 
                 return rectangle;
             }
@@ -116,6 +125,8 @@ public:
                 }
                 circle->initCamera(camera);
                 circle->init();
+
+                LOGGER(debug, "circle created");
 
                 return circle;
             }
@@ -213,6 +224,8 @@ public:
                 cube->initTexture("textures/wall2.png");
                 cube->initCamera(camera);
                 cube->init();
+
+                LOGGER(debug, "cube created");
 
                 return cube;
             }

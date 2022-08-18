@@ -5,6 +5,7 @@
 #include "Factory.h"
 #include "Layer.h"
 #include "Camera.h"
+#include "Logger.h"
 
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
@@ -46,6 +47,7 @@ public:
         static bool no_open = true;
         if (!ImGui::Begin("Maze", &no_open, _window_flags)) {
             ImGui::End();
+            LOGGER(error, "gui begin failed");
             return;
         }
 
