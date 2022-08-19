@@ -1,6 +1,7 @@
 #pragma once
 
 #include "WindowManager.h"
+#include "Logger.h"
 
 #include <string>
 #include <vector>

@@ -109,9 +109,9 @@ public:
             glfwSetWindowShouldClose(window, GLFW_TRUE);
         }
 
-        //if (action == GLFW_RELEASE) {
-        //    std::cout << "userInput: " << getUserInput() << std::endl;
-        //}
+        if (action == GLFW_RELEASE) {
+            LOGGER(info, "user input: " << getUserInput());
+        }
     }
 
     void processInput(float deltaTime) {
