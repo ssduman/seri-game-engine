@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Vec3.h"
+#include "Mat4.h"
 
 #include <cmath>
 #include <iostream>
@@ -107,6 +108,40 @@ public:
 
     friend Vec4 operator/(const Vec4& lhs, const Vec4& rhs) {
         return Vec4{ lhs.x / rhs.x, lhs.y / rhs.y, lhs.z / rhs.z, lhs.w / rhs.w };
+    }
+
+    /* vec4_lhs + mat4_rhs; */
+
+    friend Mat4<T> operator+(const Vec4& lhs, const Mat4<T>& rhs) {
+        Mat4<T> temp{ rhs };
+        temp.rows[0] += lhs;
+        temp.rows[1] += lhs;
+        temp.rows[2] += lhs;
+        temp.rows[3] += lhs;
+        return temp;
+    }
+
+    friend Mat4<T> operator-(const Vec4& lhs, const Mat4<T>& rhs) {
+        Mat4<T> temp{ rhs };
+        temp.rows[0] -= lhs;
+        temp.rows[1] -= lhs;
+        temp.rows[2] -= lhs;
+        temp.rows[3] -= lhs;
+        return temp;
+    }
+
+    friend Vec4<T> operator*(const Vec4& lhs, const Mat4<T>& rhs) {
+        Mat4 <T>temp{ rhs };
+        return rhs.multiply(lhs);
+    }
+
+    friend Mat4<T> operator/(const Vec4& lhs, const Mat4<T>& rhs) {
+        Mat4<T> temp{ rhs };
+        temp.rows[0] /= lhs;
+        temp.rows[1] /= lhs;
+        temp.rows[2] /= lhs;
+        temp.rows[3] /= lhs;
+        return temp;
     }
 
     /* vec4_lhs += 3.14f; */

@@ -139,6 +139,40 @@ public:
         return temp;
     }
 
+    /* mat4_lhs + vec4_rhs; */
+
+    friend Mat4 operator+(const Mat4& lhs, const Vec4<T>& rhs) {
+        Mat4 temp{ lhs };
+        temp.rows[0] += rhs;
+        temp.rows[1] += rhs;
+        temp.rows[2] += rhs;
+        temp.rows[3] += rhs;
+        return temp;
+    }
+
+    friend Mat4 operator-(const Mat4& lhs, const Vec4<T>& rhs) {
+        Mat4 temp{ lhs };
+        temp.rows[0] -= rhs;
+        temp.rows[1] -= rhs;
+        temp.rows[2] -= rhs;
+        temp.rows[3] -= rhs;
+        return temp;
+    }
+
+    friend Vec4<T> operator*(const Mat4& lhs, const Vec4<T>& rhs) {
+        Mat4 temp{ lhs };
+        return lhs.multiply(rhs);
+    }
+
+    friend Mat4 operator/(const Mat4& lhs, const Vec4<T>& rhs) {
+        Mat4 temp{ lhs };
+        temp.rows[0] /= rhs;
+        temp.rows[1] /= rhs;
+        temp.rows[2] /= rhs;
+        temp.rows[3] /= rhs;
+        return temp;
+    }
+
     /* mat4_lhs += 3.14f; */
 
     friend Mat4 operator+=(Mat4& lhs, const T& rhs) {
