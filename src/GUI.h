@@ -25,38 +25,12 @@ public:
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
 
-        _io = &ImGui::GetIO();
-        _io->ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-        _io->ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
-        //_io->Fonts->AddFontFromFileTTF(font_filename, 20.0f);
-        _io->FontGlobalScale = 1.5;
-
-        ImGui::StyleColorsDark();
+        setIO();
+        setStyle();
+        setWindowFlags();
 
         ImGui_ImplGlfw_InitForOpenGL(_windowManager->getWindow(), true);
         ImGui_ImplOpenGL3_Init(glsl_version);
-
-        _windowFlags = 0;
-        _windowFlags |= ImGuiWindowFlags_MenuBar;
-
-        _style = ImGui::GetStyle();
-
-        _style.WindowRounding = 6.0f;
-        _style.ChildRounding = 6.0f;
-        _style.FrameRounding = 6.0f;
-        _style.PopupRounding = 6.0f;
-        _style.ScrollbarRounding = 6.0f;
-        _style.GrabRounding = 6.0f;
-
-        _style.FrameBorderSize = 1.0f;
-        _style.WindowTitleAlign = ImVec2(0.5f, 0.50f);
-        _style.WindowMenuButtonPosition += 1;
-
-        _style.Colors[ImGuiCol_TitleBg] = ImVec4(0.1f, 0.1f, 0.1f, 1.0f);
-        _style.Colors[ImGuiCol_TitleBgActive] = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
-        _style.Colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
-
-        _style.ScaleAllSizes(1.5f);
     }
 
     void update() override {
@@ -64,9 +38,7 @@ public:
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        static bool showDemo = true;
-        ImGui::ShowDemoWindow(&show_demo_window);
-
+        showDemoWindow();
         showMainMenuBar();
 
         static bool no_open = true;
@@ -185,6 +157,48 @@ private:
         }
     }
 
+    void setIO() {
+        _io = &ImGui::GetIO();
+        _io->ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+        _io->ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+        _io->FontGlobalScale = 1.5;
+        _io->ConfigWindowsMoveFromTitleBarOnly = true;
+        //_io->Fonts->AddFontFromFileTTF(font_filename, 14.0f);
+    }
+
+    void setStyle() {
+        ImGui::StyleColorsDark();
+        _style = &ImGui::GetStyle();
+
+        _style->WindowRounding = 6.0f;
+        _style->ChildRounding = 6.0f;
+        _style->FrameRounding = 6.0f;
+        _style->PopupRounding = 6.0f;
+        _style->ScrollbarRounding = 6.0f;
+        _style->GrabRounding = 6.0f;
+
+        _style->FrameBorderSize = 1.0f;
+        _style->WindowTitleAlign = ImVec2(0.5f, 0.50f);
+        _style->WindowMenuButtonPosition = ImGuiDir_Right;
+
+        _style->Colors[ImGuiCol_TitleBg] = ImVec4(0.1f, 0.1f, 0.1f, 1.0f);
+        _style->Colors[ImGuiCol_TitleBgActive] = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
+        _style->Colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
+
+        _style->ScaleAllSizes(1.5f);
+    }
+
+    void setWindowFlags() {
+        _windowFlags = 0;
+        _windowFlags |= ImGuiWindowFlags_MenuBar;
+        //_windowFlags |= ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
+    }
+
+    void showDemoWindow() {
+        static bool showDemo = true;
+        ImGui::ShowDemoWindow(&show_demo_window);
+    }
+
     void showMainMenuBar() {
         if (ImGui::BeginMainMenuBar()) {
             ImGui::Text("Seri Game Engine");
@@ -212,7 +226,6 @@ private:
     }
 
     void showMenuFile() {
-        ImGui::MenuItem("(demo menu)", NULL, false, false);
         if (ImGui::MenuItem("New")) {
         }
         if (ImGui::MenuItem("Open", "Ctrl+O")) {
@@ -231,8 +244,8 @@ private:
     Camera* _camera = nullptr;
     Entity* _currentEntity = nullptr;
     ImGuiIO* _io = nullptr;
+    ImGuiStyle* _style = nullptr;
     ImGuiWindowFlags _windowFlags = 0;
-    ImGuiStyle _style;
     bool show_demo_window = true;
     const char* glsl_version = "#version 130";
     const char* font_filename = "fonts/En Bloc.ttf";
