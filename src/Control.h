@@ -106,7 +106,7 @@ public:
                 userInputVector.pop_back();
             }
         } else if ((key == GLFW_KEY_ESCAPE) && (action == GLFW_PRESS)) {
-            glfwSetWindowShouldClose(window, GLFW_TRUE);
+            _windowManager->windowShouldClose();
         }
 
         if (action == GLFW_RELEASE) {

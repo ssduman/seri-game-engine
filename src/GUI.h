@@ -28,15 +28,35 @@ public:
         _io = &ImGui::GetIO();
         _io->ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
         _io->ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
-        _io->Fonts->AddFontFromFileTTF(font_filename, 20.0f);
+        //_io->Fonts->AddFontFromFileTTF(font_filename, 20.0f);
+        _io->FontGlobalScale = 1.5;
 
         ImGui::StyleColorsDark();
 
         ImGui_ImplGlfw_InitForOpenGL(_windowManager->getWindow(), true);
         ImGui_ImplOpenGL3_Init(glsl_version);
 
-        _window_flags = 0;
-        _window_flags |= ImGuiWindowFlags_MenuBar;
+        _windowFlags = 0;
+        _windowFlags |= ImGuiWindowFlags_MenuBar;
+
+        _style = ImGui::GetStyle();
+
+        _style.WindowRounding = 6.0f;
+        _style.ChildRounding = 6.0f;
+        _style.FrameRounding = 6.0f;
+        _style.PopupRounding = 6.0f;
+        _style.ScrollbarRounding = 6.0f;
+        _style.GrabRounding = 6.0f;
+
+        _style.FrameBorderSize = 1.0f;
+        _style.WindowTitleAlign = ImVec2(0.5f, 0.50f);
+        _style.WindowMenuButtonPosition += 1;
+
+        _style.Colors[ImGuiCol_TitleBg] = ImVec4(0.1f, 0.1f, 0.1f, 1.0f);
+        _style.Colors[ImGuiCol_TitleBgActive] = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
+        _style.Colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
+
+        _style.ScaleAllSizes(1.5f);
     }
 
     void update() override {
@@ -44,8 +64,13 @@ public:
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
+        static bool showDemo = true;
+        ImGui::ShowDemoWindow(&show_demo_window);
+
+        showMainMenuBar();
+
         static bool no_open = true;
-        if (!ImGui::Begin("Maze", &no_open, _window_flags)) {
+        if (!ImGui::Begin("Maze", &no_open, _windowFlags)) {
             ImGui::End();
             LOGGER(error, "gui begin failed");
             return;
@@ -69,7 +94,6 @@ public:
 
         ImGui::Separator();
 
-        ImGui::Text("Maze");
         if (ImGui::Button("Create point")) {
             _layers->addLayer(Factory::CreateEntity(_camera, EntityType::POINT));
         }
@@ -105,7 +129,7 @@ public:
         ImGui::Separator();
 
         ImGui::CheckboxFlags("io.ConfigFlags: NavEnableKeyboard", &_io->ConfigFlags, ImGuiConfigFlags_NavEnableKeyboard);
-        ImGui::SameLine(); HelpMarker("Enable keyboard controls.");
+        ImGui::SameLine(); helpMarker("Enable keyboard controls.");
 
         ImGui::Separator();
 
@@ -150,7 +174,7 @@ public:
     }
 
 private:
-    void HelpMarker(const char* desc) {
+    void helpMarker(const char* desc) {
         ImGui::TextDisabled("(?)");
         if (ImGui::IsItemHovered()) {
             ImGui::BeginTooltip();
@@ -161,12 +185,54 @@ private:
         }
     }
 
+    void showMainMenuBar() {
+        if (ImGui::BeginMainMenuBar()) {
+            ImGui::Text("Seri Game Engine");
+
+            if (ImGui::BeginMenu("File")) {
+                showMenuFile();
+                ImGui::EndMenu();
+            }
+            if (ImGui::BeginMenu("Edit")) {
+                if (ImGui::MenuItem("Undo", "CTRL+Z")) {
+                }
+                if (ImGui::MenuItem("Redo", "CTRL+Y", false, false)) {
+                }
+                ImGui::Separator();
+                if (ImGui::MenuItem("Cut", "CTRL+X")) {
+                }
+                if (ImGui::MenuItem("Copy", "CTRL+C")) {
+                }
+                if (ImGui::MenuItem("Paste", "CTRL+V")) {
+                }
+                ImGui::EndMenu();
+            }
+            ImGui::EndMainMenuBar();
+        }
+    }
+
+    void showMenuFile() {
+        ImGui::MenuItem("(demo menu)", NULL, false, false);
+        if (ImGui::MenuItem("New")) {
+        }
+        if (ImGui::MenuItem("Open", "Ctrl+O")) {
+        }
+        if (ImGui::MenuItem("Save", "Ctrl+S")) {
+        }
+        if (ImGui::MenuItem("Save As..")) {
+        }
+        if (ImGui::MenuItem("Quit", "Alt+F4")) {
+            _windowManager->windowShouldClose();
+        }
+    }
+
     WindowManager* _windowManager = nullptr;;
     Layer* _layers = nullptr;
     Camera* _camera = nullptr;
     Entity* _currentEntity = nullptr;
     ImGuiIO* _io = nullptr;
-    ImGuiWindowFlags _window_flags = 0;
+    ImGuiWindowFlags _windowFlags = 0;
+    ImGuiStyle _style;
     bool show_demo_window = true;
     const char* glsl_version = "#version 130";
     const char* font_filename = "fonts/En Bloc.ttf";

@@ -131,6 +131,10 @@ public:
         glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
 
+    inline void windowShouldClose(int value = GLFW_TRUE) {
+        glfwSetWindowShouldClose(_window, value);
+    }
+
 private:
     inline void getMousePosition() {
         glfwGetCursorPos(_window, &_mouseXPosition, &_mouseYPosition);
