@@ -39,7 +39,7 @@ public:
         ImGui::NewFrame();
 
         showDemoWindow();
-        
+
         showMainMenuBar();
 
         showEntityWindow();
@@ -114,8 +114,6 @@ private:
 
     void showMainMenuBar() {
         if (ImGui::BeginMainMenuBar()) {
-            ImGui::Text("Seri Game Engine");
-
             if (ImGui::BeginMenu("File")) {
                 showMenuFile();
                 ImGui::EndMenu();
@@ -134,6 +132,10 @@ private:
                 }
                 ImGui::EndMenu();
             }
+
+            textCenter("Play");
+            textRight("Seri Game Engine");
+
             ImGui::EndMainMenuBar();
         }
     }
@@ -234,7 +236,7 @@ private:
 
             ImGui::SliderFloat3("camera", &_camera->_cameraProperties.position[0], 0.0f, 100.0f, "%.4f");
             _currentEntity->getShader().setMat4("u_view", _camera->view());
-        
+
             static char str0[128] = "Entity";
             ImGui::InputText("name", str0, IM_ARRAYSIZE(str0));
 
@@ -254,6 +256,22 @@ private:
         ImGui::SameLine(); helpMarker("Enable keyboard controls.");
 
         ImGui::Separator();
+    }
+
+    void textCenter(std::string text) {
+        auto windowWidth = ImGui::GetWindowSize().x;
+        auto textWidth = ImGui::CalcTextSize(text.c_str()).x;
+
+        ImGui::SetCursorPosX((windowWidth - textWidth) * 0.5f);
+        ImGui::Text(text.c_str());
+    }
+
+    void textRight(std::string text) {
+        auto windowWidth = ImGui::GetWindowSize().x;
+        auto textWidth = ImGui::CalcTextSize(text.c_str()).x;
+
+        ImGui::SetCursorPosX(windowWidth - textWidth - 5.0f);
+        ImGui::Text(text.c_str());
     }
 
     WindowManager* _windowManager = nullptr;;
