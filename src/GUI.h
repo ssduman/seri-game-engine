@@ -135,7 +135,8 @@ private:
                 ImGui::EndMenu();
             }
 
-            textCenter("Play");
+            buttonPlayCenter();
+
             textRight("Seri Game Engine");
 
             ImGui::EndMainMenuBar();
@@ -267,7 +268,27 @@ private:
         auto textWidth = ImGui::CalcTextSize(text.c_str()).x;
 
         ImGui::SetCursorPosX((windowWidth - textWidth) * 0.5f);
-        ImGui::Text(text.c_str());
+        ImGui::Button(text.c_str());
+    }
+
+    void buttonPlayCenter() {
+        static std::string text = "Play";
+        auto windowWidth = ImGui::GetWindowSize().x;
+        auto textWidth = ImGui::CalcTextSize(text.c_str()).x;
+
+        ImGui::SetCursorPosX((windowWidth - textWidth) * 0.5f);
+
+        ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.3f, 0.6f, 0.6f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(0.3f, 0.7f, 0.7f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(0.3f, 0.8f, 0.8f));
+        if (ImGui::Button(text.c_str())) {
+            if (text == "Play") {
+                text = "Stop";
+            } else {
+                text = "Play";
+            }
+        }
+        ImGui::PopStyleColor(3);
     }
 
     void textRight(std::string text) {
