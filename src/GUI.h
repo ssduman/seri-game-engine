@@ -108,8 +108,10 @@ private:
     }
 
     void showDemoWindow() {
-        static bool showDemo = true;
-        ImGui::ShowDemoWindow(&show_demo_window);
+        static bool show_demo_window = true;
+        if (show_demo_window) {
+            ImGui::ShowDemoWindow(&show_demo_window);
+        }
     }
 
     void showMainMenuBar() {
@@ -155,24 +157,26 @@ private:
     }
 
     void showEntityWindow() {
-        static bool no_open = true;
-        if (!ImGui::Begin("Maze", &no_open, _windowFlags)) {
+        static bool show_entity_window = true;
+        if (show_entity_window) {
+            if (!ImGui::Begin("Maze", &show_entity_window, _windowFlags)) {
+                ImGui::End();
+                LOGGER(error, "gui begin failed");
+                return;
+            }
+
+            showEntityWindowMenuBar();
+
+            showEntityCreateButtons();
+
+            showEntityTransformationOptions();
+
+            showGUIOptions();
+
+            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+
             ImGui::End();
-            LOGGER(error, "gui begin failed");
-            return;
         }
-
-        showEntityWindowMenuBar();
-
-        showEntityCreateButtons();
-
-        showEntityTransformationOptions();
-
-        showGUIOptions();
-
-        ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-
-        ImGui::End();
     }
 
     void showEntityWindowMenuBar() {
@@ -281,7 +285,6 @@ private:
     ImGuiIO* _io = nullptr;
     ImGuiStyle* _style = nullptr;
     ImGuiWindowFlags _windowFlags = 0;
-    bool show_demo_window = true;
     const char* glsl_version = "#version 130";
     const char* font_filename = "fonts/En Bloc.ttf";
 };
