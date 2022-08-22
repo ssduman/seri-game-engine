@@ -39,97 +39,10 @@ public:
         ImGui::NewFrame();
 
         showDemoWindow();
+        
         showMainMenuBar();
 
-        static bool no_open = true;
-        if (!ImGui::Begin("Maze", &no_open, _windowFlags)) {
-            ImGui::End();
-            LOGGER(error, "gui begin failed");
-            return;
-        }
-
-        ImGui::PushItemWidth(ImGui::GetFontSize() * -12);
-
-        static bool show_app_main_menu_bar = false;
-        static bool show_app_example_menu_bar = false;
-        if (ImGui::BeginMenuBar()) {
-            if (ImGui::BeginMenu("Menu")) {
-                ImGui::MenuItem("Option 1", nullptr, &show_app_main_menu_bar);
-                ImGui::EndMenu();
-            }
-            if (ImGui::BeginMenu("Settings")) {
-                ImGui::MenuItem("Setting 1", nullptr, &show_app_example_menu_bar);
-                ImGui::EndMenu();
-            }
-            ImGui::EndMenuBar();
-        }
-
-        ImGui::Separator();
-
-        if (ImGui::Button("Create point")) {
-            _layers->addLayer(Factory::CreateEntity(_camera, EntityType::POINT));
-        }
-        if (ImGui::Button("Create line")) {
-            _layers->addLayer(Factory::CreateEntity(_camera, EntityType::LINE));
-        }
-        if (ImGui::Button("Create triangle")) {
-            _layers->addLayer(Factory::CreateEntity(_camera, EntityType::TRIANGLE));
-        }
-        if (ImGui::Button("Create rectangle")) {
-            _layers->addLayer(Factory::CreateEntity(_camera, EntityType::RECTANGLE));
-        }
-        if (ImGui::Button("Create circle")) {
-            _layers->addLayer(Factory::CreateEntity(_camera, EntityType::CIRCLE));
-        }
-        if (ImGui::Button("Create cube")) {
-            _layers->addLayer(Factory::CreateEntity(_camera, EntityType::CUBE));
-        }
-        if (ImGui::Button("Delete entity")) {
-            _currentEntity = nullptr;
-            _layers->deleteLayer();
-        }
-
-        ImGui::Separator();
-
-        if (ImGui::Button("Enable cursor")) {
-            _windowManager->enableCursor();
-        }
-        if (ImGui::Button("Disable cursor")) {
-            _windowManager->disableCursor();
-        }
-
-        ImGui::Separator();
-
-        ImGui::CheckboxFlags("io.ConfigFlags: NavEnableKeyboard", &_io->ConfigFlags, ImGuiConfigFlags_NavEnableKeyboard);
-        ImGui::SameLine(); helpMarker("Enable keyboard controls.");
-
-        ImGui::Separator();
-
-        static char str0[128] = "Entity";
-        ImGui::InputText("name", str0, IM_ARRAYSIZE(str0));
-
-        ImGui::Separator();
-
-        if (_currentEntity) {
-            ImGui::SliderFloat3("position", &_currentEntity->getTransform()._position[0], -1.0f, 1.0f, "%.4f");
-            ImGui::SliderFloat3("rotation", &_currentEntity->getTransform()._rotation[0], -180.0f, 180.0f, "%.4f");
-            ImGui::SliderFloat3("scale", &_currentEntity->getTransform()._scale[0], 0.0f, 100.0f, "%.4f");
-            ImGui::Separator();
-
-            _currentEntity->getShader().setMat4("u_model", _currentEntity->getTransform().apply());
-
-            ImGui::ColorEdit4("color", &_currentEntity->getColor()._color[0]);
-            _currentEntity->getShader().setVec4("u_color", _currentEntity->getColor()._color);
-
-            ImGui::SliderFloat("speed", &_camera->getSpeed(), 0.0f, 100.0f, "%.4f");
-
-            ImGui::SliderFloat3("camera", &_camera->_cameraProperties.position[0], 0.0f, 100.0f, "%.4f");
-            _currentEntity->getShader().setMat4("u_view", _camera->view());
-        }
-
-        ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-
-        ImGui::End();
+        showEntityWindow();
     }
 
     void render() override {
@@ -237,6 +150,110 @@ private:
         if (ImGui::MenuItem("Quit", "Alt+F4")) {
             _windowManager->windowShouldClose();
         }
+    }
+
+    void showEntityWindow() {
+        static bool no_open = true;
+        if (!ImGui::Begin("Maze", &no_open, _windowFlags)) {
+            ImGui::End();
+            LOGGER(error, "gui begin failed");
+            return;
+        }
+
+        showEntityWindowMenuBar();
+
+        showEntityCreateButtons();
+
+        showEntityTransformationOptions();
+
+        showGUIOptions();
+
+        ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+
+        ImGui::End();
+    }
+
+    void showEntityWindowMenuBar() {
+        ImGui::PushItemWidth(ImGui::GetFontSize() * -12);
+
+        static bool show_app_main_menu_bar = false;
+        static bool show_app_example_menu_bar = false;
+        if (ImGui::BeginMenuBar()) {
+            if (ImGui::BeginMenu("Menu")) {
+                ImGui::MenuItem("Option 1", nullptr, &show_app_main_menu_bar);
+                ImGui::EndMenu();
+            }
+            if (ImGui::BeginMenu("Settings")) {
+                ImGui::MenuItem("Setting 1", nullptr, &show_app_example_menu_bar);
+                ImGui::EndMenu();
+            }
+            ImGui::EndMenuBar();
+        }
+    }
+
+    void showEntityCreateButtons() {
+        if (ImGui::Button("Create point")) {
+            _layers->addLayer(Factory::CreateEntity(_camera, EntityType::POINT));
+        }
+        if (ImGui::Button("Create line")) {
+            _layers->addLayer(Factory::CreateEntity(_camera, EntityType::LINE));
+        }
+        if (ImGui::Button("Create triangle")) {
+            _layers->addLayer(Factory::CreateEntity(_camera, EntityType::TRIANGLE));
+        }
+        if (ImGui::Button("Create rectangle")) {
+            _layers->addLayer(Factory::CreateEntity(_camera, EntityType::RECTANGLE));
+        }
+        if (ImGui::Button("Create circle")) {
+            _layers->addLayer(Factory::CreateEntity(_camera, EntityType::CIRCLE));
+        }
+        if (ImGui::Button("Create cube")) {
+            _layers->addLayer(Factory::CreateEntity(_camera, EntityType::CUBE));
+        }
+        if (ImGui::Button("Delete entity")) {
+            _currentEntity = nullptr;
+            _layers->deleteLayer();
+        }
+
+        ImGui::Separator();
+    }
+
+    void showEntityTransformationOptions() {
+        if (_currentEntity) {
+            ImGui::SliderFloat3("position", &_currentEntity->getTransform()._position[0], -1.0f, 1.0f, "%.4f");
+            ImGui::SliderFloat3("rotation", &_currentEntity->getTransform()._rotation[0], -180.0f, 180.0f, "%.4f");
+            ImGui::SliderFloat3("scale", &_currentEntity->getTransform()._scale[0], 0.0f, 100.0f, "%.4f");
+            ImGui::Separator();
+
+            _currentEntity->getShader().setMat4("u_model", _currentEntity->getTransform().apply());
+
+            ImGui::ColorEdit4("color", &_currentEntity->getColor()._color[0]);
+            _currentEntity->getShader().setVec4("u_color", _currentEntity->getColor()._color);
+
+            ImGui::SliderFloat("speed", &_camera->getSpeed(), 0.0f, 100.0f, "%.4f");
+
+            ImGui::SliderFloat3("camera", &_camera->_cameraProperties.position[0], 0.0f, 100.0f, "%.4f");
+            _currentEntity->getShader().setMat4("u_view", _camera->view());
+        
+            static char str0[128] = "Entity";
+            ImGui::InputText("name", str0, IM_ARRAYSIZE(str0));
+
+            ImGui::Separator();
+        }
+    }
+
+    void showGUIOptions() {
+        if (ImGui::Button("Enable cursor")) {
+            _windowManager->enableCursor();
+        }
+        if (ImGui::Button("Disable cursor")) {
+            _windowManager->disableCursor();
+        }
+
+        ImGui::CheckboxFlags("io.ConfigFlags: NavEnableKeyboard", &_io->ConfigFlags, ImGuiConfigFlags_NavEnableKeyboard);
+        ImGui::SameLine(); helpMarker("Enable keyboard controls.");
+
+        ImGui::Separator();
     }
 
     WindowManager* _windowManager = nullptr;;
