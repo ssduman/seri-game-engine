@@ -122,11 +122,7 @@ public:
         return _projection;
     }
 
-    float& getSpeed() {
-        return _cameraProperties.speed;
-    }
-
-    CameraProperties& cameraProperties() {
+    CameraProperties& getCameraProperties() {
         return _cameraProperties;
     }
 
