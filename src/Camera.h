@@ -16,14 +16,10 @@ struct CameraProperties {
     float far{ 100.0f };
     float aspect{ 16.0f / 9.0f };
 
+    glm::vec3 up{ 0.0f, 1.0f, 0.0f };
+    glm::vec3 right{ 1.0f, 0.0f, 0.0f };
     glm::vec3 front{ 0.0f, 0.0f, -1.0f };
-    glm::vec3 target{ 0.0f, 0.0f, 0.0f };
-    glm::vec3 worldUp{ 0.0f, 1.0f, 0.0f };
-    glm::vec3 position{ 0.0f, 0.0f, 3.0f };
-
-    glm::vec3 up;
-    glm::vec3 right;
-    glm::vec3 direction;
+    glm::vec3 position{ 0.0f, 0.0f, -3.0f };
 };
 
 std::string to_string(CameraMovement cameraMovement) {
@@ -44,10 +40,7 @@ std::string to_string(CameraMovement cameraMovement) {
 class Camera {
 public:
     Camera(CameraProperties cameraProperties) : _cameraProperties{ cameraProperties } {
-        _cameraProperties.direction = glm::normalize(_cameraProperties.position - _cameraProperties.target);
-        _cameraProperties.right = glm::normalize(glm::cross(_cameraProperties.worldUp, _cameraProperties.direction));
-        _cameraProperties.up = glm::normalize(glm::cross(_cameraProperties.direction, _cameraProperties.right));
-
+        updateVectors();
         view();
         projection();
     }
@@ -78,6 +71,10 @@ public:
     void handleMouse(float xPos, float yPos) {
         auto deltaX = xPos - _xPosLast;
         auto deltaY = _yPosLast - yPos;
+        if (_xPosLast < 0) {
+            deltaX = 0;
+            deltaY = 0;
+        }
 
         _xPosLast = xPos;
         _yPosLast = yPos;
@@ -138,12 +135,11 @@ private:
         eulerAngle.z = cos(glm::radians(_pitch)) * sin(glm::radians(_yaw));
 
         _cameraProperties.front = glm::normalize(eulerAngle);
-        _cameraProperties.right = glm::normalize(glm::cross(_cameraProperties.front, _cameraProperties.worldUp));
-        _cameraProperties.up = glm::normalize(glm::cross(_cameraProperties.right, _cameraProperties.front));
+        _cameraProperties.right = glm::normalize(glm::cross(_cameraProperties.front, _cameraProperties.up));
     }
 
-    float _xPosLast = 0.0f;
-    float _yPosLast = 0.0f;
+    float _xPosLast = -1.0f;
+    float _yPosLast = -1.0f;
 
     float _roll = 0.0f;
     float _pitch = 0.0f;
