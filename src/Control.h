@@ -77,7 +77,9 @@ public:
         mouseCurrentPosX = xpos;
         mouseCurrentPosY = ypos;
 
-        _camera->handleMouse(xpos, ypos);
+        float xPos = static_cast<float>(xpos);
+        float yPos = static_cast<float>(ypos);
+        _camera->handleMouse(xPos, yPos);
     }
 
     void scrollCallback(GLFWwindow* window, double xoffset, double yoffset) override {}
@@ -110,7 +112,7 @@ public:
         }
 
         if (action == GLFW_RELEASE) {
-            LOGGER(info, "user input: " << getUserInput());
+            //LOGGER(info, "user input: " << getUserInput());
         }
     }
 

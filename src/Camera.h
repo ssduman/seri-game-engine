@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Util.h"
+#include "Logger.h"
 
 enum class CameraMovement {
     FORWARD,
@@ -10,10 +11,10 @@ enum class CameraMovement {
 };
 
 struct CameraProperties {
-    float fov = 45.0f;
-    float aspect = 16.0f / 9.0f;
-    float near = 0.1f;
-    float far = 100.0f;
+    float fov{ 45.0f };
+    float near{ 0.1f };
+    float far{ 100.0f };
+    float aspect{ 16.0f / 9.0f };
 
     glm::vec3 front{ 0.0f, 0.0f, -1.0f };
     glm::vec3 target{ 0.0f, 0.0f, 0.0f };
@@ -24,6 +25,21 @@ struct CameraProperties {
     glm::vec3 right;
     glm::vec3 direction;
 };
+
+std::string to_string(CameraMovement cameraMovement) {
+    switch (cameraMovement) {
+        case CameraMovement::FORWARD:
+            return "forward";
+        case CameraMovement::BACKWARD:
+            return "backward";
+        case CameraMovement::LEFT:
+            return "left";
+        case CameraMovement::RIGHT:
+            return "right";
+        default:
+            return "unknown";
+    }
+}
 
 class Camera {
 public:
@@ -39,43 +55,35 @@ public:
     ~Camera() = default;
 
     void handleInput(float deltaTime, CameraMovement cameraMovement) {
-        float velocity = _speed * deltaTime;
+        float movementSpeed = _speed * deltaTime;
+
+        //LOGGER(debug, "moving: " << to_string(cameraMovement));
+
         if (cameraMovement == CameraMovement::FORWARD) {
-            _cameraProperties.position += _cameraProperties.front * velocity;
+            _cameraProperties.position += _cameraProperties.front * movementSpeed;
         }
         if (cameraMovement == CameraMovement::BACKWARD) {
-            _cameraProperties.position -= _cameraProperties.front * velocity;
+            _cameraProperties.position -= _cameraProperties.front * movementSpeed;
         }
         if (cameraMovement == CameraMovement::LEFT) {
-            _cameraProperties.position -= _cameraProperties.right * velocity;
+            _cameraProperties.position -= _cameraProperties.right * movementSpeed;
         }
         if (cameraMovement == CameraMovement::RIGHT) {
-            _cameraProperties.position += _cameraProperties.right * velocity;
+            _cameraProperties.position += _cameraProperties.right * movementSpeed;
         }
 
         view();
     }
 
-    void handleMouse(double xpos, double ypos) {
-        float xPos = static_cast<float>(xpos);
-        float yPos = static_cast<float>(ypos);
+    void handleMouse(float xPos, float yPos) {
+        auto deltaX = xPos - _xPosLast;
+        auto deltaY = _yPosLast - yPos;
 
-        if (_firstMouse) {
-            _lastX = xPos;
-            _lastY = yPos;
-            _firstMouse = false;
-        }
+        _xPosLast = xPos;
+        _yPosLast = yPos;
 
-        float xoffset = xPos - _lastX;
-        float yoffset = _lastY - yPos;
-        _lastX = xPos;
-        _lastY = yPos;
-
-        xoffset *= _sensitivity;
-        yoffset *= _sensitivity;
-
-        _yaw += xoffset;
-        _pitch += yoffset;
+        _yaw += deltaX * _sensitivity;
+        _pitch += deltaY * _sensitivity;
 
         if (_pitch > 89.0f) {
             _pitch = 89.0f;
@@ -84,12 +92,14 @@ public:
             _pitch = -89.0f;
         }
 
-        glm::vec3 front;
-        front.x = cos(glm::radians(_yaw)) * cos(glm::radians(_pitch));
-        front.y = sin(glm::radians(_pitch));
-        front.z = sin(glm::radians(_yaw)) * cos(glm::radians(_pitch));
-        _cameraProperties.front = glm::normalize(front);
+        while (_yaw < -180.0f) {
+            _yaw += 360.0f;
+        }
+        while (_yaw > 180.0f) {
+            _yaw -= 360.0f;
+        }
 
+        updateVectors();
         view();
     }
 
@@ -121,13 +131,26 @@ public:
     CameraProperties _cameraProperties;
 
 private:
-    bool _firstMouse = false;
-    float _lastX = 0;
-    float _lastY = 0;
-    float _yaw = -90.0f;
+    void updateVectors() {
+        glm::vec3 eulerAngle{};
+        eulerAngle.x = cos(glm::radians(_pitch)) * cos(glm::radians(_yaw));
+        eulerAngle.y = sin(glm::radians(_pitch));
+        eulerAngle.z = cos(glm::radians(_pitch)) * sin(glm::radians(_yaw));
+
+        _cameraProperties.front = glm::normalize(eulerAngle);
+        _cameraProperties.right = glm::normalize(glm::cross(_cameraProperties.front, _cameraProperties.worldUp));
+        _cameraProperties.up = glm::normalize(glm::cross(_cameraProperties.right, _cameraProperties.front));
+    }
+
+    float _xPosLast = 0.0f;
+    float _yPosLast = 0.0f;
+
+    float _roll = 0.0f;
     float _pitch = 0.0f;
+    float _yaw = 90.0f;
+
     float _speed = 2.5f;
-    float _sensitivity = 0.1f;
     float _zoom = 45.0f;
+    float _sensitivity = 0.1f;
 
 };
