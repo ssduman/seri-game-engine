@@ -74,6 +74,9 @@
     <Filter Include="Logger">
       <UniqueIdentifier>{4c591272-0692-469a-8a9d-0b217cff7ca3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="State">
+      <UniqueIdentifier>{2173bd8f-4395-463a-bf08-d30a35309b1e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Renderer.cpp">
@@ -270,6 +273,9 @@
     </ClInclude>
     <ClInclude Include="LogManager.h">
       <Filter>Logger</Filter>
+    </ClInclude>
+    <ClInclude Include="State.h">
+      <Filter>State</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

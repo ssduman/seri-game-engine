@@ -7,12 +7,16 @@
 #include "Camera.h"
 #include "Factory.h"
 #include "Logger.h"
+#include "State.h"
 
 int main(int argc, char** argv) {
     setlocale(LC_ALL, "en_US.UTF-8");
 
     WindowProperties windowProperties{ /*title*/ "Maze", /*fullscreen*/ false, /*w*/ 1280, /*h*/ 720 };
     std::unique_ptr<WindowManager> windowManager = std::make_unique<WindowManager>(windowProperties);
+
+    std::shared_ptr<State> state = std::make_shared<State>();
+    state->gameState() = GameState::MENU;
 
     CameraProperties cameraProperties;
     cameraProperties.aspect = static_cast<float>(windowProperties.windowWidth / windowProperties.windowHeight);
