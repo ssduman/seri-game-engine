@@ -16,6 +16,9 @@ struct CameraProperties {
     float far{ 100.0f };
     float aspect{ 16.0f / 9.0f };
 
+    float speed{ 2.5f };
+    float sensitivity{ 0.1f };
+
     glm::vec3 up{ 0.0f, 1.0f, 0.0f };
     glm::vec3 right{ 1.0f, 0.0f, 0.0f };
     glm::vec3 front{ 0.0f, 0.0f, -1.0f };
@@ -48,7 +51,7 @@ public:
     ~Camera() = default;
 
     void handleInput(float deltaTime, CameraMovement cameraMovement) {
-        float movementSpeed = _speed * deltaTime;
+        float movementSpeed = _cameraProperties.speed * deltaTime;
 
         //LOGGER(debug, "moving: " << to_string(cameraMovement));
 
@@ -79,8 +82,8 @@ public:
         _xPosLast = xPos;
         _yPosLast = yPos;
 
-        _yaw += deltaX * _sensitivity;
-        _pitch += deltaY * _sensitivity;
+        _yaw += deltaX * _cameraProperties.sensitivity;
+        _pitch += deltaY * _cameraProperties.sensitivity;
 
         if (_pitch > 89.0f) {
             _pitch = 89.0f;
@@ -120,7 +123,11 @@ public:
     }
 
     float& getSpeed() {
-        return _speed;
+        return _cameraProperties.speed;
+    }
+
+    CameraProperties& cameraProperties() {
+        return _cameraProperties;
     }
 
     glm::mat4 _view{};
@@ -144,9 +151,5 @@ private:
     float _roll = 0.0f;
     float _pitch = 0.0f;
     float _yaw = 90.0f;
-
-    float _speed = 2.5f;
-    float _zoom = 45.0f;
-    float _sensitivity = 0.1f;
 
 };
