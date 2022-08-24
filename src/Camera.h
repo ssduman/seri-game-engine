@@ -2,6 +2,7 @@
 
 #include "Util.h"
 #include "Logger.h"
+#include "State.h"
 
 enum class CameraMovement {
     FORWARD,
@@ -42,7 +43,7 @@ std::string to_string(CameraMovement cameraMovement) {
 
 class Camera {
 public:
-    Camera(CameraProperties cameraProperties) : _cameraProperties{ cameraProperties } {
+    Camera(CameraProperties cameraProperties, State* state) : _cameraProperties{ cameraProperties }, _state{ state } {
         updateVectors();
         view();
         projection();
@@ -51,6 +52,10 @@ public:
     ~Camera() = default;
 
     void handleInput(float deltaTime, CameraMovement cameraMovement) {
+        if (_state->gameState() != GameState::GAME) {
+            return;
+        }
+
         float movementSpeed = _cameraProperties.speed * deltaTime;
 
         //LOGGER(debug, "moving: " << to_string(cameraMovement));
@@ -72,6 +77,10 @@ public:
     }
 
     void handleMouse(float xPos, float yPos) {
+        if (_state->gameState() != GameState::GAME) {
+            return;
+        }
+
         auto deltaX = xPos - _xPosLast;
         auto deltaY = _yPosLast - yPos;
         if (_xPosLast < 0) {
@@ -126,6 +135,7 @@ public:
         return _cameraProperties;
     }
 
+    State* _state;
     glm::mat4 _view{};
     glm::mat4 _projection{};
     CameraProperties _cameraProperties;

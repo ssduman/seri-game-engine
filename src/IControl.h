@@ -2,14 +2,16 @@
 
 #include "WindowManager.h"
 #include "Logger.h"
+#include "State.h"
 
 #include <string>
 #include <vector>
 
 class IControl {
 public:
-    IControl(WindowManager* windowManager) :
+    IControl(WindowManager* windowManager, State* state) :
         _windowManager(windowManager),
+        _state(state),
         mouseCurrentPosX(_windowManager->getMouseX()),
         mouseCurrentPosY(_windowManager->getMouseY()) {}
 
@@ -47,6 +49,7 @@ public:
 
 protected:
     WindowManager* _windowManager = nullptr;
+    State* _state = nullptr;
     double mouseCurrentPosX;
     double mouseCurrentPosY;
     std::vector<std::string> userInputVector;

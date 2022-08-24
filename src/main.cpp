@@ -20,14 +20,15 @@ int main(int argc, char** argv) {
 
     CameraProperties cameraProperties;
     cameraProperties.aspect = static_cast<float>(windowProperties.windowWidth / windowProperties.windowHeight);
-    std::shared_ptr<Camera> camera = std::make_shared<Camera>(cameraProperties);
+    std::shared_ptr<Camera> camera = std::make_shared<Camera>(cameraProperties, state.get());
 
-    Control control(windowManager.get(), camera.get());
+    Control control(windowManager.get(), camera.get(), state.get());
     control.init();
 
     Layer layers;
+    layers.addLayer(Factory::CreateEntity(camera.get(), { EntityType::CUBE }));
 
-    GUI gui(windowManager.get(), &layers);
+    GUI gui(windowManager.get(), &layers, state.get());
     gui.init();
     gui.registerCamera(camera.get());
 

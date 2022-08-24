@@ -8,7 +8,7 @@
 
 class Control : public IControl {
 public:
-    Control(WindowManager* windowManager, Camera* camera) : IControl(windowManager), _camera(camera), _inputHandler(camera) {
+    Control(WindowManager* windowManager, Camera* camera, State* state) : IControl(windowManager, state), _camera(camera), _inputHandler(camera) {
         glfwSetWindowUserPointer(_windowManager->getWindow(), static_cast<void*>(this));
     }
 

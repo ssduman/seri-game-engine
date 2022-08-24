@@ -6,6 +6,7 @@
 #include "Layer.h"
 #include "Camera.h"
 #include "Logger.h"
+#include "State.h"
 
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
@@ -13,7 +14,7 @@
 
 class GUI : public Object {
 public:
-    GUI(WindowManager* windowManager, Layer* layers) : _windowManager(windowManager), _layers(layers) {}
+    GUI(WindowManager* windowManager, Layer* layers, State* state) : _windowManager(windowManager), _layers(layers), _state{ state } {}
 
     virtual ~GUI() {
         ImGui_ImplOpenGL3_Shutdown();
@@ -284,9 +285,12 @@ private:
         if (ImGui::Button(text.c_str())) {
             if (text == "Play") {
                 text = "Stop";
+                _state->gameState() = GameState::GAME;
             } else {
                 text = "Play";
+                _state->gameState() = GameState::IDLE;
             }
+            LOGGER(info, "game status changed to '" << to_string(_state->gameState()) << "'");
         }
         ImGui::PopStyleColor(3);
     }
@@ -301,6 +305,7 @@ private:
 
     WindowManager* _windowManager = nullptr;;
     Layer* _layers = nullptr;
+    State* _state = nullptr;
     Camera* _camera = nullptr;
     Entity* _currentEntity = nullptr;
     ImGuiIO* _io = nullptr;
