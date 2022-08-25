@@ -4,7 +4,7 @@
 
 class Rectangle : public Entity {
 public:
-    Rectangle(EntityProperties& rectangleProperties) : _rectangleProperties(rectangleProperties) {
+    Rectangle(Camera* camera, EntityProperties& rectangleProperties) : Entity(camera), _rectangleProperties(rectangleProperties) {
         _entityType = EntityType::RECTANGLE;
         setProperties(_rectangleProperties);
     }
@@ -14,8 +14,6 @@ public:
         glDeleteBuffers(1, &_VBO);
         glDeleteBuffers(1, &_EBO);
     }
-
-    void update() override {}
 
     void render() override {
         _shader.use();

@@ -4,7 +4,7 @@
 
 class Circle : public Entity {
 public:
-    Circle(EntityProperties& circleProperties) : _circleProperties(circleProperties) {
+    Circle(Camera* camera, EntityProperties& circleProperties) : Entity(camera), _circleProperties(circleProperties) {
         _entityType = EntityType::CIRCLE;
         setProperties(_circleProperties);
         _renderCount = (GLsizei)_circleProperties.coordinates.size();
@@ -14,8 +14,6 @@ public:
         glDeleteVertexArrays(1, &_VAO);
         glDeleteBuffers(1, &_VBO);
     }
-
-    void update() override {}
 
     void render() override {
         _shader.use();

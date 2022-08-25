@@ -4,7 +4,7 @@
 
 class Triangle : public Entity {
 public:
-    Triangle(EntityProperties& triangleProperties) : _triangleProperties(triangleProperties) {
+    Triangle(Camera* camera, EntityProperties& triangleProperties) : Entity(camera), _triangleProperties(triangleProperties) {
         _entityType = EntityType::TRIANGLE;
         setProperties(_triangleProperties);
     }
@@ -13,8 +13,6 @@ public:
         glDeleteVertexArrays(1, &_VAO);
         glDeleteBuffers(1, &_VBO);
     }
-
-    void update() override {}
 
     void render() override {
         _shader.use();

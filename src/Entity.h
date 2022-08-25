@@ -35,7 +35,7 @@ struct EntityProperties {
 
 class Entity : public Object {
 public:
-    Entity() = default;
+    Entity(Camera* camera) : _camera(camera) {}
 
     virtual ~Entity() {}
 
@@ -137,6 +137,10 @@ public:
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 
+    void update() override {
+        getShader().setMat4("u_view", _camera->view());
+    }
+
     inline Transform& getTransform() {
         return _transform;
     }
@@ -150,6 +154,7 @@ public:
     }
 
 protected:
+    Camera* _camera;
     Transform _transform;
     Color _color;
     EntityType _entityType = EntityType::UNKNOWN;

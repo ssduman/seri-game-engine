@@ -4,7 +4,7 @@
 
 class Point : public Entity {
 public:
-    Point(EntityProperties& pointProperties) : _pointProperties(pointProperties) {
+    Point(Camera* camera, EntityProperties& pointProperties) : Entity(camera), _pointProperties(pointProperties) {
         _entityType = EntityType::POINT;
         setProperties(_pointProperties);
         _renderCount = (GLsizei)_pointProperties.coordinates.size();
@@ -14,8 +14,6 @@ public:
         glDeleteVertexArrays(1, &_VAO);
         glDeleteBuffers(1, &_VBO);
     }
-
-    void update() override {}
 
     void render() override {
         _shader.use();

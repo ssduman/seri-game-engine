@@ -231,17 +231,18 @@ private:
             ImGui::SliderFloat3("position", &_currentEntity->getTransform()._position[0], -1.0f, 1.0f, "%.4f");
             ImGui::SliderFloat3("rotation", &_currentEntity->getTransform()._rotation[0], -180.0f, 180.0f, "%.4f");
             ImGui::SliderFloat3("scale", &_currentEntity->getTransform()._scale[0], 0.0f, 100.0f, "%.4f");
-            ImGui::Separator();
-
             _currentEntity->getShader().setMat4("u_model", _currentEntity->getTransform().apply());
+
+            ImGui::Separator();
 
             ImGui::ColorEdit4("color", &_currentEntity->getColor()._color[0]);
             _currentEntity->getShader().setVec4("u_color", _currentEntity->getColor()._color);
 
+            ImGui::Separator();
+
             ImGui::SliderFloat("speed", &_camera->getCameraProperties().speed, 0.0f, 100.0f, "%.4f");
 
-            ImGui::SliderFloat3("camera", &_camera->_cameraProperties.position[0], 0.0f, 100.0f, "%.4f");
-            _currentEntity->getShader().setMat4("u_view", _camera->view());
+            ImGui::Separator();
 
             static char str0[128] = "Entity";
             ImGui::InputText("name", str0, IM_ARRAYSIZE(str0));
@@ -257,6 +258,8 @@ private:
         if (ImGui::Button("Disable cursor")) {
             _windowManager->disableCursor();
         }
+
+        ImGui::Separator();
 
         ImGui::CheckboxFlags("io.ConfigFlags: NavEnableKeyboard", &_io->ConfigFlags, ImGuiConfigFlags_NavEnableKeyboard);
         ImGui::SameLine(); helpMarker("Enable keyboard controls.");
