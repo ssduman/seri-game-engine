@@ -67,6 +67,11 @@ public:
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        setPointSize(10.0f);
+        setLineWidth(10.0f);
+
+        LOGGER(info, "window created successfully");
     }
 
     ~WindowManager() {
@@ -134,6 +139,14 @@ public:
 
     inline void windowShouldClose() {
         glfwSetWindowShouldClose(_window, GLFW_TRUE);
+    }
+
+    inline void setPointSize(float size) {
+        glPointSize(size);
+    }
+
+    inline void setLineWidth(float width) {
+        glLineWidth(width);
     }
 
 private:

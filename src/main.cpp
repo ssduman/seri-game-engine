@@ -32,9 +32,6 @@ int main(int argc, char** argv) {
     gui.init();
     gui.registerCamera(camera.get());
 
-    glPointSize(10.0f);
-    glLineWidth(10.0f);
-
     LOGGER(info, "starting game loop");
 
     while (!glfwWindowShouldClose(windowManager->getWindow())) {
