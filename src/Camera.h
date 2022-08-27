@@ -26,7 +26,7 @@ struct CameraProperties {
     glm::vec3 position{ 0.0f, 0.0f, -3.0f };
 };
 
-std::string to_string(CameraMovement cameraMovement) {
+inline std::string to_string(CameraMovement cameraMovement) {
     switch (cameraMovement) {
         case CameraMovement::FORWARD:
             return "forward";

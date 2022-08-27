@@ -8,6 +8,7 @@
 #include "Factory.h"
 #include "Logger.h"
 #include "State.h"
+#include "Typer.h"
 
 int main(int argc, char** argv) {
     setlocale(LC_ALL, "en_US.UTF-8");
@@ -32,6 +33,8 @@ int main(int argc, char** argv) {
     gui.init();
     gui.registerCamera(camera.get());
 
+    Typer typer(camera.get(), windowProperties.windowWidth, windowProperties.windowHeight);
+
     LOGGER(info, "starting game loop");
 
     while (!glfwWindowShouldClose(windowManager->getWindow())) {
@@ -44,6 +47,8 @@ int main(int argc, char** argv) {
             entity->display();
             gui.registerEntity(entity);
         }
+
+        typer.renderText("this is a test", windowProperties.windowWidth / 2, windowProperties.windowHeight / 2);
 
         gui.display();
 

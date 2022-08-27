@@ -7,8 +7,8 @@
 #include "Texture.h"
 #include "Transform.h"
 #include "Color.h"
-
-#include <glm/glm.hpp>
+#include "Util.h"
+#include "Logger.h"
 
 #include <string>
 #include <vector>

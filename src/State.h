@@ -9,7 +9,7 @@ enum class GameState {
     GAMEOVER,
 };
 
-std::string to_string(GameState gameState) {
+inline std::string to_string(GameState gameState) {
     switch (gameState) {
         case GameState::IDLE:
             return "idle";

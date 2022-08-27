@@ -40,6 +40,7 @@ public:
     Game(float w, float h);
     void display(std::string userInput, bool play, bool& restart, bool exit);
     void renderText(std::string text, float x, float y, float scale, glm::vec3 color) {
-        typer->renderText(text, x, y, scale, color);
+        typer->setColor(color);
+        typer->renderText(text, x, y, scale);
     }
 };
