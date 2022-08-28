@@ -150,6 +150,7 @@ public:
     }
 
     inline Shader& getShader() {
+        _shader.use();
         return _shader;
     }
 
