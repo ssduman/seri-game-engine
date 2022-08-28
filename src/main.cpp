@@ -9,6 +9,7 @@
 #include "Logger.h"
 #include "State.h"
 #include "Typer.h"
+#include "Light.h"
 
 int main(int argc, char** argv) {
     setlocale(LC_ALL, "en_US.UTF-8");
@@ -34,6 +35,9 @@ int main(int argc, char** argv) {
     gui.registerCamera(camera.get());
 
     Typer typer(camera.get(), windowProperties.windowWidth, windowProperties.windowHeight);
+
+    Light light(camera.get());
+    layers.addLayer(&light);
 
     LOGGER(info, "starting game loop");
 
@@ -120,7 +124,7 @@ int main(int argc, char** argv) {
 //    camera->setWallPos(maze->getVerticalWallPosition(), maze->getHorizontalWallPosition());
 //
 //    Skybox* skybox = new Skybox();
-//    light = new Light();
+//    light = new Light(nullptr);
 //    game = new Game(width, height);
 //
 //    bool escaping = false, restart = false;
@@ -136,7 +140,9 @@ int main(int argc, char** argv) {
 //        glm::mat4 view = camera->getView();
 //        glm::mat4 projection = camera->getProjection();
 //        skybox->display(view, projection);
-//        light->light(cameraPosition, view, projection);
+//        light->setPosition(cameraPosition + glm::vec3(0, -10, 20));
+//        light->setViewProjection(view, projection);
+//        light->light();
 //
 //        game->display(userInput, play, restart, win());
 //

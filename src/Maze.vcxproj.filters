@@ -82,9 +82,6 @@
     <ClCompile Include="Renderer.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="Light.cpp">
-      <Filter>Light</Filter>
-    </ClCompile>
     <ClCompile Include="CameraOld.cpp">
       <Filter>Camera</Filter>
     </ClCompile>
