@@ -14,7 +14,9 @@
 
 class GUI : public Object {
 public:
-    GUI(WindowManager* windowManager, Layer* layers, State* state) : _windowManager(windowManager), _layers(layers), _state{ state } {}
+    GUI(WindowManager* windowManager, Layer* layers, State* state) : _windowManager(windowManager), _layers(layers), _state{ state } {
+        LOGGER(info, "gui init succeeded");
+    }
 
     virtual ~GUI() {
         ImGui_ImplOpenGL3_Shutdown();

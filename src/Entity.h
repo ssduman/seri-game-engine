@@ -23,6 +23,27 @@ enum class EntityType {
     UNKNOWN,
 };
 
+inline std::string to_string(EntityType entityType) {
+    switch (entityType) {
+        case EntityType::POINT:
+            return "point";
+        case EntityType::LINE:
+            return "line";
+        case EntityType::TRIANGLE:
+            return "triangle";
+        case EntityType::RECTANGLE:
+            return "rectangle";
+        case EntityType::CIRCLE:
+            return "circle";
+        case EntityType::CUBE:
+            return "cube";
+        case EntityType::UNKNOWN:
+            return "unknown";
+        default:
+            return "unknown";
+    }
+}
+
 struct EntityProperties {
     std::vector<glm::vec3> coordinates;
     std::vector<glm::vec3> colors;
@@ -35,7 +56,9 @@ struct EntityProperties {
 
 class Entity : public Object {
 public:
-    Entity(Camera* camera) : _camera(camera) {}
+    Entity(Camera* camera) : _camera(camera) {
+        LOGGER(info, "entity init succeeded");
+    }
 
     virtual ~Entity() {}
 

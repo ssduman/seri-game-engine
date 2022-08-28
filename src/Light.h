@@ -10,6 +10,8 @@ public:
         initShader();
         setPosition();
         setModel();
+        
+        LOGGER(info, "light init succeeded");
     }
 
     void init() override {

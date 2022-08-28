@@ -22,6 +22,8 @@ public:
         initShader();
         initProjection();
         setColor();
+
+        LOGGER(info, "typer init succeeded");
     }
 
     Typer(Camera* camera, int width, int height) : Entity(camera), _width(static_cast<float>(width)), _height(static_cast<float>(height)) {
@@ -30,6 +32,8 @@ public:
         initShader();
         initProjection();
         setColor();
+
+        LOGGER(info, "typer init succeeded");
     }
 
     void init() override {
