@@ -18,6 +18,7 @@ class Typer : public Entity {
 public:
     Typer(int width, int height) : Entity(nullptr), _width(static_cast<float>(width)), _height(static_cast<float>(height)) {
         init();
+        initFT();
         initShader();
         initProjection();
         setColor();
@@ -25,21 +26,37 @@ public:
 
     Typer(Camera* camera, int width, int height) : Entity(camera), _width(static_cast<float>(width)), _height(static_cast<float>(height)) {
         init();
+        initFT();
         initShader();
         initProjection();
         setColor();
     }
 
     void init() override {
-        if (_ft) {
+        glGenVertexArrays(1, &_VAO);
+        glGenBuffers(1, &_VBO);
+
+        glBindVertexArray(_VAO);
+        glBindBuffer(GL_ARRAY_BUFFER, _VBO);
+
+        glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
+        glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
+        glEnableVertexAttribArray(0);
+
+        glBindVertexArray(0);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+    }
+
+    void initFT() {
+        if (_library) {
             return;
         }
 
-        if (FT_Init_FreeType(&_ft)) {
-            LOGGER(error, "freetype init error");
+        if (FT_Init_FreeType(&_library)) {
+            LOGGER(error, "freetype library init error");
         }
 
-        if (FT_New_Face(_ft, _font.c_str(), 0, &_face)) {
+        if (FT_New_Face(_library, _font.c_str(), 0, &_face)) {
             LOGGER(error, "freetype new face error");
         }
 
@@ -48,7 +65,7 @@ public:
 
         for (GLubyte c = 0; c < 128; c++) {
             if (FT_Load_Char(_face, c, FT_LOAD_RENDER)) {
-                LOGGER(error, "freetype load char for " << static_cast<char>(c) << " error");
+                LOGGER(error, "freetype load char " << static_cast<char>(c) << " error");
                 continue;
             }
 
@@ -81,21 +98,11 @@ public:
         }
 
         glBindTexture(GL_TEXTURE_2D, 0);
+
         FT_Done_Face(_face);
-        FT_Done_FreeType(_ft);
-
-        glGenVertexArrays(1, &_VAO);
-        glGenBuffers(1, &_VBO);
-
-        glBindVertexArray(_VAO);
-        glBindBuffer(GL_ARRAY_BUFFER, _VBO);
-
-        glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
-        glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
-        glEnableVertexAttribArray(0);
-
-        glBindVertexArray(0);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        FT_Done_FreeType(_library);
+        _face = nullptr;
+        _library = nullptr;
     }
 
     void initShader(const std::string& vsCodePath = "shaders/typer_vs.shader", const std::string& fsCodePath = "shaders/typer_fs.shader") override {
@@ -177,7 +184,7 @@ private:
     float _height;
     glm::mat4 _projection{};
     FT_Face _face = nullptr;
-    FT_Library _ft = nullptr;
+    FT_Library _library = nullptr;
     Character _currCharacter;
     std::map<GLubyte, Character> _characters{};
     std::string _font = "fonts/En Bloc.ttf"; // DungeonFont.ttf
