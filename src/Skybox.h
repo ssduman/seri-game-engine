@@ -96,6 +96,10 @@ public:
         _shader.init(vsCodePath, fsCodePath);
     }
 
+    void setFaces(std::vector<std::string>& faces) {
+        _faces = faces;
+    }
+
     void update() override {
         _shader.use();
         _shader.setMat4("u_view", glm::mat4(glm::mat3(_camera->getView())));
@@ -130,7 +134,7 @@ private:
             std::swap(_faces[2], _faces[3]);
         }
         stbi_set_flip_vertically_on_load(flip);
-        
+
         int width, height, components;
         for (auto i = 0; i < _faces.size(); i++) {
             auto data = stbi_load(_faces[i].c_str(), &width, &height, &components, 0);
