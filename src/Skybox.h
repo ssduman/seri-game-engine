@@ -18,7 +18,7 @@ public:
     Skybox(Camera* camera) : Entity(camera) {
         init();
         initShader();
-        loadCubemap();
+        loadCubemap(false);
 
         LOGGER(info, "skybox init succeeded");
     }
@@ -122,13 +122,18 @@ public:
     }
 
 private:
-    void loadCubemap() {
+    void loadCubemap(bool flip = true) {
         glGenTextures(1, &_texture);
         glBindTexture(GL_TEXTURE_CUBE_MAP, _texture);
 
-        int width, height, nrComponents;
+        if (!flip) {
+            std::swap(_faces[2], _faces[3]);
+        }
+        stbi_set_flip_vertically_on_load(flip);
+        
+        int width, height, components;
         for (auto i = 0; i < _faces.size(); i++) {
-            auto data = stbi_load(_faces[i].c_str(), &width, &height, &nrComponents, 0);
+            auto data = stbi_load(_faces[i].c_str(), &width, &height, &components, 0);
             glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
             stbi_image_free(data);
         }
