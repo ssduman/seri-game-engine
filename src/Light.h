@@ -92,8 +92,8 @@ public:
 
     void setViewProjection() {
         _shader.use();
-        _shader.setMat4("u_view", _camera->view());
-        _shader.setMat4("u_projection", _camera->projection());
+        _shader.setMat4("u_view", _camera->getView());
+        _shader.setMat4("u_projection", _camera->getProjection());
         _shader.disuse();
     }
 
