@@ -10,6 +10,7 @@
 #include "State.h"
 #include "Typer.h"
 #include "Light.h"
+#include "Skybox.h"
 
 int main(int argc, char** argv) {
     setlocale(LC_ALL, "en_US.UTF-8");
@@ -38,6 +39,9 @@ int main(int argc, char** argv) {
 
     Light light(camera.get());
     layers.addLayer(&light);
+
+    Skybox skybox(camera.get());
+    layers.addLayer(&skybox);
 
     LOGGER(info, "starting game loop");
 

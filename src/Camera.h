@@ -133,6 +133,14 @@ public:
         return _projection;
     }
 
+    glm::mat4& getView() {
+        return _view;
+    }
+
+    glm::mat4& getProjection() {
+        return _projection;
+    }
+
     CameraProperties& getCameraProperties() {
         return _cameraProperties;
     }
