@@ -43,7 +43,7 @@ public:
                 point->initCamera(camera);
                 point->init();
 
-                LOGGER(debug, "point created");
+                LOGGER(info, "point created");
 
                 return point;
             }
@@ -62,7 +62,7 @@ public:
                 line->initCamera(camera);
                 line->init();
 
-                LOGGER(debug, "line created");
+                LOGGER(info, "line created");
 
                 return line;
             }
@@ -80,7 +80,7 @@ public:
                 triangle->initCamera(camera);
                 triangle->init();
 
-                LOGGER(debug, "triangle created");
+                LOGGER(info, "triangle created");
 
                 return triangle;
             }
@@ -98,7 +98,7 @@ public:
                 rectangle->initCamera(camera);
                 rectangle->init();
 
-                LOGGER(debug, "rectangle created");
+                LOGGER(info, "rectangle created");
 
                 return rectangle;
             }
@@ -126,7 +126,7 @@ public:
                 circle->initCamera(camera);
                 circle->init();
 
-                LOGGER(debug, "circle created");
+                LOGGER(info, "circle created");
 
                 return circle;
             }
@@ -226,7 +226,7 @@ public:
                 cube->initCamera(camera);
                 cube->init();
 
-                LOGGER(debug, "cube created");
+                LOGGER(info, "cube created");
 
                 return cube;
             }
