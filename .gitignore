@@ -21,6 +21,7 @@ mono_crash.*
 
 # Build results
 [Ii]ntermediate/
+[Oo]ut/
 [Aa]rtifact/
 [Dd]ebug/
 [Dd]ebugPublic/
