@@ -21,26 +21,23 @@ int main(int argc, char** argv) {
     std::shared_ptr<State> state = std::make_shared<State>();
     state->gameState() = GameState::MENU;
 
-    CameraProperties cameraProperties;
-    cameraProperties.aspect = static_cast<float>(windowProperties.windowWidth / windowProperties.windowHeight);
+    CameraProperties cameraProperties{ /*aspect*/ static_cast<float>(windowProperties.windowWidth / windowProperties.windowHeight) };
     std::shared_ptr<Camera> camera = std::make_shared<Camera>(cameraProperties, state.get());
 
     Control control(windowManager.get(), camera.get(), state.get());
-    control.init();
 
     Layer layers;
-    layers.addLayer(Factory::CreateEntity(camera.get(), { EntityType::CUBE }));
 
-    GUI gui(windowManager.get(), &layers, state.get());
-    gui.init();
-    gui.registerCamera(camera.get());
+    GUI gui(windowManager.get(), camera.get(), &layers, state.get());
 
     Typer typer(camera.get(), windowProperties.windowWidth, windowProperties.windowHeight);
 
     Light light(camera.get());
-    layers.addLayer(&light);
 
     Skybox skybox(camera.get());
+
+    layers.addLayer(Factory::CreateEntity(camera.get(), { EntityType::CUBE }));
+    layers.addLayer(&light);
     layers.addLayer(&skybox);
 
     LOGGER(info, "starting game loop");

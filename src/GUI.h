@@ -14,7 +14,9 @@
 
 class GUI : public Object {
 public:
-    GUI(WindowManager* windowManager, Layer* layers, State* state) : _windowManager(windowManager), _layers(layers), _state{ state } {
+    GUI(WindowManager* windowManager, Camera* camera, Layer* layers, State* state) : _windowManager(windowManager), _camera(camera), _layers(layers), _state{ state } {
+        init();
+
         LOGGER(info, "gui init succeeded");
     }
 
@@ -24,17 +26,7 @@ public:
         ImGui::DestroyContext();
     }
 
-    void init() override {
-        IMGUI_CHECKVERSION();
-        ImGui::CreateContext();
 
-        setIO();
-        setStyle();
-        setWindowFlags();
-
-        ImGui_ImplGlfw_InitForOpenGL(_windowManager->getWindow(), true);
-        ImGui_ImplOpenGL3_Init(glsl_version);
-    }
 
     void update() override {
         ImGui_ImplOpenGL3_NewFrame();
@@ -57,11 +49,19 @@ public:
         _currentEntity = entity;
     }
 
-    void registerCamera(Camera* camera) {
-        _camera = camera;
+private:
+    void init() override {
+        IMGUI_CHECKVERSION();
+        ImGui::CreateContext();
+
+        setIO();
+        setStyle();
+        setWindowFlags();
+
+        ImGui_ImplGlfw_InitForOpenGL(_windowManager->getWindow(), true);
+        ImGui_ImplOpenGL3_Init(glsl_version);
     }
 
-private:
     void helpMarker(const char* desc) {
         ImGui::TextDisabled("(?)");
         if (ImGui::IsItemHovered()) {
