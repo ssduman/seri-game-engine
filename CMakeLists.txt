@@ -12,7 +12,9 @@ link_directories(
     libraries/glfw-3.3.7.bin.WIN64/lib-vc2022
 )
 
-include_directories(
+link_libraries(opengl32 freetype glew32s glfw3)
+
+include_directories(${PROJECT_NAME}
     src
     libraries/glm
     libraries/freetype
@@ -22,9 +24,7 @@ include_directories(
     libraries/glfw-3.3.7.bin.WIN64/include
 )
 
-link_libraries(opengl32 freetype glew32s glfw3)
-
-add_executable(maze
+add_executable(${PROJECT_NAME}
     src/main.cpp
     src/CameraOld.cpp
     src/Game.cpp
