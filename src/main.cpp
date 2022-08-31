@@ -24,17 +24,17 @@ int main(int argc, char** argv) {
     CameraProperties cameraProperties{ /*aspect*/ static_cast<float>(windowProperties.windowWidth / windowProperties.windowHeight) };
     std::shared_ptr<Camera> camera = std::make_shared<Camera>(cameraProperties, state.get());
 
-    Control control(windowManager.get(), camera.get(), state.get());
+    Control control{ windowManager.get(), camera.get(), state.get() };
 
-    Layer layers;
+    Layer layers{};
 
-    GUI gui(windowManager.get(), camera.get(), &layers, state.get());
+    GUI gui{ windowManager.get(), camera.get(), &layers, state.get() };
 
-    Typer typer(camera.get(), windowProperties.windowWidth, windowProperties.windowHeight);
+    Typer typer{ camera.get(), windowProperties.windowWidth, windowProperties.windowHeight };
 
-    Light light(camera.get());
+    Light light{ camera.get() };
 
-    Skybox skybox(camera.get());
+    Skybox skybox{ camera.get() };
 
     layers.addLayer(Factory::CreateEntity(camera.get(), { EntityType::CUBE }));
     layers.addLayer(&light);
@@ -53,7 +53,7 @@ int main(int argc, char** argv) {
             gui.registerEntity(entity);
         }
 
-        typer.renderText("this is a test", windowProperties.windowWidth / 2, windowProperties.windowHeight / 2);
+        typer.renderText("this is a test", windowProperties.windowWidth / 2.0f, windowProperties.windowHeight / 2.0f);
 
         gui.display();
 
