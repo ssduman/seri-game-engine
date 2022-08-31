@@ -77,8 +77,8 @@ public:
     virtual void initCamera(Camera* camera) {
         _shader.use();
         _shader.setMat4("u_model", glm::mat4{ 1.0f });
-        _shader.setMat4("u_view", camera->_view);
-        _shader.setMat4("u_projection", camera->_projection);
+        _shader.setMat4("u_view", camera->getView());
+        _shader.setMat4("u_projection", camera->getProjection());
         _shader.disuse();
     }
 
@@ -161,7 +161,9 @@ public:
     }
 
     void update() override {
-        getShader().setMat4("u_view", _camera->view());
+        if (_camera->viewUpdated()) {
+            getShader().setMat4("u_view", _camera->getView());
+        }
     }
 
     inline Transform& getTransform() {

@@ -5,12 +5,22 @@
 
 class Light : public Entity {
 public:
+    Light() : Entity(nullptr) {
+        init();
+        initShader();
+        setPosition();
+        setModel();
+
+        LOGGER(info, "light init succeeded");
+    }
+
     Light(Camera* camera) : Entity(camera) {
         init();
         initShader();
         setPosition();
         setModel();
-        
+        setViewProjection();
+
         LOGGER(info, "light init succeeded");
     }
 
@@ -109,7 +119,9 @@ public:
     }
 
     void update() override {
-        setViewProjection();
+        if (_camera->viewUpdated()) {
+            setViewProjection();
+        }
     }
 
     void render() override {

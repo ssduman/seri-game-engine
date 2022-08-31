@@ -51,34 +51,50 @@ public:
         LOGGER(info, "camera init succeeded");
     }
 
-    ~Camera() = default;
+    ~Camera() {}
 
     void handleInput(float deltaTime, CameraMovement cameraMovement) {
+        if (_viewUpdated) {
+            _viewUpdated = false;
+        }
+
         if (_state->gameState() != GameState::GAME) {
             return;
         }
 
         float movementSpeed = _cameraProperties.speed * deltaTime;
 
-        //LOGGER(debug, "moving: " << to_string(cameraMovement));
+        bool moved = false;
 
         if (cameraMovement == CameraMovement::FORWARD) {
+            moved = true;
             _cameraProperties.position += _cameraProperties.front * movementSpeed;
         }
         if (cameraMovement == CameraMovement::BACKWARD) {
+            moved = true;
             _cameraProperties.position -= _cameraProperties.front * movementSpeed;
         }
         if (cameraMovement == CameraMovement::LEFT) {
+            moved = true;
             _cameraProperties.position -= _cameraProperties.right * movementSpeed;
         }
         if (cameraMovement == CameraMovement::RIGHT) {
+            moved = true;
             _cameraProperties.position += _cameraProperties.right * movementSpeed;
         }
 
-        view();
+        if (moved) {
+            view();
+
+            _viewUpdated = true;
+        }
     }
 
     void handleMouse(float xPos, float yPos) {
+        if (_viewUpdated) {
+            _viewUpdated = false;
+        }
+
         if (_state->gameState() != GameState::GAME) {
             return;
         }
@@ -110,47 +126,48 @@ public:
             _yaw -= 360.0f;
         }
 
-        updateVectors();
-        view();
+        if (deltaX || deltaY) {
+            updateVectors();
+            view();
+
+            _viewUpdated = true;
+        }
     }
 
-    glm::mat4& view() {
-        _view = glm::lookAt(
-            _cameraProperties.position,
-            _cameraProperties.position + _cameraProperties.front,
-            _cameraProperties.up
-        );
+    const glm::mat4& getView() {
         return _view;
     }
 
-    glm::mat4& projection() {
-        _projection = glm::perspective(
-            glm::radians(_cameraProperties.fov),
-            _cameraProperties.aspect,
-            _cameraProperties.near,
-            _cameraProperties.far
-        );
+    const glm::mat4& getProjection() {
         return _projection;
     }
 
-    glm::mat4& getView() {
-        return _view;
-    }
-
-    glm::mat4& getProjection() {
-        return _projection;
+    const bool& viewUpdated() {
+        return _viewUpdated;
     }
 
     CameraProperties& getCameraProperties() {
         return _cameraProperties;
     }
 
-    State* _state;
-    glm::mat4 _view{};
-    glm::mat4 _projection{};
-    CameraProperties _cameraProperties;
-
 private:
+    void view() {
+        _view = glm::lookAt(
+            _cameraProperties.position,
+            _cameraProperties.position + _cameraProperties.front,
+            _cameraProperties.up
+        );
+    }
+
+    void projection() {
+        _projection = glm::perspective(
+            glm::radians(_cameraProperties.fov),
+            _cameraProperties.aspect,
+            _cameraProperties.near,
+            _cameraProperties.far
+        );
+    }
+
     void updateVectors() {
         glm::vec3 eulerAngle{};
         eulerAngle.x = cos(glm::radians(_pitch)) * cos(glm::radians(_yaw));
@@ -161,11 +178,16 @@ private:
         _cameraProperties.right = glm::normalize(glm::cross(_cameraProperties.front, _cameraProperties.up));
     }
 
-    float _xPosLast = -1.0f;
-    float _yPosLast = -1.0f;
+    CameraProperties _cameraProperties;
+    State* _state;
+    glm::mat4 _view{};
+    glm::mat4 _projection{};
 
     float _roll = 0.0f;
     float _pitch = 0.0f;
     float _yaw = 90.0f;
+    float _xPosLast = -1.0f;
+    float _yPosLast = -1.0f;
+    bool _viewUpdated = false;
 
 };

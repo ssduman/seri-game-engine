@@ -19,6 +19,7 @@ public:
         init();
         initShader();
         loadCubemap(false);
+        setViewProjection();
 
         LOGGER(info, "skybox init succeeded");
     }
@@ -100,10 +101,16 @@ public:
         _faces = faces;
     }
 
-    void update() override {
+    void setViewProjection() {
         _shader.use();
         _shader.setMat4("u_view", glm::mat4(glm::mat3(_camera->getView())));
         _shader.setMat4("u_projection", _camera->getProjection());
+    }
+
+    void update() override {
+        if (_camera->viewUpdated()) {
+            setViewProjection();
+        }
     }
 
     void render() override {

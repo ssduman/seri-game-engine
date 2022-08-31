@@ -128,7 +128,7 @@ int main(int argc, char** argv) {
 //    camera->setWallPos(maze->getVerticalWallPosition(), maze->getHorizontalWallPosition());
 //
 //    Skybox* skybox = new Skybox();
-//    light = new Light(nullptr);
+//    light = new Light();
 //    game = new Game(width, height);
 //
 //    bool escaping = false, restart = false;
