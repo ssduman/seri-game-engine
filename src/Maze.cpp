@@ -43,8 +43,8 @@ void Maze::escapeBlocks() {
         }
     }
 
-    escapeRender->init(passCount, escapePosition);
-    nonEscapeRender->init(width * height - passCount, nonEscapePosition);
+    escapeRender->setCoordinates(passCount, escapePosition);
+    nonEscapeRender->setCoordinates(width * height - passCount, nonEscapePosition);
 
     visitedTable.clear();
     escapePosition.clear();
@@ -321,9 +321,9 @@ void Maze::positions() {
 
     std::cout << "total blocks: " << verticalCount + horizontalCount + width * height << std::endl;
 
-    verticalWallRender->init(verticalCount, verticalWallPosition);
-    horizontalWallRender->init(horizontalCount, horizontalWallPosition);
-    passRender->init(width * height, passPosition);
+    verticalWallRender->setCoordinates(verticalCount, verticalWallPosition);
+    horizontalWallRender->setCoordinates(horizontalCount, horizontalWallPosition);
+    passRender->setCoordinates(width * height, passPosition);
 
     passPosition.clear();
 }
