@@ -26,8 +26,6 @@ public:
         ImGui::DestroyContext();
     }
 
-
-
     void update() override {
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
