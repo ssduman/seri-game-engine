@@ -79,9 +79,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CameraOld.cpp">
-      <Filter>Camera</Filter>
-    </ClCompile>
     <ClCompile Include="Texture.cpp">
       <Filter>Texture</Filter>
     </ClCompile>
