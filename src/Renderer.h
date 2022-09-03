@@ -52,6 +52,13 @@ public:
         init();
     }
 
+    virtual ~Renderer() {
+        glDeleteVertexArrays(1, &_VAO);
+        glDeleteBuffers(1, &_VBO);
+        glDeleteBuffers(1, &_VBO2);
+        glDeleteBuffers(1, &_EBO);
+    }
+
     void setCoordinates(unsigned int count, std::vector<glm::vec3>& coordinates) {
         _count = count;
 

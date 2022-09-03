@@ -2,15 +2,13 @@
 #pragma warning(disable: 4100)
 #pragma warning(disable: 4244)
 
-#include "WindowManager.h"
-#include "IControl.h"
-#include "InputHandler.h"
-#include "CameraMaze.h"
 #include "Maze.h"
+#include "IControl.h"
+#include "CameraMaze.h"
 
 class ControlMaze : public IControl {
 public:
-    ControlMaze(WindowManager* windowManager, CameraMaze** camera, Maze* maze) : IControl(windowManager), _camera(camera), _maze(maze) {
+    ControlMaze(WindowManager* windowManager, CameraMaze* camera, Maze** maze) : IControl(windowManager), _camera(camera), _maze(maze) {
         glfwSetWindowUserPointer(_windowManager->getWindow(), static_cast<void*>(this));
 
         init();
@@ -32,11 +30,11 @@ public:
 
         float xPos = static_cast<float>(xpos);
         float yPos = static_cast<float>(ypos);
-        (*_camera)->handleMouse(xPos, yPos);
+        _camera->handleMouse(xPos, yPos);
     }
 
     void scrollCallback(GLFWwindow* window, double xoffset, double yoffset) override {
-        float& ambient = (*_camera)->getAmbient();
+        float& ambient = _camera->getAmbient();
         if ((yoffset > 0) && (ambient <= 0.98f)) {
             ambient += 0.02f;
         } else if ((yoffset < 0) && (ambient >= 0.02f)) {
@@ -88,15 +86,18 @@ public:
                 return;
             }
 
-            delete _maze, * _camera;
-            _maze = new Maze(thickness, mazeWidth, mazeHeight);
+            delete* _maze;
+            *_maze = new Maze{ thickness, mazeWidth, mazeHeight };
+            //_maze.resetMaze(thickness, mazeWidth, mazeHeight);
 
             CameraProperties cameraProperties;
             cameraProperties.position = glm::vec3((mazeWidth - 1) * thickness * 2, -thickness / 2, -thickness * 4);
-            (*_camera) = new CameraMaze(cameraProperties);
-            (*_camera)->getIsPlaying() = true;
-            (*_camera)->setDimensions(mazeWidth, mazeHeight, thickness);
-            (*_camera)->setWallPos(_maze->getVerticalWallPosition(), _maze->getHorizontalWallPosition());
+            _camera->getCameraProperties() = cameraProperties;
+            _camera->setCameraPosition(cameraProperties.position);
+            _camera->getIsPlaying() = true;
+            _camera->setDimensions(mazeWidth, mazeHeight, thickness);
+            _camera->setWallPos((*_maze)->getVerticalWallPosition(), (*_maze)->getHorizontalWallPosition());
+            _camera->init();
         } else if ((key == GLFW_KEY_BACKSPACE) && (action == GLFW_PRESS)) {
             if (_userInputVector.size() > 0) {
                 _userInputVector.pop_back();
@@ -159,6 +160,6 @@ private:
         );
     }
 
-    CameraMaze** _camera;
-    Maze* _maze;
+    CameraMaze* _camera;
+    Maze** _maze;
 };

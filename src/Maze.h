@@ -26,8 +26,8 @@ private:
     std::vector<glm::vec3> escapePosition;
     std::vector<glm::vec3> nonEscapePosition;
 
-    float width, height, thickness;
-    int passCount = 0, verticalCount, horizontalCount;
+    float width = 0.0f, height = 0.0f, thickness = 0.0f;
+    int passCount = 0, verticalCount = 0, horizontalCount = 0;
 
     std::unordered_map<std::string, std::vector<std::pair<int, int>>> mazeMap;
     std::unordered_map<std::string, std::pair<int, int>> nodesMap;
@@ -52,6 +52,7 @@ public:
     bool findHorizontalWall(int x, int y);
     void printMazeToConsole();
     void display(bool escaping);
+    void resetMaze(float thickness, float width, float height);
     std::vector<glm::vec3> getVerticalWallPosition() { return verticalWallPosition; }
     std::vector<glm::vec3> getHorizontalWallPosition() { return horizontalWallPosition; }
 };

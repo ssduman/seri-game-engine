@@ -37,17 +37,18 @@ public:
     }
 
     void setCameraPosition(glm::vec3 position) {
-        if (!_cheatActivated) {
-            _cameraProperties = CameraProperties{};
-            _cameraProperties.position = position;
+        _cameraProperties = CameraProperties{};
+        _cameraProperties.position = position;
 
-            _roll = 0.0f, _pitch = 0.0f, _yaw = 90.0f;
-            _xPosLast = -1.0f, _yPosLast = -1.0f;
+        _roll = 0.0f, _pitch = 0.0f, _yaw = 90.0f;
+        _xPosLast = -1.0f, _yPosLast = -1.0f;
 
-            view();
-            updateVectors();
-            update();
-        }
+        _isPlaying = false, _cheatActivated = false;
+        checkC = true, checkE = true, checkR = true;
+
+        view();
+        updateVectors();
+        update();
     }
 
     void setDimensions(float mazeWidth, float mazeHeight, float cubeThickness) {
@@ -61,7 +62,7 @@ public:
         _horizontalWallPosition = horizontalWallPosition;
     }
 
-    void handleInput(GLFWwindow* window, Maze** maze, bool& escaping, bool& restart) {
+    void handleInput(GLFWwindow* window, bool& escaping, bool& restart) {
         if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
             glfwSetWindowShouldClose(window, true);
             return;
@@ -81,9 +82,8 @@ public:
 
         if ((glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) && (checkR)) {
             setCameraPosition(CameraProperties{}.position);
-            delete* maze;
-            *maze = new Maze(_cubeThickness, _mazeWidth, _mazeHeight);
-            setWallPos((*maze)->getVerticalWallPosition(), (*maze)->getHorizontalWallPosition());
+            Maze maze{ _cubeThickness, _mazeWidth, _mazeHeight };
+            setWallPos(maze.getVerticalWallPosition(), maze.getHorizontalWallPosition());
             restart = true;
             checkR = false;
             escaping = false;

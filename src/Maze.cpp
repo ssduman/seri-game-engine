@@ -30,14 +30,64 @@ Maze::Maze(float thickness, float width, float height) {
     escapeBlocks();
 }
 
+void Maze::resetMaze(float thickness, float width, float height) {
+    verticalWallPosition.clear();
+    horizontalWallPosition.clear();
+    passPosition.clear();
+    escapePosition.clear();
+    nonEscapePosition.clear();
+    mazeMap.clear();
+    nodesMap.clear();
+    mazeMapTree.clear();
+    visitedTable.clear();
+
+    this->width = width;
+    this->height = height;
+    this->thickness = thickness;
+
+    delete wallTexture;
+    delete wallRerticalTexture;
+    delete passTexture;
+    delete escapeTexture;
+    delete nonEscapeTexture;
+
+    wallTexture = new Texture("textures/wall1.png");
+    wallRerticalTexture = new Texture("textures/wall2.png");
+    passTexture = new Texture("textures/passage.png");
+    escapeTexture = new Texture("textures/escape.png");
+    nonEscapeTexture = new Texture("textures/nonescape.png");
+
+    delete verticalWallRender;
+    delete horizontalWallRender;
+    delete passRender;
+    delete escapeRender;
+    delete nonEscapeRender;
+
+    verticalWallRender = new Renderer(thickness, 0.2f, thickness);
+    horizontalWallRender = new Renderer(thickness, thickness, 0.2f);
+    passRender = new Renderer(thickness / (thickness * 2) - 1.0f, thickness, thickness);
+    escapeRender = new Renderer(thickness / (thickness * 2) - 1.0f, thickness, thickness);
+    nonEscapeRender = new Renderer(thickness / (thickness * 2) - 1.0f, thickness, thickness);
+
+    std::srand(time(NULL));
+
+    randomMaze();
+    positions();
+
+    std::vector<std::vector<bool>> table(height, std::vector<bool>(width, false));
+    visitedTable = table;
+
+    solveMaze();
+    escapeBlocks();
+}
+
 void Maze::escapeBlocks() {
     float t = thickness * 2;
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
             if (visitedTable[y][x] == false) {
                 nonEscapePosition.push_back(glm::vec3(x * t, t / 2.0f, t * (height - 1) - y * t));
-            }
-            else { // this is the way of exit
+            } else { // this is the way of exit
                 escapePosition.push_back(glm::vec3(x * t, t / 2.0f, t * (height - 1) - y * t));
             }
         }
@@ -69,40 +119,33 @@ void Maze::solveMaze() {
                 posX++; // step back
                 std::string key = makeNodeKey(std::make_pair(posX, posY)); // find neighbors of new tile
                 std::get<4>(mazeMapTree[key]) = false; // assing as no way to get old positions
-            }
-            else if (down) {
+            } else if (down) {
                 posY++;
                 std::string key = makeNodeKey(std::make_pair(posX, posY));
                 std::get<5>(mazeMapTree[key]) = false;
-            }
-            else if (left) {
+            } else if (left) {
                 posX--;
                 std::string key = makeNodeKey(std::make_pair(posX, posY));
                 std::get<2>(mazeMapTree[key]) = false;
-            }
-            else if (up) {
+            } else if (up) {
                 posY--;
                 std::string key = makeNodeKey(std::make_pair(posX, posY));
                 std::get<3>(mazeMapTree[key]) = false;
             }
-        }
-        else {
+        } else {
             if ((right) && (!visitedTable[posY][posX + 1])) {
                 visitedTable[posY][posX + 1] = true;
                 posX++;
                 passCount++;
-            }
-            else if ((down) && (!visitedTable[posY + 1][posX])) {
+            } else if ((down) && (!visitedTable[posY + 1][posX])) {
                 visitedTable[posY + 1][posX] = true;
                 posY++;
                 passCount++;
-            }
-            else if ((left) && (!visitedTable[posY][posX - 1])) {
+            } else if ((left) && (!visitedTable[posY][posX - 1])) {
                 visitedTable[posY][posX - 1] = true;
                 posX--;
                 passCount++;
-            }
-            else if ((up) && (!visitedTable[posY - 1][posX])) {
+            } else if ((up) && (!visitedTable[posY - 1][posX])) {
                 visitedTable[posY - 1][posX] = true;
                 posY--;
                 passCount++;
@@ -212,8 +255,7 @@ void Maze::display(bool escaping) {
         passTexture->bind();
         passRender->render();
         passTexture->unbind();
-    }
-    else {
+    } else {
         escapeTexture->bind();
         escapeRender->render();
         escapeTexture->unbind();
