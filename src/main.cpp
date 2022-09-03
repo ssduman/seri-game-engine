@@ -1,4 +1,8 @@
-﻿#include "WindowManager.h"
+﻿#define MAZE 0
+
+#if !MAZE
+
+#include "WindowManager.h"
 #include "Util.h"
 #include "GUI.h"
 #include "Control.h"
@@ -66,61 +70,65 @@ int main(int argc, char** argv) {
     return 0;
 }
 
-//#include "Game.h"
-//#include "Maze.h"
-//#include "Util.h"
-//#include "Light.h"
-//#include "Skybox.h"
-//#include "CameraMaze.h"
-//#include "ControlMaze.h"
-//#include "WindowManager.h"
-//
-//int main(int argc, char** argv) {
-//    WindowProperties windowProperties{ /*title*/ "Maze", /*fullscreen*/ true, /*w*/ 1280, /*h*/ 720 };
-//    WindowManager windowManager(windowProperties);
-//    GLFWwindow* window = windowManager.getWindow();
-//    windowManager.disableCursor();
-//
-//    float mazeWidth = 20, mazeHeight = 20, thickness = 5.0f;
-//
-//    Maze* maze = new Maze{ thickness, mazeWidth, mazeHeight };
-//
-//    CameraProperties cameraProperties;
-//    cameraProperties.position = glm::vec3(0, -thickness * 5, -thickness * 4 - mazeHeight * thickness);
-//    CameraMaze* camera = new CameraMaze(cameraProperties);
-//    camera->setDimensions(mazeWidth, mazeHeight, thickness);
-//    camera->setWallPos(maze->getVerticalWallPosition(), maze->getHorizontalWallPosition());
-//
-//    Light light;
-//    Skybox skybox;
-//    ControlMaze control{ &windowManager, camera, &maze };
-//    Game game{ static_cast<float>(windowManager.getWidth()), static_cast<float>(windowManager.getHeight()) };
-//
-//    bool escaping = false, restart = false;
-//    while (!glfwWindowShouldClose(window)) {
-//        glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-//        glClearColor(0.4f, 0.4f, 0.4f, 1.0f);
-//
-//        camera->handleInput(window, escaping, restart);
-//        camera->update();
-//
-//        maze->display(escaping);
-//
-//        glm::mat4 view = camera->getView();
-//        glm::mat4 projection = camera->getProjection();
-//
-//        skybox.display(view, projection);
-//
-//        light.setPosition(cameraProperties.position + glm::vec3(0, -10, 20));
-//        light.setViewProjection(view, projection);
-//        light.light();
-//
-//        game.display(control.getUserInput(), camera->getIsPlaying(), restart, camera->checkWin());
-//
-//        glfwSwapBuffers(window);
-//        glfwPollEvents();
-//    }
-//
-//    glfwTerminate();
-//    return 0;
-//}
+#endif
+
+#if MAZE
+
+#include "Game.h"
+#include "Maze.h"
+#include "Util.h"
+#include "Light.h"
+#include "Skybox.h"
+#include "CameraMaze.h"
+#include "ControlMaze.h"
+#include "WindowManager.h"
+
+int main(int argc, char** argv) {
+    WindowProperties windowProperties{ /*title*/ "Maze", /*fullscreen*/ true, /*w*/ 1280, /*h*/ 720 };
+    WindowManager windowManager{ windowProperties };
+    windowManager.disableCursor();
+
+    float mazeWidth{ 20.0f }, mazeHeight{ 20.0f }, thickness{ 5.0f };
+
+    Maze* maze = new Maze{ thickness, mazeWidth, mazeHeight };
+
+    CameraProperties cameraProperties;
+    cameraProperties.position = glm::vec3{ 0, -thickness * 5, -thickness * 4 - mazeHeight * thickness };
+    CameraMaze* camera = new CameraMaze{ cameraProperties };
+    camera->setDimensions(mazeWidth, mazeHeight, thickness);
+    camera->setWallPos(maze->getVerticalWallPosition(), maze->getHorizontalWallPosition());
+
+    Light light;
+    Skybox skybox;
+    ControlMaze control{ &windowManager, camera, &maze };
+    Game game{ static_cast<float>(windowManager.getWidth()), static_cast<float>(windowManager.getHeight()) };
+
+    bool showEscapePath = false, restart = false;
+    while (!glfwWindowShouldClose(windowManager.getWindow())) {
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        camera->handleInput(windowManager.getWindow(), showEscapePath, restart);
+        camera->update();
+
+        maze->display(showEscapePath);
+
+        const glm::mat4& view = camera->getView();
+        const glm::mat4& projection = camera->getProjection();
+
+        skybox.display(view, projection);
+
+        light.setPosition(cameraProperties.position + glm::vec3{ 0.0f, -10.0f, 20.0f });
+        light.setViewProjection(view, projection);
+        light.light();
+
+        game.display(control.getUserInput(), camera->getIsPlaying(), restart, camera->checkWin());
+
+        glfwPollEvents();
+        glfwSwapBuffers(windowManager.getWindow());
+    }
+
+    return 0;
+}
+
+#endif

@@ -44,7 +44,7 @@ public:
         _xPosLast = -1.0f, _yPosLast = -1.0f;
 
         _isPlaying = false, _cheatActivated = false;
-        checkC = true, checkE = true, checkR = true;
+        _checkC = true, _checkE = true, _checkR = true;
 
         view();
         updateVectors();
@@ -72,39 +72,39 @@ public:
             return;
         }
 
-        if ((glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) && (checkE)) {
-            escaping = escaping == false ? true : false;
-            checkE = false;
+        if ((glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) && _checkE) {
+            escaping = !escaping;
+            _checkE = false;
         }
         if (glfwGetKey(window, GLFW_KEY_E) == GLFW_RELEASE) {
-            checkE = true;
+            _checkE = true;
         }
 
-        if ((glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) && (checkR)) {
+        if ((glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) && _checkR) {
             setCameraPosition(CameraProperties{}.position);
             Maze maze{ _cubeThickness, _mazeWidth, _mazeHeight };
             setWallPos(maze.getVerticalWallPosition(), maze.getHorizontalWallPosition());
             restart = true;
-            checkR = false;
+            _checkR = false;
             escaping = false;
         }
         if (glfwGetKey(window, GLFW_KEY_R) == GLFW_RELEASE) {
-            checkR = true;
+            _checkR = true;
         }
 
-        if ((glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS) && (checkC)) {
+        if ((glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS) && _checkC) {
             _cheatActivated = !_cheatActivated;
-            checkC = false;
             _cameraProperties.speed = 0.3f;
+            _checkC = false;
         }
         if (glfwGetKey(window, GLFW_KEY_C) == GLFW_RELEASE) {
-            checkC = true;
+            _checkC = true;
         }
 
-        if ((glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) && (_cheatActivated)) {
+        if ((glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) && _cheatActivated) {
             _cameraProperties.speed += 0.2f;
         }
-        if ((glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) && (_cheatActivated)) {
+        if ((glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) && _cheatActivated) {
             if (_cameraProperties.speed > 0.3f) {
                 _cameraProperties.speed -= 0.2f;
             }
@@ -295,7 +295,7 @@ private:
     glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
 
     bool _isPlaying = false, _cheatActivated = false;
-    bool checkC = true, checkE = true, checkR = true;
+    bool _checkC = true, _checkE = true, _checkR = true;
 
     float _mazeWidth{}, _mazeHeight{}, _cubeThickness{};
     std::vector<glm::vec3> _verticalWallPosition{};
