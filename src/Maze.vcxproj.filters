@@ -130,7 +130,7 @@
     <ClInclude Include="Shader.h">
       <Filter>Shader</Filter>
     </ClInclude>
-    <ClInclude Include="CameraOld.h">
+    <ClInclude Include="CameraMaze.h">
       <Filter>Camera</Filter>
     </ClInclude>
     <ClInclude Include="Typer.h">
@@ -261,6 +261,9 @@
     </ClInclude>
     <ClInclude Include="State.h">
       <Filter>State</Filter>
+    </ClInclude>
+    <ClInclude Include="ICamera.h">
+      <Filter>Camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

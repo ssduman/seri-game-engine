@@ -12,7 +12,12 @@ link_directories(
     libraries/glfw-3.3.7.bin.WIN64/lib-vc2022
 )
 
-link_libraries(opengl32 freetype glew32s glfw3)
+link_libraries(
+    opengl32
+    freetype
+    glew32s
+    glfw3
+)
 
 include_directories(${PROJECT_NAME}
     src
@@ -26,10 +31,8 @@ include_directories(${PROJECT_NAME}
 
 add_executable(${PROJECT_NAME}
     src/main.cpp
-    src/CameraOld.cpp
     src/Game.cpp
     src/Maze.cpp
-    src/Renderer.cpp
     src/Texture.cpp
     libraries/imgui-1.88/imgui.cpp
     libraries/imgui-1.88/imgui_demo.cpp
