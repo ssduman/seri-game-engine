@@ -61,38 +61,7 @@ public:
         _horizontalWallPosition = horizontalWallPosition;
     }
 
-    void handleMouse(float xPos, float yPos) {
-        auto deltaX = xPos - _xPosLast;
-        auto deltaY = _yPosLast - yPos;
-        if (_xPosLast < 0) {
-            deltaX = 0;
-            deltaY = 0;
-        }
-
-        _xPosLast = xPos;
-        _yPosLast = yPos;
-
-        _yaw += deltaX * _cameraProperties.sensitivity;
-        _pitch += deltaY * _cameraProperties.sensitivity;
-
-        if (_pitch > 89.0f) {
-            _pitch = 89.0f;
-        }
-        if (_pitch < -89.0f) {
-            _pitch = -89.0f;
-        }
-
-        while (_yaw < -180.0f) {
-            _yaw += 360.0f;
-        }
-        while (_yaw > 180.0f) {
-            _yaw -= 360.0f;
-        }
-
-        updateVectors();
-    }
-
-    void keyboardControl(GLFWwindow* window, Maze** maze, bool& escaping, bool& restart) {
+    void handleInput(GLFWwindow* window, Maze** maze, bool& escaping, bool& restart) {
         if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
             glfwSetWindowShouldClose(window, true);
             return;

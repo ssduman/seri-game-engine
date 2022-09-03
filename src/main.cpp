@@ -68,114 +68,35 @@ int main(int argc, char** argv) {
 
 //#include "Game.h"
 //#include "Maze.h"
+//#include "Util.h"
 //#include "Light.h"
-//#include "CameraOld.h"
 //#include "Skybox.h"
+//#include "CameraMaze.h"
 //#include "WindowManager.h"
 //
-//#include <GL/glew.h>
-//#include <GLFW/glfw3.h>
-//#include <glm/glm.hpp>
-//
-//double mouseCurrentPosX, mouseCurrentPosY;
-//
-//CameraOld* camera;
-//glm::vec3 cameraPosition;
-//
 //Maze* maze;
-//float width, height, aspect;
+//CameraMaze* camera;
+//std::string userInput = "";
+//
 //float mazeWidth = 20, mazeHeight = 20, thickness = 5.0f; // cubes will be 10.0f x 10.0f x 10.0f
 //
-//Light* light;
-//Game* game;
-//std::string userInput = "";
-//bool play = false;
-//
-//void mouseMoveCallback(GLFWwindow* window, double mouseXPos, double mouseYPos);
-//void mouseScrollCallback(GLFWwindow* window, double x, double y);
-//void charCallback(GLFWwindow* window, unsigned int c);
-//void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
-//bool win();
-//
-//int main(int argc, char** argv) {
-//    const char* title = "Maze";
-//    bool fullscreen = true;
-//    int windowWidth = 1280;
-//    int windowHeight = 720;
-//    WindowProperties windowProperties = { /*title*/ "Maze", /*fullscreen*/ false, /*w*/ 1280, /*h*/ 720 };
-//    WindowManager windowManager(windowProperties);
-//    GLFWwindow* window = windowManager.getWindow();
-//
-//    width = (float)windowManager.getWidth();
-//    height = (float)windowManager.getHeight();
-//
-//    mouseCurrentPosX = windowManager.getMouseX();
-//    mouseCurrentPosY = windowManager.getMouseY();
-//
-//    glfwSetCursorPosCallback(window, mouseMoveCallback);
-//    glfwSetScrollCallback(window, mouseScrollCallback);
-//    glfwSetCharCallback(window, charCallback);
-//    glfwSetKeyCallback(window, keyCallback);
-//
-//    maze = new Maze(thickness, mazeWidth, mazeHeight);
-//
-//    cameraPosition = glm::vec3(0, -thickness * 5, -thickness * 4 - mazeHeight * thickness);
-//    camera = new CameraOld(cameraPosition, ((float)width) / height, play);
-//    camera->setDimensions(mazeWidth, mazeHeight, thickness);
-//    camera->setWallPos(maze->getVerticalWallPosition(), maze->getHorizontalWallPosition());
-//
-//    Skybox* skybox = new Skybox();
-//    light = new Light();
-//    game = new Game(width, height);
-//
-//    bool escaping = false, restart = false;
-//    while (!glfwWindowShouldClose(window)) {
-//        glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-//        glClearColor(0.4f, 0.4f, 0.4f, 1.0f);
-//
-//        camera->keyboardControl(window, &maze, play, escaping, restart);
-//        camera->update(play);
-//
-//        maze->display(escaping);
-//
-//        glm::mat4 view = camera->getView();
-//        glm::mat4 projection = camera->getProjection();
-//        skybox->display(view, projection);
-//        light->setPosition(cameraPosition + glm::vec3(0, -10, 20));
-//        light->setViewProjection(view, projection);
-//        light->light();
-//
-//        game->display(userInput, play, restart, win());
-//
-//        glfwSwapBuffers(window);
-//        glfwPollEvents();
-//    }
-//
-//    glfwTerminate();
-//    return 0;
-//}
-//
-//void mouseMoveCallback(GLFWwindow* window, double mouseXPos, double mouseYPos) {
-//    double deltaX = mouseXPos - mouseCurrentPosX;
-//    double deltaY = mouseYPos - mouseCurrentPosY;
-//
-//    camera->mouseControl(window, deltaX, deltaY);
-//
-//    mouseCurrentPosX = mouseXPos;
-//    mouseCurrentPosY = mouseYPos;
+//void mouseMoveCallback(GLFWwindow* window, double xpos, double ypos) {
+//    float xPos = static_cast<float>(xpos);
+//    float yPos = static_cast<float>(ypos);
+//    camera->handleMouse(xPos, yPos);
 //}
 //
 //void mouseScrollCallback(GLFWwindow* window, double x, double y) {
 //    float curr = camera->getAmbient();
 //    if ((y > 0) && (curr <= 0.98f)) {
-//        camera->adjustAmbient(0.02f);
+//        camera->getAmbient() += 0.02f;
 //    } else if ((y < 0) && (curr >= 0.02f)) {
-//        camera->adjustAmbient(-0.02f);
+//        camera->getAmbient() -= 0.02f;
 //    }
 //}
 //
 //void charCallback(GLFWwindow* window, unsigned int c) {
-//    userInput += c;
+//    userInput += static_cast<char>(c);
 //}
 //
 //void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
@@ -198,14 +119,13 @@ int main(int argc, char** argv) {
 //        height_s >> mazeHeight;
 //        if ((mazeWidth == 0) || (mazeHeight == 0)) return;
 //
-//        play = true;
-//
-//        delete maze, camera, game;
-//
+//        delete maze, camera;
 //        maze = new Maze(thickness, mazeWidth, mazeHeight);
 //
-//        cameraPosition = glm::vec3((mazeWidth - 1) * thickness * 2, -thickness / 2, -thickness * 4); // enterence
-//        camera = new CameraOld(cameraPosition, ((float)width) / height, play);
+//        CameraProperties cameraProperties;
+//        cameraProperties.position = glm::vec3((mazeWidth - 1) * thickness * 2, -thickness / 2, -thickness * 4); // enterence
+//        camera = new CameraMaze(cameraProperties);
+//        camera->getIsPlaying() = true;
 //        camera->setDimensions(mazeWidth, mazeHeight, thickness);
 //        camera->setWallPos(maze->getVerticalWallPosition(), maze->getHorizontalWallPosition());
 //    } else if ((key == GLFW_KEY_BACKSPACE) && (action == GLFW_PRESS)) {
@@ -215,11 +135,50 @@ int main(int argc, char** argv) {
 //    }
 //}
 //
-//bool win() {
-//    glm::vec3 pos = camera->getCameraPos();
-//    float t1 = thickness, t2 = thickness * 2, h = mazeHeight;
-//    bool x = pos.x >= -thickness && pos.x <= thickness;
-//    bool z = pos.z >= (h - 2) * t2 + t1 && pos.z <= (h - 1) * t2 + t1;
-//    if (x && z) return true;
-//    return false;
+//int main(int argc, char** argv) {
+//    WindowProperties windowProperties{ /*title*/ "Maze", /*fullscreen*/ true, /*w*/ 1280, /*h*/ 720 };
+//    WindowManager windowManager(windowProperties);
+//    GLFWwindow* window = windowManager.getWindow();
+//
+//    glfwSetKeyCallback(window, keyCallback);
+//    glfwSetCharCallback(window, charCallback);
+//    glfwSetScrollCallback(window, mouseScrollCallback);
+//    glfwSetCursorPosCallback(window, mouseMoveCallback);
+//
+//    maze = new Maze(thickness, mazeWidth, mazeHeight);
+//    Light* light = new Light();
+//    Skybox* skybox = new Skybox();
+//    Game* game = new Game(static_cast<float>(windowManager.getWidth()), static_cast<float>(windowManager.getHeight()));
+//
+//    CameraProperties cameraProperties;
+//    cameraProperties.position = glm::vec3(0, -thickness * 5, -thickness * 4 - mazeHeight * thickness);
+//    camera = new CameraMaze(cameraProperties);
+//    camera->setDimensions(mazeWidth, mazeHeight, thickness);
+//    camera->setWallPos(maze->getVerticalWallPosition(), maze->getHorizontalWallPosition());
+//
+//    bool escaping = false, restart = false;
+//    while (!glfwWindowShouldClose(window)) {
+//        glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+//        glClearColor(0.4f, 0.4f, 0.4f, 1.0f);
+//
+//        camera->handleInput(window, &maze, escaping, restart);
+//        camera->update();
+//
+//        maze->display(escaping);
+//
+//        glm::mat4 view = camera->getView();
+//        glm::mat4 projection = camera->getProjection();
+//        skybox->display(view, projection);
+//        light->setPosition(cameraProperties.position + glm::vec3(0, -10, 20));
+//        light->setViewProjection(view, projection);
+//        light->light();
+//
+//        game->display(userInput, camera->getIsPlaying(), restart, camera->checkWin());
+//
+//        glfwSwapBuffers(window);
+//        glfwPollEvents();
+//    }
+//
+//    glfwTerminate();
+//    return 0;
 //}
