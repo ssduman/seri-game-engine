@@ -13,6 +13,7 @@ Maze::Maze(float thickness, float width, float height) {
     escapeRender = new Renderer(thickness / (thickness * 2) - 1.0f, thickness, thickness);
     nonEscapeRender = new Renderer(thickness / (thickness * 2) - 1.0f, thickness, thickness);
 
+    // cubes will be 10.0f x 10.0f x 10.0f
     this->width = width;
     this->height = height;
     this->thickness = thickness;
