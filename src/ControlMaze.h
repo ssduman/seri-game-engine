@@ -5,10 +5,12 @@
 #include "WindowManager.h"
 #include "IControl.h"
 #include "InputHandler.h"
+#include "CameraMaze.h"
+#include "Maze.h"
 
-class Control : public IControl {
+class ControlMaze : public IControl {
 public:
-    Control(WindowManager* windowManager, Camera* camera, State* state) : IControl(windowManager, state), _camera(camera), _inputHandler(camera) {
+    ControlMaze(WindowManager* windowManager, CameraMaze** camera, Maze* maze) : IControl(windowManager), _camera(camera), _maze(maze) {
         glfwSetWindowUserPointer(_windowManager->getWindow(), static_cast<void*>(this));
 
         init();
@@ -16,7 +18,7 @@ public:
         LOGGER(info, "control init succeeded");
     }
 
-    virtual ~Control() {}
+    virtual ~ControlMaze() {}
 
     void charCallback(GLFWwindow* window, unsigned int codepoint) override {
         char string[5] = "";
@@ -30,10 +32,17 @@ public:
 
         float xPos = static_cast<float>(xpos);
         float yPos = static_cast<float>(ypos);
-        _camera->handleMouse(xPos, yPos);
+        (*_camera)->handleMouse(xPos, yPos);
     }
 
-    void scrollCallback(GLFWwindow* window, double xoffset, double yoffset) override {}
+    void scrollCallback(GLFWwindow* window, double xoffset, double yoffset) override {
+        float& ambient = (*_camera)->getAmbient();
+        if ((yoffset > 0) && (ambient <= 0.98f)) {
+            ambient += 0.02f;
+        } else if ((yoffset < 0) && (ambient >= 0.02f)) {
+            ambient -= 0.02f;
+        }
+    }
 
     void framebufferSizeCallback(GLFWwindow* window, int width, int height) override {
         _windowManager->getWidth() = width;
@@ -47,19 +56,51 @@ public:
     }
 
     void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) override {
-        ICommand* command = _inputHandler.handleInput(key, scancode, action, mods);
-        if (command) {
-            command->execute();
+        if (key == GLFW_KEY_ESCAPE) {
+            _windowManager->windowShouldClose();
+            return;
         }
 
         if ((key == GLFW_KEY_ENTER) && (action == GLFW_PRESS)) {
+            auto userInput = getUserInput();
+
+            if (userInput.size() < 3) {
+                return;
+            }
+
+            std::string part;
+            std::vector<std::string> parts;
+            std::stringstream userInputStream(userInput);
+            while (std::getline(userInputStream, part, 'x')) {
+                parts.push_back(part);
+            }
+            if (userInput == part || parts[0].size() == 0 || parts.size() != 2) {
+                return;
+            }
+            std::stringstream width_s(parts[0]);
+            std::stringstream height_s(parts[1]);
             _userInputVector.clear();
+
+            float mazeWidth, mazeHeight, thickness = 5.0f;
+            width_s >> mazeWidth;
+            height_s >> mazeHeight;
+            if (mazeWidth == 0 || mazeHeight == 0) {
+                return;
+            }
+
+            delete _maze, * _camera;
+            _maze = new Maze(thickness, mazeWidth, mazeHeight);
+
+            CameraProperties cameraProperties;
+            cameraProperties.position = glm::vec3((mazeWidth - 1) * thickness * 2, -thickness / 2, -thickness * 4);
+            (*_camera) = new CameraMaze(cameraProperties);
+            (*_camera)->getIsPlaying() = true;
+            (*_camera)->setDimensions(mazeWidth, mazeHeight, thickness);
+            (*_camera)->setWallPos(_maze->getVerticalWallPosition(), _maze->getHorizontalWallPosition());
         } else if ((key == GLFW_KEY_BACKSPACE) && (action == GLFW_PRESS)) {
             if (_userInputVector.size() > 0) {
                 _userInputVector.pop_back();
             }
-        } else if ((key == GLFW_KEY_ESCAPE) && (action == GLFW_PRESS)) {
-            _windowManager->windowShouldClose();
         }
 
         if (action == GLFW_RELEASE) {
@@ -67,36 +108,11 @@ public:
         }
     }
 
-    void processInput(float deltaTime) {
-        GLFWwindow* window = _windowManager->getWindow();
-
-        if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-            glfwSetWindowShouldClose(window, GLFW_TRUE);
-        }
-
-        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-            _camera->handleInput(deltaTime, CameraMovement::FORWARD);
-        }
-        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-            _camera->handleInput(deltaTime, CameraMovement::BACKWARD);
-        }
-        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-            _camera->handleInput(deltaTime, CameraMovement::LEFT);
-        }
-        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-            _camera->handleInput(deltaTime, CameraMovement::RIGHT);
-        }
-    }
-
-    void setInputHandler(InputHandler inputHandler) {
-        _inputHandler = inputHandler;
-    }
-
 private:
     void init() override {
         glfwSetCharCallback(_windowManager->getWindow(),
             [](GLFWwindow* window, unsigned int codepoint) {
-                if (auto control = static_cast<Control*>(glfwGetWindowUserPointer(window))) {
+                if (auto control = static_cast<ControlMaze*>(glfwGetWindowUserPointer(window))) {
                     control->charCallback(window, codepoint);
                 }
             }
@@ -104,7 +120,7 @@ private:
 
         glfwSetMouseButtonCallback(_windowManager->getWindow(),
             [](GLFWwindow* window, int button, int action, int mods) {
-                if (auto control = static_cast<Control*>(glfwGetWindowUserPointer(window))) {
+                if (auto control = static_cast<ControlMaze*>(glfwGetWindowUserPointer(window))) {
                     control->mouseButtonCallback(window, button, action, mods);
                 }
             }
@@ -112,7 +128,7 @@ private:
 
         glfwSetScrollCallback(_windowManager->getWindow(),
             [](GLFWwindow* window, double xoffset, double yoffset) {
-                if (auto control = static_cast<Control*>(glfwGetWindowUserPointer(window))) {
+                if (auto control = static_cast<ControlMaze*>(glfwGetWindowUserPointer(window))) {
                     control->scrollCallback(window, xoffset, yoffset);
                 }
             }
@@ -120,7 +136,7 @@ private:
 
         glfwSetFramebufferSizeCallback(_windowManager->getWindow(),
             [](GLFWwindow* window, int width, int height) {
-                if (auto control = static_cast<Control*>(glfwGetWindowUserPointer(window))) {
+                if (auto control = static_cast<ControlMaze*>(glfwGetWindowUserPointer(window))) {
                     control->framebufferSizeCallback(window, width, height);
                 }
             }
@@ -128,7 +144,7 @@ private:
 
         glfwSetCursorPosCallback(_windowManager->getWindow(),
             [](GLFWwindow* window, double xpos, double ypos) {
-                if (auto control = static_cast<Control*>(glfwGetWindowUserPointer(window))) {
+                if (auto control = static_cast<ControlMaze*>(glfwGetWindowUserPointer(window))) {
                     control->cursorPosCallback(window, xpos, ypos);
                 }
             }
@@ -136,35 +152,13 @@ private:
 
         glfwSetKeyCallback(_windowManager->getWindow(),
             [](GLFWwindow* window, int key, int scancode, int action, int mods) {
-                if (auto control = static_cast<Control*>(glfwGetWindowUserPointer(window))) {
+                if (auto control = static_cast<ControlMaze*>(glfwGetWindowUserPointer(window))) {
                     control->keyCallback(window, key, scancode, action, mods);
                 }
             }
         );
     }
 
-    size_t encode_utf8(char* s, unsigned int ch) {
-        size_t count = 0;
-
-        if (ch < 0x80)
-            s[count++] = (char)ch;
-        else if (ch < 0x800) {
-            s[count++] = (ch >> 6) | 0xc0;
-            s[count++] = (ch & 0x3f) | 0x80;
-        } else if (ch < 0x10000) {
-            s[count++] = (ch >> 12) | 0xe0;
-            s[count++] = ((ch >> 6) & 0x3f) | 0x80;
-            s[count++] = (ch & 0x3f) | 0x80;
-        } else if (ch < 0x110000) {
-            s[count++] = (ch >> 18) | 0xf0;
-            s[count++] = ((ch >> 12) & 0x3f) | 0x80;
-            s[count++] = ((ch >> 6) & 0x3f) | 0x80;
-            s[count++] = (ch & 0x3f) | 0x80;
-        }
-
-        return count;
-    }
-
-    Camera* _camera;
-    InputHandler _inputHandler;
+    CameraMaze** _camera;
+    Maze* _maze;
 };

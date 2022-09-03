@@ -9,11 +9,16 @@
 
 class IControl {
 public:
+    IControl(WindowManager* windowManager) :
+        _windowManager(windowManager),
+        _mouseCurrentPosX(_windowManager->getMouseX()),
+        _mouseCurrentPosY(_windowManager->getMouseY()) {}
+
     IControl(WindowManager* windowManager, State* state) :
         _windowManager(windowManager),
         _state(state),
-        mouseCurrentPosX(_windowManager->getMouseX()),
-        mouseCurrentPosY(_windowManager->getMouseY()) {}
+        _mouseCurrentPosX(_windowManager->getMouseX()),
+        _mouseCurrentPosY(_windowManager->getMouseY()) {}
 
     virtual ~IControl() {}
 
@@ -33,24 +38,46 @@ public:
 
     inline std::string getUserInput() {
         std::string userInputString;
-        for (const auto& userInput : userInputVector) {
+        for (const auto& userInput : _userInputVector) {
             userInputString += userInput;
         }
         return userInputString;
     }
 
     inline double getMouseCurrentPosX() {
-        return mouseCurrentPosX;
+        return _mouseCurrentPosX;
     }
 
     inline double getMouseCurrentPosY() {
-        return mouseCurrentPosY;
+        return _mouseCurrentPosY;
+    }
+
+    size_t encode_utf8(char* s, unsigned int ch) {
+        size_t count = 0;
+
+        if (ch < 0x80)
+            s[count++] = (char)ch;
+        else if (ch < 0x800) {
+            s[count++] = (ch >> 6) | 0xc0;
+            s[count++] = (ch & 0x3f) | 0x80;
+        } else if (ch < 0x10000) {
+            s[count++] = (ch >> 12) | 0xe0;
+            s[count++] = ((ch >> 6) & 0x3f) | 0x80;
+            s[count++] = (ch & 0x3f) | 0x80;
+        } else if (ch < 0x110000) {
+            s[count++] = (ch >> 18) | 0xf0;
+            s[count++] = ((ch >> 12) & 0x3f) | 0x80;
+            s[count++] = ((ch >> 6) & 0x3f) | 0x80;
+            s[count++] = (ch & 0x3f) | 0x80;
+        }
+
+        return count;
     }
 
 protected:
     WindowManager* _windowManager = nullptr;
     State* _state = nullptr;
-    double mouseCurrentPosX;
-    double mouseCurrentPosY;
-    std::vector<std::string> userInputVector;
+    double _mouseCurrentPosX = 0;
+    double _mouseCurrentPosY = 0;
+    std::vector<std::string> _userInputVector{};
 };
