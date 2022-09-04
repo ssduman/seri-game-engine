@@ -39,7 +39,6 @@ add_executable(${PROJECT_NAME}
     libraries/imgui-1.88/imgui_draw.cpp
     libraries/imgui-1.88/imgui_impl_glfw.cpp
     libraries/imgui-1.88/imgui_impl_opengl3.cpp
-    libraries/imgui-1.88/imgui_impl_win32.cpp
     libraries/imgui-1.88/imgui_tables.cpp
     libraries/imgui-1.88/imgui_widgets.cpp
 )
