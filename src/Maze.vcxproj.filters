@@ -77,6 +77,9 @@
     <Filter Include="State">
       <UniqueIdentifier>{2173bd8f-4395-463a-bf08-d30a35309b1e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Runner">
+      <UniqueIdentifier>{3a77c48e-970f-434f-a719-0333d655eafd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Texture.cpp">
@@ -267,6 +270,15 @@
     </ClInclude>
     <ClInclude Include="ControlMaze.h">
       <Filter>Control</Filter>
+    </ClInclude>
+    <ClInclude Include="MazeRunner.h">
+      <Filter>Runner</Filter>
+    </ClInclude>
+    <ClInclude Include="SeriRunner.h">
+      <Filter>Runner</Filter>
+    </ClInclude>
+    <ClInclude Include="IRunner.h">
+      <Filter>Runner</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
