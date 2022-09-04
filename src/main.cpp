@@ -1,11 +1,11 @@
 ﻿#include "Logger.h"
-#include "SeriRunner.h"
-#include "MazeRunner.h"
+#include "RunnerSeri.h"
+#include "RunnerMaze.h"
 
 int main(int argc, char** argv) {
     try {
-        SeriRunner{}();
-        //MazeRunner{}();
+        RunnerSeri{}();
+        //RunnerMaze{}();
     } catch (const std::exception& ex) {
         LOGGER(error, "exception occured: " << std::string(ex.what()));
     }

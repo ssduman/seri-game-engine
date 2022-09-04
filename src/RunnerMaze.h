@@ -6,11 +6,11 @@
 #include "CameraMaze.h"
 #include "ControlMaze.h"
 
-class MazeRunner : public IRunner {
+class RunnerMaze : public IRunner {
 public:
-    MazeRunner() {}
+    RunnerMaze() {}
 
-    virtual ~MazeRunner() {}
+    virtual ~RunnerMaze() {}
 
     void operator()() {
         WindowProperties windowProperties{ /*title*/ "Maze", /*fullscreen*/ true, /*w*/ 1280, /*h*/ 720 };

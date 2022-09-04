@@ -271,10 +271,10 @@
     <ClInclude Include="ControlMaze.h">
       <Filter>Control</Filter>
     </ClInclude>
-    <ClInclude Include="MazeRunner.h">
+    <ClInclude Include="RunnerMaze.h">
       <Filter>Runner</Filter>
     </ClInclude>
-    <ClInclude Include="SeriRunner.h">
+    <ClInclude Include="RunnerSeri.h">
       <Filter>Runner</Filter>
     </ClInclude>
     <ClInclude Include="IRunner.h">

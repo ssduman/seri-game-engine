@@ -5,11 +5,11 @@
 #include "Control.h"
 #include "Factory.h"
 
-class SeriRunner : public IRunner {
+class RunnerSeri : public IRunner {
 public:
-    SeriRunner() {}
+    RunnerSeri() {}
 
-    virtual ~SeriRunner() {}
+    virtual ~RunnerSeri() {}
 
     void operator()() {
         setlocale(LC_ALL, "en_US.UTF-8");
