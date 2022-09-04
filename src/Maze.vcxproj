@@ -203,7 +203,6 @@ xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win64\freetype.dll" "$(So
     <ClCompile Include="..\libraries\imgui-1.88\imgui_draw.cpp" />
     <ClCompile Include="..\libraries\imgui-1.88\imgui_impl_glfw.cpp" />
     <ClCompile Include="..\libraries\imgui-1.88\imgui_impl_opengl3.cpp" />
-    <ClCompile Include="..\libraries\imgui-1.88\imgui_impl_win32.cpp" />
     <ClCompile Include="..\libraries\imgui-1.88\imgui_tables.cpp" />
     <ClCompile Include="..\libraries\imgui-1.88\imgui_widgets.cpp" />
     <ClCompile Include="main.cpp" />
@@ -217,7 +216,6 @@ xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win64\freetype.dll" "$(So
     <ClInclude Include="..\libraries\imgui-1.88\imgui_impl_glfw.h" />
     <ClInclude Include="..\libraries\imgui-1.88\imgui_impl_opengl3.h" />
     <ClInclude Include="..\libraries\imgui-1.88\imgui_impl_opengl3_loader.h" />
-    <ClInclude Include="..\libraries\imgui-1.88\imgui_impl_win32.h" />
     <ClInclude Include="..\libraries\imgui-1.88\imgui_internal.h" />
     <ClInclude Include="..\libraries\imgui-1.88\imstb_rectpack.h" />
     <ClInclude Include="..\libraries\imgui-1.88\imstb_textedit.h" />

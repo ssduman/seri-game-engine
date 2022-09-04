@@ -14,7 +14,7 @@ public:
     void operator()() {
         setlocale(LC_ALL, "en_US.UTF-8");
 
-        WindowProperties windowProperties{ /*title*/ "Maze", /*fullscreen*/ false, /*w*/ 1280, /*h*/ 720 };
+        WindowProperties windowProperties{ /*title*/ "Seri Game Engine", /*fullscreen*/ false, /*w*/ 1280, /*h*/ 720 };
         std::unique_ptr<WindowManager> windowManager = std::make_unique<WindowManager>(windowProperties);
 
         std::shared_ptr<State> state = std::make_shared<State>();
@@ -23,17 +23,13 @@ public:
         CameraProperties cameraProperties{ /*aspect*/ static_cast<float>(windowProperties.windowWidth / windowProperties.windowHeight) };
         std::shared_ptr<Camera> camera = std::make_shared<Camera>(cameraProperties, state.get());
 
-        Control control{ windowManager.get(), camera.get(), state.get() };
-
         Layer layers{};
 
-        GUI gui{ windowManager.get(), camera.get(), &layers, state.get() };
-
-        Typer typer{ camera.get(), windowProperties.windowWidth, windowProperties.windowHeight };
-
         Light light{ camera.get() };
-
         Skybox skybox{ camera.get() };
+        Control control{ windowManager.get(), camera.get(), state.get() };
+        GUI gui{ windowManager.get(), camera.get(), &layers, state.get() };
+        Typer typer{ camera.get(), windowProperties.windowWidth, windowProperties.windowHeight };
 
         layers.addLayer(Factory::CreateEntity(camera.get(), { EntityType::CUBE }));
         layers.addLayer(&light);

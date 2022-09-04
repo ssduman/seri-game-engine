@@ -19,7 +19,7 @@ public:
     virtual ~ControlMaze() {}
 
     void charCallback(GLFWwindow* window, unsigned int codepoint) override {
-        char string[5] = "";
+        char string[5]{};
         encode_utf8(string, codepoint);
         _userInputVector.push_back(std::string(string));
     }
