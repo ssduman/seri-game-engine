@@ -12,8 +12,6 @@ public:
     virtual ~RunnerSeri() {}
 
     void operator()() {
-        setlocale(LC_ALL, "en_US.UTF-8");
-
         WindowProperties windowProperties{ /*title*/ "Seri Game Engine", /*fullscreen*/ false, /*w*/ 1280, /*h*/ 720 };
         std::unique_ptr<WindowManager> windowManager = std::make_unique<WindowManager>(windowProperties);
 
@@ -35,7 +33,7 @@ public:
         layers.addLayer(&light);
         layers.addLayer(&skybox);
 
-        LOGGER(info, "starting game loop");
+        LOGGER(info, "starting seri game loop");
 
         while (!glfwWindowShouldClose(windowManager->getWindow())) {
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -56,7 +54,7 @@ public:
             glfwSwapBuffers(windowManager->getWindow());
         }
 
-        LOGGER(info, "game loop stopped");
+        LOGGER(info, "seri game loop stopped");
     }
 
 private:
