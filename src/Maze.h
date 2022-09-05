@@ -58,7 +58,7 @@ public:
         solveMaze();
     }
 
-    void display(bool isEscaping) {
+    void display(bool showEscapePath) {
         wallVerticalTexture->bind();
         verticalWallRender->render();
         wallVerticalTexture->unbind();
@@ -67,7 +67,7 @@ public:
         horizontalWallRender->render();
         wallTexture->unbind();
 
-        if (!isEscaping) {
+        if (!showEscapePath) {
             passTexture->bind();
             passRender->render();
             passTexture->unbind();

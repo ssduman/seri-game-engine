@@ -95,8 +95,8 @@ public:
             _camera->getCameraProperties() = cameraProperties;
             _camera->setCameraPosition(cameraProperties.position);
             _camera->getIsPlaying() = true;
-            _camera->setDimensions(mazeWidth, mazeHeight, thickness);
-            _camera->setWallPos((*_maze)->getVerticalWallPosition(), (*_maze)->getHorizontalWallPosition());
+            _camera->setMazeDimensions(mazeWidth, mazeHeight, thickness);
+            _camera->setMazeWallPositions((*_maze)->getVerticalWallPosition(), (*_maze)->getHorizontalWallPosition());
             _camera->init();
         } else if ((key == GLFW_KEY_BACKSPACE) && (action == GLFW_PRESS)) {
             if (_userInputVector.size() > 0) {

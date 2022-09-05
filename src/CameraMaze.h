@@ -51,18 +51,18 @@ public:
         update();
     }
 
-    void setDimensions(float mazeWidth, float mazeHeight, float cubeThickness) {
+    void setMazeDimensions(float mazeWidth, float mazeHeight, float cubeThickness) {
         _mazeWidth = mazeWidth;
         _mazeHeight = mazeHeight;
         _cubeThickness = cubeThickness;
     }
 
-    void setWallPos(std::vector<glm::vec3> verticalWallPosition, std::vector<glm::vec3> horizontalWallPosition) {
+    void setMazeWallPositions(const std::vector<glm::vec3>& verticalWallPosition, const std::vector<glm::vec3>& horizontalWallPosition) {
         _verticalWallPosition = verticalWallPosition;
         _horizontalWallPosition = horizontalWallPosition;
     }
 
-    void handleInput(GLFWwindow* window, bool& escaping, bool& restart) {
+    void handleInput(GLFWwindow* window) {
         if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
             glfwSetWindowShouldClose(window, true);
             return;
@@ -73,7 +73,7 @@ public:
         }
 
         if ((glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) && _checkE) {
-            escaping = !escaping;
+            _showEscapePath = !_showEscapePath;
             _checkE = false;
         }
         if (glfwGetKey(window, GLFW_KEY_E) == GLFW_RELEASE) {
@@ -83,10 +83,10 @@ public:
         if ((glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) && _checkR) {
             setCameraPosition(CameraProperties{}.position);
             Maze maze{ _cubeThickness, _mazeWidth, _mazeHeight };
-            setWallPos(maze.getVerticalWallPosition(), maze.getHorizontalWallPosition());
-            restart = true;
+            setMazeWallPositions(maze.getVerticalWallPosition(), maze.getHorizontalWallPosition());
             _checkR = false;
-            escaping = false;
+            _showEscapePath = false;
+            _isRestartTriggered = true;
         }
         if (glfwGetKey(window, GLFW_KEY_R) == GLFW_RELEASE) {
             _checkR = true;
@@ -207,6 +207,14 @@ public:
         return _isPlaying;
     }
 
+    bool& showEscapePath() {
+        return _showEscapePath;
+    }
+
+    bool& isRestartTriggered() {
+        return _isRestartTriggered;
+    }
+
 private:
     void updateVectors() override {
         glm::vec3 eulerAngle{};
@@ -296,6 +304,8 @@ private:
 
     bool _isPlaying = false, _cheatActivated = false;
     bool _checkC = true, _checkE = true, _checkR = true;
+
+    bool _showEscapePath = false, _isRestartTriggered = false;
 
     float _mazeWidth{}, _mazeHeight{}, _cubeThickness{};
     std::vector<glm::vec3> _verticalWallPosition{};

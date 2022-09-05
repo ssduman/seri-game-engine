@@ -17,33 +17,32 @@ public:
         WindowManager windowManager{ windowProperties };
         windowManager.disableCursor();
 
-        float mazeWidth{ 20.0f }, mazeHeight{ 20.0f }, thickness{ 5.0f };
+        float mazeWidth{ 20.0f }, mazeHeight{ 20.0f }, mazeThickness{ 5.0f };
 
-        Maze* maze = new Maze{ mazeWidth, mazeHeight, thickness };
+        Maze* maze = new Maze{ mazeWidth, mazeHeight, mazeThickness };
 
         CameraProperties cameraProperties;
-        cameraProperties.position = glm::vec3{ 0, -thickness * 5, -thickness * 4 - mazeHeight * thickness };
+        cameraProperties.position = glm::vec3{ 0, -mazeThickness * 5, -mazeThickness * 4 - mazeHeight * mazeThickness };
         CameraMaze* camera = new CameraMaze{ cameraProperties };
-        camera->setDimensions(mazeWidth, mazeHeight, thickness);
-        camera->setWallPos(maze->getVerticalWallPosition(), maze->getHorizontalWallPosition());
+        camera->setMazeDimensions(mazeWidth, mazeHeight, mazeThickness);
+        camera->setMazeWallPositions(maze->getVerticalWallPosition(), maze->getHorizontalWallPosition());
 
         Light light;
         Skybox skybox;
         ControlMaze control{ &windowManager, camera, &maze };
         Game game{ static_cast<float>(windowManager.getWidth()), static_cast<float>(windowManager.getHeight()) };
 
-        bool showEscapePath = false, restart = false;
         while (!glfwWindowShouldClose(windowManager.getWindow())) {
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            camera->handleInput(windowManager.getWindow(), showEscapePath, restart);
+            camera->handleInput(windowManager.getWindow());
             camera->update();
-
-            maze->display(showEscapePath);
 
             const glm::mat4& view = camera->getView();
             const glm::mat4& projection = camera->getProjection();
+
+            maze->display(camera->showEscapePath());
 
             skybox.display(view, projection);
 
@@ -51,7 +50,7 @@ public:
             light.setViewProjection(view, projection);
             light.light();
 
-            game.display(control.getUserInput(), camera->getIsPlaying(), restart, camera->checkWin());
+            game.display(control.getUserInput(), camera->getIsPlaying(), camera->isRestartTriggered(), camera->checkWin());
 
             glfwPollEvents();
             glfwSwapBuffers(windowManager.getWindow());
