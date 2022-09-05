@@ -19,7 +19,7 @@ public:
 
         float mazeWidth{ 20.0f }, mazeHeight{ 20.0f }, thickness{ 5.0f };
 
-        Maze* maze = new Maze{ thickness, mazeWidth, mazeHeight };
+        Maze* maze = new Maze{ mazeWidth, mazeHeight, thickness };
 
         CameraProperties cameraProperties;
         cameraProperties.position = glm::vec3{ 0, -thickness * 5, -thickness * 4 - mazeHeight * thickness };

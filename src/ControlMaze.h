@@ -87,8 +87,8 @@ public:
             }
 
             delete* _maze;
-            *_maze = new Maze{ thickness, mazeWidth, mazeHeight };
-            //_maze.resetMaze(thickness, mazeWidth, mazeHeight);
+            *_maze = new Maze{ mazeWidth, mazeHeight, thickness };
+            //_maze.resetMaze(mazeWidth, mazeHeight, thickness);
 
             CameraProperties cameraProperties;
             cameraProperties.position = glm::vec3((mazeWidth - 1) * thickness * 2, -thickness / 2, -thickness * 4);

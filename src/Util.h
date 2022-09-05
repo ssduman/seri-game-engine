@@ -10,6 +10,7 @@
 
 #include <map>
 #include <memory>
+#include <vector>
 #include <locale.h>
 #include <iostream>
 
