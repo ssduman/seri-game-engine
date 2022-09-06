@@ -2,10 +2,9 @@
 
 #include "Typer.h"
 #include "Entity.h"
+#include "Stopwatch.h"
 
 #include <stb_image.h>
-
-#include <ctime>
 
 class Game : public Entity {
 public:
@@ -14,21 +13,20 @@ public:
         initShader();
         initTyper();
         initTexture();
+        initStopwatch();
         setProjection();
 
         LOGGER(info, "game init succeeded");
     }
 
-    void display(std::string userInput, const bool play, const bool restart, const bool exit) {
-        if ((_inExit == true) && (restart == true)) {
-            _inExit = false;
-        } else if (_inExit == true) {
-            _inExit = true;
-        } else {
-            _inExit = exit;
-        }
-        if (play == true) {
-            stopwatch(restart);
+    ~Game() {
+        delete _typer;
+        delete _stopwatch;
+    }
+
+    void display(std::string userInput, const bool isPlaying, const bool isRestartTriggered, const bool isWon) {
+        if (isPlaying) {
+            _stopwatch->run(isRestartTriggered, isWon);
             return;
         }
 
@@ -69,7 +67,7 @@ private:
         glBindVertexArray(_VAO);
         glBindBuffer(GL_ARRAY_BUFFER, _VBO);
 
-        glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, NULL, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, nullptr, GL_STATIC_DRAW);
         glEnableVertexAttribArray(0);
 
         glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
@@ -107,6 +105,10 @@ private:
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 
+    void initStopwatch() {
+        _stopwatch = new Stopwatch(_typer, _width, _height);
+    }
+
     void setProjection() {
         _shader.use();
         auto projection = glm::ortho(0.0f, _width, 0.0f, _height);
@@ -130,48 +132,11 @@ private:
 
     void update() override {}
 
-    void stopwatch(const bool restart) {
-        if (start == NULL) start = std::clock();
-        if (restart == true) {
-            start = 0, hour = 0, min = 0, sec = 0;
-            _inExit = false;
-        }
-        if (_inExit == true) {
-            timer += 0.01f;
-            if (timer >= 0.16f) {
-                renderText(h_m_s, _width - _width / 5.0f, _height - _height / 12.0f, 1.0f, glm::vec3(0.95f, 0.6f, 0.0f));
-                renderText("YOU WON!", _width / 2.8f, _height / 2.0f, 1.0f, glm::vec3(0.95f, 0.5f, 1.0f));
-                if (timer >= 0.32f) timer = 0.0f;
-            }
-            return;
-        }
-        sec = floor((std::clock() - (double)start) / (double)CLOCKS_PER_SEC);
-        if (sec == 60) {
-            sec = 0;
-            start = 0;
-            min++;
-            if (min == 60) {
-                min = 0;
-                hour++;
-            }
-        }
-        std::string sec_s = sec < 10 ? "0" + std::to_string(sec) : std::to_string(sec);
-        std::string min_s = min < 10 ? "0" + std::to_string(min) : std::to_string(min);
-        std::string hour_s = hour < 10 ? "0" + std::to_string(hour) : std::to_string(hour);
-        h_m_s = hour_s + ":" + min_s + ":" + sec_s;
-        renderText(h_m_s, _width - _width / 5.0f, _height - _height / 12.0f, 1.0f, glm::vec3(0.95f, 0.6f, 0.0f));
-    }
-
     Typer* _typer = nullptr;
+    Stopwatch* _stopwatch = nullptr;;
     float _width{ 0.0f };
     float _height{ 0.0f };
-    bool _inExit = false;
     unsigned int _texture{ 0 };
     std::string _texturePath{ "textures/gameWindow.png" };
-
-    std::clock_t start{ 0L };
-    int sec = 0, min = 0, hour = 0;
-    float timer = 0.0f;
-    std::string h_m_s = "";
 
 };

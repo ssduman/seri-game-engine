@@ -32,13 +32,13 @@ public:
         _vertexShader = glCreateShader(GL_VERTEX_SHADER);
         std::string vsSourceCodeStr = readShaderCode(vsCodePath);
         const char* vsSourceCode = vsSourceCodeStr.c_str();
-        glShaderSource(_vertexShader, 1, &vsSourceCode, NULL);
+        glShaderSource(_vertexShader, 1, &vsSourceCode, nullptr);
         glCompileShader(_vertexShader);
 
         _fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
         std::string fsSourceCodeStr = readShaderCode(fsCodePath);
         const char* fsSourceCode = fsSourceCodeStr.c_str();
-        glShaderSource(_fragmentShader, 1, &fsSourceCode, NULL);
+        glShaderSource(_fragmentShader, 1, &fsSourceCode, nullptr);
         glCompileShader(_fragmentShader);
 
         checkShaderCompilationError();
@@ -132,7 +132,7 @@ private:
     inline void checkShaderCompilationError(const unsigned int _s) {
         glGetShaderiv(_s, GL_COMPILE_STATUS, &_errorStatusSuccess);
         if (!_errorStatusSuccess) {
-            glGetShaderInfoLog(_s, 512, NULL, _errorStatusLog);
+            glGetShaderInfoLog(_s, 512, nullptr, _errorStatusLog);
             LOGGER(error, "error: shader compilation failed: " << _errorStatusLog);
         }
     }
@@ -140,7 +140,7 @@ private:
     inline void checkProgramError() {
         glGetProgramiv(_program, GL_LINK_STATUS, &_errorStatusSuccess);
         if (!_errorStatusSuccess) {
-            glGetShaderInfoLog(_program, 512, NULL, _errorStatusLog);
+            glGetShaderInfoLog(_program, 512, nullptr, _errorStatusLog);
             LOGGER(error, "error: program linking failed: " << _errorStatusLog);
         }
     }
