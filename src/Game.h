@@ -107,7 +107,7 @@ private:
     void setProjection() {
         _shader.use();
         auto projection = glm::ortho(0.0f, _width, 0.0f, _height);
-        _shader.setMat4("projection", projection);
+        _shader.setMat4("u_projection", projection);
     }
 
     void update() override {}
