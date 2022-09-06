@@ -35,21 +35,24 @@ public:
         calculateStopwatch(isWon);
     }
 
+    void renderText(std::string text, float x, float y, glm::vec3 color = { 1.0f, 1.0f, 1.0f }, float scale = 1.0f) {
+        _typer->setColor(color);
+        _typer->renderText(text, x, y, scale);
+    }
+
 private:
     void checkWonStatus(const bool isWon) {
         if (isWon || _gameFinished) {
             static float _blinkTimer = 0.0f;
             _blinkTimer += 0.01f;
             if (_blinkTimer >= 0.16f) {
-
-                renderText(_hms, _width - _width / 5.0f, _height - _height / 12.0f, 1.0f, glm::vec3(0.95f, 0.6f, 0.0f));
-                renderText("YOU WON!", _width / 2.8f, _height / 2.0f, 1.0f, glm::vec3(0.95f, 0.5f, 1.0f));
-
                 if (_blinkTimer >= 0.32f) {
                     _blinkTimer = 0.0f;
                 }
+
+                renderText(_hms, _width - _width / 5.0f, _height - _height / 12.0f, glm::vec3{ 0.95f, 0.6f, 0.0f });
+                renderText("YOU WON!", _width / 2.8f, _height / 2.0f, glm::vec3{ 0.95f, 0.5f, 1.0f });
             }
-            return;
         }
     }
 
@@ -72,12 +75,7 @@ private:
             _hms = hour_s + ":" + min_s + ":" + sec_s;
         }
 
-        renderText(_hms, _width - _width / 5.0f, _height - _height / 12.0f, 1.0f, glm::vec3(0.95f, 0.6f, 0.0f));
-    }
-
-    void renderText(std::string text, float x, float y, float scale, glm::vec3 color) {
-        _typer->setColor(color);
-        _typer->renderText(text, x, y, scale);
+        renderText(_hms, _width - _width / 5.0f, _height - _height / 12.0f, glm::vec3{ 0.95f, 0.6f, 0.0f });
     }
 
     Typer* _typer = nullptr;
@@ -90,4 +88,5 @@ private:
     int _hour{ 0 };
     std::string _hms{};
     std::clock_t _startedClockValue{ 0L };
+
 };

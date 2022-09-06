@@ -34,13 +34,8 @@ public:
 
         float x = _width / 3.0f + 45.0f;
         float y = _height / 2.0f - 45.0f;
-        renderText(userInput, x + 8.0f * 46.5f, y, 0.5f, glm::vec3(0.3f, 0.8f, 0.9f));
-        renderText("Enter maze size: __________", x, y, 0.5f, glm::vec3(0.5f, 0.8f, 0.2f));
-    }
-
-    void renderText(std::string text, float x, float y, float scale, glm::vec3 color) {
-        _typer->setColor(color);
-        _typer->renderText(text, x, y, scale);
+        _stopwatch->renderText(userInput, x + 8.0f * 46.5f, y, glm::vec3{ 0.3f, 0.8f, 0.9f }, 0.5f);
+        _stopwatch->renderText("Enter maze size: __________", x, y, glm::vec3{ 0.5f, 0.8f, 0.2f }, 0.5f);
     }
 
 private:
@@ -115,6 +110,8 @@ private:
         _shader.setMat4("projection", projection);
     }
 
+    void update() override {}
+
     void render() override {
         _shader.use();
 
@@ -129,8 +126,6 @@ private:
         glBindTexture(GL_TEXTURE_2D, 0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
-
-    void update() override {}
 
     Typer* _typer = nullptr;
     Stopwatch* _stopwatch = nullptr;;
