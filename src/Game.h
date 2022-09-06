@@ -19,7 +19,7 @@ public:
         LOGGER(info, "game init succeeded");
     }
 
-    ~Game() {
+    virtual ~Game() {
         delete _typer;
         delete _stopwatch;
     }

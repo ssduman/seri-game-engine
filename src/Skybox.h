@@ -50,7 +50,7 @@ public:
         glDepthFunc(GL_LESS);
     }
 
-    void display(glm::mat4 view, glm::mat4 projection) {
+    void display(const glm::mat4& view, const glm::mat4& projection) {
         _shader.use();
         _shader.setMat4("u_view", glm::mat4(glm::mat3(view)));
         _shader.setMat4("u_projection", projection);

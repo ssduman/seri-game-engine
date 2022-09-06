@@ -22,13 +22,13 @@ public:
 
         CameraProperties cameraProperties;
         cameraProperties.position = glm::vec3{ 0, -mazeThickness * 5, -mazeThickness * 4 - mazeHeight * mazeThickness };
-        CameraMaze* camera = new CameraMaze{ cameraProperties };
+        std::unique_ptr<CameraMaze> camera = std::make_unique<CameraMaze>(cameraProperties);
         camera->setMazeDimensions(mazeWidth, mazeHeight, mazeThickness);
         camera->setMazeWallPositions(maze->getVerticalWallPosition(), maze->getHorizontalWallPosition());
 
         Light light;
         Skybox skybox;
-        ControlMaze control{ &windowManager, camera, &maze };
+        ControlMaze control{ &windowManager, camera.get(), &maze};
         Game game{ static_cast<float>(windowManager.getWidth()), static_cast<float>(windowManager.getHeight()) };
 
         LOGGER(info, "starting maze game loop");
