@@ -31,7 +31,6 @@ include_directories(${PROJECT_NAME}
 
 add_executable(${PROJECT_NAME}
     src/main.cpp
-    src/Game.cpp
     src/Texture.cpp
     libraries/imgui-1.88/imgui.cpp
     libraries/imgui-1.88/imgui_demo.cpp

@@ -10,9 +10,11 @@
 
 #include <map>
 #include <memory>
+#include <string>
 #include <vector>
 #include <locale.h>
 #include <iostream>
+#include <stdexcept>
 
 struct Util {
     static inline float toDegree(float radian) {

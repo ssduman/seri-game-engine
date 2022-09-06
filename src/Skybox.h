@@ -5,7 +5,6 @@
 #include <stb_image.h>
 
 class Skybox : public Entity {
-
 public:
     Skybox() : Entity(nullptr) {
         init();
@@ -24,6 +23,42 @@ public:
         LOGGER(info, "skybox init succeeded");
     }
 
+    void setFaces(std::vector<std::string>& faces) {
+        _faces = faces;
+    }
+
+    void setViewProjection() {
+        _shader.use();
+        _shader.setMat4("u_view", glm::mat4(glm::mat3(_camera->getView())));
+        _shader.setMat4("u_projection", _camera->getProjection());
+    }
+
+    void update() override {
+        if (_camera->viewUpdated()) {
+            setViewProjection();
+        }
+    }
+
+    void render() override {
+        _shader.use();
+        glDepthFunc(GL_LEQUAL);
+        glBindVertexArray(_VAO);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, _texture);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+        glBindVertexArray(0);
+        glDepthFunc(GL_LESS);
+    }
+
+    void display(glm::mat4 view, glm::mat4 projection) {
+        _shader.use();
+        _shader.setMat4("u_view", glm::mat4(glm::mat3(view)));
+        _shader.setMat4("u_projection", projection);
+
+        render();
+    }
+
+private:
     void init() override {
         _vertices = {
             -1.0f, 1.0f, -1.0f,
@@ -97,42 +132,6 @@ public:
         _shader.init(vsCodePath, fsCodePath);
     }
 
-    void setFaces(std::vector<std::string>& faces) {
-        _faces = faces;
-    }
-
-    void setViewProjection() {
-        _shader.use();
-        _shader.setMat4("u_view", glm::mat4(glm::mat3(_camera->getView())));
-        _shader.setMat4("u_projection", _camera->getProjection());
-    }
-
-    void update() override {
-        if (_camera->viewUpdated()) {
-            setViewProjection();
-        }
-    }
-
-    void render() override {
-        _shader.use();
-        glDepthFunc(GL_LEQUAL);
-        glBindVertexArray(_VAO);
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_CUBE_MAP, _texture);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-        glBindVertexArray(0);
-        glDepthFunc(GL_LESS);
-    }
-
-    void display(glm::mat4 view, glm::mat4 projection) {
-        _shader.use();
-        _shader.setMat4("u_view", glm::mat4(glm::mat3(view)));
-        _shader.setMat4("u_projection", projection);
-
-        render();
-    }
-
-private:
     void loadCubemap(bool flip = true) {
         glGenTextures(1, &_texture);
         glBindTexture(GL_TEXTURE_CUBE_MAP, _texture);
@@ -144,9 +143,13 @@ private:
 
         int width, height, components;
         for (auto i = 0; i < _faces.size(); i++) {
-            auto data = stbi_load(_faces[i].c_str(), &width, &height, &components, 0);
-            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-            stbi_image_free(data);
+            auto image = stbi_load(_faces[i].c_str(), &width, &height, &components, 0);
+            if (image) {
+                glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+                stbi_image_free(image);
+            } else {
+                LOGGER(error, "texture " << _faces[i] << " could not loaded");
+            }
         }
 
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
