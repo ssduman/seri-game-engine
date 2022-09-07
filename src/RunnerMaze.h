@@ -57,7 +57,7 @@ public:
             glfwSwapBuffers(windowManager.getWindow());
         }
 
-        LOGGER(info, "seri game loop stopped");
+        LOGGER(info, "maze game loop stopped");
     }
 
 private:
