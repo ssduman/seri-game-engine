@@ -91,7 +91,7 @@ public:
             //_maze.resetMaze(mazeWidth, mazeHeight, thickness);
 
             CameraProperties cameraProperties;
-            cameraProperties.position = glm::vec3((mazeWidth - 1) * thickness * 2, -thickness / 2, -thickness * 4);
+            cameraProperties.position = glm::vec3((mazeWidth - 1) * thickness * 2, thickness / 2, -thickness * 4);
             _camera->getCameraProperties() = cameraProperties;
             _camera->setCameraPosition(cameraProperties.position);
             _camera->getIsPlaying() = true;

@@ -176,7 +176,7 @@ private:
                     horizontalWallPosition.push_back(glm::vec3(x * t, 0.0f, t * (_height - 1) - (y * t + t / 2)));
                     horizontalCount++;
                 }
-                passPosition.push_back(glm::vec3(x * t, t / 2.0f, y * t));
+                passPosition.push_back(glm::vec3(x * t, -t / 2.0f, y * t));
 
                 // r, d, l, u
                 tempTuple = std::make_tuple(x, y, findVerticalWall(x, y), findHorizontalWall(x, y), findVerticalWall(x - 1, y), findHorizontalWall(x, y - 1));
@@ -262,9 +262,9 @@ private:
         for (int y = 0; y < _height; y++) {
             for (int x = 0; x < _width; x++) {
                 if (visitedTable[y][x] == false) {
-                    nonEscapePosition.push_back(glm::vec3(x * t, t / 2.0f, t * (_height - 1) - y * t));
-                } else {  // this is the way of exit
-                    escapePosition.push_back(glm::vec3(x * t, t / 2.0f, t * (_height - 1) - y * t));
+                    nonEscapePosition.push_back(glm::vec3(x * t, -t / 2.0f, t * (_height - 1) - y * t));
+                } else {
+                    escapePosition.push_back(glm::vec3(x * t, -t / 2.0f, t * (_height - 1) - y * t));
                 }
             }
         }

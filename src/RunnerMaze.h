@@ -21,7 +21,7 @@ public:
         Maze* maze = new Maze{ mazeWidth, mazeHeight, mazeThickness };
 
         CameraProperties cameraProperties;
-        cameraProperties.position = glm::vec3{ 0, -mazeThickness * 5, -mazeThickness * 4 - mazeHeight * mazeThickness };
+        cameraProperties.position = glm::vec3{ 0, mazeThickness * 5, -mazeThickness * 4 - mazeHeight * mazeThickness };
         std::unique_ptr<CameraMaze> camera = std::make_unique<CameraMaze>(cameraProperties);
         camera->setMazeDimensions(mazeWidth, mazeHeight, mazeThickness);
         camera->setMazeWallPositions(maze->getVerticalWallPosition(), maze->getHorizontalWallPosition());
@@ -44,7 +44,7 @@ public:
 
             skybox.display();
 
-            light.setPosition(cameraProperties.position + glm::vec3{ 0.0f, -10.0f, 20.0f });
+            light.setPosition(cameraProperties.position + glm::vec3{ 0.0f, 10.0f, 20.0f });
             light.display();
 
             game.display(control.getUserInput(), camera->getIsPlaying(), camera->isRestartTriggered(), camera->checkWin());
