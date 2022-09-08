@@ -24,7 +24,7 @@ public:
         delete _stopwatch;
     }
 
-    void display(std::string userInput, const bool isPlaying, const bool isRestartTriggered, const bool isWon) {
+    void display(std::string userInput, const bool isPlaying, bool& isRestartTriggered, const bool isWon) {
         if (isPlaying) {
             _stopwatch->run(isRestartTriggered, isWon);
             return;

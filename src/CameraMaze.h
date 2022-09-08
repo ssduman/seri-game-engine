@@ -80,18 +80,6 @@ public:
             _checkE = true;
         }
 
-        if ((glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) && _checkR) {
-            setCameraPosition(CameraProperties{}.position);
-            Maze maze{ _cubeThickness, _mazeWidth, _mazeHeight };
-            setMazeWallPositions(maze.getVerticalWallPosition(), maze.getHorizontalWallPosition());
-            _checkR = false;
-            _showEscapePath = false;
-            _isRestartTriggered = true;
-        }
-        if (glfwGetKey(window, GLFW_KEY_R) == GLFW_RELEASE) {
-            _checkR = true;
-        }
-
         if ((glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS) && _checkC) {
             _cheatActivated = !_cheatActivated;
             _cameraProperties.speed = 0.3f;

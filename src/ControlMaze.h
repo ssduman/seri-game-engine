@@ -79,26 +79,23 @@ public:
             std::stringstream height_s(parts[1]);
             _userInputVector.clear();
 
-            float mazeWidth, mazeHeight, thickness = 5.0f;
+            float mazeWidth, mazeHeight, mazeThickness = 5.0f;
             width_s >> mazeWidth;
             height_s >> mazeHeight;
             if (mazeWidth == 0 || mazeHeight == 0) {
                 return;
             }
 
-            delete* _maze;
-            *_maze = new Maze{ mazeWidth, mazeHeight, thickness };
-            //_maze.resetMaze(mazeWidth, mazeHeight, thickness);
+            generateMaze(mazeWidth, mazeHeight, mazeThickness);
+            return;
+        }
+        
+        if ((key == GLFW_KEY_R) && (action == GLFW_PRESS)) {
+            generateMaze((*_maze)->getMazeWidth(), (*_maze)->getMazeHeight(), (*_maze)->getMazeThickness());
+            return;
+        }
 
-            CameraProperties cameraProperties;
-            cameraProperties.position = glm::vec3((mazeWidth - 1) * thickness * 2, thickness / 2, -thickness * 4);
-            _camera->getCameraProperties() = cameraProperties;
-            _camera->setCameraPosition(cameraProperties.position);
-            _camera->getIsPlaying() = true;
-            _camera->setMazeDimensions(mazeWidth, mazeHeight, thickness);
-            _camera->setMazeWallPositions((*_maze)->getVerticalWallPosition(), (*_maze)->getHorizontalWallPosition());
-            _camera->init();
-        } else if ((key == GLFW_KEY_BACKSPACE) && (action == GLFW_PRESS)) {
+        if ((key == GLFW_KEY_BACKSPACE) && (action == GLFW_PRESS)) {
             if (_userInputVector.size() > 0) {
                 _userInputVector.pop_back();
             }
@@ -107,6 +104,23 @@ public:
         if (action == GLFW_RELEASE) {
             //LOGGER(info, "user input: " << getUserInput());
         }
+    }
+
+    void generateMaze(float mazeWidth, float mazeHeight, float mazeThickness) {
+        delete* _maze;
+        *_maze = new Maze{ mazeWidth, mazeHeight, mazeThickness };
+        //_maze.resetMaze(mazeWidth, mazeHeight, mazeThickness);
+
+        CameraProperties cameraProperties;
+        cameraProperties.position = glm::vec3((mazeWidth - 1) * mazeThickness * 2, mazeThickness / 2, -mazeThickness * 4);
+        _camera->getCameraProperties() = cameraProperties;
+        _camera->setCameraPosition(cameraProperties.position);
+        _camera->getIsPlaying() = true;
+        _camera->showEscapePath() = false;
+        _camera->isRestartTriggered() = true;
+        _camera->setMazeDimensions(mazeWidth, mazeHeight, mazeThickness);
+        _camera->setMazeWallPositions((*_maze)->getVerticalWallPosition(), (*_maze)->getHorizontalWallPosition());
+        _camera->init();
     }
 
 private:

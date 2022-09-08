@@ -4,8 +4,8 @@
 
 int main(int argc, char* argv[]) {
     try {
-        RunnerSeri{}();
-        //RunnerMaze{}();
+        //RunnerSeri{}();
+        RunnerMaze{}();
     } catch (const std::exception& ex) {
         LOGGER(error, "exception occured: " << ex.what());
     }

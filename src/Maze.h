@@ -90,6 +90,18 @@ public:
         return horizontalWallPosition;
     }
 
+    float getMazeWidth() {
+        return _width;
+    }
+
+    float getMazeHeight() {
+        return _height;
+    }
+
+    float getMazeThickness() {
+        return _thickness;
+    }
+
 private:
     void init() {}
 

@@ -13,7 +13,7 @@ public:
         _startedClockValue = std::clock();
     }
 
-    void run(const bool isRestartTriggered, const bool isWon) {
+    void run(bool& isRestartTriggered, const bool isWon) {
         if (_startedClockValue == 0L) {
             init();
         }
@@ -24,6 +24,7 @@ public:
             _hour = 0;
             _gameFinished = false;
             _startedClockValue = 0L;
+            isRestartTriggered = false;
         }
 
         if (isWon) {
