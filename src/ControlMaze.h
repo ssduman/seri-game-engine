@@ -34,11 +34,11 @@ public:
     }
 
     void scrollCallback(GLFWwindow* window, double xoffset, double yoffset) override {
-        float& ambient = _camera->getAmbient();
+        float ambient = _camera->getAmbient();
         if ((yoffset > 0) && (ambient <= 0.98f)) {
-            ambient += 0.02f;
+            _camera->incrementAmbient(+0.02f);
         } else if ((yoffset < 0) && (ambient >= 0.02f)) {
-            ambient -= 0.02f;
+            _camera->incrementAmbient(-0.02f);
         }
     }
 

@@ -8,7 +8,7 @@
 
 class Game : public Entity {
 public:
-    Game(float width, float height) : Entity(nullptr), _width(width), _height(height) {
+    Game(ICamera* camera, float width, float height) : Entity(camera), _width(width), _height(height) {
         init();
         initShader();
         initTyper();
@@ -77,7 +77,7 @@ private:
     }
 
     void initTyper() {
-        _typer = new Typer(static_cast<int>(_width), static_cast<int>(_height));
+        _typer = new Typer(_camera, static_cast<int>(_width), static_cast<int>(_height));
     }
 
     void initTexture() {

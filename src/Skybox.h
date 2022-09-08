@@ -6,18 +6,10 @@
 
 class Skybox : public Entity {
 public:
-    Skybox() : Entity(nullptr) {
+    Skybox(ICamera* camera) : Entity(camera) {
         init();
         initShader();
         loadCubemap();
-
-        LOGGER(info, "skybox init succeeded");
-    }
-
-    Skybox(Camera* camera) : Entity(camera) {
-        init();
-        initShader();
-        loadCubemap(false);
         setViewProjection();
 
         LOGGER(info, "skybox init succeeded");
@@ -50,10 +42,10 @@ public:
         glDepthFunc(GL_LESS);
     }
 
-    void display(const glm::mat4& view, const glm::mat4& projection) {
+    void display() {
         _shader.use();
-        _shader.setMat4("u_view", glm::mat4(glm::mat3(view)));
-        _shader.setMat4("u_projection", projection);
+        _shader.setMat4("u_view", glm::mat4(glm::mat3(_camera->getView())));
+        _shader.setMat4("u_projection", _camera->getProjection());
 
         render();
     }
@@ -132,7 +124,7 @@ private:
         _shader.init(vsCodePath, fsCodePath);
     }
 
-    void loadCubemap(bool flip = true) {
+    void loadCubemap(bool flip = false) {
         glGenTextures(1, &_texture);
         glBindTexture(GL_TEXTURE_CUBE_MAP, _texture);
 

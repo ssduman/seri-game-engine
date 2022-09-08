@@ -26,10 +26,10 @@ public:
         camera->setMazeDimensions(mazeWidth, mazeHeight, mazeThickness);
         camera->setMazeWallPositions(maze->getVerticalWallPosition(), maze->getHorizontalWallPosition());
 
-        Light light;
-        Skybox skybox;
-        ControlMaze control{ &windowManager, camera.get(), &maze};
-        Game game{ static_cast<float>(windowManager.getWidth()), static_cast<float>(windowManager.getHeight()) };
+        Light light{ camera.get() };
+        Skybox skybox{ camera.get() };
+        ControlMaze control{ &windowManager, camera.get(), &maze };
+        Game game{ camera.get(), windowManager.getWidthF(), windowManager.getHeightF() };
 
         LOGGER(info, "starting maze game loop");
 
@@ -40,16 +40,12 @@ public:
             camera->handleInput(windowManager.getWindow());
             camera->update();
 
-            const glm::mat4& view = camera->getView();
-            const glm::mat4& projection = camera->getProjection();
-
             maze->display(camera->showEscapePath());
 
-            skybox.display(view, projection);
+            skybox.display();
 
             light.setPosition(cameraProperties.position + glm::vec3{ 0.0f, -10.0f, 20.0f });
-            light.setViewProjection(view, projection);
-            light.light();
+            light.display();
 
             game.display(control.getUserInput(), camera->getIsPlaying(), camera->isRestartTriggered(), camera->checkWin());
 

@@ -3,7 +3,7 @@
 #include "Object.h"
 #include "WindowManager.h"
 #include "Shader.h"
-#include "Camera.h"
+#include "ICamera.h"
 #include "Texture.h"
 #include "Transform.h"
 #include "Color.h"
@@ -56,7 +56,7 @@ struct EntityProperties {
 
 class Entity : public Object {
 public:
-    Entity(Camera* camera) : _camera(camera) {
+    Entity(ICamera* camera) : _camera(camera) {
         LOGGER(info, "entity init succeeded");
     }
 
@@ -74,7 +74,7 @@ public:
         _texture.init(texturePath);
     }
 
-    virtual void initCamera(Camera* camera) {
+    virtual void initCamera(ICamera* camera) {
         _shader.use();
         _shader.setMat4("u_model", glm::mat4{ 1.0f });
         _shader.setMat4("u_view", camera->getView());
@@ -180,7 +180,7 @@ public:
     }
 
 protected:
-    Camera* _camera;
+    ICamera* _camera;
     Transform _transform;
     Color _color;
     EntityType _entityType = EntityType::UNKNOWN;

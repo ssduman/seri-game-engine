@@ -23,7 +23,6 @@ public:
         _cameraProperties.far = 1000.0f;
         _cameraProperties.speed = 0.3f;
         _cameraProperties.sensitivity = 0.04f;
-        _cameraProperties.up = glm::vec3{ 0.0f, -1.0f, 0.0f };
     }
 
     void initShader(const std::string& vsCodePath = "shaders/basic_vs.shader", const std::string& fsCodePath = "shaders/basic_fs.shader") {
@@ -32,8 +31,9 @@ public:
 
     void setLight() {
         _shader.use();
-        _shader.setVec3("lightPos", glm::vec3(0, 10, 0));
-        _shader.setVec3("viewPos", glm::vec3(0, 10, 0));
+        _shader.setFloat("u_ambient", _ambient);
+        _shader.setVec3("u_viewPos", glm::vec3(0, 10, 0));
+        _shader.setVec3("u_lightPos", glm::vec3(0, 10, 0));
     }
 
     void setCameraPosition(glm::vec3 position) {
@@ -171,23 +171,24 @@ public:
 
         if (!_isPlaying) {
             static float dx = 0.0f;
+
             dx += 0.01f;
-            if (dx >= 360) dx = 0.0f;
+            if (dx >= 360.0f) {
+                dx = 0.0f;
+            }
 
             auto t = _cubeThickness;
             glm::vec3 center = glm::vec3(0.0f, -t / 2, 0.0f);
-            glm::mat4 trans = glm::rotate(dx, center);
-            glm::mat4 myMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(-(_mazeWidth / 2) * t * 2, -t / 2, -(_mazeHeight / 2) * t * 2));
+            glm::mat4 rotate = glm::rotate(dx, center);
+            glm::mat4 translate = glm::translate(glm::mat4(1.0f), glm::vec3(-(_mazeWidth / 2) * t * 2, -t / 2, -(_mazeHeight / 2) * t * 2));
 
-            _shader.setMat4("model", trans * myMatrix);
+            _shader.setMat4("u_model", rotate * translate);
         } else {
-            _shader.setMat4("model", glm::mat4(1.0f));
+            _shader.setMat4("u_model", glm::mat4(1.0f));
         }
 
-        _shader.setMat4("view", getView());
-        _shader.setMat4("projection", getProjection());
-
-        _shader.setFloat("ambientS", _ambient);
+        _shader.setMat4("u_view", getView());
+        _shader.setMat4("u_projection", getProjection());
     }
 
     bool checkWin() {
@@ -199,8 +200,14 @@ public:
         return false;
     }
 
-    float& getAmbient() {
+    float getAmbient() {
         return _ambient;
+    }
+
+    void incrementAmbient(float val) {
+        _ambient += val;
+        _shader.use();
+        _shader.setFloat("u_ambient", _ambient);
     }
 
     bool& getIsPlaying() {
@@ -216,16 +223,6 @@ public:
     }
 
 private:
-    void updateVectors() override {
-        glm::vec3 eulerAngle{};
-        eulerAngle.x = -cos(glm::radians(_pitch)) * cos(glm::radians(_yaw));
-        eulerAngle.y = -sin(glm::radians(_pitch));
-        eulerAngle.z = cos(glm::radians(_pitch)) * sin(glm::radians(_yaw));
-
-        _cameraProperties.front = glm::normalize(eulerAngle);
-        _cameraProperties.right = glm::normalize(glm::cross(_cameraProperties.front, _cameraProperties.up));
-    }
-
     bool canIPass(glm::vec3 position) {
         float currentX = position.x;
         float currentZ = position.z;
@@ -299,8 +296,8 @@ private:
     }
 
     Shader _shader;
-    float _ambient = 0.7f;
-    glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
+    float _ambient{ 0.7f };
+    glm::vec3 lightColor{ 1.0f, 1.0f, 1.0f };
 
     bool _isPlaying = false, _cheatActivated = false;
     bool _checkC = true, _checkE = true, _checkR = true;

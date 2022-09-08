@@ -89,6 +89,14 @@ public:
         return _windowProperties.windowHeight;
     }
 
+    inline float getWidthF() {
+        return static_cast<float>(_windowProperties.windowWidth);
+    }
+
+    inline float getHeightF() {
+        return static_cast<float>(_windowProperties.windowHeight);
+    }
+
     inline double getMouseX() {
         getMousePosition();
         return _mouseXPosition;

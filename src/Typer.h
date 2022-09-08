@@ -16,17 +16,7 @@ struct Character {
 
 class Typer : public Entity {
 public:
-    Typer(int width, int height) : Entity(nullptr), _width(static_cast<float>(width)), _height(static_cast<float>(height)) {
-        init();
-        initFT();
-        initShader();
-        initProjection();
-        setColor();
-
-        LOGGER(info, "typer init succeeded");
-    }
-
-    Typer(Camera* camera, int width, int height) : Entity(camera), _width(static_cast<float>(width)), _height(static_cast<float>(height)) {
+    Typer(ICamera* camera, int width, int height) : Entity(camera), _width(static_cast<float>(width)), _height(static_cast<float>(height)) {
         init();
         initFT();
         initShader();

@@ -1,20 +1,12 @@
 #pragma once
 
-#include "Entity.h"
 #include "Util.h"
+#include "Entity.h"
+#include "ICamera.h"
 
 class Light : public Entity {
 public:
-    Light() : Entity(nullptr) {
-        init();
-        initShader();
-        setPosition();
-        setModel();
-
-        LOGGER(info, "light init succeeded");
-    }
-
-    Light(Camera* camera) : Entity(camera) {
+    Light(ICamera* camera) : Entity(camera) {
         init();
         initShader();
         setPosition();

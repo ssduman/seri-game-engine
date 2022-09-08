@@ -1,37 +1,34 @@
 #version 330 core
 
-out vec4 FragColor;
+in struct_info {
+    vec3 sent_pos;
+    vec3 sent_normal;
+    vec2 sent_texCoord;
+} received_data;
 
-in VS_OUT{
-    vec3 FragPos;
-    vec3 Normal;
-    vec2 TexCoords;
-} fs_in;
+uniform vec3 u_viewPos;
+uniform vec3 u_lightPos;
+uniform float u_ambient;
+uniform sampler2D u_texture;
 
-uniform sampler2D Texture;
-
-uniform vec3 lightPos;
-uniform vec3 viewPos;
-uniform float ambientS;
+out vec4 final_color;
 
 void main() {
-    vec3 color = texture(Texture, fs_in.TexCoords).rgb;
-
-    vec3 normal = normalize(fs_in.Normal);
     vec3 lightColor = vec3(1);
+    vec3 normal = normalize(received_data.sent_normal);
+    vec3 color = texture(u_texture, received_data.sent_texCoord).rgb;
+    vec3 ambient = u_ambient * color;
 
-    vec3 ambient = ambientS * color;
-
-    vec3 lightDir = normalize(lightPos - fs_in.FragPos);
+    vec3 lightDir = normalize(u_lightPos - received_data.sent_pos);
     float diff = max(dot(lightDir, normal), 0.0);
     vec3 diffuse = diff * lightColor;
 
-    vec3 viewDir = normalize(viewPos - fs_in.FragPos);
+    vec3 viewDir = normalize(u_viewPos - received_data.sent_pos);
     vec3 reflectDir = reflect(-lightDir, normal);
     vec3 halfwayDir = normalize(lightDir + viewDir);
     float spec = pow(max(dot(normal, halfwayDir), 0.0), 64.0);
     vec3 specular = spec * lightColor;
 
     vec3 lighting = (ambient + diffuse + specular) * color;
-    FragColor = vec4(lighting, 1.0);
+    final_color = vec4(lighting, 1.0);
 }
