@@ -18,18 +18,24 @@ public:
         windowManager.disableCursor();
 
         float mazeWidth{ 20.0f }, mazeHeight{ 20.0f }, mazeThickness{ 5.0f };
-        Maze* maze = new Maze{ mazeWidth, mazeHeight, mazeThickness };
 
         CameraProperties cameraProperties;
         cameraProperties.position = glm::vec3{ 0, mazeThickness * 5, -mazeThickness * 4 - mazeHeight * mazeThickness };
         std::unique_ptr<CameraMaze> camera = std::make_unique<CameraMaze>(cameraProperties);
+
+        Maze* maze = new Maze{ camera.get(), mazeWidth, mazeHeight, mazeThickness };
         camera->setMazeDimensions(mazeWidth, mazeHeight, mazeThickness);
         camera->setMazeWallPositions(maze->getVerticalWallPosition(), maze->getHorizontalWallPosition());
 
+        Layer layers{};
         Light light{ camera.get() };
         Skybox skybox{ camera.get() };
         ControlMaze control{ &windowManager, camera.get(), &maze };
         Game game{ camera.get(), windowManager.getWidthF(), windowManager.getHeightF() };
+
+        //layers.addLayer(maze);
+        layers.addLayer(&light);
+        layers.addLayer(&skybox);
 
         LOGGER(info, "starting maze game loop");
 
@@ -40,12 +46,11 @@ public:
             camera->handleInput(windowManager.getWindow());
             camera->update();
 
-            maze->display(camera->showEscapePath());
+            maze->display();
 
-            skybox.display();
-
-            light.setPosition(cameraProperties.position + glm::vec3{ 0.0f, 10.0f, 20.0f });
-            light.display();
+            for (auto entity : layers.getLayers()) {
+                entity->display();
+            }
 
             game.display(control.getUserInput(), camera->getIsPlaying(), camera->isRestartTriggered(), camera->checkWin());
 

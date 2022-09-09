@@ -108,7 +108,7 @@ public:
 
     void generateMaze(float mazeWidth, float mazeHeight, float mazeThickness) {
         delete* _maze;
-        *_maze = new Maze{ mazeWidth, mazeHeight, mazeThickness };
+        *_maze = new Maze{ _camera, mazeWidth, mazeHeight, mazeThickness };
         //_maze.resetMaze(mazeWidth, mazeHeight, mazeThickness);
 
         CameraProperties cameraProperties;

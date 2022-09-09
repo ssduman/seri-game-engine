@@ -1,9 +1,11 @@
 #pragma once
 
 #include "Util.h"
+#include "Entity.h"
 #include "Logger.h"
 #include "Texture.h"
 #include "Renderer.h"
+#include "CameraMaze.h"
 
 #include <tuple>
 #include <time.h>
@@ -13,9 +15,9 @@
 typedef std::pair<int, int> m_pair;
 typedef std::vector<m_pair> v_pair;
 
-class Maze {
+class Maze : public Entity {
 public:
-    Maze(float width, float height, float thickness) : _width(width), _height(height), _thickness(thickness) {
+    Maze(ICamera* camera, float width, float height, float thickness) : Entity(camera), _width(width), _height(height), _thickness(thickness) {
         init();
         initTexture();
         initRenderer();
@@ -58,7 +60,11 @@ public:
         solveMaze();
     }
 
-    void display(bool showEscapePath) {
+    void update() override {}
+
+    void render() override {}
+
+    void display() {
         wallVerticalTexture->bind();
         verticalWallRender->render();
         wallVerticalTexture->unbind();
@@ -67,7 +73,7 @@ public:
         horizontalWallRender->render();
         wallTexture->unbind();
 
-        if (!showEscapePath) {
+        if (!static_cast<CameraMaze*>(_camera)->showEscapePath()) {
             passTexture->bind();
             passRender->render();
             passTexture->unbind();
@@ -103,7 +109,7 @@ public:
     }
 
 private:
-    void init() {}
+    void init() override {}
 
     void initTexture() {
         wallTexture = new Texture("textures/wall1.png");
