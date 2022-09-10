@@ -87,12 +87,10 @@ public:
             _yaw -= 360.0f;
         }
 
-        //if (deltaX > 0.0f || deltaY > 0.0f) { // TODO: inspect error
-            updateVectors();
-            view();
+        updateVectors();
+        view();
 
-            _viewUpdated = true;
-        //}
+        _viewUpdated = true;
     }
 
     virtual const bool& viewUpdated() {

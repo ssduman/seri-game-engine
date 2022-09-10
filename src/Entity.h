@@ -130,7 +130,7 @@ public:
         }
 
         // configure position attribute
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, _stride * sizeof(GLfloat), nullptr);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, _stride * sizeof(GLfloat), (void*)0);
         // location defined in shader
         glEnableVertexAttribArray(0);
 
