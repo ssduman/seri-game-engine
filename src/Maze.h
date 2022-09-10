@@ -379,7 +379,7 @@ private:
         return neighbors;
     }
 
-    v_pair intersectionMap(v_pair v) {
+    v_pair intersectionMap(v_pair& v) {
         v_pair inter;
         for (const auto& it : v) {
             if (nodesMap.find(makeNodeKey(std::make_pair(it.first, it.second))) != nodesMap.end()) {

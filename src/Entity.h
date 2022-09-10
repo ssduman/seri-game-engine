@@ -159,7 +159,7 @@ public:
     }
 
     void update() override {
-        if (_camera->viewUpdated()) {
+        if (_camera && _camera->viewUpdated()) {
             getShader().setMat4("u_view", _camera->getView());
         }
     }

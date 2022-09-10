@@ -67,7 +67,7 @@ public:
         glBindVertexArray(_VAO);
         glBindBuffer(GL_ARRAY_BUFFER, _VBO2);
 
-        glBufferData(GL_ARRAY_BUFFER, count * sizeof(std::vector<glm::vec3>), coordinates.data(), GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, _count * 3 * sizeof(GLfloat), coordinates.data(), GL_STATIC_DRAW);
 
         glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
         glEnableVertexAttribArray(3);
