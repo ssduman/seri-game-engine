@@ -22,10 +22,26 @@ public:
         initTextures();
         initRenderer();
 
+        constexpr float max_maze_area = 1000000.0f;
+
+        const auto mazeArea{ _width * _height };
+        const std::string mazeDimensions{ std::to_string(static_cast<int>(_width)) + "x" + std::to_string(static_cast<int>(_height)) };
+
+        LOGGER(info, "generating '" << mazeDimensions << "' maze");
         generateMaze();
-        solveMaze();
+        LOGGER(info, "generated '" << mazeDimensions << "' maze");
+
+        if (mazeArea < max_maze_area) {
+            LOGGER(info, "solving the maze");
+            solveMaze();
+            LOGGER(info, "solved the maze");
+        } else {
+            LOGGER(info, "maze is too big to solve, max is " << max_maze_area);
+        }
 
         _cameraMaze = dynamic_cast<CameraMaze*>(_camera);
+
+        LOGGER(info, "maze init succeeded");
     }
 
     void resetMaze(float width, float height, float thickness) {

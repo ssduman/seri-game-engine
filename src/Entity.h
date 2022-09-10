@@ -54,9 +54,7 @@ struct EntityProperties {
 
 class Entity : public Object {
 public:
-    Entity(ICamera* camera) : _camera(camera) {
-        LOGGER(info, "entity init succeeded");
-    }
+    Entity(ICamera* camera) : _camera(camera) {}
 
     ~Entity() override = default;
 
