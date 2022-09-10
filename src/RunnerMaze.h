@@ -34,7 +34,6 @@ public:
         layers.addLayer(&game);
         layers.addLayer(&light);
         layers.addLayer(&skybox);
-        layers.addLayer(maze);
 
         LOGGER(info, "starting maze game loop");
 
@@ -44,6 +43,8 @@ public:
 
             camera->handleInput(windowManager.getWindow());
             camera->update();
+
+            maze->display();
 
             for (auto entity : layers.getLayers()) {
                 entity->display();
