@@ -8,14 +8,14 @@
 class Camera : public ICamera {
 public:
     Camera(CameraProperties cameraProperties, State* state) : ICamera(cameraProperties, state) {
-        updateVectors();
-        view();
-        projection();
+        Camera::updateVectors();
+        Camera::view();
+        Camera::projection();
 
         LOGGER(info, "camera init succeeded");
     }
 
-    ~Camera() {}
+    ~Camera() override = default;
 
     void handleInput(float deltaTime, CameraMovement cameraMovement) {
         if (_viewUpdated) {
@@ -26,7 +26,7 @@ public:
             return;
         }
 
-        float movementSpeed = _cameraProperties.speed * deltaTime;
+        const float movementSpeed = _cameraProperties.speed * deltaTime;
 
         bool moved = false;
 
@@ -53,7 +53,5 @@ public:
             _viewUpdated = true;
         }
     }
-
-private:
 
 };

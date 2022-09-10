@@ -6,10 +6,10 @@ class Triangle : public Entity {
 public:
     Triangle(Camera* camera, EntityProperties& triangleProperties) : Entity(camera), _triangleProperties(triangleProperties) {
         _entityType = EntityType::TRIANGLE;
-        setProperties(_triangleProperties);
+        Entity::setProperties(_triangleProperties);
     }
 
-    virtual ~Triangle() {
+    ~Triangle() override {
         glDeleteVertexArrays(1, &_VAO);
         glDeleteBuffers(1, &_VBO);
     }

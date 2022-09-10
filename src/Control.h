@@ -11,17 +11,17 @@ public:
     Control(WindowManager* windowManager, Camera* camera, State* state) : IControl(windowManager, state), _camera(camera), _inputHandler(camera) {
         glfwSetWindowUserPointer(_windowManager->getWindow(), static_cast<void*>(this));
 
-        init();
+        Control::init();
 
         LOGGER(info, "control init succeeded");
     }
 
-    virtual ~Control() {}
+    ~Control() override = default;
 
     void charCallback(GLFWwindow* window, unsigned int codepoint) override {
         char string[5] = "";
         encode_utf8(string, codepoint);
-        _userInputVector.push_back(std::string(string));
+        _userInputVector.emplace_back(string);
     }
 
     void cursorPosCallback(GLFWwindow* window, double xpos, double ypos) override {
@@ -47,15 +47,14 @@ public:
     }
 
     void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) override {
-        ICommand* command = _inputHandler.handleInput(key, scancode, action, mods);
-        if (command) {
+        if (ICommand* command = _inputHandler.handleInput(key, scancode, action, mods)) {
             command->execute();
         }
 
         if ((key == GLFW_KEY_ENTER) && (action == GLFW_PRESS)) {
             _userInputVector.clear();
         } else if ((key == GLFW_KEY_BACKSPACE) && (action == GLFW_PRESS)) {
-            if (_userInputVector.size() > 0) {
+            if (!_userInputVector.empty()) {
                 _userInputVector.pop_back();
             }
         } else if ((key == GLFW_KEY_ESCAPE) && (action == GLFW_PRESS)) {
@@ -88,7 +87,7 @@ public:
         }
     }
 
-    void setInputHandler(InputHandler inputHandler) {
+    void setInputHandler(InputHandler& inputHandler) {
         _inputHandler = inputHandler;
     }
 

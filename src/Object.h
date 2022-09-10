@@ -4,7 +4,7 @@
 
 class Object {
 public:
-    virtual ~Object() {}
+    virtual ~Object() = default;
 
     virtual void init() = 0;
 
@@ -12,11 +12,9 @@ public:
 
     virtual void render() = 0;
 
-    void display() {
+    virtual void display() {
         update();
         render();
     }
-
-private:
 
 };

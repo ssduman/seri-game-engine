@@ -6,11 +6,11 @@ class Circle : public Entity {
 public:
     Circle(Camera* camera, EntityProperties& circleProperties) : Entity(camera), _circleProperties(circleProperties) {
         _entityType = EntityType::CIRCLE;
-        setProperties(_circleProperties);
-        _renderCount = (GLsizei)_circleProperties.coordinates.size();
+        Circle::setProperties(_circleProperties);
+        _renderCount = static_cast<GLsizei>(_circleProperties.coordinates.size());
     }
 
-    virtual ~Circle() {
+    ~Circle() override {
         glDeleteVertexArrays(1, &_VAO);
         glDeleteBuffers(1, &_VBO);
     }

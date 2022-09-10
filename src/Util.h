@@ -12,7 +12,7 @@
 #include <memory>
 #include <string>
 #include <vector>
-#include <locale.h>
+#include <clocale>
 #include <iostream>
 #include <stdexcept>
 

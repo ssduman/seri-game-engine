@@ -215,6 +215,4 @@ public:
 
     Vec3<T> rows[3];
 
-private:
-
 };

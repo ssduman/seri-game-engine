@@ -215,11 +215,11 @@ public:
     /* aux */
 
     inline float sum() {
-        return (float)x + (float)y + (float)z + (float)w;
+        return static_cast<float>(x) + static_cast<float>(y) + static_cast<float>(z) + static_cast<float>(w);
     }
 
     inline float norm() {
-        return (float)sqrt(dot(*this));
+        return sqrt(dot(*this));
     }
 
     inline Vec4<T> normalize() {
@@ -231,17 +231,17 @@ public:
     }
 
     inline float distance(const Vec4<T>& rhs) {
-        return (float)sqrt(dot((*this) - rhs));
+        return sqrt(dot(*this - rhs));
     }
 
     inline float angle(const Vec4<T>& rhs) {
-        return (float)dot(rhs) / (norm() * rhs.norm());
+        return dot(rhs) / (norm() * rhs.norm());
     }
 
     /* util */
 
-    template <typename T>
-    static inline glm::vec4 toGLMVec4(Vec4<T> vec4) {
+    template <typename U = float>
+    static inline glm::vec4 toGLMVec4(Vec4<U> vec4) {
         return glm::vec4{ vec4.x, vec4.y, vec4.z, vec4.w };
     }
 
@@ -249,7 +249,5 @@ public:
     T y = 0;
     T z = 0;
     T w = 0;
-
-private:
 
 };

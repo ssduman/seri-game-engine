@@ -27,8 +27,8 @@ inline std::string to_string(CameraMovement cameraMovement) {
 }
 
 struct CameraProperties {
-    float aspect{ 16.0f / 9.0f };
     float fov{ 45.0f };
+    float aspect{ 16.0f / 9.0f };
     float near{ 0.1f };
     float far{ 100.0f };
 
@@ -43,8 +43,6 @@ struct CameraProperties {
 
 class ICamera {
 public:
-    ICamera() {}
-
     ICamera(CameraProperties cameraProperties) : _cameraProperties{ cameraProperties } {}
 
     ICamera(CameraProperties cameraProperties, State* state) : _cameraProperties{ cameraProperties }, _state{ state } {}
@@ -89,12 +87,12 @@ public:
             _yaw -= 360.0f;
         }
 
-        if (deltaX || deltaY) {
+        //if (deltaX > 0.0f || deltaY > 0.0f) { // TODO: inspect error
             updateVectors();
             view();
 
             _viewUpdated = true;
-        }
+        //}
     }
 
     virtual const bool& viewUpdated() {
@@ -113,7 +111,7 @@ public:
         glm::vec3 u = glm::cross(_cameraProperties.up, right);
         glm::vec3 v = front;
 
-        return ((u * v) / float(pow(glm::length(u), 2)) * u);
+        return ((u * v) / static_cast<float>(pow(glm::length(u), 2)) * u);
     }
 
     virtual CameraProperties& getCameraProperties() {

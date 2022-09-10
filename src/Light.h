@@ -7,8 +7,8 @@
 class Light : public Entity {
 public:
     Light(ICamera* camera) : Entity(camera) {
-        init();
-        initShader();
+        Light::init();
+        Light::initShader();
         setPosition();
         setModel();
         setViewProjection();
@@ -69,7 +69,7 @@ public:
 
         glBufferData(GL_ARRAY_BUFFER, _vertices.size() * sizeof(GLfloat), _vertices.data(), GL_STATIC_DRAW);
 
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), nullptr);
         glEnableVertexAttribArray(0);
 
         glBindVertexArray(0);
@@ -121,7 +121,5 @@ public:
         glBindVertexArray(_VAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
     }
-
-private:
 
 };

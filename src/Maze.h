@@ -8,7 +8,7 @@
 #include "CameraMaze.h"
 
 #include <tuple>
-#include <time.h>
+#include <ctime>
 #include <random>
 #include <unordered_map>
 
@@ -18,12 +18,14 @@ typedef std::vector<m_pair> v_pair;
 class Maze : public Entity {
 public:
     Maze(ICamera* camera, float width, float height, float thickness) : Entity(camera), _width(width), _height(height), _thickness(thickness) {
-        init();
-        initTexture();
+        Maze::init();
+        initTextures();
         initRenderer();
 
         generateMaze();
         solveMaze();
+
+        _cameraMaze = dynamic_cast<CameraMaze*>(_camera);
     }
 
     void resetMaze(float width, float height, float thickness) {
@@ -53,7 +55,7 @@ public:
         _thickness = thickness;
 
         init();
-        initTexture();
+        initTextures();
         initRenderer();
 
         generateMaze();
@@ -64,7 +66,7 @@ public:
 
     void render() override {}
 
-    void display() {
+    void display() override {
         wallVerticalTexture->bind();
         verticalWallRender->render();
         wallVerticalTexture->unbind();
@@ -73,7 +75,7 @@ public:
         horizontalWallRender->render();
         wallTexture->unbind();
 
-        if (!static_cast<CameraMaze*>(_camera)->showEscapePath()) {
+        if (!_cameraMaze->showEscapePath()) {
             passTexture->bind();
             passRender->render();
             passTexture->unbind();
@@ -111,7 +113,7 @@ public:
 private:
     void init() override {}
 
-    void initTexture() {
+    void initTextures() {
         wallTexture = new Texture("textures/wall1.png");
         wallVerticalTexture = new Texture("textures/wall2.png");
         passTexture = new Texture("textures/passage.png");
@@ -137,8 +139,8 @@ private:
     void randomMaze() {
         squaresMap();
 
-        int randomX = std::rand() % (int)_width;
-        int randomY = std::rand() % (int)_height;
+        int randomX = std::rand() % static_cast<int>(_width);
+        int randomY = std::rand() % static_cast<int>(_height);
         m_pair root = nodesMap[makeNodeKey(std::make_pair(randomX, randomY))];
         nodesMap.erase(makeNodeKey(std::make_pair(randomX, randomY)));
 
@@ -173,32 +175,29 @@ private:
     }
 
     void calculateWallPositions() {
-        std::tuple<int, int, bool, bool, bool, bool> tempTuple;
-
         float t = _thickness * 2;
         for (int y = 0; y < _height; y++) {
             for (int x = 0; x < _width; x++) {
                 if (x == 0) {
-                    verticalWallPosition.push_back(glm::vec3(x * t - t / 2, 0.0f, t * (_height - 1) - y * t));
+                    verticalWallPosition.emplace_back(x * t - t / 2, 0.0f, t * (_height - 1) - y * t);
                     verticalCount++;
                 }
                 if ((y == 0) && (x != 0)) {
-                    horizontalWallPosition.push_back(glm::vec3(x * t, 0.0f, t * _height - (y * t + t / 2)));
+                    horizontalWallPosition.emplace_back(x * t, 0.0f, t * _height - (y * t + t / 2));
                     horizontalCount++;
                 }
                 if (findVerticalWall(x, y) != true) {
-                    verticalWallPosition.push_back(glm::vec3(x * t + t / 2, 0.0f, t * (_height - 1) - y * t));
+                    verticalWallPosition.emplace_back(x * t + t / 2, 0.0f, t * (_height - 1) - y * t);
                     verticalCount++;
                 }
                 if (findHorizontalWall(x, y) != true) {
-                    horizontalWallPosition.push_back(glm::vec3(x * t, 0.0f, t * (_height - 1) - (y * t + t / 2)));
+                    horizontalWallPosition.emplace_back(x * t, 0.0f, t * (_height - 1) - (y * t + t / 2));
                     horizontalCount++;
                 }
-                passPosition.push_back(glm::vec3(x * t, -t / 2.0f, y * t));
+                passPosition.emplace_back(x * t, -t / 2.0f, y * t);
 
                 // r, d, l, u
-                tempTuple = std::make_tuple(x, y, findVerticalWall(x, y), findHorizontalWall(x, y), findVerticalWall(x - 1, y), findHorizontalWall(x, y - 1));
-                mazeMapTree[makeNodeKey(std::make_pair(x, y))] = tempTuple;
+                mazeMapTree[makeNodeKey(std::make_pair(x, y))] = std::make_tuple(x, y, findVerticalWall(x, y), findHorizontalWall(x, y), findVerticalWall(x - 1, y), findHorizontalWall(x, y - 1));
             }
         }
 
@@ -224,13 +223,13 @@ private:
 
             bool cond1 = (right + left + down + up == 1);            // dead-end
             bool cond2 = (right + left + down + up == 0);            // dead-end, second encounter
-            if ((cond1 || cond2) && ((posX != 0) || (posY != 0))) {  // dead-end, removing by steping back
+            if ((cond1 || cond2) && ((posX != 0) || (posY != 0))) {  // dead-end, removing by stepping back
                 passCount--;
                 visitedTable[posY][posX] = false;
                 if (right) {
                     posX++;                                                     // step back
                     std::string key = makeNodeKey(std::make_pair(posX, posY));  // find neighbors of new cell
-                    std::get<4>(mazeMapTree[key]) = false;                      // assing as no way to get old positions
+                    std::get<4>(mazeMapTree[key]) = false;                      // assign as no way to get old positions
                 } else if (down) {
                     posY++;
                     std::string key = makeNodeKey(std::make_pair(posX, posY));
@@ -264,7 +263,7 @@ private:
                 }
             }
         }
-        visitedTable[0][0] = true;                     // enterence
+        visitedTable[0][0] = true;                     // entrance
         visitedTable[_height - 1][_width - 1] = true;  // exit
         passCount++;
 
@@ -280,9 +279,9 @@ private:
         for (int y = 0; y < _height; y++) {
             for (int x = 0; x < _width; x++) {
                 if (visitedTable[y][x] == false) {
-                    nonEscapePosition.push_back(glm::vec3(x * t, -t / 2.0f, t * (_height - 1) - y * t));
+                    nonEscapePosition.emplace_back(x * t, -t / 2.0f, t * (_height - 1) - y * t);
                 } else {
-                    escapePosition.push_back(glm::vec3(x * t, -t / 2.0f, t * (_height - 1) - y * t));
+                    escapePosition.emplace_back(x * t, -t / 2.0f, t * (_height - 1) - y * t);
                 }
             }
         }
@@ -308,8 +307,7 @@ private:
         v_pair search1 = edgePair(m_pair(x, y), m_pair(x + 1, y));
         v_pair search2 = edgePair(m_pair(x + 1, y), m_pair(x, y));
 
-        std::string key;
-        key = makeKey(search1);
+        std::string key = makeKey(search1);
         if (mazeMap.find(key) != mazeMap.end()) {
             return true;
         }
@@ -324,8 +322,7 @@ private:
         v_pair search1 = edgePair(m_pair(x, y), m_pair(x, y + 1));
         v_pair search2 = edgePair(m_pair(x, y + 1), m_pair(x, y));
 
-        std::string key;
-        key = makeKey(search1);
+        std::string key = makeKey(search1);
         if (mazeMap.find(key) != mazeMap.end()) {
             return true;
         }
@@ -345,8 +342,8 @@ private:
         LOGGER(info, temp + dot);
 
         for (int y = 0; y < _height; y++) {
-            std::string temp1 = "";
-            std::string temp2 = "";
+            std::string temp1{};
+            std::string temp2{};
             for (int x = 0; x < _width; x++) {
                 temp1 += sp + ((findVerticalWall(x, y) == true) ? " " : "|");
                 temp2 += ((findHorizontalWall(x, y) == true) ? "  " : "--") + dot;
@@ -415,6 +412,8 @@ private:
 
     float _width = 0.0f, _height = 0.0f, _thickness = 0.0f;
     int passCount = 0, verticalCount = 0, horizontalCount = 0;
+
+    CameraMaze* _cameraMaze = nullptr;
 
     std::vector<glm::vec3> passPosition;
     std::vector<glm::vec3> escapePosition;

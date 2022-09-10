@@ -20,7 +20,7 @@ public:
         _mouseCurrentPosX(_windowManager->getMouseX()),
         _mouseCurrentPosY(_windowManager->getMouseY()) {}
 
-    virtual ~IControl() {}
+    virtual ~IControl() = default;
 
     virtual void init() = 0;
 
@@ -56,7 +56,7 @@ public:
         size_t count = 0;
 
         if (ch < 0x80)
-            s[count++] = (char)ch;
+            s[count++] = static_cast<char>(ch);
         else if (ch < 0x800) {
             s[count++] = (ch >> 6) | 0xc0;
             s[count++] = (ch & 0x3f) | 0x80;

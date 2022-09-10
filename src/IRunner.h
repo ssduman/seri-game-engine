@@ -12,10 +12,7 @@
 
 class IRunner {
 public:
-    IRunner() {}
+    IRunner() = default;
 
-    virtual ~IRunner() {}
-
-private:
-
+    virtual ~IRunner() = default;
 };

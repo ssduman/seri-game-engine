@@ -364,20 +364,18 @@ public:
 
     /* util */
 
-    template <typename T = float>
+    template <typename U = float>
     static inline glm::mat4 toGLMMat4(Mat4<float>& rhs) {
         return glm::mat4(
-            Vec4<T>::toGLMVec4(rhs.rows[0]),
-            Vec4<T>::toGLMVec4(rhs.rows[1]),
-            Vec4<T>::toGLMVec4(rhs.rows[2]),
-            Vec4<T>::toGLMVec4(rhs.rows[3])
+            Vec4<U>::toGLMVec4(rhs.rows[0]),
+            Vec4<U>::toGLMVec4(rhs.rows[1]),
+            Vec4<U>::toGLMVec4(rhs.rows[2]),
+            Vec4<U>::toGLMVec4(rhs.rows[3])
         );
     }
 
     /* data*/
 
     Vec4<T> rows[4];
-
-private:
 
 };

@@ -3,30 +3,33 @@
 #include "Typer.h"
 #include "Entity.h"
 #include "Stopwatch.h"
+#include "ControlMaze.h"
 
-#include <stb_image.h>
+#include "CameraMaze.h"
 
 class Game : public Entity {
 public:
-    Game(ICamera* camera, float width, float height) : Entity(camera), _width(width), _height(height) {
-        init();
-        initShader();
+    Game(ICamera* camera, ControlMaze& control, float width, float height) : Entity(camera), _control(control), _width(width), _height(height) {
+        Game::init();
+        Game::initShader();
         initTyper();
-        initTexture();
+        Entity::initTexture("textures/gameWindow.png");
         initStopwatch();
         setProjection();
+
+        _cameraMaze = dynamic_cast<CameraMaze*>(_camera);
 
         LOGGER(info, "game init succeeded");
     }
 
-    virtual ~Game() {
+    ~Game() override {
         delete _typer;
         delete _stopwatch;
     }
 
-    void display(std::string userInput, const bool isPlaying, bool& isRestartTriggered, const bool isWon) {
-        if (isPlaying) {
-            _stopwatch->run(isRestartTriggered, isWon);
+    void display() override {
+        if (_cameraMaze->getIsPlaying()) {
+            _stopwatch->run(_cameraMaze->isRestartTriggered(), _cameraMaze->checkWin());
             return;
         }
 
@@ -34,7 +37,7 @@ public:
 
         float x = _width / 3.0f + 45.0f;
         float y = _height / 2.0f - 45.0f;
-        _stopwatch->renderText(userInput, x + 8.0f * 46.5f, y, glm::vec3{ 0.3f, 0.8f, 0.9f }, 0.5f);
+        _stopwatch->renderText(_control.getUserInput(), x + 8.0f * 46.5f, y, glm::vec3{ 0.3f, 0.8f, 0.9f }, 0.5f);
         _stopwatch->renderText("Enter maze size: __________", x, y, glm::vec3{ 0.5f, 0.8f, 0.2f }, 0.5f);
     }
 
@@ -65,7 +68,7 @@ private:
         glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, nullptr, GL_STATIC_DRAW);
         glEnableVertexAttribArray(0);
 
-        glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
+        glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), nullptr);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
 
         glBindVertexArray(0);
@@ -78,26 +81,6 @@ private:
 
     void initTyper() {
         _typer = new Typer(_camera, static_cast<int>(_width), static_cast<int>(_height));
-    }
-
-    void initTexture() {
-        glGenTextures(1, &_texture);
-        glBindTexture(GL_TEXTURE_2D, _texture);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-        int tWidth, tHeight, tComponents;
-        unsigned char* image = stbi_load(_texturePath.c_str(), &tWidth, &tHeight, &tComponents, 0);
-        if (image) {
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, tWidth, tHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
-            stbi_image_free(image);
-        } else {
-            LOGGER(error, "texture " << _texturePath << " could not loaded");
-        }
-
-        glBindTexture(GL_TEXTURE_2D, 0);
     }
 
     void initStopwatch() {
@@ -114,10 +97,9 @@ private:
 
     void render() override {
         _shader.use();
+        _texture.bind();
 
-        glActiveTexture(GL_TEXTURE0);
         glBindVertexArray(_VAO);
-        glBindTexture(GL_TEXTURE_2D, _texture);
         glBindBuffer(GL_ARRAY_BUFFER, _VBO);
         glBufferSubData(GL_ARRAY_BUFFER, 0, _vertices.size() * sizeof(GLfloat), _vertices.data());
         glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -128,10 +110,10 @@ private:
     }
 
     Typer* _typer = nullptr;
-    Stopwatch* _stopwatch = nullptr;;
+    ControlMaze& _control;
+    Stopwatch* _stopwatch = nullptr;
+    CameraMaze* _cameraMaze = nullptr;
     float _width{ 0.0f };
     float _height{ 0.0f };
-    unsigned int _texture{ 0 };
-    std::string _texturePath{ "textures/gameWindow.png" };
 
 };

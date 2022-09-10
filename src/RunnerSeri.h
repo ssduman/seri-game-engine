@@ -7,9 +7,9 @@
 
 class RunnerSeri : public IRunner {
 public:
-    RunnerSeri() {}
+    RunnerSeri() = default;
 
-    virtual ~RunnerSeri() {}
+    ~RunnerSeri() override = default;
 
     void operator()() {
         WindowProperties windowProperties{ /*title*/ "Seri Game Engine", /*fullscreen*/ false, /*w*/ 1280, /*h*/ 720 };
@@ -18,18 +18,18 @@ public:
         std::shared_ptr<State> state = std::make_shared<State>();
         state->gameState() = GameState::MENU;
 
-        CameraProperties cameraProperties{ /*aspect*/ static_cast<float>(windowProperties.windowWidth / windowProperties.windowHeight) };
+        CameraProperties cameraProperties{};
+        cameraProperties.aspect = windowManager->getWidthF() / windowManager->getHeightF();
         std::shared_ptr<Camera> camera = std::make_shared<Camera>(cameraProperties, state.get());
 
         Layer layers{};
-
         Light light{ camera.get() };
         Skybox skybox{ camera.get() };
         Control control{ windowManager.get(), camera.get(), state.get() };
         GUI gui{ windowManager.get(), camera.get(), &layers, state.get() };
         Typer typer{ camera.get(), windowProperties.windowWidth, windowProperties.windowHeight };
 
-        layers.addLayer(Factory::CreateEntity(camera.get(), { EntityType::CUBE }));
+        layers.addLayer(Factory::CreateEntity(camera.get(), EntityType::CUBE));
         layers.addLayer(&light);
         layers.addLayer(&skybox);
 
@@ -46,7 +46,7 @@ public:
                 gui.registerEntity(entity);
             }
 
-            typer.renderText("this is a test", windowProperties.windowWidth / 2.0f, windowProperties.windowHeight / 2.0f);
+            //typer.renderText("this is a test", windowManager->getWidthF() / 2.0f, windowManager->getHeightF() / 2.0f);
 
             gui.display();
 
@@ -56,7 +56,5 @@ public:
 
         LOGGER(info, "seri game loop stopped");
     }
-
-private:
 
 };

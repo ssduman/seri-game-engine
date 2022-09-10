@@ -4,13 +4,13 @@
 
 class Line : public Entity {
 public:
-    Line(Camera* camera, EntityProperties& lineProperties) : Entity(camera), _lineProperties(lineProperties) {
+    Line(ICamera* camera, EntityProperties& lineProperties) : Entity(camera), _lineProperties(lineProperties) {
         _entityType = EntityType::LINE;
-        setProperties(_lineProperties);
-        _renderCount = (GLsizei)_lineProperties.coordinates.size();
+        Line::setProperties(_lineProperties);
+        _renderCount = static_cast<GLsizei>(_lineProperties.coordinates.size());
     }
 
-    virtual ~Line() {
+    ~Line() override {
         glDeleteVertexArrays(1, &_VAO);
         glDeleteBuffers(1, &_VBO);
     }

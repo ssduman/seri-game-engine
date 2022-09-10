@@ -1,14 +1,12 @@
 #pragma once
 
 #include "Object.h"
-#include "WindowManager.h"
+#include "Color.h"
+#include "Logger.h"
 #include "Shader.h"
 #include "ICamera.h"
 #include "Texture.h"
 #include "Transform.h"
-#include "Color.h"
-#include "Util.h"
-#include "Logger.h"
 
 #include <string>
 #include <vector>
@@ -60,7 +58,7 @@ public:
         LOGGER(info, "entity init succeeded");
     }
 
-    virtual ~Entity() {}
+    ~Entity() override = default;
 
     virtual void initShader(const std::string& vsCodePath, const std::string& fsCodePath) {
         _shader.init(vsCodePath, fsCodePath);
@@ -84,7 +82,7 @@ public:
 
     virtual void setProperties(EntityProperties& entityProperties) {
         auto vertexCount = entityProperties.coordinates.size();
-        for (int i = 0; i < vertexCount; i++) {
+        for (size_t i = 0; i < vertexCount; i++) {
             _vertices.push_back(entityProperties.coordinates[i].x);
             _vertices.push_back(entityProperties.coordinates[i].y);
             _vertices.push_back(entityProperties.coordinates[i].z);
@@ -95,7 +93,7 @@ public:
         }
 
         auto textureCount = entityProperties.textureCoordinates.size();
-        for (int i = 0; i < textureCount; i++) {
+        for (size_t i = 0; i < textureCount; i++) {
             _vertices.push_back(entityProperties.textureCoordinates[i].x);
             _vertices.push_back(entityProperties.textureCoordinates[i].y);
         }
@@ -132,7 +130,7 @@ public:
         }
 
         // configure position attribute
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, _stride * sizeof(GLfloat), (void*)0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, _stride * sizeof(GLfloat), nullptr);
         // location defined in shader
         glEnableVertexAttribArray(0);
 
@@ -195,7 +193,5 @@ protected:
     unsigned int _VAO = 0;
     unsigned int _VBO = 0;
     unsigned int _EBO = 0;
-
-private:
 
 };

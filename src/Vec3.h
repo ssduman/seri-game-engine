@@ -153,7 +153,7 @@ public:
     /* aux */
 
     inline float sum() {
-        return (float)x + (float)y + (float)z;
+        return static_cast<float>(x) + static_cast<float>(y) + static_cast<float>(z);
     }
 
     inline float norm() {
@@ -186,7 +186,5 @@ public:
     T x = 0;
     T y = 0;
     T z = 0;
-
-private:
 
 };

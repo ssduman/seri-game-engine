@@ -26,7 +26,7 @@ void Texture::init(const std::string& texturePath) {
     stbi_set_flip_vertically_on_load(true);
     _image = stbi_load(texturePath.c_str(), &_width, &_height, &_components, 0);
     if (_image) {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, _width, _height, 0, GL_RGBA, GL_UNSIGNED_BYTE, _image);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, _width, _height, 0, GL_RGBA, GL_UNSIGNED_BYTE, _image);
         glGenerateMipmap(GL_TEXTURE_2D);
         stbi_image_free(_image);
     }

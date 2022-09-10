@@ -17,9 +17,9 @@ struct Character {
 class Typer : public Entity {
 public:
     Typer(ICamera* camera, int width, int height) : Entity(camera), _width(static_cast<float>(width)), _height(static_cast<float>(height)) {
-        init();
+        Typer::init();
         initFT();
-        initShader();
+        Typer::initShader();
         initProjection();
         setColor();
 
@@ -34,7 +34,7 @@ public:
         glBindBuffer(GL_ARRAY_BUFFER, _VBO);
 
         glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, nullptr, GL_DYNAMIC_DRAW);
-        glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
+        glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), nullptr);
         glEnableVertexAttribArray(0);
 
         glBindVertexArray(0);
@@ -121,14 +121,13 @@ public:
         glDrawArrays(GL_TRIANGLES, 0, 6);
     }
 
-    void renderText(std::string text, float x, float y, float scale = 1.0f) {
+    void renderText(std::string& text, float x, float y, float scale = 1.0f) {
         _shader.use();
 
         bind();
 
-        std::string::const_iterator c;
-        for (c = text.begin(); c != text.end(); c++) {
-            _currCharacter = _characters[*c];
+        for (char c : text) {
+            _currCharacter = _characters[c];
 
             float xpos = x + _currCharacter.bearing.x * scale;
             float ypos = y - (_currCharacter.size.y - _currCharacter.bearing.y) * scale;
@@ -179,7 +178,7 @@ private:
     glm::mat4 _projection{};
     FT_Face _face = nullptr;
     FT_Library _library = nullptr;
-    Character _currCharacter;
+    Character _currCharacter{};
     std::map<GLubyte, Character> _characters{};
     std::string _font = "fonts/En Bloc.ttf"; // DungeonFont.ttf
 

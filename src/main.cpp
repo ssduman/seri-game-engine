@@ -7,7 +7,7 @@ int main(int argc, char* argv[]) {
         RunnerSeri{}();
         //RunnerMaze{}();
     } catch (const std::exception& ex) {
-        LOGGER(error, "exception occured: " << ex.what());
+        LOGGER(error, "exception occurred: " << ex.what());
     }
 
     return 0;

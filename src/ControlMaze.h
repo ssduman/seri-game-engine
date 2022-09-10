@@ -11,17 +11,17 @@ public:
     ControlMaze(WindowManager* windowManager, CameraMaze* camera, Maze** maze) : IControl(windowManager), _camera(camera), _maze(maze) {
         glfwSetWindowUserPointer(_windowManager->getWindow(), static_cast<void*>(this));
 
-        init();
+        ControlMaze::init();
 
         LOGGER(info, "control init succeeded");
     }
 
-    virtual ~ControlMaze() {}
+    ~ControlMaze() override = default;
 
     void charCallback(GLFWwindow* window, unsigned int codepoint) override {
         char string[5]{};
         encode_utf8(string, codepoint);
-        _userInputVector.push_back(std::string(string));
+        _userInputVector.emplace_back(string);
     }
 
     void cursorPosCallback(GLFWwindow* window, double xpos, double ypos) override {
@@ -72,7 +72,7 @@ public:
             while (std::getline(userInputStream, part, 'x')) {
                 parts.push_back(part);
             }
-            if (userInput == part || parts[0].size() == 0 || parts.size() != 2) {
+            if (userInput == part || parts[0].empty() || parts.size() != 2) {
                 return;
             }
             std::stringstream width_s(parts[0]);
@@ -82,21 +82,21 @@ public:
             float mazeWidth, mazeHeight, mazeThickness = 5.0f;
             width_s >> mazeWidth;
             height_s >> mazeHeight;
-            if (mazeWidth == 0 || mazeHeight == 0) {
+            if (mazeWidth < 1.0f || mazeHeight < 1.0f) {
                 return;
             }
 
             generateMaze(mazeWidth, mazeHeight, mazeThickness);
             return;
         }
-        
+
         if ((key == GLFW_KEY_R) && (action == GLFW_PRESS)) {
             generateMaze((*_maze)->getMazeWidth(), (*_maze)->getMazeHeight(), (*_maze)->getMazeThickness());
             return;
         }
 
         if ((key == GLFW_KEY_BACKSPACE) && (action == GLFW_PRESS)) {
-            if (_userInputVector.size() > 0) {
+            if (!_userInputVector.empty()) {
                 _userInputVector.pop_back();
             }
         }
@@ -109,7 +109,6 @@ public:
     void generateMaze(float mazeWidth, float mazeHeight, float mazeThickness) {
         delete* _maze;
         *_maze = new Maze{ _camera, mazeWidth, mazeHeight, mazeThickness };
-        //_maze.resetMaze(mazeWidth, mazeHeight, mazeThickness);
 
         CameraProperties cameraProperties;
         cameraProperties.position = glm::vec3((mazeWidth - 1) * mazeThickness * 2, mazeThickness / 2, -mazeThickness * 4);

@@ -6,11 +6,11 @@ class Point : public Entity {
 public:
     Point(Camera* camera, EntityProperties& pointProperties) : Entity(camera), _pointProperties(pointProperties) {
         _entityType = EntityType::POINT;
-        setProperties(_pointProperties);
-        _renderCount = (GLsizei)_pointProperties.coordinates.size();
+        Point::setProperties(_pointProperties);
+        _renderCount = static_cast<GLsizei>(_pointProperties.coordinates.size());
     }
 
-    virtual ~Point() {
+    ~Point() override {
         glDeleteVertexArrays(1, &_VAO);
         glDeleteBuffers(1, &_VBO);
     }

@@ -6,6 +6,4 @@ public:
 
     ~Script() = default;
 
-private:
-
 };

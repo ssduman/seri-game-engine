@@ -4,9 +4,9 @@
 
 class JumpCommand : public ICommand {
 public:
-    JumpCommand(Entity* entity, float jumpUnit) : _entity(entity), _jumpUnit(jumpUnit) {};
+    JumpCommand(Entity* entity, float jumpUnit) : _entity(entity), _jumpUnit(jumpUnit) {}
     
-    virtual ~JumpCommand() {}
+    ~JumpCommand() override = default;
 
     void execute() override {}
 

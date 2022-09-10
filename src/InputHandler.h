@@ -5,7 +5,8 @@
 class InputHandler {
 public:
     InputHandler(Camera* camera) : _camera(camera) {}
-    ~InputHandler() = default;
+
+    virtual ~InputHandler() = default;
 
     ICommand* handleInput(int key, int scancode, int action, int mods) {
         if (isPressed(key, action, GLFW_KEY_X)) {

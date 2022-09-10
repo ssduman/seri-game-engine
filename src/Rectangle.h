@@ -6,10 +6,10 @@ class Rectangle : public Entity {
 public:
     Rectangle(Camera* camera, EntityProperties& rectangleProperties) : Entity(camera), _rectangleProperties(rectangleProperties) {
         _entityType = EntityType::RECTANGLE;
-        setProperties(_rectangleProperties);
+        Entity::setProperties(_rectangleProperties);
     }
 
-    virtual ~Rectangle() {
+    ~Rectangle() override {
         glDeleteVertexArrays(1, &_VAO);
         glDeleteBuffers(1, &_VBO);
         glDeleteBuffers(1, &_EBO);
@@ -19,7 +19,7 @@ public:
         _shader.use();
         _texture.bind();
         glBindVertexArray(_VAO);
-        glDrawElements(_rectangleProperties.drawMode, _renderCount, GL_UNSIGNED_INT, 0);
+        glDrawElements(_rectangleProperties.drawMode, _renderCount, GL_UNSIGNED_INT, nullptr);
     }
 
 private:

@@ -15,12 +15,12 @@
 class GUI : public Object {
 public:
     GUI(WindowManager* windowManager, Camera* camera, Layer* layers, State* state) : _windowManager(windowManager), _camera(camera), _layers(layers), _state{ state } {
-        init();
+        GUI::init();
 
         LOGGER(info, "gui init succeeded");
     }
 
-    virtual ~GUI() {
+    ~GUI() override {
         ImGui_ImplOpenGL3_Shutdown();
         ImGui_ImplGlfw_Shutdown();
         ImGui::DestroyContext();
@@ -282,9 +282,9 @@ private:
 
         ImGui::SetCursorPosX((windowWidth - textWidth) * 0.5f);
 
-        ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.3f, 0.6f, 0.6f));
-        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(0.3f, 0.7f, 0.7f));
-        ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(0.3f, 0.8f, 0.8f));
+        ImGui::PushStyleColor(ImGuiCol_Button, static_cast<ImVec4>(ImColor::HSV(0.3f, 0.6f, 0.6f)));
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, static_cast<ImVec4>(ImColor::HSV(0.3f, 0.7f, 0.7f)));
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, static_cast<ImVec4>(ImColor::HSV(0.3f, 0.8f, 0.8f)));
         if (ImGui::Button(text.c_str())) {
             if (text == "Play") {
                 text = "Stop";
@@ -306,10 +306,10 @@ private:
         ImGui::Text(text.c_str());
     }
 
-    WindowManager* _windowManager = nullptr;;
+    WindowManager* _windowManager = nullptr;
+    Camera* _camera = nullptr;
     Layer* _layers = nullptr;
     State* _state = nullptr;
-    Camera* _camera = nullptr;
     Entity* _currentEntity = nullptr;
     ImGuiIO* _io = nullptr;
     ImGuiStyle* _style = nullptr;

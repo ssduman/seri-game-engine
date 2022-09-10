@@ -6,11 +6,11 @@ class Cube : public Entity {
 public:
     Cube(Camera* camera, EntityProperties& cubeProperties) : Entity(camera), _cubeProperties(cubeProperties) {
         _entityType = EntityType::CUBE;
-        setProperties(_cubeProperties);
-        _renderCount = (GLsizei)_cubeProperties.coordinates.size();
+        Entity::setProperties(_cubeProperties);
+        _renderCount = static_cast<GLsizei>(_cubeProperties.coordinates.size());
     }
 
-    virtual ~Cube() {
+    ~Cube() override {
         glDeleteVertexArrays(1, &_VAO);
         glDeleteBuffers(1, &_VBO);
     }

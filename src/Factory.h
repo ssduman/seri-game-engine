@@ -3,7 +3,6 @@
 #include "Util.h"
 #include "Entity.h"
 #include "Point.h"
-#include "Line.h"
 #include "Triangle.h"
 #include "Rectangle.h"
 #include "Circle.h"
@@ -11,11 +10,9 @@
 #include "Camera.h"
 #include "Logger.h"
 
-#include <stdlib.h>
-
 class Factory {
 public:
-    virtual ~Factory() {}
+    ~Factory() = default;
 
     static Entity* CreateEntity(Camera* camera, EntityType entityType) {
         glm::vec3 minColor = glm::vec3{ 0.0f, 0.0f, 0.0f };
@@ -24,19 +21,16 @@ public:
         switch (entityType) {
             case EntityType::POINT:
             {
-                auto cx = 0.0f;
-                auto cy = 0.0f;
-                auto cr = 0.5f;
                 auto num_segments = 40;
                 std::vector<glm::vec3> pointCoordinates{};
                 std::vector<glm::vec3> pointColors{};
                 for (int i = 0; i < num_segments; i++) {
-                    float theta = 2.0f * PI * float(i) / float(num_segments);
-                    float x = cr * cosf(theta);
-                    float y = cr * sinf(theta);
-                    pointCoordinates.push_back(glm::vec3{ x + cx, y + cy, 0.0f });
+                    float theta = 2.0f * PI * static_cast<float>(i) / static_cast<float>(num_segments);
+                    float x = 0.5f * cosf(theta);
+                    float y = 0.5f * sinf(theta);
+                    pointCoordinates.emplace_back(x, y, 0.0f);
                     pointColors.push_back(glm::linearRand(minColor, maxColor));
-                };
+                }
                 EntityProperties pointProperties{ pointCoordinates, pointColors, GL_POINTS };
                 Point* point = new Point(camera, pointProperties);
                 point->initShader("shaders/entity_vs.shader", "shaders/entity_fs.shader");
@@ -104,19 +98,16 @@ public:
             }
             case EntityType::CIRCLE:
             {
-                auto cx = 0.0f;
-                auto cy = 0.0f;
-                auto cr = 0.5f;
                 auto num_segments = 40;
                 std::vector<glm::vec3> circleCoordinates{};
                 std::vector<glm::vec3> circleColors{};
                 for (int i = 0; i < num_segments; i++) {
-                    float theta = 2.0f * PI * float(i) / float(num_segments);
-                    float x = cr * cosf(theta);
-                    float y = cr * sinf(theta);
-                    circleCoordinates.push_back(glm::vec3{ x + cx, y + cy, 0.0f });
+                    float theta = 2.0f * PI * static_cast<float>(i) / static_cast<float>(num_segments);
+                    float x = 0.5f * cosf(theta);
+                    float y = 0.5f * sinf(theta);
+                    circleCoordinates.emplace_back(x, y, 0.0f);
                     circleColors.push_back(glm::linearRand(minColor, maxColor));
-                };
+                }
                 EntityProperties circleProperties{ circleCoordinates, circleColors, GL_TRIANGLE_FAN };
                 Circle* circle = new Circle(camera, circleProperties);
                 circle->initShader("shaders/entity_vs.shader", "shaders/entity_fs.shader");
@@ -230,13 +221,15 @@ public:
 
                 return cube;
             }
+            case EntityType::UNKNOWN:
+            {
+                return nullptr;
+            }
             default:
             {
                 return nullptr;
             }
         }
     }
-
-private:
 
 };

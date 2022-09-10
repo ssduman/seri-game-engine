@@ -1,8 +1,6 @@
 #pragma once
 
-#include "Maze.h"
 #include "Util.h"
-#include "State.h"
 #include "Logger.h"
 #include "Shader.h"
 #include "ICamera.h"
@@ -10,12 +8,12 @@
 class CameraMaze : public ICamera {
 public:
     CameraMaze(CameraProperties cameraProperties) : ICamera(cameraProperties) {
-        init();
+        CameraMaze::init();
         initShader();
         setLight();
-        updateVectors();
-        view();
-        projection();
+        CameraMaze::updateVectors();
+        CameraMaze::view();
+        CameraMaze::projection();
         update();
     }
 
@@ -102,10 +100,8 @@ public:
         auto right = _cameraProperties.right;
         auto cameraPositionTemp = _cameraProperties.position;
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-            // check one step ahead for invisible wall, block stucking or passing maze wall
             cameraPositionTemp += glm::normalize(projectionVector(front, right)) * _cameraProperties.speed;
             if ((canIPass(cameraPositionTemp) == false) && (!_cheatActivated)) {
-                // cannot move, step back old position
                 cameraPositionTemp = _cameraProperties.position;
             } else if (canIPass(_cameraProperties.position) && (!_cheatActivated)) {
                 _cameraProperties.position += glm::normalize(projectionVector(front, right)) * _cameraProperties.speed;
@@ -165,7 +161,7 @@ public:
                 dx = 0.0f;
             }
 
-            auto t = _cubeThickness;
+            const auto t = _cubeThickness;
             glm::vec3 center = glm::vec3(0.0f, -t / 2, 0.0f);
             glm::mat4 rotate = glm::rotate(dx, center);
             glm::mat4 translate = glm::translate(glm::mat4(1.0f), glm::vec3(-(_mazeWidth / 2) * t * 2, -t / 2, -(_mazeHeight / 2) * t * 2));
@@ -215,7 +211,7 @@ private:
         float currentX = position.x;
         float currentZ = position.z;
 
-        // coordinat based location to index based location
+        // coordinate based location to index based location
         float currentXPosAtMaze = (currentX - (-_cubeThickness)) / (_cubeThickness * 2);
         float currentYPosAtMaze = (currentZ - (-_cubeThickness)) / (_cubeThickness * 2);
 
@@ -226,9 +222,6 @@ private:
         bool cond5 = currentYPosAtMaze >= 0 && currentYPosAtMaze < _mazeHeight;  // legal index
 
         if (cond1 && cond2 && cond3 && cond4 && cond5) {
-            std::vector<glm::vec3>::iterator it1;
-            std::vector<glm::vec3>::iterator it2;
-
             position.x = std::round(position.x);
             position.y = 0.0f;
             position.z = std::round(position.z);
@@ -271,8 +264,8 @@ private:
             glm::vec3 vertical(position.x, 0.0f, (std::round(position.z / 10)) * 10);
             glm::vec3 horizontal((std::round(position.x / 10)) * 10, 0.0f, position.z);
 
-            it1 = std::find(_verticalWallPosition.begin(), _verticalWallPosition.end(), vertical);
-            it2 = std::find(_horizontalWallPosition.begin(), _horizontalWallPosition.end(), horizontal);
+            auto it1 = std::find(_verticalWallPosition.begin(), _verticalWallPosition.end(), vertical);
+            auto it2 = std::find(_horizontalWallPosition.begin(), _horizontalWallPosition.end(), horizontal);
             if ((it1 == _verticalWallPosition.end()) && (it2 == _horizontalWallPosition.end())) {
                 return true;
             }

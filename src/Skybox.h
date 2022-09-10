@@ -7,8 +7,8 @@
 class Skybox : public Entity {
 public:
     Skybox(ICamera* camera) : Entity(camera) {
-        init();
-        initShader();
+        Skybox::init();
+        Skybox::initShader();
         loadCubemap();
         setViewProjection();
 
@@ -40,14 +40,6 @@ public:
         glDrawArrays(GL_TRIANGLES, 0, 36);
         glBindVertexArray(0);
         glDepthFunc(GL_LESS);
-    }
-
-    void display() {
-        _shader.use();
-        _shader.setMat4("u_view", glm::mat4(glm::mat3(_camera->getView())));
-        _shader.setMat4("u_projection", _camera->getProjection());
-
-        render();
     }
 
 private:
@@ -113,7 +105,7 @@ private:
 
         glBufferData(GL_ARRAY_BUFFER, _vertices.size() * sizeof(GLfloat), _vertices.data(), GL_STATIC_DRAW);
 
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
         glEnableVertexAttribArray(0);
 
         glBindVertexArray(0);
@@ -134,10 +126,9 @@ private:
         stbi_set_flip_vertically_on_load(flip);
 
         int width, height, components;
-        for (auto i = 0; i < _faces.size(); i++) {
-            auto image = stbi_load(_faces[i].c_str(), &width, &height, &components, 0);
-            if (image) {
-                glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+        for (size_t i = 0; i < _faces.size(); i++) {
+            if (auto image = stbi_load(_faces[i].c_str(), &width, &height, &components, 0)) {
+                glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + static_cast<GLenum>(i), 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
                 stbi_image_free(image);
             } else {
                 LOGGER(error, "texture " << _faces[i] << " could not loaded");
