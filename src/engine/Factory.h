@@ -33,7 +33,7 @@ public:
                 }
                 EntityProperties pointProperties{ pointCoordinates, pointColors, GL_POINTS };
                 Point* point = new Point(camera, pointProperties);
-                point->initShader("shaders/entity_vs.shader", "shaders/entity_fs.shader");
+                point->initShader("assets/shaders/entity_vs.shader", "assets/shaders/entity_fs.shader");
                 point->initCamera(camera);
                 point->init();
 
@@ -49,9 +49,9 @@ public:
                     GL_LINE_LOOP // GL_LINES GL_LINE_STRIP GL_LINE_LOOP
                 };
                 Circle* line = new Circle(camera, lineProperties);
-                line->initShader("shaders/entity_vs.shader", "shaders/entity_fs.shader");
+                line->initShader("assets/shaders/entity_vs.shader", "assets/shaders/entity_fs.shader");
                 if (glm::linearRand(0.0f, 1.0f) >= 0.5f) {
-                    line->initTexture("textures/passage.png");
+                    line->initTexture("assets/textures/passage.png");
                 }
                 line->initCamera(camera);
                 line->init();
@@ -67,9 +67,9 @@ public:
                     { glm::linearRand(minColor, maxColor), glm::linearRand(minColor, maxColor), glm::linearRand(minColor, maxColor) },
                 };
                 Triangle* triangle = new Triangle(camera, triangleProperties);
-                triangle->initShader("shaders/entity_vs.shader", "shaders/entity_fs.shader");
+                triangle->initShader("assets/shaders/entity_vs.shader", "assets/shaders/entity_fs.shader");
                 if (glm::linearRand(0.0f, 1.0f) >= 0.5f) {
-                    triangle->initTexture("textures/passage.png");
+                    triangle->initTexture("assets/textures/passage.png");
                 }
                 triangle->initCamera(camera);
                 triangle->init();
@@ -85,9 +85,9 @@ public:
                     { glm::linearRand(minColor, maxColor), glm::linearRand(minColor, maxColor), glm::linearRand(minColor, maxColor), glm::linearRand(minColor, maxColor) },
                 };
                 Rectangle* rectangle = new Rectangle(camera, rectangleProperties);
-                rectangle->initShader("shaders/entity_vs.shader", "shaders/entity_fs.shader");
+                rectangle->initShader("assets/shaders/entity_vs.shader", "assets/shaders/entity_fs.shader");
                 if (glm::linearRand(0.0f, 1.0f) >= 0.5f) {
-                    rectangle->initTexture("textures/wall1.png");
+                    rectangle->initTexture("assets/textures/wall1.png");
                 }
                 rectangle->initCamera(camera);
                 rectangle->init();
@@ -110,9 +110,9 @@ public:
                 }
                 EntityProperties circleProperties{ circleCoordinates, circleColors, GL_TRIANGLE_FAN };
                 Circle* circle = new Circle(camera, circleProperties);
-                circle->initShader("shaders/entity_vs.shader", "shaders/entity_fs.shader");
+                circle->initShader("assets/shaders/entity_vs.shader", "assets/shaders/entity_fs.shader");
                 if (glm::linearRand(0.0f, 1.0f) >= 0.5f) {
-                    circle->initTexture("textures/passage.png");
+                    circle->initTexture("assets/textures/passage.png");
                 }
                 circle->initCamera(camera);
                 circle->init();
@@ -212,8 +212,8 @@ public:
 
                 EntityProperties cubeProperties{ cubeCoordinates, cubeCoordinates, GL_TRIANGLES, textureCoordinates };
                 Cube* cube = new Cube(camera, cubeProperties);
-                cube->initShader("shaders/entity_vs.shader", "shaders/entity_fs.shader");
-                cube->initTexture("textures/wall2.png");
+                cube->initShader("assets/shaders/entity_vs.shader", "assets/shaders/entity_fs.shader");
+                cube->initTexture("assets/textures/wall2.png");
                 cube->initCamera(camera);
                 cube->init();
 

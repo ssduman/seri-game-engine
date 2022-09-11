@@ -106,10 +106,8 @@
       </Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>xcopy /y /i /e /r /q "$(SolutionDir)src\fonts" "$(SolutionDir)artifact\$(Configuration)-$(Platform)\fonts"
-xcopy /y /i /e /r /q "$(SolutionDir)src\shaders" "$(SolutionDir)artifact\$(Configuration)-$(Platform)\shaders"
-xcopy /y /i /e /r /q "$(SolutionDir)src\textures" "$(SolutionDir)artifact\$(Configuration)-$(Platform)\textures"
-xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win32\freetype.dll" "$(SolutionDir)artifact\$(Configuration)-$(Platform)"</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -132,10 +130,8 @@ xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win32\freetype.dll" "$(So
       </Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>xcopy /y /i /e /r /q "$(SolutionDir)src\fonts" "$(SolutionDir)artifact\$(Configuration)-$(Platform)\fonts"
-xcopy /y /i /e /r /q "$(SolutionDir)src\shaders" "$(SolutionDir)artifact\$(Configuration)-$(Platform)\shaders"
-xcopy /y /i /e /r /q "$(SolutionDir)src\textures" "$(SolutionDir)artifact\$(Configuration)-$(Platform)\textures"
-xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win64\freetype.dll" "$(SolutionDir)artifact\$(Configuration)-$(Platform)"</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -162,10 +158,8 @@ xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win64\freetype.dll" "$(So
       </Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>xcopy /y /i /e /r /q "$(SolutionDir)src\fonts" "$(SolutionDir)artifact\$(Configuration)-$(Platform)\fonts"
-xcopy /y /i /e /r /q "$(SolutionDir)src\shaders" "$(SolutionDir)artifact\$(Configuration)-$(Platform)\shaders"
-xcopy /y /i /e /r /q "$(SolutionDir)src\textures" "$(SolutionDir)artifact\$(Configuration)-$(Platform)\textures"
-xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win32\freetype.dll" "$(SolutionDir)artifact\$(Configuration)-$(Platform)"</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -192,10 +186,8 @@ xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win32\freetype.dll" "$(So
       </Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>xcopy /y /i /e /r /q "$(SolutionDir)src\fonts" "$(SolutionDir)artifact\$(Configuration)-$(Platform)\fonts"
-xcopy /y /i /e /r /q "$(SolutionDir)src\shaders" "$(SolutionDir)artifact\$(Configuration)-$(Platform)\shaders"
-xcopy /y /i /e /r /q "$(SolutionDir)src\textures" "$(SolutionDir)artifact\$(Configuration)-$(Platform)\textures"
-xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win64\freetype.dll" "$(SolutionDir)artifact\$(Configuration)-$(Platform)"</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

@@ -99,7 +99,7 @@ public:
         _library = nullptr;
     }
 
-    void initShader(const std::string& vsCodePath = "shaders/typer_vs.shader", const std::string& fsCodePath = "shaders/typer_fs.shader") override {
+    void initShader(const std::string& vsCodePath = "assets/shaders/typer_vs.shader", const std::string& fsCodePath = "assets/shaders/typer_fs.shader") override {
         _shader.init(vsCodePath, fsCodePath);
     }
 
@@ -180,6 +180,6 @@ private:
     FT_Library _library = nullptr;
     Character _currCharacter{};
     std::map<GLubyte, Character> _characters{};
-    std::string _font = "fonts/En Bloc.ttf"; // DungeonFont.ttf
+    std::string _font = "assets/fonts/En Bloc.ttf"; // DungeonFont.ttf
 
 };

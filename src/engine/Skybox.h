@@ -88,12 +88,12 @@ private:
         };
 
         _faces = {
-            "textures/skybox/right.jpg",
-            "textures/skybox/left.jpg",
-            "textures/skybox/bottom.jpg",
-            "textures/skybox/top.jpg",
-            "textures/skybox/front.jpg",
-            "textures/skybox/back.jpg"
+            "assets/textures/skybox/right.jpg",
+            "assets/textures/skybox/left.jpg",
+            "assets/textures/skybox/bottom.jpg",
+            "assets/textures/skybox/top.jpg",
+            "assets/textures/skybox/front.jpg",
+            "assets/textures/skybox/back.jpg"
         };
 
         glGenVertexArrays(1, &_VAO);
@@ -111,7 +111,7 @@ private:
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 
-    void initShader(const std::string& vsCodePath = "shaders/skybox_vs.shader", const std::string& fsCodePath = "shaders/skybox_fs.shader") override {
+    void initShader(const std::string& vsCodePath = "assets/shaders/skybox_vs.shader", const std::string& fsCodePath = "assets/shaders/skybox_fs.shader") override {
         _shader.init(vsCodePath, fsCodePath);
     }
 

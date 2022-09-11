@@ -76,7 +76,7 @@ public:
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 
-    void initShader(const std::string& vsCodePath = "shaders/light_vs.shader", const std::string& fsCodePath = "shaders/light_fs.shader") override {
+    void initShader(const std::string& vsCodePath = "assets/shaders/light_vs.shader", const std::string& fsCodePath = "assets/shaders/light_fs.shader") override {
         _shader.init(vsCodePath, fsCodePath);
     }
 

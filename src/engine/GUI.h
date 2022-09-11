@@ -315,5 +315,5 @@ private:
     ImGuiStyle* _style = nullptr;
     ImGuiWindowFlags _windowFlags = 0;
     const char* glsl_version = "#version 130";
-    const char* font_filename = "fonts/En Bloc.ttf";
+    const char* font_filename = "assets/fonts/En Bloc.ttf";
 };
