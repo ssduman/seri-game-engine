@@ -2,8 +2,9 @@
 #pragma warning(disable: 4100)
 #pragma warning(disable: 4244)
 
-#include "Maze.h"
 #include "../engine/IControl.h"
+
+#include "Maze.h"
 #include "CameraMaze.h"
 
 class ControlMaze : public IControl {

@@ -2,10 +2,10 @@
 
 #include "../engine/Typer.h"
 #include "../engine/Entity.h"
-#include "Stopwatch.h"
-#include "ControlMaze.h"
 
+#include "Stopwatch.h"
 #include "CameraMaze.h"
+#include "ControlMaze.h"
 
 class Game : public Entity {
 public:

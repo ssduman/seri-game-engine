@@ -1,9 +1,10 @@
 #pragma once
 
-#include "Game.h"
-#include "Maze.h"
 #include "../engine/IRunner.h"
 #include "../engine/Logger.h"
+
+#include "Game.h"
+#include "Maze.h"
 #include "CameraMaze.h"
 #include "ControlMaze.h"
 

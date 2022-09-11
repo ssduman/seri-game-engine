@@ -183,7 +183,6 @@ xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win64\freetype.dll" "$(So
     <ClInclude Include="ControlMaze.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Maze.h" />
-    <ClInclude Include="Renderer.h" />
     <ClInclude Include="RunnerMaze.h" />
     <ClInclude Include="Stopwatch.h" />
   </ItemGroup>

@@ -211,6 +211,7 @@
     <ClInclude Include="Object.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="Rectangle.h" />
+    <ClInclude Include="Renderer.h" />
     <ClInclude Include="Script.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Skybox.h" />

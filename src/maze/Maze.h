@@ -4,7 +4,8 @@
 #include "../engine/Entity.h"
 #include "../engine/Logger.h"
 #include "../engine/Texture.h"
-#include "Renderer.h"
+#include "../engine/Renderer.h"
+
 #include "CameraMaze.h"
 
 #include <tuple>

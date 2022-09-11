@@ -64,6 +64,9 @@
     <Filter Include="Runner">
       <UniqueIdentifier>{3a77c48e-970f-434f-a719-0333d655eafd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Renderer">
+      <UniqueIdentifier>{bde9b189-f064-46bd-b12f-79b88d42e98e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Light.h">
@@ -164,6 +167,9 @@
     </ClInclude>
     <ClInclude Include="IRunner.h">
       <Filter>Runner</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>Renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
