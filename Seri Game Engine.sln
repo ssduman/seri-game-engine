@@ -5,7 +5,7 @@ VisualStudioVersion = 17.2.32526.322
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "engine", "src\engine\engine.vcxproj", "{7080E3CC-7F49-43A5-8EBF-E3581FBA94E6}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "editor", "src\seri\seri.vcxproj", "{50F88C28-AEDE-477E-95AA-6ABFB4DF8390}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "editor", "src\editor\editor.vcxproj", "{50F88C28-AEDE-477E-95AA-6ABFB4DF8390}"
 	ProjectSection(ProjectDependencies) = postProject
 		{7080E3CC-7F49-43A5-8EBF-E3581FBA94E6} = {7080E3CC-7F49-43A5-8EBF-E3581FBA94E6}
 	EndProjectSection
