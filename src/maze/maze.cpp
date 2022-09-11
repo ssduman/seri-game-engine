@@ -1,8 +1,8 @@
-#include "RunnerMaze.h"
+#include "Runner.h"
 
 int main(int argc, char* argv[]) {
     try {
-        RunnerMaze{}();
+        Runner{}();
     } catch (const std::exception& ex) {
         LOGGER(error, "exception occurred: " << ex.what());
     }

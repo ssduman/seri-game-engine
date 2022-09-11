@@ -179,11 +179,11 @@ xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win64\freetype.dll" "$(So
     <ClCompile Include="maze.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CameraMaze.h" />
-    <ClInclude Include="ControlMaze.h" />
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="Control.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Maze.h" />
-    <ClInclude Include="RunnerMaze.h" />
+    <ClInclude Include="Runner.h" />
     <ClInclude Include="Stopwatch.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

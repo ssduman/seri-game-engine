@@ -7,15 +7,15 @@
 #include "../engine/Shader.h"
 #include "../engine/ICamera.h"
 
-class CameraMaze : public ICamera {
+class Camera : public ICamera {
 public:
-    CameraMaze(CameraProperties cameraProperties) : ICamera(cameraProperties) {
-        CameraMaze::init();
+    Camera(CameraProperties cameraProperties) : ICamera(cameraProperties) {
+        Camera::init();
         initShader();
         setLight();
-        CameraMaze::updateVectors();
-        CameraMaze::view();
-        CameraMaze::projection();
+        Camera::updateVectors();
+        Camera::view();
+        Camera::projection();
         update();
     }
 

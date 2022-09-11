@@ -24,10 +24,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CameraMaze.h">
+    <ClInclude Include="Camera.h">
       <Filter>Camera</Filter>
     </ClInclude>
-    <ClInclude Include="ControlMaze.h">
+    <ClInclude Include="Control.h">
       <Filter>Control</Filter>
     </ClInclude>
     <ClInclude Include="Game.h">
@@ -39,7 +39,7 @@
     <ClInclude Include="Stopwatch.h">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="RunnerMaze.h">
+    <ClInclude Include="Runner.h">
       <Filter>Runner</Filter>
     </ClInclude>
   </ItemGroup>

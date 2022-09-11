@@ -199,7 +199,7 @@ xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win64\freetype.dll" "$(So
     <ClInclude Include="Control.h" />
     <ClInclude Include="Factory.h" />
     <ClInclude Include="GUI.h" />
-    <ClInclude Include="RunnerEditor.h" />
+    <ClInclude Include="Runner.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

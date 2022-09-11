@@ -3,13 +3,13 @@
 #include "../engine/Typer.h"
 #include "../engine/Entity.h"
 
+#include "Camera.h"
+#include "Control.h"
 #include "Stopwatch.h"
-#include "CameraMaze.h"
-#include "ControlMaze.h"
 
 class Game : public Entity {
 public:
-    Game(ICamera* camera, ControlMaze& control, float width, float height) : Entity(camera), _control(control), _width(width), _height(height) {
+    Game(ICamera* camera, Control& control, float width, float height) : Entity(camera), _control(control), _width(width), _height(height) {
         Game::init();
         Game::initShader();
         initTyper();
@@ -17,7 +17,7 @@ public:
         initStopwatch();
         setProjection();
 
-        _cameraMaze = dynamic_cast<CameraMaze*>(_camera);
+        _cameraMaze = dynamic_cast<Camera*>(_camera);
 
         LOGGER(info, "game init succeeded");
     }
@@ -110,9 +110,9 @@ private:
     }
 
     Typer* _typer = nullptr;
-    ControlMaze& _control;
+    Control& _control;
     Stopwatch* _stopwatch = nullptr;
-    CameraMaze* _cameraMaze = nullptr;
+    Camera* _cameraMaze = nullptr;
     float _width{ 0.0f };
     float _height{ 0.0f };
 

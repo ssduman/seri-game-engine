@@ -63,7 +63,7 @@
     <ClInclude Include="GUI.h">
       <Filter>GUI</Filter>
     </ClInclude>
-    <ClInclude Include="RunnerEditor.h">
+    <ClInclude Include="Runner.h">
       <Filter>Runner</Filter>
     </ClInclude>
     <ClInclude Include="..\..\libraries\imgui-1.88\imconfig.h">

@@ -7,11 +7,11 @@
 #include "Control.h"
 #include "Factory.h"
 
-class RunnerEditor : public IRunner {
+class Runner : public IRunner {
 public:
-    RunnerEditor() = default;
+    Runner() = default;
 
-    ~RunnerEditor() override = default;
+    ~Runner() override = default;
 
     void operator()() {
         WindowProperties windowProperties{ /*title*/ "Seri Game Engine", /*fullscreen*/ false, /*w*/ 1280, /*h*/ 720 };

@@ -5,14 +5,14 @@
 
 #include "Game.h"
 #include "Maze.h"
-#include "CameraMaze.h"
-#include "ControlMaze.h"
+#include "Camera.h"
+#include "Control.h"
 
-class RunnerMaze : public IRunner {
+class Runner : public IRunner {
 public:
-    RunnerMaze() = default;
+    Runner() = default;
 
-    ~RunnerMaze() override = default;
+    ~Runner() override = default;
 
     void operator()() {
         WindowProperties windowProperties{ /*title*/ "Maze", /*fullscreen*/ true };
@@ -21,7 +21,7 @@ public:
 
         CameraProperties cameraProperties;
         cameraProperties.position = glm::vec3{ 0, _mazeThickness * 5, -_mazeThickness * 4 - _mazeHeight * _mazeThickness };
-        std::shared_ptr<CameraMaze> camera = std::make_shared<CameraMaze>(cameraProperties);
+        std::shared_ptr<Camera> camera = std::make_shared<Camera>(cameraProperties);
 
         Maze* maze = new Maze{ camera.get(), _mazeWidth, _mazeHeight, _mazeThickness };
         camera->setMazeDimensions(_mazeWidth, _mazeHeight, _mazeThickness);
@@ -30,7 +30,7 @@ public:
         Layer layers{};
         Light light{ camera.get() };
         Skybox skybox{ camera.get() };
-        ControlMaze control{ &windowManager, camera.get(), &maze };
+        Control control{ &windowManager, camera.get(), &maze };
         Game game{ camera.get(), control, windowManager.getWidthF(), windowManager.getHeightF() };
 
         layers.addLayer(&game);

@@ -5,19 +5,19 @@
 #include "../engine/IControl.h"
 
 #include "Maze.h"
-#include "CameraMaze.h"
+#include "Camera.h"
 
-class ControlMaze : public IControl {
+class Control : public IControl {
 public:
-    ControlMaze(WindowManager* windowManager, CameraMaze* camera, Maze** maze) : IControl(windowManager), _camera(camera), _maze(maze) {
+    Control(WindowManager* windowManager, Camera* camera, Maze** maze) : IControl(windowManager), _camera(camera), _maze(maze) {
         glfwSetWindowUserPointer(_windowManager->getWindow(), static_cast<void*>(this));
 
-        ControlMaze::init();
+        Control::init();
 
         LOGGER(info, "control init succeeded");
     }
 
-    ~ControlMaze() override = default;
+    ~Control() override = default;
 
     void charCallback(GLFWwindow* window, unsigned int codepoint) override {
         char string[5]{};
@@ -127,7 +127,7 @@ private:
     void init() override {
         glfwSetCharCallback(_windowManager->getWindow(),
             [](GLFWwindow* window, unsigned int codepoint) {
-                if (auto control = static_cast<ControlMaze*>(glfwGetWindowUserPointer(window))) {
+                if (auto control = static_cast<Control*>(glfwGetWindowUserPointer(window))) {
                     control->charCallback(window, codepoint);
                 }
             }
@@ -135,7 +135,7 @@ private:
 
         glfwSetMouseButtonCallback(_windowManager->getWindow(),
             [](GLFWwindow* window, int button, int action, int mods) {
-                if (auto control = static_cast<ControlMaze*>(glfwGetWindowUserPointer(window))) {
+                if (auto control = static_cast<Control*>(glfwGetWindowUserPointer(window))) {
                     control->mouseButtonCallback(window, button, action, mods);
                 }
             }
@@ -143,7 +143,7 @@ private:
 
         glfwSetScrollCallback(_windowManager->getWindow(),
             [](GLFWwindow* window, double xoffset, double yoffset) {
-                if (auto control = static_cast<ControlMaze*>(glfwGetWindowUserPointer(window))) {
+                if (auto control = static_cast<Control*>(glfwGetWindowUserPointer(window))) {
                     control->scrollCallback(window, xoffset, yoffset);
                 }
             }
@@ -151,7 +151,7 @@ private:
 
         glfwSetFramebufferSizeCallback(_windowManager->getWindow(),
             [](GLFWwindow* window, int width, int height) {
-                if (auto control = static_cast<ControlMaze*>(glfwGetWindowUserPointer(window))) {
+                if (auto control = static_cast<Control*>(glfwGetWindowUserPointer(window))) {
                     control->framebufferSizeCallback(window, width, height);
                 }
             }
@@ -159,7 +159,7 @@ private:
 
         glfwSetCursorPosCallback(_windowManager->getWindow(),
             [](GLFWwindow* window, double xpos, double ypos) {
-                if (auto control = static_cast<ControlMaze*>(glfwGetWindowUserPointer(window))) {
+                if (auto control = static_cast<Control*>(glfwGetWindowUserPointer(window))) {
                     control->cursorPosCallback(window, xpos, ypos);
                 }
             }
@@ -167,13 +167,13 @@ private:
 
         glfwSetKeyCallback(_windowManager->getWindow(),
             [](GLFWwindow* window, int key, int scancode, int action, int mods) {
-                if (auto control = static_cast<ControlMaze*>(glfwGetWindowUserPointer(window))) {
+                if (auto control = static_cast<Control*>(glfwGetWindowUserPointer(window))) {
                     control->keyCallback(window, key, scancode, action, mods);
                 }
             }
         );
     }
 
-    CameraMaze* _camera;
+    Camera* _camera;
     Maze** _maze;
 };

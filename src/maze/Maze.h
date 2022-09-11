@@ -6,7 +6,7 @@
 #include "../engine/Texture.h"
 #include "../engine/Renderer.h"
 
-#include "CameraMaze.h"
+#include "Camera.h"
 
 #include <tuple>
 #include <ctime>
@@ -40,7 +40,7 @@ public:
             LOGGER(warning, "maze is too big to solve, max is " << max_maze_area);
         }
 
-        _cameraMaze = dynamic_cast<CameraMaze*>(_camera);
+        _cameraMaze = dynamic_cast<Camera*>(_camera);
 
         LOGGER(info, "maze init succeeded");
     }
@@ -430,7 +430,7 @@ private:
     float _width = 0.0f, _height = 0.0f, _thickness = 0.0f;
     int passCount = 0, verticalCount = 0, horizontalCount = 0;
 
-    CameraMaze* _cameraMaze = nullptr;
+    Camera* _cameraMaze = nullptr;
 
     std::vector<glm::vec3> passPosition;
     std::vector<glm::vec3> escapePosition;
