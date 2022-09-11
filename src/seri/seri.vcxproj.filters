@@ -13,10 +13,93 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Camera">
+      <UniqueIdentifier>{a9e1dc1e-d030-4529-85e3-2ebfcce9e8e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Control">
+      <UniqueIdentifier>{9354be3b-4c79-4396-9aab-fbb99121df8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Factory">
+      <UniqueIdentifier>{6eccaaec-3bf8-4faa-8a9c-805133672aca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUI">
+      <UniqueIdentifier>{55fed594-43e0-4b9a-a5b7-851f0ca2c75d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Runner">
+      <UniqueIdentifier>{de6002ce-cecd-496f-b482-89d04f0cca58}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUI\ImGui">
+      <UniqueIdentifier>{1279f237-ccde-4c0f-9f22-64f262d555de}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="seri.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\libraries\imgui-1.88\imgui.cpp">
+      <Filter>GUI\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\imgui-1.88\imgui_demo.cpp">
+      <Filter>GUI\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\imgui-1.88\imgui_draw.cpp">
+      <Filter>GUI\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\imgui-1.88\imgui_impl_glfw.cpp">
+      <Filter>GUI\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\imgui-1.88\imgui_impl_opengl3.cpp">
+      <Filter>GUI\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\imgui-1.88\imgui_tables.cpp">
+      <Filter>GUI\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libraries\imgui-1.88\imgui_widgets.cpp">
+      <Filter>GUI\ImGui</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Camera.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Control.h">
+      <Filter>Control</Filter>
+    </ClInclude>
+    <ClInclude Include="Factory.h">
+      <Filter>Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="RunnerSeri.h">
+      <Filter>Runner</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\imgui-1.88\imconfig.h">
+      <Filter>GUI\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\imgui-1.88\imgui.h">
+      <Filter>GUI\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\imgui-1.88\imgui_impl_glfw.h">
+      <Filter>GUI\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\imgui-1.88\imgui_impl_opengl3.h">
+      <Filter>GUI\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\imgui-1.88\imgui_impl_opengl3_loader.h">
+      <Filter>GUI\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\imgui-1.88\imgui_internal.h">
+      <Filter>GUI\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\imgui-1.88\imstb_rectpack.h">
+      <Filter>GUI\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\imgui-1.88\imstb_textedit.h">
+      <Filter>GUI\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\imgui-1.88\imstb_truetype.h">
+      <Filter>GUI\ImGui</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

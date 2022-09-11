@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Util.h"
-#include "State.h"
-#include "Logger.h"
-#include "ICamera.h"
+#include "../engine/Util.h"
+#include "../engine/State.h"
+#include "../engine/Logger.h"
+#include "../engine/ICamera.h"
 
 class Camera : public ICamera {
 public:

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "GUI.h"
 #include "Util.h"
 #include "Layer.h"
 #include "State.h"

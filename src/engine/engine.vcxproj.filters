@@ -22,12 +22,6 @@
     <Filter Include="Control">
       <UniqueIdentifier>{b6d352b1-10dc-4bd8-bdd6-9daea4096984}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GUI">
-      <UniqueIdentifier>{fbbe1c49-dbb0-4abd-ba8c-5030a0171fa7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GUI\ImGui">
-      <UniqueIdentifier>{a42b8323-057f-43b2-9696-86324bd78d0a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Object">
       <UniqueIdentifier>{1729e664-b4ae-4839-8518-2c8b65241e03}</UniqueIdentifier>
     </Filter>
@@ -48,9 +42,6 @@
     </Filter>
     <Filter Include="Layer">
       <UniqueIdentifier>{ba210aaf-6d82-43ed-b978-2dff13a7db7f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Factory">
-      <UniqueIdentifier>{6de68790-b6e4-428d-950b-4ef8fe49ea7f}</UniqueIdentifier>
     </Filter>
     <Filter Include="Transform">
       <UniqueIdentifier>{25fec7f2-5ac2-4bd8-949b-87171dc0e877}</UniqueIdentifier>
@@ -75,29 +66,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\libraries\imgui-1.88\imgui.cpp">
-      <Filter>GUI\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\libraries\imgui-1.88\imgui_demo.cpp">
-      <Filter>GUI\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\libraries\imgui-1.88\imgui_draw.cpp">
-      <Filter>GUI\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\libraries\imgui-1.88\imgui_impl_glfw.cpp">
-      <Filter>GUI\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\libraries\imgui-1.88\imgui_impl_opengl3.cpp">
-      <Filter>GUI\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\libraries\imgui-1.88\imgui_tables.cpp">
-      <Filter>GUI\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\libraries\imgui-1.88\imgui_widgets.cpp">
-      <Filter>GUI\ImGui</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="Light.h">
       <Filter>Light</Filter>
     </ClInclude>
@@ -118,12 +86,6 @@
     </ClInclude>
     <ClInclude Include="IControl.h">
       <Filter>Control</Filter>
-    </ClInclude>
-    <ClInclude Include="Control.h">
-      <Filter>Control</Filter>
-    </ClInclude>
-    <ClInclude Include="GUI.h">
-      <Filter>GUI</Filter>
     </ClInclude>
     <ClInclude Include="Object.h">
       <Filter>Object</Filter>
@@ -164,9 +126,6 @@
     <ClInclude Include="Layer.h">
       <Filter>Layer</Filter>
     </ClInclude>
-    <ClInclude Include="Factory.h">
-      <Filter>Factory</Filter>
-    </ClInclude>
     <ClInclude Include="Point.h">
       <Filter>Shape</Filter>
     </ClInclude>
@@ -188,9 +147,6 @@
     <ClInclude Include="Script.h">
       <Filter>Script</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>Camera</Filter>
-    </ClInclude>
     <ClInclude Include="Cube.h">
       <Filter>Shape</Filter>
     </ClInclude>
@@ -206,38 +162,8 @@
     <ClInclude Include="ICamera.h">
       <Filter>Camera</Filter>
     </ClInclude>
-    <ClInclude Include="RunnerSeri.h">
-      <Filter>Runner</Filter>
-    </ClInclude>
     <ClInclude Include="IRunner.h">
       <Filter>Runner</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\libraries\imgui-1.88\imgui.h">
-      <Filter>GUI\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\libraries\imgui-1.88\imgui_impl_glfw.h">
-      <Filter>GUI\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\libraries\imgui-1.88\imgui_impl_opengl3.h">
-      <Filter>GUI\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\libraries\imgui-1.88\imgui_impl_opengl3_loader.h">
-      <Filter>GUI\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\libraries\imgui-1.88\imgui_internal.h">
-      <Filter>GUI\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\libraries\imgui-1.88\imstb_rectpack.h">
-      <Filter>GUI\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\libraries\imgui-1.88\imstb_textedit.h">
-      <Filter>GUI\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\libraries\imgui-1.88\imstb_truetype.h">
-      <Filter>GUI\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\libraries\imgui-1.88\imconfig.h">
-      <Filter>GUI\ImGui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

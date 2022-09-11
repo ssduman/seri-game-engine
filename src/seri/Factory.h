@@ -1,14 +1,14 @@
 #pragma once
 
-#include "Util.h"
-#include "Entity.h"
-#include "Point.h"
-#include "Triangle.h"
-#include "Rectangle.h"
-#include "Circle.h"
-#include "Cube.h"
+#include "../engine/Util.h"
+#include "../engine/Entity.h"
+#include "../engine/Point.h"
+#include "../engine/Triangle.h"
+#include "../engine/Rectangle.h"
+#include "../engine/Circle.h"
+#include "../engine/Cube.h"
 #include "Camera.h"
-#include "Logger.h"
+#include "../engine/Logger.h"
 
 class Factory {
 public:

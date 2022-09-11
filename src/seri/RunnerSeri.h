@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Camera.h"
-#include "IRunner.h"
+#include "../engine/IRunner.h"
 #include "Control.h"
 #include "Factory.h"
 
