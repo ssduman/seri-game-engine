@@ -2,9 +2,9 @@
 #pragma warning(disable: 4100)
 #pragma warning(disable: 4244)
 
-#include "../engine/WindowManager.h"
 #include "../engine/IControl.h"
 #include "../engine/InputHandler.h"
+#include "../engine/WindowManager.h"
 
 class Control : public IControl {
 public:

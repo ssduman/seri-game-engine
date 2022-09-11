@@ -1,12 +1,13 @@
 #pragma once
 
-#include "../engine/Object.h"
-#include "../engine/WindowManager.h"
-#include "Factory.h"
 #include "../engine/Layer.h"
-#include "Camera.h"
-#include "../engine/Logger.h"
 #include "../engine/State.h"
+#include "../engine/Object.h"
+#include "../engine/Logger.h"
+#include "../engine/WindowManager.h"
+
+#include "Camera.h"
+#include "Factory.h"
 
 #include <imgui.h>
 #include <imgui_impl_glfw.h>

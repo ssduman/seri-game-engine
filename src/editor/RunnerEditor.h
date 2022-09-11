@@ -1,10 +1,11 @@
 #pragma once
 
-#include "Camera.h"
 #include "../engine/IRunner.h"
+
+#include "GUI.h"
+#include "Camera.h"
 #include "Control.h"
 #include "Factory.h"
-#include "GUI.h"
 
 class RunnerEditor : public IRunner {
 public:
