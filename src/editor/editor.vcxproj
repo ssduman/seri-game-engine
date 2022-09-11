@@ -22,7 +22,7 @@
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{50f88c28-aede-477e-95aa-6abfb4df8390}</ProjectGuid>
-    <RootNamespace>seri</RootNamespace>
+    <RootNamespace>editor</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <ProjectName>editor</ProjectName>
   </PropertyGroup>
@@ -183,7 +183,7 @@ xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win64\freetype.dll" "$(So
     <ClCompile Include="..\..\libraries\imgui-1.88\imgui_impl_opengl3.cpp" />
     <ClCompile Include="..\..\libraries\imgui-1.88\imgui_tables.cpp" />
     <ClCompile Include="..\..\libraries\imgui-1.88\imgui_widgets.cpp" />
-    <ClCompile Include="seri.cpp" />
+    <ClCompile Include="editor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\libraries\imgui-1.88\imconfig.h" />
@@ -199,7 +199,7 @@ xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win64\freetype.dll" "$(So
     <ClInclude Include="Control.h" />
     <ClInclude Include="Factory.h" />
     <ClInclude Include="GUI.h" />
-    <ClInclude Include="RunnerSeri.h" />
+    <ClInclude Include="RunnerEditor.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

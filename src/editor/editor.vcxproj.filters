@@ -33,7 +33,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="seri.cpp">
+    <ClCompile Include="editor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\libraries\imgui-1.88\imgui.cpp">
@@ -71,7 +71,7 @@
     <ClInclude Include="GUI.h">
       <Filter>GUI</Filter>
     </ClInclude>
-    <ClInclude Include="RunnerSeri.h">
+    <ClInclude Include="RunnerEditor.h">
       <Filter>Runner</Filter>
     </ClInclude>
     <ClInclude Include="..\..\libraries\imgui-1.88\imconfig.h">

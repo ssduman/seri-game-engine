@@ -4,12 +4,13 @@
 #include "../engine/IRunner.h"
 #include "Control.h"
 #include "Factory.h"
+#include "GUI.h"
 
-class RunnerSeri : public IRunner {
+class RunnerEditor : public IRunner {
 public:
-    RunnerSeri() = default;
+    RunnerEditor() = default;
 
-    ~RunnerSeri() override = default;
+    ~RunnerEditor() override = default;
 
     void operator()() {
         WindowProperties windowProperties{ /*title*/ "Seri Game Engine", /*fullscreen*/ false, /*w*/ 1280, /*h*/ 720 };
@@ -33,7 +34,7 @@ public:
         layers.addLayer(&light);
         layers.addLayer(&skybox);
 
-        LOGGER(info, "starting seri game loop");
+        LOGGER(info, "starting seri game engine loop");
 
         while (!glfwWindowShouldClose(windowManager->getWindow())) {
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -54,7 +55,7 @@ public:
             glfwSwapBuffers(windowManager->getWindow());
         }
 
-        LOGGER(info, "seri game loop stopped");
+        LOGGER(info, "seri game engine loop stopped");
     }
 
 };

@@ -1,8 +1,8 @@
-#include "RunnerSeri.h"
+#include "RunnerEditor.h"
 
 int main(int argc, char* argv[]) {
     try {
-        RunnerSeri{}();
+        RunnerEditor{}();
     } catch (const std::exception& ex) {
         LOGGER(error, "exception occurred: " << ex.what());
     }
