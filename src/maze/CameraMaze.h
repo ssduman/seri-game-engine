@@ -1,9 +1,11 @@
 #pragma once
 
-#include "Util.h"
-#include "Logger.h"
-#include "Shader.h"
-#include "ICamera.h"
+#include <GLFW/glfw3.h>
+
+#include "../engine/Util.h"
+#include "../engine/Logger.h"
+#include "../engine/Shader.h"
+#include "../engine/ICamera.h"
 
 class CameraMaze : public ICamera {
 public:

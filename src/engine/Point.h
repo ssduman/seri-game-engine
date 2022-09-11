@@ -4,7 +4,7 @@
 
 class Point : public Entity {
 public:
-    Point(Camera* camera, EntityProperties& pointProperties) : Entity(camera), _pointProperties(pointProperties) {
+    Point(ICamera* camera, EntityProperties& pointProperties) : Entity(camera), _pointProperties(pointProperties) {
         _entityType = EntityType::POINT;
         Point::setProperties(_pointProperties);
         _renderCount = static_cast<GLsizei>(_pointProperties.coordinates.size());

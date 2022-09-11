@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Renderer">
-      <UniqueIdentifier>{ca71c88d-7fa6-4bfb-910c-1fc63920275d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Light">
       <UniqueIdentifier>{80c8d598-f8f5-459b-9aad-4cf796b9ee32}</UniqueIdentifier>
     </Filter>
@@ -21,10 +18,6 @@
     </Filter>
     <Filter Include="Window">
       <UniqueIdentifier>{14b194df-12b7-4c6a-a390-d21df65d1108}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
     <Filter Include="Control">
       <UniqueIdentifier>{b6d352b1-10dc-4bd8-bdd6-9daea4096984}</UniqueIdentifier>
@@ -82,50 +75,34 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Texture.cpp">
-      <Filter>Texture</Filter>
-    </ClCompile>
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="..\libraries\imgui-1.88\imgui_impl_opengl3.cpp">
+    <ClCompile Include="..\..\libraries\imgui-1.88\imgui.cpp">
       <Filter>GUI\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="..\libraries\imgui-1.88\imgui_tables.cpp">
+    <ClCompile Include="..\..\libraries\imgui-1.88\imgui_demo.cpp">
       <Filter>GUI\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="..\libraries\imgui-1.88\imgui_widgets.cpp">
+    <ClCompile Include="..\..\libraries\imgui-1.88\imgui_draw.cpp">
       <Filter>GUI\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="..\libraries\imgui-1.88\imgui.cpp">
+    <ClCompile Include="..\..\libraries\imgui-1.88\imgui_impl_glfw.cpp">
       <Filter>GUI\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="..\libraries\imgui-1.88\imgui_demo.cpp">
+    <ClCompile Include="..\..\libraries\imgui-1.88\imgui_impl_opengl3.cpp">
       <Filter>GUI\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="..\libraries\imgui-1.88\imgui_draw.cpp">
+    <ClCompile Include="..\..\libraries\imgui-1.88\imgui_tables.cpp">
       <Filter>GUI\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="..\libraries\imgui-1.88\imgui_impl_glfw.cpp">
+    <ClCompile Include="..\..\libraries\imgui-1.88\imgui_widgets.cpp">
       <Filter>GUI\ImGui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Maze.h">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="Game.h">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer.h">
-      <Filter>Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="Light.h">
       <Filter>Light</Filter>
     </ClInclude>
     <ClInclude Include="Shader.h">
       <Filter>Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="CameraMaze.h">
-      <Filter>Camera</Filter>
     </ClInclude>
     <ClInclude Include="Typer.h">
       <Filter>Texture</Filter>
@@ -153,33 +130,6 @@
     </ClInclude>
     <ClInclude Include="Triangle.h">
       <Filter>Shape</Filter>
-    </ClInclude>
-    <ClInclude Include="..\libraries\imgui-1.88\imgui_impl_opengl3.h">
-      <Filter>GUI\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\libraries\imgui-1.88\imgui_impl_opengl3_loader.h">
-      <Filter>GUI\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\libraries\imgui-1.88\imgui_internal.h">
-      <Filter>GUI\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\libraries\imgui-1.88\imstb_rectpack.h">
-      <Filter>GUI\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\libraries\imgui-1.88\imstb_textedit.h">
-      <Filter>GUI\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\libraries\imgui-1.88\imstb_truetype.h">
-      <Filter>GUI\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\libraries\imgui-1.88\imconfig.h">
-      <Filter>GUI\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\libraries\imgui-1.88\imgui.h">
-      <Filter>GUI\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\libraries\imgui-1.88\imgui_impl_glfw.h">
-      <Filter>GUI\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="Entity.h">
       <Filter>Entity</Filter>
@@ -256,20 +206,38 @@
     <ClInclude Include="ICamera.h">
       <Filter>Camera</Filter>
     </ClInclude>
-    <ClInclude Include="ControlMaze.h">
-      <Filter>Control</Filter>
-    </ClInclude>
-    <ClInclude Include="RunnerMaze.h">
-      <Filter>Runner</Filter>
-    </ClInclude>
     <ClInclude Include="RunnerSeri.h">
       <Filter>Runner</Filter>
     </ClInclude>
     <ClInclude Include="IRunner.h">
       <Filter>Runner</Filter>
     </ClInclude>
-    <ClInclude Include="Stopwatch.h">
-      <Filter>Game</Filter>
+    <ClInclude Include="..\..\libraries\imgui-1.88\imgui.h">
+      <Filter>GUI\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\imgui-1.88\imgui_impl_glfw.h">
+      <Filter>GUI\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\imgui-1.88\imgui_impl_opengl3.h">
+      <Filter>GUI\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\imgui-1.88\imgui_impl_opengl3_loader.h">
+      <Filter>GUI\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\imgui-1.88\imgui_internal.h">
+      <Filter>GUI\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\imgui-1.88\imstb_rectpack.h">
+      <Filter>GUI\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\imgui-1.88\imstb_textedit.h">
+      <Filter>GUI\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\imgui-1.88\imstb_truetype.h">
+      <Filter>GUI\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libraries\imgui-1.88\imconfig.h">
+      <Filter>GUI\ImGui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

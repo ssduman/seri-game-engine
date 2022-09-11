@@ -4,7 +4,7 @@
 
 class Circle : public Entity {
 public:
-    Circle(Camera* camera, EntityProperties& circleProperties) : Entity(camera), _circleProperties(circleProperties) {
+    Circle(ICamera* camera, EntityProperties& circleProperties) : Entity(camera), _circleProperties(circleProperties) {
         _entityType = EntityType::CIRCLE;
         Circle::setProperties(_circleProperties);
         _renderCount = static_cast<GLsizei>(_circleProperties.coordinates.size());

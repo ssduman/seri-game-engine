@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Util.h"
-#include "Entity.h"
-#include "Logger.h"
-#include "Texture.h"
+#include "../engine/Util.h"
+#include "../engine/Entity.h"
+#include "../engine/Logger.h"
+#include "../engine/Texture.h"
 #include "Renderer.h"
 #include "CameraMaze.h"
 

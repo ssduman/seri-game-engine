@@ -3,7 +3,7 @@
 #pragma warning(disable: 4244)
 
 #include "Maze.h"
-#include "IControl.h"
+#include "../engine/IControl.h"
 #include "CameraMaze.h"
 
 class ControlMaze : public IControl {

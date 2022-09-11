@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Entity.h"
-#include "Util.h"
+#include "../engine/Entity.h"
+#include "../engine/Util.h"
 
 class Renderer : public Entity {
 public:

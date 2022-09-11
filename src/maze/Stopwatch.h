@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Util.h"
-#include "Typer.h"
+#include "../engine/Util.h"
+#include "../engine/Typer.h"
 
 #include <ctime>
 
@@ -59,7 +59,7 @@ private:
 
     void calculateStopwatch(const bool isWon) {
         if (!isWon && !_gameFinished) {
-            _sec = floor((std::clock() - _startedClockValue) / static_cast<double>(CLOCKS_PER_SEC));
+            _sec = static_cast<int>(floor((std::clock() - _startedClockValue) / CLOCKS_PER_SEC));
             if (_sec == 60) {
                 _startedClockValue = 0L;
                 _sec = 0;

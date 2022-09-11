@@ -4,7 +4,7 @@
 
 class Rectangle : public Entity {
 public:
-    Rectangle(Camera* camera, EntityProperties& rectangleProperties) : Entity(camera), _rectangleProperties(rectangleProperties) {
+    Rectangle(ICamera* camera, EntityProperties& rectangleProperties) : Entity(camera), _rectangleProperties(rectangleProperties) {
         _entityType = EntityType::RECTANGLE;
         Entity::setProperties(_rectangleProperties);
     }

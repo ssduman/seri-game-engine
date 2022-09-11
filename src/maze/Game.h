@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Typer.h"
-#include "Entity.h"
+#include "../engine/Typer.h"
+#include "../engine/Entity.h"
 #include "Stopwatch.h"
 #include "ControlMaze.h"
 

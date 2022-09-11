@@ -4,7 +4,7 @@
 
 class Triangle : public Entity {
 public:
-    Triangle(Camera* camera, EntityProperties& triangleProperties) : Entity(camera), _triangleProperties(triangleProperties) {
+    Triangle(ICamera* camera, EntityProperties& triangleProperties) : Entity(camera), _triangleProperties(triangleProperties) {
         _entityType = EntityType::TRIANGLE;
         Entity::setProperties(_triangleProperties);
     }

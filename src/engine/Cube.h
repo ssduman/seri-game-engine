@@ -4,7 +4,7 @@
 
 class Cube : public Entity {
 public:
-    Cube(Camera* camera, EntityProperties& cubeProperties) : Entity(camera), _cubeProperties(cubeProperties) {
+    Cube(ICamera* camera, EntityProperties& cubeProperties) : Entity(camera), _cubeProperties(cubeProperties) {
         _entityType = EntityType::CUBE;
         Entity::setProperties(_cubeProperties);
         _renderCount = static_cast<GLsizei>(_cubeProperties.coordinates.size());

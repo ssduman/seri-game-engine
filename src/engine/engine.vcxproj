@@ -21,31 +21,32 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <ProjectGuid>{7080E3CC-7F49-43A5-8EBF-E3581FBA94E6}</ProjectGuid>
-    <RootNamespace>Maze</RootNamespace>
+    <RootNamespace>engine</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>engine</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -71,19 +72,19 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(SolutionDir)artifact\$(Configuration)-$(Platform)\</OutDir>
-    <IntDir>$(SolutionDir)intermediate\$(Configuration)-$(Platform)\</IntDir>
+    <IntDir>$(SolutionDir)intermediate\$(ProjectName)\$(Configuration)-$(Platform)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)artifact\$(Configuration)-$(Platform)\</OutDir>
-    <IntDir>$(SolutionDir)intermediate\$(Configuration)-$(Platform)\</IntDir>
+    <IntDir>$(SolutionDir)intermediate\$(ProjectName)\$(Configuration)-$(Platform)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)artifact\$(Configuration)-$(Platform)\</OutDir>
-    <IntDir>$(SolutionDir)intermediate\$(Configuration)-$(Platform)\</IntDir>
+    <IntDir>$(SolutionDir)intermediate\$(ProjectName)\$(Configuration)-$(Platform)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)artifact\$(Configuration)-$(Platform)\</OutDir>
-    <IntDir>$(SolutionDir)intermediate\$(Configuration)-$(Platform)\</IntDir>
+    <IntDir>$(SolutionDir)intermediate\$(ProjectName)\$(Configuration)-$(Platform)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -198,32 +199,28 @@ xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win64\freetype.dll" "$(So
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\libraries\imgui-1.88\imgui.cpp" />
-    <ClCompile Include="..\libraries\imgui-1.88\imgui_demo.cpp" />
-    <ClCompile Include="..\libraries\imgui-1.88\imgui_draw.cpp" />
-    <ClCompile Include="..\libraries\imgui-1.88\imgui_impl_glfw.cpp" />
-    <ClCompile Include="..\libraries\imgui-1.88\imgui_impl_opengl3.cpp" />
-    <ClCompile Include="..\libraries\imgui-1.88\imgui_tables.cpp" />
-    <ClCompile Include="..\libraries\imgui-1.88\imgui_widgets.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="..\..\libraries\imgui-1.88\imgui.cpp" />
+    <ClCompile Include="..\..\libraries\imgui-1.88\imgui_demo.cpp" />
+    <ClCompile Include="..\..\libraries\imgui-1.88\imgui_draw.cpp" />
+    <ClCompile Include="..\..\libraries\imgui-1.88\imgui_impl_glfw.cpp" />
+    <ClCompile Include="..\..\libraries\imgui-1.88\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="..\..\libraries\imgui-1.88\imgui_tables.cpp" />
+    <ClCompile Include="..\..\libraries\imgui-1.88\imgui_widgets.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\libraries\imgui-1.88\imconfig.h" />
-    <ClInclude Include="..\libraries\imgui-1.88\imgui.h" />
-    <ClInclude Include="..\libraries\imgui-1.88\imgui_impl_glfw.h" />
-    <ClInclude Include="..\libraries\imgui-1.88\imgui_impl_opengl3.h" />
-    <ClInclude Include="..\libraries\imgui-1.88\imgui_impl_opengl3_loader.h" />
-    <ClInclude Include="..\libraries\imgui-1.88\imgui_internal.h" />
-    <ClInclude Include="..\libraries\imgui-1.88\imstb_rectpack.h" />
-    <ClInclude Include="..\libraries\imgui-1.88\imstb_textedit.h" />
-    <ClInclude Include="..\libraries\imgui-1.88\imstb_truetype.h" />
+    <ClInclude Include="..\..\libraries\imgui-1.88\imconfig.h" />
+    <ClInclude Include="..\..\libraries\imgui-1.88\imgui.h" />
+    <ClInclude Include="..\..\libraries\imgui-1.88\imgui_impl_glfw.h" />
+    <ClInclude Include="..\..\libraries\imgui-1.88\imgui_impl_opengl3.h" />
+    <ClInclude Include="..\..\libraries\imgui-1.88\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="..\..\libraries\imgui-1.88\imgui_internal.h" />
+    <ClInclude Include="..\..\libraries\imgui-1.88\imstb_rectpack.h" />
+    <ClInclude Include="..\..\libraries\imgui-1.88\imstb_textedit.h" />
+    <ClInclude Include="..\..\libraries\imgui-1.88\imstb_truetype.h" />
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="CameraMaze.h" />
     <ClInclude Include="Circle.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="Control.h" />
-    <ClInclude Include="ControlMaze.h" />
     <ClInclude Include="Cube.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Factory.h" />
@@ -241,20 +238,15 @@ xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win64\freetype.dll" "$(So
     <ClInclude Include="LogManager.h" />
     <ClInclude Include="Mat3.h" />
     <ClInclude Include="Mat4.h" />
-    <ClInclude Include="Maze.h" />
-    <ClInclude Include="RunnerMaze.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="Rectangle.h" />
-    <ClInclude Include="Renderer.h" />
-    <ClInclude Include="Game.h" />
     <ClInclude Include="Script.h" />
     <ClInclude Include="RunnerSeri.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Skybox.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="State.h" />
-    <ClInclude Include="Stopwatch.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="Triangle.h" />

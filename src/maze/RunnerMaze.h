@@ -2,7 +2,8 @@
 
 #include "Game.h"
 #include "Maze.h"
-#include "IRunner.h"
+#include "../engine/IRunner.h"
+#include "../engine/Logger.h"
 #include "CameraMaze.h"
 #include "ControlMaze.h"
 
