@@ -47,7 +47,7 @@ public:
                 gui.registerEntity(entity);
             }
 
-            //typer.renderText("this is a test", windowManager->getWidthF() / 2.0f, windowManager->getHeightF() / 2.0f);
+            typer.renderText(toRender, windowManager->getWidthF() / 3.0f, windowManager->getHeightF() / 2.0f);
 
             gui.display();
 
@@ -57,5 +57,8 @@ public:
 
         LOGGER(info, "seri game engine loop stopped");
     }
+
+private:
+    std::string toRender{ "this is a test" };
 
 };
