@@ -60,6 +60,9 @@ public:
 
     virtual void initShader(const std::string& vsCodePath, const std::string& fsCodePath) {
         _shader.init(vsCodePath, fsCodePath);
+        _shader.use();
+        _shader.setBool("u_useTexture", false);
+        _shader.disuse();
     }
 
     virtual void initTexture(const std::string& texturePath) {
@@ -97,6 +100,10 @@ public:
         }
 
         _texStart = static_cast<int>(_vertices.size() - textureCount * 2);
+    }
+
+    virtual void setUseSingleColor(const bool useSingleColor) {
+        _useSingleColor = useSingleColor;
     }
 
     void init() override {

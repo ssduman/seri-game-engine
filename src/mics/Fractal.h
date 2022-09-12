@@ -13,6 +13,9 @@ public:
     Fractal(Camera* camera, Layer& layers) : _camera(camera), _layers(layers) {}
 
     void operator()() {
+        glm::vec3 minColor = glm::vec3{ 0.0f, 0.0f, 0.0f };
+        glm::vec3 maxColor = glm::vec3{ 1.0f, 1.0f, 1.0f };
+
         std::vector<glm::vec3> pointCoordinates{ { 0.0f, 0.0f, 0.0f } };
         std::vector<glm::vec3> pointColors{ { 1.0f, 1.0f, 1.0f } };
 
@@ -34,11 +37,12 @@ public:
                 pointCoordinates.emplace_back(-0.15 * x + 0.28 * y, 0.26 * x + 0.24 * y + 0.44, 0.0f);
             }
 
-            pointColors.emplace_back(1.0f, 1.0f, 1.0f);
+            pointColors.emplace_back(glm::linearRand(minColor, maxColor));
         }
 
         EntityProperties pointProperties{ pointCoordinates, pointColors, GL_POINTS };
         Point* point = new Point(_camera, pointProperties);
+        point->setUseSingleColor(false);
         point->initShader("assets/shaders/entity_vs.shader", "assets/shaders/entity_fs.shader");
         point->initCamera(_camera);
         point->init();

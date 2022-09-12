@@ -13,6 +13,6 @@ void main() {
     if (u_useTexture) {
         final_color = texture(u_texture, sent_texCoord) * u_color;
     } else {
-        final_color = u_color;
+        final_color = vec4(sent_color, 1.0);
     }
 }
