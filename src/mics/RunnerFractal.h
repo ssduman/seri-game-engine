@@ -31,7 +31,7 @@ public:
         Control control{ windowManager.get(), camera.get(), state.get() };
         Typer typer{ camera.get(), windowProperties.windowWidth, windowProperties.windowHeight };
 
-        Fractal{ camera.get(), layers }();
+        Fractal{ camera.get(), layers }.BarnsleyFern();
 
         LOGGER(info, "starting seri game engine loop");
 

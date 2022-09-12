@@ -12,12 +12,9 @@ class Fractal {
 public:
     Fractal(Camera* camera, Layer& layers) : _camera(camera), _layers(layers) {}
 
-    void operator()() {
-        glm::vec3 minColor = glm::vec3{ 0.0f, 0.0f, 0.0f };
-        glm::vec3 maxColor = glm::vec3{ 1.0f, 1.0f, 1.0f };
-
+    void BarnsleyFern() {
         std::vector<glm::vec3> pointCoordinates{ { 0.0f, 0.0f, 0.0f } };
-        std::vector<glm::vec3> pointColors{ { 1.0f, 1.0f, 1.0f } };
+        std::vector<glm::vec3> pointColors{ { 0.0f, 0.6f, 0.16f } };
 
         for (int i = 0; i < 50000; i++) {
             const auto x = pointCoordinates[i].x;
@@ -37,7 +34,7 @@ public:
                 pointCoordinates.emplace_back(-0.15 * x + 0.28 * y, 0.26 * x + 0.24 * y + 0.44, 0.0f);
             }
 
-            pointColors.emplace_back(glm::linearRand(minColor, maxColor));
+            pointColors.emplace_back(0.0f, 0.6f, 0.16f);
         }
 
         EntityProperties pointProperties{ pointCoordinates, pointColors, GL_POINTS };
