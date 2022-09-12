@@ -32,7 +32,7 @@ public:
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        showDemoWindow();
+        //showDemoWindow();
 
         showMainMenuBar();
 
