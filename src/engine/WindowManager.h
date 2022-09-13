@@ -81,51 +81,51 @@ public:
         LOGGER(info, "window destroyed and terminated successfully");
     }
 
-    inline int& getWidth() {
+    int& getWidth() {
         return _windowProperties.windowWidth;
     }
 
-    inline int& getHeight() {
+    int& getHeight() {
         return _windowProperties.windowHeight;
     }
 
-    inline float getWidthF() {
+    float getWidthF() {
         return static_cast<float>(_windowProperties.windowWidth);
     }
 
-    inline float getHeightF() {
+    float getHeightF() {
         return static_cast<float>(_windowProperties.windowHeight);
     }
 
-    inline double getMouseX() {
+    double getMouseX() {
         getMousePosition();
         return _mouseXPosition;
     }
 
-    inline double getMouseY() {
+    double getMouseY() {
         getMousePosition();
         return _mouseYPosition;
     }
 
-    inline void setCursorPos(double xpos, double ypos) {
+    void setCursorPos(double xpos, double ypos) {
         glfwSetCursorPos(_window, xpos, ypos);
     }
 
-    inline void setCursorPosMiddle() {
+    void setCursorPosMiddle() {
         auto xmid = _windowProperties.windowWidth / 2.0;
         auto ymid = _windowProperties.windowHeight / 2.0;
         setCursorPos(xmid, ymid);
     }
 
-    inline GLFWwindow* getWindow() {
+    GLFWwindow* getWindow() {
         return _window;
     }
 
-    inline double getTime() {
+    double getTime() {
         return glfwGetTime();
     }
 
-    inline float updateDeltaTime() {
+    float updateDeltaTime() {
         auto currentFrame = getTime();
         _deltaTime = currentFrame - _lastFrame;
         _lastFrame = currentFrame;
@@ -133,32 +133,32 @@ public:
         return static_cast<float>(_deltaTime);
     }
 
-    inline void enableCursor() {
+    void enableCursor() {
         glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
 
-    inline void hideCursor() {
+    void hideCursor() {
         glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
     }
 
-    inline void disableCursor() {
+    void disableCursor() {
         glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
 
-    inline void windowShouldClose() {
+    void windowShouldClose() {
         glfwSetWindowShouldClose(_window, GLFW_TRUE);
     }
 
-    inline void setPointSize(float size) {
+    void setPointSize(float size) {
         glPointSize(size);
     }
 
-    inline void setLineWidth(float width) {
+    void setLineWidth(float width) {
         glLineWidth(width);
     }
 
 private:
-    inline void getMousePosition() {
+    void getMousePosition() {
         glfwGetCursorPos(_window, &_mouseXPosition, &_mouseYPosition);
     }
 

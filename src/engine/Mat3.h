@@ -187,15 +187,15 @@ public:
 
     /* aux */
 
-    inline Vec3<T> getRow(const int& index) {
+    Vec3<T> getRow(const int& index) {
         return rows[index];
     }
 
-    inline Vec3<T> getCol(const int& index) {
+    Vec3<T> getCol(const int& index) {
         return Vec3{ rows[0][index], rows[1][index], rows[2][index] };
     }
 
-    inline Vec3<float> multiply(Vec3<T>& rhs) {
+    Vec3<float> multiply(Vec3<T>& rhs) {
         return Vec3<float>(
             getRow(0).dot(rhs),
             getRow(1).dot(rhs),
@@ -203,7 +203,7 @@ public:
         );
     }
 
-    inline Mat3<float> multiply(Mat3<T>& rhs) {
+    Mat3<float> multiply(Mat3<T>& rhs) {
         return Mat3<float>(
             Vec3<float>{ getRow(0).dot(rhs.getCol(0)), getRow(0).dot(rhs.getCol(1)), getRow(0).dot(rhs.getCol(2)) },
             Vec3<float>{ getRow(1).dot(rhs.getCol(0)), getRow(1).dot(rhs.getCol(1)), getRow(1).dot(rhs.getCol(2)) },

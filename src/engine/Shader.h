@@ -124,12 +124,12 @@ private:
         return ss.str();
     }
 
-    inline void checkShaderCompilationError() {
+    void checkShaderCompilationError() {
         checkShaderCompilationError(_vertexShader);
         checkShaderCompilationError(_fragmentShader);
     }
 
-    inline void checkShaderCompilationError(const unsigned int _s) {
+    void checkShaderCompilationError(const unsigned int _s) {
         glGetShaderiv(_s, GL_COMPILE_STATUS, &_errorStatusSuccess);
         if (!_errorStatusSuccess) {
             glGetShaderInfoLog(_s, 512, nullptr, _errorStatusLog);
@@ -137,7 +137,7 @@ private:
         }
     }
 
-    inline void checkProgramError() {
+    void checkProgramError() {
         glGetProgramiv(_program, GL_LINK_STATUS, &_errorStatusSuccess);
         if (!_errorStatusSuccess) {
             glGetShaderInfoLog(_program, 512, nullptr, _errorStatusLog);

@@ -243,17 +243,17 @@ public:
 
     /* aux */
 
-    inline Vec4<T> getRow(const int& index) {
+    Vec4<T> getRow(const int& index) {
         return rows[index];
     }
 
-    inline Vec4<T> getCol(const int& index) {
+    Vec4<T> getCol(const int& index) {
         return Vec4{ rows[0][index], rows[1][index], rows[2][index], rows[3][index] };
     }
 
     /* transformations */
 
-    inline Vec4<float> multiply(Vec4<T>& rhs) {
+    Vec4<float> multiply(Vec4<T>& rhs) {
         return Vec4<float>(
             getRow(0).dot(rhs),
             getRow(1).dot(rhs),
@@ -262,7 +262,7 @@ public:
         );
     }
 
-    inline Vec4<float> multiply(Vec3<T>& rhs) {
+    Vec4<float> multiply(Vec3<T>& rhs) {
         return Vec4<float>(
             getRow(0).dot(rhs),
             getRow(1).dot(rhs),
@@ -271,25 +271,25 @@ public:
         );
     }
 
-    inline Vec4<float> scale(Vec3<T>& rhs) {
+    Vec4<float> scale(Vec3<T>& rhs) {
         return multiply(rhs);
     }
 
-    inline Vec4<float> scale(Vec4<T>& rhs) {
+    Vec4<float> scale(Vec4<T>& rhs) {
         return multiply(rhs);
     }
 
-    inline Vec4<float> translate(Vec3<T>& rhs) {
+    Vec4<float> translate(Vec3<T>& rhs) {
         return multiply(rhs);
     }
 
-    inline Vec4<float> translate(Vec4<T>& rhs) {
+    Vec4<float> translate(Vec4<T>& rhs) {
         return multiply(rhs);
     }
 
     /* static transformations */
 
-    inline static Vec4<float> multiply(Mat4<T>& mat4, Vec3<T>& vec3) {
+    static Vec4<float> multiply(Mat4<T>& mat4, Vec3<T>& vec3) {
         return Vec4<float>(
             mat4.getRow(0).dot(vec3),
             mat4.getRow(1).dot(vec3),
@@ -298,7 +298,7 @@ public:
         );
     }
 
-    inline static Vec4<float> multiply(Mat4<T>& mat4, Vec4<T>& vec4) {
+    static Vec4<float> multiply(Mat4<T>& mat4, Vec4<T>& vec4) {
         return Vec4<float>(
             mat4.getRow(0).dot(vec4),
             mat4.getRow(1).dot(vec4),
@@ -307,7 +307,7 @@ public:
         );
     }
 
-    inline static Mat4<float> scale(Mat4<T>& mat4, Vec3<T> scaler) {
+    static Mat4<float> scale(Mat4<T>& mat4, Vec3<T> scaler) {
         Mat4 temp{ 1.0f };
         temp.rows[0] = mat4[0] * scaler[0];
         temp.rows[1] = mat4[1] * scaler[1];
@@ -316,13 +316,13 @@ public:
         return temp;
     }
 
-    inline static Mat4<float> translate(Mat4<T>& mat4, Vec3<T> translator) {
+    static Mat4<float> translate(Mat4<T>& mat4, Vec3<T> translator) {
         Mat4 temp{ mat4 };
         temp[3] = mat4[0] * translator[0] + mat4[1] * translator[1] + mat4[2] * translator[2] + mat4[3];
         return temp;
     }
 
-    inline static Mat4<float> rotate(Mat4<T>& mat4, float angle, Vec3<T> axis) {
+    static Mat4<float> rotate(Mat4<T>& mat4, float angle, Vec3<T> axis) {
         float theta = Util::toRadian(angle);
         float cosTheta = cos(theta);
         float sinTheta = sin(theta);
@@ -353,7 +353,7 @@ public:
 
     /* combinations */
 
-    inline Mat4<float> multiply(Mat4<T>& rhs) {
+    Mat4<float> multiply(Mat4<T>& rhs) {
         return Mat4<float>(
             Vec4<float>{ getRow(0).dot(rhs.getCol(0)), getRow(0).dot(rhs.getCol(1)), getRow(0).dot(rhs.getCol(2)), getRow(0).dot(rhs.getCol(3)) },
             Vec4<float>{ getRow(1).dot(rhs.getCol(0)), getRow(1).dot(rhs.getCol(1)), getRow(1).dot(rhs.getCol(2)), getRow(1).dot(rhs.getCol(3)) },
@@ -365,7 +365,7 @@ public:
     /* util */
 
     template <typename U = float>
-    static inline glm::mat4 toGLMMat4(Mat4<float>& rhs) {
+    static glm::mat4 toGLMMat4(Mat4<float>& rhs) {
         return glm::mat4(
             Vec4<U>::toGLMVec4(rhs.rows[0]),
             Vec4<U>::toGLMVec4(rhs.rows[1]),

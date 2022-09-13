@@ -36,7 +36,7 @@ public:
 
     virtual void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) = 0;
 
-    inline std::string getUserInput() {
+    std::string getUserInput() {
         std::string userInputString;
         for (const auto& userInput : _userInputVector) {
             userInputString += userInput;
@@ -44,11 +44,11 @@ public:
         return userInputString;
     }
 
-    inline double getMouseCurrentPosX() {
+    double getMouseCurrentPosX() {
         return _mouseCurrentPosX;
     }
 
-    inline double getMouseCurrentPosY() {
+    double getMouseCurrentPosY() {
         return _mouseCurrentPosY;
     }
 

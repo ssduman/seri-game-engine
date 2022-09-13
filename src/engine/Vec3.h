@@ -152,34 +152,34 @@ public:
 
     /* aux */
 
-    inline float sum() {
+    float sum() {
         return static_cast<float>(x) + static_cast<float>(y) + static_cast<float>(z);
     }
 
-    inline float norm() {
+    float norm() {
         return (float)sqrt(dot(*this));
     }
 
-    inline Vec3<T> normalize() {
+    Vec3<T> normalize() {
         return (*this) / norm();
     }
 
-    inline float dot(const Vec3<T>& rhs) {
+    float dot(const Vec3<T>& rhs) {
         return ((*this) * rhs).sum();
     }
 
-    inline Vec3<T> cross(const Vec3<T>& rhs) {
+    Vec3<T> cross(const Vec3<T>& rhs) {
         auto c_x = y * rhs.z - z * rhs.y;
         auto c_y = z * rhs.x - x * rhs.z;
         auto c_z = x * rhs.y - y * rhs.x;
         return Vec3{ c_x, c_y, c_z };
     }
 
-    inline float distance(const Vec3<T>& rhs) {
+    float distance(const Vec3<T>& rhs) {
         return (float)sqrt(dot((*this) - rhs));
     }
 
-    inline float angle(const Vec3<T>& rhs) {
+    float angle(const Vec3<T>& rhs) {
         return (float)dot(rhs) / (norm() * rhs.norm());
     }
 

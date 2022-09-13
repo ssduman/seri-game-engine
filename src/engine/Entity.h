@@ -173,11 +173,11 @@ public:
         return _transform;
     }
 
-    inline Color& getColor() {
+    Color& getColor() {
         return _color;
     }
 
-    inline Shader& getShader() {
+    Shader& getShader() {
         _shader.use();
         return _shader;
     }

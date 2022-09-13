@@ -214,34 +214,34 @@ public:
 
     /* aux */
 
-    inline float sum() {
+    float sum() {
         return static_cast<float>(x) + static_cast<float>(y) + static_cast<float>(z) + static_cast<float>(w);
     }
 
-    inline float norm() {
+    float norm() {
         return sqrt(dot(*this));
     }
 
-    inline Vec4<T> normalize() {
+    Vec4<T> normalize() {
         return (*this) / norm();
     }
 
-    inline float dot(const Vec4<T>& rhs) {
+    float dot(const Vec4<T>& rhs) {
         return ((*this) * rhs).sum();
     }
 
-    inline float distance(const Vec4<T>& rhs) {
+    float distance(const Vec4<T>& rhs) {
         return sqrt(dot(*this - rhs));
     }
 
-    inline float angle(const Vec4<T>& rhs) {
+    float angle(const Vec4<T>& rhs) {
         return dot(rhs) / (norm() * rhs.norm());
     }
 
     /* util */
 
     template <typename U = float>
-    static inline glm::vec4 toGLMVec4(Vec4<U> vec4) {
+    static glm::vec4 toGLMVec4(Vec4<U> vec4) {
         return glm::vec4{ vec4.x, vec4.y, vec4.z, vec4.w };
     }
 
