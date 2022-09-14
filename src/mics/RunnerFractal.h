@@ -31,7 +31,7 @@ public:
         Control control{ windowManager.get(), camera.get(), state.get() };
         Typer typer{ camera.get(), windowProperties.windowWidth, windowProperties.windowHeight };
 
-        Fractal{ camera.get(), layers }.BarnsleyFern();
+        auto fractal = Fractal{ camera.get(), layers };
 
         LOGGER(info, "starting seri game engine loop");
 
@@ -39,13 +39,15 @@ public:
             glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            control.processInput(windowManager->updateDeltaTime());
+            auto deltaTime = windowManager->updateDeltaTime();
+
+            control.processInput(deltaTime);
+
+            fractal.BarnsleyFern(deltaTime);
 
             for (auto entity : layers.getLayers()) {
                 entity->display();
             }
-
-            //typer.renderText(toRender, windowManager->getWidthF() / 3.0f, windowManager->getHeightF() / 2.0f);
 
             glfwPollEvents();
             glfwSwapBuffers(windowManager->getWindow());

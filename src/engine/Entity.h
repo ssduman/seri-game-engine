@@ -169,8 +169,21 @@ public:
         }
     }
 
-    inline Transform& getTransform() {
+    void addData(const std::vector<glm::vec3>& data) {
+        _vertices.push_back(data[0][0]);
+        _vertices.push_back(data[0][1]);
+        _vertices.push_back(data[0][2]);
+        _vertices.push_back(data[1][0]);
+        _vertices.push_back(data[1][1]);
+        _vertices.push_back(data[1][2]);
+    }
+
+    Transform& getTransform() {
         return _transform;
+    }
+
+    std::vector<GLfloat>& getVertices() {
+        return _vertices;
     }
 
     Color& getColor() {
