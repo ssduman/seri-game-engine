@@ -36,13 +36,13 @@ public:
                     pointCoordinates.emplace_back(x, 0.16f * y, 0.0f);
                 }
                 if (next >= 2 && next <= 86) {
-                    pointCoordinates.emplace_back(0.85 * x + 0.04 * y, -0.04 * x + 0.85 * y + 1.6, 0.0f);
+                    pointCoordinates.emplace_back(0.85f * x + 0.04f * y, -0.04f * x + 0.85f * y + 1.6f, 0.0f);
                 }
                 if (next >= 87 && next <= 93) {
-                    pointCoordinates.emplace_back(0.2 * x - 0.26 * y, 0.23 * x + 0.22 * y + 1.6, 0.0f);
+                    pointCoordinates.emplace_back(0.2f * x - 0.26f * y, 0.23f * x + 0.22f * y + 1.6f, 0.0f);
                 }
                 if (next >= 94 && next <= 100) {
-                    pointCoordinates.emplace_back(-0.15 * x + 0.28 * y, 0.26 * x + 0.24 * y + 0.44, 0.0f);
+                    pointCoordinates.emplace_back(-0.15f * x + 0.28f * y, 0.26f * x + 0.24f * y + 0.44f, 0.0f);
                 }
 
                 pointColors.emplace_back(0.0f, 0.6f, 0.16f);
