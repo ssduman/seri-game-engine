@@ -13,7 +13,7 @@ public:
     ~RunnerFractal() override = default;
 
     void operator()() {
-        WindowProperties windowProperties{ /*title*/ "Seri Game Engine", /*fullscreen*/ false, /*w*/ 600, /*h*/ 800 };
+        WindowProperties windowProperties{ /*title*/ "Seri Game Engine - Mics", /*fullscreen*/ false, /*w*/ 600, /*h*/ 800 };
         std::unique_ptr<WindowManager> windowManager = std::make_unique<WindowManager>(windowProperties);
         windowManager->disableCursor();
         windowManager->setPointSize(2.0f);
@@ -35,7 +35,7 @@ public:
         //fractal.BarnsleyFern();
         fractal.FractalTree();
 
-        LOGGER(info, "starting seri game engine loop");
+        LOGGER(info, "starting mics loop");
 
         while (!glfwWindowShouldClose(windowManager->getWindow())) {
             glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -55,10 +55,7 @@ public:
             glfwSwapBuffers(windowManager->getWindow());
         }
 
-        LOGGER(info, "seri game engine loop stopped");
+        LOGGER(info, "mics loop stopped");
     }
-
-private:
-    std::string toRender{ "this is a test" };
 
 };
