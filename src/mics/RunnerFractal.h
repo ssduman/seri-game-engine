@@ -32,7 +32,8 @@ public:
         Typer typer{ camera.get(), windowProperties.windowWidth, windowProperties.windowHeight };
 
         auto fractal = Fractal{ camera.get(), layers };
-        fractal.BarnsleyFern();
+        //fractal.BarnsleyFern();
+        fractal.FractalTree();
 
         LOGGER(info, "starting seri game engine loop");
 

@@ -48,7 +48,7 @@ public:
 
         _layers.addLayer(point);
 
-        LOGGER(info, "fractal created");
+        LOGGER(info, "Barnsley Fern created with size: " << pointCoordinates.size());
     }
 
     void BarnsleyFernAnimation(float deltaTime) {
@@ -101,12 +101,83 @@ public:
         }
     }
 
+    void FractalTree() {
+        std::vector<glm::vec3> lineCoordinates{};
+        std::vector<glm::vec3> lineColors{};
+
+        float angle = 30.0f;
+        float startAngle = 90.0f;
+        float shortenBy = 0.5f;
+        float branchLength = 5.0f;
+        float minBranchLength = 0.5f;
+
+        lineCoordinates.emplace_back(0.0f, 0.0f, 50.0f);
+        lineCoordinates.emplace_back(0.0f, 1.0f * branchLength, 50.0f);
+
+        lineColors.emplace_back(1.0f, 1.0f, 1.0f);
+        lineColors.emplace_back(1.0f, 1.0f, 1.0f);
+
+        buildFractalTree(lineCoordinates, lineColors, branchLength, minBranchLength, shortenBy, startAngle, angle);
+
+        EntityProperties lineProperties{
+            { lineCoordinates },
+            { lineColors },
+            GL_LINE_LOOP
+        };
+        Line* line = new Line(_camera, lineProperties);
+        line->setUseSingleColor(false);
+        line->initShader("assets/shaders/entity_vs.shader", "assets/shaders/entity_fs.shader");
+        line->initCamera(_camera);
+        line->init();
+
+        _layers.addLayer(line);
+
+        LOGGER(info, "fractal tree created with size: " << lineCoordinates.size());
+    }
+
 private:
     glm::vec3 getUnitVector(float angle) {
         static float pi = 3.14159265f;
 
         const float radians = angle * pi / 180.0f;
         return { cos(radians), sin(radians), 0.0f };
+    }
+
+    void buildFractalTree(std::vector<glm::vec3>& coords, std::vector<glm::vec3>& colors, float branchLen, float minBranchLen, float shortenBy, float dirAngle, float angle) {
+        if (branchLen > minBranchLen) {
+            const float branchLengthNew = branchLen - shortenBy;
+
+            auto unitVector = getUnitVector(dirAngle);
+            auto lastOrigin = coords.back();
+
+            coords.emplace_back(lastOrigin + unitVector * branchLen);
+            colors.emplace_back(1.0f, 1.0f, 1.0f);
+
+            dirAngle = dirAngle + angle;
+            if (dirAngle >= 360.0f) {
+                dirAngle -= 360.0f;
+            }
+
+            buildFractalTree(coords, colors, branchLengthNew, minBranchLen, shortenBy, dirAngle, angle);
+
+            dirAngle = dirAngle - angle * 2;
+            if (dirAngle <= 0.0f) {
+                dirAngle += 360.0f;
+            }
+
+            buildFractalTree(coords, colors, branchLengthNew, minBranchLen, shortenBy, dirAngle, angle);
+
+            dirAngle = dirAngle + angle;
+            if (dirAngle >= 360.0f) {
+                dirAngle -= 360.0f;
+            }
+
+            unitVector = getUnitVector(dirAngle);
+            lastOrigin = coords.back();
+
+            coords.emplace_back(lastOrigin - unitVector * branchLen);
+            colors.emplace_back(1.0f, 1.0f, 1.0f);
+        }
     }
 
     Camera* _camera;
