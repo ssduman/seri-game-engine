@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../engine/Cube.h"
+#include "../engine/Line.h"
 #include "../engine/Util.h"
 #include "../engine/Point.h"
 #include "../engine/Circle.h"
@@ -49,7 +50,7 @@ public:
                     { glm::linearRand(minColor, maxColor), glm::linearRand(minColor, maxColor), glm::linearRand(minColor, maxColor) },
                     GL_LINE_LOOP // GL_LINES GL_LINE_STRIP GL_LINE_LOOP
                 };
-                Circle* line = new Circle(camera, lineProperties);
+                Line* line = new Line(camera, lineProperties);
                 line->initShader("assets/shaders/entity_vs.shader", "assets/shaders/entity_fs.shader");
                 if (glm::linearRand(0.0f, 1.0f) >= 0.5f) {
                     line->initTexture("assets/textures/passage.png");
