@@ -32,6 +32,7 @@ public:
         Typer typer{ camera.get(), windowProperties.windowWidth, windowProperties.windowHeight };
 
         auto fractal = Fractal{ camera.get(), layers };
+        fractal.BarnsleyFern();
 
         LOGGER(info, "starting seri game engine loop");
 
@@ -43,7 +44,7 @@ public:
 
             control.processInput(deltaTime);
 
-            fractal.BarnsleyFern(deltaTime);
+            //fractal.BarnsleyFernAnimation(deltaTime);
 
             for (auto entity : layers.getLayers()) {
                 entity->display();

@@ -6,13 +6,52 @@
 
 #include "Camera.h"
 
+#include <cmath>
 #include <random>
 
 class Fractal {
 public:
     Fractal(Camera* camera, Layer& layers) : _camera(camera), _layers(layers) {}
 
-    void BarnsleyFern(float deltaTime) {
+    void BarnsleyFern() {
+        std::vector<glm::vec3> pointCoordinates{ { 0.0f, 0.0f, 0.0f } };
+        std::vector<glm::vec3> pointColors{ { 0.0f, 0.6f, 0.16f } };
+
+        constexpr int iteration = 50000;
+        for (int i = 0; i < iteration; i++) {
+            const auto x = pointCoordinates[i].x;
+            const auto y = pointCoordinates[i].y;
+            const auto next = _distribution(_generator);
+
+            if (next == 1) {
+                pointCoordinates.emplace_back(x, 0.16f * y, 0.0f);
+            }
+            if (next >= 2 && next <= 86) {
+                pointCoordinates.emplace_back(0.85f * x + 0.04f * y, -0.04f * x + 0.85f * y + 1.6f, 0.0f);
+            }
+            if (next >= 87 && next <= 93) {
+                pointCoordinates.emplace_back(0.2f * x - 0.26f * y, 0.23f * x + 0.22f * y + 1.6f, 0.0f);
+            }
+            if (next >= 94 && next <= 100) {
+                pointCoordinates.emplace_back(-0.15f * x + 0.28f * y, 0.26f * x + 0.24f * y + 0.44f, 0.0f);
+            }
+
+            pointColors.emplace_back(0.0f, 0.6f, 0.16f);
+        }
+
+        EntityProperties pointProperties{ pointCoordinates, pointColors, GL_POINTS };
+        Point* point = new Point(_camera, pointProperties);
+        point->setUseSingleColor(false);
+        point->initShader("assets/shaders/entity_vs.shader", "assets/shaders/entity_fs.shader");
+        point->initCamera(_camera);
+        point->init();
+
+        _layers.addLayer(point);
+
+        LOGGER(info, "fractal created");
+    }
+
+    void BarnsleyFernAnimation(float deltaTime) {
         static int i = 0;
         static float dx = 0.0f;
         constexpr int iteration = 50000;
@@ -63,6 +102,13 @@ public:
     }
 
 private:
+    glm::vec3 getUnitVector(float angle) {
+        static float pi = 3.14159265f;
+
+        const float radians = angle * pi / 180.0f;
+        return { cos(radians), sin(radians), 0.0f };
+    }
+
     Camera* _camera;
     Layer& _layers;
 
