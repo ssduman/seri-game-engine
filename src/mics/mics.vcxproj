@@ -182,7 +182,7 @@ xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win64\freetype.dll" "$(So
     <ClInclude Include="Control.h" />
     <ClInclude Include="Fractal.h" />
     <ClInclude Include="PerlinNoise.h" />
-    <ClInclude Include="RunnerFractal.h" />
+    <ClInclude Include="RunnerMics.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

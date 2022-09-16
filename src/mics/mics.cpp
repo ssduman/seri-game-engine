@@ -1,8 +1,8 @@
-#include "RunnerFractal.h"
+#include "RunnerMics.h"
 
 int main(int argc, char* argv[]) {
     try {
-        RunnerFractal{}();
+        RunnerMics{}();
     } catch (const std::exception& ex) {
         LOGGER(error, "exception occurred: " << ex.what());
     }

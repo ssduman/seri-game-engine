@@ -27,7 +27,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="RunnerFractal.h">
+    <ClInclude Include="RunnerMics.h">
       <Filter>Runner</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">

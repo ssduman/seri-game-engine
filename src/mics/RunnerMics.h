@@ -7,11 +7,11 @@
 #include "Fractal.h"
 #include "PerlinNoise.h"
 
-class RunnerFractal : public IRunner {
+class RunnerMics : public IRunner {
 public:
-    RunnerFractal() = default;
+    RunnerMics() = default;
 
-    ~RunnerFractal() override = default;
+    ~RunnerMics() override = default;
 
     void operator()() {
         WindowProperties windowProperties{ /*title*/ "Seri Game Engine - Mics", /*fullscreen*/ false, /*w*/ 600, /*h*/ 800 };
