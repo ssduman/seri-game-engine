@@ -5,14 +5,6 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
     <Filter Include="Runner">
       <UniqueIdentifier>{88fdf04b-a25a-4ede-ad7d-d53b085cd8fd}</UniqueIdentifier>
     </Filter>
@@ -22,11 +14,11 @@
     <Filter Include="Control">
       <UniqueIdentifier>{62870a18-7f9b-4c42-85be-6a0e9268855f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Factory">
-      <UniqueIdentifier>{e0508168-bb20-4bab-b192-47c934845b38}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Fractal">
       <UniqueIdentifier>{5336d03c-f379-47f8-9f52-313f8cdb20a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Perlin Noise">
+      <UniqueIdentifier>{b4becb44-9511-49f4-9067-72d1f3e8cef1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -46,6 +38,9 @@
     </ClInclude>
     <ClInclude Include="Fractal.h">
       <Filter>Fractal</Filter>
+    </ClInclude>
+    <ClInclude Include="PerlinNoise.h">
+      <Filter>Perlin Noise</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

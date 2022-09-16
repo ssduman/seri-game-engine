@@ -5,6 +5,7 @@
 #include "Camera.h"
 #include "Control.h"
 #include "Fractal.h"
+#include "PerlinNoise.h"
 
 class RunnerFractal : public IRunner {
 public:
@@ -33,7 +34,10 @@ public:
 
         auto fractal = Fractal{ camera.get(), layers };
         //fractal.BarnsleyFern();
-        fractal.FractalTree();
+        //fractal.FractalTree();
+
+        PerlinNoise perlinNoise{ camera.get(), layers };
+        perlinNoise();
 
         LOGGER(info, "starting mics loop");
 
