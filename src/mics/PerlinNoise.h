@@ -26,27 +26,30 @@ public:
         constexpr float dx = -25.0f;
         constexpr float dy = -10.0f;
 
-        std::vector<glm::vec3> pointCoordinates{};
-        std::vector<glm::vec3> pointColors{};
+        std::vector<glm::vec3> positions{};
+        std::vector<glm::vec4> colors{};
 
         for (int x = 0; x < _pixels.size(); x++) {
             for (int y = 0; y < _pixels[0].size(); y++) {
                 auto color = _pixels[x][y];
-                pointCoordinates.emplace_back(x / d + dx, y / d + dy, z);
-                pointColors.emplace_back(color.r, color.g, 1.0f);
+                positions.emplace_back(x / d + dx, y / d + dy, z);
+                colors.emplace_back(color.r, color.g, 1.0f, 1.0f);
             }
         }
 
-        EntityProperties pointProperties{ pointCoordinates, pointColors, GL_POINTS };
-        Point* point = new Point(_camera, pointProperties);
-        point->setUseSingleColor(false);
-        point->initShader("mics-assets/shaders/entity_vs.shader", "mics-assets/shaders/entity_fs.shader");
-        point->initCamera(_camera);
-        point->init();
+        Point* perlinNoisePoints = new Point(_camera);
+        perlinNoisePoints->initShader("mics-assets/shaders/entity_vs.shader", "mics-assets/shaders/entity_fs.shader");
+        perlinNoisePoints->initMVP();
 
-        _layers.addLayer(point);
+        perlinNoisePoints->setDrawMode(GL_POINTS);
+        perlinNoisePoints->setPositions(positions);
+        perlinNoisePoints->setColors(colors);
 
-        LOGGER(info, "perlin noise created with size: " << pointCoordinates.size());
+        perlinNoisePoints->init();
+
+        _layers.addLayer(perlinNoisePoints);
+
+        LOGGER(info, "perlin noise created with size: " << positions.size());
     }
 
     std::vector<std::vector<Color>>& getPixels() {

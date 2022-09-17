@@ -30,11 +30,11 @@ public:
 
         Layer layers{};
         Control control{ windowManager.get(), camera.get(), state.get() };
-        Typer typer{ camera.get(), windowProperties.windowWidth, windowProperties.windowHeight };
+        //Typer typer{ camera.get(), windowProperties.windowWidth, windowProperties.windowHeight };
 
         Fractal fractal{ camera.get(), layers };
         //fractal.BarnsleyFern();
-        //fractal.FractalTree();
+        //fractal.tree();
 
         PerlinNoise perlinNoise{ camera.get(), layers };
         perlinNoise();
