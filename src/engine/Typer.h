@@ -17,12 +17,6 @@ struct Character {
 class Typer : public Entity {
 public:
     Typer(ICamera* camera, int width, int height) : Entity(camera), _width(static_cast<float>(width)), _height(static_cast<float>(height)) {
-        Typer::init();
-        initFT();
-        //Typer::initShader();
-        initProjection();
-        setColor();
-
         LOGGER(info, "typer init succeeded");
     }
 
@@ -39,6 +33,10 @@ public:
 
         glBindVertexArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
+    }
+
+    void initShader(const std::string& vsCodePath, const std::string& fsCodePath) override {
+        _shader.init(vsCodePath, fsCodePath);
     }
 
     void initFT() {
@@ -99,8 +97,11 @@ public:
         _library = nullptr;
     }
 
-    void initShader(const std::string& vsCodePath, const std::string& fsCodePath) override {
-        _shader.init(vsCodePath, fsCodePath);
+    void initProjection() {
+        _shader.use();
+        _projection = glm::ortho(0.0f, (float)_width, 0.0f, (float)_height);
+        _shader.setMat4("u_projection", _projection);
+        _shader.disuse();
     }
 
     void setFont(const std::string& font) {
@@ -156,12 +157,7 @@ public:
     }
 
 private:
-    void initProjection() {
-        _shader.use();
-        _projection = glm::ortho(0.0f, (float)_width, 0.0f, (float)_height);
-        _shader.setMat4("u_projection", _projection);
-        _shader.disuse();
-    }
+    
 
     void bind() {
         glActiveTexture(GL_TEXTURE0);

@@ -11,9 +11,9 @@ class Game : public Entity {
 public:
     Game(ICamera* camera, Control& control, float width, float height) : Entity(camera), _control(control), _width(width), _height(height) {
         Game::init();
-        Game::initShader();
+        Game::initShader("maze-assets/shaders/game_vs.shader", "maze-assets/shaders/game_fs.shader");
         initTyper();
-        Entity::initTexture("maze-assets/textures/gameWindow.png");
+        Entity::setTexture("maze-assets/textures/gameWindow.png");
         initStopwatch();
         setProjection();
 
@@ -75,12 +75,18 @@ private:
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 
-    void initShader(const std::string& vsCodePath = "maze-assets/shaders/game_vs.shader", const std::string& fsCodePath = "maze-assets/shaders/game_fs.shader") override {
+    void initShader(const std::string& vsCodePath, const std::string& fsCodePath) override {
         _shader.init(vsCodePath, fsCodePath);
     }
 
     void initTyper() {
         _typer = new Typer(_camera, static_cast<int>(_width), static_cast<int>(_height));
+        _typer->setFont("maze-assets/fonts/En Bloc.ttf");
+        _typer->init();
+        _typer->initFT();
+        _typer->initShader("maze-assets/shaders/typer_vs.shader", "maze-assets/shaders/typer_fs.shader");
+        _typer->initProjection();
+        _typer->setColor();
     }
 
     void initStopwatch() {
@@ -115,5 +121,7 @@ private:
     Camera* _cameraMaze = nullptr;
     float _width{ 0.0f };
     float _height{ 0.0f };
+
+    std::vector<float> _vertices;
 
 };

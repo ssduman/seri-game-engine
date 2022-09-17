@@ -11,7 +11,7 @@ class Camera : public ICamera {
 public:
     Camera(CameraProperties cameraProperties) : ICamera(cameraProperties) {
         Camera::init();
-        initShader();
+        Camera::initShader("maze-assets/shaders/basic_vs.shader", "maze-assets/shaders/basic_fs.shader");
         setLight();
         Camera::updateEulerAngles();
         Camera::view();

@@ -28,14 +28,14 @@ public:
         camera->setMazeWallPositions(maze->getVerticalWallPosition(), maze->getHorizontalWallPosition());
 
         Layer layers{};
-        Light light{ camera.get() };
-        Skybox skybox{ camera.get() };
+        //Light light{ camera.get() };
+        //Skybox skybox{ camera.get() };
         Control control{ &windowManager, camera.get(), &maze };
         Game game{ camera.get(), control, windowManager.getWidthF(), windowManager.getHeightF() };
 
         layers.addLayer(&game);
-        layers.addLayer(&light);
-        layers.addLayer(&skybox);
+        //layers.addLayer(&light);
+        //layers.addLayer(&skybox);
 
         LOGGER(info, "starting maze game loop");
 

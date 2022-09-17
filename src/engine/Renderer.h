@@ -124,4 +124,7 @@ private:
     float _width, _height, _depth;
     unsigned int _VBO2 = 0, _count = 0;
 
+    std::vector<int> _indices;
+    std::vector<float> _vertices;
+
 };
