@@ -4,9 +4,8 @@
 
 class Triangle : public Entity {
 public:
-    Triangle(ICamera* camera, EntityProperties& triangleProperties) : Entity(camera), _triangleProperties(triangleProperties) {
+    Triangle(ICamera* camera) : Entity(camera) {
         _entityType = EntityType::TRIANGLE;
-        Entity::setProperties(_triangleProperties);
     }
 
     ~Triangle() override {
@@ -18,10 +17,9 @@ public:
         _shader.use();
         _texture.bind();
         glBindVertexArray(_VAO);
-        glDrawArrays(_triangleProperties.drawMode, 0, _renderCount);
+        glDrawArrays(_drawMode, 0, _positionsDataCount / 3);
     }
 
 private:
-    GLsizei _renderCount = 3;
-    EntityProperties _triangleProperties;
+
 };

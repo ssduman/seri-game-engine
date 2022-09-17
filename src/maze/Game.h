@@ -13,7 +13,7 @@ public:
         Game::init();
         Game::initShader();
         initTyper();
-        Entity::initTexture("assets/textures/gameWindow.png");
+        Entity::initTexture("maze-assets/textures/gameWindow.png");
         initStopwatch();
         setProjection();
 
@@ -75,7 +75,7 @@ private:
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 
-    void initShader(const std::string& vsCodePath = "assets/shaders/game_vs.shader", const std::string& fsCodePath = "assets/shaders/game_fs.shader") override {
+    void initShader(const std::string& vsCodePath = "maze-assets/shaders/game_vs.shader", const std::string& fsCodePath = "maze-assets/shaders/game_fs.shader") override {
         _shader.init(vsCodePath, fsCodePath);
     }
 

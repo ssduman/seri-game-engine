@@ -131,11 +131,11 @@ private:
     void init() override {}
 
     void initTextures() {
-        wallTexture = new Texture("assets/textures/wall1.png");
-        wallVerticalTexture = new Texture("assets/textures/wall2.png");
-        passTexture = new Texture("assets/textures/passage.png");
-        escapeTexture = new Texture("assets/textures/escape.png");
-        nonEscapeTexture = new Texture("assets/textures/nonescape.png");
+        wallTexture = new Texture("maze-assets/textures/wall1.png");
+        wallVerticalTexture = new Texture("maze-assets/textures/wall2.png");
+        passTexture = new Texture("maze-assets/textures/passage.png");
+        escapeTexture = new Texture("maze-assets/textures/escape.png");
+        nonEscapeTexture = new Texture("maze-assets/textures/nonescape.png");
     }
 
     void initRenderer() {

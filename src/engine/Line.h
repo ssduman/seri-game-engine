@@ -4,10 +4,8 @@
 
 class Line : public Entity {
 public:
-    Line(ICamera* camera, EntityProperties& lineProperties) : Entity(camera), _lineProperties(lineProperties) {
+    Line(ICamera* camera) : Entity(camera) {
         _entityType = EntityType::LINE;
-        Line::setProperties(_lineProperties);
-        _renderCount = static_cast<GLsizei>(_lineProperties.coordinates.size());
     }
 
     ~Line() override {
@@ -19,10 +17,9 @@ public:
         _shader.use();
         _texture.bind();
         glBindVertexArray(_VAO);
-        glDrawArrays(_lineProperties.drawMode, 0, _renderCount);
+        glDrawArrays(_drawMode, 0, _positionsDataCount / 3);
     }
 
 private:
-    GLsizei _renderCount = 0;
-    EntityProperties _lineProperties;
+
 };

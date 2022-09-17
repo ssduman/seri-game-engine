@@ -7,7 +7,7 @@ class Skybox : public Entity {
 public:
     Skybox(ICamera* camera) : Entity(camera) {
         Skybox::init();
-        Skybox::initShader();
+        //Skybox::initShader();
         loadCubemap();
         setViewProjection();
 
@@ -111,7 +111,7 @@ private:
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 
-    void initShader(const std::string& vsCodePath = "assets/shaders/skybox_vs.shader", const std::string& fsCodePath = "assets/shaders/skybox_fs.shader") override {
+    void initShader(const std::string& vsCodePath, const std::string& fsCodePath) override {
         _shader.init(vsCodePath, fsCodePath);
     }
 
@@ -142,6 +142,7 @@ private:
     }
 
     unsigned int _texture = 0;
+    std::vector<float> _vertices{};
     std::vector<std::string> _faces{};
 
 };

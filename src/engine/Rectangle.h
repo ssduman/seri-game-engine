@@ -4,9 +4,8 @@
 
 class Rectangle : public Entity {
 public:
-    Rectangle(ICamera* camera, EntityProperties& rectangleProperties) : Entity(camera), _rectangleProperties(rectangleProperties) {
+    Rectangle(ICamera* camera) : Entity(camera) {
         _entityType = EntityType::RECTANGLE;
-        Entity::setProperties(_rectangleProperties);
     }
 
     ~Rectangle() override {
@@ -19,10 +18,10 @@ public:
         _shader.use();
         _texture.bind();
         glBindVertexArray(_VAO);
-        glDrawElements(_rectangleProperties.drawMode, _renderCount, GL_UNSIGNED_INT, nullptr);
+        glDrawElements(_drawMode, _renderCount, GL_UNSIGNED_INT, nullptr);
     }
 
 private:
     GLsizei _renderCount = 6;
-    EntityProperties _rectangleProperties;
+
 };

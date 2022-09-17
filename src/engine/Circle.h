@@ -4,10 +4,8 @@
 
 class Circle : public Entity {
 public:
-    Circle(ICamera* camera, EntityProperties& circleProperties) : Entity(camera), _circleProperties(circleProperties) {
+    Circle(ICamera* camera) : Entity(camera) {
         _entityType = EntityType::CIRCLE;
-        Circle::setProperties(_circleProperties);
-        _renderCount = static_cast<GLsizei>(_circleProperties.coordinates.size());
     }
 
     ~Circle() override {
@@ -19,10 +17,9 @@ public:
         _shader.use();
         _texture.bind();
         glBindVertexArray(_VAO);
-        glDrawArrays(_circleProperties.drawMode, 0, _renderCount);
+        glDrawArrays(_drawMode, 0, _positionsDataCount / 3);
     }
 
 private:
-    GLsizei _renderCount = 0;
-    EntityProperties _circleProperties;
+
 };

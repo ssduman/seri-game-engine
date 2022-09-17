@@ -4,10 +4,8 @@
 
 class Cube : public Entity {
 public:
-    Cube(ICamera* camera, EntityProperties& cubeProperties) : Entity(camera), _cubeProperties(cubeProperties) {
+    Cube(ICamera* camera) : Entity(camera) {
         _entityType = EntityType::CUBE;
-        Entity::setProperties(_cubeProperties);
-        _renderCount = static_cast<GLsizei>(_cubeProperties.coordinates.size());
     }
 
     ~Cube() override {
@@ -19,10 +17,9 @@ public:
         _shader.use();
         _texture.bind();
         glBindVertexArray(_VAO);
-        glDrawArrays(_cubeProperties.drawMode, 0, _renderCount);
+        glDrawArrays(_drawMode, 0, _positionsDataCount / 3);
     }
 
 private:
-    GLsizei _renderCount = 0;
-    EntityProperties _cubeProperties;
+
 };

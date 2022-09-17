@@ -103,7 +103,7 @@
       <AdditionalLibraryDirectories>$(SolutionDir)libraries\freetype\win32;$(SolutionDir)libraries\glew-2.1.0\lib\Release\Win32;$(SolutionDir)libraries\glfw-3.3.7.bin.WIN32\lib-vc2022</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y /i /e /r /q "$(SolutionDir)src\$(ProjectName)\assets" "$(SolutionDir)artifact\$(Configuration)-$(Platform)\assets"
+      <Command>xcopy /y /i /e /r /q "$(SolutionDir)src\$(ProjectName)\maze-assets" "$(SolutionDir)artifact\$(Configuration)-$(Platform)\maze-assets"
 xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win32\freetype.dll" "$(SolutionDir)artifact\$(Configuration)-$(Platform)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -127,7 +127,7 @@ xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win32\freetype.dll" "$(So
       <AdditionalLibraryDirectories>$(SolutionDir)libraries\freetype\win32;$(SolutionDir)libraries\glew-2.1.0\lib\Release\Win32;$(SolutionDir)libraries\glfw-3.3.7.bin.WIN32\lib-vc2022</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y /i /e /r /q "$(SolutionDir)src\$(ProjectName)\assets" "$(SolutionDir)artifact\$(Configuration)-$(Platform)\assets"
+      <Command>xcopy /y /i /e /r /q "$(SolutionDir)src\$(ProjectName)\maze-assets" "$(SolutionDir)artifact\$(Configuration)-$(Platform)\maze-assets"
 xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win32\freetype.dll" "$(SolutionDir)artifact\$(Configuration)-$(Platform)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -147,7 +147,7 @@ xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win32\freetype.dll" "$(So
       <AdditionalDependencies>glfw3.lib;opengl32.lib;User32.lib;Gdi32.lib;Shell32.lib;glew32s.lib;freetype.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y /i /e /r /q "$(SolutionDir)src\$(ProjectName)\assets" "$(SolutionDir)artifact\$(Configuration)-$(Platform)\assets"
+      <Command>xcopy /y /i /e /r /q "$(SolutionDir)src\$(ProjectName)\maze-assets" "$(SolutionDir)artifact\$(Configuration)-$(Platform)\maze-assets"
 xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win64\freetype.dll" "$(SolutionDir)artifact\$(Configuration)-$(Platform)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -171,7 +171,7 @@ xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win64\freetype.dll" "$(So
       <AdditionalLibraryDirectories>$(SolutionDir)libraries\freetype\win64;$(SolutionDir)libraries\glew-2.1.0\lib\Release\x64;$(SolutionDir)libraries\glfw-3.3.7.bin.WIN64\lib-vc2022</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y /i /e /r /q "$(SolutionDir)src\$(ProjectName)\assets" "$(SolutionDir)artifact\$(Configuration)-$(Platform)\assets"
+      <Command>xcopy /y /i /e /r /q "$(SolutionDir)src\$(ProjectName)\maze-assets" "$(SolutionDir)artifact\$(Configuration)-$(Platform)\maze-assets"
 xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win64\freetype.dll" "$(SolutionDir)artifact\$(Configuration)-$(Platform)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>

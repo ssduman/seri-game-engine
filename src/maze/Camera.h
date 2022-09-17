@@ -25,7 +25,7 @@ public:
         _cameraProperties.sensitivity = 0.04f;
     }
 
-    void initShader(const std::string& vsCodePath = "assets/shaders/basic_vs.shader", const std::string& fsCodePath = "assets/shaders/basic_fs.shader") {
+    void initShader(const std::string& vsCodePath, const std::string& fsCodePath) {
         _shader.init(vsCodePath, fsCodePath);
     }
 

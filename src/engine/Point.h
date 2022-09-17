@@ -4,10 +4,8 @@
 
 class Point : public Entity {
 public:
-    Point(ICamera* camera, EntityProperties& pointProperties) : Entity(camera), _pointProperties(pointProperties) {
+    Point(ICamera* camera) : Entity(camera) {
         _entityType = EntityType::POINT;
-        Point::setProperties(_pointProperties);
-        _renderCount = static_cast<GLsizei>(_pointProperties.coordinates.size());
     }
 
     ~Point() override {
@@ -19,10 +17,9 @@ public:
         _shader.use();
         _texture.bind();
         glBindVertexArray(_VAO);
-        glDrawArrays(_pointProperties.drawMode, 0, _renderCount);
+        glDrawArrays(_drawMode, 0, _positionsDataCount / 3);
     }
 
 private:
-    GLsizei _renderCount = 0;
-    EntityProperties _pointProperties;
+
 };

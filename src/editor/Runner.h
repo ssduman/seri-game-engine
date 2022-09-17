@@ -25,15 +25,15 @@ public:
         std::shared_ptr<Camera> camera = std::make_shared<Camera>(cameraProperties, state.get());
 
         Layer layers{};
-        Light light{ camera.get() };
-        Skybox skybox{ camera.get() };
+        //Light light{ camera.get() };
+        //Skybox skybox{ camera.get() };
         Control control{ windowManager.get(), camera.get(), state.get() };
         GUI gui{ windowManager.get(), camera.get(), &layers, state.get() };
-        Typer typer{ camera.get(), windowProperties.windowWidth, windowProperties.windowHeight };
+        //Typer typer{ camera.get(), windowProperties.windowWidth, windowProperties.windowHeight };
 
-        layers.addLayer(Factory::CreateEntity(camera.get(), EntityType::CUBE));
-        layers.addLayer(&light);
-        layers.addLayer(&skybox);
+        //layers.addLayer(Factory::CreateEntity(camera.get(), EntityType::TRIANGLE));
+        //layers.addLayer(&light);
+        //layers.addLayer(&skybox);
 
         LOGGER(info, "starting seri game engine loop");
 
@@ -48,7 +48,7 @@ public:
                 gui.registerEntity(entity);
             }
 
-            typer.renderText(toRender, windowManager->getWidthF() / 3.0f, windowManager->getHeightF() / 2.0f);
+            //typer.renderText(toRender, windowManager->getWidthF() / 3.0f, windowManager->getHeightF() / 2.0f);
 
             gui.display();
 

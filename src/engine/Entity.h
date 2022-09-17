@@ -7,50 +7,10 @@
 #include "ICamera.h"
 #include "Texture.h"
 #include "Transform.h"
+#include "EntityType.h"
 
 #include <string>
 #include <vector>
-
-enum class EntityType {
-    POINT,
-    LINE,
-    TRIANGLE,
-    RECTANGLE,
-    CIRCLE,
-    CUBE,
-    UNKNOWN,
-};
-
-inline std::string to_string(EntityType entityType) {
-    switch (entityType) {
-        case EntityType::POINT:
-            return "point";
-        case EntityType::LINE:
-            return "line";
-        case EntityType::TRIANGLE:
-            return "triangle";
-        case EntityType::RECTANGLE:
-            return "rectangle";
-        case EntityType::CIRCLE:
-            return "circle";
-        case EntityType::CUBE:
-            return "cube";
-        case EntityType::UNKNOWN:
-            return "unknown";
-        default:
-            return "unknown";
-    }
-}
-
-struct EntityProperties {
-    std::vector<glm::vec3> coordinates;
-    std::vector<glm::vec3> colors;
-    int drawMode = GL_TRIANGLES;
-
-    std::vector<glm::vec2> textureCoordinates{
-        glm::vec2{ 1.0f, 1.0f }, glm::vec2{ 1.0f, 0.0f }, glm::vec2{ 0.0f, 0.0f }, glm::vec2{ 0.0f, 1.0f }
-    };
-};
 
 class Entity : public Object {
 public:
@@ -60,50 +20,64 @@ public:
 
     virtual void initShader(const std::string& vsCodePath, const std::string& fsCodePath) {
         _shader.init(vsCodePath, fsCodePath);
-        _shader.use();
-        _shader.setBool("u_useTexture", false);
-        _shader.disuse();
     }
 
-    virtual void initTexture(const std::string& texturePath) {
-        _useTexture = true;
-        _shader.use();
-        _shader.setBool("u_useTexture", true);
-        _shader.disuse();
-        _texture.init(texturePath);
-    }
-
-    virtual void initCamera(ICamera* camera) {
+    virtual void initMVP() {
         _shader.use();
         _shader.setMat4("u_model", glm::mat4{ 1.0f });
-        _shader.setMat4("u_view", camera->getView());
-        _shader.setMat4("u_projection", camera->getProjection());
+        _shader.setMat4("u_view", _camera->getView());
+        _shader.setMat4("u_projection", _camera->getProjection());
         _shader.disuse();
     }
 
-    virtual void setProperties(EntityProperties& entityProperties) {
-        auto vertexCount = entityProperties.coordinates.size();
-        for (size_t i = 0; i < vertexCount; i++) {
-            _vertices.push_back(entityProperties.coordinates[i].x);
-            _vertices.push_back(entityProperties.coordinates[i].y);
-            _vertices.push_back(entityProperties.coordinates[i].z);
-
-            _vertices.push_back(entityProperties.colors[i].x);
-            _vertices.push_back(entityProperties.colors[i].y);
-            _vertices.push_back(entityProperties.colors[i].z);
-        }
-
-        auto textureCount = entityProperties.textureCoordinates.size();
-        for (size_t i = 0; i < textureCount; i++) {
-            _vertices.push_back(entityProperties.textureCoordinates[i].x);
-            _vertices.push_back(entityProperties.textureCoordinates[i].y);
-        }
-
-        _texStart = static_cast<int>(_vertices.size() - textureCount * 2);
+    virtual void setDrawMode(int drawMode) {
+        _drawMode = drawMode;
     }
 
-    virtual void setUseSingleColor(const bool useSingleColor) {
-        _useSingleColor = useSingleColor;
+    virtual void setPositions(const std::vector<glm::vec3>& positionsData) {
+        _usePositions = true;
+        _positionsData = positionsData;
+        _positionsDataDimension = 3;
+        _positionsDataCount = static_cast<int>(_positionsData.size()) * _positionsDataDimension;
+        _totalDataCount += _positionsDataCount;
+    }
+
+    virtual void setColor(const glm::vec4& color) {
+        _color = { color };
+        _shader.use();
+        _shader.setBool("u_useColor", true);
+        _shader.setVec4("u_color", _color.getColorRGBA());
+        _shader.disuse();
+    }
+
+    virtual void setColors(const std::vector<glm::vec4>& colorsData) {
+        _useColors = true;
+        _shader.use();
+        _shader.setBool("u_useColors", _useColors);
+        _shader.disuse();
+
+        _colorsData = colorsData;
+        _colorsDataDimension = 4;
+        _colorsDataCount += static_cast<int>(_colorsData.size()) * _colorsDataDimension;
+        _totalDataCount += _colorsDataCount;
+    }
+
+    virtual void setTexture(const std::string& texturePath, std::vector<glm::vec2> texturePositionsData = {}) {
+        _useTexture = true;
+        _shader.use();
+        _shader.setBool("u_useTexture", _useTexture);
+        _shader.disuse();
+        _texture.init(texturePath);
+
+        setTexturePositions(texturePositionsData);
+    }
+
+    virtual void setNormals(const std::vector<glm::vec3>& normalsData) {
+        _useNormals = true;
+        _normalsData = normalsData;
+        _normalsDataDimension = 3;
+        _normalsDataCount += static_cast<int>(_normalsData.size()) * _normalsDataDimension;
+        _totalDataCount += _normalsDataCount;
     }
 
     void init() override {
@@ -127,34 +101,69 @@ public:
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
         }
 
-        // store vbo data for entity
-        glBufferData(GL_ARRAY_BUFFER, _vertices.size() * sizeof(GLfloat), _vertices.data(), GL_STATIC_DRAW);
+        // calculate total data size
+        const auto totalDataSize = _totalDataCount * sizeof(GLfloat);
+        // reserve vbo data for entity
+        glBufferData(GL_ARRAY_BUFFER, totalDataSize, nullptr, GL_STATIC_DRAW);
         if (_entityType == EntityType::RECTANGLE) {
+            // set indices
+            const std::vector<GLuint> _indices{ 0, 1, 3, 1, 2, 3 };
             // store ebo data
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, _indices.size() * sizeof(GLuint), _indices.data(), GL_STATIC_DRAW);
         }
 
-        // configure position attribute
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, _stride * sizeof(GLfloat), (void*)0);
-        // location defined in shader
-        glEnableVertexAttribArray(0);
+        GLintptr offsetSize{ 0 };
 
-        if (_useSingleColor) {
-            _shader.use();
-            _shader.setVec4("u_color", glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f });
-            _shader.disuse();
-        } else {
-            // configure color attribute
-            glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, _stride * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
+        if (_usePositions) {
+            // calculate position data size
+            const auto positionsDataSize = _positionsDataCount * sizeof(GLfloat);
+            // set position sub data
+            glBufferSubData(GL_ARRAY_BUFFER, offsetSize, positionsDataSize, _positionsData.data());
+            // configure position attribute
+            glVertexAttribPointer(0, _positionsDataDimension, GL_FLOAT, GL_FALSE, _positionsDataDimension * sizeof(GLfloat), (void*)offsetSize);
             // location defined in shader
-            glEnableVertexAttribArray(1);
+            glEnableVertexAttribArray(0);
+            // update offset size
+            offsetSize += positionsDataSize;
         }
 
-        if (_useTexture) {
+        if (_useColors) {
+            // calculate color data size
+            const auto colorsDataSize = _colorsDataCount * sizeof(GLfloat);
+            // set color sub data
+            glBufferSubData(GL_ARRAY_BUFFER, offsetSize, colorsDataSize, _colorsData.data());
+            // configure color attribute
+            glVertexAttribPointer(1, _colorsDataDimension, GL_FLOAT, GL_FALSE, _colorsDataDimension * sizeof(GLfloat), (void*)offsetSize);
+            // location defined in shader
+            glEnableVertexAttribArray(1);
+            // update offset size
+            offsetSize += colorsDataSize;
+        }
+
+        if (_useTexturePositions) {
+            // calculate texture data size
+            const auto texturePositionsDataSize = _texturePositionsDataCount * sizeof(GLfloat);
+            // set texture sub data
+            glBufferSubData(GL_ARRAY_BUFFER, offsetSize, texturePositionsDataSize, _texturePositionsData.data());
             // configure texture attribute
-            glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0 * sizeof(GLfloat), (void*)(_texStart * sizeof(GLfloat)));
+            glVertexAttribPointer(2, _texturePositionsDataDimension, GL_FLOAT, GL_FALSE, _texturePositionsDataDimension * sizeof(GLfloat), (void*)offsetSize);
             // location defined in shader
             glEnableVertexAttribArray(2);
+            // update offset size
+            offsetSize += texturePositionsDataSize;
+        }
+
+        if (_useNormals) {
+            // calculate normal data size
+            const auto normalsDataSize = _normalsDataCount * sizeof(GLfloat);
+            // set normal sub data
+            glBufferSubData(GL_ARRAY_BUFFER, offsetSize, normalsDataSize, _normalsData.data());
+            // configure normal attribute
+            glVertexAttribPointer(3, _normalsDataDimension, GL_FLOAT, GL_FALSE, _normalsDataDimension * sizeof(GLfloat), (void*)offsetSize);
+            // location defined in shader
+            glEnableVertexAttribArray(3);
+            // update offset size
+            offsetSize += normalsDataSize;
         }
 
         // unbind vao
@@ -164,26 +173,9 @@ public:
     }
 
     void update() override {
-        if (_camera && _camera->isViewUpdated()) {
+        if (_camera) {
             getShader().setMat4("u_view", _camera->getView());
         }
-    }
-
-    void addData(const std::vector<glm::vec3>& data) {
-        _vertices.push_back(data[0][0]);
-        _vertices.push_back(data[0][1]);
-        _vertices.push_back(data[0][2]);
-        _vertices.push_back(data[1][0]);
-        _vertices.push_back(data[1][1]);
-        _vertices.push_back(data[1][2]);
-    }
-
-    Transform& getTransform() {
-        return _transform;
-    }
-
-    std::vector<GLfloat>& getVertices() {
-        return _vertices;
     }
 
     Color& getColor() {
@@ -195,21 +187,63 @@ public:
         return _shader;
     }
 
+    Transform& getTransform() {
+        return _transform;
+    }
+
 protected:
-    ICamera* _camera;
+    ICamera* _camera = nullptr;
     Transform _transform;
     Color _color;
-    EntityType _entityType = EntityType::UNKNOWN;
     Shader _shader;
     Texture _texture;
-    std::vector<GLfloat> _vertices;
-    std::vector<GLuint> _indices{ 0, 1, 3, 1, 2, 3 };
-    int _stride = 6;
-    int _texStart = 0;
-    bool _useTexture = false;
-    bool _useSingleColor = true;
-    unsigned int _VAO = 0;
-    unsigned int _VBO = 0;
-    unsigned int _EBO = 0;
+    EntityType _entityType{ EntityType::UNKNOWN };
+
+    int _drawMode{ GL_TRIANGLES };
+
+    unsigned int _VAO{ 0 };
+    unsigned int _VBO{ 0 };
+    unsigned int _EBO{ 0 };
+
+    std::vector<glm::vec3> _positionsData;
+    std::vector<glm::vec4> _colorsData;
+    std::vector<glm::vec2> _texturePositionsData;
+    std::vector<glm::vec3> _normalsData;
+
+    bool _usePositions{ false };
+    bool _useColors{ false };
+    bool _useTexture{ false };
+    bool _useTexturePositions{ false };
+    bool _useNormals{ false };
+
+    int _positionsDataDimension{ 0 };
+    int _colorsDataDimension{ 0 };
+    int _texturePositionsDataDimension{ 0 };
+    int _normalsDataDimension{ 0 };
+
+    int _positionsDataCount{ 0 };
+    int _colorsDataCount{ 0 };
+    int _texturePositionsDataCount{ 0 };
+    int _normalsDataCount{ 0 };
+    int _totalDataCount{ 0 };
+
+private:
+    void setTexturePositions(std::vector<glm::vec2> texturePositionsData) {
+        if (texturePositionsData.empty()) {
+            texturePositionsData = { { 1.0f, 1.0f }, { 1.0f, 0.0f }, { 0.0f, 0.0f }, { 0.0f, 1.0f } };
+        }
+        _useTexturePositions = true;
+        _texturePositionsData = texturePositionsData;
+        _texturePositionsDataDimension = 2;
+        _texturePositionsDataCount += static_cast<int>(_texturePositionsData.size()) * _texturePositionsDataDimension;
+        _totalDataCount += _texturePositionsDataCount;
+    }
+
+    void checkGLError() {
+        GLenum err;
+        while ((err = glGetError()) != GL_NO_ERROR) {
+            LOGGER(error, "gl error occurred: " << err);
+        }
+    }
 
 };

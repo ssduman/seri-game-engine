@@ -19,7 +19,7 @@ public:
     Typer(ICamera* camera, int width, int height) : Entity(camera), _width(static_cast<float>(width)), _height(static_cast<float>(height)) {
         Typer::init();
         initFT();
-        Typer::initShader();
+        //Typer::initShader();
         initProjection();
         setColor();
 
@@ -99,7 +99,7 @@ public:
         _library = nullptr;
     }
 
-    void initShader(const std::string& vsCodePath = "assets/shaders/typer_vs.shader", const std::string& fsCodePath = "assets/shaders/typer_fs.shader") override {
+    void initShader(const std::string& vsCodePath, const std::string& fsCodePath) override {
         _shader.init(vsCodePath, fsCodePath);
     }
 
@@ -176,6 +176,7 @@ private:
     float _width;
     float _height;
     glm::mat4 _projection{};
+    std::vector<float> _vertices{};
     FT_Face _face = nullptr;
     FT_Library _library = nullptr;
     Character _currCharacter{};

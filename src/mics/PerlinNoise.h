@@ -40,7 +40,7 @@ public:
         EntityProperties pointProperties{ pointCoordinates, pointColors, GL_POINTS };
         Point* point = new Point(_camera, pointProperties);
         point->setUseSingleColor(false);
-        point->initShader("assets/shaders/entity_vs.shader", "assets/shaders/entity_fs.shader");
+        point->initShader("mics-assets/shaders/entity_vs.shader", "mics-assets/shaders/entity_fs.shader");
         point->initCamera(_camera);
         point->init();
 

@@ -12,31 +12,41 @@
 
 #include "Camera.h"
 
+#include <ctime>
+#include <cstdlib>
+
 class Factory {
 public:
     ~Factory() = default;
 
     static Entity* CreateEntity(Camera* camera, EntityType entityType) {
-        glm::vec3 minColor = glm::vec3{ 0.0f, 0.0f, 0.0f };
-        glm::vec3 maxColor = glm::vec3{ 1.0f, 1.0f, 1.0f };
+        srand(time(0));
+
+        constexpr auto minColor = glm::vec4{ 0.0f, 0.0f, 0.0f, 1.0f };
+        constexpr auto maxColor = glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f };
 
         switch (entityType) {
             case EntityType::POINT:
             {
-                auto num_segments = 40;
-                std::vector<glm::vec3> pointCoordinates{};
-                std::vector<glm::vec3> pointColors{};
-                for (int i = 0; i < num_segments; i++) {
-                    float theta = 2.0f * PI * static_cast<float>(i) / static_cast<float>(num_segments);
+                constexpr auto numSegments = 40;
+                std::vector<glm::vec3> positions;
+                std::vector<glm::vec4> colors;
+                for (int i = 0; i < numSegments; i++) {
+                    float theta = 2.0f * PI * static_cast<float>(i) / static_cast<float>(numSegments);
                     float x = 0.5f * cosf(theta);
                     float y = 0.5f * sinf(theta);
-                    pointCoordinates.emplace_back(x, y, 0.0f);
-                    pointColors.push_back(glm::linearRand(minColor, maxColor));
+                    positions.emplace_back(x, y, 0.0f);
+                    colors.push_back(glm::linearRand(minColor, maxColor));
                 }
-                EntityProperties pointProperties{ pointCoordinates, pointColors, GL_POINTS };
-                Point* point = new Point(camera, pointProperties);
-                point->initShader("assets/shaders/entity_vs.shader", "assets/shaders/entity_fs.shader");
-                point->initCamera(camera);
+                Point* point = new Point(camera);
+                point->initShader("editor-assets/shaders/entity_vs.shader", "editor-assets/shaders/entity_fs.shader");
+                point->initMVP();
+
+                point->setDrawMode(GL_POINTS);
+                point->setPositions(positions);
+                //point->setColor(glm::linearRand(minColor, maxColor));
+                point->setColors(colors);
+
                 point->init();
 
                 LOGGER(info, "point created");
@@ -45,17 +55,17 @@ public:
             }
             case EntityType::LINE:
             {
-                EntityProperties lineProperties = {
-                    { glm::vec3{ -0.5f, -0.5f, 0 }, glm::vec3{ 0, 0.5f, 0 }, glm::vec3{ 0.5f, -0.5f, 0 } },
-                    { glm::linearRand(minColor, maxColor), glm::linearRand(minColor, maxColor), glm::linearRand(minColor, maxColor) },
-                    GL_LINE_LOOP // GL_LINES GL_LINE_STRIP GL_LINE_LOOP
-                };
-                Line* line = new Line(camera, lineProperties);
-                line->initShader("assets/shaders/entity_vs.shader", "assets/shaders/entity_fs.shader");
-                if (glm::linearRand(0.0f, 1.0f) >= 0.5f) {
-                    line->initTexture("assets/textures/passage.png");
-                }
-                line->initCamera(camera);
+                std::vector<glm::vec3> positions{ { -0.5f, -0.5f, 0 }, { 0, 0.5f, 0 }, { 0.5f, -0.5f, 0 } };
+                std::vector<glm::vec4> colors{ glm::linearRand(minColor, maxColor), glm::linearRand(minColor, maxColor), glm::linearRand(minColor, maxColor) };
+                Line* line = new Line(camera);
+                line->initShader("editor-assets/shaders/entity_vs.shader", "editor-assets/shaders/entity_fs.shader");
+                line->initMVP();
+
+                line->setDrawMode(GL_LINE_LOOP);
+                line->setPositions(positions);
+                //line->setColor(glm::linearRand(minColor, maxColor));
+                line->setColors(colors);
+
                 line->init();
 
                 LOGGER(info, "line created");
@@ -64,16 +74,17 @@ public:
             }
             case EntityType::TRIANGLE:
             {
-                EntityProperties triangleProperties = {
-                    { glm::vec3{ -0.5f, -0.5f, 0 }, glm::vec3{ 0, 0.5f, 0 }, glm::vec3{ 0.5f, -0.5f, 0 } },
-                    { glm::linearRand(minColor, maxColor), glm::linearRand(minColor, maxColor), glm::linearRand(minColor, maxColor) },
-                };
-                Triangle* triangle = new Triangle(camera, triangleProperties);
-                triangle->initShader("assets/shaders/entity_vs.shader", "assets/shaders/entity_fs.shader");
-                if (glm::linearRand(0.0f, 1.0f) >= 0.5f) {
-                    triangle->initTexture("assets/textures/passage.png");
-                }
-                triangle->initCamera(camera);
+                std::vector<glm::vec3> positions{ { -0.5f, -0.5f, 0.0f }, { 0.0f, 0.5f, 0.0f }, { 0.5f, -0.5f, 0.0f } };
+                std::vector<glm::vec4> colors{ glm::linearRand(minColor, maxColor), glm::linearRand(minColor, maxColor), glm::linearRand(minColor, maxColor) };
+                Triangle* triangle = new Triangle(camera);
+                triangle->initShader("editor-assets/shaders/entity_vs.shader", "editor-assets/shaders/entity_fs.shader");
+                triangle->initMVP();
+
+                triangle->setPositions(positions);
+                triangle->setColor(glm::linearRand(minColor, maxColor));
+                triangle->setColors(colors);
+                triangle->setTexture("editor-assets/textures/passage.png");
+
                 triangle->init();
 
                 LOGGER(info, "triangle created");
@@ -82,16 +93,17 @@ public:
             }
             case EntityType::RECTANGLE:
             {
-                EntityProperties rectangleProperties = {
-                    { glm::vec3{ -0.5f, -0.5f, 0 }, glm::vec3{ -0.5f, 0.5f, 0 }, glm::vec3{ 0.5f, 0.5f, 0 }, glm::vec3{ 0.5f, -0.5f, 0 } },
-                    { glm::linearRand(minColor, maxColor), glm::linearRand(minColor, maxColor), glm::linearRand(minColor, maxColor), glm::linearRand(minColor, maxColor) },
-                };
-                Rectangle* rectangle = new Rectangle(camera, rectangleProperties);
-                rectangle->initShader("assets/shaders/entity_vs.shader", "assets/shaders/entity_fs.shader");
-                if (glm::linearRand(0.0f, 1.0f) >= 0.5f) {
-                    rectangle->initTexture("assets/textures/wall1.png");
-                }
-                rectangle->initCamera(camera);
+                std::vector<glm::vec3> positions{ { -0.5f, -0.5f, 0 }, { -0.5f, 0.5f, 0 }, { 0.5f, 0.5f, 0 }, { 0.5f, -0.5f, 0 } };
+                std::vector<glm::vec4> colors{ glm::linearRand(minColor, maxColor), glm::linearRand(minColor, maxColor), glm::linearRand(minColor, maxColor), glm::linearRand(minColor, maxColor) };
+                Rectangle* rectangle = new Rectangle(camera);
+                rectangle->initShader("editor-assets/shaders/entity_vs.shader", "editor-assets/shaders/entity_fs.shader");
+                rectangle->initMVP();
+
+                rectangle->setPositions(positions);
+                //rectangle->setColor(glm::linearRand(minColor, maxColor));
+                //rectangle->setColors(colors);
+                //rectangle->setTexture("editor-assets/textures/wall1.png");
+
                 rectangle->init();
 
                 LOGGER(info, "rectangle created");
@@ -100,23 +112,28 @@ public:
             }
             case EntityType::CIRCLE:
             {
-                auto num_segments = 40;
-                std::vector<glm::vec3> circleCoordinates{};
-                std::vector<glm::vec3> circleColors{};
-                for (int i = 0; i < num_segments; i++) {
-                    float theta = 2.0f * PI * static_cast<float>(i) / static_cast<float>(num_segments);
+                constexpr auto numSegments = 40;
+                std::vector<glm::vec3> positions;
+                std::vector<glm::vec4> colors;
+                std::vector<glm::vec2> texturePositions;
+                for (int i = 0; i < numSegments; i++) {
+                    float theta = 2.0f * PI * static_cast<float>(i) / static_cast<float>(numSegments);
                     float x = 0.5f * cosf(theta);
                     float y = 0.5f * sinf(theta);
-                    circleCoordinates.emplace_back(x, y, 0.0f);
-                    circleColors.push_back(glm::linearRand(minColor, maxColor));
+                    positions.emplace_back(x, y, 0.0f);
+                    colors.push_back(glm::linearRand(minColor, maxColor));
+                    texturePositions.emplace_back(x, y);
                 }
-                EntityProperties circleProperties{ circleCoordinates, circleColors, GL_TRIANGLE_FAN };
-                Circle* circle = new Circle(camera, circleProperties);
-                circle->initShader("assets/shaders/entity_vs.shader", "assets/shaders/entity_fs.shader");
-                if (glm::linearRand(0.0f, 1.0f) >= 0.5f) {
-                    circle->initTexture("assets/textures/passage.png");
-                }
-                circle->initCamera(camera);
+                Circle* circle = new Circle(camera);
+                circle->initShader("editor-assets/shaders/entity_vs.shader", "editor-assets/shaders/entity_fs.shader");
+                circle->initMVP();
+
+                circle->setDrawMode(GL_TRIANGLE_FAN);
+                circle->setPositions(positions);
+                circle->setColor(glm::linearRand(minColor, maxColor));
+                //circle->setColors(colors);
+                circle->setTexture("editor-assets/textures/passage.png", texturePositions);
+
                 circle->init();
 
                 LOGGER(info, "circle created");
@@ -125,7 +142,7 @@ public:
             }
             case EntityType::CUBE:
             {
-                std::vector<glm::vec3> cubeCoordinates{
+                std::vector<glm::vec3> positions{
                     { -0.5f, -0.5f, -0.5f, },
                     { 0.5f, -0.5f, -0.5f, },
                     { 0.5f, 0.5f, -0.5f, },
@@ -168,7 +185,7 @@ public:
                     { -0.5f, 0.5f, 0.5f, },
                     { -0.5f, 0.5f, -0.5f, },
                 };
-                std::vector<glm::vec2> textureCoordinates{
+                std::vector<glm::vec2> texturePositions{
                     { 0.0f, 0.0f },
                     { 1.0f, 0.0f },
                     { 1.0f, 1.0f },
@@ -212,11 +229,14 @@ public:
                     { 0.0f, 1.0f },
                 };
 
-                EntityProperties cubeProperties{ cubeCoordinates, cubeCoordinates, GL_TRIANGLES, textureCoordinates };
-                Cube* cube = new Cube(camera, cubeProperties);
-                cube->initShader("assets/shaders/entity_vs.shader", "assets/shaders/entity_fs.shader");
-                cube->initTexture("assets/textures/wall2.png");
-                cube->initCamera(camera);
+                Cube* cube = new Cube(camera);
+                cube->initShader("editor-assets/shaders/entity_vs.shader", "editor-assets/shaders/entity_fs.shader");
+                cube->initMVP();
+
+                cube->setPositions(positions);
+                cube->setColor(glm::linearRand(minColor, maxColor));
+                cube->setTexture("editor-assets/textures/wall2.png", texturePositions);
+
                 cube->init();
 
                 LOGGER(info, "cube created");

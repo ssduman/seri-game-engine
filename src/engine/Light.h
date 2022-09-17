@@ -8,7 +8,7 @@ class Light : public Entity {
 public:
     Light(ICamera* camera) : Entity(camera) {
         Light::init();
-        Light::initShader();
+        //Light::initShader();
         setPosition();
         setModel();
         setViewProjection();
@@ -76,7 +76,7 @@ public:
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 
-    void initShader(const std::string& vsCodePath = "assets/shaders/light_vs.shader", const std::string& fsCodePath = "assets/shaders/light_fs.shader") override {
+    void initShader(const std::string& vsCodePath, const std::string& fsCodePath) override {
         _shader.init(vsCodePath, fsCodePath);
     }
 
@@ -121,5 +121,8 @@ public:
         glBindVertexArray(_VAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
     }
+
+private:
+    std::vector<float> _vertices{};
 
 };

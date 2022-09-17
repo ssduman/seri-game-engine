@@ -290,9 +290,13 @@ private:
             if (text == "Play") {
                 text = "Stop";
                 _state->gameState() = GameState::GAME;
+                //_io->MouseDrawCursor = true;
+                _windowManager->disableCursor();
             } else {
                 text = "Play";
                 _state->gameState() = GameState::IDLE;
+                _windowManager->enableCursor();
+                //_io->MouseDrawCursor = false;
             }
             LOGGER(info, "game status changed to '" << to_string(_state->gameState()) << "'");
         }
@@ -316,5 +320,5 @@ private:
     ImGuiStyle* _style = nullptr;
     ImGuiWindowFlags _windowFlags = 0;
     const char* glsl_version = "#version 130";
-    const char* font_filename = "assets/fonts/En Bloc.ttf";
+    const char* font_filename = "editor-assets/fonts/En Bloc.ttf";
 };
