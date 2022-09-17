@@ -80,6 +80,10 @@ public:
         _totalDataCount += _normalsDataCount;
     }
 
+    virtual void reserveTotalDataCount(int totalDataCount) {
+        _totalDataCount = totalDataCount;
+    }
+
     void init() override {
         // generating buffers, binding buffers, storing buffers, configuring attributes, unbinding buffers
 
@@ -107,9 +111,9 @@ public:
         glBufferData(GL_ARRAY_BUFFER, totalDataSize, nullptr, GL_STATIC_DRAW);
         if (_entityType == EntityType::RECTANGLE) {
             // set indices
-            const std::vector<GLuint> _indices{ 0, 1, 3, 1, 2, 3 };
+            const std::vector<GLuint> indices{ 0, 1, 3, 1, 2, 3 };
             // store ebo data
-            glBufferData(GL_ELEMENT_ARRAY_BUFFER, _indices.size() * sizeof(GLuint), _indices.data(), GL_STATIC_DRAW);
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), indices.data(), GL_STATIC_DRAW);
         }
 
         GLintptr offsetSize{ 0 };
