@@ -81,12 +81,10 @@ private:
 
     void initTyper() {
         _typer = new Typer(_camera, static_cast<int>(_width), static_cast<int>(_height));
-        _typer->setFont("maze-assets/fonts/En Bloc.ttf");
-        _typer->init();
-        _typer->initFT();
         _typer->initShader("maze-assets/shaders/typer_vs.shader", "maze-assets/shaders/typer_fs.shader");
+        _typer->initFT("maze-assets/fonts/En Bloc.ttf");
         _typer->initProjection();
-        _typer->setColor();
+        _typer->init();
     }
 
     void initStopwatch() {

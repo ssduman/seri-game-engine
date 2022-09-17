@@ -20,36 +20,33 @@ public:
         LOGGER(info, "typer init succeeded");
     }
 
-    void init() override {
-        glGenVertexArrays(1, &_VAO);
-        glGenBuffers(1, &_VBO);
-
-        glBindVertexArray(_VAO);
-        glBindBuffer(GL_ARRAY_BUFFER, _VBO);
-
-        glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, nullptr, GL_DYNAMIC_DRAW);
-        glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
-        glEnableVertexAttribArray(0);
-
-        glBindVertexArray(0);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-    }
+    ~Typer() override = default;
 
     void initShader(const std::string& vsCodePath, const std::string& fsCodePath) override {
         _shader.init(vsCodePath, fsCodePath);
+        setColor({ 1.0f, 1.0f, 1.0f });
     }
 
-    void initFT() {
+    void initFT(const std::string& font) {
+        _font = font;
+        if (_font.empty()) {
+            LOGGER(error, "freetype needs a valid font");
+            return;
+        }
+
         if (_library) {
+            LOGGER(warning, "freetype library is already initialized");
             return;
         }
 
         if (FT_Init_FreeType(&_library)) {
             LOGGER(error, "freetype library init error");
+            return;
         }
 
         if (FT_New_Face(_library, _font.c_str(), 0, &_face)) {
             LOGGER(error, "freetype new face error");
+            return;
         }
 
         FT_Set_Pixel_Sizes(_face, 0, 48 * 2);
@@ -104,14 +101,25 @@ public:
         _shader.disuse();
     }
 
-    void setFont(const std::string& font) {
-        _font = font;
-    }
-
-    void setColor(glm::vec3 color = { 1.0f, 1.0f, 1.0f }) {
+    void setColor(glm::vec3 color) {
         _shader.use();
         _shader.setVec3("u_textColor", color);
         _shader.disuse();
+    }
+
+    void init() override {
+        glGenVertexArrays(1, &_VAO);
+        glGenBuffers(1, &_VBO);
+
+        glBindVertexArray(_VAO);
+        glBindBuffer(GL_ARRAY_BUFFER, _VBO);
+
+        glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, nullptr, GL_DYNAMIC_DRAW);
+        glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+        glEnableVertexAttribArray(0);
+
+        glBindVertexArray(0);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 
     void render() override {
@@ -157,8 +165,6 @@ public:
     }
 
 private:
-    
-
     void bind() {
         glActiveTexture(GL_TEXTURE0);
         glBindVertexArray(_VAO);
@@ -177,6 +183,6 @@ private:
     FT_Library _library = nullptr;
     Character _currCharacter{};
     std::map<GLubyte, Character> _characters{};
-    std::string _font = "assets/fonts/En Bloc.ttf"; // DungeonFont.ttf
+    std::string _font; // En Bloc.ttf or DungeonFont.ttf
 
 };
