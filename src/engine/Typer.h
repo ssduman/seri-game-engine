@@ -20,7 +20,13 @@ public:
         LOGGER(info, "typer init succeeded");
     }
 
-    ~Typer() override = default;
+    ~Typer() override {
+        glDeleteVertexArrays(1, &_VAO);
+        glDeleteBuffers(1, &_VBO);
+        delete _face;
+
+        LOGGER(info, "typer delete succeeded");
+    }
 
     void initShader(const std::string& vsCodePath, const std::string& fsCodePath) override {
         _shader.init(vsCodePath, fsCodePath);

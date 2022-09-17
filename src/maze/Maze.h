@@ -139,11 +139,20 @@ private:
     }
 
     void initRenderer() {
-        verticalWallRender = new Renderer(_thickness, 0.2f, _thickness);
-        horizontalWallRender = new Renderer(_thickness, _thickness, 0.2f);
         passRender = new Renderer(_thickness / (_thickness * 2) - 1.0f, _thickness, _thickness);
+        passRender->init();
+
         escapeRender = new Renderer(_thickness / (_thickness * 2) - 1.0f, _thickness, _thickness);
+        escapeRender->init();
+
         nonEscapeRender = new Renderer(_thickness / (_thickness * 2) - 1.0f, _thickness, _thickness);
+        nonEscapeRender->init();
+
+        verticalWallRender = new Renderer(_thickness, 0.2f, _thickness);
+        verticalWallRender->init();
+
+        horizontalWallRender = new Renderer(_thickness, _thickness, 0.2f);
+        horizontalWallRender->init();
     }
 
     void generateMaze() {
