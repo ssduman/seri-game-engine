@@ -19,9 +19,8 @@ public:
     ~Control() override = default;
 
     void charCallback(GLFWwindow* window, unsigned int codepoint) override {
-        char string[5] = "";
-        encode_utf8(string, codepoint);
-        _userInputVector.emplace_back(string);
+        auto str = encodeUTF8(codepoint);
+        addUserInput(str);
     }
 
     void cursorPosCallback(GLFWwindow* window, double xpos, double ypos) override {

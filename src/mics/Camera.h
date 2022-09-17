@@ -1,14 +1,14 @@
 #pragma once
 
-#include "../engine/Util.h"
-#include "../engine/State.h"
-#include "../engine/Logger.h"
 #include "../engine/ICamera.h"
+#include "../engine/Logger.h"
+#include "../engine/State.h"
+#include "../engine/Util.h"
 
 class Camera : public ICamera {
-public:
+   public:
     Camera(CameraProperties cameraProperties, State* state) : ICamera(cameraProperties, state) {
-        Camera::updateVectors();
+        Camera::updateEulerAngles();
         Camera::view();
         Camera::projection();
 
@@ -53,5 +53,4 @@ public:
             _viewUpdated = true;
         }
     }
-
 };

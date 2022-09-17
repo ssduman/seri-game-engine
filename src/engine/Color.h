@@ -7,34 +7,53 @@ public:
     Color() = default;
 
     Color(float c) {
-        if (c > 1.0f) {
-            c /= 255.0f;
-        }
-        _color.r = c;
-        _color.g = c;
-        _color.b = c;
+        normalize(c);
+
+        r = c;
+        g = c;
+        b = c;
     }
 
-    Color(float r, float g, float b) {
-        _color.r = r;
-        _color.g = g;
-        _color.b = b;
+    Color(float _r, float _g, float _b) {
+        normalize(_r);
+        normalize(_g);
+        normalize(_b);
+
+        r = _r;
+        g = _g;
+        b = _b;
+    }
+
+    Color(float _r, float _g, float _b, float _a) {
+        normalize(_r);
+        normalize(_g);
+        normalize(_b);
+        normalize(_a);
+
+        r = _r;
+        g = _g;
+        b = _b;
+        a = _a;
     }
 
     glm::vec3 getColor() {
-        return _color;
+        return { r, g, b };
     }
 
     glm::vec4 getColorRGBA() {
-        return { _color, _alpha };
+        return { r, g, b, a };
     }
 
-    void setAlpha(float alpha) {
-        _alpha = alpha;
-    }
+    float r = 1.0f;
+    float g = 1.0f;
+    float b = 1.0f;
+    float a = 1.0f;
 
 private:
-    float _alpha = 1.0f;
-    glm::vec3 _color{ 1.0f, 1.0f, 1.0f };
+    void normalize(float& c) {
+        if (c > 1.0f) {
+            c /= 255.0f;
+        }
+    }
 
 };

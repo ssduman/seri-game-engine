@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Util.h"
 #include "Logger.h"
 #include "State.h"
+#include "Util.h"
 
 enum class CameraMovement {
     FORWARD,
@@ -10,21 +10,6 @@ enum class CameraMovement {
     LEFT,
     RIGHT,
 };
-
-inline std::string to_string(CameraMovement cameraMovement) {
-    switch (cameraMovement) {
-        case CameraMovement::FORWARD:
-            return "forward";
-        case CameraMovement::BACKWARD:
-            return "backward";
-        case CameraMovement::LEFT:
-            return "left";
-        case CameraMovement::RIGHT:
-            return "right";
-        default:
-            return "unknown";
-    }
-}
 
 struct CameraProperties {
     float fov{ 45.0f };
@@ -60,12 +45,13 @@ public:
             return;
         }
 
-        auto deltaX = xPos - _xPosLast;
-        auto deltaY = _yPosLast - yPos;
-        if (_xPosLast < 0) {
-            deltaX = 0;
-            deltaY = 0;
+        if (_xPosLast < 0 && _yPosLast < 0) {
+            _xPosLast = xPos;
+            _yPosLast = yPos;
         }
+
+        const auto deltaX = xPos - _xPosLast;
+        const auto deltaY = _yPosLast - yPos;
 
         _xPosLast = xPos;
         _yPosLast = yPos;
@@ -87,13 +73,13 @@ public:
             _yaw -= 360.0f;
         }
 
-        updateVectors();
+        updateEulerAngles();
         view();
 
         _viewUpdated = true;
     }
 
-    virtual const bool& viewUpdated() {
+    virtual const bool& isViewUpdated() {
         return _viewUpdated;
     }
 
@@ -105,13 +91,6 @@ public:
         return _projection;
     }
 
-    glm::vec3 projectionVector(glm::vec3& front, glm::vec3& right) {
-        glm::vec3 u = glm::cross(_cameraProperties.up, right);
-        glm::vec3 v = front;
-
-        return ((u * v) / static_cast<float>(pow(glm::length(u), 2)) * u);
-    }
-
     virtual CameraProperties& getCameraProperties() {
         return _cameraProperties;
     }
@@ -121,8 +100,7 @@ protected:
         _view = glm::lookAt(
             _cameraProperties.position,
             _cameraProperties.position + _cameraProperties.front,
-            _cameraProperties.up
-        );
+            _cameraProperties.up);
     }
 
     virtual void projection() {
@@ -130,11 +108,10 @@ protected:
             glm::radians(_cameraProperties.fov),
             _cameraProperties.aspect,
             _cameraProperties.near,
-            _cameraProperties.far
-        );
+            _cameraProperties.far);
     }
 
-    virtual void updateVectors() {
+    virtual void updateEulerAngles() {
         glm::vec3 eulerAngle{};
         eulerAngle.x = cos(glm::radians(_pitch)) * cos(glm::radians(_yaw));
         eulerAngle.y = sin(glm::radians(_pitch));
@@ -155,5 +132,4 @@ protected:
     float _xPosLast = -1.0f;
     float _yPosLast = -1.0f;
     bool _viewUpdated = false;
-
 };

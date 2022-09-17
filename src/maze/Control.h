@@ -20,9 +20,8 @@ public:
     ~Control() override = default;
 
     void charCallback(GLFWwindow* window, unsigned int codepoint) override {
-        char string[5]{};
-        encode_utf8(string, codepoint);
-        _userInputVector.emplace_back(string);
+        auto str = encodeUTF8(codepoint);
+        addUserInput(str);
     }
 
     void cursorPosCallback(GLFWwindow* window, double xpos, double ypos) override {
@@ -61,11 +60,11 @@ public:
         }
 
         if ((key == GLFW_KEY_ENTER) && (action == GLFW_PRESS)) {
-            auto userInput = getUserInput();
-
-            if (userInput.size() < 3) {
+            if (getUserInputSize() < 3) {
                 return;
             }
+
+            auto userInput = getUserInput();
 
             std::string part;
             std::vector<std::string> parts;
@@ -78,7 +77,7 @@ public:
             }
             std::stringstream width_s(parts[0]);
             std::stringstream height_s(parts[1]);
-            _userInputVector.clear();
+            clearUserInput();
 
             float mazeWidth, mazeHeight, mazeThickness = 5.0f;
             width_s >> mazeWidth;
@@ -97,13 +96,13 @@ public:
         }
 
         if ((key == GLFW_KEY_BACKSPACE) && (action == GLFW_PRESS)) {
-            if (!_userInputVector.empty()) {
-                _userInputVector.pop_back();
-            }
+            deleteLastUserInput();
         }
 
         if (action == GLFW_RELEASE) {
-            //LOGGER(info, "user input: " << getUserInput());
+            //auto i = getUserInput();
+            //auto s = getUserInputSize();
+            //LOGGER(info, "user input: " << i << ", size: " << s);
         }
     }
 

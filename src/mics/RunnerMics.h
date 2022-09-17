@@ -32,7 +32,7 @@ public:
         Control control{ windowManager.get(), camera.get(), state.get() };
         Typer typer{ camera.get(), windowProperties.windowWidth, windowProperties.windowHeight };
 
-        auto fractal = Fractal{ camera.get(), layers };
+        Fractal fractal{ camera.get(), layers };
         //fractal.BarnsleyFern();
         //fractal.FractalTree();
 

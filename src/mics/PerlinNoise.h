@@ -31,7 +31,7 @@ public:
 
         for (int x = 0; x < _pixels.size(); x++) {
             for (int y = 0; y < _pixels[0].size(); y++) {
-                auto color = _pixels[x][y].getColor();
+                auto color = _pixels[x][y];
                 pointCoordinates.emplace_back(x / d + dx, y / d + dy, z);
                 pointColors.emplace_back(color.r, color.g, 1.0f);
             }

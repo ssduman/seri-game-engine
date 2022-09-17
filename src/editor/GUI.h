@@ -236,8 +236,8 @@ private:
 
             ImGui::Separator();
 
-            ImGui::ColorEdit4("color", &_currentEntity->getColor()._color[0]);
-            _currentEntity->getShader().setVec4("u_color", _currentEntity->getColor()._color);
+            ImGui::ColorEdit4("color", &_currentEntity->getColor().r);
+            _currentEntity->getShader().setVec4("u_color", _currentEntity->getColor().getColorRGBA());
 
             ImGui::Separator();
 

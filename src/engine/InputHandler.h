@@ -1,10 +1,13 @@
 #pragma once
 
+#include "ICamera.h"
 #include "ICommand.h"
+
+#include <GLFW/glfw3.h>
 
 class InputHandler {
 public:
-    InputHandler(Camera* camera) : _camera(camera) {}
+    InputHandler(ICamera* camera) : _camera(camera) {}
 
     virtual ~InputHandler() = default;
 
@@ -79,7 +82,7 @@ private:
         return false;
     }
 
-    Camera* _camera;
+    ICamera* _camera;
 
     ICommand* _x = nullptr;
     ICommand* _y = nullptr;

@@ -105,9 +105,6 @@
     <ClInclude Include="InputHandler.h">
       <Filter>Control</Filter>
     </ClInclude>
-    <ClInclude Include="JumpCommand.h">
-      <Filter>Command</Filter>
-    </ClInclude>
     <ClInclude Include="ICommand.h">
       <Filter>Command</Filter>
     </ClInclude>

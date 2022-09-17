@@ -25,7 +25,7 @@ public:
     }
 
     void update() override {
-        if (_camera->viewUpdated()) {
+        if (_camera->isViewUpdated()) {
             setViewProjection();
         }
     }

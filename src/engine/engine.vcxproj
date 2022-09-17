@@ -200,7 +200,6 @@
     <ClInclude Include="IControl.h" />
     <ClInclude Include="InputHandler.h" />
     <ClInclude Include="IRunner.h" />
-    <ClInclude Include="JumpCommand.h" />
     <ClInclude Include="Layer.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="Line.h" />

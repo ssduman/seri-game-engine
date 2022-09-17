@@ -2,10 +2,10 @@
 
 #include <GLFW/glfw3.h>
 
-#include "../engine/Util.h"
+#include "../engine/ICamera.h"
 #include "../engine/Logger.h"
 #include "../engine/Shader.h"
-#include "../engine/ICamera.h"
+#include "../engine/Util.h"
 
 class Camera : public ICamera {
 public:
@@ -13,7 +13,7 @@ public:
         Camera::init();
         initShader();
         setLight();
-        Camera::updateVectors();
+        Camera::updateEulerAngles();
         Camera::view();
         Camera::projection();
         update();
@@ -47,7 +47,7 @@ public:
         _checkC = true, _checkE = true, _checkR = true;
 
         view();
-        updateVectors();
+        updateEulerAngles();
         update();
     }
 
@@ -177,6 +177,13 @@ public:
         _shader.setMat4("u_projection", getProjection());
     }
 
+    glm::vec3 projectionVector(const glm::vec3& front, const glm::vec3& right) {
+        glm::vec3 u = glm::cross(_cameraProperties.up, right);
+        glm::vec3 v = front;
+
+        return ((u * v) / static_cast<float>(pow(glm::length(u), 2)) * u);
+    }
+
     bool checkWin() {
         glm::vec3 pos = _cameraProperties.position;
         float t1 = _cubeThickness, t2 = _cubeThickness * 2, h = _mazeHeight;
@@ -217,11 +224,11 @@ private:
         float currentXPosAtMaze = (currentX - (-_cubeThickness)) / (_cubeThickness * 2);
         float currentYPosAtMaze = (currentZ - (-_cubeThickness)) / (_cubeThickness * 2);
 
-        bool cond1 = currentZ > -_cubeThickness; // lower bound
-        bool cond2 = currentZ < _cubeThickness * 2 * _mazeHeight - _cubeThickness; // upper bound
-        bool cond3 = currentX < _cubeThickness * 2 * _mazeWidth - _cubeThickness;  // right bound
-        bool cond4 = currentXPosAtMaze >= 0 && currentXPosAtMaze < _mazeWidth;   // legal index
-        bool cond5 = currentYPosAtMaze >= 0 && currentYPosAtMaze < _mazeHeight;  // legal index
+        bool cond1 = currentZ > -_cubeThickness;                                    // lower bound
+        bool cond2 = currentZ < _cubeThickness * 2 * _mazeHeight - _cubeThickness;  // upper bound
+        bool cond3 = currentX < _cubeThickness * 2 * _mazeWidth - _cubeThickness;   // right bound
+        bool cond4 = currentXPosAtMaze >= 0 && currentXPosAtMaze < _mazeWidth;      // legal index
+        bool cond5 = currentYPosAtMaze >= 0 && currentYPosAtMaze < _mazeHeight;     // legal index
 
         if (cond1 && cond2 && cond3 && cond4 && cond5) {
             position.x = std::round(position.x);
@@ -231,8 +238,8 @@ private:
             /*     A 5x5 maze
              +Z
               ^
-              |
-              |    o  o--o--o--o--o
+              |               (exit)
+              |    o--o--o--o--o  o
               |    |              |
               |    o  o--o--o--o  o
               |    |  |        |  |
@@ -242,8 +249,8 @@ private:
               |    |  |  |        |
               |    o  o  o--o--o  o
               |    |     |        |
-              |    o--o--o--o--o  o
-              |              (camera)
+              |    o  o--o--o--o--o
+              |  (camera)
             (-t,-t)----------------------> +X
 
             t is the thickness of the cubes. cubes becomes (t*2)x(t*2)x(t*2) cubes.
@@ -290,5 +297,4 @@ private:
     float _mazeWidth{}, _mazeHeight{}, _cubeThickness{};
     std::vector<glm::vec3> _verticalWallPosition{};
     std::vector<glm::vec3> _horizontalWallPosition{};
-
 };
