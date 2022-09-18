@@ -27,10 +27,12 @@ public:
         cameraProperties.aspect = windowManager->getWidthF() / windowManager->getHeightF();
         cameraProperties.position = glm::vec3{ 0.0f, 10.0f, -15.0f };
         std::shared_ptr<Camera> camera = std::make_shared<Camera>(cameraProperties, state.get());
+        camera->init();
 
         Layer layers{};
+
         Control control{ windowManager.get(), camera.get(), state.get() };
-        //Typer typer{ camera.get(), windowProperties.windowWidth, windowProperties.windowHeight };
+        control.init();
 
         Fractal fractal{ camera.get(), layers };
         //fractal.BarnsleyFern();
