@@ -12,13 +12,61 @@ public:
     Control(WindowManager* windowManager, Camera* camera, Maze** maze) : IControl(windowManager), _camera(camera), _maze(maze) {
         glfwSetWindowUserPointer(_windowManager->getWindow(), static_cast<void*>(this));
 
-        Control::init();
-
         LOGGER(info, "control init succeeded");
     }
 
     ~Control() override {
         LOGGER(info, "control delete succeeded");
+    }
+
+    void init() override {
+        glfwSetCharCallback(_windowManager->getWindow(),
+            [](GLFWwindow* window, unsigned int codepoint) {
+                if (auto control = static_cast<Control*>(glfwGetWindowUserPointer(window))) {
+                    control->charCallback(window, codepoint);
+                }
+            }
+        );
+
+        glfwSetMouseButtonCallback(_windowManager->getWindow(),
+            [](GLFWwindow* window, int button, int action, int mods) {
+                if (auto control = static_cast<Control*>(glfwGetWindowUserPointer(window))) {
+                    control->mouseButtonCallback(window, button, action, mods);
+                }
+            }
+        );
+
+        glfwSetScrollCallback(_windowManager->getWindow(),
+            [](GLFWwindow* window, double xoffset, double yoffset) {
+                if (auto control = static_cast<Control*>(glfwGetWindowUserPointer(window))) {
+                    control->scrollCallback(window, xoffset, yoffset);
+                }
+            }
+        );
+
+        glfwSetFramebufferSizeCallback(_windowManager->getWindow(),
+            [](GLFWwindow* window, int width, int height) {
+                if (auto control = static_cast<Control*>(glfwGetWindowUserPointer(window))) {
+                    control->framebufferSizeCallback(window, width, height);
+                }
+            }
+        );
+
+        glfwSetCursorPosCallback(_windowManager->getWindow(),
+            [](GLFWwindow* window, double xpos, double ypos) {
+                if (auto control = static_cast<Control*>(glfwGetWindowUserPointer(window))) {
+                    control->cursorPosCallback(window, xpos, ypos);
+                }
+            }
+        );
+
+        glfwSetKeyCallback(_windowManager->getWindow(),
+            [](GLFWwindow* window, int key, int scancode, int action, int mods) {
+                if (auto control = static_cast<Control*>(glfwGetWindowUserPointer(window))) {
+                    control->keyCallback(window, key, scancode, action, mods);
+                }
+            }
+        );
     }
 
     void charCallback(GLFWwindow* window, unsigned int codepoint) override {
@@ -125,55 +173,7 @@ public:
     }
 
 private:
-    void init() override {
-        glfwSetCharCallback(_windowManager->getWindow(),
-            [](GLFWwindow* window, unsigned int codepoint) {
-                if (auto control = static_cast<Control*>(glfwGetWindowUserPointer(window))) {
-                    control->charCallback(window, codepoint);
-                }
-            }
-        );
 
-        glfwSetMouseButtonCallback(_windowManager->getWindow(),
-            [](GLFWwindow* window, int button, int action, int mods) {
-                if (auto control = static_cast<Control*>(glfwGetWindowUserPointer(window))) {
-                    control->mouseButtonCallback(window, button, action, mods);
-                }
-            }
-        );
-
-        glfwSetScrollCallback(_windowManager->getWindow(),
-            [](GLFWwindow* window, double xoffset, double yoffset) {
-                if (auto control = static_cast<Control*>(glfwGetWindowUserPointer(window))) {
-                    control->scrollCallback(window, xoffset, yoffset);
-                }
-            }
-        );
-
-        glfwSetFramebufferSizeCallback(_windowManager->getWindow(),
-            [](GLFWwindow* window, int width, int height) {
-                if (auto control = static_cast<Control*>(glfwGetWindowUserPointer(window))) {
-                    control->framebufferSizeCallback(window, width, height);
-                }
-            }
-        );
-
-        glfwSetCursorPosCallback(_windowManager->getWindow(),
-            [](GLFWwindow* window, double xpos, double ypos) {
-                if (auto control = static_cast<Control*>(glfwGetWindowUserPointer(window))) {
-                    control->cursorPosCallback(window, xpos, ypos);
-                }
-            }
-        );
-
-        glfwSetKeyCallback(_windowManager->getWindow(),
-            [](GLFWwindow* window, int key, int scancode, int action, int mods) {
-                if (auto control = static_cast<Control*>(glfwGetWindowUserPointer(window))) {
-                    control->keyCallback(window, key, scancode, action, mods);
-                }
-            }
-        );
-    }
 
     Camera* _camera;
     Maze** _maze;

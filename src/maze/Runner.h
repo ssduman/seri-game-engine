@@ -56,6 +56,8 @@ public:
         skybox.init();
 
         Control control{ &windowManager, camera.get(), &maze };
+        control.init();
+
         Game game{ camera.get(), control, windowManager.getWidthF(), windowManager.getHeightF() };
 
         layers.addLayer(&game);
