@@ -37,13 +37,27 @@ public:
         light.setColor({ 1.0f, 1.0f, 1.0f, 1.0f });
         light.init();
 
-        //Skybox skybox{ camera.get() };
+        Skybox skybox{ camera.get() };
+        skybox.initShader("maze-assets/shaders/skybox_vs.shader", "maze-assets/shaders/skybox_fs.shader");
+        skybox.initMVP();
+        skybox.setDefaultPositions();
+        skybox.setFaces({
+            "maze-assets/textures/skybox/right.jpg",
+            "maze-assets/textures/skybox/left.jpg",
+            "maze-assets/textures/skybox/bottom.jpg",
+            "maze-assets/textures/skybox/top.jpg",
+            "maze-assets/textures/skybox/front.jpg",
+            "maze-assets/textures/skybox/back.jpg"
+        });
+        skybox.loadCubemap();
+        skybox.init();
+
         Control control{ &windowManager, camera.get(), &maze };
         Game game{ camera.get(), control, windowManager.getWidthF(), windowManager.getHeightF() };
 
         layers.addLayer(&game);
         layers.addLayer(&light);
-        //layers.addLayer(&skybox);
+        layers.addLayer(&skybox);
 
         LOGGER(info, "starting maze game loop");
 

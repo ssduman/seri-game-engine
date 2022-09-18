@@ -6,118 +6,84 @@
 class Skybox : public Entity {
 public:
     Skybox(ICamera* camera) : Entity(camera) {
-        Skybox::init();
-        //Skybox::initShader();
-        loadCubemap();
-        setViewProjection();
-
         LOGGER(info, "skybox init succeeded");
     }
 
-    void setFaces(std::vector<std::string>& faces) {
+    ~Skybox() override {
+        glDeleteVertexArrays(1, &_VAO);
+        glDeleteBuffers(1, &_VBO);
+
+        LOGGER(info, "skybox delete succeeded");
+    }
+
+    void initMVP() override {
+        _shader.use();
+        _shader.setMat4("u_model", glm::mat4{ 1.0f });
+        _shader.setMat4("u_view", glm::mat4(glm::mat3(_camera->getView())));
+        _shader.setMat4("u_projection", _camera->getProjection());
+        _shader.disuse();
+    }
+
+    void setDefaultPositions() {
+        const std::vector<glm::vec3> positions = {
+            { -1.0f, 1.0f, -1.0f },
+            { -1.0f, -1.0f, -1.0f },
+            { 1.0f, -1.0f, -1.0f },
+            { 1.0f, -1.0f, -1.0f },
+            { 1.0f, 1.0f, -1.0f },
+            { -1.0f, 1.0f, -1.0f },
+
+            { -1.0f, -1.0f, 1.0f },
+            { -1.0f, -1.0f, -1.0f },
+            { -1.0f, 1.0f, -1.0f },
+            { -1.0f, 1.0f, -1.0f },
+            { -1.0f, 1.0f, 1.0f },
+            { -1.0f, -1.0f, 1.0f },
+
+            { 1.0f, -1.0f, -1.0f },
+            { 1.0f, -1.0f, 1.0f },
+            { 1.0f, 1.0f, 1.0f },
+            { 1.0f, 1.0f, 1.0f },
+            { 1.0f, 1.0f, -1.0f },
+            { 1.0f, -1.0f, -1.0f },
+
+            { -1.0f, -1.0f, 1.0f },
+            { -1.0f, 1.0f, 1.0f },
+            { 1.0f, 1.0f, 1.0f },
+            { 1.0f, 1.0f, 1.0f },
+            { 1.0f, -1.0f, 1.0f },
+            { -1.0f, -1.0f, 1.0f },
+
+            { -1.0f, 1.0f, -1.0f },
+            { 1.0f, 1.0f, -1.0f },
+            { 1.0f, 1.0f, 1.0f },
+            { 1.0f, 1.0f, 1.0f },
+            { -1.0f, 1.0f, 1.0f },
+            { -1.0f, 1.0f, -1.0f },
+
+            { -1.0f, -1.0f, -1.0f },
+            { -1.0f, -1.0f, 1.0f },
+            { 1.0f, -1.0f, -1.0f },
+            { 1.0f, -1.0f, -1.0f },
+            { -1.0f, -1.0f, 1.0f },
+            { 1.0f, -1.0f, 1.0f },
+        };
+
+        setPositions(positions);
+    }
+
+    void setFaces(const std::vector<std::string>& faces) {
         _faces = faces;
     }
 
-    void setViewProjection() {
-        _shader.use();
-        _shader.setMat4("u_view", glm::mat4(glm::mat3(_camera->getView())));
-        _shader.setMat4("u_projection", _camera->getProjection());
-    }
-
-    void update() override {
-        if (_camera->isViewUpdated()) {
-            setViewProjection();
-        }
-    }
-
-    void render() override {
-        _shader.use();
-        glDepthFunc(GL_LEQUAL);
-        glBindVertexArray(_VAO);
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_CUBE_MAP, _texture);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-        glBindVertexArray(0);
-        glDepthFunc(GL_LESS);
-    }
-
-private:
-    void init() override {
-        _vertices = {
-            -1.0f, 1.0f, -1.0f,
-            -1.0f, -1.0f, -1.0f,
-            1.0f, -1.0f, -1.0f,
-            1.0f, -1.0f, -1.0f,
-            1.0f, 1.0f, -1.0f,
-            -1.0f, 1.0f, -1.0f,
-
-            -1.0f, -1.0f, 1.0f,
-            -1.0f, -1.0f, -1.0f,
-            -1.0f, 1.0f, -1.0f,
-            -1.0f, 1.0f, -1.0f,
-            -1.0f, 1.0f, 1.0f,
-            -1.0f, -1.0f, 1.0f,
-
-            1.0f, -1.0f, -1.0f,
-            1.0f, -1.0f, 1.0f,
-            1.0f, 1.0f, 1.0f,
-            1.0f, 1.0f, 1.0f,
-            1.0f, 1.0f, -1.0f,
-            1.0f, -1.0f, -1.0f,
-
-            -1.0f, -1.0f, 1.0f,
-            -1.0f, 1.0f, 1.0f,
-            1.0f, 1.0f, 1.0f,
-            1.0f, 1.0f, 1.0f,
-            1.0f, -1.0f, 1.0f,
-            -1.0f, -1.0f, 1.0f,
-
-            -1.0f, 1.0f, -1.0f,
-            1.0f, 1.0f, -1.0f,
-            1.0f, 1.0f, 1.0f,
-            1.0f, 1.0f, 1.0f,
-            -1.0f, 1.0f, 1.0f,
-            -1.0f, 1.0f, -1.0f,
-
-            -1.0f, -1.0f, -1.0f,
-            -1.0f, -1.0f, 1.0f,
-            1.0f, -1.0f, -1.0f,
-            1.0f, -1.0f, -1.0f,
-            -1.0f, -1.0f, 1.0f,
-            1.0f, -1.0f, 1.0f
-        };
-
-        _faces = {
-            "assets/textures/skybox/right.jpg",
-            "assets/textures/skybox/left.jpg",
-            "assets/textures/skybox/bottom.jpg",
-            "assets/textures/skybox/top.jpg",
-            "assets/textures/skybox/front.jpg",
-            "assets/textures/skybox/back.jpg"
-        };
-
-        glGenVertexArrays(1, &_VAO);
-        glGenBuffers(1, &_VBO);
-
-        glBindVertexArray(_VAO);
-        glBindBuffer(GL_ARRAY_BUFFER, _VBO);
-
-        glBufferData(GL_ARRAY_BUFFER, _vertices.size() * sizeof(GLfloat), _vertices.data(), GL_STATIC_DRAW);
-
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-        glEnableVertexAttribArray(0);
-
-        glBindVertexArray(0);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-    }
-
-    void initShader(const std::string& vsCodePath, const std::string& fsCodePath) override {
-        _shader.init(vsCodePath, fsCodePath);
-    }
-
     void loadCubemap(bool flip = false) {
-        glGenTextures(1, &_texture);
-        glBindTexture(GL_TEXTURE_CUBE_MAP, _texture);
+        if (_faces.empty() || _faces.size() != 6) {
+            LOGGER(error, "there should be exactly 6 textures for skybox");
+            return;
+        }
+
+        glGenTextures(1, &_tex);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, _tex);
 
         if (!flip) {
             std::swap(_faces[2], _faces[3]);
@@ -141,8 +107,25 @@ private:
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
     }
 
-    unsigned int _texture = 0;
-    std::vector<float> _vertices{};
-    std::vector<std::string> _faces{};
+    void update() override {
+        if (_camera) {
+            getShader().setMat4("u_view", glm::mat4(glm::mat3(_camera->getView())));
+        }
+    }
+
+    void render() override {
+        _shader.use();
+        glDepthFunc(GL_LEQUAL);
+        glBindVertexArray(_VAO);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, _tex);
+        glDrawArrays(_drawMode, 0, _positionsDataCount / 3);
+        glBindVertexArray(0);
+        glDepthFunc(GL_LESS);
+    }
+
+private:
+    unsigned int _tex = 0;
+    std::vector<std::string> _faces;
 
 };
