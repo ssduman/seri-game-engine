@@ -28,13 +28,21 @@ public:
         camera->setMazeWallPositions(maze->getVerticalWallPosition(), maze->getHorizontalWallPosition());
 
         Layer layers{};
-        //Light light{ camera.get() };
+
+        Light light{ camera.get() };
+        light.initShader("maze-assets/shaders/entity_vs.shader", "maze-assets/shaders/entity_fs.shader");
+        light.initMVP();
+        light.setPosition({ 0.0f, 10.0f, 8.0f });
+        light.setDefaultPositions();
+        light.setColor({ 1.0f, 1.0f, 1.0f, 1.0f });
+        light.init();
+
         //Skybox skybox{ camera.get() };
         Control control{ &windowManager, camera.get(), &maze };
         Game game{ camera.get(), control, windowManager.getWidthF(), windowManager.getHeightF() };
 
         layers.addLayer(&game);
-        //layers.addLayer(&light);
+        layers.addLayer(&light);
         //layers.addLayer(&skybox);
 
         LOGGER(info, "starting maze game loop");

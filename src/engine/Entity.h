@@ -34,6 +34,12 @@ public:
         _drawMode = drawMode;
     }
 
+    virtual void setPosition(const glm::vec3& position) {
+        _shader.use();
+        _shader.setVec3("u_position", position);
+        _shader.disuse();
+    }
+
     virtual void setPositions(const std::vector<glm::vec3>& positionsData) {
         _usePositions = true;
         _positionsData = positionsData;
