@@ -6,16 +6,22 @@
 #include "../engine/Util.h"
 
 class Camera : public ICamera {
-   public:
+public:
     Camera(CameraProperties cameraProperties, State* state) : ICamera(cameraProperties, state) {
-        Camera::updateEulerAngles();
-        Camera::view();
-        Camera::projection();
-
         LOGGER(info, "camera init succeeded");
     }
 
-    ~Camera() override = default;
+    ~Camera() override {
+        LOGGER(info, "camera delete succeeded");
+    }
+
+    void init() override {
+        updateEulerAngles();
+        updateView();
+        updateProjection();
+    }
+
+    void update() override {}
 
     void handleInput(float deltaTime, CameraMovement cameraMovement) {
         if (_viewUpdated) {
@@ -48,9 +54,10 @@ class Camera : public ICamera {
         }
 
         if (moved) {
-            view();
+            updateView();
 
             _viewUpdated = true;
         }
     }
+
 };

@@ -23,17 +23,17 @@ public:
         CameraProperties cameraProperties{};
         cameraProperties.aspect = windowManager->getWidthF() / windowManager->getHeightF();
         std::shared_ptr<Camera> camera = std::make_shared<Camera>(cameraProperties, state.get());
+        camera->init();
 
         Layer layers{};
-        //Light light{ camera.get() };
-        //Skybox skybox{ camera.get() };
-        Control control{ windowManager.get(), camera.get(), state.get() };
-        GUI gui{ windowManager.get(), camera.get(), &layers, state.get() };
-        //Typer typer{ camera.get(), windowProperties.windowWidth, windowProperties.windowHeight };
 
-        //layers.addLayer(Factory::CreateEntity(camera.get(), EntityType::TRIANGLE));
-        //layers.addLayer(&light);
-        //layers.addLayer(&skybox);
+        Control control{ windowManager.get(), camera.get(), state.get() };
+        control.init();
+
+        GUI gui{ windowManager.get(), camera.get(), &layers, state.get() };
+        gui.init();
+
+        layers.addLayer(Factory::CreateEntity(camera.get(), EntityType::CUBE));
 
         LOGGER(info, "starting seri game engine loop");
 
@@ -48,8 +48,6 @@ public:
                 gui.registerEntity(entity);
             }
 
-            //typer.renderText(toRender, windowManager->getWidthF() / 3.0f, windowManager->getHeightF() / 2.0f);
-
             gui.display();
 
             glfwPollEvents();
@@ -58,8 +56,5 @@ public:
 
         LOGGER(info, "seri game engine loop stopped");
     }
-
-private:
-    std::string toRender{ "this is a test" };
 
 };

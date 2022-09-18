@@ -16,8 +16,6 @@
 class GUI : public Object {
 public:
     GUI(WindowManager* windowManager, Camera* camera, Layer* layers, State* state) : _windowManager(windowManager), _camera(camera), _layers(layers), _state{ state } {
-        GUI::init();
-
         LOGGER(info, "gui init succeeded");
     }
 
@@ -25,6 +23,20 @@ public:
         ImGui_ImplOpenGL3_Shutdown();
         ImGui_ImplGlfw_Shutdown();
         ImGui::DestroyContext();
+
+        LOGGER(info, "gui delete succeeded");
+    }
+
+    void init() override {
+        IMGUI_CHECKVERSION();
+        ImGui::CreateContext();
+
+        setIO();
+        setStyle();
+        setWindowFlags();
+
+        ImGui_ImplGlfw_InitForOpenGL(_windowManager->getWindow(), true);
+        ImGui_ImplOpenGL3_Init(glsl_version);
     }
 
     void update() override {
@@ -49,18 +61,6 @@ public:
     }
 
 private:
-    void init() override {
-        IMGUI_CHECKVERSION();
-        ImGui::CreateContext();
-
-        setIO();
-        setStyle();
-        setWindowFlags();
-
-        ImGui_ImplGlfw_InitForOpenGL(_windowManager->getWindow(), true);
-        ImGui_ImplOpenGL3_Init(glsl_version);
-    }
-
     void helpMarker(const char* desc) {
         ImGui::TextDisabled("(?)");
         if (ImGui::IsItemHovered()) {
@@ -268,7 +268,7 @@ private:
         ImGui::Separator();
     }
 
-    void textCenter(std::string text) {
+    void textCenter(const std::string& text) {
         auto windowWidth = ImGui::GetWindowSize().x;
         auto textWidth = ImGui::CalcTextSize(text.c_str()).x;
 
@@ -303,7 +303,7 @@ private:
         ImGui::PopStyleColor(3);
     }
 
-    void textRight(std::string text) {
+    void textRight(const std::string& text) {
         auto windowWidth = ImGui::GetWindowSize().x;
         auto textWidth = ImGui::CalcTextSize(text.c_str()).x;
 
@@ -321,4 +321,5 @@ private:
     ImGuiWindowFlags _windowFlags = 0;
     const char* glsl_version = "#version 130";
     const char* font_filename = "editor-assets/fonts/En Bloc.ttf";
+
 };
