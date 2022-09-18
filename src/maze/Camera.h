@@ -2,22 +2,14 @@
 
 #include <GLFW/glfw3.h>
 
-#include "../engine/ICamera.h"
+#include "../engine/Util.h"
 #include "../engine/Logger.h"
 #include "../engine/Shader.h"
-#include "../engine/Util.h"
+#include "../engine/ICamera.h"
 
 class Camera : public ICamera {
 public:
     Camera(CameraProperties cameraProperties) : ICamera(cameraProperties) {
-        Camera::init();
-        Camera::initShader("maze-assets/shaders/basic_vs.shader", "maze-assets/shaders/basic_fs.shader");
-        setLight();
-        Camera::updateEulerAngles();
-        Camera::view();
-        Camera::projection();
-        update();
-
         LOGGER(info, "camera init succeeded");
     }
 
@@ -29,30 +21,37 @@ public:
         _cameraProperties.far = 1000.0f;
         _cameraProperties.speed = 0.3f;
         _cameraProperties.sensitivity = 0.04f;
-    }
 
-    void initShader(const std::string& vsCodePath, const std::string& fsCodePath) {
-        _shader.init(vsCodePath, fsCodePath);
+        updateEulerAngles();
+        updateView();
+        updateProjection();
+        update();
     }
 
     void setLight() {
         _shader.use();
         _shader.setFloat("u_ambient", _ambient);
-        _shader.setVec3("u_viewPos", glm::vec3(0, 10, 0));
-        _shader.setVec3("u_lightPos", glm::vec3(0, 10, 0));
+        _shader.setVec3("u_viewPos", glm::vec3{ 0, 10, 0 });
+        _shader.setVec3("u_lightPos", glm::vec3{ 0, 10, 0 });
     }
 
-    void setCameraPosition(glm::vec3 position) {
+    void setCameraPosition(const glm::vec3& position) {
         _cameraProperties = CameraProperties{};
         _cameraProperties.position = position;
 
-        _roll = 0.0f, _pitch = 0.0f, _yaw = 90.0f;
-        _xPosLast = -1.0f, _yPosLast = -1.0f;
+        _roll = 0.0f;
+        _pitch = 0.0f;
+        _yaw = 90.0f;
+        _xPosLast = -1.0f;
+        _yPosLast = -1.0f;
 
-        _isPlaying = false, _cheatActivated = false;
-        _checkC = true, _checkE = true, _checkR = true;
+        _isPlaying = false;
+        _isCheatActivated = false;
+        _checkC = true;
+        _checkE = true;
+        _checkR = true;
 
-        view();
+        updateView();
         updateEulerAngles();
         update();
     }
@@ -87,7 +86,7 @@ public:
         }
 
         if ((glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS) && _checkC) {
-            _cheatActivated = !_cheatActivated;
+            _isCheatActivated = !_isCheatActivated;
             _cameraProperties.speed = 0.3f;
             _checkC = false;
         }
@@ -95,10 +94,10 @@ public:
             _checkC = true;
         }
 
-        if ((glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) && _cheatActivated) {
+        if ((glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) && _isCheatActivated) {
             _cameraProperties.speed += 0.2f;
         }
-        if ((glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) && _cheatActivated) {
+        if ((glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) && _isCheatActivated) {
             if (_cameraProperties.speed > 0.3f) {
                 _cameraProperties.speed -= 0.2f;
             }
@@ -108,94 +107,77 @@ public:
         auto right = _cameraProperties.right;
         auto cameraPositionTemp = _cameraProperties.position;
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-            cameraPositionTemp += glm::normalize(projectionVector(front, right)) * _cameraProperties.speed;
-            if ((canIPass(cameraPositionTemp) == false) && (!_cheatActivated)) {
+            cameraPositionTemp += glm::normalize(calculateProjectionVector(front, right)) * _cameraProperties.speed;
+            if ((canIPass(cameraPositionTemp) == false) && (!_isCheatActivated)) {
                 cameraPositionTemp = _cameraProperties.position;
-            } else if (canIPass(_cameraProperties.position) && (!_cheatActivated)) {
-                _cameraProperties.position += glm::normalize(projectionVector(front, right)) * _cameraProperties.speed;
+            } else if (canIPass(_cameraProperties.position) && (!_isCheatActivated)) {
+                _cameraProperties.position += glm::normalize(calculateProjectionVector(front, right)) * _cameraProperties.speed;
                 cameraPositionTemp = _cameraProperties.position;
-            } else if (_cheatActivated) {
+            } else if (_isCheatActivated) {
                 _cameraProperties.position += front * _cameraProperties.speed;
                 cameraPositionTemp = _cameraProperties.position;
             }
         }
         if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-            cameraPositionTemp -= glm::normalize(projectionVector(front, right)) * _cameraProperties.speed;
-            if ((canIPass(cameraPositionTemp) == false) && (!_cheatActivated)) {
+            cameraPositionTemp -= glm::normalize(calculateProjectionVector(front, right)) * _cameraProperties.speed;
+            if ((canIPass(cameraPositionTemp) == false) && (!_isCheatActivated)) {
                 cameraPositionTemp = _cameraProperties.position;
-            } else if (canIPass(_cameraProperties.position) && (!_cheatActivated)) {
-                _cameraProperties.position -= glm::normalize(projectionVector(front, right)) * _cameraProperties.speed;
+            } else if (canIPass(_cameraProperties.position) && (!_isCheatActivated)) {
+                _cameraProperties.position -= glm::normalize(calculateProjectionVector(front, right)) * _cameraProperties.speed;
                 cameraPositionTemp = _cameraProperties.position;
-            } else if (_cheatActivated) {
+            } else if (_isCheatActivated) {
                 _cameraProperties.position -= front * _cameraProperties.speed;
                 cameraPositionTemp = _cameraProperties.position;
             }
         }
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
             cameraPositionTemp += right * _cameraProperties.speed;
-            if ((canIPass(cameraPositionTemp) == false) && (!_cheatActivated)) {
+            if ((canIPass(cameraPositionTemp) == false) && (!_isCheatActivated)) {
                 cameraPositionTemp = _cameraProperties.position;
-            } else if ((canIPass(_cameraProperties.position)) && (!_cheatActivated)) {
+            } else if ((canIPass(_cameraProperties.position)) && (!_isCheatActivated)) {
                 _cameraProperties.position += right * (_cameraProperties.speed);
                 cameraPositionTemp = _cameraProperties.position;
-            } else if (_cheatActivated) {
+            } else if (_isCheatActivated) {
                 _cameraProperties.position += right * (_cameraProperties.speed);
                 cameraPositionTemp = _cameraProperties.position;
             }
         }
         if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
             cameraPositionTemp -= right * _cameraProperties.speed;
-            if ((canIPass(cameraPositionTemp) == false) && (!_cheatActivated)) {
+            if ((canIPass(cameraPositionTemp) == false) && (!_isCheatActivated)) {
                 cameraPositionTemp = _cameraProperties.position;
-            } else if ((canIPass(_cameraProperties.position)) && (!_cheatActivated)) {
+            } else if ((canIPass(_cameraProperties.position)) && (!_isCheatActivated)) {
                 _cameraProperties.position -= right * (_cameraProperties.speed);
                 cameraPositionTemp = _cameraProperties.position;
-            } else if (_cheatActivated) {
+            } else if (_isCheatActivated) {
                 _cameraProperties.position -= right * (_cameraProperties.speed);
                 cameraPositionTemp = _cameraProperties.position;
             }
         }
     }
 
-    void update() {
-        view();
+    void update() override {
+        updateView();
+
         _shader.use();
-
+        glm::mat4 model = getModel();
         if (!_isPlaying) {
-            static float dx = 0.0f;
-
-            dx += 0.01f;
-            if (dx >= 360.0f) {
-                dx = 0.0f;
-            }
-
-            const auto t = _cubeThickness;
-            glm::vec3 center = glm::vec3(0.0f, -t / 2, 0.0f);
-            glm::mat4 rotate = glm::rotate(dx, center);
-            glm::mat4 translate = glm::translate(glm::mat4(1.0f), glm::vec3(-(_mazeWidth / 2) * t * 2, -t / 2, -(_mazeHeight / 2) * t * 2));
-
-            _shader.setMat4("u_model", rotate * translate);
-        } else {
-            _shader.setMat4("u_model", glm::mat4(1.0f));
+            model = getRotateModel();
         }
-
+        _shader.setMat4("u_model", model);
         _shader.setMat4("u_view", getView());
         _shader.setMat4("u_projection", getProjection());
     }
 
-    glm::vec3 projectionVector(const glm::vec3& front, const glm::vec3& right) {
-        glm::vec3 u = glm::cross(_cameraProperties.up, right);
-        glm::vec3 v = front;
-
-        return ((u * v) / static_cast<float>(pow(glm::length(u), 2)) * u);
-    }
-
     bool checkWin() {
-        glm::vec3 pos = _cameraProperties.position;
-        float t1 = _cubeThickness, t2 = _cubeThickness * 2, h = _mazeHeight;
-        bool x = pos.x >= -_cubeThickness && pos.x <= _cubeThickness;
-        bool z = pos.z >= (h - 2) * t2 + t1 && pos.z <= (h - 1) * t2 + t1;
-        if (x && z) return true;
+        const glm::vec3 position = _cameraProperties.position;
+        const float h = _mazeHeight;
+        const float t = _cubeThickness;
+        const bool conditionX = position.x >= -_cubeThickness && position.x <= _cubeThickness;
+        const bool conditionZ = position.z >= (h - 2) * t * 2 + t && position.z <= (h - 1) * t * 2 + t;
+        if (conditionX && conditionZ) {
+            return true;
+        }
         return false;
     }
 
@@ -222,7 +204,30 @@ public:
     }
 
 private:
-    bool canIPass(glm::vec3 position) {
+    glm::vec3 calculateProjectionVector(const glm::vec3& front, const glm::vec3& right) {
+        glm::vec3 u = glm::cross(_cameraProperties.up, right);
+        glm::vec3 v = front;
+
+        return ((u * v) / static_cast<float>(pow(glm::length(u), 2)) * u);
+    }
+
+    glm::mat4 getRotateModel() {
+        static float dx = 0.0f;
+
+        dx += 0.01f;
+        if (dx >= 360.0f) {
+            dx = 0.0f;
+        }
+
+        const auto t = _cubeThickness;
+        glm::vec3 center = glm::vec3(0.0f, -t / 2, 0.0f);
+        glm::mat4 rotate = glm::rotate(dx, center);
+        glm::mat4 translate = glm::translate(glm::mat4(1.0f), glm::vec3(-(_mazeWidth / 2) * t * 2, -t / 2, -(_mazeHeight / 2) * t * 2));
+
+        return rotate * translate;
+    }
+
+    bool canIPass(const glm::vec3& position) {
         float currentX = position.x;
         float currentZ = position.z;
 
@@ -237,9 +242,8 @@ private:
         bool cond5 = currentYPosAtMaze >= 0 && currentYPosAtMaze < _mazeHeight;     // legal index
 
         if (cond1 && cond2 && cond3 && cond4 && cond5) {
-            position.x = std::round(position.x);
-            position.y = 0.0f;
-            position.z = std::round(position.z);
+            currentX = std::round(position.x);
+            currentZ = std::round(position.z);
 
             /*     A 5x5 maze
              +Z
@@ -276,8 +280,8 @@ private:
             which row we are in.
             */
 
-            glm::vec3 vertical(position.x, 0.0f, (std::round(position.z / 10)) * 10);
-            glm::vec3 horizontal((std::round(position.x / 10)) * 10, 0.0f, position.z);
+            glm::vec3 vertical(currentX, 0.0f, (std::round(currentZ / 10)) * 10);
+            glm::vec3 horizontal((std::round(currentX / 10)) * 10, 0.0f, currentZ);
 
             auto it1 = std::find(_verticalWallPosition.begin(), _verticalWallPosition.end(), vertical);
             auto it2 = std::find(_horizontalWallPosition.begin(), _horizontalWallPosition.end(), horizontal);
@@ -291,16 +295,22 @@ private:
         return false;
     }
 
-    Shader _shader;
     float _ambient{ 0.7f };
     glm::vec3 lightColor{ 1.0f, 1.0f, 1.0f };
 
-    bool _isPlaying = false, _cheatActivated = false;
-    bool _checkC = true, _checkE = true, _checkR = true;
+    bool _isPlaying{ false };
+    bool _showEscapePath{ false };
+    bool _isCheatActivated{ false };
+    bool _isRestartTriggered{ false };
 
-    bool _showEscapePath = false, _isRestartTriggered = false;
+    bool _checkC{ true };
+    bool _checkE{ true };
+    bool _checkR{ true };
 
-    float _mazeWidth{}, _mazeHeight{}, _cubeThickness{};
-    std::vector<glm::vec3> _verticalWallPosition{};
-    std::vector<glm::vec3> _horizontalWallPosition{};
+    float _mazeWidth{ 0.0f };
+    float _mazeHeight{ 0.0f };
+    float _cubeThickness{ 0.0f };
+    std::vector<glm::vec3> _verticalWallPosition;
+    std::vector<glm::vec3> _horizontalWallPosition;
+
 };

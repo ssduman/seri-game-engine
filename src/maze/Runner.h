@@ -22,6 +22,9 @@ public:
         CameraProperties cameraProperties;
         cameraProperties.position = glm::vec3{ 0, _mazeThickness * 5, -_mazeThickness * 4 - _mazeHeight * _mazeThickness };
         std::shared_ptr<Camera> camera = std::make_shared<Camera>(cameraProperties);
+        camera->initShader("maze-assets/shaders/basic_vs.shader", "maze-assets/shaders/basic_fs.shader");
+        camera->setLight();
+        camera->init();
 
         Maze* maze = new Maze{ camera.get(), _mazeWidth, _mazeHeight, _mazeThickness };
         camera->setMazeDimensions(_mazeWidth, _mazeHeight, _mazeThickness);

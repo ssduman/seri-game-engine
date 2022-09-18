@@ -5,8 +5,6 @@
 #include <GL/glew.h>
 #include <stb_image.h>
 
-#include <string>
-
 class Texture {
 public:
     Texture() {

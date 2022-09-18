@@ -171,6 +171,9 @@
     <ClInclude Include="EntityType.h">
       <Filter>Entity</Filter>
     </ClInclude>
+    <ClInclude Include="CameraProperties.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\basic_fs.shader">
