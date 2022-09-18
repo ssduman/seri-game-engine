@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Logger.h"
+
 #include <GL/glew.h>
 #include <stb_image.h>
 
@@ -7,40 +9,37 @@
 
 class Texture {
 public:
-    Texture() = default;
-
-    Texture(const std::string& texturePath) {
-        init(texturePath);
+    Texture() {
+        LOGGER(info, "texture init succeeded");
     }
 
     ~Texture() {
-        glDeleteTextures(1, &_texture);
+        glDeleteTextures(1, &_tex);
+
+        LOGGER(info, "texture delete succeeded");
     }
 
     void init(const std::string& texturePath) {
-        if (_texture != 0) {
-            return;
-        }
-
-        glGenTextures(1, &_texture);
-        glBindTexture(GL_TEXTURE_2D, _texture);
+        glGenTextures(1, &_tex);
+        glBindTexture(GL_TEXTURE_2D, _tex);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
         setTextureFlip(true);
-        _image = loadTexture(texturePath, _width, _height, _components, 0);
-        if (_image) {
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, _width, _height, 0, GL_RGBA, GL_UNSIGNED_BYTE, _image);
+
+        int width, height, components;
+        if (auto image = loadTexture(texturePath, width, height, components, 0)) {
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
             glGenerateMipmap(GL_TEXTURE_2D);
-            unloadTexture(_image);
+            unloadTexture(image);
         }
     }
 
     void bind() {
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, _texture);
+        glBindTexture(GL_TEXTURE_2D, _tex);
     }
 
     void unbind() {
@@ -60,10 +59,6 @@ public:
     }
 
 private:
-    int _width = 0;
-    int _height = 0;
-    int _components = 0;
-    unsigned int _texture = 0;
-    unsigned char* _image = nullptr;
+    unsigned int _tex = 0;
 
 };

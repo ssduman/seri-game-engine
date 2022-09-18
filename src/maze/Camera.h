@@ -17,6 +17,12 @@ public:
         Camera::view();
         Camera::projection();
         update();
+
+        LOGGER(info, "camera init succeeded");
+    }
+
+    ~Camera() override {
+        LOGGER(info, "camera delete succeeded");
     }
 
     void init() override {

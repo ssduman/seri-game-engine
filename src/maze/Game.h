@@ -25,6 +25,8 @@ public:
     ~Game() override {
         delete _typer;
         delete _stopwatch;
+
+        LOGGER(info, "game delete succeeded");
     }
 
     void display() override {

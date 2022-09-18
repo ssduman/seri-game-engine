@@ -45,27 +45,45 @@ public:
         LOGGER(info, "maze init succeeded");
     }
 
+    ~Maze() override {
+        delete passTexture;
+        delete wallTexture;
+        delete escapeTexture;
+        delete nonEscapeTexture;
+        delete wallVerticalTexture;
+
+        delete passRender;
+        delete escapeRender;
+        delete nonEscapeRender;
+        delete verticalWallRender;
+        delete horizontalWallRender;
+
+        LOGGER(info, "maze delete succeeded");
+    }
+
     void resetMaze(float width, float height, float thickness) {
-        verticalWallPosition.clear();
-        horizontalWallPosition.clear();
-        passPosition.clear();
-        escapePosition.clear();
-        nonEscapePosition.clear();
         mazeMap.clear();
         nodesMap.clear();
         mazeMapTree.clear();
         visitedTable.clear();
 
-        delete wallTexture;
-        delete wallVerticalTexture;
+        passPosition.clear();
+        escapePosition.clear();
+        nonEscapePosition.clear();
+        verticalWallPosition.clear();
+        horizontalWallPosition.clear();
+
         delete passTexture;
+        delete wallTexture;
         delete escapeTexture;
         delete nonEscapeTexture;
-        delete verticalWallRender;
-        delete horizontalWallRender;
+        delete wallVerticalTexture;
+
         delete passRender;
         delete escapeRender;
         delete nonEscapeRender;
+        delete verticalWallRender;
+        delete horizontalWallRender;
 
         _width = width;
         _height = height;
@@ -131,11 +149,20 @@ private:
     void init() override {}
 
     void initTextures() {
-        wallTexture = new Texture("maze-assets/textures/wall1.png");
-        wallVerticalTexture = new Texture("maze-assets/textures/wall2.png");
-        passTexture = new Texture("maze-assets/textures/passage.png");
-        escapeTexture = new Texture("maze-assets/textures/escape.png");
-        nonEscapeTexture = new Texture("maze-assets/textures/nonescape.png");
+        passTexture = new Texture();
+        passTexture->init("maze-assets/textures/passage.png");
+
+        wallTexture = new Texture();
+        wallTexture->init("maze-assets/textures/wall1.png");
+
+        escapeTexture = new Texture();
+        escapeTexture->init("maze-assets/textures/escape.png");
+
+        nonEscapeTexture = new Texture();
+        nonEscapeTexture->init("maze-assets/textures/nonescape.png");
+
+        wallVerticalTexture = new Texture();
+        wallVerticalTexture->init("maze-assets/textures/wall2.png");
     }
 
     void initRenderer() {
@@ -379,19 +406,19 @@ private:
         }
     }
 
-    std::string makeNodeKey(m_pair pair) {
+    std::string makeNodeKey(const m_pair& pair) {
         std::string key = std::to_string(pair.first) + ", " + std::to_string(pair.second);
 
         return key;
     }
 
-    std::string makeKey(v_pair edge) {
+    std::string makeKey(const v_pair& edge) {
         std::string key = std::to_string(edge[0].first) + " " + std::to_string(edge[0].second) + " " +
             std::to_string(edge[1].first) + " " + std::to_string(edge[1].second);
         return key;
     }
 
-    v_pair neighbors4(m_pair square) {
+    v_pair neighbors4(const m_pair& square) {
         v_pair neighbors;
         m_pair temp1(square.first + 1, square.second);
         m_pair temp2(square.first, square.second + 1);
@@ -405,7 +432,7 @@ private:
         return neighbors;
     }
 
-    v_pair intersectionMap(v_pair& v) {
+    v_pair intersectionMap(const v_pair& v) {
         v_pair inter;
         for (const auto& it : v) {
             if (nodesMap.find(makeNodeKey(std::make_pair(it.first, it.second))) != nodesMap.end()) {
@@ -416,7 +443,7 @@ private:
         return inter;
     }
 
-    v_pair edgePair(m_pair node1, m_pair node2) {
+    v_pair edgePair(const m_pair& node1, const m_pair& node2) {
         v_pair edge;
         edge.push_back(node1);
         edge.push_back(node2);

@@ -17,7 +17,9 @@ public:
         LOGGER(info, "control init succeeded");
     }
 
-    ~Control() override = default;
+    ~Control() override {
+        LOGGER(info, "control delete succeeded");
+    }
 
     void charCallback(GLFWwindow* window, unsigned int codepoint) override {
         auto str = encodeUTF8(codepoint);
