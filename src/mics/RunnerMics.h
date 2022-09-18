@@ -41,6 +41,8 @@ public:
         PerlinNoise perlinNoise{ camera.get(), layers };
         perlinNoise();
 
+        Point* BarnsleyFernPoints = new Point(camera.get());
+
         LOGGER(info, "starting mics loop");
 
         while (!glfwWindowShouldClose(windowManager->getWindow())) {
@@ -51,7 +53,7 @@ public:
 
             control.processInput(deltaTime);
 
-            //fractal.BarnsleyFernAnimation(deltaTime);
+            fractal.BarnsleyFernAnimation(BarnsleyFernPoints, deltaTime);
 
             for (auto entity : layers.getLayers()) {
                 entity->display();

@@ -95,7 +95,37 @@ public:
     }
 
     virtual void reserveTotalDataCount(int totalDataCount) {
-        _totalDataCount = totalDataCount;
+        _totalDataCount += totalDataCount;
+        _usePositions = true;
+        _positionsData.reserve(_totalDataCount);
+        _positionsDataDimension = 3;
+    }
+
+    virtual void reserveTotalDataCountVec4(int totalDataCount) {
+        _totalDataCount += totalDataCount;
+        _usePositionsVec4 = true;
+        _positionsDataVec4.reserve(_totalDataCount);
+        _positionsDataDimension = 4;
+        _positionsDataCount = static_cast<int>(_positionsData.size()) * _positionsDataDimension;
+    }
+
+    virtual void addPositions(const std::vector<glm::vec3>& positionsData) {
+        GLintptr offsetSize = static_cast<int>(_positionsData.size()) * _positionsDataDimension;
+        _positionsData.insert(_positionsData.end(), positionsData.begin(), positionsData.end());
+        _positionsDataCount = static_cast<int>(_positionsData.size()) * _positionsDataDimension;
+
+        // bind vao
+        glBindVertexArray(_VAO);
+        // bind vbo
+        glBindBuffer(GL_ARRAY_BUFFER, _VBO);
+        // calculate position data size
+        const auto positionsDataSize = _positionsDataCount * sizeof(GLfloat);
+        // set position sub data
+        glBufferSubData(GL_ARRAY_BUFFER, offsetSize, positionsDataSize, _positionsData.data());
+        // configure position attribute
+        glVertexAttribPointer(0, _positionsDataDimension, GL_FLOAT, GL_FALSE, _positionsDataDimension * sizeof(GLfloat), (void*)offsetSize);
+        // location defined in shader
+        glEnableVertexAttribArray(0);
     }
 
     void init() override {
@@ -207,6 +237,10 @@ public:
         if (_camera) {
             getShader().setMat4("u_view", _camera->getView());
         }
+    }
+
+    const std::vector<glm::vec3>& getPositionsData() {
+        return _positionsData;
     }
 
     Color& getColor() {

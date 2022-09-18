@@ -55,59 +55,67 @@ public:
         LOGGER(info, "Barnsley Fern created with size: " << positions.size());
     }
 
-    /*
-    void BarnsleyFernAnimation(float deltaTime) {
+    void BarnsleyFernAnimation(Point* entity, float deltaTime) {
         static int i = 0;
         static float dx = 0.0f;
         constexpr float z = 10.0f;
         constexpr float dy = 2.0f;
         constexpr int iteration = 50000;
+        constexpr int perSample = 200;
+
+        if (i == 0) {
+            entity->initShader("mics-assets/shaders/entity_vs.shader", "mics-assets/shaders/entity_fs.shader");
+            entity->initMVP();
+
+            entity->setDrawMode(GL_POINTS);
+            entity->reserveTotalDataCount(iteration * 3 * sizeof(GLfloat));
+            entity->setColor({ 0.0f, 0.6f, 0.16f, 1.0f });
+
+            entity->init();
+
+            entity->addPositions({ { 0.0f, dy, z } });
+            i++;
+
+            _layers.addLayer(entity);
+        }
 
         dx += deltaTime;
-        if (dx >= 0.0016f && i < iteration) {
-            std::vector<glm::vec3> pointCoordinates{};
-            std::vector<glm::vec3> pointColors{};
-
-            if (i == 0) {
-                pointCoordinates.emplace_back(0.0f, dy, z);
-                pointColors.emplace_back(0.0f, 0.6f, 0.16f);
-            } else {
-                Entity* prev = _layers.getLayers().front();
-                const auto& prevPointCoordinates = prev->getVertices();
-                const auto x = prevPointCoordinates[0];
-                const auto y = prevPointCoordinates[1] + dy;
+        if (dx >= 0.016f && i < iteration) {
+            std::vector<glm::vec3> positions;
+            const auto& positionsData = entity->getPositionsData();
+            auto prevPosition = positionsData.back();
+            for (int k = 0; i < iteration && k < perSample; k++) {
+                if (!positions.empty()) {
+                    prevPosition = positions.back();
+                }
+                const auto x = prevPosition.x;
+                const auto y = prevPosition.y + dy;
                 const auto next = _distribution(_generator);
 
                 if (next == 1) {
-                    pointCoordinates.emplace_back(x, 0.16f * y, z);
+                    positions.emplace_back(x, 0.16f * y, z);
                 }
                 if (next >= 2 && next <= 86) {
-                    pointCoordinates.emplace_back(0.85f * x + 0.04f * y, -0.04f * x + 0.85f * y + 1.6f, z);
+                    positions.emplace_back(0.85f * x + 0.04f * y, -0.04f * x + 0.85f * y + 1.6f, z);
                 }
                 if (next >= 87 && next <= 93) {
-                    pointCoordinates.emplace_back(0.2f * x - 0.26f * y, 0.23f * x + 0.22f * y + 1.6f, z);
+                    positions.emplace_back(0.2f * x - 0.26f * y, 0.23f * x + 0.22f * y + 1.6f, z);
                 }
                 if (next >= 94 && next <= 100) {
-                    pointCoordinates.emplace_back(-0.15f * x + 0.28f * y, 0.26f * x + 0.24f * y + 0.44f, z);
+                    positions.emplace_back(-0.15f * x + 0.28f * y, 0.26f * x + 0.24f * y + 0.44f, z);
                 }
 
-                pointColors.emplace_back(0.0f, 0.6f, 0.16f);
+                i++;
             }
 
-            EntityProperties pointProperties{ pointCoordinates, pointColors, GL_POINTS };
-            Point* point = new Point(_camera, pointProperties);
-            point->setUseSingleColor(false);
-            point->initShader("mics-assets/shaders/entity_vs.shader", "mics-assets/shaders/entity_fs.shader");
-            point->initCamera(_camera);
-            point->init();
-
             dx = 0.0f;
-            i++;
+            entity->addPositions(positions);
 
-            _layers.addLayer(point);
+            if (i >= iteration) {
+                LOGGER(info, "Barnsley Fern animation completed with size: " << entity->getPositionsData().size());
+            }
         }
     }
-    */
 
     void tree() {
         std::vector<glm::vec3> positions{};
