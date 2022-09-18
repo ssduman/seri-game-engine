@@ -159,6 +159,9 @@ public:
     void generateMaze(float mazeWidth, float mazeHeight, float mazeThickness) {
         delete* _maze;
         *_maze = new Maze{ _camera, mazeWidth, mazeHeight, mazeThickness };
+        (*_maze)->initTextures();
+        (*_maze)->initRenderer();
+        (*_maze)->createMaze();
 
         CameraProperties cameraProperties;
         cameraProperties.position = glm::vec3((mazeWidth - 1) * mazeThickness * 2, mazeThickness / 2, -mazeThickness * 4);

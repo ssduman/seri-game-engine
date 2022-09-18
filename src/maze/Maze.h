@@ -19,27 +19,6 @@ typedef std::vector<m_pair> v_pair;
 class Maze : public Entity {
 public:
     Maze(ICamera* camera, float width, float height, float thickness) : Entity(camera), _width(width), _height(height), _thickness(thickness) {
-        Maze::init();
-        initTextures();
-        initRenderer();
-
-        constexpr float max_maze_area{ 1000000.0f };
-
-        const auto mazeArea{ _width * _height };
-        const std::string mazeDimensions{ std::to_string(static_cast<int>(_width)) + "x" + std::to_string(static_cast<int>(_height)) };
-
-        LOGGER(info, "generating '" << mazeDimensions << "' maze");
-        generateMaze();
-        LOGGER(info, "generated '" << mazeDimensions << "' maze");
-
-        if (mazeArea <= max_maze_area) {
-            LOGGER(info, "solving the maze");
-            solveMaze();
-            LOGGER(info, "solved the maze");
-        } else {
-            LOGGER(warning, "maze is too big to solve, max is " << max_maze_area);
-        }
-
         _cameraMaze = dynamic_cast<Camera*>(_camera);
 
         LOGGER(info, "maze init succeeded");
@@ -59,6 +38,40 @@ public:
         delete horizontalWallRender;
 
         LOGGER(info, "maze delete succeeded");
+    }
+
+    void initTextures() {
+        passTexture = new Texture();
+        passTexture->init("maze-assets/textures/passage.png");
+
+        wallTexture = new Texture();
+        wallTexture->init("maze-assets/textures/wall1.png");
+
+        escapeTexture = new Texture();
+        escapeTexture->init("maze-assets/textures/escape.png");
+
+        nonEscapeTexture = new Texture();
+        nonEscapeTexture->init("maze-assets/textures/nonescape.png");
+
+        wallVerticalTexture = new Texture();
+        wallVerticalTexture->init("maze-assets/textures/wall2.png");
+    }
+
+    void initRenderer() {
+        passRender = new Renderer(_thickness / (_thickness * 2) - 1.0f, _thickness, _thickness);
+        passRender->init();
+
+        escapeRender = new Renderer(_thickness / (_thickness * 2) - 1.0f, _thickness, _thickness);
+        escapeRender->init();
+
+        nonEscapeRender = new Renderer(_thickness / (_thickness * 2) - 1.0f, _thickness, _thickness);
+        nonEscapeRender->init();
+
+        verticalWallRender = new Renderer(_thickness, 0.2f, _thickness);
+        verticalWallRender->init();
+
+        horizontalWallRender = new Renderer(_thickness, _thickness, 0.2f);
+        horizontalWallRender->init();
     }
 
     void resetMaze(float width, float height, float thickness) {
@@ -96,6 +109,27 @@ public:
         generateMaze();
         solveMaze();
     }
+
+    void createMaze() {
+        constexpr float max_maze_area{ 1000000.0f };
+
+        const auto mazeArea{ _width * _height };
+        const std::string mazeDimensions{ std::to_string(static_cast<int>(_width)) + "x" + std::to_string(static_cast<int>(_height)) };
+
+        LOGGER(info, "generating '" << mazeDimensions << "' maze");
+        generateMaze();
+        LOGGER(info, "generated '" << mazeDimensions << "' maze");
+
+        if (mazeArea <= max_maze_area) {
+            LOGGER(info, "solving the maze");
+            solveMaze();
+            LOGGER(info, "solved the maze");
+        } else {
+            LOGGER(warning, "maze is too big to solve, max is " << max_maze_area);
+        }
+    }
+
+    void init() override {}
 
     void update() override {}
 
@@ -146,42 +180,6 @@ public:
     }
 
 private:
-    void init() override {}
-
-    void initTextures() {
-        passTexture = new Texture();
-        passTexture->init("maze-assets/textures/passage.png");
-
-        wallTexture = new Texture();
-        wallTexture->init("maze-assets/textures/wall1.png");
-
-        escapeTexture = new Texture();
-        escapeTexture->init("maze-assets/textures/escape.png");
-
-        nonEscapeTexture = new Texture();
-        nonEscapeTexture->init("maze-assets/textures/nonescape.png");
-
-        wallVerticalTexture = new Texture();
-        wallVerticalTexture->init("maze-assets/textures/wall2.png");
-    }
-
-    void initRenderer() {
-        passRender = new Renderer(_thickness / (_thickness * 2) - 1.0f, _thickness, _thickness);
-        passRender->init();
-
-        escapeRender = new Renderer(_thickness / (_thickness * 2) - 1.0f, _thickness, _thickness);
-        escapeRender->init();
-
-        nonEscapeRender = new Renderer(_thickness / (_thickness * 2) - 1.0f, _thickness, _thickness);
-        nonEscapeRender->init();
-
-        verticalWallRender = new Renderer(_thickness, 0.2f, _thickness);
-        verticalWallRender->init();
-
-        horizontalWallRender = new Renderer(_thickness, _thickness, 0.2f);
-        horizontalWallRender->init();
-    }
-
     void generateMaze() {
         std::srand(time(nullptr));
 
@@ -451,6 +449,15 @@ private:
         return edge;
     }
 
+    float _width{ 0.0f };
+    float _height{ 0.0f };
+    float _thickness{ 0.0f };
+    int passCount{ 0 };
+    int verticalCount{ 0 };
+    int horizontalCount{ 0 };
+
+    Camera* _cameraMaze = nullptr;
+
     Texture* passTexture = nullptr;
     Texture* wallTexture = nullptr;
     Texture* escapeTexture = nullptr;
@@ -462,11 +469,6 @@ private:
     Renderer* nonEscapeRender = nullptr;
     Renderer* verticalWallRender = nullptr;
     Renderer* horizontalWallRender = nullptr;
-
-    float _width = 0.0f, _height = 0.0f, _thickness = 0.0f;
-    int passCount = 0, verticalCount = 0, horizontalCount = 0;
-
-    Camera* _cameraMaze = nullptr;
 
     std::vector<glm::vec3> passPosition;
     std::vector<glm::vec3> escapePosition;

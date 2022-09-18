@@ -15,7 +15,7 @@ public:
     ~Runner() override = default;
 
     void operator()() {
-        WindowProperties windowProperties{ /*title*/ "Maze", /*fullscreen*/ true };
+        WindowProperties windowProperties{ /*title*/ "Seri Game Engine - Maze", /*fullscreen*/ true };
         WindowManager windowManager{ windowProperties };
         windowManager.disableCursor();
 
@@ -27,10 +27,12 @@ public:
         camera->init();
 
         Maze* maze = new Maze{ camera.get(), _mazeWidth, _mazeHeight, _mazeThickness };
+        maze->initTextures();
+        maze->initRenderer();
+        maze->createMaze();
+
         camera->setMazeDimensions(_mazeWidth, _mazeHeight, _mazeThickness);
         camera->setMazeWallPositions(maze->getVerticalWallPosition(), maze->getHorizontalWallPosition());
-
-        Layer layers{};
 
         Light light{ camera.get() };
         light.initShader("maze-assets/shaders/entity_vs.shader", "maze-assets/shaders/entity_fs.shader");
@@ -67,6 +69,7 @@ public:
         game.setDefaultPositions();
         game.init();
 
+        Layer layers{};
         layers.addLayer(&game);
         layers.addLayer(&light);
         layers.addLayer(&skybox);
