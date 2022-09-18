@@ -48,7 +48,7 @@ public:
         _totalDataCount += _positionsDataCount;
     }
 
-    virtual void setPositions(const std::vector<glm::vec4>& positionsDataVec4) {
+    virtual void setPositionsVec4(const std::vector<glm::vec4>& positionsDataVec4) {
         _usePositionsVec4 = true;
         _positionsDataVec4 = positionsDataVec4;
         _positionsDataDimension = 4;

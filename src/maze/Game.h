@@ -46,7 +46,7 @@ public:
         const float z = _height / (6.0f * _width / _height);
         const float w = _width / 6.0f;
 
-        std::vector<glm::vec4> positions{
+        std::vector<glm::vec4> positionsVec4{
             { x, z, 1.0f, 1.0f }, // top right
             { w, z, 0.0f, 1.0f }, // top left
             { w, y, 0.0f, 0.0f }, // bottom left
@@ -56,7 +56,7 @@ public:
             { w, y, 0.0f, 0.0f }, // bottom left
         };
 
-        setPositions(positions);
+        setPositionsVec4(positionsVec4);
     }
 
     void render() override {
