@@ -59,6 +59,13 @@ public:
         control.init();
 
         Game game{ camera.get(), control, windowManager.getWidthF(), windowManager.getHeightF() };
+        game.initShader("maze-assets/shaders/game_vs.shader", "maze-assets/shaders/game_fs.shader");
+        game.initTyper();
+        game.initStopwatch();
+        game.setTexture("maze-assets/textures/gameWindow.png");
+        game.setProjection();
+        game.setDefaultPositions();
+        game.init();
 
         layers.addLayer(&game);
         layers.addLayer(&light);

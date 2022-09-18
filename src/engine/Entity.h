@@ -48,6 +48,14 @@ public:
         _totalDataCount += _positionsDataCount;
     }
 
+    virtual void setPositions(const std::vector<glm::vec4>& positionsDataVec4) {
+        _usePositionsVec4 = true;
+        _positionsDataVec4 = positionsDataVec4;
+        _positionsDataDimension = 4;
+        _positionsDataCount = static_cast<int>(_positionsDataVec4.size()) * _positionsDataDimension;
+        _totalDataCount += _positionsDataCount;
+    }
+
     virtual void setColor(const glm::vec4& color) {
         _color = { color };
         _shader.use();
@@ -137,6 +145,19 @@ public:
             offsetSize += positionsDataSize;
         }
 
+        if (_usePositionsVec4) {
+            // calculate position data size
+            const auto positionsDataSize = _positionsDataCount * sizeof(GLfloat);
+            // set position sub data
+            glBufferSubData(GL_ARRAY_BUFFER, offsetSize, positionsDataSize, _positionsDataVec4.data());
+            // configure position attribute
+            glVertexAttribPointer(0, _positionsDataDimension, GL_FLOAT, GL_FALSE, _positionsDataDimension * sizeof(GLfloat), (void*)offsetSize);
+            // location defined in shader
+            glEnableVertexAttribArray(0);
+            // update offset size
+            offsetSize += positionsDataSize;
+        }
+
         if (_useColors) {
             // calculate color data size
             const auto colorsDataSize = _colorsDataCount * sizeof(GLfloat);
@@ -216,11 +237,13 @@ protected:
     unsigned int _EBO{ 0 };
 
     std::vector<glm::vec3> _positionsData;
+    std::vector<glm::vec4> _positionsDataVec4;
     std::vector<glm::vec4> _colorsData;
     std::vector<glm::vec2> _texturePositionsData;
     std::vector<glm::vec3> _normalsData;
 
     bool _usePositions{ false };
+    bool _usePositionsVec4{ false };
     bool _useColors{ false };
     bool _useTexture{ false };
     bool _useTexturePositions{ false };
