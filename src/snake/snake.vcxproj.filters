@@ -8,6 +8,12 @@
     <Filter Include="Runner">
       <UniqueIdentifier>{b93d7023-e04a-4a6b-a7a9-e7eca6a396ef}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Camera">
+      <UniqueIdentifier>{61d23cbb-6dec-410a-9602-60b536cb6dad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Control">
+      <UniqueIdentifier>{0d5d69a1-6444-411e-a492-5d2e8cffdafc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="snake.cpp">
@@ -17,6 +23,12 @@
   <ItemGroup>
     <ClInclude Include="RunnerSnake.h">
       <Filter>Runner</Filter>
+    </ClInclude>
+    <ClInclude Include="Control.h">
+      <Filter>Control</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Camera</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

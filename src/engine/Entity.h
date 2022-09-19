@@ -40,6 +40,14 @@ public:
         _shader.disuse();
     }
 
+    virtual void setPositionsVec2(const std::vector<glm::vec2>& positionsDataVec2) {
+        _usePositionsVec2 = true;
+        _positionsDataVec2 = positionsDataVec2;
+        _positionsDataDimension = 2;
+        _positionsDataCount = static_cast<int>(_positionsDataVec2.size()) * _positionsDataDimension;
+        _totalDataCount += _positionsDataCount;
+    }
+
     virtual void setPositions(const std::vector<glm::vec3>& positionsData) {
         _usePositions = true;
         _positionsData = positionsData;
@@ -94,6 +102,13 @@ public:
         _totalDataCount += _normalsDataCount;
     }
 
+    virtual void reserveTotalDataCountVec2(int totalDataCount) {
+        _totalDataCount += totalDataCount;
+        _usePositionsVec2 = true;
+        _positionsDataVec2.reserve(_totalDataCount);
+        _positionsDataDimension = 2;
+    }
+
     virtual void reserveTotalDataCount(int totalDataCount) {
         _totalDataCount += totalDataCount;
         _usePositions = true;
@@ -106,7 +121,6 @@ public:
         _usePositionsVec4 = true;
         _positionsDataVec4.reserve(_totalDataCount);
         _positionsDataDimension = 4;
-        _positionsDataCount = static_cast<int>(_positionsData.size()) * _positionsDataDimension;
     }
 
     virtual void addPositions(const std::vector<glm::vec3>& positionsData) {
@@ -161,6 +175,19 @@ public:
         }
 
         GLintptr offsetSize{ 0 };
+
+        if (_usePositionsVec2) {
+            // calculate position data size
+            const auto positionsDataSize = _positionsDataCount * sizeof(GLfloat);
+            // set position sub data
+            glBufferSubData(GL_ARRAY_BUFFER, offsetSize, positionsDataSize, _positionsDataVec2.data());
+            // configure position attribute
+            glVertexAttribPointer(0, _positionsDataDimension, GL_FLOAT, GL_FALSE, _positionsDataDimension * sizeof(GLfloat), (void*)offsetSize);
+            // location defined in shader
+            glEnableVertexAttribArray(0);
+            // update offset size
+            offsetSize += positionsDataSize;
+        }
 
         if (_usePositions) {
             // calculate position data size
@@ -270,12 +297,14 @@ protected:
     unsigned int _VBO{ 0 };
     unsigned int _EBO{ 0 };
 
+    std::vector<glm::vec2> _positionsDataVec2;
     std::vector<glm::vec3> _positionsData;
     std::vector<glm::vec4> _positionsDataVec4;
     std::vector<glm::vec4> _colorsData;
     std::vector<glm::vec2> _texturePositionsData;
     std::vector<glm::vec3> _normalsData;
 
+    bool _usePositionsVec2{ false };
     bool _usePositions{ false };
     bool _usePositionsVec4{ false };
     bool _useColors{ false };
