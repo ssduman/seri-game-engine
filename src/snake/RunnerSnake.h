@@ -3,6 +3,7 @@
 #include "../engine/IRunner.h"
 #include "../engine/Triangle.h"
 
+#include "Food.h"
 #include "Snake.h"
 #include "Camera.h"
 #include "Control.h"
@@ -29,11 +30,15 @@ public:
         snake.createPoint(400.0f, 400.0f);
         //snake.createTriangle();
 
+        Food food{ camera.get() };
+        food.generateFood();
+
         Control control{ windowManager.get(), camera.get(), &snake, state.get() };
         control.init();
 
         Layer layers{};
         layers.addLayer(&snake);
+        layers.addLayer(&food);
 
         LOGGER(info, "starting snake loop");
 

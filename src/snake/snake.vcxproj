@@ -180,6 +180,7 @@ xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win64\freetype.dll" "$(So
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Control.h" />
+    <ClInclude Include="Food.h" />
     <ClInclude Include="RunnerSnake.h" />
     <ClInclude Include="Snake.h" />
   </ItemGroup>

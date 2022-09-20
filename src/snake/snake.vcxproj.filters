@@ -36,5 +36,8 @@
     <ClInclude Include="Snake.h">
       <Filter>Snake</Filter>
     </ClInclude>
+    <ClInclude Include="Food.h">
+      <Filter>Snake</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -17,9 +17,7 @@ enum class SnakeMovement {
 
 class Snake : public Entity {
 public:
-    Snake(Camera* camera) : Entity(camera) {
-
-    }
+    Snake(Camera* camera) : Entity(camera) {}
 
     void init() override {
 
@@ -90,4 +88,5 @@ private:
     glm::vec4 _pointColor{ 0.1f, 1.0f, 0.4f, 1.0f };
 
     float movementStep = 800.0f;
+
 };
