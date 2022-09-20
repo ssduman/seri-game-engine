@@ -64,19 +64,21 @@ public:
         _points.emplace_back(triangle);
     }
 
-    void handleMovement(SnakeMovement snakeMovement) {
+    void handleMovement(float deltaTime, SnakeMovement snakeMovement) {
+        const auto movementSpeed = movementStep * deltaTime;
+
         auto& lastPosition = _pointPositions.back();
         if (SnakeMovement::forward == snakeMovement) {
-            lastPosition += glm::vec2{ 0.0f, movementStep };
+            lastPosition += glm::vec2{ 0.0f, movementSpeed };
         }
         else if (SnakeMovement::backward == snakeMovement) {
-            lastPosition += glm::vec2{ 0.0f, -movementStep };
+            lastPosition += glm::vec2{ 0.0f, -movementSpeed };
         }
         else if (SnakeMovement::left == snakeMovement) {
-            lastPosition += glm::vec2{ -movementStep, 0.0f };
+            lastPosition += glm::vec2{ -movementSpeed, 0.0f };
         }
         else if (SnakeMovement::right == snakeMovement) {
-            lastPosition += glm::vec2{ movementStep, 0.0f };
+            lastPosition += glm::vec2{ movementSpeed, 0.0f };
         }
         const auto lastPoint = _points.back();
         lastPoint->setPositionVec2(lastPosition);
@@ -87,5 +89,5 @@ private:
     std::vector<glm::vec2> _pointPositions;
     glm::vec4 _pointColor{ 0.1f, 1.0f, 0.4f, 1.0f };
 
-    float movementStep = 10.0f;
+    float movementStep = 800.0f;
 };

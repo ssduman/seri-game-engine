@@ -128,17 +128,17 @@ public:
             glfwSetWindowShouldClose(window, GLFW_TRUE);
         }
 
-        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-            _snake->handleMovement(SnakeMovement::forward);
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+            _snake->handleMovement(deltaTime, SnakeMovement::forward);
         }
-        else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-            _snake->handleMovement(SnakeMovement::backward);
+        else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+            _snake->handleMovement(deltaTime, SnakeMovement::backward);
         }
-        else if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-            _snake->handleMovement(SnakeMovement::left);
+        else if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+            _snake->handleMovement(deltaTime, SnakeMovement::left);
         }
-        else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-            _snake->handleMovement(SnakeMovement::right);
+        else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+            _snake->handleMovement(deltaTime, SnakeMovement::right);
         }
     }
 
