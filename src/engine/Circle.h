@@ -17,7 +17,7 @@ public:
         _shader.use();
         _texture.bind();
         glBindVertexArray(_VAO);
-        glDrawArrays(_drawMode, 0, _positionsDataCount / 3);
+        glDrawArrays(_drawMode, 0, _positionsDataCount / _positionsDataDimension);
     }
 
 private:

@@ -3,6 +3,7 @@
 #include "../engine/IRunner.h"
 #include "../engine/Triangle.h"
 
+#include "Snake.h"
 #include "Camera.h"
 #include "Control.h"
 
@@ -15,6 +16,7 @@ public:
     void operator()() {
         WindowProperties windowProperties{ /*title*/ "Seri Game Engine - Snake", /*fullscreen*/ false, /*w*/ 800, /*h*/ 800 };
         std::unique_ptr<WindowManager> windowManager = std::make_unique<WindowManager>(windowProperties);
+        windowManager->setPointSize(20.0f);
 
         std::shared_ptr<State> state = std::make_shared<State>();
         state->gameState() = GameState::GAME;
@@ -26,20 +28,12 @@ public:
         Control control{ windowManager.get(), camera.get(), state.get() };
         control.init();
 
-        std::vector<glm::vec2> positions{
-            { 200.0f, 200.0f },
-            { 600.0f, 200.0f },
-            { 400.0f, 600.0f },
-        };
-        Triangle* triangle = new Triangle(camera.get());
-        triangle->initShader("snake-assets/shaders/snake_vs.shader", "snake-assets/shaders/snake_fs.shader");
-        triangle->initMVP();
-        triangle->setPositionsVec2(positions);
-        triangle->setColor({ 0.2f, 0.2f, 0.2f, 1.0f });
-        triangle->init();
+        Snake snake{ camera.get() };
+        snake.createPoint(400.0f, 400.0f);
+        //snake.createTriangle();
 
         Layer layers{};
-        layers.addLayer(triangle);
+        layers.addLayer(&snake);
 
         LOGGER(info, "starting snake loop");
 

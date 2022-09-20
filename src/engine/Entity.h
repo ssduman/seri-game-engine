@@ -34,9 +34,21 @@ public:
         _drawMode = drawMode;
     }
 
+    virtual void setPositionVec2(const glm::vec2& position) {
+        _shader.use();
+        _shader.setVec2("u_position", position);
+        _shader.disuse();
+    }
+
     virtual void setPosition(const glm::vec3& position) {
         _shader.use();
         _shader.setVec3("u_position", position);
+        _shader.disuse();
+    }
+
+    virtual void setPositionVec4(const glm::vec4& position) {
+        _shader.use();
+        _shader.setVec4("u_position", position);
         _shader.disuse();
     }
 

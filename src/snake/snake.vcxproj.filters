@@ -14,6 +14,9 @@
     <Filter Include="Control">
       <UniqueIdentifier>{0d5d69a1-6444-411e-a492-5d2e8cffdafc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Snake">
+      <UniqueIdentifier>{6bbb1106-3b32-4000-817d-8c87179fcb12}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="snake.cpp">
@@ -29,6 +32,9 @@
     </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Snake.h">
+      <Filter>Snake</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
