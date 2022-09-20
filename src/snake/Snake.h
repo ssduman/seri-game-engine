@@ -8,6 +8,13 @@
 
 #include <vector>
 
+enum class SnakeMovement {
+    forward,
+    backward,
+    left,
+    right,
+};
+
 class Snake : public Entity {
 public:
     Snake(Camera* camera) : Entity(camera) {
@@ -37,10 +44,8 @@ public:
         point->setColor(_pointColor);
         point->init();
 
-        point->setPositionVec2({ -300.0f, 300.0f });
-
         _points.emplace_back(point);
-        _pointPositions.emplace_back(x, y);
+        _pointPositions.emplace_back(0.0f, 0.0f);
     }
 
     void createTriangle() {
@@ -59,9 +64,28 @@ public:
         _points.emplace_back(triangle);
     }
 
+    void handleMovement(SnakeMovement snakeMovement) {
+        auto& lastPosition = _pointPositions.back();
+        if (SnakeMovement::forward == snakeMovement) {
+            lastPosition += glm::vec2{ 0.0f, movementStep };
+        }
+        else if (SnakeMovement::backward == snakeMovement) {
+            lastPosition += glm::vec2{ 0.0f, -movementStep };
+        }
+        else if (SnakeMovement::left == snakeMovement) {
+            lastPosition += glm::vec2{ -movementStep, 0.0f };
+        }
+        else if (SnakeMovement::right == snakeMovement) {
+            lastPosition += glm::vec2{ movementStep, 0.0f };
+        }
+        const auto lastPoint = _points.back();
+        lastPoint->setPositionVec2(lastPosition);
+    }
+
 private:
     std::vector<Entity*> _points;
     std::vector<glm::vec2> _pointPositions;
     glm::vec4 _pointColor{ 0.1f, 1.0f, 0.4f, 1.0f };
 
+    float movementStep = 10.0f;
 };

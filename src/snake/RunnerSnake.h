@@ -25,12 +25,12 @@ public:
         std::shared_ptr<Camera> camera = std::make_shared<Camera>(cameraProperties, state.get());
         camera->init();
 
-        Control control{ windowManager.get(), camera.get(), state.get() };
-        control.init();
-
         Snake snake{ camera.get() };
         snake.createPoint(400.0f, 400.0f);
         //snake.createTriangle();
+
+        Control control{ windowManager.get(), camera.get(), &snake, state.get() };
+        control.init();
 
         Layer layers{};
         layers.addLayer(&snake);

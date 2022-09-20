@@ -6,11 +6,13 @@
 #include "../engine/InputHandler.h"
 #include "../engine/WindowManager.h"
 
+#include "Snake.h"
 #include "Camera.h"
 
 class Control : public IControl {
 public:
-    Control(WindowManager* windowManager, Camera* camera, State* state) : IControl(windowManager, state), _camera(camera), _inputHandler(camera) {
+    Control(WindowManager* windowManager, Camera* camera, Snake* snake, State* state)
+        : IControl(windowManager, state), _camera(camera), _snake(snake), _inputHandler(camera) {
         glfwSetWindowUserPointer(_windowManager->getWindow(), static_cast<void*>(this));
 
         LOGGER(info, "control init succeeded");
@@ -104,11 +106,13 @@ public:
 
         if ((key == GLFW_KEY_ENTER) && (action == GLFW_PRESS)) {
             _userInputVector.clear();
-        } else if ((key == GLFW_KEY_BACKSPACE) && (action == GLFW_PRESS)) {
+        }
+        else if ((key == GLFW_KEY_BACKSPACE) && (action == GLFW_PRESS)) {
             if (!_userInputVector.empty()) {
                 _userInputVector.pop_back();
             }
-        } else if ((key == GLFW_KEY_ESCAPE) && (action == GLFW_PRESS)) {
+        }
+        else if ((key == GLFW_KEY_ESCAPE) && (action == GLFW_PRESS)) {
             _windowManager->windowShouldClose();
         }
 
@@ -125,16 +129,16 @@ public:
         }
 
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-            _camera->handleInput(deltaTime, CameraMovement::FORWARD);
+            _snake->handleMovement(SnakeMovement::forward);
         }
-        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-            _camera->handleInput(deltaTime, CameraMovement::BACKWARD);
+        else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+            _snake->handleMovement(SnakeMovement::backward);
         }
-        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-            _camera->handleInput(deltaTime, CameraMovement::LEFT);
+        else if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+            _snake->handleMovement(SnakeMovement::left);
         }
-        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-            _camera->handleInput(deltaTime, CameraMovement::RIGHT);
+        else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+            _snake->handleMovement(SnakeMovement::right);
         }
     }
 
@@ -144,6 +148,7 @@ public:
 
 private:
     Camera* _camera;
+    Snake* _snake;
     InputHandler _inputHandler;
 
 };
