@@ -17,6 +17,9 @@
     <Filter Include="Snake">
       <UniqueIdentifier>{6bbb1106-3b32-4000-817d-8c87179fcb12}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Board">
+      <UniqueIdentifier>{0ccc9b11-213f-4bff-afd5-a43522cbe20e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="snake.cpp">
@@ -38,6 +41,9 @@
     </ClInclude>
     <ClInclude Include="Food.h">
       <Filter>Snake</Filter>
+    </ClInclude>
+    <ClInclude Include="Board.h">
+      <Filter>Board</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

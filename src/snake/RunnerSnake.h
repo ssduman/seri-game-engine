@@ -4,6 +4,7 @@
 #include "../engine/Triangle.h"
 
 #include "Food.h"
+#include "Board.h"
 #include "Snake.h"
 #include "Camera.h"
 #include "Control.h"
@@ -33,12 +34,16 @@ public:
         Food food{ camera.get() };
         food.generateFood();
 
+        Board board{ camera.get() };
+        board.init();
+
         Control control{ windowManager.get(), camera.get(), &snake, state.get() };
         control.init();
 
         Layer layers{};
         layers.addLayer(&snake);
         layers.addLayer(&food);
+        layers.addLayer(&board);
 
         LOGGER(info, "starting snake loop");
 

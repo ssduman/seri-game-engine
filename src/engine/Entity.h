@@ -135,8 +135,27 @@ public:
         _positionsDataDimension = 4;
     }
 
+    virtual void addPositionsVec2(const std::vector<glm::vec2>& positionsData) {
+        GLintptr offsetSize = static_cast<int>(_positionsDataVec2.size()) * _positionsDataDimension * sizeof(float);
+        _positionsDataVec2.insert(_positionsDataVec2.end(), positionsData.begin(), positionsData.end());
+        _positionsDataCount = static_cast<int>(_positionsDataVec2.size()) * _positionsDataDimension;
+
+        // bind vao
+        glBindVertexArray(_VAO);
+        // bind vbo
+        glBindBuffer(GL_ARRAY_BUFFER, _VBO);
+        // calculate position data size
+        const auto positionsDataSize = _positionsDataCount * sizeof(GLfloat);
+        // set position sub data
+        glBufferSubData(GL_ARRAY_BUFFER, offsetSize, positionsDataSize, _positionsDataVec2.data());
+        // configure position attribute
+        glVertexAttribPointer(0, _positionsDataDimension, GL_FLOAT, GL_FALSE, _positionsDataDimension * sizeof(GLfloat), (void*)offsetSize);
+        // location defined in shader
+        glEnableVertexAttribArray(0);
+    }
+
     virtual void addPositions(const std::vector<glm::vec3>& positionsData) {
-        GLintptr offsetSize = static_cast<int>(_positionsData.size()) * _positionsDataDimension;
+        GLintptr offsetSize = static_cast<int>(_positionsData.size()) * _positionsDataDimension * sizeof(float);
         _positionsData.insert(_positionsData.end(), positionsData.begin(), positionsData.end());
         _positionsDataCount = static_cast<int>(_positionsData.size()) * _positionsDataDimension;
 
@@ -148,6 +167,25 @@ public:
         const auto positionsDataSize = _positionsDataCount * sizeof(GLfloat);
         // set position sub data
         glBufferSubData(GL_ARRAY_BUFFER, offsetSize, positionsDataSize, _positionsData.data());
+        // configure position attribute
+        glVertexAttribPointer(0, _positionsDataDimension, GL_FLOAT, GL_FALSE, _positionsDataDimension * sizeof(GLfloat), (void*)offsetSize);
+        // location defined in shader
+        glEnableVertexAttribArray(0);
+    }
+
+    virtual void addPositionsVec4(const std::vector<glm::vec4>& positionsData) {
+        GLintptr offsetSize = static_cast<int>(_positionsDataVec4.size()) * _positionsDataDimension * sizeof(float);
+        _positionsDataVec4.insert(_positionsDataVec4.end(), positionsData.begin(), positionsData.end());
+        _positionsDataCount = static_cast<int>(_positionsDataVec4.size()) * _positionsDataDimension;
+
+        // bind vao
+        glBindVertexArray(_VAO);
+        // bind vbo
+        glBindBuffer(GL_ARRAY_BUFFER, _VBO);
+        // calculate position data size
+        const auto positionsDataSize = _positionsDataCount * sizeof(GLfloat);
+        // set position sub data
+        glBufferSubData(GL_ARRAY_BUFFER, offsetSize, positionsDataSize, _positionsDataVec4.data());
         // configure position attribute
         glVertexAttribPointer(0, _positionsDataDimension, GL_FLOAT, GL_FALSE, _positionsDataDimension * sizeof(GLfloat), (void*)offsetSize);
         // location defined in shader
