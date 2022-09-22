@@ -38,7 +38,7 @@ public:
         point->initShader("snake-assets/shaders/snake_vs.shader", "snake-assets/shaders/snake_fs.shader");
         point->initMVP();
         point->setDrawMode(GL_POINTS);
-        point->setPositionsVec2({ { x, y } });
+        point->setPositionsVec2({ { x - _step / 2.0f, y - _step / 2.0f } });
         point->setColor(_pointColor);
         point->init();
 
@@ -63,7 +63,8 @@ public:
     }
 
     void handleMovement(float deltaTime, SnakeMovement snakeMovement) {
-        const auto movementSpeed = movementStep * deltaTime;
+        //const auto movementSpeed = _movementStep * deltaTime;
+        const auto movementSpeed = _step;
 
         auto& lastPosition = _pointPositions.back();
         if (SnakeMovement::forward == snakeMovement) {
@@ -87,6 +88,9 @@ private:
     std::vector<glm::vec2> _pointPositions;
     glm::vec4 _pointColor{ 0.1f, 1.0f, 0.4f, 1.0f };
 
-    float movementStep = 800.0f;
+    float _step{ 50.f };
+    float _width{ 800.0f };
+    float _height{ 800.0f };
+    float _movementStep = 800.0f;
 
 };

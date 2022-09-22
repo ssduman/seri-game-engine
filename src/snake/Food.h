@@ -30,7 +30,7 @@ public:
     void generateFood() {
         const auto x = _distribution(_generator);
         const auto y = _distribution(_generator);
-        _foodPosition = { x, y };
+        _foodPosition = { x * _step - _step / 2.0f, y * _step - _step / 2.0f };
 
         Point* point = new Point(_camera);
         point->initShader("snake-assets/shaders/snake_vs.shader", "snake-assets/shaders/snake_fs.shader");
@@ -65,7 +65,11 @@ private:
     glm::vec2 _foodPosition;
     glm::vec4 _foodColor{ 0.6f, 2.0f, 0.4f, 1.0f };
 
+    float _step{ 50.f };
+    float _width{ 800.0f };
+    float _height{ 800.0f };
+
     std::default_random_engine _generator;
-    std::uniform_int_distribution<int> _distribution{ 0, 800 };
+    std::uniform_int_distribution<int> _distribution{ 0, static_cast<int>(_width / _step) };
 
 };
