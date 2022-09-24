@@ -24,7 +24,25 @@ public:
     }
 
     void update() override {
+        if (_timeElapsed >= 0.16f) {
+            _timeElapsed = 0.0f;
 
+            auto& lastPosition = _pointPositions.back();
+            if (SnakeMovement::forward == _snakeHeadDirection) {
+                lastPosition += glm::vec2{ 0.0f, _step };
+            }
+            else if (SnakeMovement::backward == _snakeHeadDirection) {
+                lastPosition += glm::vec2{ 0.0f, -_step };
+            }
+            else if (SnakeMovement::left == _snakeHeadDirection) {
+                lastPosition += glm::vec2{ -_step, 0.0f };
+            }
+            else if (SnakeMovement::right == _snakeHeadDirection) {
+                lastPosition += glm::vec2{ _step, 0.0f };
+            }
+            const auto lastPoint = _points.back();
+            lastPoint->setPositionVec2(lastPosition);
+        }
     }
 
     void render() override {
@@ -63,30 +81,20 @@ public:
     }
 
     void handleMovement(float deltaTime, SnakeMovement snakeMovement) {
-        //const auto movementSpeed = _movementStep * deltaTime;
-        const auto movementSpeed = _step;
+        _snakeHeadDirection = snakeMovement;
+    }
 
-        auto& lastPosition = _pointPositions.back();
-        if (SnakeMovement::forward == snakeMovement) {
-            lastPosition += glm::vec2{ 0.0f, movementSpeed };
-        }
-        else if (SnakeMovement::backward == snakeMovement) {
-            lastPosition += glm::vec2{ 0.0f, -movementSpeed };
-        }
-        else if (SnakeMovement::left == snakeMovement) {
-            lastPosition += glm::vec2{ -movementSpeed, 0.0f };
-        }
-        else if (SnakeMovement::right == snakeMovement) {
-            lastPosition += glm::vec2{ movementSpeed, 0.0f };
-        }
-        const auto lastPoint = _points.back();
-        lastPoint->setPositionVec2(lastPosition);
+    void handleTime(float deltaTime) {
+        _timeElapsed += deltaTime;
     }
 
 private:
     std::vector<Entity*> _points;
     std::vector<glm::vec2> _pointPositions;
     glm::vec4 _pointColor{ 0.1f, 1.0f, 0.4f, 1.0f };
+
+    float _timeElapsed{ 0.0f };
+    SnakeMovement _snakeHeadDirection{ SnakeMovement::forward };
 
     float _step{ 50.f };
     float _width{ 800.0f };

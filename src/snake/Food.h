@@ -31,11 +31,14 @@ public:
     void generateFood() {
         const auto x = _distribution(_generator);
         const auto y = _distribution(_generator);
+
+        const auto d1 = (_step * 1.0f) / 3.0f;
+        const auto d2 = (_step * 2.0f) / 3.0f;
         _foodPosition = {
-            { x * _step, y * _step },
-            { x * _step, y * _step + _step },
-            { x * _step + _step, y * _step + _step },
-            { x * _step + _step, y * _step },
+            { x * _step + d1, y * _step + d1 },
+            { x * _step + d1, y * _step + d2 },
+            { x * _step + d2, y * _step + d2 },
+            { x * _step + d2, y * _step + d1 },
         };
         Rectangle* rectangle = new Rectangle(_camera);
         rectangle->initShader("snake-assets/shaders/snake_vs.shader", "snake-assets/shaders/snake_fs.shader");
@@ -89,6 +92,6 @@ private:
     float _height{ 800.0f };
 
     std::default_random_engine _generator;
-    std::uniform_int_distribution<int> _distribution{ 0, static_cast<int>(_width / _step) };
+    std::uniform_int_distribution<int> _distribution{ 1, static_cast<int>(_width / _step) - 1 };
 
 };

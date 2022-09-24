@@ -55,6 +55,8 @@ public:
 
             control.processInput(deltaTime);
 
+            snake.handleTime(deltaTime);
+
             for (auto entity : layers.getLayers()) {
                 entity->display();
             }
@@ -63,7 +65,7 @@ public:
             glfwSwapBuffers(windowManager->getWindow());
         }
 
-        LOGGER(info, "mics snake stopped");
+        LOGGER(info, "snake loop stopped");
     }
 
 };
