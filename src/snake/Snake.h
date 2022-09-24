@@ -20,14 +20,25 @@ public:
     Snake(Camera* camera) : Entity(camera) {}
 
     void init() override {
+        const int totalCells = static_cast<int>((_width / _step) * (_height / _step));
 
+        Point* snakeHead = new Point(_camera);
+        snakeHead->initShader("snake-assets/shaders/snake_vs.shader", "snake-assets/shaders/snake_fs.shader");
+        snakeHead->initMVP();
+        snakeHead->setDrawMode(GL_POINTS);
+        snakeHead->setPositionsVec2({ { _width / 2.0f - _step / 2.0f, _height / 2.0f - _step / 2.0f } });
+        snakeHead->setColor(_pointColor);
+        snakeHead->init();
+
+        _snakeBodies.emplace_back(snakeHead);
+        _snakeBodiesMovePositions.emplace_back(0.0f, 0.0f);
     }
 
     void update() override {
         if (_timeElapsed >= 0.16f) {
             _timeElapsed = 0.0f;
 
-            auto& lastPosition = _pointPositions.back();
+            auto& lastPosition = _snakeBodiesMovePositions.back();
             if (SnakeMovement::forward == _snakeHeadDirection) {
                 lastPosition += glm::vec2{ 0.0f, _step };
             }
@@ -40,44 +51,28 @@ public:
             else if (SnakeMovement::right == _snakeHeadDirection) {
                 lastPosition += glm::vec2{ _step, 0.0f };
             }
-            const auto lastPoint = _points.back();
+            const auto lastPoint = _snakeBodies.back();
             lastPoint->setPositionVec2(lastPosition);
         }
     }
 
     void render() override {
-        for (const auto point : _points) {
-            point->display();
+        for (const auto& snakeBody : _snakeBodies) {
+            snakeBody->display();
         }
     }
 
-    void createPoint(const float x, const float y) {
-        Point* point = new Point(_camera);
-        point->initShader("snake-assets/shaders/snake_vs.shader", "snake-assets/shaders/snake_fs.shader");
-        point->initMVP();
-        point->setDrawMode(GL_POINTS);
-        point->setPositionsVec2({ { x - _step / 2.0f, y - _step / 2.0f } });
-        point->setColor(_pointColor);
-        point->init();
+    void addBodyToSnakeBodies(const float x, const float y) {
+        Point* snakeBody = new Point(_camera);
+        snakeBody->initShader("snake-assets/shaders/snake_vs.shader", "snake-assets/shaders/snake_fs.shader");
+        snakeBody->initMVP();
+        snakeBody->setDrawMode(GL_POINTS);
+        snakeBody->setPositionsVec2({ { x, y } });
+        snakeBody->setColor(_pointColor);
+        snakeBody->init();
 
-        _points.emplace_back(point);
-        _pointPositions.emplace_back(0.0f, 0.0f);
-    }
-
-    void createTriangle() {
-        std::vector<glm::vec2> positions{
-            { 200.0f, 200.0f },
-            { 600.0f, 200.0f },
-            { 400.0f, 600.0f },
-        };
-        Triangle* triangle = new Triangle(_camera);
-        triangle->initShader("snake-assets/shaders/snake_vs.shader", "snake-assets/shaders/snake_fs.shader");
-        triangle->initMVP();
-        triangle->setPositionsVec2(positions);
-        triangle->setColor({ 0.2f, 0.2f, 0.2f, 1.0f });
-        triangle->init();
-
-        _points.emplace_back(triangle);
+        _snakeBodies.emplace_back(snakeBody);
+        _snakeBodiesMovePositions.emplace_back(0.0f, 0.0f);
     }
 
     void handleMovement(float deltaTime, SnakeMovement snakeMovement) {
@@ -89,8 +84,8 @@ public:
     }
 
 private:
-    std::vector<Entity*> _points;
-    std::vector<glm::vec2> _pointPositions;
+    std::vector<Entity*> _snakeBodies;
+    std::vector<glm::vec2> _snakeBodiesMovePositions;
     glm::vec4 _pointColor{ 0.1f, 1.0f, 0.4f, 1.0f };
 
     float _timeElapsed{ 0.0f };

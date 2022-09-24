@@ -28,8 +28,7 @@ public:
         camera->init();
 
         Snake snake{ camera.get() };
-        snake.createPoint(400.0f, 400.0f);
-        //snake.createTriangle();
+        snake.init();
 
         Food food{ camera.get() };
         food.generateFood();
