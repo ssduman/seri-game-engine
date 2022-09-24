@@ -38,6 +38,8 @@ public:
             { x * _step + d2, y * _step + d2 },
             { x * _step + d2, y * _step + d1 },
         };
+
+        delete _food;
         _food = new Rectangle(_camera);
         _food->initShader("snake-assets/shaders/snake_vs.shader", "snake-assets/shaders/snake_fs.shader");
         _food->initMVP();

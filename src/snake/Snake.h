@@ -22,50 +22,54 @@ public:
         const int x = totalRows / 2;
         const int y = totalCols / 2;
 
-        addBody(x, y - 1);
-        addBody(x, y);
-        addBody(x, y + 1);
-        addBody(x, y + 2);
         addBody(x, y + 3);
+        addBody(x, y + 2);
+        addBody(x, y + 1);
+        addBody(x, y);
+        addBody(x, y - 1);
     }
 
     void update() override {
         if (_timeElapsed >= 0.16f) {
             _timeElapsed = 0.0f;
 
+            const auto oldTail = _cells.back();
+
             SnakeMovement oldDir{ SnakeMovement::noop };
-            SnakeMovement reqDir{ _cells.back().requestedDirection };
+            SnakeMovement reqDir{ _cells.front().requestedDirection };
             reqDir = reqDir == SnakeMovement::noop ? SnakeMovement::forward : reqDir;
-            for (auto cell = _cells.rbegin(); cell != _cells.rend(); ++cell) {
-                oldDir = cell->direction;
-                cell->direction = reqDir;
-                if (SnakeMovement::forward == cell->direction) {
-                    cell->y += 1;
-                    cell->position += glm::vec2{ 0.0f, _step };
-                    cell->entity->setPositionVec2(cell->position);
+            for (auto& cell : _cells) {
+                oldDir = cell.direction;
+                cell.direction = reqDir;
+                if (SnakeMovement::forward == cell.direction) {
+                    cell.y += 1;
+                    cell.position += glm::vec2{ 0.0f, _step };
+                    cell.entity->setPositionVec2(cell.position);
                 }
-                else if (SnakeMovement::backward == cell->direction) {
-                    cell->y -= 1;
-                    cell->position += glm::vec2{ 0.0f, -_step };
-                    cell->entity->setPositionVec2(cell->position);
+                else if (SnakeMovement::backward == cell.direction) {
+                    cell.y -= 1;
+                    cell.position += glm::vec2{ 0.0f, -_step };
+                    cell.entity->setPositionVec2(cell.position);
                 }
-                else if (SnakeMovement::left == cell->direction) {
-                    cell->x -= 1;
-                    cell->position += glm::vec2{ -_step, 0.0f };
-                    cell->entity->setPositionVec2(cell->position);
+                else if (SnakeMovement::left == cell.direction) {
+                    cell.x -= 1;
+                    cell.position += glm::vec2{ -_step, 0.0f };
+                    cell.entity->setPositionVec2(cell.position);
                 }
-                else if (SnakeMovement::right == cell->direction) {
-                    cell->x += 1;
-                    cell->position += glm::vec2{ _step, 0.0f };
-                    cell->entity->setPositionVec2(cell->position);
+                else if (SnakeMovement::right == cell.direction) {
+                    cell.x += 1;
+                    cell.position += glm::vec2{ _step, 0.0f };
+                    cell.entity->setPositionVec2(cell.position);
                 }
                 reqDir = oldDir;
             }
 
-            const auto& head = _cells.back();
+            const auto& head = _cells.front();
             const auto& foodPosition = _food.getFoodPosition();
             if (head.x == foodPosition.x && head.y == foodPosition.y) {
-                LOGGER(info, "food will be eaten");
+                addBody(oldTail.x, oldTail.y, oldTail.direction);
+                _food.generateFood();
+                LOGGER(info, "snake ate the food");
             }
         }
     }
@@ -79,7 +83,7 @@ public:
         }
     }
 
-    void addBody(const int x, const int y) {
+    void addBody(const int x, const int y, SnakeMovement direction = SnakeMovement::forward) {
         Point* snakeBody = new Point(_camera);
         snakeBody->initShader("snake-assets/shaders/snake_vs.shader", "snake-assets/shaders/snake_fs.shader");
         snakeBody->initMVP();
@@ -91,11 +95,11 @@ public:
         const glm::vec2 position{ x * _step + _step / 2.0f, y * _step + _step / 2.0f };
         snakeBody->setPositionVec2(position);
 
-        _cells.emplace_back(x, y, snakeBody, position, _snakeHeadDirection);
+        _cells.emplace_back(x, y, snakeBody, position, direction);
     }
 
     void handleMovement(float deltaTime, SnakeMovement snakeMovement) {
-        _cells.back().requestedDirection = snakeMovement;
+        _cells.front().requestedDirection = snakeMovement;
     }
 
     void handleTime(float deltaTime) {
