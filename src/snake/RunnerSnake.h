@@ -27,11 +27,11 @@ public:
         std::shared_ptr<Camera> camera = std::make_shared<Camera>(cameraProperties, state.get());
         camera->init();
 
-        Snake snake{ camera.get() };
-        snake.init();
-
         Food food{ camera.get() };
         food.generateFood();
+
+        Snake snake{ camera.get(), food };
+        snake.init();
 
         Board board{ camera.get() };
         board.init();

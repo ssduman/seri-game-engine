@@ -1,9 +1,11 @@
 #pragma once
 
 #include "../engine/Point.h"
+#include "../engine/Logger.h"
 #include "../engine/Entity.h"
 
 #include "Cell.h"
+#include "Food.h"
 #include "Camera.h"
 #include "SnakeMovement.h"
 
@@ -11,7 +13,7 @@
 
 class Snake : public Entity {
 public:
-    Snake(Camera* camera) : Entity(camera) {}
+    Snake(Camera* camera, Food& food) : Entity(camera), _food(food) {}
 
     void init() override {
         const int totalRows = static_cast<int>(_width / _step);
@@ -31,8 +33,8 @@ public:
         if (_timeElapsed >= 0.16f) {
             _timeElapsed = 0.0f;
 
-            SnakeMovement oldDir;
-            SnakeMovement reqDir = _cells.back().requestedDirection;
+            SnakeMovement oldDir{ SnakeMovement::noop };
+            SnakeMovement reqDir{ _cells.back().requestedDirection };
             reqDir = reqDir == SnakeMovement::noop ? SnakeMovement::forward : reqDir;
             for (auto cell = _cells.rbegin(); cell != _cells.rend(); ++cell) {
                 oldDir = cell->direction;
@@ -59,10 +61,19 @@ public:
                 }
                 reqDir = oldDir;
             }
+
+            const auto& head = _cells.back();
+            const auto& foodPosition = _food.getFoodPosition();
+            if (head.x == foodPosition.x && head.y == foodPosition.y) {
+                LOGGER(info, "food will be eaten");
+            }
         }
     }
 
-    void render() override {
+    void render() override {}
+
+    void display() override {
+        Object::display();
         for (const auto& cell : _cells) {
             cell.entity->display();
         }
@@ -92,6 +103,7 @@ public:
     }
 
 private:
+    Food& _food;
     std::vector<Cell> _cells;
     glm::vec4 _snakeColor{ 0.1f, 1.0f, 0.4f, 1.0f };
 

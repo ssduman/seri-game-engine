@@ -13,5 +13,5 @@ struct Cell {
     Entity* entity;
     glm::vec2 position;
     SnakeMovement direction;
-    SnakeMovement requestedDirection = SnakeMovement::noop;
+    SnakeMovement requestedDirection{ SnakeMovement::noop };
 };
