@@ -30,7 +30,7 @@ public:
     }
 
     void update() override {
-        if (_timeElapsed >= 0.16f) {
+        if (_timeElapsed >= 0.16f && _isPlaying) {
             _timeElapsed = 0.0f;
 
             const auto oldTail = _cells.back();
@@ -65,6 +65,19 @@ public:
             }
 
             const auto& head = _cells.front();
+
+            bool isHead = true;
+            for (auto& cell : _cells) {
+                if (isHead) {
+                    isHead = false;
+                    continue;
+                }
+                if (cell.x == head.x && cell.y == head.y) {
+                    _isPlaying = false;
+                    LOGGER(info, "game over");
+                }
+            }
+
             const auto& foodPosition = _food.getFoodPosition();
             if (head.x == foodPosition.x && head.y == foodPosition.y) {
                 addBody(oldTail.x, oldTail.y, oldTail.direction);
@@ -117,5 +130,6 @@ private:
     float _step{ 50.f };
     float _width{ 800.0f };
     float _height{ 800.0f };
+    bool _isPlaying{ true };
 
 };
