@@ -45,5 +45,11 @@
     <ClInclude Include="Board.h">
       <Filter>Board</Filter>
     </ClInclude>
+    <ClInclude Include="Cell.h">
+      <Filter>Snake</Filter>
+    </ClInclude>
+    <ClInclude Include="SnakeMovement.h">
+      <Filter>Snake</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
