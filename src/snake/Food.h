@@ -62,7 +62,7 @@ public:
 private:
     SnakeProperties& _snakeProperties;
     Entity* _food{ nullptr };
-    glm::ivec2 _foodPosition;
+    glm::ivec2 _foodPosition{};
     std::vector<glm::vec2> _foodPositions;
     glm::vec4 _foodColor{ 0.6f, 2.0f, 0.4f, 1.0f };
 

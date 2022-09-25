@@ -6,7 +6,6 @@
 #include "Snake.h"
 #include "Camera.h"
 #include "Control.h"
-#include "SnakeProperties.h"
 
 class RunnerSnake : public IRunner {
 public:
@@ -25,7 +24,7 @@ public:
         std::shared_ptr<Camera> camera = std::make_shared<Camera>(cameraProperties, state.get());
         camera->init();
 
-        SnakeProperties snakeProperties{ windowManager->getWidthF(), windowManager->getHeightF(), /*speed*/ 4.0f, /*interval*/ 40.0f };
+        SnakeProperties snakeProperties{ windowManager->getWidthF(), windowManager->getHeightF(), /*speed*/ 4.0f, /*interval*/ 20.0f };
         Snake snake{ camera.get(), snakeProperties };
         snake.init();
 

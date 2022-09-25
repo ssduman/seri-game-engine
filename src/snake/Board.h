@@ -45,16 +45,6 @@ public:
     }
 
 private:
-    void createLine(float x1, float y1, float x2, float y2) {
-        Line* line = new Line(_camera);
-        line->initShader("snake-assets/shaders/snake_vs.shader", "snake-assets/shaders/snake_fs.shader");
-        line->initMVP();
-        line->setDrawMode(GL_LINE_LOOP);
-        line->setPositionsVec2({ { x1, y1 }, { x2, y2 } });
-        line->setColor(_lineColor);
-        line->init();
-    }
-
     SnakeProperties& _snakeProperties;
     Entity* _lines{ nullptr };
     glm::vec4 _lineColor{ 0.2f, 0.2f, 0.2f, 1.0f };

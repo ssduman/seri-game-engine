@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../engine/Point.h"
 #include "../engine/Logger.h"
 #include "../engine/Entity.h"
 
@@ -26,9 +25,9 @@ public:
 
         const int x = _snakeProperties.totalRows / 2;
         const int y = _snakeProperties.totalCols / 2;
-        addBody(x, y, SnakeMovement::forward, true);
-        addBody(x, y - 1);
-        addBody(x, y - 2);
+        addBody(x, y - 0, SnakeMovement::forward, true);
+        addBody(x, y - 1, SnakeMovement::forward);
+        addBody(x, y - 2, SnakeMovement::forward);
     }
 
     void update() override {
@@ -111,7 +110,7 @@ public:
         _board.display();
     }
 
-    void addBody(const int x, const int y, SnakeMovement direction = SnakeMovement::forward, bool isHead = false) {
+    void addBody(const int x, const int y, SnakeMovement direction, bool isHead = false) {
         const auto interval = _snakeProperties.interval;
         const auto d1 = (interval * 0.0f) / 2.0f;
         const auto d2 = (interval * 2.0f) / 2.0f;
@@ -133,7 +132,7 @@ public:
             snakeBody->setColor(_snakeBodyColor);
         }
         snakeBody->init();
-        
+
         _snake.emplace_back(x, y, snakeBody, position, direction);
     }
 
