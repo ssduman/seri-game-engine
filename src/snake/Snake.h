@@ -70,6 +70,12 @@ public:
             }
 
             const auto& head = _snake.front();
+            if (head.x < 0 || head.x >= _snakeProperties.totalCols || head.y < 0 || head.y >= _snakeProperties.totalRows) {
+                head.entity->setColor(_snakeCollisionColor);
+                _snakeProperties.isPlaying = false;
+                LOGGER(info, "snake hit the wall, game over");
+                return;
+            }
 
             bool isHead = true;
             for (auto& snake : _snake) {
@@ -81,7 +87,8 @@ public:
                     snake.entity->setColor(_snakeCollisionColor);
                     head.entity->setColor(_snakeCollisionColor);
                     _snakeProperties.isPlaying = false;
-                    LOGGER(info, "game over");
+                    LOGGER(info, "snake hit own body, game over");
+                    return;
                 }
             }
 
