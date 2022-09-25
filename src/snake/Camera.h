@@ -16,8 +16,6 @@ public:
     }
 
     void init() override {
-        updateEulerAngles();
-        updateView();
         updateProjection();
     }
 
@@ -25,43 +23,6 @@ public:
 
     void updateProjection() override {
         _projection = glm::ortho(0.0f, _cameraProperties.width, 0.0f, _cameraProperties.height);
-    }
-
-    void handleInput(float deltaTime, CameraMovement cameraMovement) {
-        if (_viewUpdated) {
-            _viewUpdated = false;
-        }
-
-        if (_state->gameState() != GameState::GAME) {
-            return;
-        }
-
-        const float movementSpeed = _cameraProperties.speed * deltaTime;
-
-        bool moved = false;
-
-        if (cameraMovement == CameraMovement::FORWARD) {
-            moved = true;
-            _cameraProperties.position += _cameraProperties.front * movementSpeed;
-        }
-        if (cameraMovement == CameraMovement::BACKWARD) {
-            moved = true;
-            _cameraProperties.position -= _cameraProperties.front * movementSpeed;
-        }
-        if (cameraMovement == CameraMovement::LEFT) {
-            moved = true;
-            _cameraProperties.position -= _cameraProperties.right * movementSpeed;
-        }
-        if (cameraMovement == CameraMovement::RIGHT) {
-            moved = true;
-            _cameraProperties.position += _cameraProperties.right * movementSpeed;
-        }
-
-        if (moved) {
-            updateView();
-
-            _viewUpdated = true;
-        }
     }
 
 };

@@ -12,8 +12,8 @@
 class Control : public IControl {
 public:
     Control(WindowManager* windowManager, Camera* camera, Snake* snake, State* state)
-        : IControl(windowManager, state), _camera(camera), _snake(snake), _inputHandler(camera) {
-        glfwSetWindowUserPointer(_windowManager->getWindow(), static_cast<void*>(this));
+        : IControl(windowManager, state), _camera(camera), _snake(snake), _window(_windowManager->getWindow()) {
+        glfwSetWindowUserPointer(_window, static_cast<void*>(this));
 
         LOGGER(info, "control init succeeded");
     }
@@ -72,18 +72,11 @@ public:
         );
     }
 
-    void charCallback(GLFWwindow* window, unsigned int codepoint) override {
-        auto str = encodeUTF8(codepoint);
-        addUserInput(str);
-    }
+    void charCallback(GLFWwindow* window, unsigned int codepoint) override {}
 
     void cursorPosCallback(GLFWwindow* window, double xpos, double ypos) override {
         _mouseCurrentPosX = xpos;
         _mouseCurrentPosY = ypos;
-
-        float xPos = static_cast<float>(xpos);
-        float yPos = static_cast<float>(ypos);
-        _camera->handleMouse(xPos, yPos);
     }
 
     void scrollCallback(GLFWwindow* window, double xoffset, double yoffset) override {}
@@ -94,62 +87,36 @@ public:
         glViewport(0, 0, width, height);
     }
 
-    void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods) override {
-        if ((button == GLFW_MOUSE_BUTTON_LEFT) && (action == GLFW_PRESS)) {
-        }
-    }
+    void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods) override {}
 
     void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) override {
-        if (ICommand* command = _inputHandler.handleInput(key, scancode, action, mods)) {
-            command->execute();
-        }
-
-        if ((key == GLFW_KEY_ENTER) && (action == GLFW_PRESS)) {
-            _userInputVector.clear();
-        }
-        else if ((key == GLFW_KEY_BACKSPACE) && (action == GLFW_PRESS)) {
-            if (!_userInputVector.empty()) {
-                _userInputVector.pop_back();
-            }
-        }
-
         if ((key == GLFW_KEY_P) && (action == GLFW_PRESS)) {
             _snake->toggleIsPlaying();
-        }
-
-        if (action == GLFW_RELEASE) {
-            //LOGGER(info, "user input: " << getUserInput());
         }
     }
 
     void processInput(float deltaTime) {
-        GLFWwindow* window = _windowManager->getWindow();
-
-        if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-            glfwSetWindowShouldClose(window, GLFW_TRUE);
+        if (glfwGetKey(_window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+            glfwSetWindowShouldClose(_window, GLFW_TRUE);
         }
 
-        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+        if (glfwGetKey(_window, GLFW_KEY_W) == GLFW_PRESS || glfwGetKey(_window, GLFW_KEY_UP) == GLFW_PRESS) {
             _snake->handleMovement(deltaTime, SnakeMovement::forward);
         }
-        else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+        else if (glfwGetKey(_window, GLFW_KEY_S) == GLFW_PRESS || glfwGetKey(_window, GLFW_KEY_DOWN) == GLFW_PRESS) {
             _snake->handleMovement(deltaTime, SnakeMovement::backward);
         }
-        else if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+        else if (glfwGetKey(_window, GLFW_KEY_A) == GLFW_PRESS || glfwGetKey(_window, GLFW_KEY_LEFT) == GLFW_PRESS) {
             _snake->handleMovement(deltaTime, SnakeMovement::left);
         }
-        else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+        else if (glfwGetKey(_window, GLFW_KEY_D) == GLFW_PRESS || glfwGetKey(_window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
             _snake->handleMovement(deltaTime, SnakeMovement::right);
         }
-    }
-
-    void setInputHandler(InputHandler& inputHandler) {
-        _inputHandler = inputHandler;
     }
 
 private:
     Camera* _camera;
     Snake* _snake;
-    InputHandler _inputHandler;
+    GLFWwindow* _window;
 
 };
