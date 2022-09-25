@@ -37,8 +37,8 @@ public:
         _foodPosition = { x, y };
 
         const auto interval = _snakeProperties.interval;
-        const auto d1 = (interval * 1.0f) / 3.0f;
-        const auto d2 = (interval * 2.0f) / 3.0f;
+        const auto d1 = (interval * 0.0f) / 2.0f;
+        const auto d2 = (interval * 2.0f) / 2.0f;
         _foodPositions = {
             { x * interval + d1, y * interval + d1 },
             { x * interval + d1, y * interval + d2 },
