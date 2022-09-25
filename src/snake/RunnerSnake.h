@@ -3,11 +3,10 @@
 #include "../engine/IRunner.h"
 #include "../engine/Triangle.h"
 
-#include "Food.h"
-#include "Board.h"
 #include "Snake.h"
 #include "Camera.h"
 #include "Control.h"
+#include "SnakeProperties.h"
 
 class RunnerSnake : public IRunner {
 public:
@@ -27,22 +26,15 @@ public:
         std::shared_ptr<Camera> camera = std::make_shared<Camera>(cameraProperties, state.get());
         camera->init();
 
-        Food food{ camera.get() };
-        food.generateFood();
-
-        Snake snake{ camera.get(), food };
+        SnakeProperties snakeProperties{ /*w*/ 800.0f, /*h*/ 800.0f, /*i*/ 50.0f };
+        Snake snake{ camera.get(), snakeProperties };
         snake.init();
-
-        Board board{ camera.get() };
-        board.init();
 
         Control control{ windowManager.get(), camera.get(), &snake, state.get() };
         control.init();
 
         Layer layers{};
         layers.addLayer(&snake);
-        layers.addLayer(&food);
-        layers.addLayer(&board);
 
         LOGGER(info, "starting snake loop");
 

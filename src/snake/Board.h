@@ -1,44 +1,46 @@
 #pragma once
 
 #include "../engine/Line.h"
+#include "../engine/Logger.h"
 #include "../engine/Entity.h"
 
 #include "Camera.h"
+#include "SnakeProperties.h"
 
 #include <vector>
 
 class Board : public Entity {
 public:
-    Board(Camera* camera) : Entity(camera) {
-
+    Board(Camera* camera, SnakeProperties& snakeProperties) : Entity(camera), _snakeProperties(snakeProperties) {
+        LOGGER(info, "board init succeeded");
     }
 
     void init() override {
-        const int xCount = static_cast<int>(_width / _step);
-        const int yCount = static_cast<int>(_height / _step);
-
         _lines = new Line(_camera);
         _lines->initShader("snake-assets/shaders/snake_vs.shader", "snake-assets/shaders/snake_fs.shader");
         _lines->initMVP();
         _lines->setDrawMode(GL_LINES);
-        _lines->reserveTotalDataCountVec2(xCount * yCount * 2);
+        _lines->reserveTotalDataCountVec2(_snakeProperties.totalCells * 2);
         _lines->setColor(_lineColor);
         _lines->init();
 
-        for (int x = 0; x < xCount; x++) {
-            _lines->addPositionsVec2({ { 0.0f, _step * x }, { _width, _step * x } });
+        const auto width = _snakeProperties.width;
+        const auto height = _snakeProperties.height;
+        const auto interval = _snakeProperties.interval;
+        for (int x = 0; x < _snakeProperties.totalRows; x++) {
+            _lines->addPositionsVec2({ { 0.0f, interval * x }, { width, interval * x } });
         }
-
-        for (int y = 0; y < yCount; y++) {
-            _lines->addPositionsVec2({ { _step * y, 0.0f }, { _step * y, _height } });
+        for (int y = 0; y < _snakeProperties.totalCols; y++) {
+            _lines->addPositionsVec2({ { interval * y, 0.0f }, { interval * y, height } });
         }
     }
 
-    void update() override {
+    void update() override {}
 
-    }
+    void render() override {}
 
-    void render() override {
+    void display() override {
+        Object::display();
         _lines->display();
     }
 
@@ -53,11 +55,8 @@ private:
         line->init();
     }
 
-    Entity* _lines;
+    SnakeProperties& _snakeProperties;
+    Entity* _lines{ nullptr };
     glm::vec4 _lineColor{ 0.2f, 0.2f, 0.2f, 1.0f };
-
-    float _step{ 50.f };
-    float _width{ 800.0f };
-    float _height{ 800.0f };
 
 };

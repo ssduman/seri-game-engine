@@ -186,6 +186,7 @@ xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win64\freetype.dll" "$(So
     <ClInclude Include="RunnerSnake.h" />
     <ClInclude Include="Snake.h" />
     <ClInclude Include="SnakeMovement.h" />
+    <ClInclude Include="SnakeProperties.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

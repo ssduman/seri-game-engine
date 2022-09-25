@@ -6,23 +6,27 @@
 
 #include "Cell.h"
 #include "Food.h"
+#include "Board.h"
 #include "Camera.h"
 #include "SnakeMovement.h"
+#include "SnakeProperties.h"
 
 #include <vector>
 
 class Snake : public Entity {
 public:
-    Snake(Camera* camera, Food& food) : Entity(camera), _food(food) {}
+    Snake(Camera* camera, SnakeProperties& snakeProperties)
+        : Entity(camera), _snakeProperties(snakeProperties), _food(camera, _snakeProperties), _board(camera, _snakeProperties) {
+        LOGGER(info, "snake init succeeded");
+    }
 
     void init() override {
-        const int totalRows = static_cast<int>(_width / _step);
-        const int totalCols = static_cast<int>(_height / _step);
-        const int totalCells = totalRows * totalCols;
-        const int x = totalRows / 2;
-        const int y = totalCols / 2;
+        _food.init();
+        _board.init();
 
-        addBody(x, y + 3);
+        const int x = _snakeProperties.totalRows / 2;
+        const int y = _snakeProperties.totalCols / 2;
+        addBody(x, y + 3, SnakeMovement::forward, true);
         addBody(x, y + 2);
         addBody(x, y + 1);
         addBody(x, y);
@@ -30,50 +34,53 @@ public:
     }
 
     void update() override {
-        if (_timeElapsed >= 0.16f && _isPlaying) {
-            _timeElapsed = 0.0f;
+        if (_snakeProperties.timeElapsed >= 0.16f && _snakeProperties.isPlaying) {
+            _snakeProperties.timeElapsed = 0.0f;
 
-            const auto oldTail = _cells.back();
+            const auto oldTail = _snake.back();
+            const auto interval = _snakeProperties.interval;
 
             SnakeMovement oldDir{ SnakeMovement::noop };
-            SnakeMovement reqDir{ _cells.front().requestedDirection };
+            SnakeMovement reqDir{ _snake.front().requestedDirection };
             reqDir = reqDir == SnakeMovement::noop ? SnakeMovement::forward : reqDir;
-            for (auto& cell : _cells) {
+            for (auto& cell : _snake) {
                 oldDir = cell.direction;
                 cell.direction = reqDir;
                 if (SnakeMovement::forward == cell.direction) {
                     cell.y += 1;
-                    cell.position += glm::vec2{ 0.0f, _step };
+                    cell.position += glm::vec2{ 0.0f, interval };
                     cell.entity->setPositionVec2(cell.position);
                 }
                 else if (SnakeMovement::backward == cell.direction) {
                     cell.y -= 1;
-                    cell.position += glm::vec2{ 0.0f, -_step };
+                    cell.position += glm::vec2{ 0.0f, -interval };
                     cell.entity->setPositionVec2(cell.position);
                 }
                 else if (SnakeMovement::left == cell.direction) {
                     cell.x -= 1;
-                    cell.position += glm::vec2{ -_step, 0.0f };
+                    cell.position += glm::vec2{ -interval, 0.0f };
                     cell.entity->setPositionVec2(cell.position);
                 }
                 else if (SnakeMovement::right == cell.direction) {
                     cell.x += 1;
-                    cell.position += glm::vec2{ _step, 0.0f };
+                    cell.position += glm::vec2{ interval, 0.0f };
                     cell.entity->setPositionVec2(cell.position);
                 }
                 reqDir = oldDir;
             }
 
-            const auto& head = _cells.front();
+            const auto& head = _snake.front();
 
             bool isHead = true;
-            for (auto& cell : _cells) {
+            for (auto& cell : _snake) {
                 if (isHead) {
                     isHead = false;
                     continue;
                 }
                 if (cell.x == head.x && cell.y == head.y) {
-                    _isPlaying = false;
+                    cell.entity->setColor(_snakeCollisionColor);
+                    head.entity->setColor(_snakeCollisionColor);
+                    _snakeProperties.isPlaying = false;
                     LOGGER(info, "game over");
                 }
             }
@@ -91,45 +98,51 @@ public:
 
     void display() override {
         Object::display();
-        for (const auto& cell : _cells) {
+        for (const auto& cell : _snake) {
             cell.entity->display();
         }
+
+        _food.display();
+        _board.display();
     }
 
-    void addBody(const int x, const int y, SnakeMovement direction = SnakeMovement::forward) {
+    void addBody(const int x, const int y, SnakeMovement direction = SnakeMovement::forward, bool isHead = false) {
         Point* snakeBody = new Point(_camera);
         snakeBody->initShader("snake-assets/shaders/snake_vs.shader", "snake-assets/shaders/snake_fs.shader");
         snakeBody->initMVP();
         snakeBody->setDrawMode(GL_POINTS);
         snakeBody->setPositionsVec2({ { 0.0f, 0.0f } });
-        snakeBody->setColor(_snakeColor);
+        if (isHead) {
+            snakeBody->setColor(_snakeHeadColor);
+        }
+        else {
+            snakeBody->setColor(_snakeBodyColor);
+        }
         snakeBody->init();
 
-        const glm::vec2 position{ x * _step + _step / 2.0f, y * _step + _step / 2.0f };
+        const auto interval = _snakeProperties.interval;
+        const glm::vec2 position{ x * interval + interval / 2.0f, y * interval + interval / 2.0f };
         snakeBody->setPositionVec2(position);
 
-        _cells.emplace_back(x, y, snakeBody, position, direction);
+        _snake.emplace_back(x, y, snakeBody, position, direction);
     }
 
     void handleMovement(float deltaTime, SnakeMovement snakeMovement) {
-        _cells.front().requestedDirection = snakeMovement;
+        _snake.front().requestedDirection = snakeMovement;
     }
 
     void handleTime(float deltaTime) {
-        _timeElapsed += deltaTime;
+        _snakeProperties.timeElapsed += deltaTime;
     }
 
 private:
-    Food& _food;
-    std::vector<Cell> _cells;
-    glm::vec4 _snakeColor{ 0.1f, 1.0f, 0.4f, 1.0f };
+    SnakeProperties& _snakeProperties;
+    Food _food;
+    Board _board;
 
-    float _timeElapsed{ 0.0f };
-    SnakeMovement _snakeHeadDirection{ SnakeMovement::forward };
-
-    float _step{ 50.f };
-    float _width{ 800.0f };
-    float _height{ 800.0f };
-    bool _isPlaying{ true };
+    std::vector<Cell> _snake;
+    glm::vec4 _snakeHeadColor{ 0.8f, 1.0f, 0.4f, 1.0f };
+    glm::vec4 _snakeBodyColor{ 0.1f, 1.0f, 0.4f, 1.0f };
+    glm::vec4 _snakeCollisionColor{ 0.9f, 0.2f, 0.2f, 1.0f };
 
 };
