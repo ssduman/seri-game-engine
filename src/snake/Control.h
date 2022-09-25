@@ -112,8 +112,9 @@ public:
                 _userInputVector.pop_back();
             }
         }
-        else if ((key == GLFW_KEY_ESCAPE) && (action == GLFW_PRESS)) {
-            _windowManager->windowShouldClose();
+
+        if ((key == GLFW_KEY_P) && (action == GLFW_PRESS)) {
+            _snake->toggleIsPlaying();
         }
 
         if (action == GLFW_RELEASE) {

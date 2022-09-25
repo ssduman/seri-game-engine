@@ -85,6 +85,12 @@ public:
         _snakeProperties.timeElapsed += deltaTime;
     }
 
+    void toggleIsPlaying() {
+        _snakeProperties.isPlaying = !_snakeProperties.isPlaying;
+
+        LOGGER(info, "snake state: " << (_snakeProperties.isPlaying ? "'play'" : "'pause'"));
+    }
+
 private:
     void addBody(const int x, const int y, SnakeMovement direction, bool isHead = false) {
         const auto interval = _snakeProperties.interval;
