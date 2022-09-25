@@ -26,11 +26,9 @@ public:
 
         const int x = _snakeProperties.totalRows / 2;
         const int y = _snakeProperties.totalCols / 2;
-        addBody(x, y + 3, SnakeMovement::forward, true);
-        addBody(x, y + 2);
-        addBody(x, y + 1);
-        addBody(x, y);
+        addBody(x, y, SnakeMovement::forward, true);
         addBody(x, y - 1);
+        addBody(x, y - 2);
     }
 
     void update() override {
@@ -114,11 +112,20 @@ public:
     }
 
     void addBody(const int x, const int y, SnakeMovement direction = SnakeMovement::forward, bool isHead = false) {
-        Point* snakeBody = new Point(_camera);
+        const auto interval = _snakeProperties.interval;
+        const auto d1 = (interval * 0.0f) / 2.0f;
+        const auto d2 = (interval * 2.0f) / 2.0f;
+        const glm::vec2 position{ 0.0f, 0.0f };
+        const std::vector<glm::vec2> bodyPositions{
+            { x * interval + d1, y * interval + d1 },
+            { x * interval + d1, y * interval + d2 },
+            { x * interval + d2, y * interval + d2 },
+            { x * interval + d2, y * interval + d1 },
+        };
+        Rectangle* snakeBody = new Rectangle(_camera);
         snakeBody->initShader("snake-assets/shaders/snake_vs.shader", "snake-assets/shaders/snake_fs.shader");
         snakeBody->initMVP();
-        snakeBody->setDrawMode(GL_POINTS);
-        snakeBody->setPositionsVec2({ { 0.0f, 0.0f } });
+        snakeBody->setPositionsVec2(bodyPositions);
         if (isHead) {
             snakeBody->setColor(_snakeHeadColor);
         }
@@ -126,11 +133,7 @@ public:
             snakeBody->setColor(_snakeBodyColor);
         }
         snakeBody->init();
-
-        const auto interval = _snakeProperties.interval;
-        const glm::vec2 position{ x * interval + interval / 2.0f, y * interval + interval / 2.0f };
-        snakeBody->setPositionVec2(position);
-
+        
         _snake.emplace_back(x, y, snakeBody, position, direction);
     }
 

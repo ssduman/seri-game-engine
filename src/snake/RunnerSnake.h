@@ -17,7 +17,6 @@ public:
     void operator()() {
         WindowProperties windowProperties{ /*title*/ "Seri Game Engine - Snake", /*fullscreen*/ false, /*w*/ 800, /*h*/ 800 };
         std::unique_ptr<WindowManager> windowManager = std::make_unique<WindowManager>(windowProperties);
-        windowManager->setPointSize(20.0f);
 
         std::shared_ptr<State> state = std::make_shared<State>();
         state->gameState() = GameState::GAME;
@@ -26,7 +25,7 @@ public:
         std::shared_ptr<Camera> camera = std::make_shared<Camera>(cameraProperties, state.get());
         camera->init();
 
-        SnakeProperties snakeProperties{ windowManager->getWidthF(), windowManager->getHeightF(), /*speed*/ 4.0f, /*interval*/ 20.0f };
+        SnakeProperties snakeProperties{ windowManager->getWidthF(), windowManager->getHeightF(), /*speed*/ 4.0f, /*interval*/ 40.0f };
         Snake snake{ camera.get(), snakeProperties };
         snake.init();
 
