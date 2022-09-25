@@ -121,25 +121,28 @@ private:
         for (auto& snake : _snake) {
             oldDir = snake.direction;
             snake.direction = reqDir;
-            if (SnakeMovement::forward == snake.direction) {
+            if (SnakeMovement::forward == snake.direction && SnakeMovement::backward != oldDir) {
                 snake.y += 1;
                 snake.position += glm::vec2{ 0.0f, interval };
                 snake.entity->setPositionVec2(snake.position);
             }
-            else if (SnakeMovement::backward == snake.direction) {
+            else if (SnakeMovement::backward == snake.direction && SnakeMovement::forward != oldDir) {
                 snake.y -= 1;
                 snake.position += glm::vec2{ 0.0f, -interval };
                 snake.entity->setPositionVec2(snake.position);
             }
-            else if (SnakeMovement::left == snake.direction) {
+            else if (SnakeMovement::left == snake.direction && SnakeMovement::right != oldDir) {
                 snake.x -= 1;
                 snake.position += glm::vec2{ -interval, 0.0f };
                 snake.entity->setPositionVec2(snake.position);
             }
-            else if (SnakeMovement::right == snake.direction) {
+            else if (SnakeMovement::right == snake.direction && SnakeMovement::left != oldDir) {
                 snake.x += 1;
                 snake.position += glm::vec2{ interval, 0.0f };
                 snake.entity->setPositionVec2(snake.position);
+            }
+            else {
+                LOGGER(info, "illegal snake move");
             }
             reqDir = oldDir;
         }
