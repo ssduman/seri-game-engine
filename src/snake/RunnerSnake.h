@@ -26,7 +26,7 @@ public:
         std::shared_ptr<Camera> camera = std::make_shared<Camera>(cameraProperties, state.get());
         camera->init();
 
-        SnakeProperties snakeProperties{ /*w*/ 800.0f, /*h*/ 800.0f, /*i*/ 50.0f };
+        SnakeProperties snakeProperties{ windowManager->getWidthF(), windowManager->getHeightF(), /*speed*/ 2.0f, /*interval*/ 20.0f };
         Snake snake{ camera.get(), snakeProperties };
         snake.init();
 

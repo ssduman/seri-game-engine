@@ -34,7 +34,7 @@ public:
     }
 
     void update() override {
-        if (_snakeProperties.timeElapsed >= 0.16f && _snakeProperties.isPlaying) {
+        if (_snakeProperties.timeElapsed >= (0.16f / _snakeProperties.speed) && _snakeProperties.isPlaying) {
             _snakeProperties.timeElapsed = 0.0f;
 
             const auto oldTail = _snake.back();
@@ -43,28 +43,28 @@ public:
             SnakeMovement oldDir{ SnakeMovement::noop };
             SnakeMovement reqDir{ _snake.front().requestedDirection };
             reqDir = reqDir == SnakeMovement::noop ? SnakeMovement::forward : reqDir;
-            for (auto& cell : _snake) {
-                oldDir = cell.direction;
-                cell.direction = reqDir;
-                if (SnakeMovement::forward == cell.direction) {
-                    cell.y += 1;
-                    cell.position += glm::vec2{ 0.0f, interval };
-                    cell.entity->setPositionVec2(cell.position);
+            for (auto& snake : _snake) {
+                oldDir = snake.direction;
+                snake.direction = reqDir;
+                if (SnakeMovement::forward == snake.direction) {
+                    snake.y += 1;
+                    snake.position += glm::vec2{ 0.0f, interval };
+                    snake.entity->setPositionVec2(snake.position);
                 }
-                else if (SnakeMovement::backward == cell.direction) {
-                    cell.y -= 1;
-                    cell.position += glm::vec2{ 0.0f, -interval };
-                    cell.entity->setPositionVec2(cell.position);
+                else if (SnakeMovement::backward == snake.direction) {
+                    snake.y -= 1;
+                    snake.position += glm::vec2{ 0.0f, -interval };
+                    snake.entity->setPositionVec2(snake.position);
                 }
-                else if (SnakeMovement::left == cell.direction) {
-                    cell.x -= 1;
-                    cell.position += glm::vec2{ -interval, 0.0f };
-                    cell.entity->setPositionVec2(cell.position);
+                else if (SnakeMovement::left == snake.direction) {
+                    snake.x -= 1;
+                    snake.position += glm::vec2{ -interval, 0.0f };
+                    snake.entity->setPositionVec2(snake.position);
                 }
-                else if (SnakeMovement::right == cell.direction) {
-                    cell.x += 1;
-                    cell.position += glm::vec2{ interval, 0.0f };
-                    cell.entity->setPositionVec2(cell.position);
+                else if (SnakeMovement::right == snake.direction) {
+                    snake.x += 1;
+                    snake.position += glm::vec2{ interval, 0.0f };
+                    snake.entity->setPositionVec2(snake.position);
                 }
                 reqDir = oldDir;
             }
@@ -72,13 +72,13 @@ public:
             const auto& head = _snake.front();
 
             bool isHead = true;
-            for (auto& cell : _snake) {
+            for (auto& snake : _snake) {
                 if (isHead) {
                     isHead = false;
                     continue;
                 }
-                if (cell.x == head.x && cell.y == head.y) {
-                    cell.entity->setColor(_snakeCollisionColor);
+                if (snake.x == head.x && snake.y == head.y) {
+                    snake.entity->setColor(_snakeCollisionColor);
                     head.entity->setColor(_snakeCollisionColor);
                     _snakeProperties.isPlaying = false;
                     LOGGER(info, "game over");
@@ -98,8 +98,8 @@ public:
 
     void display() override {
         Object::display();
-        for (const auto& cell : _snake) {
-            cell.entity->display();
+        for (const auto& snake : _snake) {
+            snake.entity->display();
         }
 
         _food.display();
