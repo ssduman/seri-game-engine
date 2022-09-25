@@ -24,7 +24,7 @@ public:
     void update() override {}
 
     void updateProjection() override {
-        _projection = glm::ortho(0.0f, 800.0f, 0.0f, 800.0f, 0.1f, 100.0f);
+        _projection = glm::ortho(0.0f, _cameraProperties.width, 0.0f, _cameraProperties.height);
     }
 
     void handleInput(float deltaTime, CameraMovement cameraMovement) {

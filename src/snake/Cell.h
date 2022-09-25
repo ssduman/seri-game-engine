@@ -8,6 +8,8 @@ struct Cell {
     Cell(int x_, int y_, Entity* entity_, glm::vec2 position_, SnakeMovement direction_)
         : x{ x_ }, y{ y_ }, entity{ entity_ }, position{ position_ }, direction{ direction_ } {}
 
+    ~Cell() {}
+
     int x;
     int y;
     Entity* entity;

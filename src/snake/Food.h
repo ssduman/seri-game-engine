@@ -18,6 +18,12 @@ public:
         LOGGER(info, "food init succeeded");
     }
 
+    ~Food() override {
+        delete _food;
+        
+        LOGGER(info, "food delete succeeded");
+    }
+
     void init() override {
         generateFood();
     }
@@ -32,8 +38,8 @@ public:
     }
 
     void generateFood() {
-        const auto x = _distributionRows(_generator);
-        const auto y = _distributionCols(_generator);
+        const auto x = _distributionCols(_generator);
+        const auto y = _distributionRows(_generator);
         _foodPosition = { x, y };
 
         const auto interval = _snakeProperties.interval;

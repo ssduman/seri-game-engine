@@ -14,13 +14,15 @@ public:
     ~RunnerSnake() override = default;
 
     void operator()() {
-        WindowProperties windowProperties{ /*title*/ "Seri Game Engine - Snake", /*fullscreen*/ false, /*w*/ 800, /*h*/ 800 };
+        WindowProperties windowProperties{ /*title*/ "Seri Game Engine - Snake", /*fullscreen*/ false, /*w*/ 800, /*h*/ 600 };
         std::unique_ptr<WindowManager> windowManager = std::make_unique<WindowManager>(windowProperties);
 
         std::shared_ptr<State> state = std::make_shared<State>();
         state->gameState() = GameState::GAME;
 
         CameraProperties cameraProperties{};
+        cameraProperties.width = windowManager->getWidthF();
+        cameraProperties.height = windowManager->getHeightF();
         std::shared_ptr<Camera> camera = std::make_shared<Camera>(cameraProperties, state.get());
         camera->init();
 

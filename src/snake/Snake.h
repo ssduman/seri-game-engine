@@ -19,6 +19,14 @@ public:
         LOGGER(info, "snake init succeeded");
     }
 
+    ~Snake() override {
+        for (auto& snake : _snake) {
+            delete snake.entity;
+        }
+
+        LOGGER(info, "snake delete succeeded");
+    }
+
     void init() override {
         _food.init();
         _board.init();

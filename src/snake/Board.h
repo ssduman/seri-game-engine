@@ -15,6 +15,12 @@ public:
         LOGGER(info, "board init succeeded");
     }
 
+    ~Board() override {
+        delete _lines;
+
+        LOGGER(info, "board delete succeeded");
+    }
+
     void init() override {
         _lines = new Line(_camera);
         _lines->initShader("snake-assets/shaders/snake_vs.shader", "snake-assets/shaders/snake_fs.shader");
