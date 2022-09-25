@@ -31,8 +31,8 @@ public:
         _food.init();
         _board.init();
 
-        const int x = _snakeProperties.totalRows / 2;
-        const int y = _snakeProperties.totalCols / 2;
+        const int x = _snakeProperties.totalCols / 2;
+        const int y = _snakeProperties.totalRows / 2;
         addBody(x, y - 0, SnakeMovement::forward, true);
         addBody(x, y - 1, SnakeMovement::forward);
         addBody(x, y - 2, SnakeMovement::forward);
@@ -43,67 +43,24 @@ public:
             _snakeProperties.timeElapsed = 0.0f;
 
             const auto oldTail = _snake.back();
-            const auto interval = _snakeProperties.interval;
 
-            SnakeMovement oldDir{ SnakeMovement::noop };
-            SnakeMovement reqDir{ _snake.front().requestedDirection };
-            reqDir = reqDir == SnakeMovement::noop ? SnakeMovement::forward : reqDir;
-            for (auto& snake : _snake) {
-                oldDir = snake.direction;
-                snake.direction = reqDir;
-                if (SnakeMovement::forward == snake.direction) {
-                    snake.y += 1;
-                    snake.position += glm::vec2{ 0.0f, interval };
-                    snake.entity->setPositionVec2(snake.position);
-                }
-                else if (SnakeMovement::backward == snake.direction) {
-                    snake.y -= 1;
-                    snake.position += glm::vec2{ 0.0f, -interval };
-                    snake.entity->setPositionVec2(snake.position);
-                }
-                else if (SnakeMovement::left == snake.direction) {
-                    snake.x -= 1;
-                    snake.position += glm::vec2{ -interval, 0.0f };
-                    snake.entity->setPositionVec2(snake.position);
-                }
-                else if (SnakeMovement::right == snake.direction) {
-                    snake.x += 1;
-                    snake.position += glm::vec2{ interval, 0.0f };
-                    snake.entity->setPositionVec2(snake.position);
-                }
-                reqDir = oldDir;
-            }
+            moveSnake();
 
             const auto& head = _snake.front();
-            if (head.x < 0 || head.x >= _snakeProperties.totalCols || head.y < 0 || head.y >= _snakeProperties.totalRows) {
-                for (auto& snake : _snake) {
-                    snake.entity->setColor(_snakeCollisionColor);
-                }
-                _snakeProperties.isPlaying = false;
+
+            if (checkWallCollision(head)) {
                 LOGGER(info, "snake hit the wall, game over");
                 return;
             }
 
-            bool isHead = true;
-            for (auto& snake : _snake) {
-                if (isHead) {
-                    isHead = false;
-                    continue;
-                }
-                if (snake.x == head.x && snake.y == head.y) {
-                    snake.entity->setColor(_snakeCollisionColor);
-                    head.entity->setColor(_snakeCollisionColor);
-                    _snakeProperties.isPlaying = false;
-                    LOGGER(info, "snake hit own body, game over");
-                    return;
-                }
+            if (checkBodyCollision(head)) {
+                LOGGER(info, "snake hit own body, game over");
+                return;
             }
 
-            const auto& foodPosition = _food.getFoodPosition();
-            if (head.x == foodPosition.x && head.y == foodPosition.y) {
-                addBody(oldTail.x, oldTail.y, oldTail.direction);
-                _food.generateFood();
+            if (checkFoodCollision(head, oldTail)) {
                 LOGGER(info, "snake ate the food");
+                return;
             }
         }
     }
@@ -120,6 +77,15 @@ public:
         _board.display();
     }
 
+    void handleMovement(float deltaTime, SnakeMovement snakeMovement) {
+        _snake.front().requestedDirection = snakeMovement;
+    }
+
+    void handleTime(float deltaTime) {
+        _snakeProperties.timeElapsed += deltaTime;
+    }
+
+private:
     void addBody(const int x, const int y, SnakeMovement direction, bool isHead = false) {
         const auto interval = _snakeProperties.interval;
         const auto d1 = (interval * 0.0f) / 2.0f;
@@ -146,15 +112,80 @@ public:
         _snake.emplace_back(x, y, snakeBody, position, direction);
     }
 
-    void handleMovement(float deltaTime, SnakeMovement snakeMovement) {
-        _snake.front().requestedDirection = snakeMovement;
+    void moveSnake() {
+        const auto interval = _snakeProperties.interval;
+
+        SnakeMovement oldDir{ SnakeMovement::noop };
+        SnakeMovement reqDir{ _snake.front().requestedDirection };
+        reqDir = reqDir == SnakeMovement::noop ? SnakeMovement::forward : reqDir;
+        for (auto& snake : _snake) {
+            oldDir = snake.direction;
+            snake.direction = reqDir;
+            if (SnakeMovement::forward == snake.direction) {
+                snake.y += 1;
+                snake.position += glm::vec2{ 0.0f, interval };
+                snake.entity->setPositionVec2(snake.position);
+            }
+            else if (SnakeMovement::backward == snake.direction) {
+                snake.y -= 1;
+                snake.position += glm::vec2{ 0.0f, -interval };
+                snake.entity->setPositionVec2(snake.position);
+            }
+            else if (SnakeMovement::left == snake.direction) {
+                snake.x -= 1;
+                snake.position += glm::vec2{ -interval, 0.0f };
+                snake.entity->setPositionVec2(snake.position);
+            }
+            else if (SnakeMovement::right == snake.direction) {
+                snake.x += 1;
+                snake.position += glm::vec2{ interval, 0.0f };
+                snake.entity->setPositionVec2(snake.position);
+            }
+            reqDir = oldDir;
+        }
     }
 
-    void handleTime(float deltaTime) {
-        _snakeProperties.timeElapsed += deltaTime;
+    bool checkWallCollision(const Cell& head) {
+        if (head.x < 0 || head.x >= _snakeProperties.totalCols || head.y < 0 || head.y >= _snakeProperties.totalRows) {
+            for (auto& snake : _snake) {
+                snake.entity->setColor(_snakeCollisionColor);
+            }
+            _snakeProperties.isPlaying = false;
+            return true;
+        }
+
+        return false;
     }
 
-private:
+    bool checkBodyCollision(const Cell& head) {
+        bool isHead = true;
+        for (auto& snake : _snake) {
+            if (isHead) {
+                isHead = false;
+                continue;
+            }
+            if (snake.x == head.x && snake.y == head.y) {
+                snake.entity->setColor(_snakeCollisionColor);
+                head.entity->setColor(_snakeCollisionColor);
+                _snakeProperties.isPlaying = false;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    bool checkFoodCollision(const Cell& head, const Cell& oldTail) {
+        const auto& foodPosition = _food.getFoodPosition();
+        if (head.x == foodPosition.x && head.y == foodPosition.y) {
+            addBody(oldTail.x, oldTail.y, oldTail.direction);
+            _food.generateFood();
+            return true;
+        }
+
+        return false;
+    }
+
     SnakeProperties& _snakeProperties;
     Food _food;
     Board _board;
