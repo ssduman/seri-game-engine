@@ -3,23 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32526.322
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "engine", "src\engine\engine.vcxproj", "{7080E3CC-7F49-43A5-8EBF-E3581FBA94E6}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "engine", "engine\engine.vcxproj", "{7080E3CC-7F49-43A5-8EBF-E3581FBA94E6}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "editor", "src\editor\editor.vcxproj", "{50F88C28-AEDE-477E-95AA-6ABFB4DF8390}"
-	ProjectSection(ProjectDependencies) = postProject
-		{7080E3CC-7F49-43A5-8EBF-E3581FBA94E6} = {7080E3CC-7F49-43A5-8EBF-E3581FBA94E6}
-	EndProjectSection
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "editor", "editor\editor.vcxproj", "{50F88C28-AEDE-477E-95AA-6ABFB4DF8390}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "maze", "src\maze\maze.vcxproj", "{E9CAB241-9B94-4FAD-BE0D-59BBACA17B55}"
-	ProjectSection(ProjectDependencies) = postProject
-		{7080E3CC-7F49-43A5-8EBF-E3581FBA94E6} = {7080E3CC-7F49-43A5-8EBF-E3581FBA94E6}
-	EndProjectSection
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "maze", "maze\maze.vcxproj", "{E9CAB241-9B94-4FAD-BE0D-59BBACA17B55}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mics", "src\mics\mics.vcxproj", "{047D2E68-3113-4E81-93A5-2F71305ADE83}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mics", "mics\mics.vcxproj", "{047D2E68-3113-4E81-93A5-2F71305ADE83}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tetris", "src\tetris\tetris.vcxproj", "{70EC351C-5E12-4885-87B9-D950020C16F8}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tetris", "tetris\tetris.vcxproj", "{70EC351C-5E12-4885-87B9-D950020C16F8}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "snake", "src\snake\snake.vcxproj", "{95DF26F2-0704-4E23-A3D7-309005D58FCC}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "snake", "snake\snake.vcxproj", "{95DF26F2-0704-4E23-A3D7-309005D58FCC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

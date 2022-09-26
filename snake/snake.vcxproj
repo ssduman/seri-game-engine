@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{70ec351c-5e12-4885-87b9-d950020c16f8}</ProjectGuid>
-    <RootNamespace>tetris</RootNamespace>
+    <ProjectGuid>{95df26f2-0704-4e23-a3d7-309005d58fcc}</ProjectGuid>
+    <RootNamespace>snake</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -90,18 +90,6 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
-    </ClCompile>
-    <Link>
-      <SubSystem>Console</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>STB_IMAGE_IMPLEMENTATION;GLEW_STATIC;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -114,7 +102,7 @@
       <AdditionalDependencies>glfw3.lib;opengl32.lib;User32.lib;Gdi32.lib;Shell32.lib;glew32s.lib;freetype.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y /i /e /r /q "$(SolutionDir)src\$(ProjectName)\tetris-assets" "$(SolutionDir)artifact\$(Configuration)-$(Platform)\tetris-assets"
+      <Command>xcopy /y /i /e /r /q "$(SolutionDir)$(ProjectName)\snake-assets" "$(SolutionDir)artifact\$(Configuration)-$(Platform)\snake-assets"
 xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win32\freetype.dll" "$(SolutionDir)artifact\$(Configuration)-$(Platform)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -138,7 +126,7 @@ xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win32\freetype.dll" "$(So
       <AdditionalDependencies>glfw3.lib;opengl32.lib;User32.lib;Gdi32.lib;Shell32.lib;glew32s.lib;freetype.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y /i /e /r /q "$(SolutionDir)src\$(ProjectName)\tetris-assets" "$(SolutionDir)artifact\$(Configuration)-$(Platform)\tetris-assets"
+      <Command>xcopy /y /i /e /r /q "$(SolutionDir)$(ProjectName)\snake-assets" "$(SolutionDir)artifact\$(Configuration)-$(Platform)\snake-assets"
 xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win32\freetype.dll" "$(SolutionDir)artifact\$(Configuration)-$(Platform)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -158,7 +146,7 @@ xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win32\freetype.dll" "$(So
       <AdditionalDependencies>glfw3.lib;opengl32.lib;User32.lib;Gdi32.lib;Shell32.lib;glew32s.lib;freetype.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y /i /e /r /q "$(SolutionDir)src\$(ProjectName)\tetris-assets" "$(SolutionDir)artifact\$(Configuration)-$(Platform)\tetris-assets"
+      <Command>xcopy /y /i /e /r /q "$(SolutionDir)$(ProjectName)\snake-assets" "$(SolutionDir)artifact\$(Configuration)-$(Platform)\snake-assets"
 xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win64\freetype.dll" "$(SolutionDir)artifact\$(Configuration)-$(Platform)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -182,15 +170,23 @@ xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win64\freetype.dll" "$(So
       <AdditionalDependencies>glfw3.lib;opengl32.lib;User32.lib;Gdi32.lib;Shell32.lib;glew32s.lib;freetype.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y /i /e /r /q "$(SolutionDir)src\$(ProjectName)\tetris-assets" "$(SolutionDir)artifact\$(Configuration)-$(Platform)\tetris-assets"
+      <Command>xcopy /y /i /e /r /q "$(SolutionDir)$(ProjectName)\snake-assets" "$(SolutionDir)artifact\$(Configuration)-$(Platform)\snake-assets"
 xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win64\freetype.dll" "$(SolutionDir)artifact\$(Configuration)-$(Platform)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="tetris.cpp" />
+    <ClCompile Include="snake.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="RunnerTetris.h" />
+    <ClInclude Include="Board.h" />
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="Cell.h" />
+    <ClInclude Include="Control.h" />
+    <ClInclude Include="Food.h" />
+    <ClInclude Include="RunnerSnake.h" />
+    <ClInclude Include="Snake.h" />
+    <ClInclude Include="SnakeMovement.h" />
+    <ClInclude Include="SnakeProperties.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
