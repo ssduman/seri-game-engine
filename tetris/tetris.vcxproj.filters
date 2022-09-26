@@ -8,6 +8,12 @@
     <Filter Include="Runner">
       <UniqueIdentifier>{bda894e3-7373-44e2-aaec-f8675f1ec576}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Camera">
+      <UniqueIdentifier>{7916b466-9972-4456-ac57-a9b35108b48d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Control">
+      <UniqueIdentifier>{b2d8dfbb-2404-4387-be30-6d809880f27e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="tetris.cpp">
@@ -17,6 +23,12 @@
   <ItemGroup>
     <ClInclude Include="RunnerTetris.h">
       <Filter>Runner</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Control.h">
+      <Filter>Control</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
