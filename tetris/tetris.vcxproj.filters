@@ -14,6 +14,9 @@
     <Filter Include="Control">
       <UniqueIdentifier>{b2d8dfbb-2404-4387-be30-6d809880f27e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Tetris">
+      <UniqueIdentifier>{eb851c1a-503f-409b-a374-21b55acda3d3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="tetris.cpp">
@@ -29,6 +32,12 @@
     </ClInclude>
     <ClInclude Include="Control.h">
       <Filter>Control</Filter>
+    </ClInclude>
+    <ClInclude Include="Tetris.h">
+      <Filter>Tetris</Filter>
+    </ClInclude>
+    <ClInclude Include="TetrisProperties.h">
+      <Filter>Tetris</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

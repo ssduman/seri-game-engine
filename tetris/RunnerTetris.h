@@ -4,7 +4,9 @@
 #include "../engine/Triangle.h"
 
 #include "Camera.h"
+#include "Tetris.h"
 #include "Control.h"
+#include "TetrisProperties.h"
 
 class RunnerTetris : public IRunner {
 public:
@@ -25,10 +27,15 @@ public:
         std::shared_ptr<Camera> camera = std::make_shared<Camera>(cameraProperties, state.get());
         camera->init();
 
+        TetrisProperties snakeProperties{ windowManager->getWidthF(), windowManager->getHeightF(), /*speed*/ 4.0f, /*interval*/ 20.0f };
+        Tetris snake{ camera.get(), snakeProperties };
+        snake.init();
+
         Control control{ windowManager.get(), camera.get(), state.get() };
         control.init();
 
         Layer layers{};
+        layers.addLayer(&snake);
 
         LOGGER(info, "starting tetris loop");
 
