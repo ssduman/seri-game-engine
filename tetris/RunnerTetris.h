@@ -28,14 +28,14 @@ public:
         camera->init();
 
         TetrisProperties snakeProperties{ windowManager->getWidthF(), windowManager->getHeightF(), /*speed*/ 4.0f, /*interval*/ 50.0f };
-        Tetris snake{ camera.get(), snakeProperties };
-        snake.init();
+        Tetris tetris{ camera.get(), snakeProperties };
+        tetris.init();
 
         Control control{ windowManager.get(), camera.get(), state.get() };
         control.init();
 
         Layer layers{};
-        layers.addLayer(&snake);
+        layers.addLayer(&tetris);
 
         LOGGER(info, "starting tetris loop");
 
@@ -46,6 +46,8 @@ public:
             auto deltaTime = windowManager->updateDeltaTime();
 
             control.processInput(deltaTime);
+
+            tetris.update(deltaTime);
 
             for (auto entity : layers.getLayers()) {
                 entity->display();

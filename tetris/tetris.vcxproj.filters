@@ -42,5 +42,11 @@
     <ClInclude Include="Board.h">
       <Filter>Tetris</Filter>
     </ClInclude>
+    <ClInclude Include="TetrisMovement.h">
+      <Filter>Tetris</Filter>
+    </ClInclude>
+    <ClInclude Include="Block.h">
+      <Filter>Tetris</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
