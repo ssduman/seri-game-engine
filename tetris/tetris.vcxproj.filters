@@ -17,6 +17,9 @@
     <Filter Include="Tetris">
       <UniqueIdentifier>{eb851c1a-503f-409b-a374-21b55acda3d3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Block">
+      <UniqueIdentifier>{dce905c4-1edc-4414-bdbd-95af5d04a6dd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="tetris.cpp">
@@ -45,8 +48,17 @@
     <ClInclude Include="TetrisMovement.h">
       <Filter>Tetris</Filter>
     </ClInclude>
-    <ClInclude Include="Block.h">
-      <Filter>Tetris</Filter>
+    <ClInclude Include="IBlock.h">
+      <Filter>Block</Filter>
+    </ClInclude>
+    <ClInclude Include="BlockI.h">
+      <Filter>Block</Filter>
+    </ClInclude>
+    <ClInclude Include="BlockFactory.h">
+      <Filter>Block</Filter>
+    </ClInclude>
+    <ClInclude Include="BlockType.h">
+      <Filter>Block</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

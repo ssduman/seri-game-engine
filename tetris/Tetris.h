@@ -3,9 +3,11 @@
 #include "../engine/Logger.h"
 #include "../engine/Entity.h"
 
-#include "Block.h"
 #include "Board.h"
 #include "Camera.h"
+#include "IBlock.h"
+#include "BlockType.h"
+#include "BlockFactory.h"
 #include "TetrisMovement.h"
 #include "TetrisProperties.h"
 
@@ -19,12 +21,16 @@ public:
     }
 
     ~Tetris() override {
+        for (auto& block : _blocks) {
+            //delete block;
+        }
+
         LOGGER(info, "tetris delete succeeded");
     }
 
     void init() override {
         _board.init();
-        _blocks.emplace_back(_camera, _tetrisProperties);
+        _blocks.emplace_back(BlockFactory::create(_camera, _tetrisProperties, BlockType::I));
     }
 
     void update() override {}
@@ -37,7 +43,7 @@ public:
         _board.display();
 
         for (auto& block : _blocks) {
-            block.display();
+            block->display();
         }
     }
 
@@ -50,6 +56,6 @@ private:
     TetrisProperties& _tetrisProperties;
     Board _board;
 
-    std::vector<Block> _blocks;
+    std::vector<IBlock*> _blocks;
 
 };
