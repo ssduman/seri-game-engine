@@ -24,6 +24,18 @@ public:
 
     virtual void generateBlock() = 0;
 
+    std::vector<glm::vec2> createSquarePosition(const float x, const float y) {
+        const auto interval = _tetrisProperties.interval;
+        const auto d1 = (interval * 0.0f) / 2.0f;
+        const auto d2 = (interval * 2.0f) / 2.0f;
+        return {
+            { x * interval + d1, y * interval + d1 },
+            { x * interval + d1, y * interval + d2 },
+            { x * interval + d2, y * interval + d2 },
+            { x * interval + d2, y * interval + d1 },
+        };
+    }
+
     const glm::ivec2& getBlockPosition() {
         return _blockPosition;
     }

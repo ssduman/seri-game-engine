@@ -2,6 +2,7 @@
 
 #include "../engine/Entity.h"
 #include "../engine/Logger.h"
+#include "../engine/Triangle.h"
 #include "../engine/Rectangle.h"
 
 #include "Camera.h"
@@ -39,9 +40,10 @@ public:
     void generateBlock() override {
         generateBlockPositions();
 
-        _block = new Rectangle(_camera);
+        _block = new Triangle(_camera);
+        //_block->setDrawMode(GL_POLYGON);
         _block->initShader("tetris-assets/shaders/tetris_vs.shader", "tetris-assets/shaders/tetris_fs.shader");
-        _block->setTexture("tetris-assets/textures/block-" + _blockIdentifier + ".png");
+        _block->setTexture("tetris-assets/textures/block-" + _blockIdentifier + ".png", _blockPositions);
         _block->initMVP();
         _block->setPositionsVec2(_blockPositions);
         _block->init();
@@ -52,15 +54,16 @@ private:
         const auto x = _tetrisProperties.totalCols / 2.0f - 1.0f;
         const auto y = _tetrisProperties.totalRows - 2.0f;
 
-        const auto interval = _tetrisProperties.interval;
-        const auto d1 = (interval * 0.0f) / 2.0f;
-        const auto d2 = (interval * 2.0f) / 2.0f;
-        _blockPositions = {
-            { (x - 1) * interval + d1, (y - 1) * interval + d1 },
-            { (x - 1) * interval + d1, (y + 1) * interval + d2 },
-            { (x + 1) * interval + d2, (y + 1) * interval + d2 },
-            { (x + 1) * interval + d2, (y - 1) * interval + d1 },
-        };
+        const auto s1 = createSquarePosition(x - 2.0f, y);
+        const auto s2 = createSquarePosition(x - 1.0f, y);
+        const auto s3 = createSquarePosition(x + 0.0f, y);
+        const auto s4 = createSquarePosition(x + 1.0f, y);
+
+        _blockPositions.reserve(4 * 4);
+        _blockPositions.insert(_blockPositions.end(), s1.begin(), s1.end());
+        _blockPositions.insert(_blockPositions.end(), s2.begin(), s2.end());
+        _blockPositions.insert(_blockPositions.end(), s3.begin(), s3.end());
+        _blockPositions.insert(_blockPositions.end(), s4.begin(), s4.end());
     }
 
     std::string _blockIdentifier{ "I" };
