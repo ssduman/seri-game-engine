@@ -16,6 +16,7 @@
 * <a href="https://github.com/nothings/stb/blob/master/stb_image.h"> stb_image </a> 
 * <a href="https://github.com/g-truc/glm"> glm </a> 
 * <a href="https://www.freetype.org/"> freetype </a> 
+* <a href="https://github.com/ocornut/imgui"> ImGui </a> (for editor)
 ## Run: ##
 Create a file named *libraries* and copy dependencies into it. Click to solution (if needed, change solution platform) and 
 build. Next, copy *shaders/*, *textures/* and *freetype.dll* next to the *Maze.exe*, run and enjoy!
