@@ -7,6 +7,7 @@
 #include "../engine/Circle.h"
 #include "../engine/Entity.h"
 #include "../engine/Logger.h"
+#include "../engine/Polygon.h"
 #include "../engine/Triangle.h"
 #include "../engine/Rectangle.h"
 
@@ -242,6 +243,30 @@ public:
                 LOGGER(info, "cube created");
 
                 return cube;
+            }
+            case EntityType::POLYGON:
+            {
+                std::vector<glm::vec3> positions{
+                    { -0.5f, -0.5f, 0 },
+                    { -0.5f, 0.5f, 0 },
+                    { 0.5f, 0.5f, 0 },
+                    { 0.0f, 0.0f, 0 },
+                    { 0.5f, -0.5f, 0 },
+                };
+                Polygon* polygon = new Polygon(camera);
+                polygon->initShader("editor-assets/shaders/entity_vs.shader", "editor-assets/shaders/entity_fs.shader");
+                polygon->initMVP();
+
+                polygon->setDrawMode(GL_TRIANGLE_FAN);
+                polygon->setPositions(positions);
+                //polygon->setColor(glm::linearRand(minColor, maxColor));
+                polygon->setTexture("editor-assets/textures/passage.png");
+
+                polygon->init();
+
+                LOGGER(info, "triangle created");
+
+                return polygon;
             }
             case EntityType::UNKNOWN:
             {

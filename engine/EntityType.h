@@ -9,6 +9,7 @@ enum class EntityType {
     RECTANGLE,
     CIRCLE,
     CUBE,
+    POLYGON,
     UNKNOWN,
 };
 
@@ -26,6 +27,8 @@ inline std::string toString(EntityType entityType) {
             return "circle";
         case EntityType::CUBE:
             return "cube";
+        case EntityType::POLYGON:
+            return "polygon";
         case EntityType::UNKNOWN:
             return "unknown";
         default:
