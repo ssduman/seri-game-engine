@@ -3,6 +3,7 @@
 #include "Camera.h"
 #include "IBlock.h"
 #include "BlockI.h"
+#include "BlockJ.h"
 #include "BlockType.h"
 #include "TetrisProperties.h"
 
@@ -16,7 +17,12 @@ public:
                 block->init();
                 return block;
             }
-            case BlockType::J: break;
+            case BlockType::J:
+            {
+                auto block = new BlockJ{ camera, tetrisProperties };
+                block->init();
+                return block;
+            }
             case BlockType::L: break;
             case BlockType::O: break;
             case BlockType::S: break;

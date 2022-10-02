@@ -60,5 +60,8 @@
     <ClInclude Include="BlockType.h">
       <Filter>Block</Filter>
     </ClInclude>
+    <ClInclude Include="BlockJ.h">
+      <Filter>Block</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

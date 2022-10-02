@@ -13,16 +13,16 @@
 #include <vector>
 #include <random>
 
-class BlockI : public IBlock {
+class BlockJ : public IBlock {
 public:
-    BlockI(Camera* camera, TetrisProperties& tetrisProperties) : IBlock(camera, tetrisProperties) {
-        LOGGER(info, "block I init succeeded");
+    BlockJ(Camera* camera, TetrisProperties& tetrisProperties) : IBlock(camera, tetrisProperties) {
+        LOGGER(info, "block J init succeeded");
     }
 
-    ~BlockI() override {
+    ~BlockJ() override {
         delete _block;
 
-        LOGGER(info, "block I delete succeeded");
+        LOGGER(info, "block J delete succeeded");
     }
 
     void init() override {
@@ -43,7 +43,7 @@ public:
 
         _block = new Polygon(_camera);
         _block->initShader("tetris-assets/shaders/tetris_vs.shader", "tetris-assets/shaders/tetris_fs.shader");
-        _block->setDrawMode(GL_TRIANGLE_FAN);
+        _block->setDrawMode(GL_TRIANGLE_STRIP);
         _block->setTexture("tetris-assets/textures/block-" + _blockIdentifier + ".png", _blockPositions);
         _block->initMVP();
         _block->setPositionsVec2(_blockPositions);
@@ -55,10 +55,10 @@ private:
         const auto x = _tetrisProperties.totalCols / 2.0f - 1.0f;
         const auto y = _tetrisProperties.totalRows - 2.0f;
 
-        const auto s1 = createSquarePosition(x - 2.0f, y);
-        const auto s2 = createSquarePosition(x - 1.0f, y);
-        const auto s3 = createSquarePosition(x + 0.0f, y);
-        const auto s4 = createSquarePosition(x + 1.0f, y);
+        const auto s1 = createSquarePosition(x + 0.0f, y - 0.0f);
+        const auto s2 = createSquarePosition(x + 0.0f, y - 1.0f);
+        const auto s3 = createSquarePosition(x + 0.0f, y - 2.0f);
+        const auto s4 = createSquarePosition(x - 1.0f, y - 2.0f);
 
         _blockPositions.reserve(4 * 4);
         _blockPositions.insert(_blockPositions.end(), s1.begin(), s1.end());
@@ -67,6 +67,6 @@ private:
         _blockPositions.insert(_blockPositions.end(), s4.begin(), s4.end());
     }
 
-    std::string _blockIdentifier{ "I" };
+    std::string _blockIdentifier{ "J" };
 
 };
