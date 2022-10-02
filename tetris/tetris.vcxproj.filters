@@ -63,5 +63,20 @@
     <ClInclude Include="BlockJ.h">
       <Filter>Block</Filter>
     </ClInclude>
+    <ClInclude Include="BlockL.h">
+      <Filter>Block</Filter>
+    </ClInclude>
+    <ClInclude Include="BlockO.h">
+      <Filter>Block</Filter>
+    </ClInclude>
+    <ClInclude Include="BlockS.h">
+      <Filter>Block</Filter>
+    </ClInclude>
+    <ClInclude Include="BlockT.h">
+      <Filter>Block</Filter>
+    </ClInclude>
+    <ClInclude Include="BlockZ.h">
+      <Filter>Block</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

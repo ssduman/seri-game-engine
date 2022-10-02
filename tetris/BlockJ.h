@@ -55,7 +55,7 @@ private:
         const auto x = _tetrisProperties.totalCols / 2.0f - 1.0f;
         const auto y = _tetrisProperties.totalRows - 2.0f;
 
-        const auto s1 = createSquarePosition(x + 0.0f, y - 0.0f);
+        const auto s1 = createSquarePosition(x + 0.0f, y + 0.0f);
         const auto s2 = createSquarePosition(x + 0.0f, y - 1.0f);
         const auto s3 = createSquarePosition(x + 0.0f, y - 2.0f);
         const auto s4 = createSquarePosition(x - 1.0f, y - 2.0f);

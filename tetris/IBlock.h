@@ -10,6 +10,13 @@
 #include <vector>
 #include <random>
 
+enum Positions {
+    bottom_left = 0,
+    top_left,
+    top_right,
+    bottom_right,
+};
+
 class IBlock : public Entity {
 public:
     IBlock(Camera* camera, TetrisProperties& tetrisProperties) : Entity(camera), _tetrisProperties(tetrisProperties) {
@@ -29,10 +36,12 @@ public:
         const auto d1 = (interval * 0.0f) / 2.0f;
         const auto d2 = (interval * 2.0f) / 2.0f;
         return {
-            { x * interval + d1, y * interval + d1 },
-            { x * interval + d1, y * interval + d2 },
-            { x * interval + d2, y * interval + d2 },
-            { x * interval + d2, y * interval + d1 },
+            // 3 triangles will be drawn -> v0-v1-v2, v2-v1-v3, v2-v3-v4
+            { x * interval + d1, y * interval + d1 }, // bottom left -> v0
+            { x * interval + d1, y * interval + d2 }, // top left -> v1
+            { x * interval + d2, y * interval + d2 }, // top right -> v2
+            { x * interval + d2, y * interval + d1 }, // bottom right -> v3
+            { x * interval + d1, y * interval + d1 }, // bottom left -> v4 (v0)
         };
     }
 

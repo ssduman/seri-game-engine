@@ -4,7 +4,12 @@
 #include "IBlock.h"
 #include "BlockI.h"
 #include "BlockJ.h"
+#include "BlockL.h"
+#include "BlockO.h"
+#include "BlockS.h"
+#include "BlockT.h"
 #include "BlockType.h"
+#include "BlockZ.h"
 #include "TetrisProperties.h"
 
 class BlockFactory {
@@ -23,11 +28,36 @@ public:
                 block->init();
                 return block;
             }
-            case BlockType::L: break;
-            case BlockType::O: break;
-            case BlockType::S: break;
-            case BlockType::T: break;
-            case BlockType::Z: break;
+            case BlockType::L:
+            {
+                auto block = new BlockL{ camera, tetrisProperties };
+                block->init();
+                return block;
+            }
+            case BlockType::O:
+            {
+                auto block = new BlockO{ camera, tetrisProperties };
+                block->init();
+                return block;
+            }
+            case BlockType::S:
+            {
+                auto block = new BlockS{ camera, tetrisProperties };
+                block->init();
+                return block;
+            }
+            case BlockType::T:
+            {
+                auto block = new BlockT{ camera, tetrisProperties };
+                block->init();
+                return block;
+            }
+            case BlockType::Z:
+            {
+                auto block = new BlockZ{ camera, tetrisProperties };
+                block->init();
+                return block;
+            }
             default:;
         }
 
