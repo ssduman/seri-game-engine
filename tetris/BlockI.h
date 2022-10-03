@@ -39,18 +39,35 @@ public:
     }
 
     void generateBlock() override {
-        generateBlockPositions();
+        generatePositions();
 
         _block = new Polygon(_camera);
         _block->initShader("tetris-assets/shaders/tetris_vs.shader", "tetris-assets/shaders/tetris_fs.shader");
         _block->setDrawMode(GL_TRIANGLE_STRIP);
-        _block->setTexture("tetris-assets/textures/block-" + _blockIdentifier + ".png", _blockPositions);
+        _block->setTexture("tetris-assets/textures/block-" + _blockIdentifier + ".png");
         _block->initMVP();
         _block->setPositionsVec2(_blockPositions);
         _block->init();
     }
 
 private:
+    void generatePositions() {
+        const auto x = _tetrisProperties.totalCols / 2.0f - 1.0f;
+        const auto y = _tetrisProperties.totalRows - 2.0f;
+
+        const auto s1 = createSquarePosition(x - 2.0f, y);
+        const auto s2 = createSquarePosition(x - 1.0f, y);
+        const auto s3 = createSquarePosition(x + 0.0f, y);
+        const auto s4 = createSquarePosition(x + 1.0f, y);
+
+        _blockPositions = {
+            s1[Positions::bottom_left],
+            s1[Positions::top_left],
+            s4[Positions::top_right],
+            s4[Positions::bottom_right],
+        };
+    }
+
     void generateBlockPositions() {
         const auto x = _tetrisProperties.totalCols / 2.0f - 1.0f;
         const auto y = _tetrisProperties.totalRows - 2.0f;

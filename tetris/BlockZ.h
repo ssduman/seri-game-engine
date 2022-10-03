@@ -39,18 +39,42 @@ public:
     }
 
     void generateBlock() override {
-        generateBlockPositions();
+        generatePositions();
 
         _block = new Polygon(_camera);
         _block->initShader("tetris-assets/shaders/tetris_vs.shader", "tetris-assets/shaders/tetris_fs.shader");
-        _block->setDrawMode(GL_TRIANGLE_STRIP);
-        _block->setTexture("tetris-assets/textures/block-" + _blockIdentifier + ".png", _blockPositions);
+        _block->setDrawMode(GL_LINE_LOOP);
+        //_block->setTexture("tetris-assets/textures/block-" + _blockIdentifier + ".png", _blockPositions);
         _block->initMVP();
         _block->setPositionsVec2(_blockPositions);
         _block->init();
     }
 
 private:
+    void generatePositions() {
+        const auto x = _tetrisProperties.totalCols / 2.0f - 1.0f;
+        const auto y = _tetrisProperties.totalRows - 2.0f;
+
+        const auto s1 = createSquarePosition(x - 1.0f, y + 0.0f);
+        const auto s2 = createSquarePosition(x + 0.0f, y + 0.0f);
+        const auto s3 = createSquarePosition(x + 0.0f, y - 1.0f);
+        const auto s4 = createSquarePosition(x + 1.0f, y - 1.0f);
+
+        _blockPositions = {
+            s1[Positions::bottom_left],
+            s1[Positions::top_left],
+
+            s2[Positions::top_right],
+            s2[Positions::bottom_right],
+
+            s4[Positions::top_right],
+            s4[Positions::bottom_right],
+
+            s3[Positions::bottom_left],
+            s3[Positions::top_left],
+        };
+    }
+
     void generateBlockPositions() {
         const auto x = _tetrisProperties.totalCols / 2.0f - 1.0f;
         const auto y = _tetrisProperties.totalRows - 2.0f;

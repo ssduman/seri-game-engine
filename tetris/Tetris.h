@@ -30,7 +30,7 @@ public:
 
     void init() override {
         _board.init();
-        _blocks.emplace_back(BlockFactory::create(_camera, _tetrisProperties, BlockType::I));
+        _blocks.emplace_back(BlockFactory::create(_camera, _tetrisProperties, BlockType::S));
     }
 
     void update() override {}
@@ -40,11 +40,11 @@ public:
     void display() override {
         Object::display();
 
-        _board.display();
-
         for (auto& block : _blocks) {
             block->display();
         }
+
+        _board.display();
     }
 
     void update(float deltaTime) {

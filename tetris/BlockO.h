@@ -44,7 +44,7 @@ public:
         _block = new Polygon(_camera);
         _block->initShader("tetris-assets/shaders/tetris_vs.shader", "tetris-assets/shaders/tetris_fs.shader");
         _block->setDrawMode(GL_TRIANGLE_STRIP);
-        _block->setTexture("tetris-assets/textures/block-" + _blockIdentifier + ".png", _blockPositions);
+        _block->setTexture("tetris-assets/textures/block-" + _blockIdentifier + ".png");
         _block->initMVP();
         _block->setPositionsVec2(_blockPositions);
         _block->init();
