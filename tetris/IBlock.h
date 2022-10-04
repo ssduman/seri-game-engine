@@ -36,12 +36,13 @@ public:
         const auto d1 = (interval * 0.0f) / 2.0f;
         const auto d2 = (interval * 2.0f) / 2.0f;
         return {
-            // 3 triangles will be drawn -> v0-v1-v2, v2-v1-v3, v2-v3-v4
+            // 2 triangles will be drawn -> v0-v1-v2, v3-v5-v6
             { x * interval + d1, y * interval + d1 }, // bottom left -> v0
             { x * interval + d1, y * interval + d2 }, // top left -> v1
             { x * interval + d2, y * interval + d2 }, // top right -> v2
+            { x * interval + d2, y * interval + d2 }, // top right -> v2
             { x * interval + d2, y * interval + d1 }, // bottom right -> v3
-            { x * interval + d1, y * interval + d1 }, // bottom left -> v4 (v0)
+            { x * interval + d1, y * interval + d1 }, // bottom left -> v0
         };
     }
 

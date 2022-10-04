@@ -30,7 +30,7 @@ public:
 
     void init() override {
         _board.init();
-        _blocks.emplace_back(BlockFactory::create(_camera, _tetrisProperties, BlockType::S));
+        _blocks.emplace_back(BlockFactory::create(_camera, _tetrisProperties, BlockType::I));
     }
 
     void update() override {}
