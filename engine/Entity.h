@@ -18,8 +18,8 @@ public:
 
     ~Entity() override = default;
 
-    virtual void initShader(const std::string& vsCodePath, const std::string& fsCodePath) {
-        _shader.init(vsCodePath, fsCodePath);
+    virtual void initShader(const std::string& vsCodePath, const std::string& fsCodePath, bool readFromFile = true) {
+        _shader.init(vsCodePath, fsCodePath, readFromFile);
     }
 
     virtual void initMVP() {

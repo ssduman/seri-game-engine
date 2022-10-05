@@ -28,7 +28,7 @@ public:
         LOGGER(info, "typer delete succeeded");
     }
 
-    void initShader(const std::string& vsCodePath, const std::string& fsCodePath) override {
+    void initShader(const std::string& vsCodePath, const std::string& fsCodePath, bool) override {
         _shader.init(vsCodePath, fsCodePath);
         setColor({ 1.0f, 1.0f, 1.0f });
     }

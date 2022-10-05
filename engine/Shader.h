@@ -28,15 +28,21 @@ public:
         glDeleteProgram(_program);
     }
 
-    void init(const std::string& vsCodePath, const std::string& fsCodePath) {
+    void init(const std::string& vsCodePath, const std::string& fsCodePath, bool readFromFile = true) {
         _vertexShader = glCreateShader(GL_VERTEX_SHADER);
-        std::string vsSourceCodeStr = readShaderCode(vsCodePath);
+        std::string vsSourceCodeStr = vsCodePath;
+        if (readFromFile) {
+            vsSourceCodeStr = readShaderCode(vsCodePath);
+        }
         const char* vsSourceCode = vsSourceCodeStr.c_str();
         glShaderSource(_vertexShader, 1, &vsSourceCode, nullptr);
         glCompileShader(_vertexShader);
 
         _fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-        std::string fsSourceCodeStr = readShaderCode(fsCodePath);
+        std::string fsSourceCodeStr = fsCodePath;
+        if (readFromFile) {
+            fsSourceCodeStr = readShaderCode(fsCodePath);
+        }
         const char* fsSourceCode = fsSourceCodeStr.c_str();
         glShaderSource(_fragmentShader, 1, &fsSourceCode, nullptr);
         glCompileShader(_fragmentShader);

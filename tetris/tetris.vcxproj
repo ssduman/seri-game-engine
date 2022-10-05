@@ -207,6 +207,7 @@ xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win64\freetype.dll" "$(So
     <ClInclude Include="Tetris.h" />
     <ClInclude Include="TetrisMovement.h" />
     <ClInclude Include="TetrisProperties.h" />
+    <ClInclude Include="TetrisShaders.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

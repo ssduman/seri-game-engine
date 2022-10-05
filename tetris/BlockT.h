@@ -42,7 +42,7 @@ public:
         generatePositions();
 
         _block = new Polygon(_camera);
-        _block->initShader("tetris-assets/shaders/tetris_vs.shader", "tetris-assets/shaders/tetris_fs.shader");
+        _block->initShader(vertexShader, fragmentShader, /*readFromFile*/ false);
         _block->setDrawMode(GL_LINE_LOOP);
         //_block->setTexture("tetris-assets/textures/block-" + _blockIdentifier + ".png", _blockPositions);
         _block->initMVP();

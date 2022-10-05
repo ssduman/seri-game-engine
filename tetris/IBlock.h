@@ -5,6 +5,7 @@
 #include "../engine/Rectangle.h"
 
 #include "Camera.h"
+#include "TetrisShaders.h"
 #include "TetrisProperties.h"
 
 #include <vector>

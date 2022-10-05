@@ -20,6 +20,9 @@
     <Filter Include="Block">
       <UniqueIdentifier>{dce905c4-1edc-4414-bdbd-95af5d04a6dd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{9a5850b7-fc78-47e9-9673-f2d92364148e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="tetris.cpp">
@@ -77,6 +80,9 @@
     </ClInclude>
     <ClInclude Include="BlockZ.h">
       <Filter>Block</Filter>
+    </ClInclude>
+    <ClInclude Include="TetrisShaders.h">
+      <Filter>Shader</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
