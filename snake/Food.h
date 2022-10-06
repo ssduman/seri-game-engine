@@ -1,17 +1,16 @@
 #pragma once
 
+#include <random>
+#include <vector>
+
 #include "../engine/Entity.h"
 #include "../engine/Logger.h"
 #include "../engine/Rectangle.h"
-
 #include "Camera.h"
 #include "SnakeProperties.h"
 
-#include <vector>
-#include <random>
-
 class Food : public Entity {
-public:
+   public:
     Food(Camera* camera, SnakeProperties& snakeProperties) : Entity(camera), _snakeProperties(snakeProperties) {
         _generator.seed(std::random_device{}());
 
@@ -20,7 +19,7 @@ public:
 
     ~Food() override {
         delete _food;
-        
+
         LOGGER(info, "food delete succeeded");
     }
 
@@ -40,23 +39,23 @@ public:
     void generateFood() {
         const auto x = _distributionCols(_generator);
         const auto y = _distributionRows(_generator);
-        _foodPosition = { x, y };
+        _foodPosition = {x, y};
 
         const auto interval = _snakeProperties.interval;
         const auto d1 = (interval * 0.0f) / 2.0f;
         const auto d2 = (interval * 2.0f) / 2.0f;
         _foodPositions = {
-            { x * interval + d1, y * interval + d1 },
-            { x * interval + d1, y * interval + d2 },
-            { x * interval + d2, y * interval + d2 },
-            { x * interval + d2, y * interval + d1 },
+            {x * interval + d1, y * interval + d1},
+            {x * interval + d1, y * interval + d2},
+            {x * interval + d2, y * interval + d2},
+            {x * interval + d2, y * interval + d1},
         };
 
         delete _food;
         _food = new Rectangle(_camera);
         _food->initShader("snake-assets/shaders/snake_vs.shader", "snake-assets/shaders/snake_fs.shader");
         _food->initMVP();
-        _food->setPositionsVec2(_foodPositions);
+        _food->setPositions(_foodPositions);
         _food->setColor(_foodColor);
         _food->init();
     }
@@ -65,15 +64,14 @@ public:
         return _foodPosition;
     }
 
-private:
+   private:
     SnakeProperties& _snakeProperties;
-    Entity* _food{ nullptr };
+    Entity* _food{nullptr};
     glm::ivec2 _foodPosition{};
     std::vector<glm::vec2> _foodPositions;
-    glm::vec4 _foodColor{ 0.6f, 2.0f, 0.4f, 1.0f };
+    glm::vec4 _foodColor{0.6f, 2.0f, 0.4f, 1.0f};
 
     std::default_random_engine _generator;
-    std::uniform_int_distribution<int> _distributionRows{ 0, _snakeProperties.totalRows - 1 };
-    std::uniform_int_distribution<int> _distributionCols{ 0, _snakeProperties.totalCols - 1 };
-
+    std::uniform_int_distribution<int> _distributionRows{0, _snakeProperties.totalRows - 1};
+    std::uniform_int_distribution<int> _distributionCols{0, _snakeProperties.totalCols - 1};
 };

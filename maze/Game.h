@@ -24,7 +24,7 @@ public:
 
     void initTyper() {
         _typer = new Typer(_camera, static_cast<int>(_width), static_cast<int>(_height));
-        _typer->initShader("maze-assets/shaders/typer_vs.shader", "maze-assets/shaders/typer_fs.shader");
+        _typer->initShader("maze-assets/shaders/typer_vs.shader", "maze-assets/shaders/typer_fs.shader", false);
         _typer->initFT("maze-assets/fonts/En Bloc.ttf");
         _typer->initProjection();
         _typer->init();
@@ -56,7 +56,7 @@ public:
             { w, y, 0.0f, 0.0f }, // bottom left
         };
 
-        setPositionsVec4(positionsVec4);
+        setPositions(positionsVec4);
     }
 
     void render() override {

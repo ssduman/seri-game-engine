@@ -1,13 +1,12 @@
 #pragma once
 
+#include <vector>
+
+#include "../engine/Entity.h"
 #include "../engine/Line.h"
 #include "../engine/Logger.h"
-#include "../engine/Entity.h"
-
 #include "Camera.h"
 #include "TetrisProperties.h"
-
-#include <vector>
 
 class Board : public Entity {
 public:
@@ -34,10 +33,10 @@ public:
         const auto height = _tetrisProperties.height;
         const auto interval = _tetrisProperties.interval;
         for (int x = 0; x < _tetrisProperties.totalRows; x++) {
-            _lines->addPositionsVec2({ { 0.0f, interval * x }, { width, interval * x } });
+            _lines->addPositions({ glm::vec2{ 0.0f, interval * x }, glm::vec2{ width, interval * x } });
         }
         for (int y = 0; y < _tetrisProperties.totalCols; y++) {
-            _lines->addPositionsVec2({ { interval * y, 0.0f }, { interval * y, height } });
+            _lines->addPositions({ glm::vec2{ interval * y, 0.0f }, glm::vec2{ interval * y, height } });
         }
     }
 
@@ -54,5 +53,4 @@ private:
     TetrisProperties& _tetrisProperties;
     Entity* _lines{ nullptr };
     glm::vec4 _lineColor{ 0.2f, 0.2f, 0.2f, 1.0f };
-
 };

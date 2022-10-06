@@ -1,20 +1,19 @@
 #pragma once
 
+#include <random>
+#include <vector>
+
 #include "../engine/Entity.h"
 #include "../engine/Logger.h"
 #include "../engine/Polygon.h"
-#include "../engine/Triangle.h"
 #include "../engine/Rectangle.h"
-
+#include "../engine/Triangle.h"
 #include "Camera.h"
 #include "IBlock.h"
 #include "TetrisProperties.h"
 
-#include <vector>
-#include <random>
-
 class BlockJ : public IBlock {
-public:
+   public:
     BlockJ(Camera* camera, TetrisProperties& tetrisProperties) : IBlock(camera, tetrisProperties) {
         LOGGER(info, "block J init succeeded");
     }
@@ -46,11 +45,11 @@ public:
         _block->setDrawMode(GL_TRIANGLE_STRIP);
         _block->setTexture("tetris-assets/textures/block-" + _blockIdentifier + ".png", _blockPositions);
         _block->initMVP();
-        _block->setPositionsVec2(_blockPositions);
+        _block->setPositions(_blockPositions);
         _block->init();
     }
 
-private:
+   private:
     void generateBlockPositions() {
         const auto x = _tetrisProperties.totalCols / 2.0f - 1.0f;
         const auto y = _tetrisProperties.totalRows - 2.0f;
@@ -67,6 +66,5 @@ private:
         _blockPositions.insert(_blockPositions.end(), s4.begin(), s4.end());
     }
 
-    std::string _blockIdentifier{ "J" };
-
+    std::string _blockIdentifier{"J"};
 };
