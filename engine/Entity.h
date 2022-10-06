@@ -30,29 +30,29 @@ public:
         _shader.disuse();
     }
 
-    virtual void setDrawMode(int drawMode) {
+    void setDrawMode(int drawMode) {
         _drawMode = drawMode;
     }
 
-    virtual void setPositionVec2(const glm::vec2& position) {
+    void setPosition(const glm::vec2& position) {
         _shader.use();
         _shader.setVec2("u_position", position);
         _shader.disuse();
     }
 
-    virtual void setPosition(const glm::vec3& position) {
+    void setPosition(const glm::vec3& position) {
         _shader.use();
         _shader.setVec3("u_position", position);
         _shader.disuse();
     }
 
-    virtual void setPositionVec4(const glm::vec4& position) {
+    void setPosition(const glm::vec4& position) {
         _shader.use();
         _shader.setVec4("u_position", position);
         _shader.disuse();
     }
 
-    virtual void setPositionsVec2(const std::vector<glm::vec2>& positionsDataVec2) {
+    void setPositions(const std::vector<glm::vec2>& positionsDataVec2) {
         _usePositionsVec2 = true;
         _positionsDataVec2 = positionsDataVec2;
         _positionsDataDimension = 2;
@@ -60,7 +60,7 @@ public:
         _totalDataCount += _positionsDataCount;
     }
 
-    virtual void setPositions(const std::vector<glm::vec3>& positionsData) {
+    void setPositions(const std::vector<glm::vec3>& positionsData) {
         _usePositions = true;
         _positionsData = positionsData;
         _positionsDataDimension = 3;
@@ -68,7 +68,7 @@ public:
         _totalDataCount += _positionsDataCount;
     }
 
-    virtual void setPositionsVec4(const std::vector<glm::vec4>& positionsDataVec4) {
+    void setPositions(const std::vector<glm::vec4>& positionsDataVec4) {
         _usePositionsVec4 = true;
         _positionsDataVec4 = positionsDataVec4;
         _positionsDataDimension = 4;
@@ -76,7 +76,7 @@ public:
         _totalDataCount += _positionsDataCount;
     }
 
-    virtual void setColor(const glm::vec4& color) {
+    void setColor(const glm::vec4& color) {
         _color = { color };
         _shader.use();
         _shader.setBool("u_useColor", true);
@@ -84,7 +84,7 @@ public:
         _shader.disuse();
     }
 
-    virtual void setColors(const std::vector<glm::vec4>& colorsData) {
+    void setColors(const std::vector<glm::vec4>& colorsData) {
         _useColors = true;
         _shader.use();
         _shader.setBool("u_useColors", _useColors);
@@ -96,7 +96,7 @@ public:
         _totalDataCount += _colorsDataCount;
     }
 
-    virtual void setTexture(const std::string& texturePath, std::vector<glm::vec2> texturePositionsData = {}) {
+    void setTexture(const std::string& texturePath, std::vector<glm::vec2> texturePositionsData = {}) {
         _useTexture = true;
         _shader.use();
         _shader.setBool("u_useTexture", _useTexture);
@@ -106,7 +106,7 @@ public:
         setTexturePositions(texturePositionsData);
     }
 
-    virtual void setNormals(const std::vector<glm::vec3>& normalsData) {
+    void setNormals(const std::vector<glm::vec3>& normalsData) {
         _useNormals = true;
         _normalsData = normalsData;
         _normalsDataDimension = 3;
@@ -114,28 +114,28 @@ public:
         _totalDataCount += _normalsDataCount;
     }
 
-    virtual void reserveTotalDataCountVec2(int totalDataCount) {
+    void reserveTotalDataCountVec2(int totalDataCount) {
         _totalDataCount += totalDataCount;
         _usePositionsVec2 = true;
         _positionsDataVec2.reserve(_totalDataCount);
         _positionsDataDimension = 2;
     }
 
-    virtual void reserveTotalDataCount(int totalDataCount) {
+    void reserveTotalDataCount(int totalDataCount) {
         _totalDataCount += totalDataCount;
         _usePositions = true;
         _positionsData.reserve(_totalDataCount);
         _positionsDataDimension = 3;
     }
 
-    virtual void reserveTotalDataCountVec4(int totalDataCount) {
+    void reserveTotalDataCountVec4(int totalDataCount) {
         _totalDataCount += totalDataCount;
         _usePositionsVec4 = true;
         _positionsDataVec4.reserve(_totalDataCount);
         _positionsDataDimension = 4;
     }
 
-    virtual void addPositionsVec2(const std::vector<glm::vec2>& positionsData) {
+    void addPositions(const std::vector<glm::vec2>& positionsData) {
         GLintptr offsetSize = static_cast<int>(_positionsDataVec2.size()) * _positionsDataDimension * sizeof(float);
         _positionsDataVec2.insert(_positionsDataVec2.end(), positionsData.begin(), positionsData.end());
         _positionsDataCount = static_cast<int>(_positionsDataVec2.size()) * _positionsDataDimension;
@@ -154,7 +154,7 @@ public:
         glEnableVertexAttribArray(0);
     }
 
-    virtual void addPositions(const std::vector<glm::vec3>& positionsData) {
+    void addPositions(const std::vector<glm::vec3>& positionsData) {
         GLintptr offsetSize = static_cast<int>(_positionsData.size()) * _positionsDataDimension * sizeof(float);
         _positionsData.insert(_positionsData.end(), positionsData.begin(), positionsData.end());
         _positionsDataCount = static_cast<int>(_positionsData.size()) * _positionsDataDimension;
@@ -173,7 +173,7 @@ public:
         glEnableVertexAttribArray(0);
     }
 
-    virtual void addPositionsVec4(const std::vector<glm::vec4>& positionsData) {
+    void addPositions(const std::vector<glm::vec4>& positionsData) {
         GLintptr offsetSize = static_cast<int>(_positionsDataVec4.size()) * _positionsDataDimension * sizeof(float);
         _positionsDataVec4.insert(_positionsDataVec4.end(), positionsData.begin(), positionsData.end());
         _positionsDataCount = static_cast<int>(_positionsDataVec4.size()) * _positionsDataDimension;
@@ -199,19 +199,15 @@ public:
         glGenVertexArrays(1, &_VAO);
         // generate vbo
         glGenBuffers(1, &_VBO);
-        if (_entityType == EntityType::RECTANGLE) {
-            // generate ebo
-            glGenBuffers(1, &_EBO);
-        }
+        // generate ebo
+        glGenBuffers(1, &_EBO);
 
         // bind vao
         glBindVertexArray(_VAO);
         // bind vbo
         glBindBuffer(GL_ARRAY_BUFFER, _VBO);
-        if (_entityType == EntityType::RECTANGLE) {
-            // bind ebo
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
-        }
+        // bind ebo
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
 
         // calculate total data size
         const auto totalDataSize = _totalDataCount * sizeof(GLfloat);
