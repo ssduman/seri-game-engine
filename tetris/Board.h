@@ -1,12 +1,14 @@
 #pragma once
 
-#include <vector>
-
 #include "../engine/Entity.h"
 #include "../engine/Line.h"
 #include "../engine/Logger.h"
+
 #include "Camera.h"
+#include "TetrisShaders.h"
 #include "TetrisProperties.h"
+
+#include <vector>
 
 class Board : public Entity {
 public:
@@ -22,7 +24,7 @@ public:
 
     void init() override {
         _lines = new Line(_camera);
-        _lines->initShader("tetris-assets/shaders/tetris_vs.shader", "tetris-assets/shaders/tetris_fs.shader");
+        _lines->initShader(vertexShader, fragmentShader, /*readFromFile*/ false);
         _lines->initMVP();
         _lines->setDrawMode(GL_LINES);
         _lines->reserveTotalDataCountVec2(_tetrisProperties.totalCells * 2);
