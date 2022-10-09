@@ -10,8 +10,8 @@
 
 class Control : public IControl {
 public:
-    Control(WindowManager* windowManager, Camera* camera, State* state)
-        : IControl(windowManager, state), _camera(camera), _window(_windowManager->getWindow()) {
+    Control(WindowManager* windowManager, Camera* camera, State* state, Tetris& tetris)
+        : IControl(windowManager, state), _camera(camera), _window(_windowManager->getWindow()), _tetris(tetris) {
         glfwSetWindowUserPointer(_window, static_cast<void*>(this));
 
         LOGGER(info, "control init succeeded");
@@ -93,23 +93,31 @@ public:
         }
     }
 
-    void processInput(float deltaTime) {
+    void processInput() {
         if (glfwGetKey(_window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
             glfwSetWindowShouldClose(_window, GLFW_TRUE);
         }
 
-        if (glfwGetKey(_window, GLFW_KEY_W) == GLFW_PRESS || glfwGetKey(_window, GLFW_KEY_UP) == GLFW_PRESS) {
-        }
-        else if (glfwGetKey(_window, GLFW_KEY_S) == GLFW_PRESS || glfwGetKey(_window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+        if (glfwGetKey(_window, GLFW_KEY_S) == GLFW_PRESS || glfwGetKey(_window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+            _tetris.setRequestedBlockMovement(BlockMovement::down);
         }
         else if (glfwGetKey(_window, GLFW_KEY_A) == GLFW_PRESS || glfwGetKey(_window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+            _tetris.setRequestedBlockMovement(BlockMovement::left);
         }
         else if (glfwGetKey(_window, GLFW_KEY_D) == GLFW_PRESS || glfwGetKey(_window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+            _tetris.setRequestedBlockMovement(BlockMovement::right);
+        }
+        else if (glfwGetKey(_window, GLFW_KEY_Q) == GLFW_PRESS) {
+            _tetris.setRequestedBlockMovement(BlockMovement::rotate_left);
+        }
+        else if (glfwGetKey(_window, GLFW_KEY_E) == GLFW_PRESS) {
+            _tetris.setRequestedBlockMovement(BlockMovement::rotate_right);
         }
     }
 
 private:
     Camera* _camera;
     GLFWwindow* _window;
+    Tetris& _tetris;
 
 };

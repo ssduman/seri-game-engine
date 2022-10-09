@@ -194,6 +194,7 @@ xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win64\freetype.dll" "$(So
     <ClInclude Include="BlockI.h" />
     <ClInclude Include="BlockJ.h" />
     <ClInclude Include="BlockL.h" />
+    <ClInclude Include="BlockMovement.h" />
     <ClInclude Include="BlockO.h" />
     <ClInclude Include="BlockS.h" />
     <ClInclude Include="BlockT.h" />

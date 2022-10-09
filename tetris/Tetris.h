@@ -30,7 +30,8 @@ public:
 
     void init() override {
         _board.init();
-        _blocks.emplace_back(BlockFactory::create(_camera, _tetrisProperties, BlockType::S));
+        _currentBlock = BlockFactory::create(_camera, _tetrisProperties, BlockType::Z);
+        _blocks.emplace_back(_currentBlock);
     }
 
     void update() override {}
@@ -49,6 +50,18 @@ public:
 
     void update(float deltaTime) {
         _tetrisProperties.timeElapsed += deltaTime;
+
+        if (_tetrisProperties.timeElapsed > 0.016f) {
+            _tetrisProperties.timeElapsed = 0.0f;
+
+            if (_currentBlock) {
+                _currentBlock->move(_requestedBlockMovement);
+            }
+        }
+    }
+
+    void setRequestedBlockMovement(BlockMovement requestedBlockMovement) {
+        _requestedBlockMovement = requestedBlockMovement;
     }
 
 private:
@@ -56,6 +69,8 @@ private:
     TetrisProperties& _tetrisProperties;
     Board _board;
 
+    BlockMovement _requestedBlockMovement = BlockMovement::noop;
+    IBlock* _currentBlock = nullptr;
     std::vector<IBlock*> _blocks;
 
 };

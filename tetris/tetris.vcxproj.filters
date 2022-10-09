@@ -84,5 +84,8 @@
     <ClInclude Include="TetrisShaders.h">
       <Filter>Shader</Filter>
     </ClInclude>
+    <ClInclude Include="BlockMovement.h">
+      <Filter>Block</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

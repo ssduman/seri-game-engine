@@ -5,6 +5,7 @@
 #include "../engine/Rectangle.h"
 
 #include "Camera.h"
+#include "BlockMovement.h"
 #include "TetrisShaders.h"
 #include "TetrisProperties.h"
 
@@ -32,6 +33,49 @@ public:
 
     virtual void generateBlock() = 0;
 
+    virtual void move(BlockMovement blockMovement) {
+        switch (blockMovement) {
+            case BlockMovement::down:
+            {
+                down();
+            }
+            case BlockMovement::faster_down:
+            {
+                fasterDown();
+            }
+            case BlockMovement::right:
+            {
+                right();
+            }
+            case BlockMovement::left:
+            {
+                left();
+            }
+            case BlockMovement::rotate_left:
+            {
+                rotateLeft();
+            }
+            case BlockMovement::rotate_right:
+            {
+                rotateRight();
+            }
+            case BlockMovement::noop:;
+            default:;
+        }
+    };
+
+    virtual void down() = 0;
+
+    virtual void fasterDown() = 0;
+
+    virtual void right() = 0;
+
+    virtual void left() = 0;
+
+    virtual void rotateLeft() = 0;
+
+    virtual void rotateRight() = 0;
+
     std::vector<glm::vec2> createSquarePosition(const float x, const float y) {
         const auto interval = _tetrisProperties.interval;
         const auto d1 = (interval * 0.0f) / 2.0f;
@@ -56,6 +100,7 @@ protected:
     Entity* _block{ nullptr };
     glm::ivec2 _blockPosition{};
     std::vector<glm::vec2> _blockPositions;
+    BlockMovement _blockMovement = BlockMovement::noop;
 
     std::default_random_engine _generator;
     std::uniform_int_distribution<int> _distributionCols{ 1, 7 };

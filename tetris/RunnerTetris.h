@@ -31,7 +31,7 @@ public:
         Tetris tetris{ camera.get(), snakeProperties };
         tetris.init();
 
-        Control control{ windowManager.get(), camera.get(), state.get() };
+        Control control{ windowManager.get(), camera.get(), state.get(), tetris };
         control.init();
 
         Layer layers{};
@@ -45,7 +45,7 @@ public:
 
             auto deltaTime = windowManager->updateDeltaTime();
 
-            control.processInput(deltaTime);
+            control.processInput();
 
             tetris.update(deltaTime);
 

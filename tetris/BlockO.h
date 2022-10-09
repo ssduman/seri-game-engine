@@ -13,7 +13,7 @@
 #include "TetrisProperties.h"
 
 class BlockO : public IBlock {
-   public:
+public:
     BlockO(Camera* camera, TetrisProperties& tetrisProperties) : IBlock(camera, tetrisProperties) {
         LOGGER(info, "block O init succeeded");
     }
@@ -49,7 +49,19 @@ class BlockO : public IBlock {
         _block->init();
     }
 
-   private:
+    void down() override {}
+
+    void fasterDown() override {}
+
+    void right() override {}
+
+    void left() override {}
+
+    void rotateLeft() override {}
+
+    void rotateRight() override {}
+
+private:
     void generateBlockPositions() {
         const auto x = _tetrisProperties.totalCols / 2.0f - 1.0f;
         const auto y = _tetrisProperties.totalRows - 2.0f;
@@ -66,5 +78,5 @@ class BlockO : public IBlock {
         _blockPositions.insert(_blockPositions.end(), s4.begin(), s4.end());
     }
 
-    std::string _blockIdentifier{"O"};
+    std::string _blockIdentifier{ "O" };
 };
