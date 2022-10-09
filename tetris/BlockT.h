@@ -38,11 +38,11 @@ class BlockT : public IBlock {
     }
 
     void generateBlock() override {
-        generatePositions();
+        generateBlockPositions();
 
         _block = new Polygon(_camera);
         _block->initShader(vertexShader, fragmentShader, /*readFromFile*/ false);
-        _block->setDrawMode(GL_LINE_LOOP);
+        _block->setDrawMode(GL_TRIANGLES);
         //_block->setTexture("tetris-assets/textures/block-" + _blockIdentifier + ".png", _blockPositions);
         _block->initMVP();
         _block->setPositions(_blockPositions);

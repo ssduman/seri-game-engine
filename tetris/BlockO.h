@@ -42,8 +42,8 @@ class BlockO : public IBlock {
 
         _block = new Polygon(_camera);
         _block->initShader(vertexShader, fragmentShader, /*readFromFile*/ false);
-        _block->setDrawMode(GL_TRIANGLE_STRIP);
-        _block->setTexture("tetris-assets/textures/block-" + _blockIdentifier + ".png");
+        _block->setDrawMode(GL_TRIANGLES);
+        //_block->setTexture("tetris-assets/textures/block-" + _blockIdentifier + ".png");
         _block->initMVP();
         _block->setPositions(_blockPositions);
         _block->init();
