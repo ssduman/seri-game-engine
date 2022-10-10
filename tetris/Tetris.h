@@ -30,7 +30,7 @@ public:
 
     void init() override {
         _board.init();
-        _currentBlock = BlockFactory::create(_camera, _tetrisProperties, BlockType::Z);
+        _currentBlock = BlockFactory::create(_camera, _tetrisProperties, BlockType::S);
         _blocks.emplace_back(_currentBlock);
     }
 
