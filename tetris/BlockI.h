@@ -30,7 +30,9 @@ public:
 
     void update() override {}
 
-    void render() override {}
+    void render() override {
+        _block->getShader().setVec2("u_position", glm::vec2{ _block->getTransform()._position });
+    }
 
     void display() override {
         Object::display();
@@ -49,13 +51,19 @@ public:
         _block->init();
     }
 
-    void down() override {}
+    void down() override {
+        _block->getTransform()._position.y -= _tetrisProperties.interval;
+    }
 
     void fasterDown() override {}
 
-    void right() override {}
+    void right() override {
+        _block->getTransform()._position.x += _tetrisProperties.interval;
+    }
 
-    void left() override {}
+    void left() override {
+        _block->getTransform()._position.x -= _tetrisProperties.interval;
+    }
 
     void rotateLeft() override {}
 

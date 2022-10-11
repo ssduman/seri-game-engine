@@ -30,7 +30,7 @@ public:
 
     void init() override {
         _board.init();
-        _currentBlock = BlockFactory::create(_camera, _tetrisProperties, BlockType::S);
+        _currentBlock = BlockFactory::create(_camera, _tetrisProperties, BlockType::I);
         _blocks.emplace_back(_currentBlock);
     }
 
@@ -51,7 +51,7 @@ public:
     void update(float deltaTime) {
         _tetrisProperties.timeElapsed += deltaTime;
 
-        if (_tetrisProperties.timeElapsed > 0.016f) {
+        if (_tetrisProperties.timeElapsed > (0.016f * _tetrisProperties.speed)) {
             _tetrisProperties.timeElapsed = 0.0f;
 
             if (_currentBlock) {

@@ -38,26 +38,32 @@ public:
             case BlockMovement::down:
             {
                 down();
+                break;
             }
             case BlockMovement::faster_down:
             {
                 fasterDown();
+                break;
             }
             case BlockMovement::right:
             {
                 right();
+                break;
             }
             case BlockMovement::left:
             {
                 left();
+                break;
             }
             case BlockMovement::rotate_left:
             {
                 rotateLeft();
+                break;
             }
             case BlockMovement::rotate_right:
             {
                 rotateRight();
+                break;
             }
             case BlockMovement::noop:;
             default:;
