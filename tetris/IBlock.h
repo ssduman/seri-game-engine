@@ -83,9 +83,13 @@ public:
         _block->getTransform()._position.x -= _tetrisProperties.interval;
     }
 
-    virtual void rotateLeft() {}
+    virtual void rotateLeft() {
+        _block->getTransform()._rotation.y -= 90.0f;
+    }
 
-    virtual void rotateRight() {}
+    virtual void rotateRight() {
+        _block->getTransform()._rotation.y += 90.0f;
+    }
 
     std::vector<glm::vec2> createSquarePosition(const float x, const float y) {
         const auto interval = _tetrisProperties.interval;
