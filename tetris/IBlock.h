@@ -34,12 +34,9 @@ public:
     virtual void generateBlock() = 0;
 
     virtual void move(BlockMovement blockMovement) {
+        down();
+
         switch (blockMovement) {
-            case BlockMovement::down:
-            {
-                down();
-                break;
-            }
             case BlockMovement::faster_down:
             {
                 fasterDown();
@@ -70,17 +67,25 @@ public:
         }
     };
 
-    virtual void down() = 0;
+    virtual void down()  {
+        _block->getTransform()._position.y -= _tetrisProperties.interval;
+    }
 
-    virtual void fasterDown() = 0;
+    virtual void fasterDown() {
+        _block->getTransform()._position.y -= _tetrisProperties.interval;
+    }
 
-    virtual void right() = 0;
+    virtual void right()  {
+        _block->getTransform()._position.x += _tetrisProperties.interval;
+    }
 
-    virtual void left() = 0;
+    virtual void left()  {
+        _block->getTransform()._position.x -= _tetrisProperties.interval;
+    }
 
-    virtual void rotateLeft() = 0;
+    virtual void rotateLeft()  {}
 
-    virtual void rotateRight() = 0;
+    virtual void rotateRight()  {}
 
     std::vector<glm::vec2> createSquarePosition(const float x, const float y) {
         const auto interval = _tetrisProperties.interval;

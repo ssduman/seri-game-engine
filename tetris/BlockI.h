@@ -51,24 +51,6 @@ public:
         _block->init();
     }
 
-    void down() override {
-        _block->getTransform()._position.y -= _tetrisProperties.interval;
-    }
-
-    void fasterDown() override {}
-
-    void right() override {
-        _block->getTransform()._position.x += _tetrisProperties.interval;
-    }
-
-    void left() override {
-        _block->getTransform()._position.x -= _tetrisProperties.interval;
-    }
-
-    void rotateLeft() override {}
-
-    void rotateRight() override {}
-
 private:
     void generatePositions() {
         const auto x = _tetrisProperties.totalCols / 2.0f - 1.0f;

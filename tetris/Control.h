@@ -99,7 +99,7 @@ public:
         }
 
         if (glfwGetKey(_window, GLFW_KEY_S) == GLFW_PRESS || glfwGetKey(_window, GLFW_KEY_DOWN) == GLFW_PRESS) {
-            _tetris.setRequestedBlockMovement(BlockMovement::down);
+            _tetris.setRequestedBlockMovement(BlockMovement::faster_down);
         }
         else if (glfwGetKey(_window, GLFW_KEY_A) == GLFW_PRESS || glfwGetKey(_window, GLFW_KEY_LEFT) == GLFW_PRESS) {
             _tetris.setRequestedBlockMovement(BlockMovement::left);

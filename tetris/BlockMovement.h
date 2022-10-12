@@ -1,7 +1,6 @@
 #pragma once
 
 enum class BlockMovement {
-    down,
     faster_down,
     right,
     left,
