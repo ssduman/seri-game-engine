@@ -1,16 +1,15 @@
 #pragma once
 
-#include <random>
-#include <vector>
-
 #include "../engine/Entity.h"
 #include "../engine/Logger.h"
 #include "../engine/Polygon.h"
-#include "../engine/Rectangle.h"
-#include "../engine/Triangle.h"
+
 #include "Camera.h"
 #include "IBlock.h"
 #include "TetrisProperties.h"
+
+#include <random>
+#include <vector>
 
 class BlockI : public IBlock {
 public:
