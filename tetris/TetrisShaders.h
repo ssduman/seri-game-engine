@@ -9,6 +9,7 @@ static const std::string vertexShader{ R"(
     layout(location = 2) in vec2 in_texCoord;
 
     uniform vec2 u_position = vec2(0.0, 0.0);
+    uniform mat4 u_view;
     uniform mat4 u_projection;
 
     out vec2 sent_texCoord;
