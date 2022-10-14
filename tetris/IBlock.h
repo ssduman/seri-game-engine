@@ -91,6 +91,10 @@ public:
         _block->getTransform()._rotation.y += 90.0f;
     }
 
+    virtual bool isBottom() {
+        return _block->getTransform()._position.y >= _tetrisProperties.height;
+    }
+
     std::vector<glm::vec2> createSquarePosition(const float x, const float y) {
         const auto interval = _tetrisProperties.interval;
         const auto d1 = (interval * 0.0f) / 2.0f;
