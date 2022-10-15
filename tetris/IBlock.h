@@ -68,11 +68,15 @@ public:
     };
 
     virtual void down() {
-        _block->getTransform()._position.y -= _tetrisProperties.interval;
+        if (!isBottom()) {
+            _block->getTransform()._position.y -= _tetrisProperties.interval;
+        }
     }
 
     virtual void fasterDown() {
-        _block->getTransform()._position.y -= _tetrisProperties.interval;
+        if (!isBottom()) {
+            _block->getTransform()._position.y -= _tetrisProperties.interval;
+        }
     }
 
     virtual void right() {
