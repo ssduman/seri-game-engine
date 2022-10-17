@@ -96,7 +96,8 @@ public:
     }
 
     virtual bool isBottom() {
-        return _block->getTransform()._position.y >= _tetrisProperties.height;
+        auto pos = _block->getTransform()._position.y - _tetrisProperties.interval;
+        return -pos > _tetrisProperties.height - (_tetrisProperties.interval * 1.5f);
     }
 
     std::vector<glm::vec2> createSquarePosition(const float x, const float y) {
