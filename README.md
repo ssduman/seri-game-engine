@@ -1,5 +1,5 @@
 # Seri Game Engine #
-* A 3D OpenGL Game Engine I wrote for fun. I started July, 2019 and developed from time to time. You can find older version here.
+* A 2D/3D OpenGL Game Engine I wrote for fun. I started July, 2019 and developed from time to time. You can find older version here.
 ## Specifications: ##
 * Solves the maze with iteration method and makes the path green if the mode activated
 * Determine maze size ingame
