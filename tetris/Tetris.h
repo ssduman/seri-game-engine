@@ -12,11 +12,14 @@
 #include "TetrisProperties.h"
 
 #include <vector>
+#include <random>
 
 class Tetris : public Entity {
 public:
     Tetris(Camera* camera, TetrisProperties& tetrisProperties)
         : Entity(camera), _camera(camera), _tetrisProperties(tetrisProperties), _board(camera, _tetrisProperties) {
+        _generator.seed(std::random_device{}());
+        
         LOGGER(info, "tetris init succeeded");
     }
 
@@ -72,5 +75,8 @@ private:
     BlockMovement _requestedBlockMovement = BlockMovement::noop;
     IBlock* _currentBlock = nullptr;
     std::vector<IBlock*> _blocks;
+
+    std::default_random_engine _generator;
+    std::uniform_int_distribution<int> _distributionCols{ 1, 7 };
 
 };

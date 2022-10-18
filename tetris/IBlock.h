@@ -10,7 +10,6 @@
 #include "TetrisProperties.h"
 
 #include <vector>
-#include <random>
 
 enum Positions {
     bottom_left = 0,
@@ -21,9 +20,7 @@ enum Positions {
 
 class IBlock : public Entity {
 public:
-    IBlock(Camera* camera, TetrisProperties& tetrisProperties) : Entity(camera), _tetrisProperties(tetrisProperties) {
-        _generator.seed(std::random_device{}());
-    }
+    IBlock(Camera* camera, TetrisProperties& tetrisProperties) : Entity(camera), _tetrisProperties(tetrisProperties) {}
 
     ~IBlock() override = default;
 
@@ -125,8 +122,5 @@ protected:
     glm::ivec2 _blockPosition{};
     std::vector<glm::vec2> _blockPositions;
     BlockMovement _blockMovement = BlockMovement::noop;
-
-    std::default_random_engine _generator;
-    std::uniform_int_distribution<int> _distributionCols{ 1, 7 };
 
 };
