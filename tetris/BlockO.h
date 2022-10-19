@@ -49,18 +49,6 @@ public:
         _block->init();
     }
 
-    void down() override {}
-
-    void fasterDown() override {}
-
-    void right() override {}
-
-    void left() override {}
-
-    void rotateLeft() override {}
-
-    void rotateRight() override {}
-
 private:
     void generateBlockPositions() {
         const auto x = _tetrisProperties.totalCols / 2.0f - 1.0f;

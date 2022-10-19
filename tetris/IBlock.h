@@ -30,66 +30,72 @@ public:
 
     virtual void generateBlock() = 0;
 
-    virtual void move(BlockMovement blockMovement) {
-        down();
+    virtual bool move(BlockMovement blockMovement) {
+        if (!down()) {
+            return false;
+        }
 
         switch (blockMovement) {
             case BlockMovement::faster_down:
             {
-                fasterDown();
-                break;
+                return fasterDown();
             }
             case BlockMovement::right:
             {
-                right();
-                break;
+                return right();
             }
             case BlockMovement::left:
             {
-                left();
-                break;
+                return left();
             }
             case BlockMovement::rotate_left:
             {
-                rotateLeft();
-                break;
+                return rotateLeft();
             }
             case BlockMovement::rotate_right:
             {
-                rotateRight();
-                break;
+                return rotateRight();
             }
             case BlockMovement::noop:;
-            default:;
+            default:
+                return true;
         }
     };
 
-    virtual void down() {
+    virtual bool down() {
         if (!isBottom()) {
             _block->getTransform()._position.y -= _tetrisProperties.interval;
+            return true;
         }
+        return false;
     }
 
-    virtual void fasterDown() {
+    virtual bool fasterDown() {
         if (!isBottom()) {
             _block->getTransform()._position.y -= _tetrisProperties.interval;
+            return true;
         }
+        return false;
     }
 
-    virtual void right() {
+    virtual bool right() {
         _block->getTransform()._position.x += _tetrisProperties.interval;
+        return true;
     }
 
-    virtual void left() {
+    virtual bool left() {
         _block->getTransform()._position.x -= _tetrisProperties.interval;
+        return true;
     }
 
-    virtual void rotateLeft() {
+    virtual bool rotateLeft() {
         _block->getTransform()._rotation.y -= 90.0f;
+        return true;
     }
 
-    virtual void rotateRight() {
+    virtual bool rotateRight() {
         _block->getTransform()._rotation.y += 90.0f;
+        return true;
     }
 
     virtual bool isBottom() {

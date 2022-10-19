@@ -58,7 +58,10 @@ public:
             _tetrisProperties.timeElapsed = 0.0f;
 
             if (_currentBlock) {
-                _currentBlock->move(_requestedBlockMovement);
+                if (!_currentBlock->move(_requestedBlockMovement)) {
+                    _currentBlock = BlockFactory::create(_camera, _tetrisProperties, BlockType::I);
+                    _blocks.emplace_back(_currentBlock);
+                }
             }
         }
     }
