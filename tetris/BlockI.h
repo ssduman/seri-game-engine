@@ -29,10 +29,6 @@ public:
 
     void update() override {}
 
-    void render() override {
-        _block->getShader().setVec2("u_position", glm::vec2{ _block->getTransform()._position });
-    }
-
     void display() override {
         Object::display();
         _block->display();

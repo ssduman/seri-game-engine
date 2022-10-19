@@ -19,7 +19,7 @@ public:
     Tetris(Camera* camera, TetrisProperties& tetrisProperties)
         : Entity(camera), _camera(camera), _tetrisProperties(tetrisProperties), _board(camera, _tetrisProperties) {
         _generator.seed(std::random_device{}());
-        
+
         LOGGER(info, "tetris init succeeded");
     }
 
@@ -33,8 +33,8 @@ public:
 
     void init() override {
         _board.init();
-        _currentBlock = BlockFactory::create(_camera, _tetrisProperties, BlockType::I);
-        _blocks.emplace_back(_currentBlock);
+
+        generateRandomBlock();
     }
 
     void update() override {}
@@ -59,9 +59,9 @@ public:
 
             if (_currentBlock) {
                 if (!_currentBlock->move(_requestedBlockMovement)) {
-                    _currentBlock = BlockFactory::create(_camera, _tetrisProperties, BlockType::I);
-                    _blocks.emplace_back(_currentBlock);
+                    generateRandomBlock();
                 }
+                _requestedBlockMovement = BlockMovement::noop;
             }
         }
     }
@@ -71,6 +71,12 @@ public:
     }
 
 private:
+    void generateRandomBlock() {
+        int index = _distribution(_generator);
+        _currentBlock = BlockFactory::create(_camera, _tetrisProperties, _blockTypes[index]);
+        _blocks.emplace_back(_currentBlock);
+    }
+
     Camera* _camera{ nullptr };
     TetrisProperties& _tetrisProperties;
     Board _board;
@@ -79,7 +85,17 @@ private:
     IBlock* _currentBlock = nullptr;
     std::vector<IBlock*> _blocks;
 
+    std::vector<BlockType> _blockTypes{
+        BlockType::I,
+        BlockType::J,
+        BlockType::L,
+        BlockType::O,
+        BlockType::S,
+        BlockType::T,
+        BlockType::Z,
+    };
+
     std::default_random_engine _generator;
-    std::uniform_int_distribution<int> _distributionCols{ 1, 7 };
+    std::uniform_int_distribution<int> _distribution{ 0, static_cast<int>(_blockTypes.size()) - 1};
 
 };

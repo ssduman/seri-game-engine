@@ -23,9 +23,13 @@ public:
     IBlock(Camera* camera, TetrisProperties& tetrisProperties) : Entity(camera), _tetrisProperties(tetrisProperties) {}
 
     ~IBlock() override = default;
-
+    
     void update(float deltaTime) {
         _tetrisProperties.timeElapsed += deltaTime;
+    }
+
+    void render() override {
+        _block->getShader().setVec2("u_position", glm::vec2{ _block->getTransform()._position });
     }
 
     virtual void generateBlock() = 0;

@@ -30,8 +30,6 @@ public:
 
     void update() override {}
 
-    void render() override {}
-
     void display() override {
         Object::display();
         _block->display();
