@@ -27,7 +27,7 @@ public:
         std::shared_ptr<Camera> camera = std::make_shared<Camera>(cameraProperties, state.get());
         camera->init();
 
-        TetrisProperties snakeProperties{ windowManager->getWidthF(), windowManager->getHeightF(), /*speed*/ 10.0f, /*interval*/ 50.0f };
+        TetrisProperties snakeProperties{ windowManager->getWidthF(), windowManager->getHeightF(), /*speed*/ 8.0f, /*interval*/ 50.0f };
         Tetris tetris{ camera.get(), snakeProperties };
         tetris.init();
 
@@ -43,11 +43,9 @@ public:
             glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            auto deltaTime = windowManager->updateDeltaTime();
-
             control.processInput();
 
-            tetris.update(deltaTime);
+            tetris.update(windowManager->updateDeltaTime());
 
             for (auto entity : layers.getLayers()) {
                 entity->display();
