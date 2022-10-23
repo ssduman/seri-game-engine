@@ -23,7 +23,7 @@ public:
     IBlock(Camera* camera, TetrisProperties& tetrisProperties) : Entity(camera), _tetrisProperties(tetrisProperties) {}
 
     ~IBlock() override = default;
-    
+
     void update(float deltaTime) {
         _tetrisProperties.timeElapsed += deltaTime;
     }
@@ -69,6 +69,7 @@ public:
     virtual bool down() {
         if (!isBottom()) {
             _block->getTransform()._position.y -= _tetrisProperties.interval;
+            ++_row;
             return true;
         }
         return false;
@@ -77,6 +78,7 @@ public:
     virtual bool fasterDown() {
         if (!isBottom()) {
             _block->getTransform()._position.y -= _tetrisProperties.interval;
+            ++_row;
             return true;
         }
         return false;
@@ -103,8 +105,9 @@ public:
     }
 
     virtual bool isBottom() {
-        auto pos = _block->getTransform()._position.y - _tetrisProperties.interval;
-        return -pos > _tetrisProperties.height - (_tetrisProperties.interval * 1.5f);
+        return _row >= _tetrisProperties.totalRows - 1;
+        //auto pos = _block->getTransform()._position.y - _tetrisProperties.interval;
+        //return -pos > _tetrisProperties.height - (_tetrisProperties.interval * 1.5f);
     }
 
     std::vector<glm::vec2> createSquarePosition(const float x, const float y) {
@@ -131,5 +134,9 @@ protected:
     glm::ivec2 _blockPosition{};
     std::vector<glm::vec2> _blockPositions;
     BlockMovement _blockMovement = BlockMovement::noop;
+
+    glm::imat4x4 _layout;
+    int _row{ 0 };
+    int _col{ static_cast<int>(_tetrisProperties.width) / 2 };
 
 };

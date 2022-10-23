@@ -16,6 +16,15 @@ class BlockJ : public IBlock {
 public:
     BlockJ(Camera* camera, TetrisProperties& tetrisProperties) : IBlock(camera, tetrisProperties) {
         LOGGER(info, "block J init succeeded");
+
+        _layout = {
+            { 0, 0, 1, 0 },
+            { 0, 0, 1, 0 },
+            { 0, 1, 1, 0 },
+            { 0, 0, 0, 0 },
+        };
+
+        _row = 3;
     }
 
     ~BlockJ() override {

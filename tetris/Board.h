@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../engine/Entity.h"
 #include "../engine/Line.h"
+#include "../engine/Entity.h"
 #include "../engine/Logger.h"
 
 #include "Camera.h"
@@ -51,8 +51,25 @@ public:
         _lines->display();
     }
 
+    void updatedBoardLayout(const glm::imat4x4& layout, int row, int col) {
+        for (int x = 0; x < 4; x++) {
+            for (int y = 0; y < 4; y++) {
+                if (layout[x][y] == 1) {
+                    if (col + x >= _tetrisProperties.width || row + y >= _tetrisProperties.height) {
+                        LOGGER(error, "tetris block should not be in [" << col + x << ", " << row + y << "]");
+                        return;
+                    }
+                    _boardLayout[row + y][col + x] = 1;
+                }
+            }
+        }
+    }
+
 private:
     TetrisProperties& _tetrisProperties;
     Entity* _lines{ nullptr };
     glm::vec4 _lineColor{ 0.2f, 0.2f, 0.2f, 1.0f };
+
+    std::vector<std::vector<int>> _boardLayout;
+
 };
