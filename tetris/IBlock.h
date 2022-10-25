@@ -126,7 +126,7 @@ public:
         const auto offsetX = _tetrisProperties.totalCols / 2.0f;
         const auto offsetY = _tetrisProperties.totalRows - 2.0f;
 
-        _blockPositions.reserve(4 * 4);
+        _blockPositions.reserve(4 * 6 * 2);
 
         for (int y = 0; y < 4; y++) {
             for (int x = 0; x < 4; x++) {
