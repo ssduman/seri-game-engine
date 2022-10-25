@@ -126,12 +126,12 @@ public:
         const auto offsetX = _tetrisProperties.totalCols / 2.0f;
         const auto offsetY = _tetrisProperties.totalRows - 2.0f;
 
-        _blockPositions.reserve(4 * 6 * 2);
+        _blockPositions.reserve(4 * 6);
 
         for (int y = 0; y < 4; y++) {
             for (int x = 0; x < 4; x++) {
                 if (_layout[y][x] == 1) {
-                    const auto s1 = createSquarePosition(offsetX - x, offsetY - y);
+                    const auto s1 = createSquarePosition(offsetX + x, offsetY - y);
                     _blockPositions.insert(_blockPositions.end(), s1.begin(), s1.end());
                 }
             }
@@ -150,7 +150,7 @@ protected:
     std::vector<glm::vec2> _blockPositions;
     BlockMovement _blockMovement = BlockMovement::noop;
 
-    glm::imat4x4 _layout;
+    glm::imat4x4 _layout{};
     int _row{ 0 };
     int _col{ static_cast<int>(_tetrisProperties.width) / 2 };
 
