@@ -106,8 +106,6 @@ public:
 
     virtual bool isBottom() {
         return _row >= _tetrisProperties.totalRows - 1;
-        //auto pos = _block->getTransform()._position.y - _tetrisProperties.interval;
-        //return -pos > _tetrisProperties.height - (_tetrisProperties.interval * 1.5f);
     }
 
     std::vector<glm::vec2> createSquarePosition(const float x, const float y) {
@@ -124,6 +122,22 @@ public:
         };
     }
 
+    void generateBlockPositions() {
+        const auto offsetX = _tetrisProperties.totalCols / 2.0f;
+        const auto offsetY = _tetrisProperties.totalRows - 2.0f;
+
+        _blockPositions.reserve(4 * 4);
+
+        for (int y = 0; y < 4; y++) {
+            for (int x = 0; x < 4; x++) {
+                if (_layout[y][x] == 1) {
+                    const auto s1 = createSquarePosition(offsetX - x, offsetY - y);
+                    _blockPositions.insert(_blockPositions.end(), s1.begin(), s1.end());
+                }
+            }
+        }
+    }
+
     const glm::ivec2& getBlockPosition() {
         return _blockPosition;
     }
@@ -132,6 +146,7 @@ protected:
     TetrisProperties& _tetrisProperties;
     Entity* _block{ nullptr };
     glm::ivec2 _blockPosition{};
+    std::string _blockIdentifier;
     std::vector<glm::vec2> _blockPositions;
     BlockMovement _blockMovement = BlockMovement::noop;
 

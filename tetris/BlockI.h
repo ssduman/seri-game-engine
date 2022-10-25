@@ -14,16 +14,16 @@
 class BlockI : public IBlock {
 public:
     BlockI(Camera* camera, TetrisProperties& tetrisProperties) : IBlock(camera, tetrisProperties) {
-        LOGGER(info, "block I init succeeded");
-
+        _blockIdentifier = "I";
         _layout = {
             { 0, 0, 0, 0 },
             { 1, 1, 1, 1 },
             { 0, 0, 0, 0 },
             { 0, 0, 0, 0 },
         };
-
         _row = 2;
+
+        LOGGER(info, "block I init succeeded");
     }
 
     ~BlockI() override {
@@ -55,22 +55,4 @@ public:
         _block->init();
     }
 
-private:
-    void generateBlockPositions() {
-        const auto offsetX = _tetrisProperties.totalCols / 2.0f;
-        const auto offsetY = _tetrisProperties.totalRows - 2.0f;
-
-        _blockPositions.reserve(4 * 4);
-
-        for (int y = 0; y < 4; y++) {
-            for (int x = 0; x < 4; x++) {
-                if (_layout[y][x] == 1) {
-                    const auto s1 = createSquarePosition(offsetX - x, offsetY - y);
-                    _blockPositions.insert(_blockPositions.end(), s1.begin(), s1.end());
-                }
-            }
-        }
-    }
-
-    std::string _blockIdentifier{ "I" };
 };
