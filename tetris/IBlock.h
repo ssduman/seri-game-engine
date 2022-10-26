@@ -85,11 +85,19 @@ public:
     }
 
     virtual bool right() {
+        if (isWall()) {
+            return true;
+        }
+        ++_col;
         _block->getTransform()._position.x += _tetrisProperties.interval;
         return true;
     }
 
     virtual bool left() {
+        if (isWall()) {
+            return true;
+        }
+        --_col;
         _block->getTransform()._position.x -= _tetrisProperties.interval;
         return true;
     }
@@ -106,6 +114,10 @@ public:
 
     virtual bool isBottom() {
         return _row >= _tetrisProperties.totalRows - 1;
+    }
+
+    virtual bool isWall() {
+        return _col < 0 || _col > _tetrisProperties.totalCols;
     }
 
     std::vector<glm::vec2> createSquarePosition(const float x, const float y) {
@@ -152,6 +164,6 @@ protected:
 
     glm::imat4x4 _layout{};
     int _row{ 0 };
-    int _col{ static_cast<int>(_tetrisProperties.width) / 2 };
+    int _col{ _tetrisProperties.totalCols / 2 };
 
 };
