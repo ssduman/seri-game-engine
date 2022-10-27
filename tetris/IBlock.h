@@ -34,7 +34,7 @@ public:
 
     virtual void generateBlock() = 0;
 
-    virtual bool move(BlockMovement blockMovement) {
+    bool move(BlockMovement blockMovement) {
         if (!down()) {
             return false;
         }
@@ -66,7 +66,7 @@ public:
         }
     };
 
-    virtual bool down() {
+    bool down() {
         if (!isBottom()) {
             _block->getTransform()._position.y -= _tetrisProperties.interval;
             ++_row;
@@ -75,7 +75,7 @@ public:
         return false;
     }
 
-    virtual bool fasterDown() {
+    bool fasterDown() {
         if (!isBottom()) {
             _block->getTransform()._position.y -= _tetrisProperties.interval;
             ++_row;
@@ -84,7 +84,7 @@ public:
         return false;
     }
 
-    virtual bool right() {
+    bool right() {
         if (isWall()) {
             return true;
         }
@@ -93,7 +93,7 @@ public:
         return true;
     }
 
-    virtual bool left() {
+    bool left() {
         if (isWall()) {
             return true;
         }
@@ -112,11 +112,11 @@ public:
         return true;
     }
 
-    virtual bool isBottom() {
+    bool isBottom() {
         return _row >= _tetrisProperties.totalRows - 1;
     }
 
-    virtual bool isWall() {
+    bool isWall() {
         return _col < 0 || _col > _tetrisProperties.totalCols;
     }
 
