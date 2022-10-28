@@ -40,7 +40,8 @@ public:
             int monXPos, monYPos;
             glfwGetMonitorWorkarea(glfwGetPrimaryMonitor(), &monXPos, &monYPos, &_windowProperties.windowWidth, &_windowProperties.windowHeight);
             _window = glfwCreateWindow(_windowProperties.windowWidth, _windowProperties.windowHeight, _windowProperties.windowTitle, glfwGetPrimaryMonitor(), nullptr);
-        } else {
+        }
+        else {
             _window = glfwCreateWindow(_windowProperties.windowWidth, _windowProperties.windowHeight, _windowProperties.windowTitle, nullptr, nullptr);
         }
         if (!_window) {
@@ -167,6 +168,13 @@ public:
 
     void setLineWidth(float width) {
         glLineWidth(width);
+    }
+
+    void checkGLError() {
+        GLenum err;
+        while ((err = glGetError()) != GL_NO_ERROR) {
+            LOGGER(error, "gl error occurred: " << err);
+        }
     }
 
 private:
