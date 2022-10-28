@@ -7,14 +7,10 @@
 
 class Texture {
 public:
-    Texture() {
-        LOGGER(info, "texture init succeeded");
-    }
+    Texture() = default;
 
     ~Texture() {
         glDeleteTextures(1, &_tex);
-
-        LOGGER(info, "texture delete succeeded");
     }
 
     void init(const std::string& texturePath) {
