@@ -33,7 +33,7 @@ public:
         GUI gui{ windowManager.get(), camera.get(), &layers, state.get() };
         gui.init();
 
-        layers.addLayer(Factory::CreateEntity(camera.get(), EntityType::CUBE));
+        layers.addLayer(Factory::CreateEntity(camera.get(), EntityType::cube));
 
         LOGGER(info, "starting seri game engine loop");
 

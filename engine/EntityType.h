@@ -3,35 +3,33 @@
 #include <string>
 
 enum class EntityType {
-    POINT,
-    LINE,
-    TRIANGLE,
-    RECTANGLE,
-    CIRCLE,
-    CUBE,
-    POLYGON,
-    UNKNOWN,
+    point,
+    line,
+    triangle,
+    rectangle,
+    circle,
+    cube,
+    polygon,
+    unknown,
 };
 
 inline std::string toString(EntityType entityType) {
     switch (entityType) {
-        case EntityType::POINT:
+        case EntityType::point:
             return "point";
-        case EntityType::LINE:
+        case EntityType::line:
             return "line";
-        case EntityType::TRIANGLE:
+        case EntityType::triangle:
             return "triangle";
-        case EntityType::RECTANGLE:
+        case EntityType::rectangle:
             return "rectangle";
-        case EntityType::CIRCLE:
+        case EntityType::circle:
             return "circle";
-        case EntityType::CUBE:
+        case EntityType::cube:
             return "cube";
-        case EntityType::POLYGON:
+        case EntityType::polygon:
             return "polygon";
-        case EntityType::UNKNOWN:
-            return "unknown";
-        default:
+        case EntityType::unknown:
             return "unknown";
     }
 }

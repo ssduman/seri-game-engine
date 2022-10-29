@@ -5,7 +5,7 @@
 class Cube : public Entity {
 public:
     Cube(ICamera* camera) : Entity(camera) {
-        _entityType = EntityType::CUBE;
+        _entityType = EntityType::cube;
     }
 
     ~Cube() override {

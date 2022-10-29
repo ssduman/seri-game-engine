@@ -202,22 +202,22 @@ private:
 
     void showEntityCreateButtons() {
         if (ImGui::Button("Create point")) {
-            _layers->addLayer(Factory::CreateEntity(_camera, EntityType::POINT));
+            _layers->addLayer(Factory::CreateEntity(_camera, EntityType::point));
         }
         if (ImGui::Button("Create line")) {
-            _layers->addLayer(Factory::CreateEntity(_camera, EntityType::LINE));
+            _layers->addLayer(Factory::CreateEntity(_camera, EntityType::line));
         }
         if (ImGui::Button("Create triangle")) {
-            _layers->addLayer(Factory::CreateEntity(_camera, EntityType::TRIANGLE));
+            _layers->addLayer(Factory::CreateEntity(_camera, EntityType::triangle));
         }
         if (ImGui::Button("Create rectangle")) {
-            _layers->addLayer(Factory::CreateEntity(_camera, EntityType::RECTANGLE));
+            _layers->addLayer(Factory::CreateEntity(_camera, EntityType::rectangle));
         }
         if (ImGui::Button("Create circle")) {
-            _layers->addLayer(Factory::CreateEntity(_camera, EntityType::CIRCLE));
+            _layers->addLayer(Factory::CreateEntity(_camera, EntityType::circle));
         }
         if (ImGui::Button("Create cube")) {
-            _layers->addLayer(Factory::CreateEntity(_camera, EntityType::CUBE));
+            _layers->addLayer(Factory::CreateEntity(_camera, EntityType::cube));
         }
         if (ImGui::Button("Delete entity")) {
             _currentEntity = nullptr;

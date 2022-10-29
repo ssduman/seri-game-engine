@@ -5,7 +5,7 @@
 class Circle : public Entity {
 public:
     Circle(ICamera* camera) : Entity(camera) {
-        _entityType = EntityType::CIRCLE;
+        _entityType = EntityType::circle;
     }
 
     ~Circle() override {

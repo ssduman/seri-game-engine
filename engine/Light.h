@@ -7,7 +7,7 @@
 class Light : public Entity {
 public:
     Light(ICamera* camera) : Entity(camera) {
-        _entityType = EntityType::CUBE;
+        _entityType = EntityType::cube;
 
         LOGGER(info, "light init succeeded");
     }

@@ -5,7 +5,7 @@
 class Rectangle : public Entity {
 public:
     Rectangle(ICamera* camera) : Entity(camera) {
-        _entityType = EntityType::RECTANGLE;
+        _entityType = EntityType::rectangle;
     }
 
     ~Rectangle() override {

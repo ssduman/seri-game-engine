@@ -5,7 +5,7 @@
 class Polygon : public Entity {
 public:
     Polygon(ICamera* camera) : Entity(camera) {
-        _entityType = EntityType::POLYGON;
+        _entityType = EntityType::polygon;
     }
 
     ~Polygon() override {

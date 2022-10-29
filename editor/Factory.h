@@ -27,7 +27,7 @@ public:
         constexpr auto maxColor = glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f };
 
         switch (entityType) {
-            case EntityType::POINT:
+            case EntityType::point:
             {
                 constexpr auto numSegments = 40;
                 std::vector<glm::vec3> positions;
@@ -54,7 +54,7 @@ public:
 
                 return point;
             }
-            case EntityType::LINE:
+            case EntityType::line:
             {
                 std::vector<glm::vec3> positions{ { -0.5f, -0.5f, 0 }, { 0, 0.5f, 0 }, { 0.5f, -0.5f, 0 } };
                 std::vector<glm::vec4> colors{ glm::linearRand(minColor, maxColor), glm::linearRand(minColor, maxColor), glm::linearRand(minColor, maxColor) };
@@ -73,7 +73,7 @@ public:
 
                 return line;
             }
-            case EntityType::TRIANGLE:
+            case EntityType::triangle:
             {
                 std::vector<glm::vec3> positions{ { -0.5f, -0.5f, 0.0f }, { 0.0f, 0.5f, 0.0f }, { 0.5f, -0.5f, 0.0f } };
                 std::vector<glm::vec4> colors{ glm::linearRand(minColor, maxColor), glm::linearRand(minColor, maxColor), glm::linearRand(minColor, maxColor) };
@@ -92,7 +92,7 @@ public:
 
                 return triangle;
             }
-            case EntityType::RECTANGLE:
+            case EntityType::rectangle:
             {
                 std::vector<glm::vec3> positions{ { -0.5f, -0.5f, 0 }, { -0.5f, 0.5f, 0 }, { 0.5f, 0.5f, 0 }, { 0.5f, -0.5f, 0 } };
                 std::vector<glm::vec4> colors{ glm::linearRand(minColor, maxColor), glm::linearRand(minColor, maxColor), glm::linearRand(minColor, maxColor), glm::linearRand(minColor, maxColor) };
@@ -111,7 +111,7 @@ public:
 
                 return rectangle;
             }
-            case EntityType::CIRCLE:
+            case EntityType::circle:
             {
                 constexpr auto numSegments = 40;
                 std::vector<glm::vec3> positions;
@@ -141,7 +141,7 @@ public:
 
                 return circle;
             }
-            case EntityType::CUBE:
+            case EntityType::cube:
             {
                 std::vector<glm::vec3> positions{
                     { -0.5f, -0.5f, -0.5f, },
@@ -244,7 +244,7 @@ public:
 
                 return cube;
             }
-            case EntityType::POLYGON:
+            case EntityType::polygon:
             {
                 std::vector<glm::vec3> positions{
                     { -0.5f, -0.5f, 0 },
@@ -268,11 +268,7 @@ public:
 
                 return polygon;
             }
-            case EntityType::UNKNOWN:
-            {
-                return nullptr;
-            }
-            default:
+            case EntityType::unknown:
             {
                 return nullptr;
             }

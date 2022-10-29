@@ -5,7 +5,7 @@
 class Line : public Entity {
 public:
     Line(ICamera* camera) : Entity(camera) {
-        _entityType = EntityType::LINE;
+        _entityType = EntityType::line;
     }
 
     ~Line() override {

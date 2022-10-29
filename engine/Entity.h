@@ -109,7 +109,7 @@ protected:
     Shader _shader;
     Texture _texture;
     Transform _transform;
-    EntityType _entityType{ EntityType::UNKNOWN };
+    EntityType _entityType{ EntityType::unknown };
 
     unsigned int _VAO{ 0 };
     unsigned int _VBO{ 0 };

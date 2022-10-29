@@ -5,7 +5,7 @@
 class Triangle : public Entity {
 public:
     Triangle(ICamera* camera) : Entity(camera) {
-        _entityType = EntityType::TRIANGLE;
+        _entityType = EntityType::triangle;
     }
 
     ~Triangle() override {

@@ -5,7 +5,7 @@
 class Point : public Entity {
 public:
     Point(ICamera* camera) : Entity(camera) {
-        _entityType = EntityType::POINT;
+        _entityType = EntityType::point;
     }
 
     ~Point() override {
