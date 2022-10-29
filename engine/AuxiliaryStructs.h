@@ -3,6 +3,11 @@
 #include <GL/glew.h>
 
 namespace aux {
+    enum class Dimension {
+        two_d = 2,
+        three_d = 3,
+    };
+
     enum class DrawMode {
         points = GL_POINTS,
         lines = GL_LINES,

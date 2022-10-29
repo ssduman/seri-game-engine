@@ -37,8 +37,8 @@ public:
         _shader.disuse();
     }
 
-    void setEngineDimension(int dim) {
-        _engineDimension = dim;
+    void setEngineDimension(aux::Dimension dimension) {
+        _engineDimension = static_cast<int>(toGLenum(dimension));
     }
 
     void setDrawMode(aux::DrawMode drawMode) {
