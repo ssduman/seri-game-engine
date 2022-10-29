@@ -55,14 +55,15 @@ public:
     void update(float deltaTime) {
         _tetrisProperties.timeElapsed += deltaTime;
 
+        if (_currentBlock) {
+            _currentBlock->move(_requestedBlockMovement);
+            _requestedBlockMovement = BlockMovement::noop;
+        }
+
         if (_tetrisProperties.timeElapsed >= (0.016f * _tetrisProperties.speed)) {
             _tetrisProperties.timeElapsed = 0.0f;
-
-            if (_currentBlock) {
-                if (!_currentBlock->move(_requestedBlockMovement)) {
-                    generateRandomBlock();
-                }
-                _requestedBlockMovement = BlockMovement::noop;
+            if (_currentBlock && !_currentBlock->down()) {
+                generateRandomBlock();
             }
         }
     }

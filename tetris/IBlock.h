@@ -45,10 +45,6 @@ public:
     }
 
     bool move(BlockMovement blockMovement) {
-        if (!down()) {
-            return false;
-        }
-
         switch (blockMovement) {
             case BlockMovement::faster_down:
             {
@@ -112,11 +108,13 @@ public:
         return true;
     }
 
-    virtual bool rotateLeft() {
+    bool rotateLeft() {
+        rotateLayoutLeft();
         return true;
     }
 
-    virtual bool rotateRight() {
+    bool rotateRight() {
+        rotateLayoutRight();
         return true;
     }
 
@@ -171,5 +169,32 @@ protected:
     glm::imat4x4 _layout{};
     int _row{ _tetrisProperties.totalRows };
     int _col{ _tetrisProperties.totalCols / 3 };
+
+private:
+    void rotateLayoutLeft() {
+        auto N = 4;
+        for (int x = 0; x < N / 2; x++) {
+            for (int y = x; y < N - x - 1; y++) {
+                int temp = _layout[x][y];
+                _layout[x][y] = _layout[y][N - 1 - x];
+                _layout[y][N - 1 - x] = _layout[N - 1 - x][N - 1 - y];
+                _layout[N - 1 - x][N - 1 - y] = _layout[N - 1 - y][x];
+                _layout[N - 1 - y][x] = temp;
+            }
+        }
+    }
+
+    void rotateLayoutRight() {
+        int N = 4;
+        for (int i = 0; i < N / 2; i++) {
+            for (int j = i; j < N - i - 1; j++) {
+                int temp = _layout[i][j];
+                _layout[i][j] = _layout[N - 1 - j][i];
+                _layout[N - 1 - j][i] = _layout[N - 1 - i][N - 1 - j];
+                _layout[N - 1 - i][N - 1 - j] = _layout[j][N - 1 - i];
+                _layout[j][N - 1 - i] = temp;
+            }
+        }
+    }
 
 };
