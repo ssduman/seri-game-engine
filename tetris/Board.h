@@ -26,20 +26,24 @@ public:
         _lines = new Line(_camera);
         _lines->initShader(vertexShader, fragmentShader, /*readFromFile*/ false);
         _lines->initMVP();
-        _lines->setDrawMode(GL_LINES);
-        _lines->reserveTotalDataCountVec2(_tetrisProperties.totalCells * 2);
+        _lines->setDrawMode(aux::DrawMode::lines);
         _lines->setColor(_lineColor);
-        _lines->init();
+        _lines->dataBuffer({ /*size*/ _tetrisProperties.totalCells * 4, /*data*/ nullptr });
+        _lines->attribute({ /*index*/ 0, /*size*/ 2, /*pointer*/ 0 });
 
+        std::vector<glm::vec2> linePos;
         const auto width = _tetrisProperties.width;
         const auto height = _tetrisProperties.height;
         const auto interval = _tetrisProperties.interval;
         for (int x = 0; x < _tetrisProperties.totalRows; x++) {
-            _lines->addPositions({ glm::vec2{ 0.0f, interval * x }, glm::vec2{ width, interval * x } });
+            linePos.emplace_back(0.0f, interval * x);
+            linePos.emplace_back(width, interval * x);
         }
         for (int y = 0; y < _tetrisProperties.totalCols; y++) {
-            _lines->addPositions({ glm::vec2{ interval * y, 0.0f }, glm::vec2{ interval * y, height } });
+            linePos.emplace_back(interval * y, 0.0f);
+            linePos.emplace_back(interval * y, height);
         }
+        _lines->subdataBuffer({ /*offset*/ 0, /*size*/ _tetrisProperties.totalCells * 4, /*data*/ linePos.data() });
     }
 
     void update() override {}
@@ -47,7 +51,6 @@ public:
     void render() override {}
 
     void display() override {
-        Object::display();
         _lines->display();
     }
 
