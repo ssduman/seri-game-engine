@@ -191,6 +191,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AuxiliaryStructs.h" />
     <ClInclude Include="CameraProperties.h" />
     <ClInclude Include="Circle.h" />
     <ClInclude Include="Color.h" />

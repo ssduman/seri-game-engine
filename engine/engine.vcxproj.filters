@@ -177,6 +177,9 @@
     <ClInclude Include="Polygon.h">
       <Filter>Shape</Filter>
     </ClInclude>
+    <ClInclude Include="AuxiliaryStructs.h">
+      <Filter>Entity</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\basic_fs.shader">
