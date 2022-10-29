@@ -29,43 +29,34 @@ public:
     }
 
     void init(const std::string& vsCodePath, const std::string& fsCodePath, bool readFromFile = true) {
-        _vertexShader = glCreateShader(GL_VERTEX_SHADER);
-        std::string vsSourceCodeStr = vsCodePath;
-        if (readFromFile) {
-            vsSourceCodeStr = readShaderCode(vsCodePath);
-        }
-        const char* vsSourceCode = vsSourceCodeStr.c_str();
-        glShaderSource(_vertexShader, 1, &vsSourceCode, nullptr);
-        glCompileShader(_vertexShader);
-
-        _fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-        std::string fsSourceCodeStr = fsCodePath;
-        if (readFromFile) {
-            fsSourceCodeStr = readShaderCode(fsCodePath);
-        }
-        const char* fsSourceCode = fsSourceCodeStr.c_str();
-        glShaderSource(_fragmentShader, 1, &fsSourceCode, nullptr);
-        glCompileShader(_fragmentShader);
-
-        checkShaderCompilationError();
+        unsigned int vertexShader = compileShader(GL_VERTEX_SHADER, vsCodePath, readFromFile);
+        unsigned int fragmentShader = compileShader(GL_FRAGMENT_SHADER, fsCodePath, readFromFile);
 
         _program = glCreateProgram();
-        glAttachShader(_program, _vertexShader);
-        glAttachShader(_program, _fragmentShader);
+        glAttachShader(_program, vertexShader);
+        glAttachShader(_program, fragmentShader);
+        glDeleteShader(vertexShader);
+        glDeleteShader(fragmentShader);
         glLinkProgram(_program);
 
-        checkProgramError();
-
-        glDeleteShader(_vertexShader);
-        glDeleteShader(_fragmentShader);
+        checkProgramLinkingError();
     }
 
     void use() {
+        if (!isActiveForUsing()) {
+            LOGGER(error, "shader is not active");
+            return;
+        }
+
         glUseProgram(_program);
     }
 
     void disuse() {
         glUseProgram(0);
+    }
+
+    bool isActiveForUsing() {
+        return _program != 0;
     }
 
     int getUniformLocation(const std::string& name) const {
@@ -128,41 +119,61 @@ public:
     }
 
 private:
+    unsigned int compileShader(GLenum type, const std::string& code, bool readFromFile) {
+        unsigned int shader = glCreateShader(type);
+        std::string codeStr = code;
+        if (readFromFile) {
+            codeStr = readShaderCode(code);
+        }
+        const char* codeCStr = codeStr.c_str();
+        glShaderSource(shader, 1, &codeCStr, nullptr);
+        glCompileShader(shader);
+        checkShaderCompilationError(shader);
+        return shader;
+    }
+
     std::string readShaderCode(const std::string& shaderCodePath) {
-        std::stringstream ss;
-        std::ifstream shaderFile(shaderCodePath);
-        if (shaderFile.is_open()) {
-            ss << shaderFile.rdbuf();
-            shaderFile.close();
+        try {
+            std::stringstream ss;
+            std::ifstream shaderFile(shaderCodePath);
+            if (shaderFile.is_open()) {
+                ss << shaderFile.rdbuf();
+                shaderFile.close();
+            }
+            return ss.str();
         }
-        return ss.str();
-    }
-
-    void checkShaderCompilationError() {
-        checkShaderCompilationError(_vertexShader);
-        checkShaderCompilationError(_fragmentShader);
-    }
-
-    void checkShaderCompilationError(const unsigned int _s) {
-        glGetShaderiv(_s, GL_COMPILE_STATUS, &_errorStatusSuccess);
-        if (!_errorStatusSuccess) {
-            glGetShaderInfoLog(_s, 512, nullptr, _errorStatusLog);
-            LOGGER(error, "error: shader compilation failed: " << _errorStatusLog);
+        catch (const std::exception& ex) {
+            LOGGER(error, "exception occurred while reading shader code: " << ex.what());
+            return std::string{};
         }
     }
 
-    void checkProgramError() {
-        glGetProgramiv(_program, GL_LINK_STATUS, &_errorStatusSuccess);
-        if (!_errorStatusSuccess) {
-            glGetShaderInfoLog(_program, 512, nullptr, _errorStatusLog);
-            LOGGER(error, "error: program linking failed: " << _errorStatusLog);
+    bool checkShaderCompilationError(const unsigned int shader) {
+        int errorStatusSuccess;
+        char errorStatusLog[512];
+        glGetShaderiv(shader, GL_COMPILE_STATUS, &errorStatusSuccess);
+        if (!errorStatusSuccess) {
+            glGetShaderInfoLog(shader, 512, nullptr, errorStatusLog);
+            LOGGER(error, "shader compilation failed: " << std::string{ errorStatusLog });
+            return false;
         }
+
+        return true;
     }
 
-    int _errorStatusSuccess = -1;
-    char _errorStatusLog[512] = {};
+    bool checkProgramLinkingError() {
+        int errorStatusSuccess;
+        char errorStatusLog[512];
+        glGetProgramiv(_program, GL_LINK_STATUS, &errorStatusSuccess);
+        if (!errorStatusSuccess) {
+            glGetShaderInfoLog(_program, 512, nullptr, errorStatusLog);
+            LOGGER(error, "program linking failed: " << std::string{ errorStatusLog });
+            return false;
+        }
+
+        return true;
+    }
+
     unsigned int _program = 0;
-    unsigned int _vertexShader = 0;
-    unsigned int _fragmentShader = 0;
 
 };
