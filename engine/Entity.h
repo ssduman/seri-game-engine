@@ -38,11 +38,11 @@ public:
     }
 
     void setEngineDimension(aux::Dimension dimension) {
-        _engineDimension = static_cast<int>(toGLenum(dimension));
+        _engineDimension = aux::toInt(dimension);
     }
 
     void setDrawMode(aux::DrawMode drawMode) {
-        _drawMode = toGLenum(drawMode);
+        _drawMode = aux::toGLenum(drawMode);
     }
 
     void setColor(const glm::vec4& color) {
@@ -75,7 +75,6 @@ public:
 
     void attribute(const aux::Attribute& attribute, bool doEnable = true) {
         bind();
-        _positionsDataDimension = static_cast<int>(attribute.size);
         glVertexAttribPointer(attribute.index, attribute.size, attribute.type, attribute.normalized, attribute.stride, attribute.pointer);
         if (doEnable) {
             enable(attribute);
@@ -115,11 +114,9 @@ protected:
     unsigned int _VBO{ 0 };
     unsigned int _EBO{ 0 };
 
-    int _engineDimension{ 2 };
-    int _drawMode{ GL_TRIANGLES };
-
     int _positionsDataCount{ 0 };
-    int _positionsDataDimension{ -1 };
+    int _drawMode{ aux::toGLenum(aux::DrawMode::triangles) };
+    int _engineDimension{ aux::toInt(aux::Dimension::two_d) };
 
 private:
     void generate() {

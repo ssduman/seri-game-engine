@@ -36,6 +36,11 @@ namespace aux {
     };
 
     template <typename Enumeration>
+    auto toInt(Enumeration const value) -> typename std::underlying_type<Enumeration>::type {
+        return static_cast<typename std::underlying_type<Enumeration>::type>(value);
+    }
+
+    template <typename Enumeration>
     auto toGLenum(Enumeration const value) -> typename std::underlying_type<Enumeration>::type {
         return static_cast<typename std::underlying_type<Enumeration>::type>(value);
     }
