@@ -26,8 +26,8 @@ public:
         std::shared_ptr<Camera> camera = std::make_shared<Camera>(cameraProperties, state.get());
         camera->init();
 
-        TetrisProperties snakeProperties{ windowManager->getWidthF(), windowManager->getHeightF(), /*speed*/ 8.0f, /*interval*/ 50.0f };
-        Tetris tetris{ camera.get(), snakeProperties };
+        TetrisProperties tetrisProperties{ windowManager->getWidthF(), windowManager->getHeightF(), /*speed*/ 8.0f, /*interval*/ 50.0f };
+        Tetris tetris{ camera.get(), tetrisProperties };
         tetris.init();
 
         Control control{ windowManager.get(), camera.get(), state.get(), tetris };
