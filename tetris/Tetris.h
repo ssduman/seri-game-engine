@@ -24,8 +24,9 @@ public:
     }
 
     ~Tetris() override {
+        _currentBlock = nullptr;
         for (auto& block : _blocks) {
-            //delete block;
+            delete block;
         }
 
         LOGGER(info, "tetris delete succeeded");
@@ -96,6 +97,6 @@ private:
     };
 
     std::default_random_engine _generator;
-    std::uniform_int_distribution<int> _distribution{ 0, static_cast<int>(_blockTypes.size()) - 1};
+    std::uniform_int_distribution<int> _distribution{ 0, static_cast<int>(_blockTypes.size()) - 1 };
 
 };

@@ -2,6 +2,7 @@
 
 #include "../engine/Entity.h"
 #include "../engine/Logger.h"
+#include "../engine/Polygon.h"
 #include "../engine/Rectangle.h"
 
 #include "Camera.h"
@@ -11,18 +12,15 @@
 
 #include <vector>
 
-enum Positions {
-    bottom_left = 0,
-    top_left,
-    top_right,
-    bottom_right,
-};
-
 class IBlock : public Entity {
 public:
     IBlock(Camera* camera, TetrisProperties& tetrisProperties) : Entity(camera), _tetrisProperties(tetrisProperties) {}
 
-    ~IBlock() override = default;
+    ~IBlock() override {
+        delete _block;
+
+        LOGGER(info, "iblock " << _blockIdentifier << " delete succeeded");
+    }
 
     void update(float deltaTime) {
         _tetrisProperties.timeElapsed += deltaTime;
@@ -32,7 +30,21 @@ public:
         _block->getShader().setVec2("u_position", glm::vec2{ _block->getTransform()._position });
     }
 
-    virtual void generateBlock() = 0;
+    virtual void generateBlock() {
+        generateBlockPositions();
+
+        _block = new Polygon(_camera);
+        _block->initShader(vertexShader, fragmentShader, /*readFromFile*/ false);
+        _block->initMVP();
+        _block->setDrawMode(aux::DrawMode::triangles);
+        _block->dataBuffer({ /*size*/ sizeof(_blockPositions[0]) * _blockPositions.size(), /*data*/ _blockPositions.data() });
+        _block->attribute({ /*index*/ 0, /*size*/ 2, /*pointer*/ 0 });
+    }
+
+    void display() override {
+        render();
+        _block->display();
+    }
 
     bool move(BlockMovement blockMovement) {
         if (!down()) {
