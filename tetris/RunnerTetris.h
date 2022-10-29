@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../engine/IRunner.h"
-#include "../engine/Triangle.h"
 
 #include "Camera.h"
 #include "Tetris.h"
