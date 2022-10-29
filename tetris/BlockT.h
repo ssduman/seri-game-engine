@@ -12,7 +12,6 @@ public:
             { 0, 1, 0, 0 },
             { 0, 0, 0, 0 },
         };
-        _row = 3;
 
         LOGGER(info, "block T init succeeded");
     }

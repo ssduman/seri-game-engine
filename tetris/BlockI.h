@@ -12,7 +12,6 @@ public:
             { 0, 0, 0, 0 },
             { 0, 0, 0, 0 },
         };
-        _row = 2;
 
         LOGGER(info, "block I init succeeded");
     }
