@@ -42,7 +42,7 @@ public:
                     positions.emplace_back(x, y, 0.0f);
                     colors.push_back(randomColor());
                 }
-                
+
                 Point* point = new Point(camera);
                 point->initShader("editor-assets/shaders/entity_vs.shader", "editor-assets/shaders/entity_fs.shader");
                 point->initMVP();
@@ -50,6 +50,8 @@ public:
                 point->setEngineDimension(aux::Dimension::three_d);
                 point->setDrawMode(aux::DrawMode::points);
                 point->setDrawArrayCount(positions.size());
+
+                point->useColors(true);
 
                 auto positionsSize = aux::size(positions);
                 auto colorsSize = aux::size(colors);
@@ -68,7 +70,7 @@ public:
             {
                 std::vector<glm::vec3> positions{ { -0.5f, -0.5f, 0.0f }, { 0.0f, 0.5f, 0.0f }, { 0.5f, -0.5f, 0.0f } };
                 std::vector<glm::vec4> colors{ randomColor(), randomColor(), randomColor() };
-                
+
                 Line* line = new Line(camera);
                 line->initShader("editor-assets/shaders/entity_vs.shader", "editor-assets/shaders/entity_fs.shader");
                 line->initMVP();
@@ -76,6 +78,8 @@ public:
                 line->setEngineDimension(aux::Dimension::three_d);
                 line->setDrawMode(aux::DrawMode::line_loop);
                 line->setDrawArrayCount(positions.size());
+
+                line->useColors(true);
 
                 auto positionsSize = aux::size(positions);
                 auto colorsSize = aux::size(colors);
@@ -94,7 +98,7 @@ public:
             {
                 std::vector<glm::vec3> positions{ { -0.5f, -0.5f, 0.0f }, { 0.0f, 0.5f, 0.0f }, { 0.5f, -0.5f, 0.0f } };
                 std::vector<glm::vec4> colors{ randomColor(), randomColor(), randomColor() };
-                
+
                 Triangle* triangle = new Triangle(camera);
                 triangle->initShader("editor-assets/shaders/entity_vs.shader", "editor-assets/shaders/entity_fs.shader");
                 triangle->initMVP();
@@ -102,6 +106,8 @@ public:
                 triangle->setEngineDimension(aux::Dimension::three_d);
                 triangle->setDrawMode(aux::DrawMode::triangles);
                 triangle->setDrawArrayCount(positions.size());
+
+                triangle->useColors(true);
 
                 auto positionsSize = aux::size(positions);
                 auto colorsSize = aux::size(colors);
@@ -122,7 +128,7 @@ public:
             {
                 std::vector<glm::vec3> positions{ { -0.5f, -0.5f, 0 }, { -0.5f, 0.5f, 0 }, { 0.5f, 0.5f, 0 }, { 0.5f, -0.5f, 0 } };
                 std::vector<glm::vec4> colors{ randomColor(), randomColor(), randomColor(), randomColor() };
-                
+
                 Rectangle* rectangle = new Rectangle(camera);
                 rectangle->initShader("editor-assets/shaders/entity_vs.shader", "editor-assets/shaders/entity_fs.shader");
                 rectangle->initMVP();
@@ -158,7 +164,7 @@ public:
                     colors.push_back(randomColor());
                     texturePositions.emplace_back(x, y);
                 }
-                
+
                 Circle* circle = new Circle(camera);
                 circle->initShader("editor-assets/shaders/entity_vs.shader", "editor-assets/shaders/entity_fs.shader");
                 circle->initMVP();
@@ -302,7 +308,7 @@ public:
                     { 0.0f, 0.0f, 0.0f },
                     { 0.5f, -0.5f, 0.0f },
                 };
-                
+
                 Polygon* polygon = new Polygon(camera);
                 polygon->initShader("editor-assets/shaders/entity_vs.shader", "editor-assets/shaders/entity_fs.shader");
                 polygon->initMVP();

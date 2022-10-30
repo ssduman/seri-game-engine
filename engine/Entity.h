@@ -57,6 +57,12 @@ public:
         _shader.disuse();
     }
 
+    void useColors(bool flag) {
+        _shader.use();
+        _shader.setBool("u_useColors", flag);
+        _shader.disuse();
+    }
+
     void dataBuffer(const aux::DataBuffer& dataBuffer) {
         bind();
         glBufferData(dataBuffer.target, dataBuffer.size, dataBuffer.data, dataBuffer.usage);
