@@ -45,6 +45,10 @@ public:
         _drawMode = aux::toGLenum(drawMode);
     }
 
+    void setDrawArrayCount(size_t drawArrayCount) {
+        _drawArrayCount = static_cast<int>(drawArrayCount);
+    }
+
     void setColor(const glm::vec4& color) {
         _color = { color };
         _shader.use();
@@ -56,7 +60,6 @@ public:
     void dataBuffer(const aux::DataBuffer& dataBuffer) {
         bind();
         glBufferData(dataBuffer.target, dataBuffer.size, dataBuffer.data, dataBuffer.usage);
-        _positionsDataCount = static_cast<int>(dataBuffer.size) / static_cast<int>(sizeof(float));
         unbind();
     }
 
@@ -120,7 +123,7 @@ protected:
     unsigned int _VBO{ 0 };
     unsigned int _EBO{ 0 };
 
-    int _positionsDataCount{ 0 };
+    int _drawArrayCount{ 0 };
     int _drawMode{ aux::toGLenum(aux::DrawMode::triangles) };
     int _engineDimension{ aux::toInt(aux::Dimension::two_d) };
 

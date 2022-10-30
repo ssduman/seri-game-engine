@@ -25,6 +25,9 @@ public:
 
         constexpr auto minColor = glm::vec4{ 0.0f, 0.0f, 0.0f, 1.0f };
         constexpr auto maxColor = glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f };
+        constexpr auto randomColor = []() -> glm::vec4 {
+            return glm::linearRand(minColor, maxColor);
+        };
 
         switch (entityType) {
             case EntityType::point:
@@ -37,14 +40,16 @@ public:
                     float x = 0.5f * cosf(theta);
                     float y = 0.5f * sinf(theta);
                     positions.emplace_back(x, y, 0.0f);
-                    colors.push_back(glm::linearRand(minColor, maxColor));
+                    colors.push_back(randomColor());
                 }
+                
                 Point* point = new Point(camera);
                 point->initShader("editor-assets/shaders/entity_vs.shader", "editor-assets/shaders/entity_fs.shader");
                 point->initMVP();
 
                 point->setEngineDimension(aux::Dimension::three_d);
                 point->setDrawMode(aux::DrawMode::points);
+                point->setDrawArrayCount(positions.size());
 
                 auto positionsSize = aux::size(positions);
                 auto colorsSize = aux::size(colors);
@@ -62,13 +67,15 @@ public:
             case EntityType::line:
             {
                 std::vector<glm::vec3> positions{ { -0.5f, -0.5f, 0.0f }, { 0.0f, 0.5f, 0.0f }, { 0.5f, -0.5f, 0.0f } };
-                std::vector<glm::vec4> colors{ glm::linearRand(minColor, maxColor), glm::linearRand(minColor, maxColor), glm::linearRand(minColor, maxColor) };
+                std::vector<glm::vec4> colors{ randomColor(), randomColor(), randomColor() };
+                
                 Line* line = new Line(camera);
                 line->initShader("editor-assets/shaders/entity_vs.shader", "editor-assets/shaders/entity_fs.shader");
                 line->initMVP();
 
                 line->setEngineDimension(aux::Dimension::three_d);
                 line->setDrawMode(aux::DrawMode::line_loop);
+                line->setDrawArrayCount(positions.size());
 
                 auto positionsSize = aux::size(positions);
                 auto colorsSize = aux::size(colors);
@@ -86,13 +93,15 @@ public:
             case EntityType::triangle:
             {
                 std::vector<glm::vec3> positions{ { -0.5f, -0.5f, 0.0f }, { 0.0f, 0.5f, 0.0f }, { 0.5f, -0.5f, 0.0f } };
-                std::vector<glm::vec4> colors{ glm::linearRand(minColor, maxColor), glm::linearRand(minColor, maxColor), glm::linearRand(minColor, maxColor) };
+                std::vector<glm::vec4> colors{ randomColor(), randomColor(), randomColor() };
+                
                 Triangle* triangle = new Triangle(camera);
                 triangle->initShader("editor-assets/shaders/entity_vs.shader", "editor-assets/shaders/entity_fs.shader");
                 triangle->initMVP();
 
                 triangle->setEngineDimension(aux::Dimension::three_d);
                 triangle->setDrawMode(aux::DrawMode::triangles);
+                triangle->setDrawArrayCount(positions.size());
 
                 auto positionsSize = aux::size(positions);
                 auto colorsSize = aux::size(colors);
@@ -112,13 +121,15 @@ public:
             case EntityType::rectangle:
             {
                 std::vector<glm::vec3> positions{ { -0.5f, -0.5f, 0 }, { -0.5f, 0.5f, 0 }, { 0.5f, 0.5f, 0 }, { 0.5f, -0.5f, 0 } };
-                std::vector<glm::vec4> colors{ glm::linearRand(minColor, maxColor), glm::linearRand(minColor, maxColor), glm::linearRand(minColor, maxColor), glm::linearRand(minColor, maxColor) };
+                std::vector<glm::vec4> colors{ randomColor(), randomColor(), randomColor(), randomColor() };
+                
                 Rectangle* rectangle = new Rectangle(camera);
                 rectangle->initShader("editor-assets/shaders/entity_vs.shader", "editor-assets/shaders/entity_fs.shader");
                 rectangle->initMVP();
 
                 rectangle->setEngineDimension(aux::Dimension::three_d);
                 rectangle->setDrawMode(aux::DrawMode::triangles);
+                rectangle->setDrawArrayCount(positions.size());
 
                 auto positionsSize = aux::size(positions);
                 auto colorsSize = aux::size(colors);
@@ -144,15 +155,17 @@ public:
                     float x = 0.5f * cosf(theta);
                     float y = 0.5f * sinf(theta);
                     positions.emplace_back(x, y, 0.0f);
-                    colors.push_back(glm::linearRand(minColor, maxColor));
+                    colors.push_back(randomColor());
                     texturePositions.emplace_back(x, y);
                 }
+                
                 Circle* circle = new Circle(camera);
                 circle->initShader("editor-assets/shaders/entity_vs.shader", "editor-assets/shaders/entity_fs.shader");
                 circle->initMVP();
 
                 circle->setEngineDimension(aux::Dimension::three_d);
                 circle->setDrawMode(aux::DrawMode::triangle_fan);
+                circle->setDrawArrayCount(positions.size());
 
                 auto positionsSize = aux::size(positions);
                 auto colorsSize = aux::size(colors);
@@ -161,7 +174,7 @@ public:
                 circle->subdataBuffer({ /*offset*/ 0, /*size*/ positionsSize, /*data*/ positions.data() });
                 circle->attribute({ /*index*/ 0, /*size*/ 3, /*pointer*/ 0 });
 
-                circle->setColor(glm::linearRand(minColor, maxColor));
+                circle->setColor(randomColor());
 
                 //circle->setTexture("editor-assets/textures/passage.png", texturePositions);
 
@@ -264,6 +277,7 @@ public:
 
                 cube->setEngineDimension(aux::Dimension::three_d);
                 cube->setDrawMode(aux::DrawMode::triangles);
+                cube->setDrawArrayCount(positions.size());
 
                 auto positionsSize = aux::size(positions);
                 cube->dataBuffer({ /*size*/ positionsSize });
@@ -271,7 +285,7 @@ public:
                 cube->subdataBuffer({ /*offset*/ 0, /*size*/ positionsSize, /*data*/ positions.data() });
                 cube->attribute({ /*index*/ 0, /*size*/ 3, /*pointer*/ 0 });
 
-                cube->setColor(glm::linearRand(minColor, maxColor));
+                cube->setColor(randomColor());
 
                 //cube->setTexture("editor-assets/textures/wall2.png", texturePositions);
 
@@ -288,12 +302,14 @@ public:
                     { 0.0f, 0.0f, 0.0f },
                     { 0.5f, -0.5f, 0.0f },
                 };
+                
                 Polygon* polygon = new Polygon(camera);
                 polygon->initShader("editor-assets/shaders/entity_vs.shader", "editor-assets/shaders/entity_fs.shader");
                 polygon->initMVP();
 
                 polygon->setEngineDimension(aux::Dimension::three_d);
                 polygon->setDrawMode(aux::DrawMode::triangle_fan);
+                polygon->setDrawArrayCount(positions.size());
 
                 auto positionsSize = aux::size(positions);
                 polygon->dataBuffer({ /*size*/ positionsSize });
