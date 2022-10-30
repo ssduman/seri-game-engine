@@ -182,40 +182,34 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\basic_fs.shader">
+    <None Include="..\maze\maze-assets\shaders\basic_fs.shader">
       <Filter>Shader\Shader Programs</Filter>
     </None>
-    <None Include="shaders\basic_vs.shader">
+    <None Include="..\maze\maze-assets\shaders\basic_vs.shader">
       <Filter>Shader\Shader Programs</Filter>
     </None>
-    <None Include="shaders\game_fs.shader">
+    <None Include="..\maze\maze-assets\shaders\entity_fs.shader">
       <Filter>Shader\Shader Programs</Filter>
     </None>
-    <None Include="shaders\game_vs.shader">
+    <None Include="..\maze\maze-assets\shaders\entity_vs.shader">
       <Filter>Shader\Shader Programs</Filter>
     </None>
-    <None Include="shaders\light_fs.shader">
+    <None Include="..\maze\maze-assets\shaders\game_fs.shader">
       <Filter>Shader\Shader Programs</Filter>
     </None>
-    <None Include="shaders\light_vs.shader">
+    <None Include="..\maze\maze-assets\shaders\game_vs.shader">
       <Filter>Shader\Shader Programs</Filter>
     </None>
-    <None Include="shaders\skybox_fs.shader">
+    <None Include="..\maze\maze-assets\shaders\skybox_fs.shader">
       <Filter>Shader\Shader Programs</Filter>
     </None>
-    <None Include="shaders\skybox_vs.shader">
+    <None Include="..\maze\maze-assets\shaders\skybox_vs.shader">
       <Filter>Shader\Shader Programs</Filter>
     </None>
-    <None Include="shaders\typer_fs.shader">
+    <None Include="..\maze\maze-assets\shaders\typer_fs.shader">
       <Filter>Shader\Shader Programs</Filter>
     </None>
-    <None Include="shaders\typer_vs.shader">
-      <Filter>Shader\Shader Programs</Filter>
-    </None>
-    <None Include="shaders\entity_vs.shader">
-      <Filter>Shader\Shader Programs</Filter>
-    </None>
-    <None Include="shaders\entity_fs.shader">
+    <None Include="..\maze\maze-assets\shaders\typer_vs.shader">
       <Filter>Shader\Shader Programs</Filter>
     </None>
   </ItemGroup>
