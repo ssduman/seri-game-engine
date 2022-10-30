@@ -35,6 +35,11 @@ namespace aux {
         read_write = GL_READ_WRITE,
     };
 
+    template<typename T>
+    GLsizeiptr size(const typename std::vector<T>& vec) {
+        return static_cast<GLsizeiptr>(sizeof(T) * vec.size());
+    }
+
     template <typename Enumeration>
     auto toInt(Enumeration const value) -> typename std::underlying_type<Enumeration>::type {
         return static_cast<typename std::underlying_type<Enumeration>::type>(value);
@@ -66,15 +71,9 @@ namespace aux {
     struct DataBuffer {
         DataBuffer() = default;
 
-        DataBuffer(int size_, const void* data_)
+        DataBuffer(GLsizeiptr size_)
             :
-            size(static_cast<GLsizeiptr>(size_)),
-            data(data_) {}
-
-        DataBuffer(size_t size_, const void* data_)
-            :
-            size(static_cast<GLsizeiptr>(size_)),
-            data(data_) {}
+            size(size_) {}
 
         DataBuffer(GLsizeiptr size_, const void* data_)
             :
