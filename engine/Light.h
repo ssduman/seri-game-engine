@@ -64,7 +64,7 @@ public:
             { -0.5f, 0.5f, -0.5f },
         };
 
-        setPositions(positions);
+        dataBuffer({ /*size*/ sizeof(positions[0]) * positions.size(), /*data*/ positions.data() });
     }
 
     void render() override {

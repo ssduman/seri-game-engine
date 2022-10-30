@@ -69,7 +69,7 @@ public:
             { 1.0f, -1.0f, 1.0f },
         };
 
-        setPositions(positions);
+        dataBuffer({ /*size*/ sizeof(positions[0]) * positions.size(), /*data*/ positions.data() });
     }
 
     void setFaces(const std::vector<std::string>& faces) {
