@@ -46,9 +46,10 @@ public:
     }
 
     void setColor(const glm::vec4& color) {
+        _color = { color };
         _shader.use();
         _shader.setBool("u_useColor", true);
-        _shader.setVec4("u_color", color);
+        _shader.setVec4("u_color", _color.getColorRGBA());
         _shader.disuse();
     }
 
@@ -94,6 +95,10 @@ public:
         }
     }
 
+    Color& getColor() {
+        return _color;
+    }
+
     Shader& getShader() {
         _shader.use();
         return _shader;
@@ -105,6 +110,7 @@ public:
 
 protected:
     ICamera* _camera = nullptr;
+    Color _color;
     Shader _shader;
     Texture _texture;
     Transform _transform;
