@@ -14,7 +14,7 @@ public:
     ~Runner() override = default;
 
     void operator()() {
-        WindowProperties windowProperties{ /*title*/ "Seri Game Engine", /*fullscreen*/ false, /*w*/ 1280, /*h*/ 720 };
+        WindowProperties windowProperties{ /*title*/ "Seri Game Engine - Editor", /*fullscreen*/ false, /*w*/ 1280, /*h*/ 720 };
         std::unique_ptr<WindowManager> windowManager = std::make_unique<WindowManager>(windowProperties);
 
         std::shared_ptr<State> state = std::make_shared<State>();
@@ -33,9 +33,7 @@ public:
         GUI gui{ windowManager.get(), camera.get(), &layers, state.get() };
         gui.init();
 
-        layers.addLayer(Factory::CreateEntity(camera.get(), EntityType::cube));
-
-        LOGGER(info, "starting seri game engine loop");
+        LOGGER(info, "starting seri game engine - editor loop");
 
         while (!glfwWindowShouldClose(windowManager->getWindow())) {
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -54,7 +52,7 @@ public:
             glfwSwapBuffers(windowManager->getWindow());
         }
 
-        LOGGER(info, "seri game engine loop stopped");
+        LOGGER(info, "seri game engine - editor loop stopped");
     }
 
 };
