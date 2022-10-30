@@ -21,7 +21,7 @@ public:
     ~Factory() = default;
 
     static Entity* CreateEntity(Camera* camera, EntityType entityType) {
-        srand(time(0));
+        srand(static_cast<unsigned int>(time(0)));
 
         constexpr auto minColor = glm::vec4{ 0.0f, 0.0f, 0.0f, 1.0f };
         constexpr auto maxColor = glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f };
@@ -43,12 +43,17 @@ public:
                 point->initShader("editor-assets/shaders/entity_vs.shader", "editor-assets/shaders/entity_fs.shader");
                 point->initMVP();
 
-                point->setDrawMode(GL_POINTS);
-                point->setPositions(positions);
-                //point->setColor(glm::linearRand(minColor, maxColor));
-                point->setColors(colors);
+                point->setEngineDimension(aux::Dimension::three_d);
+                point->setDrawMode(aux::DrawMode::points);
 
-                point->init();
+                auto positionsSize = aux::size(positions);
+                auto colorsSize = aux::size(colors);
+                point->dataBuffer({ /*size*/ positionsSize + colorsSize });
+
+                point->subdataBuffer({ /*offset*/ 0, /*size*/ positionsSize, /*data*/ positions.data() });
+                point->attribute({ /*index*/ 0, /*size*/ 3, /*pointer*/ 0 });
+                point->subdataBuffer({ /*offset*/ positionsSize, /*size*/ colorsSize, /*data*/ colors.data() });
+                point->attribute({ /*index*/ 1, /*size*/ 4, /*pointer*/ (const void*)positionsSize });
 
                 LOGGER(info, "point created");
 
@@ -56,18 +61,23 @@ public:
             }
             case EntityType::line:
             {
-                std::vector<glm::vec3> positions{ { -0.5f, -0.5f, 0 }, { 0, 0.5f, 0 }, { 0.5f, -0.5f, 0 } };
+                std::vector<glm::vec3> positions{ { -0.5f, -0.5f, 0.0f }, { 0.0f, 0.5f, 0.0f }, { 0.5f, -0.5f, 0.0f } };
                 std::vector<glm::vec4> colors{ glm::linearRand(minColor, maxColor), glm::linearRand(minColor, maxColor), glm::linearRand(minColor, maxColor) };
                 Line* line = new Line(camera);
                 line->initShader("editor-assets/shaders/entity_vs.shader", "editor-assets/shaders/entity_fs.shader");
                 line->initMVP();
 
-                line->setDrawMode(GL_LINE_LOOP);
-                line->setPositions(positions);
-                //line->setColor(glm::linearRand(minColor, maxColor));
-                line->setColors(colors);
+                line->setEngineDimension(aux::Dimension::three_d);
+                line->setDrawMode(aux::DrawMode::line_loop);
 
-                line->init();
+                auto positionsSize = aux::size(positions);
+                auto colorsSize = aux::size(colors);
+                line->dataBuffer({ /*size*/ positionsSize + colorsSize });
+
+                line->subdataBuffer({ /*offset*/ 0, /*size*/ positionsSize, /*data*/ positions.data() });
+                line->attribute({ /*index*/ 0, /*size*/ 3, /*pointer*/ 0 });
+                line->subdataBuffer({ /*offset*/ positionsSize, /*size*/ colorsSize, /*data*/ colors.data() });
+                line->attribute({ /*index*/ 1, /*size*/ 4, /*pointer*/ (const void*)positionsSize });
 
                 LOGGER(info, "line created");
 
@@ -81,12 +91,19 @@ public:
                 triangle->initShader("editor-assets/shaders/entity_vs.shader", "editor-assets/shaders/entity_fs.shader");
                 triangle->initMVP();
 
-                triangle->setPositions(positions);
-                triangle->setColor(glm::linearRand(minColor, maxColor));
-                triangle->setColors(colors);
-                triangle->setTexture("editor-assets/textures/passage.png");
+                triangle->setEngineDimension(aux::Dimension::three_d);
+                triangle->setDrawMode(aux::DrawMode::triangles);
 
-                triangle->init();
+                auto positionsSize = aux::size(positions);
+                auto colorsSize = aux::size(colors);
+                triangle->dataBuffer({ /*size*/ positionsSize + colorsSize });
+
+                triangle->subdataBuffer({ /*offset*/ 0, /*size*/ positionsSize, /*data*/ positions.data() });
+                triangle->attribute({ /*index*/ 0, /*size*/ 3, /*pointer*/ 0 });
+                triangle->subdataBuffer({ /*offset*/ positionsSize, /*size*/ colorsSize, /*data*/ colors.data() });
+                triangle->attribute({ /*index*/ 1, /*size*/ 4, /*pointer*/ (const void*)positionsSize });
+
+                //triangle->setTexture("editor-assets/textures/passage.png");
 
                 LOGGER(info, "triangle created");
 
@@ -100,12 +117,17 @@ public:
                 rectangle->initShader("editor-assets/shaders/entity_vs.shader", "editor-assets/shaders/entity_fs.shader");
                 rectangle->initMVP();
 
-                rectangle->setPositions(positions);
-                //rectangle->setColor(glm::linearRand(minColor, maxColor));
-                //rectangle->setColors(colors);
-                //rectangle->setTexture("editor-assets/textures/wall1.png");
+                rectangle->setEngineDimension(aux::Dimension::three_d);
+                rectangle->setDrawMode(aux::DrawMode::triangles);
 
-                rectangle->init();
+                auto positionsSize = aux::size(positions);
+                auto colorsSize = aux::size(colors);
+                rectangle->dataBuffer({ /*size*/ positionsSize });
+
+                rectangle->subdataBuffer({ /*offset*/ 0, /*size*/ positionsSize, /*data*/ positions.data() });
+                rectangle->attribute({ /*index*/ 0, /*size*/ 3, /*pointer*/ 0 });
+
+                //rectangle->setTexture("editor-assets/textures/wall1.png");
 
                 LOGGER(info, "rectangle created");
 
@@ -129,13 +151,19 @@ public:
                 circle->initShader("editor-assets/shaders/entity_vs.shader", "editor-assets/shaders/entity_fs.shader");
                 circle->initMVP();
 
-                circle->setDrawMode(GL_TRIANGLE_FAN);
-                circle->setPositions(positions);
-                circle->setColor(glm::linearRand(minColor, maxColor));
-                //circle->setColors(colors);
-                circle->setTexture("editor-assets/textures/passage.png", texturePositions);
+                circle->setEngineDimension(aux::Dimension::three_d);
+                circle->setDrawMode(aux::DrawMode::triangle_fan);
 
-                circle->init();
+                auto positionsSize = aux::size(positions);
+                auto colorsSize = aux::size(colors);
+                circle->dataBuffer({ /*size*/ positionsSize });
+
+                circle->subdataBuffer({ /*offset*/ 0, /*size*/ positionsSize, /*data*/ positions.data() });
+                circle->attribute({ /*index*/ 0, /*size*/ 3, /*pointer*/ 0 });
+
+                circle->setColor(glm::linearRand(minColor, maxColor));
+
+                //circle->setTexture("editor-assets/textures/passage.png", texturePositions);
 
                 LOGGER(info, "circle created");
 
@@ -234,11 +262,18 @@ public:
                 cube->initShader("editor-assets/shaders/entity_vs.shader", "editor-assets/shaders/entity_fs.shader");
                 cube->initMVP();
 
-                cube->setPositions(positions);
-                cube->setColor(glm::linearRand(minColor, maxColor));
-                cube->setTexture("editor-assets/textures/wall2.png", texturePositions);
+                cube->setEngineDimension(aux::Dimension::three_d);
+                cube->setDrawMode(aux::DrawMode::triangles);
 
-                cube->init();
+                auto positionsSize = aux::size(positions);
+                cube->dataBuffer({ /*size*/ positionsSize });
+
+                cube->subdataBuffer({ /*offset*/ 0, /*size*/ positionsSize, /*data*/ positions.data() });
+                cube->attribute({ /*index*/ 0, /*size*/ 3, /*pointer*/ 0 });
+
+                cube->setColor(glm::linearRand(minColor, maxColor));
+
+                //cube->setTexture("editor-assets/textures/wall2.png", texturePositions);
 
                 LOGGER(info, "cube created");
 
@@ -247,24 +282,28 @@ public:
             case EntityType::polygon:
             {
                 std::vector<glm::vec3> positions{
-                    { -0.5f, -0.5f, 0 },
-                    { -0.5f, 0.5f, 0 },
-                    { 0.5f, 0.5f, 0 },
-                    { 0.0f, 0.0f, 0 },
-                    { 0.5f, -0.5f, 0 },
+                    { -0.5f, -0.5f, 0.0f },
+                    { -0.5f, 0.5f, 0.0f },
+                    { 0.5f, 0.5f, 0.0f },
+                    { 0.0f, 0.0f, 0.0f },
+                    { 0.5f, -0.5f, 0.0f },
                 };
                 Polygon* polygon = new Polygon(camera);
                 polygon->initShader("editor-assets/shaders/entity_vs.shader", "editor-assets/shaders/entity_fs.shader");
                 polygon->initMVP();
 
-                polygon->setDrawMode(GL_TRIANGLE_FAN);
-                polygon->setPositions(positions);
-                //polygon->setColor(glm::linearRand(minColor, maxColor));
-                polygon->setTexture("editor-assets/textures/passage.png");
+                polygon->setEngineDimension(aux::Dimension::three_d);
+                polygon->setDrawMode(aux::DrawMode::triangle_fan);
 
-                polygon->init();
+                auto positionsSize = aux::size(positions);
+                polygon->dataBuffer({ /*size*/ positionsSize });
 
-                LOGGER(info, "triangle created");
+                polygon->subdataBuffer({ /*offset*/ 0, /*size*/ positionsSize, /*data*/ positions.data() });
+                polygon->attribute({ /*index*/ 0, /*size*/ 3, /*pointer*/ 0 });
+
+                //polygon->setTexture("editor-assets/textures/passage.png");
+
+                LOGGER(info, "polygon created");
 
                 return polygon;
             }
@@ -273,6 +312,8 @@ public:
                 return nullptr;
             }
         }
+
+        return nullptr;
     }
 
 };
