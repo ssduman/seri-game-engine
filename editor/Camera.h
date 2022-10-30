@@ -28,7 +28,7 @@ public:
             _viewUpdated = false;
         }
 
-        if (_state->gameState() != GameState::GAME) {
+        if (_state->gameState() != GameState::game) {
             return;
         }
 
@@ -36,19 +36,19 @@ public:
 
         bool moved = false;
 
-        if (cameraMovement == CameraMovement::FORWARD) {
+        if (cameraMovement == CameraMovement::forward) {
             moved = true;
             _cameraProperties.position += _cameraProperties.front * movementSpeed;
         }
-        if (cameraMovement == CameraMovement::BACKWARD) {
+        if (cameraMovement == CameraMovement::backward) {
             moved = true;
             _cameraProperties.position -= _cameraProperties.front * movementSpeed;
         }
-        if (cameraMovement == CameraMovement::LEFT) {
+        if (cameraMovement == CameraMovement::left) {
             moved = true;
             _cameraProperties.position -= _cameraProperties.right * movementSpeed;
         }
-        if (cameraMovement == CameraMovement::RIGHT) {
+        if (cameraMovement == CameraMovement::right) {
             moved = true;
             _cameraProperties.position += _cameraProperties.right * movementSpeed;
         }

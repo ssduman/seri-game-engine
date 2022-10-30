@@ -123,16 +123,16 @@ public:
         }
 
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-            _camera->handleInput(deltaTime, CameraMovement::FORWARD);
+            _camera->handleInput(deltaTime, CameraMovement::forward);
         }
         if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-            _camera->handleInput(deltaTime, CameraMovement::BACKWARD);
+            _camera->handleInput(deltaTime, CameraMovement::backward);
         }
         if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-            _camera->handleInput(deltaTime, CameraMovement::LEFT);
+            _camera->handleInput(deltaTime, CameraMovement::left);
         }
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-            _camera->handleInput(deltaTime, CameraMovement::RIGHT);
+            _camera->handleInput(deltaTime, CameraMovement::right);
         }
     }
 

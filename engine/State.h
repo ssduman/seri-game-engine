@@ -3,21 +3,21 @@
 #include <iostream>
 
 enum class GameState {
-    IDLE,
-    MENU,
-    GAME,
-    GAMEOVER,
+    idle,
+    menu,
+    game,
+    gameover,
 };
 
 inline std::string to_string(GameState gameState) {
     switch (gameState) {
-        case GameState::IDLE:
+        case GameState::idle:
             return "idle";
-        case GameState::MENU:
+        case GameState::menu:
             return "menu";
-        case GameState::GAME:
+        case GameState::game:
             return "game";
-        case GameState::GAMEOVER:
+        case GameState::gameover:
             return "game over";
         default:
             return "unknown";
@@ -31,6 +31,6 @@ public:
     }
 
 private:
-    GameState _gameState = GameState::IDLE;
+    GameState _gameState = GameState::idle;
 
 };

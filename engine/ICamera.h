@@ -26,7 +26,7 @@ public:
             _viewUpdated = false;
         }
 
-        if (_state && _state->gameState() != GameState::GAME) {
+        if (_state && _state->gameState() != GameState::game) {
             return;
         }
 

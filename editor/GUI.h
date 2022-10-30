@@ -289,12 +289,12 @@ private:
         if (ImGui::Button(text.c_str())) {
             if (text == "Play") {
                 text = "Stop";
-                _state->gameState() = GameState::GAME;
+                _state->gameState() = GameState::game;
                 //_io->MouseDrawCursor = true;
                 _windowManager->disableCursor();
             } else {
                 text = "Play";
-                _state->gameState() = GameState::IDLE;
+                _state->gameState() = GameState::idle;
                 _windowManager->enableCursor();
                 //_io->MouseDrawCursor = false;
             }

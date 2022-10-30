@@ -18,7 +18,7 @@ public:
         std::unique_ptr<WindowManager> windowManager = std::make_unique<WindowManager>(windowProperties);
 
         std::shared_ptr<State> state = std::make_shared<State>();
-        state->gameState() = GameState::MENU;
+        state->gameState() = GameState::menu;
 
         CameraProperties cameraProperties{};
         cameraProperties.aspect = windowManager->getWidthF() / windowManager->getHeightF();

@@ -3,10 +3,10 @@
 #include <glm/glm.hpp>
 
 enum class CameraMovement {
-    FORWARD,
-    BACKWARD,
-    LEFT,
-    RIGHT,
+    forward,
+    backward,
+    left,
+    right,
 };
 
 struct CameraProperties {
