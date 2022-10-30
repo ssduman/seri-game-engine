@@ -127,7 +127,6 @@ public:
             case EntityType::rectangle:
             {
                 std::vector<glm::vec3> positions{ { -0.5f, -0.5f, 0 }, { -0.5f, 0.5f, 0 }, { 0.5f, 0.5f, 0 }, { 0.5f, -0.5f, 0 } };
-                std::vector<glm::vec4> colors{ randomColor(), randomColor(), randomColor(), randomColor() };
 
                 Rectangle* rectangle = new Rectangle(camera);
                 rectangle->initShader("editor-assets/shaders/entity_vs.shader", "editor-assets/shaders/entity_fs.shader");
@@ -138,8 +137,10 @@ public:
                 rectangle->setDrawArrayCount(positions.size());
 
                 auto positionsSize = aux::size(positions);
-                auto colorsSize = aux::size(colors);
                 rectangle->dataBuffer({ /*size*/ positionsSize });
+
+                const std::vector<GLuint> indices{ 0, 1, 3, 1, 2, 3 };
+                rectangle->dataBuffer({ aux::Target::ebo, aux::size(indices), indices.data() });
 
                 rectangle->subdataBuffer({ /*offset*/ 0, /*size*/ positionsSize, /*data*/ positions.data() });
                 rectangle->attribute({ /*index*/ 0, /*size*/ 3, /*pointer*/ 0 });
