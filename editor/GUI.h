@@ -219,6 +219,9 @@ private:
         if (ImGui::Button("Create cube")) {
             _layers->addLayer(Factory::CreateEntity(_camera, EntityType::cube));
         }
+        if (ImGui::Button("Create polygon")) {
+            _layers->addLayer(Factory::CreateEntity(_camera, EntityType::polygon));
+        }
         if (ImGui::Button("Delete entity")) {
             _currentEntity = nullptr;
             _layers->deleteLayer();
@@ -292,7 +295,8 @@ private:
                 _state->gameState() = GameState::game;
                 //_io->MouseDrawCursor = true;
                 _windowManager->disableCursor();
-            } else {
+            }
+            else {
                 text = "Play";
                 _state->gameState() = GameState::idle;
                 _windowManager->enableCursor();

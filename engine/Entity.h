@@ -50,16 +50,28 @@ public:
     }
 
     void setColor(const glm::vec4& color) {
+        useColor(true);
         _color = { color };
         _shader.use();
-        _shader.setBool("u_useColor", true);
         _shader.setVec4("u_color", _color.getColorRGBA());
+        _shader.disuse();
+    }
+
+    void useColor(bool flag) {
+        _shader.use();
+        _shader.setBool("u_useColor", true);
         _shader.disuse();
     }
 
     void useColors(bool flag) {
         _shader.use();
         _shader.setBool("u_useColors", flag);
+        _shader.disuse();
+    }
+
+    void useTexture(bool flag) {
+        _shader.use();
+        _shader.setBool("u_useTexture", flag);
         _shader.disuse();
     }
 
@@ -111,6 +123,10 @@ public:
     Shader& getShader() {
         _shader.use();
         return _shader;
+    }
+
+    Texture& getTexture() {
+        return _texture;
     }
 
     Transform& getTransform() {

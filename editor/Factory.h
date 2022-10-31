@@ -98,6 +98,7 @@ public:
             {
                 std::vector<glm::vec3> positions{ { -0.5f, -0.5f, 0.0f }, { 0.0f, 0.5f, 0.0f }, { 0.5f, -0.5f, 0.0f } };
                 std::vector<glm::vec4> colors{ randomColor(), randomColor(), randomColor() };
+                std::vector<glm::vec2> texturePositions{ { 1.0f, 1.0f }, { 1.0f, 0.0f }, { 0.0f, 0.0f }, { 0.0f, 1.0f } };
 
                 Triangle* triangle = new Triangle(camera);
                 triangle->initShader("editor-assets/shaders/entity_vs.shader", "editor-assets/shaders/entity_fs.shader");
@@ -108,17 +109,20 @@ public:
                 triangle->setDrawArrayCount(positions.size());
 
                 triangle->useColors(true);
+                triangle->useTexture(true);
+                triangle->getTexture().init("editor-assets/textures/passage.png");
 
                 auto positionsSize = aux::size(positions);
                 auto colorsSize = aux::size(colors);
-                triangle->dataBuffer({ /*size*/ positionsSize + colorsSize });
+                auto texturePositionsSize = aux::size(texturePositions);
+                triangle->dataBuffer({ /*size*/ positionsSize + colorsSize + texturePositionsSize });
 
                 triangle->subdataBuffer({ /*offset*/ 0, /*size*/ positionsSize, /*data*/ positions.data() });
                 triangle->attribute({ /*index*/ 0, /*size*/ 3, /*pointer*/ 0 });
                 triangle->subdataBuffer({ /*offset*/ positionsSize, /*size*/ colorsSize, /*data*/ colors.data() });
                 triangle->attribute({ /*index*/ 1, /*size*/ 4, /*pointer*/ (const void*)positionsSize });
-
-                //triangle->setTexture("editor-assets/textures/passage.png");
+                triangle->subdataBuffer({ /*offset*/ positionsSize + colorsSize, /*size*/ texturePositionsSize, /*data*/ texturePositions.data() });
+                triangle->attribute({ /*index*/ 2, /*size*/ 2, /*pointer*/ (const void*)(positionsSize + colorsSize) });
 
                 LOGGER(info, "triangle created");
 
@@ -127,6 +131,7 @@ public:
             case EntityType::rectangle:
             {
                 std::vector<glm::vec3> positions{ { -0.5f, -0.5f, 0 }, { -0.5f, 0.5f, 0 }, { 0.5f, 0.5f, 0 }, { 0.5f, -0.5f, 0 } };
+                std::vector<glm::vec2> texturePositions{ { 1.0f, 1.0f }, { 1.0f, 0.0f }, { 0.0f, 0.0f }, { 0.0f, 1.0f } };
 
                 Rectangle* rectangle = new Rectangle(camera);
                 rectangle->initShader("editor-assets/shaders/entity_vs.shader", "editor-assets/shaders/entity_fs.shader");
@@ -136,16 +141,20 @@ public:
                 rectangle->setDrawMode(aux::DrawMode::triangles);
                 rectangle->setDrawArrayCount(positions.size());
 
+                rectangle->useTexture(true);
+                rectangle->getTexture().init("editor-assets/textures/wall1.png");
+
                 auto positionsSize = aux::size(positions);
-                rectangle->dataBuffer({ /*size*/ positionsSize });
+                auto texturePositionsSize = aux::size(texturePositions);
+                rectangle->dataBuffer({ /*size*/ positionsSize + texturePositionsSize });
 
                 const std::vector<GLuint> indices{ 0, 1, 3, 1, 2, 3 };
                 rectangle->dataBuffer({ aux::Target::ebo, aux::size(indices), indices.data() });
 
                 rectangle->subdataBuffer({ /*offset*/ 0, /*size*/ positionsSize, /*data*/ positions.data() });
                 rectangle->attribute({ /*index*/ 0, /*size*/ 3, /*pointer*/ 0 });
-
-                //rectangle->setTexture("editor-assets/textures/wall1.png");
+                rectangle->subdataBuffer({ /*offset*/ positionsSize, /*size*/ texturePositionsSize, /*data*/ texturePositions.data() });
+                rectangle->attribute({ /*index*/ 2, /*size*/ 2, /*pointer*/ (const void*)positionsSize });
 
                 LOGGER(info, "rectangle created");
 
@@ -174,16 +183,20 @@ public:
                 circle->setDrawMode(aux::DrawMode::triangle_fan);
                 circle->setDrawArrayCount(positions.size());
 
+                circle->useTexture(true);
+                circle->getTexture().init("editor-assets/textures/passage.png");
+
                 auto positionsSize = aux::size(positions);
                 auto colorsSize = aux::size(colors);
-                circle->dataBuffer({ /*size*/ positionsSize });
+                auto texturePositionsSize = aux::size(texturePositions);
+                circle->dataBuffer({ /*size*/ positionsSize + texturePositionsSize });
 
                 circle->subdataBuffer({ /*offset*/ 0, /*size*/ positionsSize, /*data*/ positions.data() });
                 circle->attribute({ /*index*/ 0, /*size*/ 3, /*pointer*/ 0 });
+                circle->subdataBuffer({ /*offset*/ positionsSize, /*size*/ texturePositionsSize, /*data*/ texturePositions.data() });
+                circle->attribute({ /*index*/ 2, /*size*/ 2, /*pointer*/ (const void*)positionsSize });
 
                 circle->setColor(randomColor());
-
-                //circle->setTexture("editor-assets/textures/passage.png", texturePositions);
 
                 LOGGER(info, "circle created");
 
@@ -286,15 +299,19 @@ public:
                 cube->setDrawMode(aux::DrawMode::triangles);
                 cube->setDrawArrayCount(positions.size());
 
+                cube->useTexture(true);
+                cube->getTexture().init("editor-assets/textures/wall2.png");
+
                 auto positionsSize = aux::size(positions);
-                cube->dataBuffer({ /*size*/ positionsSize });
+                auto texturePositionsSize = aux::size(texturePositions);
+                cube->dataBuffer({ /*size*/ positionsSize + texturePositionsSize });
 
                 cube->subdataBuffer({ /*offset*/ 0, /*size*/ positionsSize, /*data*/ positions.data() });
                 cube->attribute({ /*index*/ 0, /*size*/ 3, /*pointer*/ 0 });
+                cube->subdataBuffer({ /*offset*/ positionsSize, /*size*/ texturePositionsSize, /*data*/ texturePositions.data() });
+                cube->attribute({ /*index*/ 2, /*size*/ 2, /*pointer*/ (const void*)positionsSize });
 
                 cube->setColor(randomColor());
-
-                //cube->setTexture("editor-assets/textures/wall2.png", texturePositions);
 
                 LOGGER(info, "cube created");
 
@@ -323,8 +340,6 @@ public:
 
                 polygon->subdataBuffer({ /*offset*/ 0, /*size*/ positionsSize, /*data*/ positions.data() });
                 polygon->attribute({ /*index*/ 0, /*size*/ 3, /*pointer*/ 0 });
-
-                //polygon->setTexture("editor-assets/textures/passage.png");
 
                 LOGGER(info, "polygon created");
 
