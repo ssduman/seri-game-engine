@@ -46,7 +46,7 @@ public:
         const float z = _height / (6.0f * _width / _height);
         const float w = _width / 6.0f;
 
-        std::vector<glm::vec4> positionsVec4{
+        std::vector<glm::vec4> positions{
             { x, z, 1.0f, 1.0f }, // top right
             { w, z, 0.0f, 1.0f }, // top left
             { w, y, 0.0f, 0.0f }, // bottom left
@@ -55,8 +55,9 @@ public:
             { x, y, 1.0f, 0.0f }, // bottom right
             { w, y, 0.0f, 0.0f }, // bottom left
         };
-
-        setPositions(positionsVec4);
+        _positionsDataCount = aux::count(positions);
+        dataBuffer({ /*size*/ aux::size(positions), /*data*/ positions.data() });
+        attribute({ /*index*/ 0, /*size*/ 4, /*pointer*/ 0 });
     }
 
     void render() override {
@@ -65,7 +66,7 @@ public:
 
         glBindVertexArray(_VAO);
         glBindBuffer(GL_ARRAY_BUFFER, _VBO);
-        glDrawArrays(GL_TRIANGLES, 0, _positionsDataCount / 4);
+        glDrawArrays(GL_TRIANGLES, 0, _positionsDataCount);
 
         glBindVertexArray(0);
         glBindTexture(GL_TEXTURE_2D, 0);
@@ -93,6 +94,7 @@ private:
     Camera* _cameraMaze = nullptr;
     float _width{ 0.0f };
     float _height{ 0.0f };
-    glm::mat4 _projection;
+    glm::mat4 _projection{};
+    int _positionsDataCount{ 0 };
 
 };

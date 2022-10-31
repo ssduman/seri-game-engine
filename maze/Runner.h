@@ -1,7 +1,9 @@
 #pragma once
 
-#include "../engine/IRunner.h"
+#include "../engine/Light.h"
 #include "../engine/Logger.h"
+#include "../engine/Skybox.h"
+#include "../engine/IRunner.h"
 
 #include "Game.h"
 #include "Maze.h"
@@ -37,7 +39,7 @@ public:
         Light light{ camera.get() };
         light.initShader("maze-assets/shaders/entity_vs.shader", "maze-assets/shaders/entity_fs.shader");
         light.initMVP();
-        light.setPosition({ 0.0f, 10.0f, 8.0f });
+        //light.setPosition({ 0.0f, 10.0f, 8.0f });
         light.setDefaultPositions();
         light.setColor({ 1.0f, 1.0f, 1.0f, 1.0f });
         light.init();
@@ -64,7 +66,7 @@ public:
         game.initShader("maze-assets/shaders/game_vs.shader", "maze-assets/shaders/game_fs.shader");
         game.initTyper();
         game.initStopwatch();
-        game.setTexture("maze-assets/textures/gameWindow.png");
+        game.getTexture().init("maze-assets/textures/gameWindow.png");
         game.setProjection();
         game.setDefaultPositions();
         game.init();
