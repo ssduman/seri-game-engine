@@ -68,8 +68,9 @@ public:
             { -1.0f, -1.0f, 1.0f },
             { 1.0f, -1.0f, 1.0f },
         };
-
-        dataBuffer({ /*size*/ sizeof(positions[0]) * positions.size(), /*data*/ positions.data() });
+        _positionsDataCount = aux::count(positions);
+        dataBuffer({ /*size*/ aux::size(positions), /*data*/ positions.data() });
+        attribute({ /*index*/ 0, /*size*/ 3, /*pointer*/ 0 });
     }
 
     void setFaces(const std::vector<std::string>& faces) {
@@ -95,7 +96,8 @@ public:
             if (auto image = Texture::loadTexture(_faces[i], width, height, components, 0)) {
                 glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + static_cast<GLenum>(i), 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
                 Texture::unloadTexture(image);
-            } else {
+            }
+            else {
                 LOGGER(error, "texture " << _faces[i] << " could not loaded");
             }
         }
@@ -119,13 +121,14 @@ public:
         glBindVertexArray(_VAO);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_CUBE_MAP, _tex);
-        glDrawArrays(_drawMode, 0, _positionsDataCount / 3);
+        glDrawArrays(_drawMode, 0, _positionsDataCount);
         glBindVertexArray(0);
         glDepthFunc(GL_LESS);
     }
 
 private:
-    unsigned int _tex = 0;
+    unsigned int _tex{ 0 };
+    int _positionsDataCount{ 0 };
     std::vector<std::string> _faces;
 
 };
