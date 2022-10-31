@@ -36,6 +36,11 @@ namespace aux {
     };
 
     template<typename T>
+    GLsizei count(const typename std::vector<T>& vec) {
+        return static_cast<GLsizei>(vec.size());
+    }
+
+    template<typename T>
     GLsizeiptr size(const typename std::vector<T>& vec) {
         return static_cast<GLsizeiptr>(sizeof(T) * vec.size());
     }
