@@ -114,8 +114,7 @@
       <AdditionalDependencies>glfw3.lib;opengl32.lib;User32.lib;Gdi32.lib;Shell32.lib;glew32s.lib;freetype.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y /i /e /r /q "$(SolutionDir)$(ProjectName)\tetris-assets" "$(SolutionDir)artifact\$(Configuration)-$(Platform)\tetris-assets"
-xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win32\freetype.dll" "$(SolutionDir)artifact\$(Configuration)-$(Platform)"</Command>
+      <Command>xcopy /y /i /e /r /q "$(SolutionDir)$(ProjectName)\tetris-assets" "$(SolutionDir)artifact\$(Configuration)-$(Platform)\tetris-assets"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -138,8 +137,7 @@ xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win32\freetype.dll" "$(So
       <AdditionalDependencies>glfw3.lib;opengl32.lib;User32.lib;Gdi32.lib;Shell32.lib;glew32s.lib;freetype.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y /i /e /r /q "$(SolutionDir)$(ProjectName)\tetris-assets" "$(SolutionDir)artifact\$(Configuration)-$(Platform)\tetris-assets"
-xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win32\freetype.dll" "$(SolutionDir)artifact\$(Configuration)-$(Platform)"</Command>
+      <Command>xcopy /y /i /e /r /q "$(SolutionDir)$(ProjectName)\tetris-assets" "$(SolutionDir)artifact\$(Configuration)-$(Platform)\tetris-assets"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -158,8 +156,7 @@ xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win32\freetype.dll" "$(So
       <AdditionalDependencies>glfw3.lib;opengl32.lib;User32.lib;Gdi32.lib;Shell32.lib;glew32s.lib;freetype.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y /i /e /r /q "$(SolutionDir)$(ProjectName)\tetris-assets" "$(SolutionDir)artifact\$(Configuration)-$(Platform)\tetris-assets"
-xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win64\freetype.dll" "$(SolutionDir)artifact\$(Configuration)-$(Platform)"</Command>
+      <Command>xcopy /y /i /e /r /q "$(SolutionDir)$(ProjectName)\tetris-assets" "$(SolutionDir)artifact\$(Configuration)-$(Platform)\tetris-assets"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -182,8 +179,7 @@ xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win64\freetype.dll" "$(So
       <AdditionalDependencies>glfw3.lib;opengl32.lib;User32.lib;Gdi32.lib;Shell32.lib;glew32s.lib;freetype.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y /i /e /r /q "$(SolutionDir)$(ProjectName)\tetris-assets" "$(SolutionDir)artifact\$(Configuration)-$(Platform)\tetris-assets"
-xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win64\freetype.dll" "$(SolutionDir)artifact\$(Configuration)-$(Platform)"</Command>
+      <Command>xcopy /y /i /e /r /q "$(SolutionDir)$(ProjectName)\tetris-assets" "$(SolutionDir)artifact\$(Configuration)-$(Platform)\tetris-assets"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
