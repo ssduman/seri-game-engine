@@ -1,18 +1,20 @@
 #pragma once
 
-#include <vector>
-
 #include "../engine/Entity.h"
 #include "../engine/Logger.h"
-#include "Board.h"
-#include "Camera.h"
+
 #include "Cell.h"
 #include "Food.h"
+#include "Board.h"
+#include "Camera.h"
+#include "SnakeShaders.h"
 #include "SnakeMovement.h"
 #include "SnakeProperties.h"
 
+#include <vector>
+
 class Snake : public Entity {
-   public:
+public:
     Snake(Camera* camera, SnakeProperties& snakeProperties)
         : Entity(camera), _snakeProperties(snakeProperties), _food(camera, _snakeProperties), _board(camera, _snakeProperties) {
         LOGGER(info, "snake init succeeded");
@@ -90,29 +92,33 @@ class Snake : public Entity {
         LOGGER(info, "snake state: " << (_snakeProperties.isPlaying ? "'play'" : "'pause'"));
     }
 
-   private:
+private:
     void addBody(const int x, const int y, SnakeMovement direction, bool isHead = false) {
         const auto interval = _snakeProperties.interval;
         const auto d1 = (interval * 0.0f) / 2.0f;
         const auto d2 = (interval * 2.0f) / 2.0f;
-        const glm::vec2 position{0.0f, 0.0f};
+        const glm::vec2 position{ 0.0f, 0.0f };
         const std::vector<glm::vec2> bodyPositions{
-            {x * interval + d1, y * interval + d1},
-            {x * interval + d1, y * interval + d2},
-            {x * interval + d2, y * interval + d2},
-            {x * interval + d2, y * interval + d1},
+            { x * interval + d1, y * interval + d1 },
+            { x * interval + d1, y * interval + d2 },
+            { x * interval + d2, y * interval + d2 },
+            { x * interval + d2, y * interval + d1 },
         };
+
         Rectangle* snakeBody = new Rectangle(_camera);
-        snakeBody->initShader("snake-assets/shaders/snake_vs.shader", "snake-assets/shaders/snake_fs.shader");
+        snakeBody->initShader(vertexShader, fragmentShader, /*readFromFile*/ false);
         snakeBody->initMVP();
-        snakeBody->setPositions(bodyPositions);
         if (isHead) {
             snakeBody->setColor(_snakeHeadColor);
         }
         else {
             snakeBody->setColor(_snakeBodyColor);
         }
-        snakeBody->init();
+        snakeBody->setDrawArrayCount(aux::count(bodyPositions));
+        snakeBody->dataBuffer({ /*size*/ aux::size(bodyPositions), /*data*/ bodyPositions.data() });
+        snakeBody->attribute({ /*index*/ 0, /*size*/ 2, /*pointer*/ 0 });
+        const std::vector<GLuint> indices{ 0, 1, 3, 1, 2, 3 };
+        snakeBody->dataBuffer({ aux::Target::ebo, aux::size(indices), indices.data() });
 
         _snake.emplace_back(x, y, snakeBody, position, direction);
     }
@@ -120,30 +126,30 @@ class Snake : public Entity {
     void moveSnake() {
         const auto interval = _snakeProperties.interval;
 
-        SnakeMovement oldDir{SnakeMovement::noop};
-        SnakeMovement reqDir{_snake.front().requestedDirection};
+        SnakeMovement oldDir{ SnakeMovement::noop };
+        SnakeMovement reqDir{ _snake.front().requestedDirection };
         reqDir = reqDir == SnakeMovement::noop ? SnakeMovement::forward : reqDir;
         for (auto& snake : _snake) {
             oldDir = snake.direction;
             snake.direction = reqDir;
             if (SnakeMovement::forward == snake.direction && SnakeMovement::backward != oldDir) {
                 snake.y += 1;
-                snake.position += glm::vec2{0.0f, interval};
+                snake.position += glm::vec2{ 0.0f, interval };
                 snake.entity->setPosition(snake.position);
             }
             else if (SnakeMovement::backward == snake.direction && SnakeMovement::forward != oldDir) {
                 snake.y -= 1;
-                snake.position += glm::vec2{0.0f, -interval};
+                snake.position += glm::vec2{ 0.0f, -interval };
                 snake.entity->setPosition(snake.position);
             }
             else if (SnakeMovement::left == snake.direction && SnakeMovement::right != oldDir) {
                 snake.x -= 1;
-                snake.position += glm::vec2{-interval, 0.0f};
+                snake.position += glm::vec2{ -interval, 0.0f };
                 snake.entity->setPosition(snake.position);
             }
             else if (SnakeMovement::right == snake.direction && SnakeMovement::left != oldDir) {
                 snake.x += 1;
-                snake.position += glm::vec2{interval, 0.0f};
+                snake.position += glm::vec2{ interval, 0.0f };
                 snake.entity->setPosition(snake.position);
             }
             else {
@@ -199,7 +205,8 @@ class Snake : public Entity {
     Board _board;
 
     std::vector<Cell> _snake;
-    glm::vec4 _snakeHeadColor{0.8f, 1.0f, 0.4f, 1.0f};
-    glm::vec4 _snakeBodyColor{0.1f, 1.0f, 0.4f, 1.0f};
-    glm::vec4 _snakeCollisionColor{0.9f, 0.2f, 0.2f, 1.0f};
+    glm::vec4 _snakeHeadColor{ 0.8f, 1.0f, 0.4f, 1.0f };
+    glm::vec4 _snakeBodyColor{ 0.1f, 1.0f, 0.4f, 1.0f };
+    glm::vec4 _snakeCollisionColor{ 0.9f, 0.2f, 0.2f, 1.0f };
+
 };

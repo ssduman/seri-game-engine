@@ -1,15 +1,17 @@
 #pragma once
 
-#include <vector>
-
-#include "../engine/Entity.h"
 #include "../engine/Line.h"
+#include "../engine/Entity.h"
 #include "../engine/Logger.h"
+
 #include "Camera.h"
+#include "SnakeShaders.h"
 #include "SnakeProperties.h"
 
+#include <vector>
+
 class Board : public Entity {
-   public:
+public:
     Board(Camera* camera, SnakeProperties& snakeProperties) : Entity(camera), _snakeProperties(snakeProperties) {
         LOGGER(info, "board init succeeded");
     }
@@ -21,23 +23,27 @@ class Board : public Entity {
     }
 
     void init() override {
-        _lines = new Line(_camera);
-        _lines->initShader("snake-assets/shaders/snake_vs.shader", "snake-assets/shaders/snake_fs.shader");
-        _lines->initMVP();
-        _lines->setDrawMode(GL_LINES);
-        _lines->reserveTotalDataCountVec2(_snakeProperties.totalCells * 2);
-        _lines->setColor(_lineColor);
-        _lines->init();
-
+        std::vector<glm::vec2> linePos;
         const auto width = _snakeProperties.width;
         const auto height = _snakeProperties.height;
         const auto interval = _snakeProperties.interval;
         for (int x = 0; x < _snakeProperties.totalRows; x++) {
-            _lines->addPositions({{0.0f, interval * x}, {width, interval * x}});
+            linePos.emplace_back(0.0f, interval * x);
+            linePos.emplace_back(width, interval * x);
         }
         for (int y = 0; y < _snakeProperties.totalCols; y++) {
-            _lines->addPositions({{interval * y, 0.0f}, {interval * y, height}});
+            linePos.emplace_back(interval * y, 0.0f);
+            linePos.emplace_back(interval * y, height);
         }
+
+        _lines = new Line(_camera);
+        _lines->initShader(vertexShader, fragmentShader, /*readFromFile*/ false);
+        _lines->initMVP();
+        _lines->setColor(_lineColor);
+        _lines->setDrawMode(aux::DrawMode::lines);
+        _lines->setDrawArrayCount(aux::count(linePos));
+        _lines->dataBuffer({ /*size*/ aux::size(linePos), /*data*/ linePos.data() });
+        _lines->attribute({ /*index*/ 0, /*size*/ 2, /*pointer*/ 0 });
     }
 
     void update() override {}
@@ -49,8 +55,9 @@ class Board : public Entity {
         _lines->display();
     }
 
-   private:
+private:
     SnakeProperties& _snakeProperties;
-    Entity* _lines{nullptr};
-    glm::vec4 _lineColor{0.2f, 0.2f, 0.2f, 1.0f};
+    Entity* _lines{ nullptr };
+    glm::vec4 _lineColor{ 0.2f, 0.2f, 0.2f, 1.0f };
+
 };

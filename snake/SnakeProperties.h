@@ -22,5 +22,4 @@ struct SnakeProperties {
 
     bool isPlaying{ true };
     float timeElapsed{ 0.0f };
-
 };

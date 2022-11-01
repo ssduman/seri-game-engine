@@ -17,6 +17,9 @@
     <Filter Include="Snake">
       <UniqueIdentifier>{6bbb1106-3b32-4000-817d-8c87179fcb12}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{cd849b10-838a-4e99-b2b7-453e6ce6a989}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="snake.cpp">
@@ -50,6 +53,9 @@
     </ClInclude>
     <ClInclude Include="Board.h">
       <Filter>Snake</Filter>
+    </ClInclude>
+    <ClInclude Include="SnakeShaders.h">
+      <Filter>Shader</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
