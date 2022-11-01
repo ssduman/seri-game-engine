@@ -40,7 +40,8 @@ public:
         _block->initShader(vertexShader, fragmentShader, /*readFromFile*/ false);
         _block->initMVP();
         _block->setDrawMode(aux::DrawMode::triangles);
-        _block->dataBuffer({ /*size*/ sizeof(_blockPositions[0]) * _blockPositions.size(), /*data*/ _blockPositions.data() });
+        _block->setDrawArrayCount(aux::count(_blockPositions));
+        _block->dataBuffer({ /*size*/ aux::size(_blockPositions), /*data*/ _blockPositions.data() });
         _block->attribute({ /*index*/ 0, /*size*/ 2, /*pointer*/ 0 });
     }
 
@@ -76,7 +77,7 @@ public:
         if (!isBottom()) {
             --_row;
             generateBlockPositions();
-            _block->dataBuffer({ /*size*/ sizeof(_blockPositions[0]) * _blockPositions.size(), /*data*/ _blockPositions.data() });
+            _block->dataBuffer({ /*size*/ aux::size(_blockPositions), /*data*/ _blockPositions.data() });
             return true;
         }
         return false;
@@ -86,7 +87,7 @@ public:
         if (!isBottom()) {
             --_row;
             generateBlockPositions();
-            _block->dataBuffer({ /*size*/ sizeof(_blockPositions[0]) * _blockPositions.size(), /*data*/ _blockPositions.data() });
+            _block->dataBuffer({ /*size*/ aux::size(_blockPositions), /*data*/ _blockPositions.data() });
             return true;
         }
         return false;

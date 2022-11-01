@@ -23,14 +23,6 @@ public:
     }
 
     void init() override {
-        _lines = new Line(_camera);
-        _lines->initShader(vertexShader, fragmentShader, /*readFromFile*/ false);
-        _lines->initMVP();
-        _lines->setDrawMode(aux::DrawMode::lines);
-        _lines->setColor(_lineColor);
-        _lines->dataBuffer({ /*size*/ _tetrisProperties.totalCells * 4, /*data*/ nullptr });
-        _lines->attribute({ /*index*/ 0, /*size*/ 2, /*pointer*/ 0 });
-
         std::vector<glm::vec2> linePos;
         const auto width = _tetrisProperties.width;
         const auto height = _tetrisProperties.height;
@@ -43,7 +35,15 @@ public:
             linePos.emplace_back(interval * y, 0.0f);
             linePos.emplace_back(interval * y, height);
         }
-        _lines->subdataBuffer({ /*offset*/ 0, /*size*/ _tetrisProperties.totalCells * 4, /*data*/ linePos.data() });
+
+        _lines = new Line(_camera);
+        _lines->initShader(vertexShader, fragmentShader, /*readFromFile*/ false);
+        _lines->initMVP();
+        _lines->setColor(_lineColor);
+        _lines->setDrawMode(aux::DrawMode::lines);
+        _lines->setDrawArrayCount(aux::count(linePos));
+        _lines->dataBuffer({ /*size*/ aux::size(linePos), /*data*/ linePos.data() });
+        _lines->attribute({ /*index*/ 0, /*size*/ 2, /*pointer*/ 0 });
     }
 
     void update() override {}
