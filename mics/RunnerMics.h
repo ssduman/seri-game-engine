@@ -18,10 +18,10 @@ public:
         std::unique_ptr<WindowManager> windowManager = std::make_unique<WindowManager>(windowProperties);
         windowManager->disableCursor();
         windowManager->setPointSize(2.0f);
-        windowManager->setLineWidth(2.0f);
+        //windowManager->setLineWidth(2.0f);
 
         std::shared_ptr<State> state = std::make_shared<State>();
-        state->gameState() = GameState::GAME;
+        state->gameState() = GameState::game;
 
         CameraProperties cameraProperties{};
         cameraProperties.aspect = windowManager->getWidthF() / windowManager->getHeightF();
@@ -35,8 +35,8 @@ public:
         control.init();
 
         Fractal fractal{ camera.get(), layers };
-        //fractal.BarnsleyFern();
-        //fractal.tree();
+        fractal.BarnsleyFern();
+        fractal.tree();
 
         PerlinNoise perlinNoise{ camera.get(), layers };
         perlinNoise();
@@ -53,7 +53,7 @@ public:
 
             control.processInput(deltaTime);
 
-            fractal.BarnsleyFernAnimation(BarnsleyFernPoints, deltaTime);
+            //fractal.BarnsleyFernAnimation(BarnsleyFernPoints, deltaTime);
 
             for (auto entity : layers.getLayers()) {
                 entity->display();

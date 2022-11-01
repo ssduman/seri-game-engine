@@ -1,8 +1,8 @@
 #pragma once
 
 #include "../engine/Line.h"
-#include "../engine/Point.h"
 #include "../engine/Layer.h"
+#include "../engine/Point.h"
 
 #include "Camera.h"
 
@@ -44,11 +44,13 @@ public:
         BarnsleyFernPoints->initShader("mics-assets/shaders/entity_vs.shader", "mics-assets/shaders/entity_fs.shader");
         BarnsleyFernPoints->initMVP();
 
-        BarnsleyFernPoints->setDrawMode(GL_POINTS);
-        BarnsleyFernPoints->setPositions(positions);
+        BarnsleyFernPoints->setEngineDimension(aux::Dimension::three_d);
+        BarnsleyFernPoints->setDrawMode(aux::DrawMode::points);
+        BarnsleyFernPoints->setDrawArrayCount(positions.size());
         BarnsleyFernPoints->setColor({ 0.0f, 0.6f, 0.16f, 1.0f });
 
-        BarnsleyFernPoints->init();
+        BarnsleyFernPoints->dataBuffer({ /*size*/ aux::size(positions), /*data*/ positions.data() });
+        BarnsleyFernPoints->attribute({ /*index*/ 0, /*size*/ 3, /*pointer*/ 0 });
 
         _layers.addLayer(BarnsleyFernPoints);
 
@@ -56,6 +58,7 @@ public:
     }
 
     void BarnsleyFernAnimation(Point* entity, float deltaTime) {
+        /*
         static int i = 0;
         static float dx = 0.0f;
         constexpr float z = 10.0f;
@@ -115,6 +118,7 @@ public:
                 LOGGER(info, "Barnsley Fern animation completed with size: " << entity->getPositionsData().size());
             }
         }
+        */
     }
 
     void tree() {
@@ -135,10 +139,12 @@ public:
         fractalTreeLines->initShader("mics-assets/shaders/entity_vs.shader", "mics-assets/shaders/entity_fs.shader");
         fractalTreeLines->initMVP();
 
-        fractalTreeLines->setDrawMode(GL_LINE_LOOP);
-        fractalTreeLines->setPositions(positions);
+        fractalTreeLines->setEngineDimension(aux::Dimension::three_d);
+        fractalTreeLines->setDrawMode(aux::DrawMode::line_loop);
+        fractalTreeLines->setDrawArrayCount(positions.size());
 
-        fractalTreeLines->init();
+        fractalTreeLines->dataBuffer({ /*size*/ aux::size(positions), /*data*/ positions.data() });
+        fractalTreeLines->attribute({ /*index*/ 0, /*size*/ 3, /*pointer*/ 0 });
 
         _layers.addLayer(fractalTreeLines);
 

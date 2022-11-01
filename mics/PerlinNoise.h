@@ -1,9 +1,9 @@
 #pragma once
 
 #include "../engine/Line.h"
-#include "../engine/Point.h"
-#include "../engine/Layer.h"
 #include "../engine/Color.h"
+#include "../engine/Layer.h"
+#include "../engine/Point.h"
 
 #include "Camera.h"
 
@@ -41,11 +41,20 @@ public:
         perlinNoisePoints->initShader("mics-assets/shaders/entity_vs.shader", "mics-assets/shaders/entity_fs.shader");
         perlinNoisePoints->initMVP();
 
-        perlinNoisePoints->setDrawMode(GL_POINTS);
-        perlinNoisePoints->setPositions(positions);
-        perlinNoisePoints->setColors(colors);
+        perlinNoisePoints->setEngineDimension(aux::Dimension::three_d);
+        perlinNoisePoints->setDrawMode(aux::DrawMode::points);
+        perlinNoisePoints->setDrawArrayCount(positions.size());
 
-        perlinNoisePoints->init();
+        perlinNoisePoints->useColors(true);
+
+        auto positionsSize = aux::size(positions);
+        auto colorsSize = aux::size(colors);
+        perlinNoisePoints->dataBuffer({ /*size*/ positionsSize + colorsSize });
+
+        perlinNoisePoints->subdataBuffer({ /*offset*/ 0, /*size*/ positionsSize, /*data*/ positions.data() });
+        perlinNoisePoints->attribute({ /*index*/ 0, /*size*/ 3, /*pointer*/ 0 });
+        perlinNoisePoints->subdataBuffer({ /*offset*/ positionsSize, /*size*/ colorsSize, /*data*/ colors.data() });
+        perlinNoisePoints->attribute({ /*index*/ 1, /*size*/ 4, /*pointer*/ (const void*)positionsSize });
 
         _layers.addLayer(perlinNoisePoints);
 
