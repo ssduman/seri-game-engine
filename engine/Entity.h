@@ -49,6 +49,18 @@ public:
         _drawArrayCount = static_cast<int>(drawArrayCount);
     }
 
+    void setPosition(const glm::vec2& position) {
+        _shader.use();
+        _shader.setVec2("u_position", position);
+        _shader.disuse();
+    }
+
+    void setPosition(const glm::vec3& position) {
+        _shader.use();
+        _shader.setVec3("u_position", position);
+        _shader.disuse();
+    }
+
     void setColor(const glm::vec4& color) {
         useColor(true);
         _color = { color };
