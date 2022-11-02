@@ -120,7 +120,16 @@ public:
     }
 
     bool isBottom() {
-        return _row <= 0;
+        int last = 0;
+        for (int x = 0; x < 4; x++) {
+            for (int y = 0; y < 4; y++) {
+                if (_layout[x][y] == 1) {
+                    last = x;
+                }
+            }
+        }
+
+        return _row - last <= 0;
     }
 
     bool isWall() {
