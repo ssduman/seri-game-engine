@@ -15,6 +15,17 @@ namespace aux {
         normal = 3,
     };
 
+    enum class Type : GLenum {
+        byte_type = GL_BYTE,
+        ubyte_type = GL_UNSIGNED_BYTE,
+        short_type = GL_SHORT,
+        ushort_type = GL_UNSIGNED_SHORT,
+        int_type = GL_INT,
+        uint_type = GL_UNSIGNED_INT,
+        float_type = GL_FLOAT,
+        double_type = GL_DOUBLE,
+    };
+
     enum class DrawMode : GLenum {
         points = GL_POINTS,
         lines = GL_LINES,
@@ -60,6 +71,11 @@ namespace aux {
     template<typename T>
     const void* data(const typename std::vector<T>& vec) {
         return vec.data();
+    }
+
+    template<typename T>
+    GLsizei stride(const typename std::vector<T>& vec, GLint size) {
+        return static_cast<GLsizei>(sizeof(T) * size);
     }
 
     template <typename Enumeration>
