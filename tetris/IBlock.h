@@ -41,8 +41,8 @@ public:
         _block->initMVP();
         _block->setDrawMode(aux::DrawMode::triangles);
         _block->setDrawArrayCount(aux::count(_blockPositions));
-        _block->dataBuffer({ /*size*/ aux::size(_blockPositions), /*data*/ _blockPositions.data() });
-        _block->attribute({ /*index*/ 0, /*size*/ 2, /*pointer*/ 0 });
+        _block->dataBuffer({ /*size*/ aux::size(_blockPositions), /*data*/ aux::data(_blockPositions) });
+        _block->attribute({ /*index*/ aux::Index::position, /*size*/ aux::length(_blockPositions), /*pointer*/ 0 });
     }
 
     bool move(BlockMovement blockMovement) {
