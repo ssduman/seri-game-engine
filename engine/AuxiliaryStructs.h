@@ -3,12 +3,19 @@
 #include <GL/glew.h>
 
 namespace aux {
-    enum class Dimension {
+    enum class Dimension : int {
         two_d = 2,
         three_d = 3,
     };
 
-    enum class DrawMode {
+    enum class Index : GLuint {
+        position = 0,
+        color = 1,
+        texture = 2,
+        normal = 3,
+    };
+
+    enum class DrawMode : GLenum {
         points = GL_POINTS,
         lines = GL_LINES,
         line_loop = GL_LINE_LOOP,
@@ -18,22 +25,27 @@ namespace aux {
         triangle_fan = GL_TRIANGLE_FAN,
     };
 
-    enum class Target {
+    enum class Target : GLenum {
         vbo = GL_ARRAY_BUFFER,
         ebo = GL_ELEMENT_ARRAY_BUFFER,
     };
 
-    enum class Usage {
+    enum class Usage : GLenum {
         stream_draw = GL_STREAM_DRAW,
         static_draw = GL_STATIC_DRAW,
         dynamic_draw = GL_DYNAMIC_DRAW,
     };
 
-    enum class Access {
+    enum class Access : GLenum {
         read = GL_READ_ONLY,
         write = GL_WRITE_ONLY,
         read_write = GL_READ_WRITE,
     };
+
+    template<typename T>
+    int length(const typename std::vector<T>& vec) {
+        return static_cast<int>(T::length());
+    }
 
     template<typename T>
     GLsizei count(const typename std::vector<T>& vec) {
@@ -45,8 +57,18 @@ namespace aux {
         return static_cast<GLsizeiptr>(sizeof(T) * vec.size());
     }
 
+    template<typename T>
+    const void* data(const typename std::vector<T>& vec) {
+        return vec.data();
+    }
+
     template <typename Enumeration>
     auto toInt(Enumeration const value) -> typename std::underlying_type<Enumeration>::type {
+        return static_cast<typename std::underlying_type<Enumeration>::type>(value);
+    }
+
+    template <typename Enumeration>
+    auto toUInt(Enumeration const value) -> typename std::underlying_type<Enumeration>::type {
         return static_cast<typename std::underlying_type<Enumeration>::type>(value);
     }
 
@@ -57,6 +79,13 @@ namespace aux {
 
     struct Attribute {
         Attribute() = default;
+
+        Attribute(Index index_, GLint size_, const void* pointer_)
+            :
+            index(toUInt(index_)),
+            size(size_),
+            pointer(pointer_),
+            stride(size * sizeof(GLfloat)) {}
 
         Attribute(GLuint index_, GLint size_, const void* pointer_)
             :

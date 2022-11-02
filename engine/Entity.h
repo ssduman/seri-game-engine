@@ -158,8 +158,8 @@ protected:
     unsigned int _EBO{ 0 };
 
     int _drawArrayCount{ 0 };
-    int _drawMode{ aux::toGLenum(aux::DrawMode::triangles) };
     int _engineDimension{ aux::toInt(aux::Dimension::two_d) };
+    unsigned int _drawMode{ aux::toGLenum(aux::DrawMode::triangles) };
 
 private:
     void generate() {
