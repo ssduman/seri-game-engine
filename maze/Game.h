@@ -55,9 +55,7 @@ public:
             { x, y, 1.0f, 0.0f }, // bottom right
             { w, y, 0.0f, 0.0f }, // bottom left
         };
-        _positionsDataCount = aux::count(positions);
-        dataBuffer({ /*size*/ aux::size(positions), /*data*/ positions.data() });
-        attribute({ /*index*/ 0, /*size*/ 4, /*pointer*/ 0 });
+        setDataBuffer(aux::Index::position, positions);
     }
 
     void render() override {
@@ -66,7 +64,7 @@ public:
 
         glBindVertexArray(_VAO);
         glBindBuffer(GL_ARRAY_BUFFER, _VBO);
-        glDrawArrays(GL_TRIANGLES, 0, _positionsDataCount);
+        glDrawArrays(GL_TRIANGLES, 0, _drawArrayCount);
 
         glBindVertexArray(0);
         glBindTexture(GL_TEXTURE_2D, 0);
@@ -95,6 +93,5 @@ private:
     float _width{ 0.0f };
     float _height{ 0.0f };
     glm::mat4 _projection{};
-    int _positionsDataCount{ 0 };
 
 };

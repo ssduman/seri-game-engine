@@ -39,7 +39,7 @@ public:
         Light light{ camera.get() };
         light.initShader("maze-assets/shaders/entity_vs.shader", "maze-assets/shaders/entity_fs.shader");
         light.initMVP();
-        //light.setPosition({ 0.0f, 10.0f, 8.0f });
+        light.setPosition({ 0.0f, 10.0f, 8.0f });
         light.setDefaultPositions();
         light.setColor({ 1.0f, 1.0f, 1.0f, 1.0f });
         light.init();
