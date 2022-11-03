@@ -41,9 +41,7 @@ public:
         _lines->initMVP();
         _lines->setColor(_lineColor);
         _lines->setDrawMode(aux::DrawMode::lines);
-        _lines->setDrawArrayCount(aux::count(linePos));
-        _lines->dataBuffer({ /*size*/ aux::size(linePos), /*data*/ linePos.data() });
-        _lines->attribute({ /*index*/ 0, /*size*/ 2, /*pointer*/ 0 });
+        _lines->setDataBuffer(aux::Index::position, linePos);
     }
 
     void update() override {}

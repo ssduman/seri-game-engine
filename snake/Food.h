@@ -58,9 +58,7 @@ public:
         _food->initShader(vertexShader, fragmentShader, /*readFromFile*/ false);
         _food->initMVP();
         _food->setColor(_foodColor);
-        _food->setDrawArrayCount(aux::count(_foodPositions));
-        _food->dataBuffer({ /*size*/ aux::size(_foodPositions), /*data*/ _foodPositions.data() });
-        _food->attribute({ /*index*/ 0, /*size*/ 2, /*pointer*/ 0 });
+        _food->setDataBuffer(aux::Index::position, _foodPositions);
         const std::vector<GLuint> indices{ 0, 1, 3, 1, 2, 3 };
         _food->dataBuffer({ aux::Target::ebo, aux::size(indices), indices.data() });
     }

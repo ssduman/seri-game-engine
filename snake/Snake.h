@@ -114,9 +114,7 @@ private:
         else {
             snakeBody->setColor(_snakeBodyColor);
         }
-        snakeBody->setDrawArrayCount(aux::count(bodyPositions));
-        snakeBody->dataBuffer({ /*size*/ aux::size(bodyPositions), /*data*/ bodyPositions.data() });
-        snakeBody->attribute({ /*index*/ 0, /*size*/ 2, /*pointer*/ 0 });
+        snakeBody->setDataBuffer(aux::Index::position, bodyPositions);
         const std::vector<GLuint> indices{ 0, 1, 3, 1, 2, 3 };
         snakeBody->dataBuffer({ aux::Target::ebo, aux::size(indices), indices.data() });
 
