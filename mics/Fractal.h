@@ -44,13 +44,10 @@ public:
         BarnsleyFernPoints->initShader("mics-assets/shaders/entity_vs.shader", "mics-assets/shaders/entity_fs.shader");
         BarnsleyFernPoints->initMVP();
 
-        BarnsleyFernPoints->setEngineDimension(aux::Dimension::three_d);
         BarnsleyFernPoints->setDrawMode(aux::DrawMode::points);
-        BarnsleyFernPoints->setDrawArrayCount(positions.size());
         BarnsleyFernPoints->setColor({ 0.0f, 0.6f, 0.16f, 1.0f });
 
-        BarnsleyFernPoints->dataBuffer({ /*size*/ aux::size(positions), /*data*/ positions.data() });
-        BarnsleyFernPoints->attribute({ /*index*/ 0, /*size*/ 3, /*pointer*/ 0 });
+        BarnsleyFernPoints->setDataBuffer(aux::Index::position, positions);
 
         _layers.addLayer(BarnsleyFernPoints);
 
@@ -141,10 +138,8 @@ public:
 
         fractalTreeLines->setEngineDimension(aux::Dimension::three_d);
         fractalTreeLines->setDrawMode(aux::DrawMode::line_loop);
-        fractalTreeLines->setDrawArrayCount(positions.size());
 
-        fractalTreeLines->dataBuffer({ /*size*/ aux::size(positions), /*data*/ positions.data() });
-        fractalTreeLines->attribute({ /*index*/ 0, /*size*/ 3, /*pointer*/ 0 });
+        fractalTreeLines->setDataBuffer(aux::Index::position, positions);
 
         _layers.addLayer(fractalTreeLines);
 

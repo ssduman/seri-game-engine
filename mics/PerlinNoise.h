@@ -49,12 +49,10 @@ public:
 
         auto positionsSize = aux::size(positions);
         auto colorsSize = aux::size(colors);
-        perlinNoisePoints->dataBuffer({ /*size*/ positionsSize + colorsSize });
+        perlinNoisePoints->reserveDataBuffer(positionsSize + colorsSize);
 
-        perlinNoisePoints->subdataBuffer({ /*offset*/ 0, /*size*/ positionsSize, /*data*/ positions.data() });
-        perlinNoisePoints->attribute({ /*index*/ 0, /*size*/ 3, /*pointer*/ 0 });
-        perlinNoisePoints->subdataBuffer({ /*offset*/ positionsSize, /*size*/ colorsSize, /*data*/ colors.data() });
-        perlinNoisePoints->attribute({ /*index*/ 1, /*size*/ 4, /*pointer*/ (const void*)positionsSize });
+        perlinNoisePoints->setSubDataBuffer(aux::Index::position, positions, 0);
+        perlinNoisePoints->setSubDataBuffer(aux::Index::color, colors, positionsSize);
 
         _layers.addLayer(perlinNoisePoints);
 
