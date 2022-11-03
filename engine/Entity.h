@@ -29,6 +29,10 @@ public:
         _shader.init(vsCodePath, fsCodePath, readFromFile);
     }
 
+    virtual void initTexture(const std::string& texturePath) {
+        _texture.init(texturePath);
+    }
+
     virtual void initMVP() {
         _shader.use();
         _shader.setMat4("u_model", glm::mat4{ 1.0f });
@@ -37,8 +41,24 @@ public:
         _shader.disuse();
     }
 
-    void setEngineDimension(aux::Dimension dimension) {
-        _engineDimension = aux::toInt(dimension);
+    void reserveDataBuffer(GLsizeiptr size) {
+        dataBuffer({ size });
+    }
+
+    template<typename T>
+    void setDataBuffer(aux::Index index, const typename std::vector<T>& vec, GLintptr offset = 0) {
+        indexCheck(index, vec);
+
+        dataBuffer({ aux::size(vec), aux::data(vec) });
+        attribute({ index, aux::length(vec), (const void*)offset });
+    }
+
+    template<typename T>
+    void setSubDataBuffer(aux::Index index, const typename std::vector<T>& vec, GLintptr offset) {
+        indexCheck(index, vec);
+
+        subdataBuffer({ offset, aux::size(vec), aux::data(vec) });
+        attribute({ index, aux::length(vec), (const void*)offset });
     }
 
     void setDrawMode(aux::DrawMode drawMode) {
@@ -47,6 +67,10 @@ public:
 
     void setDrawArrayCount(size_t drawArrayCount) {
         _drawArrayCount = static_cast<int>(drawArrayCount);
+    }
+
+    void setEngineDimension(aux::Dimension dimension) {
+        _engineDimension = aux::toInt(dimension);
     }
 
     void setPosition(const glm::vec2& position) {
@@ -125,6 +149,19 @@ public:
     void update() override {
         if (_camera) {
             getShader().setMat4("u_view", _camera->getView());
+        }
+    }
+
+    template<typename T>
+    void indexCheck(aux::Index index, const typename std::vector<T>& vec) {
+        if (aux::Index::position == index) {
+            _drawArrayCount = aux::count(vec);
+        }
+        if (aux::Index::color == index) {
+            useColors(true);
+        }
+        if (aux::Index::texture == index) {
+            useTexture(true);
         }
     }
 

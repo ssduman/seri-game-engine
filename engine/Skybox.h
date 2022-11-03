@@ -68,9 +68,7 @@ public:
             { -1.0f, -1.0f, 1.0f },
             { 1.0f, -1.0f, 1.0f },
         };
-        _positionsDataCount = aux::count(positions);
-        dataBuffer({ /*size*/ aux::size(positions), /*data*/ positions.data() });
-        attribute({ /*index*/ 0, /*size*/ 3, /*pointer*/ 0 });
+        setDataBuffer(aux::Index::position, positions);
     }
 
     void setFaces(const std::vector<std::string>& faces) {
@@ -121,14 +119,13 @@ public:
         glBindVertexArray(_VAO);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_CUBE_MAP, _tex);
-        glDrawArrays(_drawMode, 0, _positionsDataCount);
+        glDrawArrays(_drawMode, 0, _drawArrayCount);
         glBindVertexArray(0);
         glDepthFunc(GL_LESS);
     }
 
 private:
     unsigned int _tex{ 0 };
-    int _positionsDataCount{ 0 };
     std::vector<std::string> _faces;
 
 };

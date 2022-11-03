@@ -64,6 +64,11 @@ namespace aux {
     }
 
     template<typename T>
+    GLsizei stride(const typename std::vector<T>& vec) {
+        return static_cast<GLsizei>(sizeof(T) * aux::length(vec));
+    }
+
+    template<typename T>
     GLsizeiptr size(const typename std::vector<T>& vec) {
         return static_cast<GLsizeiptr>(sizeof(T) * vec.size());
     }
@@ -71,11 +76,6 @@ namespace aux {
     template<typename T>
     const void* data(const typename std::vector<T>& vec) {
         return vec.data();
-    }
-
-    template<typename T>
-    GLsizei stride(const typename std::vector<T>& vec, GLint size) {
-        return static_cast<GLsizei>(sizeof(T) * size);
     }
 
     template <typename Enumeration>
@@ -94,21 +94,12 @@ namespace aux {
     }
 
     struct Attribute {
-        Attribute() = default;
-
         Attribute(Index index_, GLint size_, const void* pointer_)
             :
             index(toUInt(index_)),
             size(size_),
-            pointer(pointer_),
-            stride(size * sizeof(GLfloat)) {}
-
-        Attribute(GLuint index_, GLint size_, const void* pointer_)
-            :
-            index(index_),
-            size(size_),
-            pointer(pointer_),
-            stride(size * sizeof(GLfloat)) {}
+            stride(size * sizeof(GLfloat)),
+            pointer(pointer_) {}
 
         GLuint index = 0;
         GLint size = 0;
@@ -119,8 +110,6 @@ namespace aux {
     };
 
     struct DataBuffer {
-        DataBuffer() = default;
-
         DataBuffer(GLsizeiptr size_)
             :
             size(size_) {}
@@ -150,8 +139,6 @@ namespace aux {
     };
 
     struct SubDataBuffer {
-        SubDataBuffer() = default;
-
         SubDataBuffer(GLintptr offset_, GLsizeiptr size_, const void* data_)
             :
             offset(offset_),
@@ -172,8 +159,6 @@ namespace aux {
     };
 
     struct MapBuffer {
-        MapBuffer() = default;
-
         MapBuffer(size_t size_, const void* data_)
             :
             size(size_),

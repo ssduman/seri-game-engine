@@ -63,18 +63,13 @@ public:
             { -0.5f, 0.5f, 0.5f },
             { -0.5f, 0.5f, -0.5f },
         };
-        _positionsDataCount = aux::count(positions);
-        dataBuffer({ /*size*/ aux::size(positions), /*data*/ positions.data() });
-        attribute({ /*index*/ 0, /*size*/ 3, /*pointer*/ 0 });
+        setDataBuffer(aux::Index::position, positions);
     }
 
     void render() override {
         _shader.use();
         glBindVertexArray(_VAO);
-        glDrawArrays(_drawMode, 0, _positionsDataCount);
+        glDrawArrays(_drawMode, 0, _drawArrayCount);
     }
-
-private:
-    int _positionsDataCount{ 0 };
 
 };
