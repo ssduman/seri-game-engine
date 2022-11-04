@@ -3,7 +3,6 @@
 #include "../engine/Entity.h"
 #include "../engine/Logger.h"
 #include "../engine/Polygon.h"
-#include "../engine/Rectangle.h"
 
 #include "Camera.h"
 #include "BlockMovement.h"
@@ -39,6 +38,7 @@ public:
         _block = new Polygon(_camera);
         _block->initShader(vertexShader, fragmentShader, /*readFromFile*/ false);
         _block->initMVP();
+        _block->setColor(_blockColor);
         _block->setDrawMode(aux::DrawMode::triangles);
         _block->setDataBuffer(aux::Index::position, _blockPositions);
     }
@@ -169,6 +169,7 @@ public:
 protected:
     TetrisProperties& _tetrisProperties;
     Entity* _block{ nullptr };
+    glm::vec4 _blockColor{};
     glm::ivec2 _blockPosition{};
     std::string _blockIdentifier;
     std::vector<glm::vec2> _blockPositions;

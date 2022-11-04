@@ -12,6 +12,7 @@ public:
             { 0, 1, 1, 0 },
             { 0, 0, 0, 0 },
         };
+        _blockColor = { 0.95f, 0.0f, 0.0f, 1.0f };
 
         LOGGER(info, "block Z init succeeded");
     }
