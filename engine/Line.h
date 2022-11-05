@@ -6,6 +6,7 @@ class Line : public Entity {
 public:
     Line(ICamera* camera) : Entity(camera) {
         _entityType = EntityType::line;
+        setDrawMode(aux::DrawMode::line_loop);
     }
 
     ~Line() override {

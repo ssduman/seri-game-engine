@@ -6,6 +6,7 @@ class Cube : public Entity {
 public:
     Cube(ICamera* camera) : Entity(camera) {
         _entityType = EntityType::cube;
+        setDrawMode(aux::DrawMode::triangles);
     }
 
     ~Cube() override {

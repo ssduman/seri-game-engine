@@ -6,6 +6,7 @@ class Triangle : public Entity {
 public:
     Triangle(ICamera* camera) : Entity(camera) {
         _entityType = EntityType::triangle;
+        setDrawMode(aux::DrawMode::triangles);
     }
 
     ~Triangle() override {

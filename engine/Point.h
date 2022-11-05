@@ -6,6 +6,7 @@ class Point : public Entity {
 public:
     Point(ICamera* camera) : Entity(camera) {
         _entityType = EntityType::point;
+        setDrawMode(aux::DrawMode::points);
     }
 
     ~Point() override {
