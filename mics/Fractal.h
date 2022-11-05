@@ -43,9 +43,7 @@ public:
         Point* BarnsleyFernPoints = new Point(_camera);
         BarnsleyFernPoints->initShader("mics-assets/shaders/entity_vs.shader", "mics-assets/shaders/entity_fs.shader");
         BarnsleyFernPoints->initMVP();
-
         BarnsleyFernPoints->setColor({ 0.0f, 0.6f, 0.16f, 1.0f });
-
         BarnsleyFernPoints->setDataBuffer(aux::Index::position, positions);
 
         _layers.addLayer(BarnsleyFernPoints);
@@ -133,9 +131,6 @@ public:
         Line* fractalTreeLines = new Line(_camera);
         fractalTreeLines->initShader("mics-assets/shaders/entity_vs.shader", "mics-assets/shaders/entity_fs.shader");
         fractalTreeLines->initMVP();
-
-        fractalTreeLines->setEngineDimension(aux::Dimension::three_d);
-
         fractalTreeLines->setDataBuffer(aux::Index::position, positions);
 
         _layers.addLayer(fractalTreeLines);

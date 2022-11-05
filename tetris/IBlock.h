@@ -2,7 +2,7 @@
 
 #include "../engine/Entity.h"
 #include "../engine/Logger.h"
-#include "../engine/Polygon.h"
+#include "../engine/Triangle.h"
 
 #include "Camera.h"
 #include "BlockMovement.h"
@@ -35,11 +35,10 @@ public:
     virtual void generateBlock() {
         generateBlockPositions();
 
-        _block = new Polygon(_camera);
+        _block = new Triangle(_camera);
         _block->initShader(vertexShader, fragmentShader, /*readFromFile*/ false);
         _block->initMVP();
         _block->setColor(_blockColor);
-        _block->setDrawMode(aux::DrawMode::triangles);
         _block->setDataBuffer(aux::Index::position, _blockPositions);
     }
 
