@@ -10,6 +10,7 @@
 #include "TetrisProperties.h"
 
 #include <vector>
+#include <algorithm>
 
 class IBlock : public Entity {
 public:
@@ -130,7 +131,18 @@ public:
     }
 
     bool isWall() {
-        return _col < 0 || _col > _tetrisProperties.totalCols;
+        int lastMin = 4;
+        int lastMax = 0;
+        for (int x = 0; x < 4; x++) {
+            for (int y = 0; y < 4; y++) {
+                if (_layout[x][y] == 1) {
+                    lastMin = std::min(lastMin, y);
+                    lastMax = std::max(lastMax, y);
+                }
+            }
+        }
+
+        return _col + lastMin <= 0 || _col + lastMax + 1 >= _tetrisProperties.totalCols;
     }
 
     std::vector<glm::vec2> createSquarePosition(const int x, const int y) {
