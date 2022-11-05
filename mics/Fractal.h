@@ -44,7 +44,6 @@ public:
         BarnsleyFernPoints->initShader("mics-assets/shaders/entity_vs.shader", "mics-assets/shaders/entity_fs.shader");
         BarnsleyFernPoints->initMVP();
 
-        BarnsleyFernPoints->setDrawMode(aux::DrawMode::points);
         BarnsleyFernPoints->setColor({ 0.0f, 0.6f, 0.16f, 1.0f });
 
         BarnsleyFernPoints->setDataBuffer(aux::Index::position, positions);
@@ -67,7 +66,6 @@ public:
             entity->initShader("mics-assets/shaders/entity_vs.shader", "mics-assets/shaders/entity_fs.shader");
             entity->initMVP();
 
-            entity->setDrawMode(GL_POINTS);
             entity->reserveTotalDataCount(iteration * 3 * sizeof(GLfloat));
             entity->setColor({ 0.0f, 0.6f, 0.16f, 1.0f });
 
@@ -137,7 +135,6 @@ public:
         fractalTreeLines->initMVP();
 
         fractalTreeLines->setEngineDimension(aux::Dimension::three_d);
-        fractalTreeLines->setDrawMode(aux::DrawMode::line_loop);
 
         fractalTreeLines->setDataBuffer(aux::Index::position, positions);
 

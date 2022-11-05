@@ -28,7 +28,6 @@ public:
 
         std::vector<glm::vec3> positions{};
         std::vector<glm::vec4> colors{};
-
         for (int x = 0; x < _pixels.size(); x++) {
             for (int y = 0; y < _pixels[0].size(); y++) {
                 auto color = _pixels[x][y];
@@ -36,21 +35,14 @@ public:
                 colors.emplace_back(color.r, color.g, 1.0f, 1.0f);
             }
         }
+        auto positionsSize = aux::size(positions);
+        auto colorsSize = aux::size(colors);
 
         Point* perlinNoisePoints = new Point(_camera);
         perlinNoisePoints->initShader("mics-assets/shaders/entity_vs.shader", "mics-assets/shaders/entity_fs.shader");
         perlinNoisePoints->initMVP();
 
-        perlinNoisePoints->setEngineDimension(aux::Dimension::three_d);
-        perlinNoisePoints->setDrawMode(aux::DrawMode::points);
-        perlinNoisePoints->setDrawArrayCount(positions.size());
-
-        perlinNoisePoints->useColors(true);
-
-        auto positionsSize = aux::size(positions);
-        auto colorsSize = aux::size(colors);
         perlinNoisePoints->reserveDataBuffer(positionsSize + colorsSize);
-
         perlinNoisePoints->setSubDataBuffer(aux::Index::position, positions, 0);
         perlinNoisePoints->setSubDataBuffer(aux::Index::color, colors, positionsSize);
 

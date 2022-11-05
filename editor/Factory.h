@@ -50,8 +50,6 @@ public:
                 point->initShader("editor-assets/shaders/entity_vs.shader", "editor-assets/shaders/entity_fs.shader");
                 point->initMVP();
 
-                point->setDrawMode(aux::DrawMode::points);
-
                 point->reserveDataBuffer(positionsSize + colorsSize);
                 point->setSubDataBuffer(aux::Index::position, positions, 0);
                 point->setSubDataBuffer(aux::Index::color, colors, positionsSize);
@@ -71,8 +69,6 @@ public:
                 Line* line = new Line(camera);
                 line->initShader("editor-assets/shaders/entity_vs.shader", "editor-assets/shaders/entity_fs.shader");
                 line->initMVP();
-
-                line->setDrawMode(aux::DrawMode::line_loop);
 
                 line->reserveDataBuffer(positionsSize + colorsSize);
                 line->setSubDataBuffer(aux::Index::position, positions, 0);
@@ -97,8 +93,6 @@ public:
                 triangle->initTexture("editor-assets/textures/passage.png");
                 triangle->initMVP();
 
-                triangle->setDrawMode(aux::DrawMode::triangles);
-
                 triangle->reserveDataBuffer(positionsSize + colorsSize + texturePositionsSize);
                 triangle->setSubDataBuffer(aux::Index::position, positions, 0);
                 triangle->setSubDataBuffer(aux::Index::color, colors, positionsSize);
@@ -120,8 +114,6 @@ public:
                 rectangle->initShader("editor-assets/shaders/entity_vs.shader", "editor-assets/shaders/entity_fs.shader");
                 rectangle->initTexture("editor-assets/textures/wall1.png");
                 rectangle->initMVP();
-
-                rectangle->setDrawMode(aux::DrawMode::triangles);
 
                 const std::vector<GLuint> indices{ 0, 1, 3, 1, 2, 3 };
                 rectangle->dataBuffer({ aux::Target::ebo, aux::size(indices), indices.data() });
@@ -159,7 +151,6 @@ public:
                 circle->initMVP();
 
                 circle->setColor(randomColor());
-                circle->setDrawMode(aux::DrawMode::triangle_fan);
 
                 circle->reserveDataBuffer(positionsSize + colorsSize + texturePositionsSize);
                 circle->setSubDataBuffer(aux::Index::position, positions, 0);
@@ -268,7 +259,6 @@ public:
                 cube->initMVP();
 
                 cube->setColor(randomColor());
-                cube->setDrawMode(aux::DrawMode::triangles);
 
                 cube->reserveDataBuffer(positionsSize + texturePositionsSize);
                 cube->setSubDataBuffer(aux::Index::position, positions, 0);
@@ -291,8 +281,6 @@ public:
                 Polygon* polygon = new Polygon(camera);
                 polygon->initShader("editor-assets/shaders/entity_vs.shader", "editor-assets/shaders/entity_fs.shader");
                 polygon->initMVP();
-
-                polygon->setDrawMode(aux::DrawMode::triangle_fan);
 
                 polygon->setDataBuffer(aux::Index::position, positions);
 
