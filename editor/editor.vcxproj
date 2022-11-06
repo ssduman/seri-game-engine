@@ -59,12 +59,12 @@
       <PreprocessorDefinitions>STB_IMAGE_IMPLEMENTATION;GLEW_STATIC;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)libraries\glm;$(SolutionDir)libraries\freetype;$(SolutionDir)libraries\stb_image;$(SolutionDir)libraries\imgui-1.88;$(SolutionDir)libraries\glew-2.1.0\include;$(SolutionDir)libraries\glfw-3.3.7.bin.WIN64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)libraries\glm;$(SolutionDir)libraries\freetype;$(SolutionDir)libraries\stb_image;$(SolutionDir)libraries\imgui;$(SolutionDir)libraries\glew\include;$(SolutionDir)libraries\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)libraries\freetype\win64;$(SolutionDir)libraries\glew-2.1.0\lib\Release\x64;$(SolutionDir)libraries\glfw-3.3.7.bin.WIN64\lib-vc2022</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)libraries\freetype\win64;$(SolutionDir)libraries\glew\lib\Release\x64;$(SolutionDir)libraries\glfw\lib-vc2022</AdditionalLibraryDirectories>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;User32.lib;Gdi32.lib;Shell32.lib;glew32s.lib;freetype.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
@@ -81,14 +81,14 @@ xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win64\freetype.dll" "$(So
       <PreprocessorDefinitions>STB_IMAGE_IMPLEMENTATION;GLEW_STATIC;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)libraries\glm;$(SolutionDir)libraries\freetype;$(SolutionDir)libraries\stb_image;$(SolutionDir)libraries\imgui-1.88;$(SolutionDir)libraries\glew-2.1.0\include;$(SolutionDir)libraries\glfw-3.3.7.bin.WIN64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)libraries\glm;$(SolutionDir)libraries\freetype;$(SolutionDir)libraries\stb_image;$(SolutionDir)libraries\imgui;$(SolutionDir)libraries\glew\include;$(SolutionDir)libraries\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)libraries\freetype\win64;$(SolutionDir)libraries\glew-2.1.0\lib\Release\x64;$(SolutionDir)libraries\glfw-3.3.7.bin.WIN64\lib-vc2022</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)libraries\freetype\win64;$(SolutionDir)libraries\glew\lib\Release\x64;$(SolutionDir)libraries\glfw\lib-vc2022</AdditionalLibraryDirectories>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;User32.lib;Gdi32.lib;Shell32.lib;glew32s.lib;freetype.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
@@ -97,25 +97,25 @@ xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win64\freetype.dll" "$(So
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\libraries\imgui-1.88\imgui.cpp" />
-    <ClCompile Include="..\libraries\imgui-1.88\imgui_demo.cpp" />
-    <ClCompile Include="..\libraries\imgui-1.88\imgui_draw.cpp" />
-    <ClCompile Include="..\libraries\imgui-1.88\imgui_impl_glfw.cpp" />
-    <ClCompile Include="..\libraries\imgui-1.88\imgui_impl_opengl3.cpp" />
-    <ClCompile Include="..\libraries\imgui-1.88\imgui_tables.cpp" />
-    <ClCompile Include="..\libraries\imgui-1.88\imgui_widgets.cpp" />
+    <ClCompile Include="..\libraries\imgui\backends\imgui_impl_glfw.cpp" />
+    <ClCompile Include="..\libraries\imgui\backends\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="..\libraries\imgui\imgui.cpp" />
+    <ClCompile Include="..\libraries\imgui\imgui_demo.cpp" />
+    <ClCompile Include="..\libraries\imgui\imgui_draw.cpp" />
+    <ClCompile Include="..\libraries\imgui\imgui_tables.cpp" />
+    <ClCompile Include="..\libraries\imgui\imgui_widgets.cpp" />
     <ClCompile Include="editor.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\libraries\imgui-1.88\imconfig.h" />
-    <ClInclude Include="..\libraries\imgui-1.88\imgui.h" />
-    <ClInclude Include="..\libraries\imgui-1.88\imgui_impl_glfw.h" />
-    <ClInclude Include="..\libraries\imgui-1.88\imgui_impl_opengl3.h" />
-    <ClInclude Include="..\libraries\imgui-1.88\imgui_impl_opengl3_loader.h" />
-    <ClInclude Include="..\libraries\imgui-1.88\imgui_internal.h" />
-    <ClInclude Include="..\libraries\imgui-1.88\imstb_rectpack.h" />
-    <ClInclude Include="..\libraries\imgui-1.88\imstb_textedit.h" />
-    <ClInclude Include="..\libraries\imgui-1.88\imstb_truetype.h" />
+    <ClInclude Include="..\libraries\imgui\backends\imgui_impl_glfw.h" />
+    <ClInclude Include="..\libraries\imgui\backends\imgui_impl_opengl3.h" />
+    <ClInclude Include="..\libraries\imgui\backends\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="..\libraries\imgui\imconfig.h" />
+    <ClInclude Include="..\libraries\imgui\imgui.h" />
+    <ClInclude Include="..\libraries\imgui\imgui_internal.h" />
+    <ClInclude Include="..\libraries\imgui\imstb_rectpack.h" />
+    <ClInclude Include="..\libraries\imgui\imstb_textedit.h" />
+    <ClInclude Include="..\libraries\imgui\imstb_truetype.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Control.h" />
     <ClInclude Include="Factory.h" />

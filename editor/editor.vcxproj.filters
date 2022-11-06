@@ -23,30 +23,33 @@
     <Filter Include="GUI\ImGui">
       <UniqueIdentifier>{1279f237-ccde-4c0f-9f22-64f262d555de}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GUI\ImGui\backends">
+      <UniqueIdentifier>{69e68498-9980-470e-86e3-60361f651f28}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="editor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\libraries\imgui-1.88\imgui.cpp">
+    <ClCompile Include="..\libraries\imgui\backends\imgui_impl_glfw.cpp">
+      <Filter>GUI\ImGui\backends</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libraries\imgui\backends\imgui_impl_opengl3.cpp">
+      <Filter>GUI\ImGui\backends</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libraries\imgui\imgui.cpp">
       <Filter>GUI\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="..\libraries\imgui-1.88\imgui_demo.cpp">
+    <ClCompile Include="..\libraries\imgui\imgui_demo.cpp">
       <Filter>GUI\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="..\libraries\imgui-1.88\imgui_draw.cpp">
+    <ClCompile Include="..\libraries\imgui\imgui_draw.cpp">
       <Filter>GUI\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="..\libraries\imgui-1.88\imgui_impl_glfw.cpp">
+    <ClCompile Include="..\libraries\imgui\imgui_tables.cpp">
       <Filter>GUI\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="..\libraries\imgui-1.88\imgui_impl_opengl3.cpp">
-      <Filter>GUI\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\libraries\imgui-1.88\imgui_tables.cpp">
-      <Filter>GUI\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\libraries\imgui-1.88\imgui_widgets.cpp">
+    <ClCompile Include="..\libraries\imgui\imgui_widgets.cpp">
       <Filter>GUI\ImGui</Filter>
     </ClCompile>
   </ItemGroup>
@@ -66,31 +69,31 @@
     <ClInclude Include="Runner.h">
       <Filter>Runner</Filter>
     </ClInclude>
-    <ClInclude Include="..\libraries\imgui-1.88\imconfig.h">
+    <ClInclude Include="..\libraries\imgui\backends\imgui_impl_glfw.h">
+      <Filter>GUI\ImGui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libraries\imgui\backends\imgui_impl_opengl3.h">
+      <Filter>GUI\ImGui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libraries\imgui\backends\imgui_impl_opengl3_loader.h">
+      <Filter>GUI\ImGui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libraries\imgui\imconfig.h">
       <Filter>GUI\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="..\libraries\imgui-1.88\imgui.h">
+    <ClInclude Include="..\libraries\imgui\imgui.h">
       <Filter>GUI\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="..\libraries\imgui-1.88\imgui_impl_glfw.h">
+    <ClInclude Include="..\libraries\imgui\imgui_internal.h">
       <Filter>GUI\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="..\libraries\imgui-1.88\imgui_impl_opengl3.h">
+    <ClInclude Include="..\libraries\imgui\imstb_rectpack.h">
       <Filter>GUI\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="..\libraries\imgui-1.88\imgui_impl_opengl3_loader.h">
+    <ClInclude Include="..\libraries\imgui\imstb_textedit.h">
       <Filter>GUI\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="..\libraries\imgui-1.88\imgui_internal.h">
-      <Filter>GUI\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\libraries\imgui-1.88\imstb_rectpack.h">
-      <Filter>GUI\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\libraries\imgui-1.88\imstb_textedit.h">
-      <Filter>GUI\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\libraries\imgui-1.88\imstb_truetype.h">
+    <ClInclude Include="..\libraries\imgui\imstb_truetype.h">
       <Filter>GUI\ImGui</Filter>
     </ClInclude>
   </ItemGroup>

@@ -8,8 +8,8 @@ add_compile_definitions(GLEW_STATIC)
 
 link_directories(
     libraries/freetype/win64
-    libraries/glew-2.1.0/lib/Release/x64
-    libraries/glfw-3.3.7.bin.WIN64/lib-vc2022
+    libraries/glew/lib/Release/x64
+    libraries/glfw/lib-vc2022
 )
 
 link_libraries(
@@ -24,21 +24,21 @@ include_directories(${PROJECT_NAME}
     libraries/glm
     libraries/freetype
     libraries/stb_image
-    libraries/imgui-1.88
-    libraries/glew-2.1.0/include
-    libraries/glfw-3.3.7.bin.WIN64/include
+    libraries/imgui
+    libraries/glew/include
+    libraries/glfw/include
 )
 
 add_executable(${PROJECT_NAME}
     src/main.cpp
     src/Texture.cpp
-    libraries/imgui-1.88/imgui.cpp
-    libraries/imgui-1.88/imgui_demo.cpp
-    libraries/imgui-1.88/imgui_draw.cpp
-    libraries/imgui-1.88/imgui_impl_glfw.cpp
-    libraries/imgui-1.88/imgui_impl_opengl3.cpp
-    libraries/imgui-1.88/imgui_tables.cpp
-    libraries/imgui-1.88/imgui_widgets.cpp
+    libraries/imgui/imgui.cpp
+    libraries/imgui/imgui_demo.cpp
+    libraries/imgui/imgui_draw.cpp
+    libraries/imgui/imgui_impl_glfw.cpp
+    libraries/imgui/imgui_impl_opengl3.cpp
+    libraries/imgui/imgui_tables.cpp
+    libraries/imgui/imgui_widgets.cpp
 )
 
 file(COPY src/fonts DESTINATION ${CMAKE_BINARY_DIR})

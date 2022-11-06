@@ -58,12 +58,12 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)libraries\glm;$(SolutionDir)libraries\freetype;$(SolutionDir)libraries\stb_image;$(SolutionDir)libraries\imgui-1.88;$(SolutionDir)libraries\glew-2.1.0\include;$(SolutionDir)libraries\glfw-3.3.7.bin.WIN64\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)libraries\glm;$(SolutionDir)libraries\freetype;$(SolutionDir)libraries\stb_image;$(SolutionDir)libraries\imgui;$(SolutionDir)libraries\glew\include;$(SolutionDir)libraries\glfw\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>$(SolutionDir)libraries\freetype\win64;$(SolutionDir)libraries\glew-2.1.0\lib\Release\x64;$(SolutionDir)libraries\glfw-3.3.7.bin.WIN64\lib-vc2022</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)libraries\freetype\win64;$(SolutionDir)libraries\glew\lib\Release\x64;$(SolutionDir)libraries\glfw\lib-vc2022</AdditionalLibraryDirectories>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;User32.lib;Gdi32.lib;Shell32.lib;glew32s.lib;freetype.lib</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
@@ -84,7 +84,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)libraries\glm;$(SolutionDir)libraries\freetype;$(SolutionDir)libraries\stb_image;$(SolutionDir)libraries\imgui-1.88;$(SolutionDir)libraries\glew-2.1.0\include;$(SolutionDir)libraries\glfw-3.3.7.bin.WIN64\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)libraries\glm;$(SolutionDir)libraries\freetype;$(SolutionDir)libraries\stb_image;$(SolutionDir)libraries\imgui;$(SolutionDir)libraries\glew\include;$(SolutionDir)libraries\glfw\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -92,7 +92,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;User32.lib;Gdi32.lib;Shell32.lib;glew32s.lib;freetype.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)libraries\freetype\win64;$(SolutionDir)libraries\glew-2.1.0\lib\Release\x64;$(SolutionDir)libraries\glfw-3.3.7.bin.WIN64\lib-vc2022</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)libraries\freetype\win64;$(SolutionDir)libraries\glew\lib\Release\x64;$(SolutionDir)libraries\glfw\lib-vc2022</AdditionalLibraryDirectories>
     </Link>
     <PreBuildEvent>
       <Command>
@@ -123,6 +123,7 @@
     <ClInclude Include="LogManager.h" />
     <ClInclude Include="Mat3.h" />
     <ClInclude Include="Mat4.h" />
+    <ClInclude Include="Model.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="Polygon.h" />
