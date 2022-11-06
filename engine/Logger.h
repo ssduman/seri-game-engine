@@ -8,16 +8,15 @@
 
 enum class LogLevel {
     none,
-    fatal,
     error,
     warning,
     info,
     debug,
-    verbose
+    verbose,
 };
 
 struct LoggerProperties {
-    LogLevel level = LogLevel::error;
+    LogLevel level = LogLevel::info;
 };
 
 #define LOGGER_IMPL(lvl, msg) std::cout \
@@ -41,8 +40,6 @@ inline std::string toString(LogLevel lvl) {
     switch (lvl) {
         case LogLevel::none:
             return "none";
-        case LogLevel::fatal:
-            return "fatal";
         case LogLevel::error:
             return "error";
         case LogLevel::warning:
@@ -57,5 +54,3 @@ inline std::string toString(LogLevel lvl) {
             return "unknown";
     }
 }
-
-//inline LoggerProperties loggerProperties;
