@@ -67,6 +67,9 @@
     <Filter Include="Renderer">
       <UniqueIdentifier>{bde9b189-f064-46bd-b12f-79b88d42e98e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Model">
+      <UniqueIdentifier>{3bbe2dd1-fe19-4118-854a-0ae894ec328f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Light.h">
@@ -179,6 +182,9 @@
     </ClInclude>
     <ClInclude Include="AuxiliaryStructs.h">
       <Filter>Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Model</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
