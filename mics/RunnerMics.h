@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../engine/Model.h"
 #include "../engine/IRunner.h"
 
 #include "Camera.h"
@@ -44,6 +45,9 @@ public:
         Point* BarnsleyFernPoints = new Point(camera.get());
 
         LOGGER(info, "starting mics loop");
+
+        Model model{};
+        model.load("mics-assets/models/spider.obj");
 
         while (!glfwWindowShouldClose(windowManager->getWindow())) {
             glClearColor(0.0f, 0.0f, 0.0f, 1.0f);

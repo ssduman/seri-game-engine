@@ -109,6 +109,9 @@ StyleCopReport.xml
 *.svclog
 *.scc
 
+# models
+!mics/mics-assets/models/*.obj
+
 # Chutzpah Test files
 _Chutzpah*
 
