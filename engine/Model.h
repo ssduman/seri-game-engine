@@ -1,27 +1,37 @@
 #pragma once
 
+#include "Mesh.h"
+#include "Entity.h"
 #include "Logger.h"
 
 #include <assimp/scene.h>
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 
-class Model {
-public:
-    Model() = default;
+#include <vector>
 
-    ~Model() = default;
+class Model : Entity {
+public:
+    Model(ICamera* camera) : Entity(camera) {};
+
+    ~Model() override = default;
+
+    void init() override {}
+
+    void update() override {}
+
+    void render() override {}
 
     void load(const std::string& modelPath) {
         Assimp::Importer importer;
 
-        const aiScene* scene = importer.ReadFile(modelPath,
-              aiProcess_CalcTangentSpace |
-              aiProcess_Triangulate |
-              aiProcess_JoinIdenticalVertices |
-              aiProcess_SortByPType
+        const aiScene* scene = importer.ReadFile(
+            modelPath,
+            aiProcess_CalcTangentSpace |
+            aiProcess_Triangulate |
+            aiProcess_JoinIdenticalVertices |
+            aiProcess_SortByPType
         );
-
         if (!scene) {
             LOGGER(error, "read model path '" << modelPath << "' failed: " << importer.GetErrorString());
             return;
@@ -38,5 +48,6 @@ public:
     }
 
 private:
+    std::vector<Mesh> _meshes;
 
 };

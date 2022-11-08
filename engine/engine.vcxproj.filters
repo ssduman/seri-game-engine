@@ -186,6 +186,9 @@
     <ClInclude Include="Model.h">
       <Filter>Model</Filter>
     </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Model</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\maze\maze-assets\shaders\basic_fs.shader">

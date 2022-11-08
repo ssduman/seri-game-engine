@@ -46,7 +46,7 @@ public:
 
         LOGGER(info, "starting mics loop");
 
-        Model model{};
+        Model model{ camera.get() };
         model.load("mics-assets/models/spider.obj");
 
         while (!glfwWindowShouldClose(windowManager->getWindow())) {
