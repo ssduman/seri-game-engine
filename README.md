@@ -1,6 +1,16 @@
 # Seri Game Engine #
 * A 2D/3D OpenGL Game Engine I wrote for fun. I started July, 2019 and developed from time to time. You can find older version here.
-## Specifications: ##
+## Dependencies: ##
+* [GLFW](https://www.glfw.org)
+* [GLEW](http://glew.sourceforge.net)
+* [stb_image](https://github.com/nothings/stb/blob/master/stb_image.h)
+* [glm](https://github.com/g-truc/glm)
+* [freetype](https://www.freetype.org)
+* [assimp](https://github.com/assimp/assimp)
+* [ImGui](https://github.com/ocornut/imgui) (for editor)
+## Run: ##
+Create a file named *libraries* and copy dependencies into it. Click to solution, run and enjoy!
+## Specifications for Maze: ##
 * Solves the maze with iteration method and makes the path green if the mode activated
 * Determine maze size ingame
 * Program runs up to 2000x2000+ maze (around 8.000.000 blocks, takes too long to run and very slow)
@@ -8,19 +18,9 @@
 * A light source is above the entrance
 * Renders text on the screen 
 * Quickly change textures, skyboxes or font
-* Font form: https://flightcoded.itch.io/dungeonfont
-* Maze generator algorithm from: https://github.com/norvig/pytudes/blob/master/ipynb/Maze.ipynb
-## Dependencies: ##
-* <a href="https://www.glfw.org"> GLFW </a> 
-* <a href="http://glew.sourceforge.net"> GLEW </a> 
-* <a href="https://github.com/nothings/stb/blob/master/stb_image.h"> stb_image </a> 
-* <a href="https://github.com/g-truc/glm"> glm </a> 
-* <a href="https://www.freetype.org/"> freetype </a> 
-* <a href="https://github.com/ocornut/imgui"> ImGui </a> (for editor)
-## Run: ##
-Create a file named *libraries* and copy dependencies into it. Click to solution (if needed, change solution platform) and 
-build. Next, copy *shaders/*, *textures/* and *freetype.dll* next to the *Maze.exe*, run and enjoy!
-## Control: ##
+* Fonts: [En Bloc](https://vrtxrry.itch.io/en-bloc) and [DungeonFont](https://vrtxrry.itch.io/dungeonfont)
+* [Maze generator algorithm](https://github.com/norvig/pytudes/blob/master/ipynb/Maze.ipynb)
+## Control for Maze: ##
 * Write the maze size (Format of maze size should be "*width***x***height*") and hit enter 
 * Press 'C' for cheat mode on/off 
 * If cheat mode is on, use arrow keys for speed up/down and also do not affect restarting (stay in same position)
@@ -31,40 +31,40 @@ build. Next, copy *shaders/*, *textures/* and *freetype.dll* next to the *Maze.e
 <table>
     <tr>
         <td align="center">
-            <img src="https://github.com/perought/maze-game/blob/master/test/user-input.png" alt="user-input" width="384" height="216">
+            <img src="https://github.com/ssduman/seri-game-engine/blob/master/images/user-input.png" alt="user-input" width="384" height="216">
             <br />
             <i> give maze size, a 20x20 maze is moving circularly <i>
         </td>
         <td align="center">
-            <img src="https://github.com/perought/maze-game/blob/master/test/start.png" alt="starting" width="384" height="216">
+            <img src="https://github.com/ssduman/seri-game-engine/blob/master/images/start.png" alt="starting" width="384" height="216">
             <br />
             <i> starting point <i>
         </td>
     </tr>
     <tr>
         <td align="center">
-            <img src="https://github.com/perought/maze-game/blob/master/test/passage-solution.png" alt="sol-path" width="384" height="216">
+            <img src="https://github.com/ssduman/seri-game-engine/blob/master/images/passage-solution.png" alt="sol-path" width="384" height="216">
             <br />
             <i> exit way <i>
         </td>
         <td align="center">
-            <img src="https://github.com/perought/maze-game/blob/master/test/solved.png" alt="solved" width="384" height="216">
+            <img src="https://github.com/ssduman/seri-game-engine/blob/master/images/solved.png" alt="solved" width="384" height="216">
             <br />
             <i> reached exit <i>
         </td>
     </tr>
     <tr>
         <td align="center">
-            <img src="https://github.com/perought/maze-game/blob/master/test/user-input-new-font.png" alt="new-font" width="384" height="216">
+            <img src="https://github.com/ssduman/seri-game-engine/blob/master/images/user-input-new-font.png" alt="new-font" width="384" height="216">
             <br />
             <i> exit way <i>
         </td>
         <td align="center">
-            <img src="https://github.com/perought/maze-game/blob/master/test/solved-new-font.png" alt="solved-new-font" width="384" height="216">
+            <img src="https://github.com/ssduman/seri-game-engine/blob/master/images/solved-new-font.png" alt="solved-new-font" width="384" height="216">
             <br />
             <i> reached exit <i>
         </td>
     </tr>
 </table>
 
-<i> see test/ for more images <i>
+<i> see images/ for more images <i>
