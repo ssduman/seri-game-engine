@@ -25,13 +25,7 @@ public:
     void load(const std::string& modelPath) {
         Assimp::Importer importer;
 
-        const aiScene* scene = importer.ReadFile(
-            modelPath,
-            aiProcess_CalcTangentSpace |
-            aiProcess_Triangulate |
-            aiProcess_JoinIdenticalVertices |
-            aiProcess_SortByPType
-        );
+        const aiScene* scene = importer.ReadFile(modelPath, flagBuilder());
         if (!scene) {
             LOGGER(error, "read model path '" << modelPath << "' failed: " << importer.GetErrorString());
             return;
@@ -48,6 +42,13 @@ public:
     }
 
 private:
+    unsigned int flagBuilder() {
+        return aiProcess_CalcTangentSpace |
+            aiProcess_Triangulate |
+            aiProcess_JoinIdenticalVertices |
+            aiProcess_SortByPType;
+    }
+
     std::vector<Mesh> _meshes;
 
 };
