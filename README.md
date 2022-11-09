@@ -9,7 +9,7 @@
 * [assimp](https://github.com/assimp/assimp)
 * [ImGui](https://github.com/ocornut/imgui) (for editor)
 ## Run: ##
-Create a file named *libraries* and copy dependencies into it. Click to solution, run and enjoy!
+Create a file named *libraries/* and copy dependencies into it. Click to solution, run and enjoy!
 ## Specifications for Maze: ##
 * Solves the maze with iteration method and makes the path green if the mode activated
 * Determine maze size ingame
