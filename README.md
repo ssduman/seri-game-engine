@@ -1,5 +1,5 @@
 # Seri Game Engine #
-* A 2D/3D OpenGL Game Engine I wrote for fun. I started July, 2019 and developed from time to time. You can find older version here.
+* A 2D/3D OpenGL Game Engine. Started July, 2019 and developed from time to time.
 ## Dependencies: ##
 * [GLFW](https://www.glfw.org)
 * [GLEW](http://glew.sourceforge.net)
@@ -33,36 +33,36 @@ Create a file named *libraries* and copy dependencies into it. Click to solution
         <td align="center">
             <img src="https://github.com/ssduman/seri-game-engine/blob/master/images/user-input.png" alt="user-input" width="384" height="216">
             <br />
-            <i> give maze size, a 20x20 maze is moving circularly <i>
+            <i> dimension of the maze <i>
         </td>
-        <td align="center">
-            <img src="https://github.com/ssduman/seri-game-engine/blob/master/images/start.png" alt="starting" width="384" height="216">
-            <br />
-            <i> starting point <i>
-        </td>
-    </tr>
-    <tr>
         <td align="center">
             <img src="https://github.com/ssduman/seri-game-engine/blob/master/images/passage-solution.png" alt="sol-path" width="384" height="216">
             <br />
-            <i> exit way <i>
-        </td>
-        <td align="center">
-            <img src="https://github.com/ssduman/seri-game-engine/blob/master/images/solved.png" alt="solved" width="384" height="216">
-            <br />
-            <i> reached exit <i>
+            <i> exit of the maze <i>
         </td>
     </tr>
     <tr>
         <td align="center">
-            <img src="https://github.com/ssduman/seri-game-engine/blob/master/images/user-input-new-font.png" alt="new-font" width="384" height="216">
+            <img src="https://github.com/ssduman/seri-game-engine/blob/master/images/editor.png" alt="sol-path" width="384" height="216">
             <br />
-            <i> exit way <i>
+            <i> editor <i>
         </td>
         <td align="center">
-            <img src="https://github.com/ssduman/seri-game-engine/blob/master/images/solved-new-font.png" alt="solved-new-font" width="384" height="216">
+            <img src="https://github.com/ssduman/seri-game-engine/blob/master/images/snake.png" alt="solved" width="384" height="216">
             <br />
-            <i> reached exit <i>
+            <i> snake <i>
+        </td>
+    </tr>
+    <tr>
+        <td align="center">
+            <img src="https://github.com/ssduman/seri-game-engine/blob/master/images/tetris.png" alt="new-font" width="284" height="384">
+            <br />
+            <i> tetris <i>
+        </td>
+        <td align="center">
+            <img src="https://github.com/ssduman/seri-game-engine/blob/master/images/mics.png" alt="solved-new-font" width="284" height="384">
+            <br />
+            <i> miscellaneous <i>
         </td>
     </tr>
 </table>
