@@ -12,7 +12,9 @@
 
 class Model : Entity {
 public:
-    Model(ICamera* camera) : Entity(camera) {};
+    Model(ICamera* camera) : Entity(camera) {
+        LOGGER(info, "model init succeeded");
+    };
 
     ~Model() override = default;
 
