@@ -9,7 +9,7 @@
 * [assimp](https://github.com/assimp/assimp)
 * [ImGui](https://github.com/ocornut/imgui) (for editor)
 ## Run: ##
-Create folder named *libraries/* and copy dependencies into it.
+Create a folder named *libraries/* and copy dependencies into it.
 ## Images: ##
 <table>
     <tr>
@@ -49,5 +49,3 @@ Create folder named *libraries/* and copy dependencies into it.
         </td>
     </tr>
 </table>
-
-<i> see images/ for more images <i>
