@@ -64,11 +64,12 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)libraries\freetype\win64;$(SolutionDir)libraries\glew\lib\Release\x64;$(SolutionDir)libraries\glfw\lib-vc2022;$(SolutionDir)libraries\assimp\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;User32.lib;Gdi32.lib;Shell32.lib;glew32s.lib;freetype.lib;assimp-vc143-mt.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;User32.lib;Gdi32.lib;Shell32.lib;glew32s.lib;freetype.lib;assimp.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /y /i /e /r /q "$(SolutionDir)$(ProjectName)\mics-assets" "$(SolutionDir)artifact\$(Configuration)-$(Platform)\mics-assets"
-xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win64\freetype.dll" "$(SolutionDir)artifact\$(Configuration)-$(Platform)"</Command>
+xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win64\freetype.dll" "$(SolutionDir)artifact\$(Configuration)-$(Platform)"
+xcopy /y /i /e /r /q "$(SolutionDir)libraries\assimp\bin\assimp.dll" "$(SolutionDir)artifact\$(Configuration)-$(Platform)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -88,11 +89,12 @@ xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win64\freetype.dll" "$(So
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)libraries\freetype\win64;$(SolutionDir)libraries\glew\lib\Release\x64;$(SolutionDir)libraries\glfw\lib-vc2022;$(SolutionDir)libraries\assimp\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;User32.lib;Gdi32.lib;Shell32.lib;glew32s.lib;freetype.lib;assimp-vc143-mt.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;User32.lib;Gdi32.lib;Shell32.lib;glew32s.lib;freetype.lib;assimp.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /y /i /e /r /q "$(SolutionDir)$(ProjectName)\mics-assets" "$(SolutionDir)artifact\$(Configuration)-$(Platform)\mics-assets"
-xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win64\freetype.dll" "$(SolutionDir)artifact\$(Configuration)-$(Platform)"</Command>
+xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win64\freetype.dll" "$(SolutionDir)artifact\$(Configuration)-$(Platform)"
+xcopy /y /i /e /r /q "$(SolutionDir)libraries\assimp\bin\assimp.dll" "$(SolutionDir)artifact\$(Configuration)-$(Platform)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
