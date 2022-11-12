@@ -16,12 +16,12 @@ Create a folder named *libraries/* and copy dependencies into it.
         <td align="center">
             <img src="https://github.com/ssduman/seri-game-engine/blob/master/images/user-input.png" alt="user-input" width="384" height="216">
             <br />
-            <i> dimension of the maze <i>
+            <i> giving dimension for the maze <i>
         </td>
         <td align="center">
             <img src="https://github.com/ssduman/seri-game-engine/blob/master/images/passage-solution.png" alt="sol-path" width="384" height="216">
             <br />
-            <i> exit of the maze <i>
+            <i> exit way of the maze <i>
         </td>
     </tr>
     <tr>
