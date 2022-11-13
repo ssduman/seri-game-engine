@@ -42,10 +42,18 @@ public:
         auto normalsSize = aux::size(_normals);
 
         reserveDataBuffer(positionsSize + colorsSize + textureCoordsSize + normalsSize);
-        setSubDataBuffer(aux::Index::position, _positions, 0);
-        setSubDataBuffer(aux::Index::color, _colors, positionsSize);
-        setSubDataBuffer(aux::Index::texture, _textureCoords, positionsSize + colorsSize);
-        setSubDataBuffer(aux::Index::normal, _normals, positionsSize + colorsSize + textureCoordsSize);
+        if (positionsSize > 0) {
+            setSubDataBuffer(aux::Index::position, _positions, 0);
+        }
+        if (colorsSize > 0) {
+            setSubDataBuffer(aux::Index::color, _colors, positionsSize);
+        }
+        if (textureCoordsSize > 0) {
+            setSubDataBuffer(aux::Index::texture, _textureCoords, positionsSize + colorsSize);
+        }
+        if (normalsSize > 0) {
+            setSubDataBuffer(aux::Index::normal, _normals, positionsSize + colorsSize + textureCoordsSize);
+        }
 
         dataBuffer({ aux::Target::ebo, aux::size(_indices), aux::data(_indices) });
     }
