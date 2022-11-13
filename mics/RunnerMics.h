@@ -6,6 +6,7 @@
 #include "Camera.h"
 #include "Control.h"
 #include "Fractal.h"
+#include "MicsShader.h"
 #include "PerlinNoise.h"
 
 class RunnerMics : public IRunner {
@@ -26,38 +27,40 @@ public:
 
         CameraProperties cameraProperties{};
         cameraProperties.aspect = windowManager->getWidthF() / windowManager->getHeightF();
-        cameraProperties.position = glm::vec3{ 0.0f, 10.0f, -15.0f };
+        cameraProperties.position = glm::vec3{ 0.0f, 0.0f, -6.0f };
         std::shared_ptr<Camera> camera = std::make_shared<Camera>(cameraProperties, state.get());
         camera->init();
-
-        Layer layers{};
 
         Control control{ windowManager.get(), camera.get(), state.get() };
         control.init();
 
-        Fractal fractal{ camera.get(), layers };
-        fractal.BarnsleyFern();
-        fractal.tree();
+        Layer layers;
 
-        PerlinNoise perlinNoise{ camera.get(), layers };
-        perlinNoise();
+        //Fractal fractal{ camera.get(), layers };
+        //fractal.BarnsleyFern();
+        //fractal.tree();
 
-        Point* BarnsleyFernPoints = new Point(camera.get());
+        //PerlinNoise perlinNoise{ camera.get(), layers };
+        //perlinNoise();
+
+        //Point* BarnsleyFernPoints = new Point(camera.get());
+
+        Model model{ camera.get() };
+        model.initShader("mics-assets/shaders/entity_vs.shader", "mics-assets/shaders/entity_fs.shader");
+        model.load("mics-assets/models/spider.obj");
+        model.getTransform()._scale = glm::vec3{ 0.05f, 0.05f, 0.05f };
+        model.getShader().setMat4("u_model", model.getTransform().apply());
+        layers.addLayer(&model);
 
         LOGGER(info, "starting mics loop");
 
-        Model model{ camera.get() };
-        model.load("mics-assets/models/spider.obj");
-
         while (!glfwWindowShouldClose(windowManager->getWindow())) {
-            glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+            glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             auto deltaTime = windowManager->updateDeltaTime();
 
             control.processInput(deltaTime);
-
-            //fractal.BarnsleyFernAnimation(BarnsleyFernPoints, deltaTime);
 
             for (auto entity : layers.getLayers()) {
                 entity->display();
