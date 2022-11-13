@@ -49,10 +49,7 @@ public:
         if (_shouldDeleteThis && _program != 0) {
             disuse();
             del();
-            //LOGGER(verbose, "shader delete succeeded");
-            return;
         }
-        //LOGGER(verbose, "shader delete skipped");
     }
 
     void init(const std::string& vsCodePath, const std::string& fsCodePath, bool readFromFile = true) {

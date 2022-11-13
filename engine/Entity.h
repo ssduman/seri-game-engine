@@ -70,10 +70,7 @@ public:
         if (_shouldDeleteThis && _VAO != 0) {
             unbind();
             del();
-            //LOGGER(verbose, "entity delete succeeded");
-            return;
         }
-        //LOGGER(verbose, "entity delete skipped");
     }
 
     virtual void initShader(const std::string& vsCodePath, const std::string& fsCodePath, bool readFromFile = true) {

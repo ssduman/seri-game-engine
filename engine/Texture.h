@@ -33,10 +33,7 @@ public:
         if (_shouldDeleteThis && _tex != 0) {
             unbind();
             del();
-            //LOGGER(verbose, "texture delete succeeded");
-            return;
         }
-        //LOGGER(verbose, "texture delete skipped");
     }
 
     void init(const std::string& texturePath) {
