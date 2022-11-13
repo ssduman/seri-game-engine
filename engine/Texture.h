@@ -9,30 +9,74 @@ class Texture {
 public:
     Texture() = default;
 
+    Texture(Texture&& other) noexcept {
+        _tex = other._tex;
+        _typeName = other._typeName;
+
+        other._shouldDeleteThis = false;
+    }
+
+    Texture(const Texture& other) = delete;
+
+    Texture& operator=(Texture&& other) noexcept {
+        _tex = other._tex;
+        _typeName = other._typeName;
+
+        other._shouldDeleteThis = false;
+
+        return *this;
+    }
+
+    Texture& operator=(const Texture& other) = delete;
+
     ~Texture() {
-        glDeleteTextures(1, &_tex);
+        if (_shouldDeleteThis && _tex != 0) {
+            unbind();
+            del();
+            //LOGGER(verbose, "texture delete succeeded");
+            return;
+        }
+        //LOGGER(verbose, "texture delete skipped");
     }
 
     void init(const std::string& texturePath) {
-        glGenTextures(1, &_tex);
-        glBindTexture(GL_TEXTURE_2D, _tex);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-        setTextureFlip(true);
-
         int width, height, components;
         if (auto image = loadTexture(texturePath, width, height, components, 0)) {
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+            GLenum format = GL_RED;
+            if (components == 3) {
+                format = GL_RGB;
+            }
+            if (components == 4) {
+                format = GL_RGBA;
+            }
+
+            generate();
+            bind();
+
+            glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, image);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
             glGenerateMipmap(GL_TEXTURE_2D);
+
+            unbind();
             unloadTexture(image);
+        }
+        else {
+            LOGGER(error, "init texture '" << texturePath << "' failed");
         }
     }
 
+    void setTypeName(const std::string& typeName) {
+        _typeName = typeName;
+    }
+
+    const std::string& getTypeName() {
+        return _typeName;
+    }
+
     void bind() {
-        glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, _tex);
     }
 
@@ -53,6 +97,17 @@ public:
     }
 
 private:
+    void generate() {
+        glGenTextures(1, &_tex);
+    }
+
+    void del() {
+        glDeleteTextures(1, &_tex);
+        _tex = 0;
+    }
+
     unsigned int _tex = 0;
+    std::string _typeName;
+    bool _shouldDeleteThis = true;
 
 };

@@ -23,9 +23,36 @@ class Shader {
 public:
     Shader() = default;
 
+    Shader(Shader&& other) = delete;
+
+    Shader(const Shader& other) = delete;
+
+    Shader& operator=(Shader&& other) noexcept {
+        _program = other._program;
+
+        _shouldDeleteThis = false;
+        other._shouldDeleteThis = false;
+
+        return *this;
+    }
+
+    Shader& operator=(Shader& other) noexcept {
+        _program = other._program;
+
+        _shouldDeleteThis = false;
+        other._shouldDeleteThis = false;
+
+        return *this;
+    }
+
     ~Shader() {
-        disuse();
-        glDeleteProgram(_program);
+        if (_shouldDeleteThis && _program != 0) {
+            disuse();
+            del();
+            //LOGGER(verbose, "shader delete succeeded");
+            return;
+        }
+        //LOGGER(verbose, "shader delete skipped");
     }
 
     void init(const std::string& vsCodePath, const std::string& fsCodePath, bool readFromFile = true) {
@@ -174,6 +201,12 @@ private:
         return true;
     }
 
+    void del() {
+        glDeleteProgram(_program);
+        _program = 0;
+    }
+
     unsigned int _program = 0;
+    bool _shouldDeleteThis = true;
 
 };

@@ -15,14 +15,65 @@
 
 class Entity : public Object {
 public:
+    Entity() = delete;
+
     Entity(ICamera* camera) : _camera(camera) {
         generate();
         bind();
     }
 
+    Entity(Entity&& other) noexcept {
+        _VAO = other._VAO;
+        _VBO = other._VBO;
+        _EBO = other._EBO;
+        _camera = other._camera;
+        _drawMode = other._drawMode;
+        _drawArrayCount = other._drawArrayCount;
+        _engineDimension = other._engineDimension;
+
+        _shader = std::move(other._shader);
+        _texture = std::move(other._texture);
+
+        _color = other._color;
+        _transform = other._transform;
+        _entityType = other._entityType;
+
+        other._shouldDeleteThis = false;
+    }
+
+    Entity(const Entity& other) = delete;
+
+    Entity& operator=(Entity&& other) noexcept {
+        _VAO = other._VAO;
+        _VBO = other._VBO;
+        _EBO = other._EBO;
+        _camera = other._camera;
+        _drawMode = other._drawMode;
+        _drawArrayCount = other._drawArrayCount;
+        _engineDimension = other._engineDimension;
+
+        _shader = std::move(other._shader);
+        _texture = std::move(other._texture);
+
+        _color = other._color;
+        _transform = other._transform;
+        _entityType = other._entityType;
+
+        other._shouldDeleteThis = false;
+
+        return *this;
+    }
+
+    Entity& operator=(const Entity& other) = delete;
+
     ~Entity() override {
-        unbind();
-        del();
+        if (_shouldDeleteThis && _VAO != 0) {
+            unbind();
+            del();
+            //LOGGER(verbose, "entity delete succeeded");
+            return;
+        }
+        //LOGGER(verbose, "entity delete skipped");
     }
 
     virtual void initShader(const std::string& vsCodePath, const std::string& fsCodePath, bool readFromFile = true) {
@@ -261,14 +312,19 @@ private:
 
     void deleteVAO() {
         glDeleteVertexArrays(1, &_VAO);
+        _VAO = 0;
     }
 
     void deleteVBO() {
         glDeleteBuffers(1, &_VBO);
+        _VBO = 0;
     }
 
     void deleteEBO() {
         glDeleteBuffers(1, &_EBO);
+        _EBO = 0;
     }
+
+    bool _shouldDeleteThis = true;
 
 };
