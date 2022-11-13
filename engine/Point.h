@@ -9,10 +9,7 @@ public:
         setDrawMode(aux::DrawMode::points);
     }
 
-    ~Point() override {
-        glDeleteVertexArrays(1, &_VAO);
-        glDeleteBuffers(1, &_VBO);
-    }
+    ~Point() override = default;
 
     void render() override {
         _shader.use();

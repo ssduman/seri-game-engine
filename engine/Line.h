@@ -9,10 +9,7 @@ public:
         setDrawMode(aux::DrawMode::line_loop);
     }
 
-    ~Line() override {
-        glDeleteVertexArrays(1, &_VAO);
-        glDeleteBuffers(1, &_VBO);
-    }
+    ~Line() override = default;
 
     void render() override {
         _shader.use();

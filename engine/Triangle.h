@@ -9,10 +9,7 @@ public:
         setDrawMode(aux::DrawMode::triangles);
     }
 
-    ~Triangle() override {
-        glDeleteVertexArrays(1, &_VAO);
-        glDeleteBuffers(1, &_VBO);
-    }
+    ~Triangle() override = default;
 
     void render() override {
         _shader.use();

@@ -9,11 +9,7 @@ public:
         setDrawMode(aux::DrawMode::triangles);
     }
 
-    ~Rectangle() override {
-        glDeleteVertexArrays(1, &_VAO);
-        glDeleteBuffers(1, &_VBO);
-        glDeleteBuffers(1, &_EBO);
-    }
+    ~Rectangle() override = default;
 
     void render() override {
         _shader.use();

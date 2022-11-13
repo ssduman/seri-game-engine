@@ -9,10 +9,7 @@ public:
         setDrawMode(aux::DrawMode::triangle_fan);
     }
 
-    ~Polygon() override {
-        glDeleteVertexArrays(1, &_VAO);
-        glDeleteBuffers(1, &_VBO);
-    }
+    ~Polygon() override = default;
 
     void render() override {
         _shader.use();
