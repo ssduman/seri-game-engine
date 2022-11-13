@@ -20,6 +20,9 @@
     <Filter Include="Perlin Noise">
       <UniqueIdentifier>{b4becb44-9511-49f4-9067-72d1f3e8cef1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{66241544-20ed-41ae-8431-513dde4edb8d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mics.cpp">
@@ -41,6 +44,9 @@
     </ClInclude>
     <ClInclude Include="PerlinNoise.h">
       <Filter>Perlin Noise</Filter>
+    </ClInclude>
+    <ClInclude Include="MicsShader.h">
+      <Filter>Shader</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

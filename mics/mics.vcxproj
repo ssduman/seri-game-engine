@@ -104,6 +104,7 @@ xcopy /y /i /e /r /q "$(SolutionDir)libraries\assimp\bin\assimp.dll" "$(Solution
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Control.h" />
     <ClInclude Include="Fractal.h" />
+    <ClInclude Include="MicsShader.h" />
     <ClInclude Include="PerlinNoise.h" />
     <ClInclude Include="RunnerMics.h" />
   </ItemGroup>
