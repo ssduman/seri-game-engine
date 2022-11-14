@@ -36,6 +36,10 @@ public:
             return;
         }
 
+        glm::mat4 globalTransformation;
+        convertMatrix(scene->mRootNode->mTransformation, globalTransformation);
+        getShader().setMat4("u_model", globalTransformation);
+
         _modelDirectory = modelPath.substr(0, modelPath.find_last_of("/")) + "/";
 
         LOGGER(info, "read model path '" << modelPath << "' succeeded");
@@ -48,7 +52,7 @@ public:
         LOGGER(info, "model mNumCameras: " << scene->mNumCameras);
         LOGGER(info, "model mNumSkeletons: " << scene->mNumSkeletons);
 
-        processNode(scene->mRootNode, scene);
+        processNode(scene, scene->mRootNode);
     }
 
 private:
@@ -59,19 +63,41 @@ private:
             aiProcess_CalcTangentSpace;
     }
 
-    void processNode(const aiNode* node, const aiScene* scene) {
+    void processNode(const aiScene* scene, const aiNode* node) {
         for (unsigned int i = 0; i < node->mNumMeshes; i++) {
             aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-            processMesh(mesh, scene);
+            processMesh(scene, mesh);
         }
         for (unsigned int i = 0; i < node->mNumChildren; i++) {
-            processNode(node->mChildren[i], scene);
+            processNode(scene, node->mChildren[i]);
         }
     }
 
-    void processMesh(const aiMesh* mesh, const aiScene* scene) {
+    void processMesh(const aiScene* scene, const aiMesh* mesh) {
         Mesh mesh_{ _camera };
 
+        loadIndices(scene, mesh, mesh_);
+        loadVertices(scene, mesh, mesh_);
+        loadTextures(scene, mesh, mesh_);
+
+        mesh_.setShader(_shader);
+        mesh_.initMVP();
+        mesh_.init();
+        _meshes.emplace_back(std::move(mesh_));
+    }
+
+    void loadIndices(const aiScene* scene, const aiMesh* mesh, Mesh& mesh_) {
+        std::vector<unsigned int> indices;
+        for (unsigned int i = 0; i < mesh->mNumFaces; i++) {
+            aiFace face = mesh->mFaces[i];
+            for (unsigned int j = 0; j < face.mNumIndices; j++) {
+                indices.emplace_back(face.mIndices[j]);
+            }
+        }
+        mesh_.addIndices(std::move(indices));
+    }
+
+    void loadVertices(const aiScene* scene, const aiMesh* mesh, Mesh& mesh_) {
         std::vector<glm::vec3> positions;
         std::vector<glm::vec4> colors;
         std::vector<glm::vec2> textureCoords;
@@ -81,7 +107,6 @@ private:
             glm::vec4 color;
             glm::vec2 textureCoord;
             glm::vec3 normal;
-
             if (mesh->HasPositions()) {
                 convertVector(mesh->mVertices[i], position);
                 positions.emplace_back(std::move(position));
@@ -111,70 +136,127 @@ private:
         mesh_.addColors(std::move(colors));
         mesh_.addTextureCoords(std::move(textureCoords));
         mesh_.addNormals(std::move(normals));
-
-        std::vector<unsigned int> indices;
-        for (unsigned int i = 0; i < mesh->mNumFaces; i++) {
-            aiFace face = mesh->mFaces[i];
-            for (unsigned int j = 0; j < face.mNumIndices; j++) {
-                indices.emplace_back(face.mIndices[j]);
-            }
-        }
-        mesh_.addIndices(std::move(indices));
-
-        aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-        std::vector<Texture> normalMaps = std::move(loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal"));
-        std::vector<Texture> heightMaps = std::move(loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height"));
-        std::vector<Texture> diffuseMaps = std::move(loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse"));
-        std::vector<Texture> specularMaps = std::move(loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular"));
-        mesh_.addTextures(std::move(heightMaps));
-        mesh_.addTextures(std::move(normalMaps));
-        mesh_.addTextures(std::move(diffuseMaps));
-        mesh_.addTextures(std::move(specularMaps));
-
-        mesh_.setShader(_shader);
-        mesh_.initMVP();
-        mesh_.init();
-        _meshes.emplace_back(std::move(mesh_));
     }
 
-    std::vector<Texture> loadMaterialTextures(const aiMaterial* material, const aiTextureType textureType, const std::string& textureTypeName) {
-        std::vector<Texture> textures;
+    void loadTextures(const aiScene* scene, const aiMesh* mesh, Mesh& mesh_) {
+        aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 
+        loadTexture(scene, material, aiTextureType_DIFFUSE, mesh_);
+        loadTexture(scene, material, aiTextureType_SPECULAR, mesh_);
+        //loadTexture(scene, material, aiTextureType_AMBIENT, mesh_);
+        //loadTexture(scene, material, aiTextureType_HEIGHT, mesh_);
+        //loadTexture(scene, material, aiTextureType_NORMALS, mesh_);
+        //loadTexture(scene, material, aiTextureType_SHININESS, mesh_);
+        loadColors(scene, material, mesh_);
+    }
+
+    void loadTexture(const aiScene* scene, const aiMaterial* material, const aiTextureType textureType, Mesh& mesh_) {
         for (unsigned int i = 0; i < material->GetTextureCount(textureType); i++) {
             aiString aiTexturePath;
-            material->GetTexture(textureType, i, &aiTexturePath);
-            std::string texturePath = _modelDirectory + std::string(aiTexturePath.C_Str());
-
-            Texture texture;
-            texture.init(texturePath);
-            texture.setTypeName(textureTypeName);
-            textures.emplace_back(std::move(texture));
+            if (material->GetTexture(textureType, i, &aiTexturePath) == aiReturn::aiReturn_SUCCESS) {
+                const std::string texturePath{ aiTexturePath.C_Str() };
+                const aiTexture* ai_texture = scene->GetEmbeddedTexture(aiTexturePath.C_Str());
+                if (ai_texture) {
+                    //LOGGER(info, "getting embedded " << getString(textureType) << " type texture");
+                    loadEmbeddedTexture(ai_texture, textureType, mesh_);
+                }
+                else {
+                    LOGGER(info, "getting from path " << texturePath << " that " << getString(textureType) << " type texture");
+                    loadFileTexture(texturePath, textureType, mesh_);
+                }
+            }
+            else {
+                LOGGER(error, "getting " << getString(textureType) << " texture with index " << i << " failed");
+            }
         }
-
-        return textures;
     }
 
-    void static convertVector(const aiVector2D& aiVec, glm::vec2& glmVec) {
+    void loadEmbeddedTexture(const aiTexture* ai_texture, const aiTextureType textureType, Mesh& mesh_) {
+        unsigned int width = ai_texture->mWidth;
+        unsigned int height = ai_texture->mHeight;
+        unsigned int size = std::max(width, height);
+        size = std::max(size, width * height);
+        //LOGGER(info, "hints: " << ai_texture->achFormatHint << ", dimensions: " << width << "x" << height << " size: " << size);
+        std::vector<Texture> textures;
+        Texture texture;
+        texture.init(ai_texture->pcData, size);
+        texture.setTypeName(getString(textureType));
+        textures.emplace_back(std::move(texture));
+        mesh_.addTextures(std::move(textures));
+    }
+
+    void loadFileTexture(const std::string& texturePath, const aiTextureType textureType, Mesh& mesh_) {
+        std::vector<Texture> textures;
+        Texture texture;
+        texture.init(_modelDirectory + texturePath);
+        texture.setTypeName(getString(textureType));
+        textures.emplace_back(std::move(texture));
+        mesh_.addTextures(std::move(textures));
+    }
+
+    void loadColors(const aiScene* scene, const aiMaterial* material, Mesh& mesh_) {}
+
+    static void convertVector(const aiVector2D& aiVec, glm::vec2& glmVec) {
         glmVec.x = aiVec.x;
         glmVec.y = aiVec.y;
     }
 
-    void static convertVector(const aiVector3D& aiVec, glm::vec2& glmVec) {
+    static void convertVector(const aiVector3D& aiVec, glm::vec2& glmVec) {
         glmVec.x = aiVec.x;
         glmVec.y = aiVec.y;
     }
 
-    void static convertVector(const aiVector3D& aiVec, glm::vec3& glmVec) {
+    static void convertVector(const aiVector3D& aiVec, glm::vec3& glmVec) {
         glmVec.x = aiVec.x;
         glmVec.y = aiVec.y;
         glmVec.z = aiVec.z;
     }
 
-    void static convertVector(const aiColor4D& aiVec, glm::vec4& glmVec) {
+    static void convertVector(const aiColor4D& aiVec, glm::vec4& glmVec) {
         glmVec.r = aiVec.r;
         glmVec.g = aiVec.g;
         glmVec.b = aiVec.b;
         glmVec.a = aiVec.a;
+    }
+
+    static void convertMatrix(const aiMatrix4x4& aiMat, glm::mat4& glmMat) {
+        glmMat[0].x = aiMat.a1;
+        glmMat[0].y = aiMat.a2;
+        glmMat[0].z = aiMat.a3;
+        glmMat[0].w = aiMat.a4;
+
+        glmMat[1].x = aiMat.b1;
+        glmMat[1].y = aiMat.b2;
+        glmMat[1].z = aiMat.b3;
+        glmMat[1].w = aiMat.b4;
+
+        glmMat[2].x = aiMat.c1;
+        glmMat[2].y = aiMat.c2;
+        glmMat[2].z = aiMat.c3;
+        glmMat[2].w = aiMat.c4;
+
+        glmMat[3].x = aiMat.d1;
+        glmMat[3].y = aiMat.d2;
+        glmMat[3].z = aiMat.d3;
+        glmMat[3].w = aiMat.d4;
+    }
+
+    static std::string getString(const aiTextureType textureType) {
+        switch (textureType) {
+            case aiTextureType_NONE: return "none";
+            case aiTextureType_DIFFUSE: return "diffuse";
+            case aiTextureType_SPECULAR: return "specular";
+            case aiTextureType_AMBIENT: return "ambient";
+            case aiTextureType_EMISSIVE: return "emissive";
+            case aiTextureType_HEIGHT: return "height";
+            case aiTextureType_NORMALS: return "normals";
+            case aiTextureType_SHININESS: return "shininess";
+            case aiTextureType_OPACITY: return "opacity";
+            case aiTextureType_DISPLACEMENT: return "displacement";
+            case aiTextureType_LIGHTMAP: return "lightmap";
+            case aiTextureType_REFLECTION: return "reflection";
+            default: return "unknown";
+        }
     }
 
     std::vector<Mesh> _meshes;
