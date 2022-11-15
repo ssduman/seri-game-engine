@@ -194,7 +194,42 @@ private:
         mesh_.addTextures(std::move(textures));
     }
 
-    void loadColors(const aiScene* scene, const aiMaterial* material, Mesh& mesh_) {}
+    void loadColors(const aiScene* scene, const aiMaterial* material, Mesh& mesh_) {
+        aiColor4D aiColor{};
+        glm::vec4 glmColor{};
+        if (material->Get(AI_MATKEY_COLOR_AMBIENT, aiColor) == aiReturn::aiReturn_SUCCESS) {
+            convertVector(aiColor, glmColor);
+            //mesh_.addColors({ glmColor });
+        }
+        if (material->Get(AI_MATKEY_COLOR_DIFFUSE, aiColor) == aiReturn::aiReturn_SUCCESS) {
+            convertVector(aiColor, glmColor);
+            //mesh_.addColors({ glmColor });
+        }
+        if (material->Get(AI_MATKEY_COLOR_SPECULAR, aiColor) == aiReturn::aiReturn_SUCCESS) {
+            convertVector(aiColor, glmColor);
+            //mesh_.addColors({ glmColor });
+        }
+        if (material->Get(AI_MATKEY_COLOR_DIFFUSE, aiColor) == aiReturn::aiReturn_SUCCESS) {
+            convertVector(aiColor, glmColor);
+            //mesh_.addColors({ glmColor });
+        }
+        if (material->Get(AI_MATKEY_COLOR_AMBIENT, aiColor) == aiReturn::aiReturn_SUCCESS) {
+            convertVector(aiColor, glmColor);
+            //mesh_.addColors({ glmColor });
+        }
+        if (material->Get(AI_MATKEY_COLOR_EMISSIVE, aiColor) == aiReturn::aiReturn_SUCCESS) {
+            convertVector(aiColor, glmColor);
+            //mesh_.addColors({ glmColor });
+        }
+        if (material->Get(AI_MATKEY_COLOR_TRANSPARENT, aiColor) == aiReturn::aiReturn_SUCCESS) {
+            convertVector(aiColor, glmColor);
+            //mesh_.addColors({ glmColor });
+        }
+        if (material->Get(AI_MATKEY_COLOR_REFLECTIVE, aiColor) == aiReturn::aiReturn_SUCCESS) {
+            convertVector(aiColor, glmColor);
+            //mesh_.addColors({ glmColor });
+        }
+    }
 
     static void convertVector(const aiVector2D& aiVec, glm::vec2& glmVec) {
         glmVec.x = aiVec.x;
