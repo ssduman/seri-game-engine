@@ -66,14 +66,17 @@ private:
     void processNode(const aiScene* scene, const aiNode* node) {
         for (unsigned int i = 0; i < node->mNumMeshes; i++) {
             aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-            processMesh(scene, mesh);
+            processMesh(scene, node, mesh);
         }
         for (unsigned int i = 0; i < node->mNumChildren; i++) {
             processNode(scene, node->mChildren[i]);
         }
     }
 
-    void processMesh(const aiScene* scene, const aiMesh* mesh) {
+    void processMesh(const aiScene* scene, const aiNode* node, const aiMesh* mesh) {
+        glm::mat4 transformation;
+        convertMatrix(node->mTransformation, transformation);
+        
         Mesh mesh_{ _camera };
 
         loadIndices(scene, mesh, mesh_);
@@ -81,8 +84,10 @@ private:
         loadTextures(scene, mesh, mesh_);
 
         mesh_.setShader(_shader);
+        mesh_.getShader().setMat4("u_model", transformation);
         mesh_.initMVP();
         mesh_.init();
+
         _meshes.emplace_back(std::move(mesh_));
     }
 
