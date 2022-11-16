@@ -76,7 +76,7 @@ private:
     void processMesh(const aiScene* scene, const aiNode* node, const aiMesh* mesh) {
         glm::mat4 transformation;
         convertMatrix(node->mTransformation, transformation);
-        
+
         Mesh mesh_{ _camera };
 
         loadIndices(scene, mesh, mesh_);
@@ -84,9 +84,9 @@ private:
         loadTextures(scene, mesh, mesh_);
 
         mesh_.setShader(_shader);
-        mesh_.getShader().setMat4("u_model", transformation);
         mesh_.initMVP();
         mesh_.init();
+        mesh_.setTransformation(std::move(transformation));
 
         _meshes.emplace_back(std::move(mesh_));
     }

@@ -85,6 +85,8 @@ public:
             _textures[i].bind();
         }
 
+        //getShader().setMat4("u_model", _transformation);
+
         glBindVertexArray(_VAO);
         glDrawElements(GL_TRIANGLES, _drawElementCount, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
@@ -94,6 +96,10 @@ public:
 
     void setShader(Shader& shader) {
         _shader = shader;
+    }
+
+    void setTransformation(glm::mat4 transformation) {
+        _transformation = std::move(transformation);
     }
 
     void addPositions(std::vector<glm::vec3> positions) {
@@ -129,6 +135,7 @@ private:
     std::vector<glm::vec3> _normals;
     std::vector<Texture> _textures;
     std::vector<unsigned int> _indices;
+    glm::mat4 _transformation{ 1.0f };
 
     unsigned int _drawElementCount{ 0 };
 
