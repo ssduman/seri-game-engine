@@ -9,7 +9,7 @@
 * [assimp](https://github.com/assimp/assimp)
 * [ImGui](https://github.com/ocornut/imgui) (for editor)
 ## Build: ##
-Create a folder named *libraries/* and copy dependencies into it then build in VS.
+Create a folder named *libraries/* and copy dependencies into it then build in VS. Tested VS2022 with x64.
 ## Images: ##
 <table>
     <tr>
