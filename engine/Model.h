@@ -3,11 +3,13 @@
 #include "Mesh.h"
 #include "Entity.h"
 #include "Logger.h"
+#include "Material.h"
 
 #include <assimp/scene.h>
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 
+#include <map>
 #include <memory>
 #include <vector>
 
@@ -81,7 +83,7 @@ private:
 
         loadIndices(scene, mesh, mesh_);
         loadVertices(scene, mesh, mesh_);
-        loadTextures(scene, mesh, mesh_);
+        loadMaterial(scene, mesh, mesh_);
 
         mesh_.setShader(_shader);
         mesh_.initMVP();
@@ -143,16 +145,20 @@ private:
         mesh_.addNormals(std::move(normals));
     }
 
-    void loadTextures(const aiScene* scene, const aiMesh* mesh, Mesh& mesh_) {
+    void loadMaterial(const aiScene* scene, const aiMesh* mesh, Mesh& mesh_) {
         aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 
+        Texture::setTextureFlip(true);
+
         loadTexture(scene, material, aiTextureType_DIFFUSE, mesh_);
-        loadTexture(scene, material, aiTextureType_SPECULAR, mesh_);
+        //loadTexture(scene, material, aiTextureType_SPECULAR, mesh_);
         //loadTexture(scene, material, aiTextureType_AMBIENT, mesh_);
         //loadTexture(scene, material, aiTextureType_HEIGHT, mesh_);
         //loadTexture(scene, material, aiTextureType_NORMALS, mesh_);
         //loadTexture(scene, material, aiTextureType_SHININESS, mesh_);
-        loadColors(scene, material, mesh_);
+
+        Material material_;
+        loadColors(scene, material, material_);
     }
 
     void loadTexture(const aiScene* scene, const aiMaterial* material, const aiTextureType textureType, Mesh& mesh_) {
@@ -166,7 +172,7 @@ private:
                     loadEmbeddedTexture(ai_texture, textureType, mesh_);
                 }
                 else {
-                    LOGGER(info, "getting from path " << texturePath << " that " << getString(textureType) << " type texture");
+                    //LOGGER(info, "getting from path " << texturePath << " that " << getString(textureType) << " type texture");
                     loadFileTexture(texturePath, textureType, mesh_);
                 }
             }
@@ -191,48 +197,43 @@ private:
     }
 
     void loadFileTexture(const std::string& texturePath, const aiTextureType textureType, Mesh& mesh_) {
-        std::vector<Texture> textures;
         Texture texture;
-        texture.init(_modelDirectory + texturePath);
-        texture.setTypeName(getString(textureType));
+        std::vector<Texture> textures;
+
+        if (_texturesLoaded.count(texturePath) == 1) {
+            texture = _texturesLoaded[texturePath];
+        }
+        else {
+            texture.init(_modelDirectory + texturePath);
+            texture.setTypeName(getString(textureType));
+            _texturesLoaded[texturePath] = texture;
+        }
+
         textures.emplace_back(std::move(texture));
         mesh_.addTextures(std::move(textures));
     }
 
-    void loadColors(const aiScene* scene, const aiMaterial* material, Mesh& mesh_) {
-        aiColor4D aiColor{};
-        glm::vec4 glmColor{};
-        if (material->Get(AI_MATKEY_COLOR_AMBIENT, aiColor) == aiReturn::aiReturn_SUCCESS) {
-            convertVector(aiColor, glmColor);
-            //mesh_.addColors({ glmColor });
-        }
+    void loadColors(const aiScene* scene, const aiMaterial* material, Material& material_) {
+        aiColor4D aiColor;
         if (material->Get(AI_MATKEY_COLOR_DIFFUSE, aiColor) == aiReturn::aiReturn_SUCCESS) {
-            convertVector(aiColor, glmColor);
-            //mesh_.addColors({ glmColor });
+            convertVector(aiColor, material_.getDiffuse());
+        }
+        if (material->Get(AI_MATKEY_COLOR_AMBIENT, aiColor) == aiReturn::aiReturn_SUCCESS) {
+            convertVector(aiColor, material_.getAmbient());
         }
         if (material->Get(AI_MATKEY_COLOR_SPECULAR, aiColor) == aiReturn::aiReturn_SUCCESS) {
-            convertVector(aiColor, glmColor);
-            //mesh_.addColors({ glmColor });
-        }
-        if (material->Get(AI_MATKEY_COLOR_DIFFUSE, aiColor) == aiReturn::aiReturn_SUCCESS) {
-            convertVector(aiColor, glmColor);
-            //mesh_.addColors({ glmColor });
-        }
-        if (material->Get(AI_MATKEY_COLOR_AMBIENT, aiColor) == aiReturn::aiReturn_SUCCESS) {
-            convertVector(aiColor, glmColor);
-            //mesh_.addColors({ glmColor });
+            convertVector(aiColor, material_.getSpecular());
         }
         if (material->Get(AI_MATKEY_COLOR_EMISSIVE, aiColor) == aiReturn::aiReturn_SUCCESS) {
-            convertVector(aiColor, glmColor);
-            //mesh_.addColors({ glmColor });
-        }
-        if (material->Get(AI_MATKEY_COLOR_TRANSPARENT, aiColor) == aiReturn::aiReturn_SUCCESS) {
-            convertVector(aiColor, glmColor);
-            //mesh_.addColors({ glmColor });
+            convertVector(aiColor, material_.getEmissive());
         }
         if (material->Get(AI_MATKEY_COLOR_REFLECTIVE, aiColor) == aiReturn::aiReturn_SUCCESS) {
-            convertVector(aiColor, glmColor);
-            //mesh_.addColors({ glmColor });
+            convertVector(aiColor, material_.getReflective());
+        }
+        if (material->Get(AI_MATKEY_COLOR_TRANSPARENT, aiColor) == aiReturn::aiReturn_SUCCESS) {
+            convertVector(aiColor, material_.getTransparent());
+        }
+        if (material->Get(AI_MATKEY_SHININESS, material_.getShininess()) == aiReturn::aiReturn_SUCCESS) {
         }
     }
 
@@ -300,7 +301,8 @@ private:
     }
 
     std::vector<Mesh> _meshes;
+    std::map<std::string, Texture> _texturesLoaded;
     std::string _modelDirectory;
-    glm::mat4 _globalTransformation;;
+    glm::mat4 _globalTransformation{};
 
 };

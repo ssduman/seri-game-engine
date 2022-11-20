@@ -27,7 +27,14 @@ public:
         return *this;
     }
 
-    Texture& operator=(const Texture& other) = delete;
+    Texture& operator=(Texture& other) noexcept {
+        _tex = other._tex;
+        _typeName = other._typeName;
+
+        other._shouldDeleteThis = false;
+
+        return *this;
+    }
 
     ~Texture() {
         if (_shouldDeleteThis && _tex != 0) {
