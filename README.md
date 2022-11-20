@@ -8,8 +8,8 @@
 * [freetype](https://www.freetype.org)
 * [assimp](https://github.com/assimp/assimp)
 * [ImGui](https://github.com/ocornut/imgui) (for editor)
-## Run: ##
-Create a folder named *libraries/* and copy dependencies into it.
+## Build: ##
+Create a folder named *libraries/* and copy dependencies into it then build with Visual Studio 2022.
 ## Images: ##
 <table>
     <tr>
