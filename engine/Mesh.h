@@ -35,6 +35,9 @@ public:
 
     void init() override {
         _drawElementCount = static_cast<unsigned int>(_indices.size());
+        if (_drawElementCount > 0) {
+            dataBuffer({ aux::Target::ebo, aux::size(_indices), aux::data(_indices) });
+        }
 
         auto positionsSize = aux::size(_positions);
         auto colorsSize = aux::size(_colors);
@@ -54,38 +57,14 @@ public:
         if (normalsSize > 0) {
             setSubDataBuffer(aux::Index::normal, _normals, positionsSize + colorsSize + textureCoordsSize);
         }
-
-        dataBuffer({ aux::Target::ebo, aux::size(_indices), aux::data(_indices) });
     }
 
     void render() override {
-        unsigned int diffuseNr = 1;
-        unsigned int specularNr = 1;
-        unsigned int normalNr = 1;
-        unsigned int heightNr = 1;
-        for (unsigned int i = 0; i < _textures.size(); i++) {
-            std::string number;
-            std::string typeName = _textures[i].getTypeName();
-            if (typeName == "texture_diffuse") {
-                number = std::to_string(diffuseNr++);
-            }
-            else if (typeName == "texture_specular") {
-                number = std::to_string(specularNr++);
-            }
-            else if (typeName == "texture_normal") {
-                number = std::to_string(normalNr++);
-            }
-            else if (typeName == "texture_height") {
-                number = std::to_string(heightNr++);
-            }
-
-            glActiveTexture(GL_TEXTURE0 + i);
-            std::string nameInShader = "u_texture"; // typeName + number
-            _shader.setInt(nameInShader, i);
-            _textures[i].bind();
+        for (auto& texture : _textures) {
+            texture.bind();
         }
 
-        //getShader().setMat4("u_model", _transformation);
+        getShader().setMat4("u_model", _transformation);
 
         glBindVertexArray(_VAO);
         glDrawElements(GL_TRIANGLES, _drawElementCount, GL_UNSIGNED_INT, 0);

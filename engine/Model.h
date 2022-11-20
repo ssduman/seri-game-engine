@@ -36,9 +36,9 @@ public:
             return;
         }
 
-        glm::mat4 globalTransformation;
-        convertMatrix(scene->mRootNode->mTransformation, globalTransformation);
-        getShader().setMat4("u_model", globalTransformation);
+
+        convertMatrix(scene->mRootNode->mTransformation, _globalTransformation);
+        getShader().setMat4("u_model", _globalTransformation);
 
         _modelDirectory = modelPath.substr(0, modelPath.find_last_of("/")) + "/";
 
@@ -86,7 +86,7 @@ private:
         mesh_.setShader(_shader);
         mesh_.initMVP();
         mesh_.init();
-        mesh_.setTransformation(std::move(transformation));
+        mesh_.setTransformation(std::move(_globalTransformation * transformation));
 
         _meshes.emplace_back(std::move(mesh_));
     }
@@ -301,5 +301,6 @@ private:
 
     std::vector<Mesh> _meshes;
     std::string _modelDirectory;
+    glm::mat4 _globalTransformation;;
 
 };
