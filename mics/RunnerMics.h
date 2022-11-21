@@ -62,7 +62,7 @@ public:
 
             control.processInput(deltaTime);
 
-            for (auto entity : layers.getLayers()) {
+            for (auto& entity : layers.getLayers()) {
                 entity->display();
             }
 
