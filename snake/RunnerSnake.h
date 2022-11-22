@@ -48,7 +48,7 @@ public:
 
             snake.handleTime(deltaTime);
 
-            for (auto entity : layers.getLayers()) {
+            for (auto& entity : layers.getLayers()) {
                 entity->display();
             }
 
