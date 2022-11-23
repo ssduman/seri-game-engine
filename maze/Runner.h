@@ -87,7 +87,7 @@ public:
 
             maze->display();
 
-            for (auto entity : layers.getLayers()) {
+            for (auto& entity : layers.getLayers()) {
                 entity->display();
             }
 
