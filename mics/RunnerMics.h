@@ -16,7 +16,7 @@ public:
     ~RunnerMics() override = default;
 
     void operator()() {
-        WindowProperties windowProperties{ /*title*/ "Seri Game Engine - Mics", /*fullscreen*/ false, /*w*/ 600, /*h*/ 800 };
+        WindowProperties windowProperties{ /*title*/ "Seri Game Engine - Mics", /*fullscreen*/ false, /*w*/ 800, /*h*/ 800 };
         std::unique_ptr<WindowManager> windowManager = std::make_unique<WindowManager>(windowProperties);
         windowManager->disableCursor();
         windowManager->setPointSize(2.0f);
