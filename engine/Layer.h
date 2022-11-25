@@ -2,29 +2,27 @@
 
 #include "Entity.h"
 
-#include <deque>
+#include <vector>
 
 class Layer {
 public:
     Layer() = default;
 
-    void addLayer(Entity* entity) {
-        _layers.push_front(entity);
+    void addLayer(std::shared_ptr<Entity> entity) {
+        _layers.emplace_back(entity);
     }
 
     void deleteLayer() {
         if (!_layers.empty()) {
-            Entity* temp = _layers.front();
-            _layers.pop_front();
-            delete temp;
+            _layers.pop_back();
         }
     }
 
-    std::deque<Entity*> getLayers() {
+    std::vector<std::shared_ptr<Entity>> getLayers() {
         return _layers;
     }
 
 private:
-    std::deque<Entity*> _layers{};
+    std::vector<std::shared_ptr<Entity>> _layers{};
 
 };

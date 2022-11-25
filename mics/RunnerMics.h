@@ -36,21 +36,29 @@ public:
 
         Layer layers;
 
-        //Fractal fractal{ camera.get(), layers };
-        //fractal.BarnsleyFern();
-        //fractal.tree();
+        if (_showModel) {
+            std::shared_ptr<Model> model = std::make_shared<Model>(camera.get());
+            model->initShader("mics-assets/shaders/entity_vs.shader", "mics-assets/shaders/entity_fs.shader");
+            model->load("mics-assets/models/backpack/backpack.obj");
+            //model.load("mics-assets/models/survival_guitar_backpack.glb");
+            //model.getTransform()._scale = glm::vec3{ 0.05f, 0.05f, 0.05f };
+            //model.getShader().setMat4("u_model", model.getTransform().apply());
+            //model.setColor({ 0.9f, 0.4f, 0.9f, 1.0f });
+            layers.addLayer(model);
+        }
 
-        //PerlinNoise perlinNoise{ camera.get(), layers };
-        //perlinNoise();
+        //if (_showFractal) {
+        //    std::shared_ptr<Fractal> fractal = std::make_shared<Fractal>(camera.get());
+        //    fractal->BarnsleyFern();
+        //    fractal->tree();
+        //    layers.addLayer(fractal);
+        //}
 
-        //Point* BarnsleyFernPoints = new Point(camera.get());
-
-        Model model{ camera.get() };
-        model.initShader("mics-assets/shaders/entity_vs.shader", "mics-assets/shaders/entity_fs.shader");
-        model.load("mics-assets/models/spider.obj");
-        model.getTransform()._scale = glm::vec3{ 0.05f, 0.05f, 0.05f };
-        model.getShader().setMat4("u_model", model.getTransform().apply());
-        layers.addLayer(&model);
+        //if (_showPerlinNoise) {
+        //    std::shared_ptr<PerlinNoise> perlinNoise = std::make_shared<PerlinNoise>(camera.get());
+        //    perlinNoise->generate();
+        //    layers.addLayer(perlinNoise);
+        //}
 
         LOGGER(info, "starting mics loop");
 
@@ -72,5 +80,10 @@ public:
 
         LOGGER(info, "mics loop stopped");
     }
+
+private:
+    bool _showModel = true;
+    bool _showFractal = false;
+    bool _showPerlinNoise = false;
 
 };
