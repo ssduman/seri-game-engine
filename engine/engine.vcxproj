@@ -118,7 +118,6 @@
     <ClInclude Include="InputHandler.h" />
     <ClInclude Include="IRunner.h" />
     <ClInclude Include="Layer.h" />
-    <ClInclude Include="Light.h" />
     <ClInclude Include="Line.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="LogManager.h" />
@@ -131,7 +130,6 @@
     <ClInclude Include="Point.h" />
     <ClInclude Include="Polygon.h" />
     <ClInclude Include="Rectangle.h" />
-    <ClInclude Include="Renderer.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Script.h" />
     <ClInclude Include="Shader.h" />
