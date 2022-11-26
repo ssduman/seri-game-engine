@@ -4,9 +4,9 @@
 #include "../engine/Entity.h"
 #include "../engine/Logger.h"
 #include "../engine/Texture.h"
-#include "../engine/Renderer.h"
 
 #include "Camera.h"
+#include "Renderer.h"
 
 #include <tuple>
 #include <ctime>

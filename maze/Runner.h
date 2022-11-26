@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../engine/Light.h"
 #include "../engine/Logger.h"
 #include "../engine/Skybox.h"
 #include "../engine/IRunner.h"
@@ -36,19 +35,11 @@ public:
         camera->setMazeDimensions(_mazeWidth, _mazeHeight, _mazeThickness);
         camera->setMazeWallPositions(maze->getVerticalWallPosition(), maze->getHorizontalWallPosition());
 
-        Light light{ camera.get() };
-        light.initShader("maze-assets/shaders/entity_vs.shader", "maze-assets/shaders/entity_fs.shader");
-        light.initMVP();
-        light.setPosition({ 0.0f, 10.0f, 8.0f });
-        light.setDefaultPositions();
-        light.setColor({ 1.0f, 1.0f, 1.0f, 1.0f });
-        light.init();
-
-        Skybox skybox{ camera.get() };
-        skybox.initShader("maze-assets/shaders/skybox_vs.shader", "maze-assets/shaders/skybox_fs.shader");
-        skybox.initMVP();
-        skybox.setDefaultPositions();
-        skybox.setFaces({
+        std::shared_ptr<Skybox> skybox = std::make_shared<Skybox>(camera.get());
+        skybox->initShader("maze-assets/shaders/skybox_vs.shader", "maze-assets/shaders/skybox_fs.shader");
+        skybox->initMVP();
+        skybox->setDefaultPositions();
+        skybox->setFaces({
             "maze-assets/textures/skybox/right.jpg",
             "maze-assets/textures/skybox/left.jpg",
             "maze-assets/textures/skybox/bottom.jpg",
@@ -56,25 +47,20 @@ public:
             "maze-assets/textures/skybox/front.jpg",
             "maze-assets/textures/skybox/back.jpg"
         });
-        skybox.loadCubemap();
-        skybox.init();
+        skybox->loadCubemap();
+        skybox->init();
 
         Control control{ &windowManager, camera.get(), &maze };
         control.init();
 
-        Game game{ camera.get(), control, windowManager.getWidthF(), windowManager.getHeightF() };
-        game.initShader("maze-assets/shaders/game_vs.shader", "maze-assets/shaders/game_fs.shader");
-        game.initTyper();
-        game.initStopwatch();
-        game.getTexture().init("maze-assets/textures/gameWindow.png");
-        game.setProjection();
-        game.setDefaultPositions();
-        game.init();
-
-        Layer layers{};
-        layers.addLayer(&game);
-        layers.addLayer(&light);
-        layers.addLayer(&skybox);
+        std::shared_ptr<Game> game = std::make_shared<Game>(camera.get(), control, windowManager.getWidthF(), windowManager.getHeightF());
+        game->initShader("maze-assets/shaders/game_vs.shader", "maze-assets/shaders/game_fs.shader");
+        game->initTyper();
+        game->initStopwatch();
+        game->getTexture().init("maze-assets/textures/gameWindow.png");
+        game->setProjection();
+        game->setDefaultPositions();
+        game->init();
 
         LOGGER(info, "starting maze game loop");
 
@@ -86,10 +72,8 @@ public:
             camera->update();
 
             maze->display();
-
-            for (auto& entity : layers.getLayers()) {
-                entity->display();
-            }
+            skybox->display();
+            game->display();
 
             glfwPollEvents();
             glfwSwapBuffers(windowManager.getWindow());

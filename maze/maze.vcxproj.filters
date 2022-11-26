@@ -17,6 +17,9 @@
     <Filter Include="Runner">
       <UniqueIdentifier>{c25514f1-ac6c-497a-b671-474ba5659b62}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Renderer">
+      <UniqueIdentifier>{9a46e617-9160-4a28-a7c6-cdfcff675167}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="maze.cpp">
@@ -41,6 +44,9 @@
     </ClInclude>
     <ClInclude Include="Runner.h">
       <Filter>Runner</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>Renderer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
