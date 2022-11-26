@@ -100,6 +100,10 @@ public:
         return static_cast<float>(_windowProperties.windowHeight);
     }
 
+    float getAspect() {
+        return getWidthF() / getHeightF();
+    }
+
     double getMouseX() {
         getMousePosition();
         return _mouseXPosition;
@@ -268,11 +272,11 @@ private:
         glfwGetCursorPos(_window, &_mouseXPosition, &_mouseYPosition);
     }
 
-    double _lastFrame = 0.0;
-    double _deltaTime = 0.0;
-    double _mouseXPosition = 0.0;
-    double _mouseYPosition = 0.0;
-    GLFWwindow* _window = nullptr;
+    double _lastFrame{ 0.0 };
+    double _deltaTime{ 0.0 };
+    double _mouseXPosition{ 0.0 };
+    double _mouseYPosition{ 0.0 };
+    GLFWwindow* _window{ nullptr };
     WindowProperties& _windowProperties;
 
 };
