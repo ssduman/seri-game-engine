@@ -70,6 +70,15 @@
     <Filter Include="Model">
       <UniqueIdentifier>{3bbe2dd1-fe19-4118-854a-0ae894ec328f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{dc1bf466-22f6-468d-8c0c-d15629721329}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Backend">
+      <UniqueIdentifier>{a615f20a-9f11-4fc8-99df-b9fd1d9fd877}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Backend\OpenGL">
+      <UniqueIdentifier>{7f950a06-262b-43b4-8f46-b7a4727387f1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Light.h">
@@ -191,6 +200,9 @@
     </ClInclude>
     <ClInclude Include="Material.h">
       <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
