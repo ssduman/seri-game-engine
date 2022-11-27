@@ -10,6 +10,8 @@
 #include "EntityType.h"
 #include "AuxiliaryStructs.h"
 
+#include <GL/glew.h>
+
 #include <string>
 #include <vector>
 
