@@ -1,0 +1,184 @@
+#pragma once
+
+#include "IEngineBackend.h"
+#include "AuxiliaryStructs.h"
+
+#include <GL/glew.h>
+
+#include <vector>
+
+class OpenGLEngineBackend : public IEngineBackend {
+public:
+    OpenGLEngineBackend() = default;
+
+    ~OpenGLEngineBackend() override = default;
+
+    void draw() override {
+        bindVAO();
+        drawArrays();
+        unbindVAO();
+    }
+
+    void release() override {
+        unbind();
+        del();
+    }
+
+    void reserveDataBufferSize(GLsizeiptr size) {
+        bind();
+        dataBuffer({ size });
+        unbind();
+    }
+
+    template<typename T>
+    void setDataBuffer(aux::Index index, const typename std::vector<T>& vec, GLintptr offset = 0) {
+        indexCheck(index, vec);
+
+        bind();
+        dataBuffer({ aux::size(vec), aux::data(vec) });
+        attribute({ index, aux::length(vec), (const void*)offset });
+        enable(index);
+        unbind();
+    }
+
+    template<typename T>
+    void setSubDataBuffer(aux::Index index, const typename std::vector<T>& vec, GLintptr offset) {
+        indexCheck(index, vec);
+
+        bind();
+        subdataBuffer({ offset, aux::size(vec), aux::data(vec) });
+        attribute({ index, aux::length(vec), (const void*)offset });
+        unbind();
+    }
+
+    void mapBuffer(const aux::MapBuffer& mapBuffer) {
+        bind();
+        void* ptr = glMapBuffer(mapBuffer.target, mapBuffer.access);
+        memcpy(ptr, mapBuffer.data, mapBuffer.size);
+        glUnmapBuffer(mapBuffer.target);
+        unbind();
+    }
+
+    void setDrawMode(aux::DrawMode drawMode) {
+        _drawMode = aux::toGLenum(drawMode);
+    }
+
+private:
+    void drawArrays() {
+        glDrawArrays(_drawMode, 0, _drawCount);
+    }
+
+    void drawElements() {
+        glDrawElements(_drawMode, _drawCount, GL_UNSIGNED_INT, nullptr);
+    }
+
+    void dataBuffer(const aux::DataBuffer& dataBuffer) {
+        glBufferData(dataBuffer.target, dataBuffer.size, dataBuffer.data, dataBuffer.usage);
+    }
+
+    void subdataBuffer(const aux::SubDataBuffer& subDataBuffer) {
+        glBufferSubData(subDataBuffer.target, subDataBuffer.offset, subDataBuffer.size, subDataBuffer.data);
+    }
+
+    void attribute(const aux::Attribute& attribute) {
+        glVertexAttribPointer(attribute.index, attribute.size, attribute.type, attribute.normalized, attribute.stride, attribute.pointer);
+    }
+
+    void enable(aux::Index index) {
+        glEnableVertexAttribArray(aux::toUInt(index));
+    }
+
+    void indexCheck(aux::Index index) {
+        if (aux::Index::position == index) {
+            //_drawCount = aux::count(vec);
+        }
+        if (aux::Index::color == index) {
+            //useColors(true);
+        }
+        if (aux::Index::texture == index) {
+            //useTexture(true);
+        }
+    }
+
+    void generate() {
+        generateVAO();
+        generateVBO();
+        generateEBO();
+    }
+
+    void generateVAO() {
+        glGenVertexArrays(1, &_VAO);
+    }
+
+    void generateVBO() {
+        glGenBuffers(1, &_VBO);
+    }
+
+    void generateEBO() {
+        glGenBuffers(1, &_EBO);
+    }
+
+    void bind() {
+        bindVAO();
+        bindVBO();
+        bindEBO();
+    }
+
+    void bindVAO() {
+        glBindVertexArray(_VAO);
+    }
+
+    void bindVBO() {
+        glBindBuffer(GL_ARRAY_BUFFER, _VBO);
+    }
+
+    void bindEBO() {
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
+    }
+
+    void unbind() {
+        unbindVAO();
+        unbindVBO();
+        unbindEBO();
+    }
+
+    void unbindVAO() {
+        glBindVertexArray(0);
+    }
+
+    void unbindVBO() {
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+    }
+
+    void unbindEBO() {
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    }
+
+    void del() {
+        deleteVAO();
+        deleteVBO();
+        deleteEBO();
+    }
+
+    void deleteVAO() {
+        glDeleteVertexArrays(1, &_VAO);
+        _VAO = 0;
+    }
+
+    void deleteVBO() {
+        glDeleteBuffers(1, &_VBO);
+        _VBO = 0;
+    }
+
+    void deleteEBO() {
+        glDeleteBuffers(1, &_EBO);
+        _EBO = 0;
+    }
+
+    unsigned int _VAO{ 0 };
+    unsigned int _VBO{ 0 };
+    unsigned int _EBO{ 0 };
+    unsigned int _drawCount{ 0 };
+    unsigned int _drawMode{ aux::toGLenum(aux::DrawMode::triangles) };
+
+};
