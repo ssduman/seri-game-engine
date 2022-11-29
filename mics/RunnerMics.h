@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../engine/Model.h"
+#include "../engine/Scene.h"
 #include "../engine/IRunner.h"
 
 #include "Camera.h"
@@ -20,19 +21,21 @@ public:
         std::unique_ptr<WindowManager> windowManager = std::make_unique<WindowManager>(windowProperties);
         windowManager->disableCursor();
         windowManager->setPointSize(2.0f);
-        //windowManager->setLineWidth(2.0f);
 
         std::shared_ptr<State> state = std::make_shared<State>();
         state->gameState() = GameState::game;
 
         CameraProperties cameraProperties{};
-        cameraProperties.aspect = windowManager->getWidthF() / windowManager->getHeightF();
+        cameraProperties.aspect = windowManager->getAspect();
         cameraProperties.position = glm::vec3{ 0.0f, 0.0f, -6.0f };
         std::shared_ptr<Camera> camera = std::make_shared<Camera>(cameraProperties, state.get());
         camera->init();
 
         Control control{ windowManager.get(), camera.get(), state.get() };
         control.init();
+
+        IScene scene;
+        scene.name = "main";
 
         Layer layers;
 
