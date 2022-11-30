@@ -7,6 +7,10 @@
 #include <vector>
 #include <algorithm>
 
+struct SceneAble {
+    virtual void draw() = 0;
+};
+
 struct IScene {
     virtual ~IScene() = default;
 
@@ -39,14 +43,4 @@ struct IScene {
     std::string name;
     std::shared_ptr<IScene> parent;
     std::vector<std::shared_ptr<IScene>> children;
-};
-
-class Scene {
-public:
-    Scene() = default;
-
-    ~Scene() = default;
-
-private:
-
 };

@@ -189,7 +189,7 @@
     <ClInclude Include="Material.h">
       <Filter>Model</Filter>
     </ClInclude>
-    <ClInclude Include="Scene.h">
+    <ClInclude Include="IScene.h">
       <Filter>Scene</Filter>
     </ClInclude>
     <ClInclude Include="IEngineBackend.h">
