@@ -2,7 +2,6 @@
 
 #include "../engine/Line.h"
 #include "../engine/Color.h"
-#include "../engine/Layer.h"
 #include "../engine/Point.h"
 
 #include "Camera.h"
@@ -14,11 +13,11 @@
 
 class PerlinNoise {
 public:
-    PerlinNoise(Camera* camera, Layer& layers) : _camera(camera), _layers(layers) {
+    PerlinNoise(Camera* camera) : _camera(camera) {
         makePermutation();
     }
 
-    void operator()() {
+    void generate() {
         perlin();
 
         constexpr float z = 80.0f;
@@ -45,8 +44,6 @@ public:
         perlinNoisePoints->reserveDataBuffer(positionsSize + colorsSize);
         perlinNoisePoints->setSubDataBuffer(aux::Index::position, positions, 0);
         perlinNoisePoints->setSubDataBuffer(aux::Index::color, colors, positionsSize);
-
-        _layers.addLayer(perlinNoisePoints);
 
         LOGGER(info, "perlin noise created with size: " << positions.size());
     }
@@ -140,7 +137,6 @@ private:
     }
 
     Camera* _camera;
-    Layer& _layers;
 
     std::vector<int> _P;
     std::vector<std::vector<Color>> _pixels;
