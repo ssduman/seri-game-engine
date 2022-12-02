@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../engine/Model.h"
-#include "../engine/Scene.h"
+#include "../engine/IScene.h"
 #include "../engine/IRunner.h"
 
 #include "Camera.h"
