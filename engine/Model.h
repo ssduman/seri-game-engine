@@ -2,6 +2,7 @@
 
 #include "Mesh.h"
 #include "Entity.h"
+#include "IScene.h"
 #include "Logger.h"
 #include "Material.h"
 
@@ -21,9 +22,11 @@ public:
 
     ~Model() override = default;
 
-    void init() override {}
+    void update() override {};
 
-    void render() override {
+    void render() override {};
+
+    void display() override {
         for (auto& mesh : _meshes) {
             mesh.display();
         }
