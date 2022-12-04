@@ -23,9 +23,19 @@ class Shader {
 public:
     Shader() = default;
 
-    Shader(Shader&& other) = delete;
+    Shader(Shader&& other) noexcept {
+        _program = other._program;
 
-    Shader(const Shader& other) = delete;
+        _shouldDeleteThis = false;
+        other._shouldDeleteThis = false;
+    }
+
+    Shader(Shader& other) noexcept {
+        _program = other._program;
+
+        _shouldDeleteThis = false;
+        other._shouldDeleteThis = false;
+    }
 
     Shader& operator=(Shader&& other) noexcept {
         _program = other._program;
