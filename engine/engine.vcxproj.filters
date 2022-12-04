@@ -198,6 +198,9 @@
     <ClInclude Include="OpenGLEngineBackend.h">
       <Filter>Backend\OpenGL</Filter>
     </ClInclude>
+    <ClInclude Include="ShaderManager.h">
+      <Filter>Shader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\maze\maze-assets\shaders\basic_fs.shader">
