@@ -66,7 +66,7 @@
     <ClInclude Include="GUI.h">
       <Filter>GUI</Filter>
     </ClInclude>
-    <ClInclude Include="Runner.h">
+    <ClInclude Include="RunnerEditor.h">
       <Filter>Runner</Filter>
     </ClInclude>
     <ClInclude Include="..\libraries\imgui\backends\imgui_impl_glfw.h">

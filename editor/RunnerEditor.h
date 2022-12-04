@@ -7,15 +7,15 @@
 #include "Control.h"
 #include "Factory.h"
 
-class Runner : public IRunner {
+class RunnerEditor : public IRunner {
 public:
-    Runner() = default;
+    RunnerEditor() = default;
 
-    ~Runner() override = default;
+    ~RunnerEditor() override = default;
 
     void operator()() {
         WindowProperties windowProperties{ /*title*/ "Seri Game Engine - Editor", /*fullscreen*/ false, /*w*/ 1280, /*h*/ 720 };
-        std::unique_ptr<WindowManager> windowManager = std::make_unique<WindowManager>(windowProperties);
+        std::shared_ptr<WindowManager> windowManager = std::make_unique<WindowManager>(windowProperties);
 
         std::shared_ptr<State> state = std::make_shared<State>();
         state->gameState() = GameState::menu;
@@ -30,7 +30,7 @@ public:
         Control control{ windowManager.get(), camera.get(), state.get() };
         control.init();
 
-        GUI gui{ windowManager.get(), camera.get(), &layers, state.get() };
+        GUI gui{ windowManager, camera, layers, state };
         gui.init();
 
         LOGGER(info, "starting seri game engine - editor loop");
@@ -41,7 +41,7 @@ public:
 
             control.processInput(windowManager->updateDeltaTime());
 
-            for (auto entity : layers.getLayers()) {
+            for (auto& entity : layers.getLayers()) {
                 entity->display();
                 gui.registerEntity(entity);
             }
