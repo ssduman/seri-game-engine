@@ -4,9 +4,9 @@
 
 class Point : public Entity {
 public:
-    Point(ICamera* camera) : Entity(camera) {
+    Point(std::shared_ptr<ICamera> camera) : Entity(camera) {
         _entityType = EntityType::point;
-        setDrawMode(aux::DrawMode::points);
+        _engineBackend.setDrawMode(aux::DrawMode::points);
     }
 
     ~Point() override = default;
@@ -14,8 +14,7 @@ public:
     void render() override {
         _shader.use();
         _texture.bind();
-        glBindVertexArray(_VAO);
-        glDrawArrays(_drawMode, 0, _drawArrayCount);
+        _engineBackend.draw();
     }
 
 private:

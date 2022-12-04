@@ -4,9 +4,9 @@
 
 class Triangle : public Entity {
 public:
-    Triangle(ICamera* camera) : Entity(camera) {
+    Triangle(std::shared_ptr<ICamera> camera) : Entity(camera) {
         _entityType = EntityType::triangle;
-        setDrawMode(aux::DrawMode::triangles);
+        _engineBackend.setDrawMode(aux::DrawMode::triangles);
     }
 
     ~Triangle() override = default;
@@ -14,8 +14,7 @@ public:
     void render() override {
         _shader.use();
         _texture.bind();
-        glBindVertexArray(_VAO);
-        glDrawArrays(_drawMode, 0, _drawArrayCount);
+        _engineBackend.draw();
     }
 
 private:

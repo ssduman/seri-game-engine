@@ -4,9 +4,9 @@
 
 class Rectangle : public Entity {
 public:
-    Rectangle(ICamera* camera) : Entity(camera) {
+    Rectangle(std::shared_ptr<ICamera> camera) : Entity(camera) {
         _entityType = EntityType::rectangle;
-        setDrawMode(aux::DrawMode::triangles);
+        _engineBackend.setDrawMode(aux::DrawMode::triangles);
     }
 
     ~Rectangle() override = default;
@@ -14,11 +14,9 @@ public:
     void render() override {
         _shader.use();
         _texture.bind();
-        glBindVertexArray(_VAO);
-        glDrawElements(_drawMode, _renderCount, GL_UNSIGNED_INT, nullptr);
+        _engineBackend.drawEl();
     }
 
 private:
-    GLsizei _renderCount = 6;
 
 };
