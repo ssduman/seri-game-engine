@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Logger.h"
+#include "ShaderManager.h"
 #include "IEngineBackend.h"
 #include "AuxiliaryStructs.h"
 
@@ -9,13 +11,22 @@
 
 class OpenGLEngineBackend : public IEngineBackend {
 public:
-    OpenGLEngineBackend() = default;
+    OpenGLEngineBackend(ShaderManager shaderManager) : _shaderManager(shaderManager) {
+        generate();
+        bind();
+    }
 
     ~OpenGLEngineBackend() override = default;
 
     void draw() override {
         bindVAO();
         drawArrays();
+        unbindVAO();
+    }
+
+    void drawEl() {
+        bindVAO();
+        drawElements();
         unbindVAO();
     }
 
@@ -41,6 +52,12 @@ public:
         unbind();
     }
 
+    void setDataBuffer(const aux::DataBuffer& dataB) {
+        bind();
+        dataBuffer(dataB);
+        unbind();
+    }
+
     template<typename T>
     void setSubDataBuffer(aux::Index index, const typename std::vector<T>& vec, GLintptr offset) {
         indexCheck(index, vec);
@@ -48,6 +65,7 @@ public:
         bind();
         subdataBuffer({ offset, aux::size(vec), aux::data(vec) });
         attribute({ index, aux::length(vec), (const void*)offset });
+        enable(index);
         unbind();
     }
 
@@ -61,6 +79,14 @@ public:
 
     void setDrawMode(aux::DrawMode drawMode) {
         _drawMode = aux::toGLenum(drawMode);
+    }
+
+    void setDrawCount(unsigned int drawCount) {
+        if (_drawCount != 0) {
+            LOGGER(warning, "draw count already set to " << _drawCount << " and will not change to given value " << drawCount);
+            return;
+        }
+        _drawCount = drawCount;
     }
 
 private:
@@ -88,15 +114,16 @@ private:
         glEnableVertexAttribArray(aux::toUInt(index));
     }
 
-    void indexCheck(aux::Index index) {
+    template<typename T>
+    void indexCheck(aux::Index index, const typename std::vector<T>& vec) {
         if (aux::Index::position == index) {
-            //_drawCount = aux::count(vec);
+            setDrawCount(aux::count(vec));
         }
         if (aux::Index::color == index) {
-            //useColors(true);
+            _shaderManager.useColors(true);
         }
         if (aux::Index::texture == index) {
-            //useTexture(true);
+            _shaderManager.useTexture(true);
         }
     }
 
@@ -174,6 +201,8 @@ private:
         glDeleteBuffers(1, &_EBO);
         _EBO = 0;
     }
+
+    ShaderManager _shaderManager;
 
     unsigned int _VAO{ 0 };
     unsigned int _VBO{ 0 };
