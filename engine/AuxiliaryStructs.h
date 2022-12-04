@@ -36,6 +36,11 @@ namespace aux {
         triangle_fan = GL_TRIANGLE_FAN,
     };
 
+    enum class DrawType : int {
+        arrays = 0,
+        elements = 1,
+    };
+
     enum class Target : GLenum {
         vbo = GL_ARRAY_BUFFER,
         ebo = GL_ELEMENT_ARRAY_BUFFER,

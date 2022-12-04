@@ -119,6 +119,7 @@ public:
                 const std::vector<GLuint> indices{ 0, 1, 3, 1, 2, 3 };
                 rectangle->getDrawer().setDataBuffer(aux::DataBuffer{ aux::Target::ebo, aux::size(indices), indices.data() });
                 rectangle->getDrawer().setDrawCount(aux::count(indices));
+                rectangle->getDrawer().setDrawType(aux::DrawType::elements);
 
                 rectangle->getDrawer().reserveDataBufferSize(positionsSize + texturePositionsSize);
                 rectangle->getDrawer().setSubDataBuffer(aux::Index::position, positions, 0);

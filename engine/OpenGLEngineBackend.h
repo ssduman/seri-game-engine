@@ -20,13 +20,12 @@ public:
 
     void draw() override {
         bindVAO();
-        drawArrays();
-        unbindVAO();
-    }
-
-    void drawEl() {
-        bindVAO();
-        drawElements();
+        if (aux::DrawType::arrays == _drawType) {
+            drawArrays();
+        }
+        if (aux::DrawType::elements == _drawType) {
+            drawElements();
+        }
         unbindVAO();
     }
 
@@ -79,6 +78,10 @@ public:
 
     void setDrawMode(aux::DrawMode drawMode) {
         _drawMode = aux::toGLenum(drawMode);
+    }
+
+    void setDrawType(aux::DrawType drawType) {
+        _drawType = drawType;
     }
 
     void setDrawCount(unsigned int drawCount) {
@@ -207,6 +210,7 @@ private:
     unsigned int _VAO{ 0 };
     unsigned int _VBO{ 0 };
     unsigned int _EBO{ 0 };
+    aux::DrawType _drawType{};
     unsigned int _drawCount{ 0 };
     unsigned int _drawMode{ aux::toGLenum(aux::DrawMode::triangles) };
 
