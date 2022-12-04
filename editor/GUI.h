@@ -13,9 +13,16 @@
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
 
+#include <memory>
+
 class GUI : public Object {
 public:
-    GUI(WindowManager* windowManager, Camera* camera, Layer* layers, State* state) : _windowManager(windowManager), _camera(camera), _layers(layers), _state{ state } {
+    GUI(
+        std::shared_ptr<WindowManager> windowManager,
+        std::shared_ptr<Camera> camera,
+        Layer& layers,
+        std::shared_ptr<State> state)
+        : _windowManager(windowManager), _camera(camera), _layers(layers), _state{ state } {
         LOGGER(info, "gui init succeeded");
     }
 
@@ -56,7 +63,7 @@ public:
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     }
 
-    void registerEntity(Entity* entity) {
+    void registerEntity(std::shared_ptr<Entity> entity) {
         _currentEntity = entity;
     }
 
@@ -202,29 +209,29 @@ private:
 
     void showEntityCreateButtons() {
         if (ImGui::Button("Create point")) {
-            _layers->addLayer(Factory::CreateEntity(_camera, EntityType::point));
+            _layers.addLayer(Factory::CreateEntity(_camera, EntityType::point));
         }
         if (ImGui::Button("Create line")) {
-            _layers->addLayer(Factory::CreateEntity(_camera, EntityType::line));
+            _layers.addLayer(Factory::CreateEntity(_camera, EntityType::line));
         }
         if (ImGui::Button("Create triangle")) {
-            _layers->addLayer(Factory::CreateEntity(_camera, EntityType::triangle));
+            _layers.addLayer(Factory::CreateEntity(_camera, EntityType::triangle));
         }
         if (ImGui::Button("Create rectangle")) {
-            _layers->addLayer(Factory::CreateEntity(_camera, EntityType::rectangle));
+            _layers.addLayer(Factory::CreateEntity(_camera, EntityType::rectangle));
         }
         if (ImGui::Button("Create circle")) {
-            _layers->addLayer(Factory::CreateEntity(_camera, EntityType::circle));
+            _layers.addLayer(Factory::CreateEntity(_camera, EntityType::circle));
         }
         if (ImGui::Button("Create cube")) {
-            _layers->addLayer(Factory::CreateEntity(_camera, EntityType::cube));
+            _layers.addLayer(Factory::CreateEntity(_camera, EntityType::cube));
         }
         if (ImGui::Button("Create polygon")) {
-            _layers->addLayer(Factory::CreateEntity(_camera, EntityType::polygon));
+            _layers.addLayer(Factory::CreateEntity(_camera, EntityType::polygon));
         }
         if (ImGui::Button("Delete entity")) {
             _currentEntity = nullptr;
-            _layers->deleteLayer();
+            _layers.deleteLayer();
         }
 
         ImGui::Separator();
@@ -232,6 +239,8 @@ private:
 
     void showEntityTransformationOptions() {
         if (_currentEntity) {
+            _currentEntity->getShader().use();
+
             ImGui::SliderFloat3("position", &_currentEntity->getTransform()._position[0], -1.0f, 1.0f, "%.4f");
             ImGui::SliderFloat3("rotation", &_currentEntity->getTransform()._rotation[0], -180.0f, 180.0f, "%.4f");
             ImGui::SliderFloat3("scale", &_currentEntity->getTransform()._scale[0], 0.0f, 100.0f, "%.4f");
@@ -252,6 +261,8 @@ private:
             ImGui::InputText("name", str0, IM_ARRAYSIZE(str0));
 
             ImGui::Separator();
+
+            _currentEntity->getShader().disuse();
         }
     }
 
@@ -315,15 +326,17 @@ private:
         ImGui::Text(text.c_str());
     }
 
-    WindowManager* _windowManager = nullptr;
-    Camera* _camera = nullptr;
-    Layer* _layers = nullptr;
-    State* _state = nullptr;
-    Entity* _currentEntity = nullptr;
-    ImGuiIO* _io = nullptr;
-    ImGuiStyle* _style = nullptr;
-    ImGuiWindowFlags _windowFlags = 0;
-    const char* glsl_version = "#version 130";
-    const char* font_filename = "editor-assets/fonts/En Bloc.ttf";
+    std::shared_ptr<WindowManager> _windowManager;
+    std::shared_ptr<Camera> _camera;
+    Layer& _layers;
+    std::shared_ptr<State> _state;
+    std::shared_ptr<Entity> _currentEntity;
+
+    ImGuiIO* _io{ nullptr };
+    ImGuiStyle* _style{ nullptr };
+    ImGuiWindowFlags _windowFlags{ 0 };
+
+    const char* glsl_version{ "#version 130" };
+    const char* font_filename{ "editor-assets/fonts/En Bloc.ttf" };
 
 };
