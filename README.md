@@ -49,3 +49,6 @@ Create a folder named *libraries/* and copy dependencies into it then build with
         </td>
     </tr>
 </table>
+
+### Note: ###
+Due to constantly changing engine code, some of the projects may not be compiled at the time.
