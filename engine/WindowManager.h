@@ -58,11 +58,11 @@ public:
         return true;
     }
 
-    int& getWidth() {
+    int getWidth() {
         return _windowProperties.windowWidth;
     }
 
-    int& getHeight() {
+    int getHeight() {
         return _windowProperties.windowHeight;
     }
 
@@ -129,6 +129,12 @@ public:
 
     void disableCursor() {
         glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    }
+
+    void viewport(int x, int y, int width, int height) {
+        _windowProperties.windowWidth = width;
+        _windowProperties.windowHeight = height;
+        glViewport(x, y, _windowProperties.windowWidth, _windowProperties.windowHeight);
     }
 
     int windowShouldClose() {
