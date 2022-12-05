@@ -5,11 +5,13 @@
 #include "Logger.h"
 #include "CameraProperties.h"
 
+#include <memory>
+
 class ICamera {
 public:
     ICamera(CameraProperties cameraProperties) : _cameraProperties{ cameraProperties } {}
 
-    ICamera(CameraProperties cameraProperties, State* state) : _cameraProperties{ cameraProperties }, _state{ state } {}
+    ICamera(CameraProperties cameraProperties, std::shared_ptr<State> state) : _cameraProperties{ cameraProperties }, _state{ state } {}
 
     virtual ~ICamera() = default;
 
@@ -17,15 +19,7 @@ public:
 
     virtual void update() = 0;
 
-    void initShader(const std::string& vsCodePath, const std::string& fsCodePath) {
-        _shader.init(vsCodePath, fsCodePath);
-    }
-
     virtual void handleMouse(float xPos, float yPos) {
-        if (_viewUpdated) {
-            _viewUpdated = false;
-        }
-
         if (_state && _state->gameState() != GameState::game) {
             return;
         }
@@ -60,27 +54,21 @@ public:
 
         updateEulerAngles();
         updateView();
-
-        _viewUpdated = true;
     }
 
-    virtual const bool& isViewUpdated() {
-        return _viewUpdated;
-    }
-
-    virtual const glm::mat4& getModel() {
+    const glm::mat4& getModel() {
         return _model;
     }
 
-    virtual const glm::mat4& getView() {
+    const glm::mat4& getView() {
         return _view;
     }
 
-    virtual const glm::mat4& getProjection() {
+    const glm::mat4& getProjection() {
         return _projection;
     }
 
-    virtual CameraProperties& getCameraProperties() {
+    CameraProperties& getCameraProperties() {
         return _cameraProperties;
     }
 
@@ -111,8 +99,7 @@ protected:
     }
 
     CameraProperties _cameraProperties;
-    State* _state = nullptr;
-    Shader _shader;
+    std::shared_ptr<State> _state;
     glm::mat4 _model{ 1.0f };
     glm::mat4 _view{};
     glm::mat4 _projection{};
@@ -122,5 +109,5 @@ protected:
     float _yaw{ 90.0f };
     float _xPosLast{ -1.0f };
     float _yPosLast{ -1.0f };
-    bool _viewUpdated{ false };
+
 };
