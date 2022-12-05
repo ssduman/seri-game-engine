@@ -1,21 +1,70 @@
 #pragma once
 
-#include "WindowManager.h"
-#include "Logger.h"
 #include "State.h"
+#include "Logger.h"
+#include "WindowManager.h"
 
+#include <memory>
 #include <string>
 #include <vector>
 
 class IControl {
 public:
-    IControl(WindowManager* windowManager) : _windowManager(windowManager) {}
+    IControl(std::shared_ptr<WindowManager> windowManager) : _windowManager(windowManager) {}
 
-    IControl(WindowManager* windowManager, State* state) : _windowManager(windowManager), _state(state) {}
+    IControl(std::shared_ptr<WindowManager> windowManager, std::shared_ptr<State> state) : _windowManager(windowManager), _state(state) {}
 
     virtual ~IControl() = default;
 
-    virtual void init() = 0;
+    virtual void init() {
+        glfwSetCharCallback(_windowManager->getWindow(),
+            [](GLFWwindow* window, unsigned int codepoint) {
+                if (auto control = static_cast<IControl*>(glfwGetWindowUserPointer(window))) {
+                    control->charCallback(window, codepoint);
+                }
+            }
+        );
+
+        glfwSetMouseButtonCallback(_windowManager->getWindow(),
+            [](GLFWwindow* window, int button, int action, int mods) {
+                if (auto control = static_cast<IControl*>(glfwGetWindowUserPointer(window))) {
+                    control->mouseButtonCallback(window, button, action, mods);
+                }
+            }
+        );
+
+        glfwSetScrollCallback(_windowManager->getWindow(),
+            [](GLFWwindow* window, double xoffset, double yoffset) {
+                if (auto control = static_cast<IControl*>(glfwGetWindowUserPointer(window))) {
+                    control->scrollCallback(window, xoffset, yoffset);
+                }
+            }
+        );
+
+        glfwSetFramebufferSizeCallback(_windowManager->getWindow(),
+            [](GLFWwindow* window, int width, int height) {
+                if (auto control = static_cast<IControl*>(glfwGetWindowUserPointer(window))) {
+                    control->framebufferSizeCallback(window, width, height);
+                }
+            }
+        );
+
+        glfwSetCursorPosCallback(_windowManager->getWindow(),
+            [](GLFWwindow* window, double xpos, double ypos) {
+                if (auto control = static_cast<IControl*>(glfwGetWindowUserPointer(window))) {
+                    control->cursorPosCallback(window, xpos, ypos);
+                }
+            }
+        );
+
+        glfwSetKeyCallback(_windowManager->getWindow(),
+            [](GLFWwindow* window, int key, int scancode, int action, int mods) {
+                if (auto control = static_cast<IControl*>(glfwGetWindowUserPointer(window))) {
+                    control->keyCallback(window, key, scancode, action, mods);
+                }
+            }
+        );
+    }
 
     virtual void charCallback(GLFWwindow* window, unsigned int codepoint) = 0;
 
@@ -29,9 +78,13 @@ public:
 
     virtual void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) = 0;
 
-    void addUserInput(std::string& str) {
-        _userInputString += str;
-        _userInputVector.emplace_back(str);
+    void clearUserInput() {
+        _userInputString.clear();
+        _userInputVector.clear();
+    }
+
+    int getUserInputSize() {
+        return static_cast<int>(_userInputVector.size());
     }
 
     void deleteLastUserInput() {
@@ -44,29 +97,17 @@ public:
         }
     }
 
-    void clearUserInput() {
-        _userInputString.clear();
-        _userInputVector.clear();
-    }
-
     const std::string& getUserInput() {
         return _userInputString;
     }
 
-    int getUserInputSize() {
-        return static_cast<int>(_userInputVector.size());
+    void addUserInput(const std::string& str) {
+        _userInputString += str;
+        _userInputVector.emplace_back(str);
     }
 
     const std::vector<std::string>& getUserInputVector() {
         return _userInputVector;
-    }
-
-    double getMouseCurrentPosX() {
-        return _windowManager->getMouseX();
-    }
-
-    double getMouseCurrentPosY() {
-        return _windowManager->getMouseY();
     }
 
     std::string encodeUTF8(const unsigned int codepoint) {
@@ -74,14 +115,17 @@ public:
 
         if (codepoint < 0x80) {
             str += static_cast<char>(codepoint);
-        } else if (codepoint < 0x800) {
+        }
+        else if (codepoint < 0x800) {
             str += (codepoint >> 6) | 0xc0;
             str += (codepoint & 0x3f) | 0x80;
-        } else if (codepoint < 0x10000) {
+        }
+        else if (codepoint < 0x10000) {
             str += (codepoint >> 12) | 0xe0;
             str += ((codepoint >> 6) & 0x3f) | 0x80;
             str += (codepoint & 0x3f) | 0x80;
-        } else if (codepoint < 0x110000) {
+        }
+        else if (codepoint < 0x110000) {
             str += (codepoint >> 18) | 0xf0;
             str += ((codepoint >> 12) & 0x3f) | 0x80;
             str += ((codepoint >> 6) & 0x3f) | 0x80;
@@ -92,10 +136,13 @@ public:
     }
 
 protected:
-    WindowManager* _windowManager = nullptr;
-    State* _state = nullptr;
-    double _mouseCurrentPosX = 0;
-    double _mouseCurrentPosY = 0;
+    std::shared_ptr<WindowManager> _windowManager;
+    std::shared_ptr<State> _state;
+
+    double _mouseCurrentPosX{ 0 };
+    double _mouseCurrentPosY{ 0 };
+
     std::string _userInputString;
     std::vector<std::string> _userInputVector;
+
 };

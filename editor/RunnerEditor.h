@@ -15,19 +15,19 @@ public:
 
     void operator()() {
         WindowProperties windowProperties{ /*title*/ "Seri Game Engine - Editor", /*fullscreen*/ false, /*w*/ 1280, /*h*/ 720 };
-        std::shared_ptr<WindowManager> windowManager = std::make_unique<WindowManager>(windowProperties);
+        std::shared_ptr<WindowManager> windowManager = std::make_shared<WindowManager>(windowProperties);
 
         std::shared_ptr<State> state = std::make_shared<State>();
         state->gameState() = GameState::menu;
 
         CameraProperties cameraProperties{};
-        cameraProperties.aspect = windowManager->getWidthF() / windowManager->getHeightF();
+        cameraProperties.aspect = windowManager->getAspect();
         std::shared_ptr<Camera> camera = std::make_shared<Camera>(cameraProperties, state.get());
         camera->init();
 
         Layer layers{};
 
-        Control control{ windowManager.get(), camera.get(), state.get() };
+        Control control{ windowManager, state, camera };
         control.init();
 
         GUI gui{ windowManager, camera, layers, state };
