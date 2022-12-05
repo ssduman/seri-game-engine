@@ -22,25 +22,17 @@ public:
     }
 
     void charCallback(GLFWwindow* window, unsigned int codepoint) override {
-        auto str = encodeUTF8(codepoint);
-        addUserInput(str);
+        addUserInput(encodeUTF8(codepoint));
     }
 
     void cursorPosCallback(GLFWwindow* window, double xpos, double ypos) override {
-        _mouseCurrentPosX = xpos;
-        _mouseCurrentPosY = ypos;
-
-        float xPos = static_cast<float>(xpos);
-        float yPos = static_cast<float>(ypos);
-        _camera->handleMouse(xPos, yPos);
+        _camera->handleMouse(static_cast<float>(xpos), static_cast<float>(ypos));
     }
 
     void scrollCallback(GLFWwindow* window, double xoffset, double yoffset) override {}
 
     void framebufferSizeCallback(GLFWwindow* window, int width, int height) override {
-        _windowManager->getWidth() = width;
-        _windowManager->getHeight() = height;
-        glViewport(0, 0, width, height);
+        _windowManager->viewport(0, 0, width, height);
     }
 
     void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods) override {
@@ -70,7 +62,7 @@ public:
         GLFWwindow* window = _windowManager->getWindow();
 
         if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-            glfwSetWindowShouldClose(window, GLFW_TRUE);
+            _windowManager->setWindowShouldCloseToTrue();
         }
 
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
