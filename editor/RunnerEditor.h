@@ -26,7 +26,7 @@ public:
 
         CameraProperties cameraProperties{};
         cameraProperties.aspect = windowManager->getAspect();
-        std::shared_ptr<Camera> camera = std::make_shared<Camera>(cameraProperties, state.get());
+        std::shared_ptr<Camera> camera = std::make_shared<Camera>(cameraProperties, state);
         camera->init();
 
         Layer layers{};
