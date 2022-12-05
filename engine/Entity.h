@@ -59,7 +59,7 @@ public:
 
     ~Entity() override {
         if (_shouldDeleteThis) {
-            //_engineBackend.release();
+            _engineBackend.release();
         }
     }
 
