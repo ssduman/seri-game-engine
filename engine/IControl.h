@@ -139,8 +139,8 @@ protected:
     std::shared_ptr<WindowManager> _windowManager;
     std::shared_ptr<State> _state;
 
-    double _mouseCurrentPosX{ 0 };
-    double _mouseCurrentPosY{ 0 };
+    double _mouseCurrentPosX{ 0.0 };
+    double _mouseCurrentPosY{ 0.0 };
 
     std::string _userInputString;
     std::vector<std::string> _userInputVector;
