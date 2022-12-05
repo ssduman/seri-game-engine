@@ -169,6 +169,10 @@ public:
         glLineWidth(width);
     }
 
+    void setWindowUserPointer(void* pointer) {
+        glfwSetWindowUserPointer(_window, pointer);
+    }
+
 private:
     void checkGLError() {
         GLenum err;
