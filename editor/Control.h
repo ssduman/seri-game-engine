@@ -12,7 +12,7 @@ class Control : public IControl {
 public:
     Control(std::shared_ptr<WindowManager> windowManager, std::shared_ptr<State> state, std::shared_ptr<Camera> camera)
         : IControl(windowManager, state), _camera(camera) {
-        glfwSetWindowUserPointer(_windowManager->getWindow(), static_cast<void*>(this));
+        _windowManager->setWindowUserPointer(static_cast<void*>(this));
 
         LOGGER(info, "control init succeeded");
     }
