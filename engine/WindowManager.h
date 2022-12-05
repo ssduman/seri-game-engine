@@ -173,6 +173,10 @@ public:
         glfwSetWindowUserPointer(_window, pointer);
     }
 
+    void* getWindowUserPointer() {
+        return glfwGetWindowUserPointer(_window);
+    }
+
 private:
     void checkGLError() {
         GLenum err;
