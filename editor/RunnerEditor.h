@@ -16,6 +16,10 @@ public:
     void operator()() {
         WindowProperties windowProperties{ /*title*/ "Seri Game Engine - Editor", /*fullscreen*/ false, /*w*/ 1280, /*h*/ 720 };
         std::shared_ptr<WindowManager> windowManager = std::make_shared<WindowManager>(windowProperties);
+        if (!windowManager->init()) {
+            LOGGER(error, "could not create window manager");
+            return;
+        }
 
         std::shared_ptr<State> state = std::make_shared<State>();
         state->gameState() = GameState::menu;
@@ -35,9 +39,9 @@ public:
 
         LOGGER(info, "starting seri game engine - editor loop");
 
-        while (!glfwWindowShouldClose(windowManager->getWindow())) {
-            glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        while (!windowManager->windowShouldClose()) {
+            windowManager->clear();
+            windowManager->clearColor();
 
             control.processInput(windowManager->updateDeltaTime());
 
@@ -48,8 +52,8 @@ public:
 
             gui.display();
 
-            glfwPollEvents();
-            glfwSwapBuffers(windowManager->getWindow());
+            windowManager->pollEvents();
+            windowManager->swapBuffers();
         }
 
         LOGGER(info, "seri game engine - editor loop stopped");
