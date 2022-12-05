@@ -6,7 +6,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-#include <iostream>
+#include <utility>
 
 struct WindowProperties {
     const char* windowTitle = nullptr;
@@ -17,71 +17,45 @@ struct WindowProperties {
 
 class WindowManager {
 public:
-    WindowManager(WindowProperties& windowProperties) : _windowProperties(windowProperties) {
-        if (!glfwInit()) {
-            LOGGER(error, "glfwInit error");
-            exit(-1);
-        }
-        LOGGER(info, "gflw version '" << glfwGetVersionString() << "' init succeeded");
-
-        glfwSetErrorCallback(
-            [](int error, const char* description) {
-                LOGGER(error, "glfw error " << error << ": " << description);
-            }
-        );
-
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-        //glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
-        //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-
-        if (_windowProperties.isFullscreen) {
-            int monXPos, monYPos;
-            glfwGetMonitorWorkarea(glfwGetPrimaryMonitor(), &monXPos, &monYPos, &_windowProperties.windowWidth, &_windowProperties.windowHeight);
-            _window = glfwCreateWindow(_windowProperties.windowWidth, _windowProperties.windowHeight, _windowProperties.windowTitle, glfwGetPrimaryMonitor(), nullptr);
-        }
-        else {
-            _window = glfwCreateWindow(_windowProperties.windowWidth, _windowProperties.windowHeight, _windowProperties.windowTitle, nullptr, nullptr);
-        }
-        if (!_window) {
-            glfwTerminate();
-            LOGGER(error, "window creating error");
-            exit(-1);
-        }
-
-        glfwMakeContextCurrent(_window);
-        glfwSwapInterval(1);
-
-        if (glewInit() != GLEW_OK) {
-            LOGGER(error, "glewInit error");
-            exit(-1);
-        }
-        LOGGER(info, "glew version '" << glewGetString(GLEW_VERSION) << "' init succeeded");
-
-        glfwSetWindowCloseCallback(_window,
-            [](GLFWwindow* window) {
-                LOGGER(info, "window is attempting to close");
-            }
-        );
-
-        glEnable(GL_DEPTH_TEST);
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-        enableDebugOutput();
-
-        setPointSize(10.0f);
-        //setLineWidth(10.0f);
-
-        LOGGER(info, "window created successfully");
-    }
+    WindowManager(WindowProperties& windowProperties) : _windowProperties(windowProperties) {}
 
     ~WindowManager() {
         glfwDestroyWindow(_window);
         glfwTerminate();
 
-        LOGGER(info, "window destroyed and terminated successfully");
+        LOGGER(info, "window manager destroyed and terminated successfully");
+    }
+
+    bool init() {
+        if (!initglfw()) {
+            return false;
+        }
+
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+        if (!createWindow()) {
+            return false;
+        }
+
+        glfwSwapInterval(1);
+        glfwMakeContextCurrent(_window);
+
+        if (!initglew()) {
+            return false;
+        }
+
+        glEnable(GL_BLEND);
+        glEnable(GL_DEPTH_TEST);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        setErrorCallback();
+        setWindowCloseCallback();
+        enableDebugOutput();
+
+        LOGGER(info, "window manager created successfully");
+        return true;
     }
 
     int& getWidth() {
@@ -105,13 +79,34 @@ public:
     }
 
     double getMouseX() {
-        getMousePosition();
+        getCursorPosition();
         return _mouseXPosition;
     }
 
     double getMouseY() {
-        getMousePosition();
+        getCursorPosition();
         return _mouseYPosition;
+    }
+
+    std::pair<double, double> getCursorPositions() {
+        getCursorPosition();
+        return std::make_pair(_mouseXPosition, _mouseYPosition);
+    }
+
+    double getTime() {
+        return glfwGetTime();
+    }
+
+    GLFWwindow* getWindow() {
+        return _window;
+    }
+
+    float updateDeltaTime() {
+        auto currentFrame = getTime();
+        _deltaTime = currentFrame - _lastFrame;
+        _lastFrame = currentFrame;
+
+        return static_cast<float>(_deltaTime);
     }
 
     void setCursorPos(double xpos, double ypos) {
@@ -124,35 +119,39 @@ public:
         setCursorPos(xmid, ymid);
     }
 
-    GLFWwindow* getWindow() {
-        return _window;
-    }
-
-    double getTime() {
-        return glfwGetTime();
-    }
-
-    float updateDeltaTime() {
-        auto currentFrame = getTime();
-        _deltaTime = currentFrame - _lastFrame;
-        _lastFrame = currentFrame;
-
-        return static_cast<float>(_deltaTime);
+    void hideCursor() {
+        glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
     }
 
     void enableCursor() {
         glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
 
-    void hideCursor() {
-        glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-    }
-
     void disableCursor() {
         glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
 
-    void windowShouldClose() {
+    int windowShouldClose() {
+        return glfwWindowShouldClose(_window);
+    }
+
+    void clear(unsigned int mask = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT) {
+        glClear(mask);
+    }
+
+    void clearColor(float red = 0.2f, float green = 0.2f, float blue = 0.2f, float alpha = 1.0f) {
+        glClearColor(red, green, blue, alpha);
+    }
+
+    void pollEvents() {
+        glfwPollEvents();
+    }
+
+    void swapBuffers() {
+        glfwSwapBuffers(_window);
+    }
+
+    void setWindowShouldCloseToTrue() {
         glfwSetWindowShouldClose(_window, GLFW_TRUE);
     }
 
@@ -164,6 +163,7 @@ public:
         glLineWidth(width);
     }
 
+private:
     void checkGLError() {
         GLenum err;
         while ((err = glGetError()) != GL_NO_ERROR) {
@@ -267,17 +267,78 @@ public:
         glDisable(GL_DEBUG_OUTPUT);
     }
 
-private:
-    void getMousePosition() {
+    void setErrorCallback() {
+        glfwSetErrorCallback(
+            [](int error, const char* description) {
+                LOGGER(error, "glfw error " << error << ": " << description);
+            }
+        );
+    }
+
+    void setWindowCloseCallback() {
+        glfwSetWindowCloseCallback(_window,
+            [](GLFWwindow* window) {
+                LOGGER(info, "window is attempting to close");
+            }
+        );
+    }
+
+    bool initglfw() {
+        if (!glfwInit()) {
+            LOGGER(error, "glfwInit error");
+            return false;
+        }
+
+        LOGGER(info, "gflw version '" << glfwGetVersionString() << "' init succeeded");
+        return true;
+    }
+
+    bool initglew() {
+        if (glewInit() != GLEW_OK) {
+            LOGGER(error, "glewInit error");
+            return false;
+        }
+
+        LOGGER(info, "glew version '" << glewGetString(GLEW_VERSION) << "' init succeeded");
+        return true;
+    }
+
+    bool createWindow() {
+        if (_windowProperties.isFullscreen) {
+            GLFWmonitor* glfwMonitor = glfwGetPrimaryMonitor();
+            if (!glfwMonitor) {
+                LOGGER(error, "getting glfw monitor failed");
+                return false;
+            }
+
+            int monXPos, monYPos;
+            glfwGetMonitorWorkarea(glfwMonitor, &monXPos, &monYPos, &_windowProperties.windowWidth, &_windowProperties.windowHeight);
+            _window = glfwCreateWindow(_windowProperties.windowWidth, _windowProperties.windowHeight, _windowProperties.windowTitle, glfwMonitor, nullptr);
+        }
+        else {
+            _window = glfwCreateWindow(_windowProperties.windowWidth, _windowProperties.windowHeight, _windowProperties.windowTitle, nullptr, nullptr);
+        }
+
+        if (!_window) {
+            LOGGER(error, "glfw window creating error");
+            return false;
+        }
+
+        LOGGER(info, "glfw window created");
+        return true;
+    }
+
+    void getCursorPosition() {
         glfwGetCursorPos(_window, &_mouseXPosition, &_mouseYPosition);
     }
+
+    WindowProperties& _windowProperties;
+    GLFWwindow* _window{ nullptr };
 
     double _lastFrame{ 0.0 };
     double _deltaTime{ 0.0 };
     double _mouseXPosition{ 0.0 };
     double _mouseYPosition{ 0.0 };
-    GLFWwindow* _window{ nullptr };
-    WindowProperties& _windowProperties;
 
 };
 
