@@ -6,9 +6,9 @@
 
 #include "Camera.h"
 #include "Control.h"
-#include "Fractal.h"
-#include "MicsShader.h"
-#include "PerlinNoise.h"
+//#include "Fractal.h"
+//#include "MicsShader.h"
+//#include "PerlinNoise.h"
 
 class RunnerMics : public IRunner {
 public:
@@ -18,30 +18,35 @@ public:
 
     void operator()() {
         WindowProperties windowProperties{ /*title*/ "Seri Game Engine - Mics", /*fullscreen*/ false, /*w*/ 800, /*h*/ 800 };
-        std::unique_ptr<WindowManager> windowManager = std::make_unique<WindowManager>(windowProperties);
+        std::shared_ptr<WindowManager> windowManager = std::make_shared<WindowManager>(windowProperties);
+        if (!windowManager->init()) {
+            LOGGER(error, "could not create window manager");
+            return;
+        }
         windowManager->disableCursor();
         windowManager->setPointSize(2.0f);
 
         std::shared_ptr<State> state = std::make_shared<State>();
         state->gameState() = GameState::game;
 
-        CameraProperties cameraProperties{};
+        CameraProperties cameraProperties;
         cameraProperties.aspect = windowManager->getAspect();
         cameraProperties.position = glm::vec3{ 0.0f, 0.0f, -6.0f };
-        std::shared_ptr<Camera> camera = std::make_shared<Camera>(cameraProperties, state.get());
+        std::shared_ptr<Camera> camera = std::make_shared<Camera>(cameraProperties, state);
         camera->init();
 
-        Control control{ windowManager.get(), camera.get(), state.get() };
+        Layer layers;
+
+        Control control{ windowManager, state, camera };
         control.init();
 
         IScene scene;
         scene.name = "main";
 
-        Layer layers;
-
         if (_showModel) {
-            std::shared_ptr<Model> model = std::make_shared<Model>(camera.get());
-            model->initShader("mics-assets/shaders/entity_vs.shader", "mics-assets/shaders/entity_fs.shader");
+            std::shared_ptr<Model> model = std::make_shared<Model>(camera);
+            model->getShader().init("mics-assets/shaders/entity_vs.shader", "mics-assets/shaders/entity_fs.shader");
+            model->init();
             model->load("mics-assets/models/backpack/backpack.obj");
             //model.load("mics-assets/models/survival_guitar_backpack.glb");
             //model.getTransform()._scale = glm::vec3{ 0.05f, 0.05f, 0.05f };
@@ -65,20 +70,18 @@ public:
 
         LOGGER(info, "starting mics loop");
 
-        while (!glfwWindowShouldClose(windowManager->getWindow())) {
-            glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        while (!windowManager->windowShouldClose()) {
+            windowManager->clear();
+            windowManager->clearColor();
 
-            auto deltaTime = windowManager->updateDeltaTime();
-
-            control.processInput(deltaTime);
+            control.processInput(windowManager->updateDeltaTime());
 
             for (auto& entity : layers.getLayers()) {
                 entity->display();
             }
 
-            glfwPollEvents();
-            glfwSwapBuffers(windowManager->getWindow());
+            windowManager->pollEvents();
+            windowManager->swapBuffers();
         }
 
         LOGGER(info, "mics loop stopped");
