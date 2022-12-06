@@ -69,9 +69,9 @@ public:
         _program = glCreateProgram();
         glAttachShader(_program, vertexShader);
         glAttachShader(_program, fragmentShader);
+        glLinkProgram(_program);
         glDeleteShader(vertexShader);
         glDeleteShader(fragmentShader);
-        glLinkProgram(_program);
 
         checkProgramLinkingError();
     }
@@ -87,10 +87,6 @@ public:
 
     void disuse() {
         glUseProgram(0);
-    }
-
-    bool isActiveForUsing() {
-        return _program != 0;
     }
 
     int getUniformLocation(const std::string& name) const {
@@ -208,12 +204,16 @@ private:
         return true;
     }
 
+    bool isActiveForUsing() {
+        return _program != 0;
+    }
+
     void del() {
         glDeleteProgram(_program);
         _program = 0;
     }
 
-    unsigned int _program = 0;
-    bool _shouldDeleteThis = true;
+    unsigned int _program{ 0 };
+    bool _shouldDeleteThis{ true };
 
 };
