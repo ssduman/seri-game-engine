@@ -1,13 +1,10 @@
 #pragma once
 
 #include "../engine/ICamera.h"
-#include "../engine/Logger.h"
-#include "../engine/State.h"
-#include "../engine/Util.h"
 
 class Camera : public ICamera {
 public:
-    Camera(CameraProperties cameraProperties, State* state) : ICamera(cameraProperties, state) {
+    Camera(CameraProperties cameraProperties, std::shared_ptr<State> state) : ICamera(cameraProperties, state) {
         LOGGER(info, "camera init succeeded");
     }
 
@@ -24,10 +21,6 @@ public:
     void update() override {}
 
     void handleInput(float deltaTime, CameraMovement cameraMovement) {
-        if (_viewUpdated) {
-            _viewUpdated = false;
-        }
-
         if (_state->gameState() != GameState::game) {
             return;
         }
@@ -55,8 +48,6 @@ public:
 
         if (moved) {
             updateView();
-
-            _viewUpdated = true;
         }
     }
 
