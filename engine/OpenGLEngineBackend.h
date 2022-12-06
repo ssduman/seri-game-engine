@@ -11,6 +11,8 @@
 
 class OpenGLEngineBackend : public IEngineBackend {
 public:
+    OpenGLEngineBackend() = delete;
+
     OpenGLEngineBackend(ShaderManager shaderManager) : _shaderManager(shaderManager) {
         generate();
         bind();

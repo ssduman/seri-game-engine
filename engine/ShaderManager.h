@@ -5,6 +5,8 @@
 
 class ShaderManager {
 public:
+    ShaderManager() = delete;
+
     ShaderManager(Shader& shader) : _shader(shader) {}
 
     ShaderManager(ShaderManager&& other) noexcept : _shader(other._shader) {}
