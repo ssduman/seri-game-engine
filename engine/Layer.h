@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Entity.h"
+#include "Object.h"
 
 #include <vector>
 
@@ -8,7 +8,7 @@ class Layer {
 public:
     Layer() = default;
 
-    void addLayer(std::shared_ptr<Entity> entity) {
+    void addLayer(std::shared_ptr<Object> entity) {
         _layers.emplace_back(entity);
     }
 
@@ -18,11 +18,11 @@ public:
         }
     }
 
-    std::vector<std::shared_ptr<Entity>> getLayers() {
+    std::vector<std::shared_ptr<Object>> getLayers() {
         return _layers;
     }
 
 private:
-    std::vector<std::shared_ptr<Entity>> _layers{};
+    std::vector<std::shared_ptr<Object>> _layers{};
 
 };
