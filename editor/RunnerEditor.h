@@ -24,12 +24,12 @@ public:
         std::shared_ptr<State> state = std::make_shared<State>();
         state->gameState() = GameState::menu;
 
-        CameraProperties cameraProperties{};
+        CameraProperties cameraProperties;
         cameraProperties.aspect = windowManager->getAspect();
         std::shared_ptr<Camera> camera = std::make_shared<Camera>(cameraProperties, state);
         camera->init();
 
-        Layer layers{};
+        Layer layers;
 
         Control control{ windowManager, state, camera };
         control.init();
