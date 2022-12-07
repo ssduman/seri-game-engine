@@ -48,10 +48,9 @@ public:
             model->getShader().init("mics-assets/shaders/entity_vs.shader", "mics-assets/shaders/entity_fs.shader");
             model->init();
             model->load("mics-assets/models/backpack/backpack.obj");
-            //model.load("mics-assets/models/survival_guitar_backpack.glb");
-            //model.getTransform()._scale = glm::vec3{ 0.05f, 0.05f, 0.05f };
-            //model.getShader().setMat4("u_model", model.getTransform().apply());
-            //model.setColor({ 0.9f, 0.4f, 0.9f, 1.0f });
+            //model->load("mics-assets/models/spider.obj");
+            //model->getTransform()._scale = glm::vec3{ 0.05f, 0.05f, 0.05f };
+            //model->getShader().setMat4("u_model", model->getTransform().apply());
             layers.addLayer(model);
         }
 
