@@ -1,10 +1,13 @@
 #pragma once
 
 #include "Mesh.h"
-#include "Entity.h"
 #include "IScene.h"
 #include "Logger.h"
+#include "Object.h"
+#include "Shader.h"
 #include "Material.h"
+#include "Transform.h"
+#include "ShaderManager.h"
 
 #include <assimp/scene.h>
 #include <assimp/Importer.hpp>
@@ -14,19 +17,31 @@
 #include <memory>
 #include <vector>
 
-class Model : public Entity {
+class Model : public Object {
 public:
-    Model(ICamera* camera) : Entity(camera) {
+    Model(std::shared_ptr<ICamera> camera) : _camera(camera) {
         LOGGER(info, "model init succeeded");
     };
 
     ~Model() override = default;
 
-    void update() override {};
+    void init() override {
+        _shaderManager.initMVP(_camera);
+    };
+
+    void update() override {
+        if (_camera) {
+            _shader.use();
+            _shader.setMat4("u_view", _camera->getView());
+            _shader.disuse();
+        }
+    };
 
     void render() override {};
 
     void display() override {
+        update();
+        render();
         for (auto& mesh : _meshes) {
             mesh.display();
         }
@@ -43,7 +58,7 @@ public:
 
 
         convertMatrix(scene->mRootNode->mTransformation, _globalTransformation);
-        getShader().setMat4("u_model", _globalTransformation);
+        //_shader.setMat4("u_model", _globalTransformation);
 
         _modelDirectory = modelPath.substr(0, modelPath.find_last_of("/")) + "/";
 
@@ -58,6 +73,18 @@ public:
         LOGGER(info, "model mNumSkeletons: " << scene->mNumSkeletons);
 
         processNode(scene, scene->mRootNode);
+    }
+
+    Shader& getShader() {
+        return _shader;
+    }
+
+    Transform& getTransform() {
+        return _transform;
+    }
+
+    ShaderManager& getShaderManager() {
+        return _shaderManager;
     }
 
 private:
@@ -82,14 +109,12 @@ private:
         glm::mat4 transformation;
         convertMatrix(node->mTransformation, transformation);
 
-        Mesh mesh_{ _camera };
+        Mesh mesh_{ _shader };
 
         loadIndices(scene, mesh, mesh_);
         loadVertices(scene, mesh, mesh_);
         loadMaterial(scene, mesh, mesh_);
 
-        mesh_.setShader(_shader);
-        mesh_.initMVP();
         mesh_.init();
         mesh_.setTransformation(std::move(_globalTransformation * transformation));
 
@@ -171,11 +196,9 @@ private:
                 const std::string texturePath{ aiTexturePath.C_Str() };
                 const aiTexture* ai_texture = scene->GetEmbeddedTexture(aiTexturePath.C_Str());
                 if (ai_texture) {
-                    //LOGGER(info, "getting embedded " << getString(textureType) << " type texture");
                     loadEmbeddedTexture(ai_texture, textureType, mesh_);
                 }
                 else {
-                    //LOGGER(info, "getting from path " << texturePath << " that " << getString(textureType) << " type texture");
                     loadFileTexture(texturePath, textureType, mesh_);
                 }
             }
@@ -190,7 +213,7 @@ private:
         unsigned int height = ai_texture->mHeight;
         unsigned int size = std::max(width, height);
         size = std::max(size, width * height);
-        //LOGGER(info, "hints: " << ai_texture->achFormatHint << ", dimensions: " << width << "x" << height << " size: " << size);
+
         std::vector<Texture> textures;
         Texture texture;
         texture.init(ai_texture->pcData, size);
@@ -302,6 +325,11 @@ private:
             default: return "unknown";
         }
     }
+
+    std::shared_ptr<ICamera> _camera;
+    Shader _shader;
+    Transform _transform;
+    ShaderManager _shaderManager{ _shader };
 
     std::vector<Mesh> _meshes;
     std::map<std::string, Texture> _texturesLoaded;
