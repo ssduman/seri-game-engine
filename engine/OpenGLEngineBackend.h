@@ -88,7 +88,7 @@ public:
 
     void setDrawCount(unsigned int drawCount) {
         if (_drawCount != 0) {
-            LOGGER(warning, "draw count already set to " << _drawCount << " and will not change to given value " << drawCount);
+            //LOGGER(warning, "draw count already set to " << _drawCount << " and will not change to given value " << drawCount);
             return;
         }
         _drawCount = drawCount;
@@ -212,7 +212,7 @@ private:
     unsigned int _VAO{ 0 };
     unsigned int _VBO{ 0 };
     unsigned int _EBO{ 0 };
-    aux::DrawType _drawType{};
+    aux::DrawType _drawType{ aux::DrawType::arrays };
     unsigned int _drawCount{ 0 };
     unsigned int _drawMode{ aux::toGLenum(aux::DrawMode::triangles) };
 
