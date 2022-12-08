@@ -8,7 +8,7 @@
 #include "Control.h"
 //#include "Fractal.h"
 //#include "MicsShader.h"
-//#include "PerlinNoise.h"
+#include "PerlinNoise.h"
 
 class RunnerMics : public IRunner {
 public:
@@ -61,11 +61,13 @@ public:
         //    layers.addLayer(fractal);
         //}
 
-        //if (_showPerlinNoise) {
-        //    std::shared_ptr<PerlinNoise> perlinNoise = std::make_shared<PerlinNoise>(camera.get());
-        //    perlinNoise->generate();
-        //    layers.addLayer(perlinNoise);
-        //}
+        if (_showPerlinNoise) {
+            std::shared_ptr<PerlinNoise> perlinNoise = std::make_shared<PerlinNoise>(camera);
+            perlinNoise->getShader().init("mics-assets/shaders/entity_vs.shader", "mics-assets/shaders/entity_fs.shader");
+            perlinNoise->init();
+            perlinNoise->generate();
+            layers.addLayer(perlinNoise);
+        }
 
         LOGGER(info, "starting mics loop");
 
