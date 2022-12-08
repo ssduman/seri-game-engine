@@ -2,7 +2,7 @@
 
 #include "../engine/Line.h"
 #include "../engine/Color.h"
-#include "../engine/Point.h"
+#include "../engine/Object.h"
 
 #include "Camera.h"
 
@@ -11,10 +11,30 @@
 #include <random>
 #include <algorithm>
 
-class PerlinNoise {
+class PerlinNoise : public Object {
 public:
-    PerlinNoise(Camera* camera) : _camera(camera) {
+    PerlinNoise(std::shared_ptr<ICamera> camera) : _camera(camera) {
         makePermutation();
+    }
+
+    void init() override {
+        _shaderManager.initMVP(_camera);
+    };
+
+    void update() override {
+        if (_camera) {
+            _shader.use();
+            _shader.setMat4("u_view", _camera->getView());
+            _shader.disuse();
+        }
+    };
+
+    void render() override {};
+
+    void display() override {
+        update();
+        render();
+        _engineBackend.draw();
     }
 
     void generate() {
@@ -25,8 +45,8 @@ public:
         constexpr float dx = -25.0f;
         constexpr float dy = -10.0f;
 
-        std::vector<glm::vec3> positions{};
-        std::vector<glm::vec4> colors{};
+        std::vector<glm::vec3> positions;
+        std::vector<glm::vec4> colors;
         for (int x = 0; x < _pixels.size(); x++) {
             for (int y = 0; y < _pixels[0].size(); y++) {
                 auto color = _pixels[x][y];
@@ -37,19 +57,21 @@ public:
         auto positionsSize = aux::size(positions);
         auto colorsSize = aux::size(colors);
 
-        Point* perlinNoisePoints = new Point(_camera);
-        perlinNoisePoints->initShader("mics-assets/shaders/entity_vs.shader", "mics-assets/shaders/entity_fs.shader");
-        perlinNoisePoints->initMVP();
+        _engineBackend.setDrawMode(aux::DrawMode::points);
 
-        perlinNoisePoints->reserveDataBuffer(positionsSize + colorsSize);
-        perlinNoisePoints->setSubDataBuffer(aux::Index::position, positions, 0);
-        perlinNoisePoints->setSubDataBuffer(aux::Index::color, colors, positionsSize);
+        _engineBackend.reserveDataBufferSize(positionsSize + colorsSize);
+        _engineBackend.setSubDataBuffer(aux::Index::position, positions, 0);
+        _engineBackend.setSubDataBuffer(aux::Index::color, colors, positionsSize);
 
         LOGGER(info, "perlin noise created with size: " << positions.size());
     }
 
-    std::vector<std::vector<Color>>& getPixels() {
-        return _pixels;
+    Shader& getShader() {
+        return _shader;
+    }
+
+    ShaderManager& getShaderManager() {
+        return _shaderManager;
     }
 
 private:
@@ -136,7 +158,11 @@ private:
         );
     }
 
-    Camera* _camera;
+    std::shared_ptr<ICamera> _camera;
+    Shader _shader;
+    Transform _transform;
+    ShaderManager _shaderManager{ _shader };
+    OpenGLEngineBackend _engineBackend{ _shaderManager };
 
     std::vector<int> _P;
     std::vector<std::vector<Color>> _pixels;
