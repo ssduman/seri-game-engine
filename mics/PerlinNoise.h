@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../engine/Line.h"
 #include "../engine/Color.h"
 #include "../engine/Object.h"
+#include "../engine/OpenGLEngineBackend.h"
 
 #include "Camera.h"
 
