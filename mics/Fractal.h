@@ -1,18 +1,41 @@
 #pragma once
 
-#include "../engine/Line.h"
-#include "../engine/Point.h"
+#include "../engine/Color.h"
+#include "../engine/Object.h"
+#include "../engine/OpenGLEngineBackend.h"
 
 #include "Camera.h"
 
 #include <cmath>
 #include <random>
 
-class Fractal {
+class Fractal : public Object {
 public:
-    Fractal(Camera* camera) : _camera(camera) {}
+    Fractal(std::shared_ptr<ICamera> camera) : _camera(camera) {}
 
-    void BarnsleyFern() {
+    ~Fractal() override = default;
+
+    void init() override {
+        _shaderManager.initMVP(_camera);
+    };
+
+    void update() override {
+        if (_camera) {
+            _shader.setMat4("u_view", _camera->getView());
+        }
+    };
+
+    void render() override {};
+
+    void display() override {
+        _shader.use();
+        update();
+        render();
+        _engineBackend.draw();
+        _shader.disuse();
+    }
+
+    void fern() {
         constexpr float z = 10.0f;
         constexpr float dy = 2.0f;
 
@@ -39,17 +62,19 @@ public:
             }
         }
 
-        Point* BarnsleyFernPoints = new Point(_camera);
-        BarnsleyFernPoints->initShader("mics-assets/shaders/entity_vs.shader", "mics-assets/shaders/entity_fs.shader");
-        BarnsleyFernPoints->initMVP();
-        BarnsleyFernPoints->setColor({ 0.0f, 0.6f, 0.16f, 1.0f });
-        BarnsleyFernPoints->setDataBuffer(aux::Index::position, positions);
+        auto positionsSize = aux::size(positions);
 
-        LOGGER(info, "Barnsley Fern created with size: " << positions.size());
+        _engineBackend.setDrawMode(aux::DrawMode::points);
+        _engineBackend.reserveDataBufferSize(positionsSize);
+        _engineBackend.setSubDataBuffer(aux::Index::position, positions, 0);
+
+        _shaderManager.setColor({ 0.0f, 0.6f, 0.16f, 1.0f });
+
+        LOGGER(info, "fern created with size: " << positions.size());
     }
 
     void tree() {
-        std::vector<glm::vec3> positions{};
+        std::vector<glm::vec3> positions;
 
         float angle = 30.0f;
         float startAngle = 90.0f;
@@ -62,17 +87,26 @@ public:
 
         buildTree(positions, branchLength, minBranchLength, shortenBy, startAngle, angle);
 
-        Line* fractalTreeLines = new Line(_camera);
-        fractalTreeLines->initShader("mics-assets/shaders/entity_vs.shader", "mics-assets/shaders/entity_fs.shader");
-        fractalTreeLines->initMVP();
-        fractalTreeLines->setDataBuffer(aux::Index::position, positions);
+        auto positionsSize = aux::size(positions);
 
-        LOGGER(info, "fractal tree created with size: " << positions.size());
+        _engineBackend.setDrawMode(aux::DrawMode::line_loop);
+        _engineBackend.reserveDataBufferSize(positionsSize);
+        _engineBackend.setSubDataBuffer(aux::Index::position, positions, 0);
+
+        LOGGER(info, "tree created with size: " << positions.size());
+    }
+
+    Shader& getShader() {
+        return _shader;
+    }
+
+    ShaderManager& getShaderManager() {
+        return _shaderManager;
     }
 
 private:
     glm::vec3 getUnitVector(float angle) {
-        static float pi = 3.14159265f;
+        static constexpr float pi = 3.14159265f;
 
         const float radians = angle * pi / 180.0f;
         return { cos(radians), sin(radians), 0.0f };
@@ -113,7 +147,11 @@ private:
         }
     }
 
-    Camera* _camera;
+    std::shared_ptr<ICamera> _camera;
+    Shader _shader;
+    Transform _transform;
+    ShaderManager _shaderManager{ _shader };
+    OpenGLEngineBackend _engineBackend{ _shaderManager };
 
     std::default_random_engine _generator;
     std::uniform_int_distribution<int> _distribution{ 1, 100 };
