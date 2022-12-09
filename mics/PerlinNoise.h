@@ -17,24 +17,26 @@ public:
         makePermutation();
     }
 
+    ~PerlinNoise() override = default;
+
     void init() override {
         _shaderManager.initMVP(_camera);
     };
 
     void update() override {
         if (_camera) {
-            _shader.use();
             _shader.setMat4("u_view", _camera->getView());
-            _shader.disuse();
         }
     };
 
     void render() override {};
 
     void display() override {
+        _shader.use();
         update();
         render();
         _engineBackend.draw();
+        _shader.disuse();
     }
 
     void generate() {
@@ -43,7 +45,7 @@ public:
         constexpr float z = 80.0f;
         constexpr float d = 10.0f;
         constexpr float dx = -25.0f;
-        constexpr float dy = -10.0f;
+        constexpr float dy = -20.0f;
 
         std::vector<glm::vec3> positions;
         std::vector<glm::vec4> colors;
