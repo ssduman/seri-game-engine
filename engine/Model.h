@@ -58,7 +58,9 @@ public:
 
 
         convertMatrix(scene->mRootNode->mTransformation, _globalTransformation);
-        //_shader.setMat4("u_model", _globalTransformation);
+        _shader.use();
+        _shader.setMat4("u_model", _globalTransformation);
+        _shader.disuse();
 
         _modelDirectory = modelPath.substr(0, modelPath.find_last_of("/")) + "/";
 

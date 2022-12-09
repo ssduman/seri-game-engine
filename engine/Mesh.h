@@ -70,7 +70,7 @@ public:
 
     void render() override {
         _shader.use();
-        //_shader.setMat4("u_model", _transformation);
+        _shader.setMat4("u_model", _transformation);
         for (auto& texture : _textures) {
             texture.bind();
         }
