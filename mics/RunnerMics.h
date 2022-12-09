@@ -35,13 +35,13 @@ public:
         std::shared_ptr<Camera> camera = std::make_shared<Camera>(cameraProperties, state);
         camera->init();
 
-        Layer layers;
-
         Control control{ windowManager, state, camera };
         control.init();
 
         IScene scene;
         scene.name = "main";
+
+        Layer layers;
 
         if (_showModel) {
             std::shared_ptr<Model> model = std::make_shared<Model>(camera);
@@ -50,7 +50,9 @@ public:
             model->load("mics-assets/models/backpack/backpack.obj");
             //model->load("mics-assets/models/spider.obj");
             //model->getTransform()._scale = glm::vec3{ 0.05f, 0.05f, 0.05f };
+            //model->getShader().use();
             //model->getShader().setMat4("u_model", model->getTransform().apply());
+            //model->getShader().disuse();
             layers.addLayer(model);
         }
 
