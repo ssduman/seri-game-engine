@@ -58,7 +58,7 @@ public:
         if (colorsSize > 0) {
             _engineBackend.setSubDataBuffer(aux::Index::color, _colors, positionsSize);
         }
-        if (textureCoordsSize > 0) {
+        if (textureCoordsSize > 0 && _textures.size() > 0) {
             _engineBackend.setSubDataBuffer(aux::Index::texture, _textureCoords, positionsSize + colorsSize);
         }
         if (normalsSize > 0) {
@@ -70,11 +70,14 @@ public:
 
     void render() override {
         _shader.use();
-        _shader.setMat4("u_model", _transformation);
         for (auto& texture : _textures) {
             texture.bind();
         }
         _engineBackend.draw();
+        for (auto& texture : _textures) {
+            texture.unbind();
+        }
+        _shader.disuse();
     }
 
     void setTransformation(glm::mat4 transformation) {
