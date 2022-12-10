@@ -35,15 +35,21 @@ public:
         _shader.disuse();
     }
 
+    void setModel(const glm::mat4& model) {
+        _shader.use();
+        _shader.setMat4("u_model", model);
+        _shader.disuse();
+    }
+
     void setView(const glm::mat4& view) {
         _shader.use();
         _shader.setMat4("u_view", view);
         _shader.disuse();
     }
 
-    void setModel(const glm::mat4& model) {
+    void setProjection(const glm::mat4& projection) {
         _shader.use();
-        _shader.setMat4("u_model", model);
+        _shader.setMat4("u_projection", projection);
         _shader.disuse();
     }
 
