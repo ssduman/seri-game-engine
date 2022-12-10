@@ -1,6 +1,6 @@
 #pragma once
 
-#include <iostream>
+#include <string>
 
 enum class GameState {
     idle,
@@ -31,6 +31,6 @@ public:
     }
 
 private:
-    GameState _gameState = GameState::idle;
+    GameState _gameState{ GameState::idle };
 
 };
