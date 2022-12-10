@@ -31,9 +31,7 @@ public:
 
     void update() override {
         if (_camera) {
-            _shader.use();
-            _shader.setMat4("u_view", _camera->getView());
-            _shader.disuse();
+            _shaderManager.setView(_camera->getView());
         }
     };
 
@@ -58,9 +56,7 @@ public:
 
 
         convertMatrix(scene->mRootNode->mTransformation, _globalTransformation);
-        _shader.use();
-        _shader.setMat4("u_model", _globalTransformation);
-        _shader.disuse();
+        _shaderManager.setModel(_globalTransformation);
 
         _modelDirectory = modelPath.substr(0, modelPath.find_last_of("/")) + "/";
 
