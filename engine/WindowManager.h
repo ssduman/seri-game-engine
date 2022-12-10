@@ -17,7 +17,7 @@ struct WindowProperties {
 
 class WindowManager {
 public:
-    WindowManager(WindowProperties& windowProperties) : _windowProperties(windowProperties) {}
+    WindowManager(WindowProperties windowProperties) : _windowProperties(windowProperties) {}
 
     ~WindowManager() {
         glfwDestroyWindow(_window);
@@ -346,7 +346,7 @@ private:
         glfwGetCursorPos(_window, &_mouseXPosition, &_mouseYPosition);
     }
 
-    WindowProperties& _windowProperties;
+    WindowProperties _windowProperties;
     GLFWwindow* _window{ nullptr };
 
     double _lastFrame{ 0.0 };
