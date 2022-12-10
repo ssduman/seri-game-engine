@@ -46,12 +46,17 @@ public:
             auto model = std::make_shared<Model>(camera);
             model->getShader().init("mics-assets/shaders/entity_vs.shader", "mics-assets/shaders/entity_fs.shader");
             model->init();
-            model->load("mics-assets/models/backpack/backpack.obj");
-            //model->load("mics-assets/models/spider.obj");
-            //model->getTransform()._scale = glm::vec3{ 0.05f, 0.05f, 0.05f };
-            //model->getShader().use();
-            //model->getShader().setMat4("u_model", model->getTransform().apply());
-            //model->getShader().disuse();
+
+            if (_loadBackpackModel) {
+                model->load("mics-assets/models/backpack/backpack.obj");
+            }
+            else if (_loadSpiderModel) {
+                model->load("mics-assets/models/spider.obj");
+                model->getTransform()._scale = glm::vec3{ 0.05f, 0.05f, 0.05f };
+                model->getShaderManager().setModel(model->getTransform().apply());
+                model->getShaderManager().setColor({ 0.45f, 0.45f, 0.45f, 1.0f });
+            }
+
             layers.addLayer(model);
         }
 
@@ -95,5 +100,8 @@ private:
     bool _showModel = true;
     bool _showFractal = true;
     bool _showPerlinNoise = true;
+
+    bool _loadSpiderModel = true;
+    bool _loadBackpackModel = false;
 
 };
