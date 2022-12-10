@@ -9,6 +9,9 @@
 #include "Fractal.h"
 #include "PerlinNoise.h"
 
+#include <memory>
+#include <stdexcept>
+
 class RunnerMics : public IRunner {
 public:
     RunnerMics() = default;
@@ -17,10 +20,9 @@ public:
 
     void operator()() {
         WindowProperties windowProperties{ /*title*/ "Seri Game Engine - Mics", /*fullscreen*/ false, /*w*/ 800, /*h*/ 800 };
-        auto windowManager = std::make_shared<WindowManager>(windowProperties);
+        auto windowManager = std::make_shared<WindowManager>(std::move(windowProperties));
         if (!windowManager->init()) {
-            LOGGER(error, "could not create window manager");
-            return;
+            throw std::runtime_error("could not create window manager");
         }
         windowManager->disableCursor();
         windowManager->setPointSize(2.0f);
@@ -31,7 +33,7 @@ public:
         CameraProperties cameraProperties;
         cameraProperties.aspect = windowManager->getAspect();
         cameraProperties.position = glm::vec3{ 0.0f, 0.0f, -6.0f };
-        auto camera = std::make_shared<Camera>(cameraProperties, state);
+        auto camera = std::make_shared<Camera>(std::move(cameraProperties), state);
         camera->init();
 
         Control control{ windowManager, state, camera };
@@ -97,11 +99,11 @@ public:
     }
 
 private:
-    bool _showModel = true;
-    bool _showFractal = true;
-    bool _showPerlinNoise = true;
+    bool _showModel{ true };
+    bool _showFractal{ true };
+    bool _showPerlinNoise{ true };
 
-    bool _loadSpiderModel = true;
-    bool _loadBackpackModel = false;
+    bool _loadSpiderModel{ true };
+    bool _loadBackpackModel{ false };
 
 };
