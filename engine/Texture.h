@@ -11,7 +11,6 @@ public:
 
     Texture(Texture&& other) noexcept {
         _tex = other._tex;
-        _typeName = other._typeName;
 
         other._shouldDeleteThis = false;
     }
@@ -20,7 +19,6 @@ public:
 
     Texture& operator=(Texture&& other) noexcept {
         _tex = other._tex;
-        _typeName = other._typeName;
 
         other._shouldDeleteThis = false;
 
@@ -29,7 +27,6 @@ public:
 
     Texture& operator=(Texture& other) noexcept {
         _tex = other._tex;
-        _typeName = other._typeName;
 
         other._shouldDeleteThis = false;
 
@@ -46,26 +43,7 @@ public:
     void init(const std::string& texturePath) {
         int width, height, components;
         if (auto image = loadTexture(texturePath, width, height, components, 0)) {
-            GLenum format = GL_RED;
-            if (components == 3) {
-                format = GL_RGB;
-            }
-            if (components == 4) {
-                format = GL_RGBA;
-            }
-
-            generate();
-            bind();
-
-            glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, image);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-            glGenerateMipmap(GL_TEXTURE_2D);
-
-            unbind();
-            unloadTexture(image);
+            init(image, width, height, components);
         }
         else {
             LOGGER(error, "init texture '" << texturePath << "' failed");
@@ -75,38 +53,11 @@ public:
     void init(const void* data, unsigned int size) {
         int width, height, components;
         if (auto image = loadTexture(data, size, width, height, components, 0)) {
-            GLenum format = GL_RED;
-            if (components == 3) {
-                format = GL_RGB;
-            }
-            if (components == 4) {
-                format = GL_RGBA;
-            }
-
-            generate();
-            bind();
-
-            glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, image);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-            glGenerateMipmap(GL_TEXTURE_2D);
-
-            unbind();
-            unloadTexture(image);
+            init(image, width, height, components);
         }
         else {
             LOGGER(error, "init texture from buffer with size " << size << " failed");
         }
-    }
-
-    void setTypeName(const std::string& typeName) {
-        _typeName = typeName;
-    }
-
-    const std::string& getTypeName() {
-        return _typeName;
     }
 
     void bind() {
@@ -134,6 +85,29 @@ public:
     }
 
 private:
+    void init(unsigned char* image, int width, int height, int components) {
+        GLenum format = GL_RED;
+        if (components == 3) {
+            format = GL_RGB;
+        }
+        if (components == 4) {
+            format = GL_RGBA;
+        }
+
+        generate();
+        bind();
+
+        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, image);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glGenerateMipmap(GL_TEXTURE_2D);
+
+        unbind();
+        unloadTexture(image);
+    }
+
     void generate() {
         glGenTextures(1, &_tex);
     }
@@ -143,8 +117,7 @@ private:
         _tex = 0;
     }
 
-    unsigned int _tex = 0;
-    std::string _typeName;
-    bool _shouldDeleteThis = true;
+    unsigned int _tex{ 0 };
+    bool _shouldDeleteThis{ true };
 
 };
