@@ -35,6 +35,18 @@ public:
         _shader.disuse();
     }
 
+    void setView(const glm::mat4& view) {
+        _shader.use();
+        _shader.setMat4("u_view", view);
+        _shader.disuse();
+    }
+
+    void setModel(const glm::mat4& model) {
+        _shader.use();
+        _shader.setMat4("u_model", model);
+        _shader.disuse();
+    }
+
     void setPosition(const glm::vec2& position) {
         _shader.use();
         _shader.setVec2("u_position", position);
