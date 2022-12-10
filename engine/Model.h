@@ -215,7 +215,6 @@ private:
         std::vector<Texture> textures;
         Texture texture;
         texture.init(ai_texture->pcData, size);
-        texture.setTypeName(getString(textureType));
         textures.emplace_back(std::move(texture));
         mesh_.addTextures(std::move(textures));
     }
@@ -229,7 +228,6 @@ private:
         }
         else {
             texture.init(_modelDirectory + texturePath);
-            texture.setTypeName(getString(textureType));
             _texturesLoaded[texturePath] = texture;
         }
 
