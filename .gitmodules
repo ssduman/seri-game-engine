@@ -1,0 +1,21 @@
+[submodule "engine/vendor/glfw"]
+	path = engine/vendor/glfw
+	url = https://github.com/glfw/glfw.git
+[submodule "engine/vendor/glew"]
+	path = engine/vendor/glew
+	url = https://github.com/nigels-com/glew.git
+[submodule "engine/vendor/stb"]
+	path = engine/vendor/stb
+	url = https://github.com/nothings/stb.git
+[submodule "engine/vendor/glm"]
+	path = engine/vendor/glm
+	url = https://github.com/g-truc/glm.git
+[submodule "engine/vendor/freetype"]
+	path = engine/vendor/freetype
+	url = https://github.com/freetype/freetype
+[submodule "engine/vendor/assimp"]
+	path = engine/vendor/assimp
+	url = https://github.com/assimp/assimp.git
+[submodule "engine/vendor/imgui"]
+	path = engine/vendor/imgui
+	url = https://github.com/ocornut/imgui.git
