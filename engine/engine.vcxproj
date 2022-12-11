@@ -10,6 +10,51 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="camera\CameraProperties.h" />
+    <ClInclude Include="camera\ICamera.h" />
+    <ClInclude Include="control\ICommand.h" />
+    <ClInclude Include="control\IControl.h" />
+    <ClInclude Include="control\InputHandler.h" />
+    <ClInclude Include="core\AuxiliaryStructs.h" />
+    <ClInclude Include="core\Entity.h" />
+    <ClInclude Include="core\EntityType.h" />
+    <ClInclude Include="core\IRunner.h" />
+    <ClInclude Include="core\Object.h" />
+    <ClInclude Include="core\Seri.h" />
+    <ClInclude Include="core\State.h" />
+    <ClInclude Include="logging\Logger.h" />
+    <ClInclude Include="logging\LogManager.h" />
+    <ClInclude Include="math\Mat3.h" />
+    <ClInclude Include="math\Mat4.h" />
+    <ClInclude Include="math\Transform.h" />
+    <ClInclude Include="math\Vec3.h" />
+    <ClInclude Include="math\Vec4.h" />
+    <ClInclude Include="model\Material.h" />
+    <ClInclude Include="model\Mesh.h" />
+    <ClInclude Include="model\Model.h" />
+    <ClInclude Include="renderer\IEngineBackend.h" />
+    <ClInclude Include="renderer\OpenGLEngineBackend.h" />
+    <ClInclude Include="scene\IScene.h" />
+    <ClInclude Include="scene\Layer.h" />
+    <ClInclude Include="shader\Shader.h" />
+    <ClInclude Include="shader\ShaderManager.h" />
+    <ClInclude Include="shape\Circle.h" />
+    <ClInclude Include="shape\Cube.h" />
+    <ClInclude Include="shape\Line.h" />
+    <ClInclude Include="shape\Point.h" />
+    <ClInclude Include="shape\Polygon.h" />
+    <ClInclude Include="shape\Rectangle.h" />
+    <ClInclude Include="shape\Triangle.h" />
+    <ClInclude Include="texture\Color.h" />
+    <ClInclude Include="texture\Skybox.h" />
+    <ClInclude Include="texture\Sprite.h" />
+    <ClInclude Include="texture\Texture.h" />
+    <ClInclude Include="texture\Typer.h" />
+    <ClInclude Include="util\Script.h" />
+    <ClInclude Include="util\Util.h" />
+    <ClInclude Include="window\WindowManager.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <ProjectGuid>{7080E3CC-7F49-43A5-8EBF-E3581FBA94E6}</ProjectGuid>
@@ -104,62 +149,6 @@
       </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClInclude Include="AuxiliaryStructs.h" />
-    <ClInclude Include="CameraProperties.h" />
-    <ClInclude Include="Circle.h" />
-    <ClInclude Include="Color.h" />
-    <ClInclude Include="Cube.h" />
-    <ClInclude Include="Entity.h" />
-    <ClInclude Include="EntityType.h" />
-    <ClInclude Include="ICamera.h" />
-    <ClInclude Include="ICommand.h" />
-    <ClInclude Include="IControl.h" />
-    <ClInclude Include="IEngineBackend.h" />
-    <ClInclude Include="InputHandler.h" />
-    <ClInclude Include="IRunner.h" />
-    <ClInclude Include="Layer.h" />
-    <ClInclude Include="Line.h" />
-    <ClInclude Include="Logger.h" />
-    <ClInclude Include="LogManager.h" />
-    <ClInclude Include="Mat3.h" />
-    <ClInclude Include="Mat4.h" />
-    <ClInclude Include="Material.h" />
-    <ClInclude Include="Mesh.h" />
-    <ClInclude Include="Model.h" />
-    <ClInclude Include="Object.h" />
-    <ClInclude Include="OpenGLEngineBackend.h" />
-    <ClInclude Include="Point.h" />
-    <ClInclude Include="Polygon.h" />
-    <ClInclude Include="Rectangle.h" />
-    <ClInclude Include="IScene.h" />
-    <ClInclude Include="Script.h" />
-    <ClInclude Include="Shader.h" />
-    <ClInclude Include="ShaderManager.h" />
-    <ClInclude Include="Skybox.h" />
-    <ClInclude Include="Sprite.h" />
-    <ClInclude Include="State.h" />
-    <ClInclude Include="Texture.h" />
-    <ClInclude Include="Transform.h" />
-    <ClInclude Include="Triangle.h" />
-    <ClInclude Include="Typer.h" />
-    <ClInclude Include="Util.h" />
-    <ClInclude Include="Vec3.h" />
-    <ClInclude Include="Vec4.h" />
-    <ClInclude Include="WindowManager.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\maze\maze-assets\shaders\basic_fs.shader" />
-    <None Include="..\maze\maze-assets\shaders\basic_vs.shader" />
-    <None Include="..\maze\maze-assets\shaders\entity_fs.shader" />
-    <None Include="..\maze\maze-assets\shaders\entity_vs.shader" />
-    <None Include="..\maze\maze-assets\shaders\game_fs.shader" />
-    <None Include="..\maze\maze-assets\shaders\game_vs.shader" />
-    <None Include="..\maze\maze-assets\shaders\skybox_fs.shader" />
-    <None Include="..\maze\maze-assets\shaders\skybox_vs.shader" />
-    <None Include="..\maze\maze-assets\shaders\typer_fs.shader" />
-    <None Include="..\maze\maze-assets\shaders\typer_vs.shader" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

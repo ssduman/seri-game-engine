@@ -1,237 +1,175 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Shader">
-      <UniqueIdentifier>{30d1a3b2-5843-48a8-b202-58c410c6754b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shader\Shader Programs">
-      <UniqueIdentifier>{c9f29f65-4e60-40f8-8722-f85407bdcd7c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Camera">
-      <UniqueIdentifier>{4d509874-8ef0-4cd9-b13b-73121234c67e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Texture">
-      <UniqueIdentifier>{36a31718-783d-4566-8048-2d96bcceb246}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Window">
-      <UniqueIdentifier>{14b194df-12b7-4c6a-a390-d21df65d1108}</UniqueIdentifier>
+      <UniqueIdentifier>{713c386d-a419-4f06-aade-4dd90dcf1507}</UniqueIdentifier>
     </Filter>
     <Filter Include="Control">
-      <UniqueIdentifier>{b6d352b1-10dc-4bd8-bdd6-9daea4096984}</UniqueIdentifier>
+      <UniqueIdentifier>{79df79dc-4d8b-4d43-b79a-862a63958728}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Object">
-      <UniqueIdentifier>{1729e664-b4ae-4839-8518-2c8b65241e03}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shape">
-      <UniqueIdentifier>{7800b6ea-53e7-4977-bc21-e08e9399299f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Entity">
-      <UniqueIdentifier>{bb34bab2-9a88-415e-befd-596a962ff565}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Command">
-      <UniqueIdentifier>{d3abd013-d6c0-4e07-9c1f-3d2cc5a9e74a}</UniqueIdentifier>
+    <Filter Include="Core">
+      <UniqueIdentifier>{4186f120-3b9e-4949-a1b5-b55346eca774}</UniqueIdentifier>
     </Filter>
     <Filter Include="Math">
-      <UniqueIdentifier>{210c29a3-6645-41b1-897d-d34707583a3a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Util">
-      <UniqueIdentifier>{24c34095-f7f6-4812-acaa-02e419c70b59}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Layer">
-      <UniqueIdentifier>{ba210aaf-6d82-43ed-b978-2dff13a7db7f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Transform">
-      <UniqueIdentifier>{25fec7f2-5ac2-4bd8-949b-87171dc0e877}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Sprite">
-      <UniqueIdentifier>{e27bbb7b-6b65-4d18-8483-e9fb4f14db75}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Color">
-      <UniqueIdentifier>{418ba81c-3444-4152-8737-9a384251e455}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Script">
-      <UniqueIdentifier>{1a8714b5-b3e2-4fd2-843b-fa3d331cf33c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Logger">
-      <UniqueIdentifier>{4c591272-0692-469a-8a9d-0b217cff7ca3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="State">
-      <UniqueIdentifier>{2173bd8f-4395-463a-bf08-d30a35309b1e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Runner">
-      <UniqueIdentifier>{3a77c48e-970f-434f-a719-0333d655eafd}</UniqueIdentifier>
+      <UniqueIdentifier>{107f6304-0973-4d75-8544-f150d5c4b571}</UniqueIdentifier>
     </Filter>
     <Filter Include="Model">
-      <UniqueIdentifier>{3bbe2dd1-fe19-4118-854a-0ae894ec328f}</UniqueIdentifier>
+      <UniqueIdentifier>{e01aa9d5-44d4-4f3d-9dca-e4962354976f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Window">
+      <UniqueIdentifier>{23fbbc5d-a2df-4d63-aa5a-281cd7b4194e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer">
+      <UniqueIdentifier>{f3122ed7-b4fe-4221-a840-0c3feba8f791}</UniqueIdentifier>
     </Filter>
     <Filter Include="Scene">
-      <UniqueIdentifier>{dc1bf466-22f6-468d-8c0c-d15629721329}</UniqueIdentifier>
+      <UniqueIdentifier>{19abdabd-aae5-42b8-b0cf-c4514112f4a7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Backend">
-      <UniqueIdentifier>{a615f20a-9f11-4fc8-99df-b9fd1d9fd877}</UniqueIdentifier>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{c11e98fd-d4e2-4bcf-ad0b-5f2026f8f0cc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Backend\OpenGL">
-      <UniqueIdentifier>{7f950a06-262b-43b4-8f46-b7a4727387f1}</UniqueIdentifier>
+    <Filter Include="Shape">
+      <UniqueIdentifier>{222be8dc-c4e8-4887-ac1f-a0937a51b15a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Texture">
+      <UniqueIdentifier>{5d52721c-6402-4f09-af67-e0787e231df7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util">
+      <UniqueIdentifier>{91c6cfc8-2cc7-4405-aedb-07ab3ebb83b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Logging">
+      <UniqueIdentifier>{49576213-c57a-443e-b137-beea185aa600}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Shader.h">
-      <Filter>Shader</Filter>
+    <ClInclude Include="camera\CameraProperties.h">
+      <Filter>Camera</Filter>
     </ClInclude>
-    <ClInclude Include="Typer.h">
-      <Filter>Texture</Filter>
+    <ClInclude Include="camera\ICamera.h">
+      <Filter>Camera</Filter>
     </ClInclude>
-    <ClInclude Include="Texture.h">
-      <Filter>Texture</Filter>
+    <ClInclude Include="control\ICommand.h">
+      <Filter>Control</Filter>
     </ClInclude>
-    <ClInclude Include="Skybox.h">
-      <Filter>Texture</Filter>
+    <ClInclude Include="control\IControl.h">
+      <Filter>Control</Filter>
     </ClInclude>
-    <ClInclude Include="WindowManager.h">
+    <ClInclude Include="control\InputHandler.h">
+      <Filter>Control</Filter>
+    </ClInclude>
+    <ClInclude Include="core\AuxiliaryStructs.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\Entity.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\EntityType.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\IRunner.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\Object.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\State.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="logging\Logger.h">
+      <Filter>Logging</Filter>
+    </ClInclude>
+    <ClInclude Include="logging\LogManager.h">
+      <Filter>Logging</Filter>
+    </ClInclude>
+    <ClInclude Include="math\Mat3.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\Mat4.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\Transform.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\Vec3.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\Vec4.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="model\Material.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="model\Mesh.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="model\Model.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="window\WindowManager.h">
       <Filter>Window</Filter>
     </ClInclude>
-    <ClInclude Include="IControl.h">
-      <Filter>Control</Filter>
-    </ClInclude>
-    <ClInclude Include="Object.h">
-      <Filter>Object</Filter>
-    </ClInclude>
-    <ClInclude Include="Triangle.h">
-      <Filter>Shape</Filter>
-    </ClInclude>
-    <ClInclude Include="Entity.h">
-      <Filter>Entity</Filter>
-    </ClInclude>
-    <ClInclude Include="Rectangle.h">
-      <Filter>Shape</Filter>
-    </ClInclude>
-    <ClInclude Include="InputHandler.h">
-      <Filter>Control</Filter>
-    </ClInclude>
-    <ClInclude Include="ICommand.h">
-      <Filter>Command</Filter>
-    </ClInclude>
-    <ClInclude Include="Vec3.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Util.h">
+    <ClInclude Include="util\Script.h">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="Mat3.h">
-      <Filter>Math</Filter>
+    <ClInclude Include="util\Util.h">
+      <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="Vec4.h">
-      <Filter>Math</Filter>
+    <ClInclude Include="texture\Color.h">
+      <Filter>Texture</Filter>
     </ClInclude>
-    <ClInclude Include="Mat4.h">
-      <Filter>Math</Filter>
+    <ClInclude Include="texture\Skybox.h">
+      <Filter>Texture</Filter>
     </ClInclude>
-    <ClInclude Include="Layer.h">
-      <Filter>Layer</Filter>
+    <ClInclude Include="texture\Sprite.h">
+      <Filter>Texture</Filter>
     </ClInclude>
-    <ClInclude Include="Point.h">
+    <ClInclude Include="texture\Texture.h">
+      <Filter>Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="texture\Typer.h">
+      <Filter>Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="shape\Circle.h">
       <Filter>Shape</Filter>
     </ClInclude>
-    <ClInclude Include="Line.h">
+    <ClInclude Include="shape\Cube.h">
       <Filter>Shape</Filter>
     </ClInclude>
-    <ClInclude Include="Circle.h">
+    <ClInclude Include="shape\Line.h">
       <Filter>Shape</Filter>
     </ClInclude>
-    <ClInclude Include="Transform.h">
-      <Filter>Transform</Filter>
-    </ClInclude>
-    <ClInclude Include="Sprite.h">
-      <Filter>Sprite</Filter>
-    </ClInclude>
-    <ClInclude Include="Color.h">
-      <Filter>Color</Filter>
-    </ClInclude>
-    <ClInclude Include="Script.h">
-      <Filter>Script</Filter>
-    </ClInclude>
-    <ClInclude Include="Cube.h">
+    <ClInclude Include="shape\Point.h">
       <Filter>Shape</Filter>
     </ClInclude>
-    <ClInclude Include="Logger.h">
-      <Filter>Logger</Filter>
-    </ClInclude>
-    <ClInclude Include="LogManager.h">
-      <Filter>Logger</Filter>
-    </ClInclude>
-    <ClInclude Include="State.h">
-      <Filter>State</Filter>
-    </ClInclude>
-    <ClInclude Include="ICamera.h">
-      <Filter>Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="IRunner.h">
-      <Filter>Runner</Filter>
-    </ClInclude>
-    <ClInclude Include="EntityType.h">
-      <Filter>Entity</Filter>
-    </ClInclude>
-    <ClInclude Include="CameraProperties.h">
-      <Filter>Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="Polygon.h">
+    <ClInclude Include="shape\Polygon.h">
       <Filter>Shape</Filter>
     </ClInclude>
-    <ClInclude Include="AuxiliaryStructs.h">
-      <Filter>Entity</Filter>
+    <ClInclude Include="shape\Rectangle.h">
+      <Filter>Shape</Filter>
     </ClInclude>
-    <ClInclude Include="Model.h">
-      <Filter>Model</Filter>
+    <ClInclude Include="shape\Triangle.h">
+      <Filter>Shape</Filter>
     </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Material.h">
-      <Filter>Model</Filter>
-    </ClInclude>
-    <ClInclude Include="IScene.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="IEngineBackend.h">
-      <Filter>Backend</Filter>
-    </ClInclude>
-    <ClInclude Include="OpenGLEngineBackend.h">
-      <Filter>Backend\OpenGL</Filter>
-    </ClInclude>
-    <ClInclude Include="ShaderManager.h">
+    <ClInclude Include="shader\Shader.h">
       <Filter>Shader</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\maze\maze-assets\shaders\basic_fs.shader">
-      <Filter>Shader\Shader Programs</Filter>
-    </None>
-    <None Include="..\maze\maze-assets\shaders\basic_vs.shader">
-      <Filter>Shader\Shader Programs</Filter>
-    </None>
-    <None Include="..\maze\maze-assets\shaders\entity_fs.shader">
-      <Filter>Shader\Shader Programs</Filter>
-    </None>
-    <None Include="..\maze\maze-assets\shaders\entity_vs.shader">
-      <Filter>Shader\Shader Programs</Filter>
-    </None>
-    <None Include="..\maze\maze-assets\shaders\game_fs.shader">
-      <Filter>Shader\Shader Programs</Filter>
-    </None>
-    <None Include="..\maze\maze-assets\shaders\game_vs.shader">
-      <Filter>Shader\Shader Programs</Filter>
-    </None>
-    <None Include="..\maze\maze-assets\shaders\skybox_fs.shader">
-      <Filter>Shader\Shader Programs</Filter>
-    </None>
-    <None Include="..\maze\maze-assets\shaders\skybox_vs.shader">
-      <Filter>Shader\Shader Programs</Filter>
-    </None>
-    <None Include="..\maze\maze-assets\shaders\typer_fs.shader">
-      <Filter>Shader\Shader Programs</Filter>
-    </None>
-    <None Include="..\maze\maze-assets\shaders\typer_vs.shader">
-      <Filter>Shader\Shader Programs</Filter>
-    </None>
+    <ClInclude Include="shader\ShaderManager.h">
+      <Filter>Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="scene\IScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="scene\Layer.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\IEngineBackend.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\OpenGLEngineBackend.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="core\Seri.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
