@@ -64,6 +64,8 @@ public:
         if (normalsSize > 0) {
             _engineBackend.setSubDataBuffer(aux::Index::normal, _normals, positionsSize + colorsSize + textureCoordsSize);
         }
+
+        clearData();
     }
 
     void update() override {}
@@ -111,15 +113,23 @@ public:
     }
 
 private:
+    void clearData() {
+        _positions.clear();
+        _colors.clear();
+        _textureCoords.clear();
+        _normals.clear();
+        _indices.clear();
+    }
+
     Shader& _shader;
     ShaderManager _shaderManager{ _shader };
     OpenGLEngineBackend _engineBackend{ _shaderManager };
 
+    std::vector<Texture> _textures;
     std::vector<glm::vec3> _positions;
     std::vector<glm::vec4> _colors;
     std::vector<glm::vec2> _textureCoords;
     std::vector<glm::vec3> _normals;
-    std::vector<Texture> _textures;
     std::vector<unsigned int> _indices;
     glm::mat4 _transformation{ 1.0f };
 
