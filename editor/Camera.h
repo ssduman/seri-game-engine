@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../engine/ICamera.h"
+#include "../engine/core/Seri.h"
 
 class Camera : public ICamera {
 public:

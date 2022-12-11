@@ -1,10 +1,6 @@
 #pragma once
 
-#include "../engine/Layer.h"
-#include "../engine/State.h"
-#include "../engine/Object.h"
-#include "../engine/Logger.h"
-#include "../engine/WindowManager.h"
+#include "../engine/core/Seri.h"
 
 #include "Camera.h"
 #include "Factory.h"
@@ -63,8 +59,8 @@ public:
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     }
 
-    void registerEntity(std::shared_ptr<Entity> entity) {
-        _currentEntity = entity;
+    void registerEntity(std::shared_ptr<Object> entity) {
+        _currentEntity = std::dynamic_pointer_cast<Entity>(entity);
     }
 
 private:

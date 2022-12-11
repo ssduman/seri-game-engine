@@ -2,7 +2,7 @@
 #pragma warning(disable: 4100)
 #pragma warning(disable: 4244)
 
-#include "../engine/IControl.h"
+#include "../engine/core/Seri.h"
 
 #include "Camera.h"
 
