@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../engine/core/Seri.h"
+#include "../engine/model/Model.h"
 
 #include "Camera.h"
 #include "Control.h"
