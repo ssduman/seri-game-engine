@@ -58,7 +58,7 @@ public:
                 model->getShaderManager().setColor({ 0.45f, 0.45f, 0.45f, 1.0f });
             }
 
-            layers.addLayer(model);
+            layers.addLayer(std::move(model));
         }
 
         if (_showFractal) {
@@ -67,7 +67,7 @@ public:
             fractal->init();
             fractal->fern();
             //fractal->tree();
-            layers.addLayer(fractal);
+            layers.addLayer(std::move(fractal));
         }
 
         if (_showPerlinNoise) {
@@ -75,7 +75,7 @@ public:
             perlinNoise->getShader().init("mics-assets/shaders/entity_vs.shader", "mics-assets/shaders/entity_fs.shader");
             perlinNoise->init();
             perlinNoise->generate();
-            layers.addLayer(perlinNoise);
+            layers.addLayer(std::move(perlinNoise));
         }
 
         LOGGER(info, "starting mics loop");
