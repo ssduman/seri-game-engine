@@ -33,6 +33,7 @@ public:
 
     void framebufferSizeCallback(GLFWwindow* window, int width, int height) override {
         _windowManager->viewport(0, 0, width, height);
+        _camera->updateAspect(_windowManager->getAspect());
     }
 
     void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods) override {

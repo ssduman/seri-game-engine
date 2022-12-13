@@ -27,28 +27,20 @@ public:
 
         const float movementSpeed = _cameraProperties.speed * deltaTime;
 
-        bool moved = false;
-
         if (cameraMovement == CameraMovement::forward) {
-            moved = true;
             _cameraProperties.position += _cameraProperties.front * movementSpeed;
         }
         if (cameraMovement == CameraMovement::backward) {
-            moved = true;
             _cameraProperties.position -= _cameraProperties.front * movementSpeed;
         }
         if (cameraMovement == CameraMovement::left) {
-            moved = true;
             _cameraProperties.position -= _cameraProperties.right * movementSpeed;
         }
         if (cameraMovement == CameraMovement::right) {
-            moved = true;
             _cameraProperties.position += _cameraProperties.right * movementSpeed;
         }
 
-        if (moved) {
-            updateView();
-        }
+        updateView();
     }
 
 };
