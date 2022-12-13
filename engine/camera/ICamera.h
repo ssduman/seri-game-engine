@@ -56,6 +56,11 @@ public:
         updateView();
     }
 
+    void updateAspect(float aspect) {
+        _cameraProperties.aspect = aspect;
+        updateProjection();
+    }
+
     const glm::mat4& getModel() {
         return _model;
     }
