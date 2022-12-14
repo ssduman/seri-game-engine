@@ -38,10 +38,10 @@ public:
         Control control{ windowManager, state, camera };
         control.init();
 
-        IScene scene;
-        scene.name = "main";
-
-        Layer layers;
+        SceneManager sceneManager;
+        auto scene = std::make_shared<Scene>();
+        scene->name = "main";
+        sceneManager.addScene(std::move(scene));
 
         if (_showModel) {
             auto model = std::make_shared<Model>(camera);
@@ -58,7 +58,10 @@ public:
                 model->getShaderManager().setColor({ 0.45f, 0.45f, 0.45f, 1.0f });
             }
 
-            layers.addLayer(std::move(model));
+            auto scene = std::make_shared<Scene>();
+            scene->name = "model";
+            scene->object = std::move(model);
+            sceneManager.addChild(sceneManager.getRoot(), std::move(scene));
         }
 
         if (_showFractal) {
@@ -67,7 +70,11 @@ public:
             fractal->init();
             fractal->fern();
             //fractal->tree();
-            layers.addLayer(std::move(fractal));
+
+            auto scene = std::make_shared<Scene>();
+            scene->name = "fractal";
+            scene->object = std::move(fractal);
+            sceneManager.addChild(sceneManager.getRoot(), std::move(scene));
         }
 
         if (_showPerlinNoise) {
@@ -75,7 +82,11 @@ public:
             perlinNoise->getShader().init("mics-assets/shaders/entity_vs.shader", "mics-assets/shaders/entity_fs.shader");
             perlinNoise->init();
             perlinNoise->generate();
-            layers.addLayer(std::move(perlinNoise));
+
+            auto scene = std::make_shared<Scene>();
+            scene->name = "perlin";
+            scene->object = std::move(perlinNoise);
+            sceneManager.addChild(sceneManager.getRoot(), std::move(scene));
         }
 
         LOGGER(info, "starting mics loop");
@@ -86,8 +97,10 @@ public:
 
             control.processInput(windowManager->updateDeltaTime());
 
-            for (auto& entity : layers.getLayers()) {
-                entity->display();
+            for (auto& scene : sceneManager.getRoot()->children) {
+                if (scene->object) {
+                    scene->object->display();
+                }
             }
 
             windowManager->pollEvents();
@@ -102,7 +115,7 @@ private:
     bool _showFractal{ true };
     bool _showPerlinNoise{ true };
 
-    bool _loadSpiderModel{ true };
-    bool _loadBackpackModel{ false };
+    bool _loadSpiderModel{ false };
+    bool _loadBackpackModel{ true };
 
 };
