@@ -156,7 +156,7 @@
     <ClInclude Include="shader\ShaderManager.h">
       <Filter>Shader</Filter>
     </ClInclude>
-    <ClInclude Include="scene\IScene.h">
+    <ClInclude Include="scene\Scene.h">
       <Filter>Scene</Filter>
     </ClInclude>
     <ClInclude Include="scene\Layer.h">

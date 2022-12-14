@@ -35,7 +35,7 @@
     <ClInclude Include="model\Model.h" />
     <ClInclude Include="renderer\IEngineBackend.h" />
     <ClInclude Include="renderer\OpenGLEngineBackend.h" />
-    <ClInclude Include="scene\IScene.h" />
+    <ClInclude Include="scene\Scene.h" />
     <ClInclude Include="scene\Layer.h" />
     <ClInclude Include="shader\Shader.h" />
     <ClInclude Include="shader\ShaderManager.h" />

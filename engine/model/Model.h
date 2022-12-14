@@ -3,7 +3,6 @@
 #include "Mesh.h"
 #include "Material.h"
 #include "../core/Object.h"
-#include "../scene/IScene.h"
 #include "../logging/Logger.h"
 #include "../math/Transform.h"
 #include "../shader/Shader.h"
