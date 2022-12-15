@@ -40,6 +40,9 @@
     <Filter Include="Logging">
       <UniqueIdentifier>{49576213-c57a-443e-b137-beea185aa600}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Event">
+      <UniqueIdentifier>{a07acd6a-4917-4d23-a3dc-4397dd09572c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera\CameraProperties.h">
@@ -170,6 +173,12 @@
     </ClInclude>
     <ClInclude Include="core\Seri.h">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="control\KeyCode.h">
+      <Filter>Control</Filter>
+    </ClInclude>
+    <ClInclude Include="event\Event.h">
+      <Filter>Event</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

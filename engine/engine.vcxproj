@@ -16,6 +16,7 @@
     <ClInclude Include="control\ICommand.h" />
     <ClInclude Include="control\IControl.h" />
     <ClInclude Include="control\InputHandler.h" />
+    <ClInclude Include="control\KeyCode.h" />
     <ClInclude Include="core\AuxiliaryStructs.h" />
     <ClInclude Include="core\Entity.h" />
     <ClInclude Include="core\EntityType.h" />
@@ -23,6 +24,7 @@
     <ClInclude Include="core\Object.h" />
     <ClInclude Include="core\Seri.h" />
     <ClInclude Include="core\State.h" />
+    <ClInclude Include="event\Event.h" />
     <ClInclude Include="logging\Logger.h" />
     <ClInclude Include="logging\LogManager.h" />
     <ClInclude Include="math\Mat3.h" />
