@@ -5,6 +5,7 @@
 #include "../core/Object.h"
 #include "../core/Entity.h"
 #include "../core/IRunner.h"
+#include "../event/Event.h"
 #include "../scene/Layer.h"
 #include "../scene/Scene.h"
 #include "../camera/ICamera.h"
