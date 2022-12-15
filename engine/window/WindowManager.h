@@ -53,6 +53,7 @@ public:
         setErrorCallback();
         setWindowCloseCallback();
         enableDebugOutput();
+        logInfoStrings();
 
         LOGGER(info, "window manager created successfully");
         return true;
@@ -178,11 +179,83 @@ public:
     }
 
 private:
+    bool initglfw() {
+        if (!glfwInit()) {
+            LOGGER(error, "glfwInit error");
+            return false;
+        }
+
+        LOGGER(info, "gflw version '" << glfwGetVersionString() << "' init succeeded");
+        return true;
+    }
+
+    bool initglew() {
+        if (glewInit() != GLEW_OK) {
+            LOGGER(error, "glewInit error");
+            return false;
+        }
+
+        LOGGER(info, "glew version '" << glewGetString(GLEW_VERSION) << "' init succeeded");
+        return true;
+    }
+
+    bool createWindow() {
+        if (_windowProperties.isFullscreen) {
+            GLFWmonitor* glfwMonitor = glfwGetPrimaryMonitor();
+            if (!glfwMonitor) {
+                LOGGER(error, "getting glfw monitor failed");
+                return false;
+            }
+
+            int monXPos, monYPos;
+            glfwGetMonitorWorkarea(glfwMonitor, &monXPos, &monYPos, &_windowProperties.windowWidth, &_windowProperties.windowHeight);
+            _window = glfwCreateWindow(_windowProperties.windowWidth, _windowProperties.windowHeight, _windowProperties.windowTitle, glfwMonitor, nullptr);
+        }
+        else {
+            _window = glfwCreateWindow(_windowProperties.windowWidth, _windowProperties.windowHeight, _windowProperties.windowTitle, nullptr, nullptr);
+        }
+
+        if (!_window) {
+            LOGGER(error, "glfw window creating error");
+            return false;
+        }
+
+        LOGGER(info, "glfw window created");
+        return true;
+    }
+
+    void logInfoStrings() {
+        LOGGER(info, "vendor: " << glGetString(GL_VENDOR));
+        LOGGER(info, "version: " << glGetString(GL_VERSION));
+        LOGGER(info, "renderer: " << glGetString(GL_RENDERER));
+        LOGGER(info, "shading language version: " << glGetString(GL_SHADING_LANGUAGE_VERSION));
+    }
+
+    void getCursorPosition() {
+        glfwGetCursorPos(_window, &_mouseXPosition, &_mouseYPosition);
+    }
+
     void checkGLError() {
         GLenum err;
         while ((err = glGetError()) != GL_NO_ERROR) {
             LOGGER(error, "gl error occurred: " << err);
         }
+    }
+
+    void setErrorCallback() {
+        glfwSetErrorCallback(
+            [](int error, const char* description) {
+                LOGGER(error, "glfw error " << error << ": " << description);
+            }
+        );
+    }
+
+    void setWindowCloseCallback() {
+        glfwSetWindowCloseCallback(_window,
+            [](GLFWwindow* window) {
+                LOGGER(info, "window is attempting to close");
+            }
+        );
     }
 
     void enableDebugOutput() {
@@ -271,71 +344,6 @@ private:
 
     void disableDebugOutput() {
         glDisable(GL_DEBUG_OUTPUT);
-    }
-
-    void setErrorCallback() {
-        glfwSetErrorCallback(
-            [](int error, const char* description) {
-                LOGGER(error, "glfw error " << error << ": " << description);
-            }
-        );
-    }
-
-    void setWindowCloseCallback() {
-        glfwSetWindowCloseCallback(_window,
-            [](GLFWwindow* window) {
-                LOGGER(info, "window is attempting to close");
-            }
-        );
-    }
-
-    bool initglfw() {
-        if (!glfwInit()) {
-            LOGGER(error, "glfwInit error");
-            return false;
-        }
-
-        LOGGER(info, "gflw version '" << glfwGetVersionString() << "' init succeeded");
-        return true;
-    }
-
-    bool initglew() {
-        if (glewInit() != GLEW_OK) {
-            LOGGER(error, "glewInit error");
-            return false;
-        }
-
-        LOGGER(info, "glew version '" << glewGetString(GLEW_VERSION) << "' init succeeded");
-        return true;
-    }
-
-    bool createWindow() {
-        if (_windowProperties.isFullscreen) {
-            GLFWmonitor* glfwMonitor = glfwGetPrimaryMonitor();
-            if (!glfwMonitor) {
-                LOGGER(error, "getting glfw monitor failed");
-                return false;
-            }
-
-            int monXPos, monYPos;
-            glfwGetMonitorWorkarea(glfwMonitor, &monXPos, &monYPos, &_windowProperties.windowWidth, &_windowProperties.windowHeight);
-            _window = glfwCreateWindow(_windowProperties.windowWidth, _windowProperties.windowHeight, _windowProperties.windowTitle, glfwMonitor, nullptr);
-        }
-        else {
-            _window = glfwCreateWindow(_windowProperties.windowWidth, _windowProperties.windowHeight, _windowProperties.windowTitle, nullptr, nullptr);
-        }
-
-        if (!_window) {
-            LOGGER(error, "glfw window creating error");
-            return false;
-        }
-
-        LOGGER(info, "glfw window created");
-        return true;
-    }
-
-    void getCursorPosition() {
-        glfwGetCursorPos(_window, &_mouseXPosition, &_mouseYPosition);
     }
 
     WindowProperties _windowProperties;
