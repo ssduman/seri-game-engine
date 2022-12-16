@@ -180,5 +180,14 @@
     <ClInclude Include="event\Event.h">
       <Filter>Event</Filter>
     </ClInclude>
+    <ClInclude Include="control\KeyAction.h">
+      <Filter>Control</Filter>
+    </ClInclude>
+    <ClInclude Include="control\ButtonCode.h">
+      <Filter>Control</Filter>
+    </ClInclude>
+    <ClInclude Include="control\ButtonAction.h">
+      <Filter>Control</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

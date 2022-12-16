@@ -13,6 +13,9 @@
   <ItemGroup>
     <ClInclude Include="camera\CameraProperties.h" />
     <ClInclude Include="camera\ICamera.h" />
+    <ClInclude Include="control\ButtonAction.h" />
+    <ClInclude Include="control\ButtonCode.h" />
+    <ClInclude Include="control\KeyAction.h" />
     <ClInclude Include="control\ICommand.h" />
     <ClInclude Include="control\IControl.h" />
     <ClInclude Include="control\InputHandler.h" />
