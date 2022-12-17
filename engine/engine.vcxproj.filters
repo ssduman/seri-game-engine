@@ -183,10 +183,10 @@
     <ClInclude Include="control\KeyAction.h">
       <Filter>Control</Filter>
     </ClInclude>
-    <ClInclude Include="control\ButtonCode.h">
+    <ClInclude Include="control\MouseButtonCode.h">
       <Filter>Control</Filter>
     </ClInclude>
-    <ClInclude Include="control\ButtonAction.h">
+    <ClInclude Include="control\MouseButtonAction.h">
       <Filter>Control</Filter>
     </ClInclude>
   </ItemGroup>

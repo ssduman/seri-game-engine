@@ -144,7 +144,7 @@ enum class KeyCode : int {
     world_2 = GLFW_KEY_WORLD_2,
 };
 
-inline std::string toString(KeyCode keyCode) {
+inline const char* toString(KeyCode keyCode) {
     switch (keyCode) {
         case KeyCode::up: return "up";
         case KeyCode::down: return "down";
