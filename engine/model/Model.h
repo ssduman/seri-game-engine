@@ -61,13 +61,6 @@ public:
 
         LOGGER(info, "read model path '" << modelPath << "' succeeded");
         LOGGER(info, "model directory: " << _modelDirectory);
-        LOGGER(info, "model mNumMeshes: " << scene->mNumMeshes);
-        LOGGER(info, "model mNumMaterials: " << scene->mNumMaterials);
-        LOGGER(info, "model mNumAnimations: " << scene->mNumAnimations);
-        LOGGER(info, "model mNumTextures: " << scene->mNumTextures);
-        LOGGER(info, "model mNumLights: " << scene->mNumLights);
-        LOGGER(info, "model mNumCameras: " << scene->mNumCameras);
-        LOGGER(info, "model mNumSkeletons: " << scene->mNumSkeletons);
 
         processNode(scene, scene->mRootNode);
     }
