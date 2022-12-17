@@ -28,29 +28,26 @@ public:
 
 private:
     F _f;
+
 };
 
 template <typename F>
-inline std::shared_ptr<IInputEvent> make_input_event(F f) {
+inline std::shared_ptr<IInputEvent> makeInputEvent(F f) {
     return std::make_shared<InputEvent<F>>(std::move(f));
 }
 
 enum class EventType {
     window,
-    input,
+    key,
     mouse,
     app,
 };
 
 class Event {
 public:
-    Event() = default;
-
-    ~Event() = default;
-
     template <typename F>
     void addInputEventListener(F f) {
-        _inputEvents.emplace_back(make_input_event(std::move(f)));
+        _inputEvents.emplace_back(makeInputEvent(std::move(f)));
     }
 
     void triggerInputEvent(KeyCode keycode) {
