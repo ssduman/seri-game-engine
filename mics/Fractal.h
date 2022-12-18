@@ -19,16 +19,16 @@ public:
 
     void update() override {
         if (_camera) {
-            _shader.setMat4("u_view", _camera->getView());
+            _shaderManager.setView(_camera->getView());
         }
     };
 
     void render() override {};
 
     void display() override {
-        _shader.use();
         update();
         render();
+        _shader.use();
         _engineBackend.draw();
         _shader.disuse();
     }
