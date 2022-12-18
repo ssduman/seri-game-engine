@@ -69,9 +69,7 @@ public:
 
     void update() override {
         if (_camera) {
-            _shader.use();
-            _shader.setMat4("u_view", _camera->getView());
-            _shader.disuse();
+            _shaderManager.setView(_camera->getView());
         }
     }
 
