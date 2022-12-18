@@ -63,6 +63,8 @@ public:
         LOGGER(info, "model directory: " << _modelDirectory);
 
         processNode(scene, scene->mRootNode);
+
+        _texturesLoaded.clear();
     }
 
     Shader& getShader() {
