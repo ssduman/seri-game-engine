@@ -316,9 +316,9 @@ private:
 
     std::shared_ptr<ICamera> _camera;
     Shader _shader;
-    Transform _transform;
     ShaderManager _shaderManager{ _shader };
 
+    Transform _transform;
     std::vector<Mesh> _meshes;
     std::map<std::string, Texture> _texturesLoaded;
     std::string _modelDirectory;

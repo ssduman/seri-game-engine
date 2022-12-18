@@ -16,7 +16,9 @@
 
 class Mesh : public Object {
 public:
-    Mesh(Shader& shader) : _shader(shader) {}
+    Mesh(Shader shader) : _shader(shader) {}
+
+    Mesh(Mesh& other) = delete;
 
     Mesh(Mesh&& other) noexcept : _shader(other._shader) {
         _positions = std::move(other._positions);
@@ -30,11 +32,9 @@ public:
         _engineBackend = std::move(other._engineBackend);
     }
 
-    Mesh(const Mesh& other) = delete;
+    Mesh& operator=(Mesh& other) = delete;
 
     Mesh& operator=(Mesh&& other) = delete;
-
-    Mesh& operator=(const Mesh& other) = delete;
 
     ~Mesh() override = default;
 
@@ -121,7 +121,7 @@ private:
         _indices.clear();
     }
 
-    Shader& _shader;
+    Shader _shader;
     ShaderManager _shaderManager{ _shader };
     OpenGLEngineBackend _engineBackend{ _shaderManager };
 
