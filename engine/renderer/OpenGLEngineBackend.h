@@ -18,6 +18,25 @@ public:
         bind();
     }
 
+    OpenGLEngineBackend(OpenGLEngineBackend& other) = delete;
+
+    OpenGLEngineBackend(OpenGLEngineBackend&& other) = delete;
+
+    OpenGLEngineBackend& operator=(OpenGLEngineBackend& other) = delete;
+
+    OpenGLEngineBackend& operator=(OpenGLEngineBackend&& other) noexcept {
+        _shaderManager = std::move(other._shaderManager);
+
+        _VAO = other._VAO;
+        _VBO = other._VBO;
+        _EBO = other._EBO;
+        _drawMode = other._drawMode;
+        _drawType = other._drawType;
+        _drawCount = other._drawCount;
+
+        return *this;
+    }
+
     ~OpenGLEngineBackend() override = default;
 
     void draw() override {
@@ -212,8 +231,8 @@ private:
     unsigned int _VAO{ 0 };
     unsigned int _VBO{ 0 };
     unsigned int _EBO{ 0 };
-    aux::DrawType _drawType{ aux::DrawType::arrays };
     unsigned int _drawCount{ 0 };
     unsigned int _drawMode{ aux::toGLenum(aux::DrawMode::triangles) };
+    aux::DrawType _drawType{ aux::DrawType::arrays };
 
 };
