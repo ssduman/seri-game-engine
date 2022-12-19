@@ -12,7 +12,6 @@
 #include <memory>
 #include <string>
 #include <vector>
-#include <clocale>
 #include <iostream>
 #include <stdexcept>
 
