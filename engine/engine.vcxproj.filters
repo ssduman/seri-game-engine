@@ -189,5 +189,13 @@
     <ClInclude Include="control\MouseButtonAction.h">
       <Filter>Control</Filter>
     </ClInclude>
+    <ClInclude Include="core\Seripch.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="core\Seripch.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

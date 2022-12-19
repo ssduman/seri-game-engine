@@ -26,6 +26,7 @@
     <ClInclude Include="core\IRunner.h" />
     <ClInclude Include="core\Object.h" />
     <ClInclude Include="core\Seri.h" />
+    <ClInclude Include="core\Seripch.h" />
     <ClInclude Include="core\State.h" />
     <ClInclude Include="event\Event.h" />
     <ClInclude Include="logging\Logger.h" />
@@ -59,6 +60,9 @@
     <ClInclude Include="util\Script.h" />
     <ClInclude Include="util\Util.h" />
     <ClInclude Include="window\WindowManager.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="core\Seripch.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
