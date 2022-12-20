@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../control/KeyCode.h"
+#include "../control/KeyAction.h"
 
 #include <memory>
 #include <vector>
@@ -11,7 +12,7 @@ public:
 
     virtual ~IInputEvent() = default;
 
-    virtual void onEvent(KeyCode keycode) = 0;
+    virtual void onEvent(KeyCode keycode, KeyAction keyAction) = 0;
 
 };
 
@@ -22,8 +23,8 @@ public:
 
     ~InputEvent() override = default;
 
-    void onEvent(KeyCode keycode) override {
-        _f(std::move(keycode));
+    void onEvent(KeyCode keycode, KeyAction keyAction) override {
+        _f(keycode, keyAction);
     }
 
 private:
@@ -50,9 +51,9 @@ public:
         _inputEvents.emplace_back(makeInputEvent(std::move(f)));
     }
 
-    void triggerInputEvent(KeyCode keycode) {
+    void triggerInputEvent(KeyCode keycode, KeyAction keyAction) {
         for (auto& inputEvent : _inputEvents) {
-            inputEvent->onEvent(std::move(keycode));
+            inputEvent->onEvent(keycode, keyAction);
         }
     }
 
