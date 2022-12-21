@@ -177,7 +177,7 @@
     <ClInclude Include="control\KeyCode.h">
       <Filter>Control</Filter>
     </ClInclude>
-    <ClInclude Include="event\Event.h">
+    <ClInclude Include="event\EventManager.h">
       <Filter>Event</Filter>
     </ClInclude>
     <ClInclude Include="control\KeyAction.h">
@@ -194,6 +194,9 @@
     </ClInclude>
     <ClInclude Include="window\IWindowManager.h">
       <Filter>Window</Filter>
+    </ClInclude>
+    <ClInclude Include="event\InputEvent.h">
+      <Filter>Event</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

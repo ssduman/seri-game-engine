@@ -28,7 +28,8 @@
     <ClInclude Include="core\Seri.h" />
     <ClInclude Include="core\Seripch.h" />
     <ClInclude Include="core\State.h" />
-    <ClInclude Include="event\Event.h" />
+    <ClInclude Include="event\EventManager.h" />
+    <ClInclude Include="event\InputEvent.h" />
     <ClInclude Include="logging\Logger.h" />
     <ClInclude Include="logging\LogManager.h" />
     <ClInclude Include="math\Mat3.h" />
