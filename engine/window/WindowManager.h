@@ -53,6 +53,10 @@ public:
         return true;
     }
 
+    double getTime() override {
+        return glfwGetTime();
+    }
+
     double getMouseX() override {
         getCursorPosition();
         return _mouseXPosition;
@@ -63,19 +67,6 @@ public:
         return _mouseYPosition;
     }
 
-    std::pair<double, double> getCursorPositions() {
-        getCursorPosition();
-        return std::make_pair(_mouseXPosition, _mouseYPosition);
-    }
-
-    double getTime() override {
-        return glfwGetTime();
-    }
-
-    GLFWwindow* getWindow() {
-        return _window;
-    }
-
     float updateDeltaTime() override {
         auto currentFrame = getTime();
         _deltaTime = currentFrame - _lastFrame;
@@ -84,14 +75,8 @@ public:
         return static_cast<float>(_deltaTime);
     }
 
-    void setCursorPos(double xpos, double ypos) {
-        glfwSetCursorPos(_window, xpos, ypos);
-    }
-
-    void setCursorPosMiddle() {
-        auto xmid = _windowProperties.windowWidth / 2.0;
-        auto ymid = _windowProperties.windowHeight / 2.0;
-        setCursorPos(xmid, ymid);
+    GLFWwindow* getWindow() {
+        return _window;
     }
 
     void hideCursor() {
@@ -104,6 +89,21 @@ public:
 
     void disableCursor() {
         glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    }
+
+    void setCursorPosMiddle() {
+        auto xmid = _windowProperties.windowWidth / 2.0;
+        auto ymid = _windowProperties.windowHeight / 2.0;
+        setCursorPos(xmid, ymid);
+    }
+
+    void setCursorPos(double xpos, double ypos) {
+        glfwSetCursorPos(_window, xpos, ypos);
+    }
+
+    std::pair<double, double> getCursorPositions() {
+        getCursorPosition();
+        return std::make_pair(_mouseXPosition, _mouseYPosition);
     }
 
     void viewport(int x, int y, int width, int height) {
@@ -321,6 +321,5 @@ private:
     }
 
     GLFWwindow* _window{ nullptr };
-
 
 };
