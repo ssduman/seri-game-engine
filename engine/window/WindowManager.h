@@ -52,13 +52,13 @@ public:
         LOGGER(info, "window manager created successfully");
         return true;
     }
-    
-    double getMouseX() {
+
+    double getMouseX() override {
         getCursorPosition();
         return _mouseXPosition;
     }
 
-    double getMouseY() {
+    double getMouseY() override {
         getCursorPosition();
         return _mouseYPosition;
     }
@@ -68,7 +68,7 @@ public:
         return std::make_pair(_mouseXPosition, _mouseYPosition);
     }
 
-    double getTime() {
+    double getTime() override {
         return glfwGetTime();
     }
 
@@ -76,7 +76,7 @@ public:
         return _window;
     }
 
-    float updateDeltaTime() {
+    float updateDeltaTime() override {
         auto currentFrame = getTime();
         _deltaTime = currentFrame - _lastFrame;
         _lastFrame = currentFrame;
@@ -319,7 +319,7 @@ private:
     void disableDebugOutput() {
         glDisable(GL_DEBUG_OUTPUT);
     }
-    
+
     GLFWwindow* _window{ nullptr };
 
 

@@ -15,6 +15,14 @@ public:
 
     virtual bool init() = 0;
 
+    virtual double getTime() = 0;
+
+    virtual double getMouseX() = 0;
+
+    virtual double getMouseY() = 0;
+
+    virtual float updateDeltaTime() = 0;
+
     int getWidth() {
         return _windowProperties.windowWidth;
     }
