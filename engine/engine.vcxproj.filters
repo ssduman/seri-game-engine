@@ -192,6 +192,9 @@
     <ClInclude Include="core\Seripch.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="window\IWindowManager.h">
+      <Filter>Window</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core\Seripch.cpp">

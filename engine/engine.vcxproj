@@ -59,6 +59,7 @@
     <ClInclude Include="texture\Typer.h" />
     <ClInclude Include="util\Script.h" />
     <ClInclude Include="util\Util.h" />
+    <ClInclude Include="window\IWindowManager.h" />
     <ClInclude Include="window\WindowManager.h" />
   </ItemGroup>
   <ItemGroup>

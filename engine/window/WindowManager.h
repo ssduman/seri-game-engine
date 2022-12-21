@@ -1,6 +1,7 @@
 #pragma once
 #pragma warning(disable: 4100)
 
+#include "IWindowManager.h"
 #include "../logging/Logger.h"
 
 #include <GL/glew.h>
@@ -8,25 +9,18 @@
 
 #include <utility>
 
-struct WindowProperties {
-    const char* windowTitle = nullptr;
-    bool isFullscreen = false;
-    int windowWidth = 1280;
-    int windowHeight = 720;
-};
-
-class WindowManager {
+class WindowManager : public IWindowManager {
 public:
-    WindowManager(WindowProperties windowProperties) : _windowProperties(windowProperties) {}
+    WindowManager(WindowProperties windowProperties) : IWindowManager(windowProperties) {}
 
-    ~WindowManager() {
+    ~WindowManager() override {
         glfwDestroyWindow(_window);
         glfwTerminate();
 
         LOGGER(info, "window manager destroyed and terminated successfully");
     }
 
-    bool init() {
+    bool init() override {
         if (!initglfw()) {
             return false;
         }
@@ -58,27 +52,7 @@ public:
         LOGGER(info, "window manager created successfully");
         return true;
     }
-
-    int getWidth() {
-        return _windowProperties.windowWidth;
-    }
-
-    int getHeight() {
-        return _windowProperties.windowHeight;
-    }
-
-    float getWidthF() {
-        return static_cast<float>(_windowProperties.windowWidth);
-    }
-
-    float getHeightF() {
-        return static_cast<float>(_windowProperties.windowHeight);
-    }
-
-    float getAspect() {
-        return getWidthF() / getHeightF();
-    }
-
+    
     double getMouseX() {
         getCursorPosition();
         return _mouseXPosition;
@@ -345,14 +319,8 @@ private:
     void disableDebugOutput() {
         glDisable(GL_DEBUG_OUTPUT);
     }
-
-    WindowProperties _windowProperties;
+    
     GLFWwindow* _window{ nullptr };
 
-    double _lastFrame{ 0.0 };
-    double _deltaTime{ 0.0 };
-    double _mouseXPosition{ 0.0 };
-    double _mouseYPosition{ 0.0 };
 
 };
-
