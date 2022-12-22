@@ -29,6 +29,7 @@
     <ClInclude Include="core\Seripch.h" />
     <ClInclude Include="core\State.h" />
     <ClInclude Include="event\EventManager.h" />
+    <ClInclude Include="event\EventType.h" />
     <ClInclude Include="event\InputEvent.h" />
     <ClInclude Include="logging\Logger.h" />
     <ClInclude Include="logging\LogManager.h" />

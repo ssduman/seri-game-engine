@@ -198,6 +198,9 @@
     <ClInclude Include="event\InputEvent.h">
       <Filter>Event</Filter>
     </ClInclude>
+    <ClInclude Include="event\EventType.h">
+      <Filter>Event</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core\Seripch.cpp">
