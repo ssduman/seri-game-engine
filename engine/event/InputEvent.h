@@ -4,7 +4,6 @@
 #include "../control/KeyAction.h"
 
 #include <memory>
-#include <vector>
 
 namespace events {
     class IInputEvent {
