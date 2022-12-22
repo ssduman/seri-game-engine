@@ -7,22 +7,18 @@
 class EventManager {
 public:
     template <typename F>
-    void addEventListener(EventType eventType, F f) {
-        switch (eventType) {
-            case EventType::window:
-                _windowEvents.emplace_back(events::makeWindowEvent(std::move(f)));
-                break;
-            case EventType::key:
-                break;
-            case EventType::input:
-                _inputEvents.emplace_back(events::makeInputEvent(std::move(f)));
-                break;
-            case EventType::mouse:
-                break;
-            case EventType::app:
-                break;
-            default:
-                break;
+    void addInputEventListener(F f) {
+        _inputEvents.emplace_back(events::makeInputEvent(std::move(f)));
+    }
+
+    template <typename F>
+    void addWindowEventListener(F f) {
+        _windowEvents.emplace_back(events::makeWindowEvent(std::move(f)));
+    }
+
+    void triggerWindowEvent() {
+        for (auto& windowEvent : _windowEvents) {
+            windowEvent->onEvent();
         }
     }
 
