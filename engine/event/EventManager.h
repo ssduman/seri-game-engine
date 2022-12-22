@@ -1,14 +1,8 @@
 #pragma once
 
+#include "EventType.h"
 #include "InputEvent.h"
-
-enum class EventType {
-    window,
-    key,
-    input,
-    mouse,
-    app,
-};
+#include "WindowEvent.h"
 
 class EventManager {
 public:
@@ -16,6 +10,7 @@ public:
     void addEventListener(EventType eventType, F f) {
         switch (eventType) {
             case EventType::window:
+                _windowEvents.emplace_back(events::makeWindowEvent(std::move(f)));
                 break;
             case EventType::key:
                 break;
@@ -31,11 +26,6 @@ public:
         }
     }
 
-    template <typename F>
-    void addInputEventListener(F f) {
-        _inputEvents.emplace_back(events::makeInputEvent(std::move(f)));
-    }
-
     void triggerInputEvent(KeyCode keycode, KeyAction keyAction) {
         for (auto& inputEvent : _inputEvents) {
             inputEvent->onEvent(keycode, keyAction);
@@ -44,5 +34,6 @@ public:
 
 private:
     std::vector<std::shared_ptr<events::IInputEvent>> _inputEvents;
+    std::vector<std::shared_ptr<events::IWindowEvent>> _windowEvents;
 
 };
