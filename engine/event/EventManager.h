@@ -3,6 +3,7 @@
 #include "EventType.h"
 #include "InputEvent.h"
 #include "WindowEvent.h"
+#include "MouseButtonEvent.h"
 
 class EventManager {
 public:
