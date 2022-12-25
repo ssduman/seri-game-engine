@@ -2,7 +2,7 @@
 
 #include "../logging/Logger.h"
 
-#include <GL/glew.h>
+#include <glad/gl.h>
 #include <stb_image.h>
 
 class Texture {

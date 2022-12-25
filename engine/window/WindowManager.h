@@ -4,7 +4,7 @@
 #include "IWindowManager.h"
 #include "../logging/Logger.h"
 
-#include <GL/glew.h>
+#include <glad/gl.h>
 #include <GLFW/glfw3.h>
 
 #include <utility>
@@ -36,7 +36,7 @@ public:
         glfwSwapInterval(1);
         glfwMakeContextCurrent(_window);
 
-        if (!initglew()) {
+        if (!initglad()) {
             return false;
         }
 
@@ -46,7 +46,7 @@ public:
 
         setErrorCallback();
         setWindowCloseCallback();
-        enableDebugOutput();
+        //enableDebugOutput();
         logInfoStrings();
 
         LOGGER(info, "window manager created successfully");
@@ -163,13 +163,14 @@ private:
         return true;
     }
 
-    bool initglew() {
-        if (glewInit() != GLEW_OK) {
-            LOGGER(error, "glewInit error");
+    bool initglad() {
+        int version = gladLoadGL(glfwGetProcAddress);
+        if (version == 0) {
+            LOGGER(error, "glad load error");
             return false;
         }
 
-        LOGGER(info, "glew version '" << glewGetString(GLEW_VERSION) << "' init succeeded");
+        LOGGER(info, "loaded opengl " << GLAD_VERSION_MAJOR(version) << "." << GLAD_VERSION_MINOR(version));
         return true;
     }
 
@@ -199,10 +200,10 @@ private:
     }
 
     void logInfoStrings() {
-        LOGGER(info, "vendor: " << glGetString(GL_VENDOR));
-        LOGGER(info, "version: " << glGetString(GL_VERSION));
-        LOGGER(info, "renderer: " << glGetString(GL_RENDERER));
-        LOGGER(info, "shading language version: " << glGetString(GL_SHADING_LANGUAGE_VERSION));
+        //LOGGER(info, "vendor: " << glGetString(GL_VENDOR));
+        //LOGGER(info, "version: " << glGetString(GL_VERSION));
+        //LOGGER(info, "renderer: " << glGetString(GL_RENDERER));
+        //LOGGER(info, "shading language version: " << glGetString(GL_SHADING_LANGUAGE_VERSION));
     }
 
     void getCursorPosition() {

@@ -5,7 +5,7 @@
 #include "../shader/ShaderManager.h"
 #include "../core/AuxiliaryStructs.h"
 
-#include <GL/glew.h>
+#include <glad/gl.h>
 
 #include <vector>
 

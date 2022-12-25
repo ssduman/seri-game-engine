@@ -13,7 +13,7 @@
 #include "../renderer/IEngineBackend.h"
 #include "../renderer/OpenGLEngineBackend.h"
 
-#include <GL/glew.h>
+#include <glad/gl.h>
 
 #include <memory>
 #include <string>

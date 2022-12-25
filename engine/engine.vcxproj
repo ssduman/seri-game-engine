@@ -117,7 +117,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)libraries\glm;$(SolutionDir)libraries\freetype;$(SolutionDir)libraries\stb_image;$(SolutionDir)libraries\imgui;$(SolutionDir)libraries\glew\include;$(SolutionDir)libraries\glfw\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)libraries\glm;$(SolutionDir)libraries\freetype;$(SolutionDir)libraries\stb_image;$(SolutionDir)libraries\imgui;$(SolutionDir)libraries\glad\include;$(SolutionDir)libraries\glfw\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>

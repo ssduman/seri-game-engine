@@ -28,6 +28,9 @@
     <ClCompile Include="mics.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\libraries\glad\src\gl.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RunnerMics.h">

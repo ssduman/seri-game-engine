@@ -58,7 +58,7 @@
       <PreprocessorDefinitions>STB_IMAGE_IMPLEMENTATION;GLEW_STATIC;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)libraries\glm;$(SolutionDir)libraries\freetype;$(SolutionDir)libraries\stb_image;$(SolutionDir)libraries\glew\include;$(SolutionDir)libraries\glfw\include;$(SolutionDir)libraries\assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)libraries\glm;$(SolutionDir)libraries\freetype;$(SolutionDir)libraries\stb_image;$(SolutionDir)libraries\glad\include;$(SolutionDir)libraries\glfw\include;$(SolutionDir)libraries\assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -98,6 +98,7 @@ xcopy /y /i /e /r /q "$(SolutionDir)libraries\assimp\bin\assimp.dll" "$(Solution
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\libraries\glad\src\gl.c" />
     <ClCompile Include="mics.cpp" />
   </ItemGroup>
   <ItemGroup>
