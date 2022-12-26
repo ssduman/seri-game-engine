@@ -233,6 +233,7 @@ private:
         );
     }
 
+    /*
     void enableDebugOutput() {
         constexpr auto getDebugSourceString = [](GLenum source) {
             if (source == GL_DEBUG_SOURCE_API) {
@@ -316,7 +317,7 @@ private:
                                << "message: " << message);
         }, nullptr);
     }
-
+    */
     void disableDebugOutput() {
         glDisable(GL_DEBUG_OUTPUT);
     }
