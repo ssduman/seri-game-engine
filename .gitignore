@@ -23,6 +23,7 @@ mono_crash.*
 # Build results
 [Ii]ntermediate/
 [Bb]uild/
+[Bb]in-int/
 [Cc]make-build*/
 [Oo]ut/
 [Aa]rtifact/
