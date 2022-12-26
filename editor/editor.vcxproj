@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
@@ -11,31 +11,27 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <VCProjectVersion>16.0</VCProjectVersion>
+    <ProjectGuid>{8C1A20B0-78BC-4A86-6177-5EDA4DB8D1D6}</ProjectGuid>
+    <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{50f88c28-aede-477e-95aa-6abfb4df8390}</ProjectGuid>
-    <RootNamespace>editor</RootNamespace>
+    <RootNamespace>Editor</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>editor</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
-  </ImportGroup>
-  <ImportGroup Label="Shared">
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -45,82 +41,74 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)artifact\$(Configuration)-$(Platform)\</OutDir>
-    <IntDir>$(SolutionDir)intermediate\$(ProjectName)\$(Configuration)-$(Platform)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>..\bin\Debug-x86_64\Editor\</OutDir>
+    <IntDir>..\bin-int\Debug-x86_64\Editor\</IntDir>
+    <TargetName>Editor</TargetName>
+    <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)artifact\$(Configuration)-$(Platform)\</OutDir>
-    <IntDir>$(SolutionDir)intermediate\$(ProjectName)\$(Configuration)-$(Platform)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>..\bin\Release-x86_64\Editor\</OutDir>
+    <IntDir>..\bin-int\Release-x86_64\Editor\</IntDir>
+    <TargetName>Editor</TargetName>
+    <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>STB_IMAGE_IMPLEMENTATION;GLEW_STATIC;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;..\engine\src;..\engine\vendor;..\engine\vendor\glad\include;..\engine\vendor\glfw\include;..\engine\vendor\glm;..\engine\vendor\stb;..\engine\vendor\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <Optimization>Disabled</Optimization>
+      <MinimalRebuild>false</MinimalRebuild>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)libraries\glm;$(SolutionDir)libraries\freetype;$(SolutionDir)libraries\stb_image;$(SolutionDir)libraries\imgui;$(SolutionDir)libraries\glew\include;$(SolutionDir)libraries\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)libraries\freetype\win64;$(SolutionDir)libraries\glew\lib\Release\x64;$(SolutionDir)libraries\glfw\lib-vc2022</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;User32.lib;Gdi32.lib;Shell32.lib;glew32s.lib;freetype.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <PostBuildEvent>
-      <Command>xcopy /y /i /e /r /q "$(SolutionDir)$(ProjectName)\editor-assets" "$(SolutionDir)artifact\$(Configuration)-$(Platform)\editor-assets"
-xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win64\freetype.dll" "$(SolutionDir)artifact\$(Configuration)-$(Platform)"</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;..\engine\src;..\engine\vendor;..\engine\vendor\glad\include;..\engine\vendor\glfw\include;..\engine\vendor\glm;..\engine\vendor\stb;..\engine\vendor\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>STB_IMAGE_IMPLEMENTATION;GLEW_STATIC;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
+      <MinimalRebuild>false</MinimalRebuild>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)libraries\glm;$(SolutionDir)libraries\freetype;$(SolutionDir)libraries\stb_image;$(SolutionDir)libraries\imgui;$(SolutionDir)libraries\glew\include;$(SolutionDir)libraries\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)libraries\freetype\win64;$(SolutionDir)libraries\glew\lib\Release\x64;$(SolutionDir)libraries\glfw\lib-vc2022</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;User32.lib;Gdi32.lib;Shell32.lib;glew32s.lib;freetype.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <PostBuildEvent>
-      <Command>xcopy /y /i /e /r /q "$(SolutionDir)$(ProjectName)\editor-assets" "$(SolutionDir)artifact\$(Configuration)-$(Platform)\editor-assets"
-xcopy /y /i /e /r /q "$(SolutionDir)libraries\freetype\win64\freetype.dll" "$(SolutionDir)artifact\$(Configuration)-$(Platform)"</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\libraries\imgui\backends\imgui_impl_glfw.cpp" />
-    <ClCompile Include="..\libraries\imgui\backends\imgui_impl_opengl3.cpp" />
-    <ClCompile Include="..\libraries\imgui\imgui.cpp" />
-    <ClCompile Include="..\libraries\imgui\imgui_demo.cpp" />
-    <ClCompile Include="..\libraries\imgui\imgui_draw.cpp" />
-    <ClCompile Include="..\libraries\imgui\imgui_tables.cpp" />
-    <ClCompile Include="..\libraries\imgui\imgui_widgets.cpp" />
-    <ClCompile Include="editor.cpp" />
+    <ClInclude Include="src\Camera.h" />
+    <ClInclude Include="src\Control.h" />
+    <ClInclude Include="src\Factory.h" />
+    <ClInclude Include="src\GUI.h" />
+    <ClInclude Include="src\RunnerEditor.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\libraries\imgui\backends\imgui_impl_glfw.h" />
-    <ClInclude Include="..\libraries\imgui\backends\imgui_impl_opengl3.h" />
-    <ClInclude Include="..\libraries\imgui\backends\imgui_impl_opengl3_loader.h" />
-    <ClInclude Include="..\libraries\imgui\imconfig.h" />
-    <ClInclude Include="..\libraries\imgui\imgui.h" />
-    <ClInclude Include="..\libraries\imgui\imgui_internal.h" />
-    <ClInclude Include="..\libraries\imgui\imstb_rectpack.h" />
-    <ClInclude Include="..\libraries\imgui\imstb_textedit.h" />
-    <ClInclude Include="..\libraries\imgui\imstb_truetype.h" />
-    <ClInclude Include="Camera.h" />
-    <ClInclude Include="Control.h" />
-    <ClInclude Include="Factory.h" />
-    <ClInclude Include="GUI.h" />
-    <ClInclude Include="RunnerEditor.h" />
+    <ClCompile Include="src\editor.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\engine\Engine.vcxproj">
+      <Project>{DBC7D3B0-C769-FE86-B024-12DB9C6585D7}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

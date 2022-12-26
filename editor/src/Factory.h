@@ -1,13 +1,13 @@
 #pragma once
 
-#include "../engine/core/Seri.h"
-#include "../engine/shape/Cube.h"
-#include "../engine/shape/Line.h"
-#include "../engine/shape/Point.h"
-#include "../engine/shape/Circle.h"
-#include "../engine/shape/Polygon.h"
-#include "../engine/shape/Triangle.h"
-#include "../engine/shape/Rectangle.h"
+#include <core/Seri.h>
+#include <shape/Cube.h>
+#include <shape/Line.h>
+#include <shape/Point.h>
+#include <shape/Circle.h>
+#include <shape/Polygon.h>
+#include <shape/Triangle.h>
+#include <shape/Rectangle.h>
 
 #include "Camera.h"
 

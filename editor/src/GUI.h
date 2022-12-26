@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../engine/core/Seri.h"
+#include <core/Seri.h>
 
 #include "Camera.h"
 #include "Factory.h"
