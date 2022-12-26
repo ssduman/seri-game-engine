@@ -25,31 +25,16 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="mics.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\libraries\glad\src\gl.c">
+    <ClCompile Include="src\mics.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="RunnerMics.h">
-      <Filter>Runner</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="Control.h">
-      <Filter>Control</Filter>
-    </ClInclude>
-    <ClInclude Include="Fractal.h">
-      <Filter>Fractal</Filter>
-    </ClInclude>
-    <ClInclude Include="PerlinNoise.h">
-      <Filter>Perlin Noise</Filter>
-    </ClInclude>
-    <ClInclude Include="MicsShader.h">
-      <Filter>Shader</Filter>
-    </ClInclude>
+    <ClInclude Include="src\Camera.h" />
+    <ClInclude Include="src\Control.h" />
+    <ClInclude Include="src\Fractal.h" />
+    <ClInclude Include="src\MicsShader.h" />
+    <ClInclude Include="src\PerlinNoise.h" />
+    <ClInclude Include="src\RunnerMics.h" />
   </ItemGroup>
 </Project>

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../engine/core/Seri.h"
-#include "../engine/model/Model.h"
+#include <core/Seri.h>
+#include <model/Model.h>
 
 #include "Camera.h"
 #include "Control.h"
@@ -88,6 +88,32 @@ public:
             scene->object = std::move(perlinNoise);
             sceneManager.addChild(sceneManager.getRoot(), std::move(scene));
         }
+
+        EventManager eventManager;
+        eventManager.addInputEventListener(
+            [](KeyCode keycode, KeyAction keyAction) {
+                LOGGER(info, "input event: " << toString(keycode) << ", action: " << toString(keyAction));
+            }
+        );
+        eventManager.addInputEventListener(
+            [](KeyCode keycode, KeyAction keyAction) {
+                LOGGER(info, "other input event: " << toString(keycode) << ", action: " << toString(keyAction));
+            }
+        );
+        eventManager.addWindowEventListener(
+            []() {
+                LOGGER(info, "other window event");
+            }
+        );
+        eventManager.addMouseButtonEventListener(
+            [](MouseButtonCode mouseButtonCode, MouseButtonAction mouseButtonAction) {
+                LOGGER(info, "other mouse button event: " << toString(mouseButtonCode) << ", action : " << toString(mouseButtonAction));
+            }
+        );
+        eventManager.triggerInputEvent(KeyCode::up, KeyAction::repeat);
+        eventManager.triggerInputEvent(KeyCode::caps_lock, KeyAction::press);
+        eventManager.triggerMouseButtonEvent(MouseButtonCode::button_left, MouseButtonAction::press);
+        eventManager.triggerWindowEvent();
 
         LOGGER(info, "starting mics loop");
 
