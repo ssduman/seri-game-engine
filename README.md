@@ -9,7 +9,8 @@
 * [assimp](https://github.com/assimp/assimp)
 * [ImGui](https://github.com/ocornut/imgui) (for editor)
 ## Build: ##
-Create a folder named *libraries/* and copy dependencies into it then build with Visual Studio 2022.
+* Create a folder named *libraries/* and copy dependencies into it then build with Visual Studio 2022.
+* Double click `generate.bat`, this will generate solution files.
 ## Images: ##
 <table>
     <tr>
