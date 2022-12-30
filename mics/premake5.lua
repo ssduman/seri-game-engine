@@ -14,6 +14,10 @@ project "Mics"
 
   defines {}
 
+  linkoptions {
+    "-IGNORE:4098",
+  }
+
   includedirs {
     "src",
     "%{wks.location}/engine/src",
@@ -28,8 +32,6 @@ project "Mics"
 
   links {
     "Engine",
-    "assimp",
-    "assimp.lib",
   }
 
   libdirs {
