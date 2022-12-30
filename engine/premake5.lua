@@ -37,6 +37,7 @@ project "Engine"
     "GLFW",
     "ImGui",
     "assimp",
+    "freetype",
     "opengl32.lib",
   }
 
