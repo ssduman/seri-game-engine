@@ -4,7 +4,7 @@
 
 #include <core/Seri.h>
 
-#include "Camera.h"
+#include "camera/Camera.h"
 
 #include <memory>
 

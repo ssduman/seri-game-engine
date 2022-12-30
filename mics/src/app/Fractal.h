@@ -2,7 +2,7 @@
 
 #include <core/Seri.h>
 
-#include "Camera.h"
+#include "camera/Camera.h"
 
 #include <cmath>
 #include <random>

@@ -3,10 +3,10 @@
 #include <core/Seri.h>
 #include <model/Model.h>
 
-#include "Camera.h"
-#include "Control.h"
-#include "Fractal.h"
-#include "PerlinNoise.h"
+#include "camera/Camera.h"
+#include "control/Control.h"
+#include "app/Fractal.h"
+#include "app/PerlinNoise.h"
 
 #include <memory>
 #include <stdexcept>
@@ -141,7 +141,7 @@ private:
     bool _showFractal{ true };
     bool _showPerlinNoise{ true };
 
-    bool _loadSpiderModel{ false };
-    bool _loadBackpackModel{ true };
+    bool _loadSpiderModel{ true };
+    bool _loadBackpackModel{ false };
 
 };
