@@ -8,8 +8,18 @@ project "ImGui"
   objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
   files {
-    "*.h",
-    "*.cpp",
+    "./*.h",
+    "./*.cpp",
+    "backends/imgui_impl_glfw.h",
+    "backends/imgui_impl_glfw.cpp",
+    "backends/imgui_impl_opengl3.h",
+    "backends/imgui_impl_opengl3.cpp",
+    "backends/imgui_impl_opengl3_loader.h",
+  }
+
+  includedirs {
+    "./",
+    "%{IncludeDir.GLFW}",
   }
 
   filter "system:windows"
