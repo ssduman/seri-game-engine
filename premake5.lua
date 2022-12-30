@@ -11,7 +11,7 @@ IncludeDir["freetype"] = "%{wks.location}/engine/vendor/freetype/include"
 
 workspace "Seri Game Engine"
   architecture "x86_64"
-  startproject "Mics"
+  startproject "Editor"
   configurations { "Debug", "Release" }
   flags { "MultiProcessorCompile" }
 
