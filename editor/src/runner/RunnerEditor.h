@@ -2,10 +2,13 @@
 
 #include <core/Seri.h>
 
-#include "GUI.h"
-#include "Camera.h"
-#include "Control.h"
-#include "Factory.h"
+#include "gui/GUI.h"
+#include "camera/Camera.h"
+#include "control/Control.h"
+#include "app/Factory.h"
+
+#include <memory>
+#include <stdexcept>
 
 class RunnerEditor : public IRunner {
 public:
@@ -15,18 +18,17 @@ public:
 
     void operator()() {
         WindowProperties windowProperties{ /*title*/ "Seri Game Engine - Editor", /*fullscreen*/ false, /*w*/ 1280, /*h*/ 720 };
-        std::shared_ptr<WindowManager> windowManager = std::make_shared<WindowManager>(windowProperties);
+        auto windowManager = std::make_shared<WindowManager>(windowProperties);
         if (!windowManager->init()) {
-            LOGGER(error, "could not create window manager");
-            return;
+            throw std::runtime_error("could not create window manager");
         }
 
-        std::shared_ptr<State> state = std::make_shared<State>();
+        auto state = std::make_shared<State>();
         state->gameState() = GameState::menu;
 
         CameraProperties cameraProperties;
         cameraProperties.aspect = windowManager->getAspect();
-        std::shared_ptr<Camera> camera = std::make_shared<Camera>(cameraProperties, state);
+        auto camera = std::make_shared<Camera>(std::move(cameraProperties), state);
         camera->init();
 
         Layer layers;

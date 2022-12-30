@@ -9,7 +9,7 @@
 #include <shape/Triangle.h>
 #include <shape/Rectangle.h>
 
-#include "Camera.h"
+#include "camera/Camera.h"
 
 #include <ctime>
 #include <memory>
@@ -22,9 +22,9 @@ public:
     static std::shared_ptr<Entity> CreateEntity(std::shared_ptr<Camera> camera, EntityType entityType) {
         srand(static_cast<unsigned int>(time(0)));
 
-        constexpr auto minColor = glm::vec4{ 0.0f, 0.0f, 0.0f, 1.0f };
-        constexpr auto maxColor = glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f };
-        constexpr auto randomColor = []() -> glm::vec4 {
+        static auto minColor = glm::vec4{ 0.0f, 0.0f, 0.0f, 1.0f };
+        static auto maxColor = glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f };
+        static auto randomColor = []() -> glm::vec4 {
             return glm::linearRand(minColor, maxColor);
         };
 

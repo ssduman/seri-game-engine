@@ -2,8 +2,8 @@
 
 #include <core/Seri.h>
 
-#include "Camera.h"
-#include "Factory.h"
+#include "camera/Camera.h"
+#include "app/Factory.h"
 
 #include <imgui.h>
 #include <backends/imgui_impl_glfw.h>
@@ -240,12 +240,12 @@ private:
             ImGui::SliderFloat3("position", &_currentEntity->getTransform()._position[0], -1.0f, 1.0f, "%.4f");
             ImGui::SliderFloat3("rotation", &_currentEntity->getTransform()._rotation[0], -180.0f, 180.0f, "%.4f");
             ImGui::SliderFloat3("scale", &_currentEntity->getTransform()._scale[0], 0.0f, 100.0f, "%.4f");
-            _currentEntity->getShader().setMat4("u_model", _currentEntity->getTransform().apply());
+            _currentEntity->getShaderManager().setModel(_currentEntity->getTransform().apply());
 
             ImGui::Separator();
 
             ImGui::ColorEdit4("color", &_currentEntity->getColor().r);
-            _currentEntity->getShader().setVec4("u_color", _currentEntity->getColor().getColorRGBA());
+            _currentEntity->getShaderManager().setColor(_currentEntity->getColor().getColorRGBA());
 
             ImGui::Separator();
 
