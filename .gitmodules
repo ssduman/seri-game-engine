@@ -1,9 +1,6 @@
 [submodule "engine/vendor/glfw"]
 	path = engine/vendor/glfw
 	url = https://github.com/glfw/glfw.git
-[submodule "engine/vendor/glew"]
-	path = engine/vendor/glew
-	url = https://github.com/nigels-com/glew.git
 [submodule "engine/vendor/stb"]
 	path = engine/vendor/stb
 	url = https://github.com/nothings/stb.git
