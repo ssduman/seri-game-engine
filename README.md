@@ -2,15 +2,16 @@
 * A 2D/3D OpenGL Game Engine. Started July, 2019 and developed from time to time.
 ## Dependencies: ##
 * [GLFW](https://www.glfw.org)
-* [GLEW](http://glew.sourceforge.net)
-* [stb_image](https://github.com/nothings/stb/blob/master/stb_image.h)
+* [glad](https://github.com/Dav1dde/glad)
+* [stb](https://github.com/nothings/stb)
 * [glm](https://github.com/g-truc/glm)
 * [freetype](https://www.freetype.org)
 * [assimp](https://github.com/assimp/assimp)
-* [ImGui](https://github.com/ocornut/imgui) (for editor)
+* [ImGui](https://github.com/ocornut/imgui)
 ## Build: ##
-* Create a folder named *libraries/* and copy dependencies into it then build with Visual Studio 2022.
+* Run `git clone --recursive https://github.com/ssduman/seri-game-engine`.
 * Double click `generate.bat`, this will generate solution files.
+* Build and run in Visual Studio 2022.
 ## Images: ##
 <table>
     <tr>
