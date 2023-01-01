@@ -57,6 +57,10 @@ public:
     void render() override {
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        GLFWwindow* backup_current_context = glfwGetCurrentContext();
+        ImGui::UpdatePlatformWindows();
+        ImGui::RenderPlatformWindowsDefault();
+        glfwMakeContextCurrent(backup_current_context);
     }
 
     void registerEntity(std::shared_ptr<Object> entity) {
@@ -77,8 +81,10 @@ private:
 
     void setIO() {
         _io = &ImGui::GetIO();
-        _io->ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+        _io->ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+        _io->ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
         _io->ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+        _io->ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
         _io->FontGlobalScale = 1.5;
         _io->ConfigWindowsMoveFromTitleBarOnly = true;
         //_io->Fonts->AddFontFromFileTTF(font_filename, 14.0f);
@@ -88,17 +94,18 @@ private:
         ImGui::StyleColorsDark();
         _style = &ImGui::GetStyle();
 
-        _style->WindowRounding = 6.0f;
+        _style->GrabRounding = 6.0f;
         _style->ChildRounding = 6.0f;
         _style->FrameRounding = 6.0f;
         _style->PopupRounding = 6.0f;
+        _style->WindowRounding = 6.0f;
         _style->ScrollbarRounding = 6.0f;
-        _style->GrabRounding = 6.0f;
 
         _style->FrameBorderSize = 1.0f;
         _style->WindowTitleAlign = ImVec2(0.5f, 0.50f);
         _style->WindowMenuButtonPosition = ImGuiDir_Right;
 
+        _style->Colors[ImGuiCol_WindowBg].w = 1.0f;
         _style->Colors[ImGuiCol_TitleBg] = ImVec4(0.1f, 0.1f, 0.1f, 1.0f);
         _style->Colors[ImGuiCol_TitleBgActive] = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
         _style->Colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
