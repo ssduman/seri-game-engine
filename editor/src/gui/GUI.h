@@ -47,9 +47,11 @@ public:
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        //showDemoWindow();
+        showDemoWindow();
 
         showMainMenuBar();
+
+        showSceneWindow();
 
         showEntityWindow();
     }
@@ -155,6 +157,20 @@ private:
         }
     }
 
+    void showSceneWindow() {
+        static bool show_scene_window = true;
+        if (show_scene_window) {
+            if (!ImGui::Begin("Scene", &show_scene_window, _windowFlags)) {
+                ImGui::End();
+                return;
+            }
+
+            ImGui::Text("Scene");
+
+            ImGui::End();
+        }
+    }
+
     void showMenuFile() {
         if (ImGui::MenuItem("New")) {
         }
@@ -174,7 +190,6 @@ private:
         if (show_entity_window) {
             if (!ImGui::Begin("Maze", &show_entity_window, _windowFlags)) {
                 ImGui::End();
-                LOGGER(error, "gui begin failed");
                 return;
             }
 
