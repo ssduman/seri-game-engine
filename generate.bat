@@ -1,3 +1,9 @@
+:: git
+call git --git-dir engine/vendor/glfw/.git switch --detach 3.3.8
+call git --git-dir engine/vendor/imgui/.git switch docking
+call git --git-dir engine/vendor/freetype/.git switch --detach VER-2-12-1
+call git --git-dir engine/vendor/assimp/.git switch --detach v5.2.5
+
 :: copy premake5.lua
 echo f | xcopy /f /y "premake5/vendor/assimp/premake5.lua" "engine/vendor/assimp/premake5.lua"
 echo f | xcopy /f /y "premake5/vendor/freetype/premake5.lua" "engine/vendor/freetype/premake5.lua"
