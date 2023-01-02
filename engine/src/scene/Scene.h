@@ -8,6 +8,71 @@
 #include <vector>
 #include <algorithm>
 
+struct Component {
+    Component() {
+        generateId();
+    };
+
+    virtual ~Component() = default;
+
+    virtual void draw() = 0;
+
+    void setObject(std::shared_ptr<Object> object) {
+        _object = std::move(object);
+    }
+
+    void setParent(std::weak_ptr<Component> parent) {
+        _parent = std::move(parent);
+    }
+
+protected:
+    void generateId() {
+        _id = ++Component::_id_s;
+    }
+
+    int _id{ 0 };
+    inline static int _id_s{ 0 };
+
+    std::shared_ptr<Object> _object;
+    std::weak_ptr<Component> _parent;
+
+};
+
+struct Composite : Component, std::enable_shared_from_this<Component>{
+    ~Composite() override = default;
+
+    void draw() override {
+        if (_object) {
+            _object->display();
+        }
+
+        for (auto& child : _children) {
+            child->draw();
+        }
+    }
+
+    void add(std::shared_ptr<Component> child) {
+        child->setParent(shared_from_this());
+        _children.emplace_back(std::move(child));
+    }
+
+    void remove(std::shared_ptr<Component> child) {
+        _children.erase(std::remove(_children.begin(), _children.end(), child), _children.end());
+    }
+
+    const std::vector<std::shared_ptr<Component>>& getChildren() const {
+        return _children;
+    }
+
+    bool isLeaf() {
+        return !_children.empty();
+    }
+
+private:
+    std::vector<std::shared_ptr<Component>> _children;
+
+};
+
 struct Scene {
     std::string name;
     std::shared_ptr<Scene> parent;
@@ -41,7 +106,7 @@ public:
     }
 
     static bool isLeaf(std::shared_ptr<Scene> scene) {
-        return false;
+        return !scene->children.empty();
     }
 
 private:
