@@ -61,7 +61,7 @@ public:
             auto scene = std::make_shared<Scene>();
             scene->name = "model";
             scene->object = std::move(model);
-            sceneManager.addChild(sceneManager.getRoot(), std::move(scene));
+            sceneManager.addScene(std::move(scene));
         }
 
         if (_showFractal) {
@@ -74,7 +74,7 @@ public:
             auto scene = std::make_shared<Scene>();
             scene->name = "fractal";
             scene->object = std::move(fractal);
-            sceneManager.addChild(sceneManager.getRoot(), std::move(scene));
+            sceneManager.addScene(std::move(scene));
         }
 
         if (_showPerlinNoise) {
@@ -86,7 +86,7 @@ public:
             auto scene = std::make_shared<Scene>();
             scene->name = "perlin";
             scene->object = std::move(perlinNoise);
-            sceneManager.addChild(sceneManager.getRoot(), std::move(scene));
+            sceneManager.addScene(std::move(scene));
         }
 
         EventManager eventManager;
