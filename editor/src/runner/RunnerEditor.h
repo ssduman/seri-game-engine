@@ -23,6 +23,8 @@ public:
             throw std::runtime_error("could not create window manager");
         }
 
+        auto scene = std::make_shared<SceneComposite>("Main");
+
         auto state = std::make_shared<State>();
         state->gameState() = GameState::menu;
 
@@ -31,12 +33,11 @@ public:
         auto camera = std::make_shared<Camera>(std::move(cameraProperties), state);
         camera->init();
 
-        Layer layers;
 
         Control control{ windowManager, state, camera };
         control.init();
 
-        GUI gui{ windowManager, camera, layers, state };
+        GUI gui{ windowManager, camera, scene, state };
         gui.init();
 
         LOGGER(info, "starting seri game engine - editor loop");
@@ -47,10 +48,7 @@ public:
 
             control.processInput(windowManager->updateDeltaTime());
 
-            for (auto& entity : layers.getLayers()) {
-                entity->display();
-                gui.registerEntity(entity);
-            }
+            scene->draw();
 
             gui.display();
 
