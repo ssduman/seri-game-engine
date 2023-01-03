@@ -16,9 +16,9 @@ public:
     GUI(
         std::shared_ptr<WindowManager> windowManager,
         std::shared_ptr<Camera> camera,
-        Layer& layers,
+        std::shared_ptr<SceneComposite> scene,
         std::shared_ptr<State> state)
-        : _windowManager(windowManager), _camera(camera), _layers(layers), _state{ state } {
+        : _windowManager(windowManager), _camera(camera), _scene(scene), _state{ state } {
         LOGGER(info, "gui init succeeded");
     }
 
@@ -158,6 +158,13 @@ private:
     }
 
     void showSceneWindow() {
+        static ImGuiTreeNodeFlags treeBaseFlags =
+            ImGuiTreeNodeFlags_OpenOnArrow |
+            ImGuiTreeNodeFlags_OpenOnDoubleClick |
+            //ImGuiTreeNodeFlags_Leaf |
+            //ImGuiTreeNodeFlags_Selected |
+            ImGuiTreeNodeFlags_SpanAvailWidth;
+
         static bool show_scene_window = true;
         if (show_scene_window) {
             if (!ImGui::Begin("Scene", &show_scene_window, _windowFlags)) {
@@ -226,6 +233,7 @@ private:
     }
 
     void showEntityCreateButtons() {
+        /*
         if (ImGui::Button("Create point")) {
             _layers.addLayer(Factory::CreateEntity(_camera, EntityType::point));
         }
@@ -251,6 +259,7 @@ private:
             _currentEntity = nullptr;
             _layers.deleteLayer();
         }
+        */
 
         ImGui::Separator();
     }
@@ -346,7 +355,7 @@ private:
 
     std::shared_ptr<WindowManager> _windowManager;
     std::shared_ptr<Camera> _camera;
-    Layer& _layers;
+    std::shared_ptr<SceneComposite> _scene;
     std::shared_ptr<State> _state;
     std::shared_ptr<Entity> _currentEntity;
 
