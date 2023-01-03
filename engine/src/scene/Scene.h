@@ -51,6 +51,29 @@ struct IScene {
         _object = std::move(object);
     }
 
+    static IScene* get(std::shared_ptr<IScene> scene, int id) {
+        if (!scene) {
+            return nullptr;
+        }
+
+        if (scene->getId() == id) {
+            return scene.get();
+        }
+
+        if (scene->isLeaf()) {
+            return nullptr;
+        }
+
+        for (auto& s : scene->getChildren()) {
+            auto found = IScene::get(s, id);
+            if (found) {
+                return found;
+            }
+        }
+
+        return nullptr;
+    }
+
 protected:
     int _id{ 0 };
     std::string _name;
