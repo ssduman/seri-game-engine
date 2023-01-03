@@ -3,21 +3,20 @@
 #include "CameraProperties.h"
 #include "../util/Util.h"
 #include "../core/State.h"
+#include "../core/Object.h"
 #include "../logging/Logger.h"
 
 #include <memory>
 
-class ICamera {
+class ICamera : public Object {
 public:
     ICamera(CameraProperties cameraProperties) : _cameraProperties{ cameraProperties } {}
 
     ICamera(CameraProperties cameraProperties, std::shared_ptr<State> state) : _cameraProperties{ cameraProperties }, _state{ state } {}
 
-    virtual ~ICamera() = default;
+    ~ICamera() override = default;
 
-    virtual void init() = 0;
-
-    virtual void update() = 0;
+    void render() override {}
 
     virtual void handleMouse(float xPos, float yPos) {
         if (_state && _state->gameState() != GameState::game) {
