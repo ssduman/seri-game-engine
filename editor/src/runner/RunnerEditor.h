@@ -23,7 +23,7 @@ public:
             throw std::runtime_error("could not create window manager");
         }
 
-        auto scene = std::make_shared<SceneComposite>("Main");
+        auto scene = std::make_shared<SceneComponent>("Main");
 
         auto state = std::make_shared<State>();
         state->gameState() = GameState::menu;
@@ -32,7 +32,6 @@ public:
         cameraProperties.aspect = windowManager->getAspect();
         auto camera = std::make_shared<Camera>(std::move(cameraProperties), state);
         camera->init();
-
 
         Control control{ windowManager, state, camera };
         control.init();
