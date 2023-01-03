@@ -8,24 +8,42 @@
 #include <vector>
 #include <algorithm>
 
-struct SceneComponent {
-    SceneComponent(std::string name) : _id(generateId()), _name(std::move(name)) {}
+struct IScene {
+    IScene(std::string name) : _id(generateId()), _name(std::move(name)) {}
 
-    virtual ~SceneComponent() = default;
+    virtual ~IScene() = default;
 
     virtual void draw() = 0;
 
-    virtual const std::vector<std::shared_ptr<SceneComponent>>& getChildren() const = 0;
+    virtual void add(std::shared_ptr<IScene> child) = 0;
+
+    virtual void remove(std::shared_ptr<IScene> child) = 0;
 
     int getId() {
         return _id;
+    }
+
+    bool isLeaf() {
+        return _children.empty();
     }
 
     const std::string& getName() {
         return _name;
     }
 
-    const std::shared_ptr<Object> getObject() const {
+    const std::vector<std::shared_ptr<IScene>>& getChildren() {
+        return _children;
+    }
+
+    const std::weak_ptr<IScene>& getParent() {
+        return _parent;
+    }
+
+    void setParent(std::weak_ptr<IScene> parent) {
+        _parent = std::move(parent);
+    }
+
+    const std::shared_ptr<Object>& getObject() {
         return _object;
     }
 
@@ -33,34 +51,27 @@ struct SceneComponent {
         _object = std::move(object);
     }
 
-    const std::weak_ptr<SceneComponent> getParent() const {
-        return _parent;
-    }
-
-    void setParent(std::weak_ptr<SceneComponent> parent) {
-        _parent = std::move(parent);
-    }
-
 protected:
     int _id{ 0 };
     std::string _name;
 
+    std::weak_ptr<IScene> _parent;
     std::shared_ptr<Object> _object;
-    std::weak_ptr<SceneComponent> _parent;
+    std::vector<std::shared_ptr<IScene>> _children;
 
 private:
     int generateId() {
-        return ++SceneComponent::_id_s;
+        return ++IScene::_id_s;
     }
 
     inline static int _id_s{ 0 };
 
 };
 
-struct SceneComposite : SceneComponent, std::enable_shared_from_this<SceneComponent> {
-    SceneComposite(std::string name) : SceneComponent(std::move(name)) {}
+struct SceneComponent : IScene, std::enable_shared_from_this<IScene> {
+    SceneComponent(std::string name) : IScene(std::move(name)) {}
 
-    ~SceneComposite() override = default;
+    ~SceneComponent() override = default;
 
     void draw() override {
         if (_object) {
@@ -72,25 +83,14 @@ struct SceneComposite : SceneComponent, std::enable_shared_from_this<SceneCompon
         }
     }
 
-    bool isLeaf() {
-        return !_children.empty() || !_object;
-    }
-
-    void add(std::shared_ptr<SceneComponent> child) {
+    void add(std::shared_ptr<IScene> child) override {
         child->setParent(shared_from_this());
         _children.emplace_back(std::move(child));
     }
 
-    void remove(std::shared_ptr<SceneComponent> child) {
+    void remove(std::shared_ptr<IScene> child) override {
         _children.erase(std::remove(_children.begin(), _children.end(), child), _children.end());
     }
-
-    const std::vector<std::shared_ptr<SceneComponent>>& getChildren() const override {
-        return _children;
-    }
-
-private:
-    std::vector<std::shared_ptr<SceneComponent>> _children;
 
 };
 
