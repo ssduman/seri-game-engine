@@ -16,7 +16,7 @@ public:
     GUI(
         std::shared_ptr<WindowManager> windowManager,
         std::shared_ptr<Camera> camera,
-        std::shared_ptr<SceneComposite> scene,
+        std::shared_ptr<IScene> scene,
         std::shared_ptr<State> state)
         : _windowManager(windowManager), _camera(camera), _scene(scene), _state{ state } {
         LOGGER(info, "gui init succeeded");
@@ -158,13 +158,6 @@ private:
     }
 
     void showSceneWindow() {
-        static ImGuiTreeNodeFlags treeBaseFlags =
-            ImGuiTreeNodeFlags_OpenOnArrow |
-            ImGuiTreeNodeFlags_OpenOnDoubleClick |
-            //ImGuiTreeNodeFlags_Leaf |
-            //ImGuiTreeNodeFlags_Selected |
-            ImGuiTreeNodeFlags_SpanAvailWidth;
-
         static bool show_scene_window = true;
         if (show_scene_window) {
             if (!ImGui::Begin("Scene", &show_scene_window, _windowFlags)) {
@@ -172,9 +165,55 @@ private:
                 return;
             }
 
-            ImGui::Text("Scene");
+            ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+            if (ImGui::TreeNode(_scene->getName().c_str())) {
+                showSceneWindowImpl(_scene);
+                ImGui::TreePop();
+            }
 
             ImGui::End();
+        }
+    }
+
+    void showSceneWindowImpl(std::shared_ptr<IScene> scenes) {
+        static ImGuiTreeNodeFlags treeBaseFlags =
+            ImGuiTreeNodeFlags_OpenOnArrow |
+            ImGuiTreeNodeFlags_SpanAvailWidth |
+            ImGuiTreeNodeFlags_OpenOnDoubleClick;
+
+        static int nodeClickedId = -1;
+
+        for (auto& scene : scenes->getChildren()) {
+            // flags
+            ImGuiTreeNodeFlags treeNodeFlags = treeBaseFlags;
+            if (scene->isLeaf()) {
+                treeNodeFlags |= ImGuiTreeNodeFlags_Leaf;
+            }
+            if (nodeClickedId == scene->getId()) {
+                treeNodeFlags |= ImGuiTreeNodeFlags_Selected;
+            }
+            
+            if (ImGui::TreeNodeEx((void*)(intptr_t)scene->getId(), treeNodeFlags, scene->getName().c_str())) {
+                // context menu
+                if (ImGui::BeginPopupContextItem()) {
+                    if (ImGui::Button("Add")) {
+                        ImGui::CloseCurrentPopup();
+                    }
+                    if (ImGui::Button("Delete")) {
+                        ImGui::CloseCurrentPopup();
+                    }
+                    ImGui::EndPopup();
+                }
+
+                // selection
+                if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen()) {
+                    nodeClickedId = scene->getId();
+                }
+
+                showSceneWindowImpl(scene);
+                
+                ImGui::TreePop();
+            }
         }
     }
 
@@ -355,7 +394,7 @@ private:
 
     std::shared_ptr<WindowManager> _windowManager;
     std::shared_ptr<Camera> _camera;
-    std::shared_ptr<SceneComposite> _scene;
+    std::shared_ptr<IScene> _scene;
     std::shared_ptr<State> _state;
     std::shared_ptr<Entity> _currentEntity;
 
