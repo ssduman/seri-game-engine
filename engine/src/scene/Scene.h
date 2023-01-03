@@ -15,8 +15,14 @@ struct SceneComponent {
 
     virtual void draw() = 0;
 
+    virtual const std::vector<std::shared_ptr<SceneComponent>>& getChildren() const = 0;
+
     int getId() {
         return _id;
+    }
+
+    const std::string& getName() {
+        return _name;
     }
 
     const std::shared_ptr<Object> getObject() const {
@@ -79,7 +85,7 @@ struct SceneComposite : SceneComponent, std::enable_shared_from_this<SceneCompon
         _children.erase(std::remove(_children.begin(), _children.end(), child), _children.end());
     }
 
-    const std::vector<std::shared_ptr<SceneComponent>>& getChildren() const {
+    const std::vector<std::shared_ptr<SceneComponent>>& getChildren() const override {
         return _children;
     }
 
