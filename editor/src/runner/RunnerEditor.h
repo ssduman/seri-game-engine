@@ -33,6 +33,26 @@ public:
         auto camera = std::make_shared<Camera>(std::move(cameraProperties), state);
         camera->init();
 
+        if (_showDemoScene) {
+            auto cameraScene = std::make_shared<SceneComponent>("Camera");
+            cameraScene->setObject(camera);
+            scene->add(cameraScene);
+
+            auto component1Scene = std::make_shared<SceneComponent>("Components1");
+            auto component2Scene = std::make_shared<SceneComponent>("Components2");
+
+            auto triangle1Scene = std::make_shared<SceneComponent>("Triangle1");
+            triangle1Scene->setObject(Factory::CreateEntity(camera, EntityType::triangle));
+            component1Scene->add(triangle1Scene);
+
+            auto rectangle1Scene = std::make_shared<SceneComponent>("Rectangle1");
+            rectangle1Scene->setObject(Factory::CreateEntity(camera, EntityType::rectangle));
+            component1Scene->add(rectangle1Scene);
+
+            scene->add(component1Scene);
+            scene->add(component2Scene);
+        }
+
         Control control{ windowManager, state, camera };
         control.init();
 
@@ -57,5 +77,8 @@ public:
 
         LOGGER(info, "seri game engine - editor loop stopped");
     }
+
+private:
+    bool _showDemoScene{ true };
 
 };
