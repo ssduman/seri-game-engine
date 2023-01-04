@@ -31,6 +31,10 @@ struct IScene {
         return _name;
     }
 
+    void setName(std::string name) {
+        _name = std::move(name);
+    }
+
     const std::vector<std::shared_ptr<IScene>>& getChildren() {
         return _children;
     }
