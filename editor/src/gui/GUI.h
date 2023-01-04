@@ -190,18 +190,66 @@ private:
                 treeNodeFlags |= ImGuiTreeNodeFlags_Leaf;
             }
             if (nodeClickedId == scene->getId()) {
+                registerEntity(scene->getObject());
                 treeNodeFlags |= ImGuiTreeNodeFlags_Selected;
             }
-            
+
             if (ImGui::TreeNodeEx((void*)(intptr_t)scene->getId(), treeNodeFlags, scene->getName().c_str())) {
                 // context menu
                 if (ImGui::BeginPopupContextItem()) {
-                    if (ImGui::Button("Add")) {
-                        ImGui::CloseCurrentPopup();
+                    if (ImGui::BeginMenu("Add ...")) {
+                        if (ImGui::MenuItem("Point")) {
+                            auto addScene = std::make_shared<SceneComponent>("Point");
+                            addScene->setObject(Factory::CreateEntity(_camera, EntityType::point));
+                            scene->add(std::move(addScene));
+                        }
+
+                        if (ImGui::MenuItem("Line")) {
+                            auto addScene = std::make_shared<SceneComponent>("Line");
+                            addScene->setObject(Factory::CreateEntity(_camera, EntityType::line));
+                            scene->add(std::move(addScene));
+                        }
+
+                        if (ImGui::MenuItem("Triangle")) {
+                            auto addScene = std::make_shared<SceneComponent>("Triangle");
+                            addScene->setObject(Factory::CreateEntity(_camera, EntityType::triangle));
+                            scene->add(std::move(addScene));
+                        }
+
+                        if (ImGui::MenuItem("Rectangle")) {
+                            auto addScene = std::make_shared<SceneComponent>("Rectangle");
+                            addScene->setObject(Factory::CreateEntity(_camera, EntityType::rectangle));
+                            scene->add(std::move(addScene));
+                        }
+
+                        if (ImGui::MenuItem("Circle")) {
+                            auto addScene = std::make_shared<SceneComponent>("Circle");
+                            addScene->setObject(Factory::CreateEntity(_camera, EntityType::circle));
+                            scene->add(std::move(addScene));
+                        }
+
+                        if (ImGui::MenuItem("Cube")) {
+                            auto addScene = std::make_shared<SceneComponent>("Cube");
+                            addScene->setObject(Factory::CreateEntity(_camera, EntityType::cube));
+                            scene->add(std::move(addScene));
+                        }
+
+                        if (ImGui::MenuItem("Polygon")) {
+                            auto addScene = std::make_shared<SceneComponent>("Polygon");
+                            addScene->setObject(Factory::CreateEntity(_camera, EntityType::polygon));
+                            scene->add(std::move(addScene));
+                        }
+
+                        ImGui::EndMenu();
                     }
+
                     if (ImGui::Button("Delete")) {
-                        ImGui::CloseCurrentPopup();
+                        auto parentWeak = scene->getParent();
+                        if (auto parent = parentWeak.lock()) {
+                            parent->remove(scene);
+                        }
                     }
+
                     ImGui::EndPopup();
                 }
 
@@ -211,7 +259,7 @@ private:
                 }
 
                 showSceneWindowImpl(scene);
-                
+
                 ImGui::TreePop();
             }
         }
