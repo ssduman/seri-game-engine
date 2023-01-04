@@ -60,7 +60,7 @@ public:
     }
 
     void processInput(float deltaTime) {
-        GLFWwindow* window = _windowManager->getWindow();
+        auto window = static_cast<GLFWwindow*>(_windowManager->getWindow());
 
         if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
             _windowManager->setWindowShouldCloseToTrue();

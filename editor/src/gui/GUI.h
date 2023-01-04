@@ -38,7 +38,7 @@ public:
         setStyle();
         setWindowFlags();
 
-        ImGui_ImplGlfw_InitForOpenGL(_windowManager->getWindow(), true);
+        ImGui_ImplGlfw_InitForOpenGL(static_cast<GLFWwindow*>(_windowManager->getWindow()), true);
         ImGui_ImplOpenGL3_Init(glsl_version);
     }
 

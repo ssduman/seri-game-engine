@@ -17,7 +17,9 @@ public:
     virtual ~IControl() = default;
 
     virtual void init() {
-        glfwSetCharCallback(_windowManager->getWindow(),
+        auto window = static_cast<GLFWwindow*>(_windowManager->getWindow());
+
+        glfwSetCharCallback(window,
             [](GLFWwindow* window, unsigned int codepoint) {
                 if (auto control = static_cast<IControl*>(glfwGetWindowUserPointer(window))) {
                     control->charCallback(window, codepoint);
@@ -25,7 +27,7 @@ public:
             }
         );
 
-        glfwSetMouseButtonCallback(_windowManager->getWindow(),
+        glfwSetMouseButtonCallback(window,
             [](GLFWwindow* window, int button, int action, int mods) {
                 if (auto control = static_cast<IControl*>(glfwGetWindowUserPointer(window))) {
                     control->mouseButtonCallback(window, button, action, mods);
@@ -33,7 +35,7 @@ public:
             }
         );
 
-        glfwSetScrollCallback(_windowManager->getWindow(),
+        glfwSetScrollCallback(window,
             [](GLFWwindow* window, double xoffset, double yoffset) {
                 if (auto control = static_cast<IControl*>(glfwGetWindowUserPointer(window))) {
                     control->scrollCallback(window, xoffset, yoffset);
@@ -41,7 +43,7 @@ public:
             }
         );
 
-        glfwSetFramebufferSizeCallback(_windowManager->getWindow(),
+        glfwSetFramebufferSizeCallback(window,
             [](GLFWwindow* window, int width, int height) {
                 if (auto control = static_cast<IControl*>(glfwGetWindowUserPointer(window))) {
                     control->framebufferSizeCallback(window, width, height);
@@ -49,7 +51,7 @@ public:
             }
         );
 
-        glfwSetCursorPosCallback(_windowManager->getWindow(),
+        glfwSetCursorPosCallback(window,
             [](GLFWwindow* window, double xpos, double ypos) {
                 if (auto control = static_cast<IControl*>(glfwGetWindowUserPointer(window))) {
                     control->cursorPosCallback(window, xpos, ypos);
@@ -57,7 +59,7 @@ public:
             }
         );
 
-        glfwSetKeyCallback(_windowManager->getWindow(),
+        glfwSetKeyCallback(window,
             [](GLFWwindow* window, int key, int scancode, int action, int mods) {
                 if (auto control = static_cast<IControl*>(glfwGetWindowUserPointer(window))) {
                     control->keyCallback(window, key, scancode, action, mods);
