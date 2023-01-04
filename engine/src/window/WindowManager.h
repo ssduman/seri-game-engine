@@ -75,7 +75,7 @@ public:
         return static_cast<float>(_deltaTime);
     }
 
-    GLFWwindow* getWindow() {
+    void* getWindow() override {
         return _window;
     }
 

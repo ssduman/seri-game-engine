@@ -23,6 +23,8 @@ public:
 
     virtual float updateDeltaTime() = 0;
 
+    virtual void* getWindow() = 0;
+
     int getWidth() {
         return _windowProperties.windowWidth;
     }
