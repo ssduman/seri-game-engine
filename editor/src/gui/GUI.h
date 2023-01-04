@@ -65,10 +65,6 @@ public:
         glfwMakeContextCurrent(backup_current_context);
     }
 
-    void registerEntity(std::shared_ptr<Object> entity) {
-        _currentEntity = std::dynamic_pointer_cast<Entity>(entity);
-    }
-
 private:
     void helpMarker(const char* desc) {
         ImGui::TextDisabled("(?)");
@@ -190,7 +186,7 @@ private:
                 treeNodeFlags |= ImGuiTreeNodeFlags_Leaf;
             }
             if (nodeClickedId == scene->getId()) {
-                registerEntity(scene->getObject());
+                registerScene(scene);
                 treeNodeFlags |= ImGuiTreeNodeFlags_Selected;
             }
 
@@ -371,8 +367,8 @@ private:
 
             ImGui::Separator();
 
-            static char str0[128] = "Entity";
-            ImGui::InputText("name", str0, IM_ARRAYSIZE(str0));
+            auto& sceneName = _currentScene->getName();
+            ImGui::InputText("name", (char*)sceneName.c_str(), sceneName.size() + 1);
 
             ImGui::Separator();
 
@@ -440,10 +436,20 @@ private:
         ImGui::Text(text.c_str());
     }
 
+    void registerScene(std::shared_ptr<IScene> scene) {
+        _currentScene = scene;
+        registerEntity(scene->getObject());
+    }
+
+    void registerEntity(std::shared_ptr<Object> entity) {
+        _currentEntity = std::dynamic_pointer_cast<Entity>(entity);
+    }
+
     std::shared_ptr<WindowManager> _windowManager;
     std::shared_ptr<Camera> _camera;
     std::shared_ptr<IScene> _scene;
     std::shared_ptr<State> _state;
+    std::shared_ptr<IScene> _currentScene;
     std::shared_ptr<Entity> _currentEntity;
 
     ImGuiIO* _io{ nullptr };
