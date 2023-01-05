@@ -1,5 +1,6 @@
 #pragma once
 
+#include "SceneVisitor.h"
 #include "../core/Object.h"
 #include "../logging/Logger.h"
 
@@ -18,6 +19,8 @@ struct IScene {
     virtual void add(std::shared_ptr<IScene> child) = 0;
 
     virtual void remove(std::shared_ptr<IScene> child) = 0;
+
+    virtual void visit(std::shared_ptr<ISceneVisitor>& visitor) = 0;
 
     int getId() {
         return _id;
@@ -107,6 +110,14 @@ struct SceneComponent : IScene, std::enable_shared_from_this<IScene> {
 
         for (auto& child : _children) {
             child->draw();
+        }
+    }
+
+    void visit(std::shared_ptr<ISceneVisitor>& visitor) override {
+        visitor->visit(shared_from_this());
+
+        for (auto& child : _children) {
+            child->visit(visitor);
         }
     }
 
