@@ -7,6 +7,7 @@
 #include "../core/IRunner.h"
 #include "../scene/Layer.h"
 #include "../scene/Scene.h"
+#include "../scene/SceneBuilder.h"
 #include "../camera/ICamera.h"
 #include "../texture/Color.h"
 #include "../logging/Logger.h"
