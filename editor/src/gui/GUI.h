@@ -194,46 +194,34 @@ private:
                 // context menu
                 if (ImGui::BeginPopupContextItem()) {
                     if (ImGui::BeginMenu("Add ...")) {
+                        SceneBuilder builder;
+
                         if (ImGui::MenuItem("Point")) {
-                            auto addScene = std::make_shared<SceneComponent>("Point");
-                            addScene->setObject(Factory::CreateEntity(_camera, EntityType::point));
-                            scene->add(std::move(addScene));
+                            scene->add(std::move(builder.setName("Point").setObject(Factory::CreateEntity(_camera, EntityType::point)).build()));
                         }
 
                         if (ImGui::MenuItem("Line")) {
-                            auto addScene = std::make_shared<SceneComponent>("Line");
-                            addScene->setObject(Factory::CreateEntity(_camera, EntityType::line));
-                            scene->add(std::move(addScene));
+                            scene->add(std::move(builder.setName("Line").setObject(Factory::CreateEntity(_camera, EntityType::line)).build()));
                         }
 
                         if (ImGui::MenuItem("Triangle")) {
-                            auto addScene = std::make_shared<SceneComponent>("Triangle");
-                            addScene->setObject(Factory::CreateEntity(_camera, EntityType::triangle));
-                            scene->add(std::move(addScene));
+                            scene->add(std::move(builder.setName("Triangle").setObject(Factory::CreateEntity(_camera, EntityType::triangle)).build()));
                         }
 
                         if (ImGui::MenuItem("Rectangle")) {
-                            auto addScene = std::make_shared<SceneComponent>("Rectangle");
-                            addScene->setObject(Factory::CreateEntity(_camera, EntityType::rectangle));
-                            scene->add(std::move(addScene));
+                            scene->add(std::move(builder.setName("Rectangle").setObject(Factory::CreateEntity(_camera, EntityType::rectangle)).build()));
                         }
 
                         if (ImGui::MenuItem("Circle")) {
-                            auto addScene = std::make_shared<SceneComponent>("Circle");
-                            addScene->setObject(Factory::CreateEntity(_camera, EntityType::circle));
-                            scene->add(std::move(addScene));
+                            scene->add(std::move(builder.setName("Circle").setObject(Factory::CreateEntity(_camera, EntityType::circle)).build()));
                         }
 
                         if (ImGui::MenuItem("Cube")) {
-                            auto addScene = std::make_shared<SceneComponent>("Cube");
-                            addScene->setObject(Factory::CreateEntity(_camera, EntityType::cube));
-                            scene->add(std::move(addScene));
+                            scene->add(std::move(builder.setName("Cube").setObject(Factory::CreateEntity(_camera, EntityType::cube)).build()));
                         }
 
                         if (ImGui::MenuItem("Polygon")) {
-                            auto addScene = std::make_shared<SceneComponent>("Polygon");
-                            addScene->setObject(Factory::CreateEntity(_camera, EntityType::polygon));
-                            scene->add(std::move(addScene));
+                            scene->add(std::move(builder.setName("Polygon").setObject(Factory::CreateEntity(_camera, EntityType::polygon)).build()));
                         }
 
                         ImGui::EndMenu();
