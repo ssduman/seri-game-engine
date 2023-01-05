@@ -48,6 +48,12 @@ public:
             scene->add(component2Scene);
         }
 
+        scene->visit(makeSceneVisitor(
+            [](std::shared_ptr<IScene>& scene) {
+                LOGGER(verbose, "scene id: " << scene->getId() << ", name: " << scene->getName());
+            }
+        ));
+
         Control control{ windowManager, state, camera };
         control.init();
 
