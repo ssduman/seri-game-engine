@@ -1,12 +1,6 @@
 #pragma once
 
-#include "../core/Object.h"
-#include "../logging/Logger.h"
-
 #include <memory>
-#include <string>
-#include <vector>
-#include <algorithm>
 
 struct IScene;
 

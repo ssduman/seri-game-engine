@@ -9,6 +9,9 @@
 #include <vector>
 #include <algorithm>
 
+struct SceneBuilder;
+struct SceneVisitor;
+
 struct IScene {
     IScene(std::string name) : _id(generateId()), _name(std::move(name)) {}
 

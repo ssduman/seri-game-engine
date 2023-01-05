@@ -8,6 +8,8 @@
 #include "../scene/Layer.h"
 #include "../scene/Scene.h"
 #include "../scene/SceneBuilder.h"
+#include "../scene/SceneVisitor.h"
+#include "../scene/SceneIterator.h"
 #include "../camera/ICamera.h"
 #include "../texture/Color.h"
 #include "../logging/Logger.h"
