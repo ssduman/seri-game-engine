@@ -68,7 +68,11 @@ public:
 
             control.processInput(windowManager->updateDeltaTime());
 
-            scene->draw();
+            //scene->draw();
+            SceneIterator iter(scene);
+            for (auto& s : iter) {
+                s->draw();
+            }
 
             gui.display();
 
