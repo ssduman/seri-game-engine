@@ -23,7 +23,8 @@ public:
             throw std::runtime_error("could not create window manager");
         }
 
-        auto scene = std::make_shared<SceneComponent>("Main");
+        SceneBuilder builder;
+        auto scene = builder.setName("Main").build();
 
         auto state = std::make_shared<State>();
         state->gameState() = GameState::menu;
@@ -34,21 +35,15 @@ public:
         camera->init();
 
         if (_showDemoScene) {
-            auto cameraScene = std::make_shared<SceneComponent>("Camera");
-            cameraScene->setObject(camera);
+            auto cameraScene = builder.setName("Camera").setObject(camera).build();
+            auto circle1Scene = builder.setName("Circle1").setObject(Factory::CreateEntity(camera, EntityType::circle)).build();
+            auto triangle1Scene = builder.setName("Triangle1").setObject(Factory::CreateEntity(camera, EntityType::triangle)).build();
+            auto rectangle1Scene = builder.setName("Rectangle1").setObject(Factory::CreateEntity(camera, EntityType::rectangle)).build();
+
+            auto component1Scene = builder.setName("Component1").add(triangle1Scene).add(rectangle1Scene).build();
+            auto component2Scene = builder.setName("Component2").add(circle1Scene).build();
+
             scene->add(cameraScene);
-
-            auto component1Scene = std::make_shared<SceneComponent>("Components1");
-            auto component2Scene = std::make_shared<SceneComponent>("Components2");
-
-            auto triangle1Scene = std::make_shared<SceneComponent>("Triangle1");
-            triangle1Scene->setObject(Factory::CreateEntity(camera, EntityType::triangle));
-            component1Scene->add(triangle1Scene);
-
-            auto rectangle1Scene = std::make_shared<SceneComponent>("Rectangle1");
-            rectangle1Scene->setObject(Factory::CreateEntity(camera, EntityType::rectangle));
-            component1Scene->add(rectangle1Scene);
-
             scene->add(component1Scene);
             scene->add(component2Scene);
         }
