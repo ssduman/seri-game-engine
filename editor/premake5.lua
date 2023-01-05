@@ -12,7 +12,9 @@ project "Editor"
     "src/**.cpp",
   }
 
-  defines {}
+  linkoptions {
+    "-IGNORE:4098",
+  }
 
   includedirs {
     "src",
