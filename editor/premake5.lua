@@ -25,6 +25,7 @@ project "Editor"
     "%{IncludeDir.glm}",
     "%{IncludeDir.stb}",
     "%{IncludeDir.ImGui}",
+    "%{IncludeDir.freetype}",
   }
 
   links {
