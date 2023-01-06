@@ -81,6 +81,11 @@ namespace aux {
     }
 
     template<typename T>
+    GLsizeiptr capacity(const typename std::vector<T>& vec) {
+        return static_cast<GLsizeiptr>(sizeof(T) * vec.capacity());
+    }
+
+    template<typename T>
     const void* data(const typename std::vector<T>& vec) {
         return vec.data();
     }
@@ -101,6 +106,8 @@ namespace aux {
     }
 
     struct Attribute {
+        Attribute() = default;
+
         Attribute(Index index_, GLint size_, const void* pointer_)
             :
             index(toUInt(index_)),
@@ -117,6 +124,8 @@ namespace aux {
     };
 
     struct DataBuffer {
+        DataBuffer() = default;
+
         DataBuffer(GLsizeiptr size_)
             :
             size(size_) {}
@@ -146,6 +155,8 @@ namespace aux {
     };
 
     struct SubDataBuffer {
+        SubDataBuffer() = default;
+
         SubDataBuffer(GLintptr offset_, GLsizeiptr size_, const void* data_)
             :
             offset(offset_),
@@ -166,6 +177,8 @@ namespace aux {
     };
 
     struct MapBuffer {
+        MapBuffer() = default;
+
         MapBuffer(size_t size_, const void* data_)
             :
             size(size_),
