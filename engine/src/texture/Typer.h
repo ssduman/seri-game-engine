@@ -1,11 +1,18 @@
 #pragma once
 
 #include "../util/Util.h"
-#include "../core/Entity.h"
+#include "../core/Object.h"
+#include "../core/AuxiliaryStructs.h"
+#include "../core/AuxiliaryStructsBuilder.h"
 #include "../logging/Logger.h"
+#include "../renderer/IEngineBackend.h"
+#include "../renderer/OpenGLEngineBackend.h"
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
+
+#include <memory>
+#include <string>
 
 struct Character {
     GLuint texture;
@@ -14,27 +21,132 @@ struct Character {
     glm::ivec2 bearing;
 };
 
-class Typer : public Entity {
+class Typer : public Object {
 public:
-    Typer(ICamera* camera, int width, int height) : Entity(camera), _width(static_cast<float>(width)), _height(static_cast<float>(height)) {
-        LOGGER(info, "typer init succeeded");
+    Typer(int windowWidth, int windowHeight, std::string font)
+        :
+        _width(static_cast<float>(windowWidth)),
+        _height(static_cast<float>(windowHeight)),
+        _font(std::move(font)) {
+        _vertices.reserve(6 * 4);
+        initFT();
     }
 
     ~Typer() override {
-        glDeleteVertexArrays(1, &_VAO);
-        glDeleteBuffers(1, &_VBO);
+        //_engineBackend.release();
         delete _face;
-
-        LOGGER(info, "typer delete succeeded");
     }
 
-    void initShader(const std::string& vsCodePath, const std::string& fsCodePath, bool) override {
-        _shader.init(vsCodePath, fsCodePath);
-        setColor({ 1.0f, 1.0f, 1.0f });
+    void init() override {
+        aux::DataBufferBuilder dataBufferBuilder;
+        aux::AttributeBuilder attributeBuilder;
+
+        auto dataBuffer = dataBufferBuilder
+            .setTarget(aux::Target::vbo)
+            .setSize(aux::capacity(_vertices))
+            .setData(nullptr)
+            .setUsage(aux::Usage::dynamic_draw)
+            .build();
+        _engineBackend.setDataBuffer(dataBuffer);
+
+        auto attribute = attributeBuilder
+            .setIndex(aux::Index::position)
+            .setSize(4)
+            .setPointer(nullptr)
+            .build();
+        _engineBackend.setAttribute(attribute);
+
+        _engineBackend.setEnable(aux::Index::position);
+        _engineBackend.setDrawCount(6);
     }
 
-    void initFT(const std::string& font) {
-        _font = font;
+    void render() override {
+        _shader.use();
+
+        bind();
+
+        float xTemp{ _x };
+
+        for (char c : _text) {
+            _currCharacter = _characters[c];
+
+            float w = _currCharacter.size.x * _scale;
+            float h = _currCharacter.size.y * _scale;
+            float xpos = xTemp + _currCharacter.bearing.x * _scale;
+            float ypos = _y - (_currCharacter.size.y - _currCharacter.bearing.y) * _scale;
+            xTemp += (_currCharacter.advance >> 6) * _scale;
+
+            _vertices = {
+                xpos, ypos + h, 0.0f, 0.0f,
+                xpos, ypos, 0.0f, 1.0f,
+                xpos + w, ypos, 1.0f, 1.0f,
+
+                xpos, ypos + h, 0.0f, 0.0f,
+                xpos + w, ypos, 1.0f, 1.0f,
+                xpos + w, ypos + h, 1.0f, 0.0f,
+            };
+
+            glBindTexture(GL_TEXTURE_2D, _currCharacter.texture);
+
+            _engineBackend.bindVBO();
+            aux::SubDataBufferBuilder subDataBufferBuilder;
+            auto subDataBuffer = subDataBufferBuilder
+                .setTarget(aux::Target::vbo)
+                .setOffset(0)
+                .setSize(aux::size(_vertices))
+                .setData(aux::data(_vertices))
+                .build();
+            _engineBackend.setSubDataBuffer(subDataBuffer);
+            _engineBackend.draw();
+        }
+
+        unbind();
+
+        _shader.disuse();
+    }
+
+    void update() override {}
+
+    void setText(std::string text) {
+        _text = std::move(text);
+    }
+
+    void setScale(float scale) {
+        _scale = scale;
+    }
+
+    void setColor(glm::vec4 color) {
+        _color = std::move(color);
+        _shaderManager.setColor(_color);
+    }
+
+    void setPosition(float x, float y, float z = 1.0f) {
+        _x = x;
+        _y = y;
+        _z = z;
+    }
+
+    void clear() {
+        _text.clear();
+        _scale = 1.0f;
+        _x = 0, _y = 0, _z = 0;
+        setColor({ 1.0f, 1.0f, 1.0f, 1.0f });
+    }
+
+    Shader& getShader() {
+        return _shader;
+    }
+
+    ShaderManager& getShaderManager() {
+        return _shaderManager;
+    }
+
+    OpenGLEngineBackend& getDrawer() {
+        return _engineBackend;
+    }
+
+private:
+    void initFT() {
         if (_font.empty()) {
             LOGGER(error, "freetype needs a valid font");
             return;
@@ -100,95 +212,33 @@ public:
         _library = nullptr;
     }
 
-    void initProjection() {
-        _shader.use();
-        _projection = glm::ortho(0.0f, (float)_width, 0.0f, (float)_height);
-        _shader.setMat4("u_projection", _projection);
-        _shader.disuse();
-    }
-
-    void setColor(glm::vec3 color) {
-        _shader.use();
-        _shader.setVec3("u_textColor", color);
-        _shader.disuse();
-    }
-
-    void init() override {
-        glGenVertexArrays(1, &_VAO);
-        glGenBuffers(1, &_VBO);
-
-        glBindVertexArray(_VAO);
-        glBindBuffer(GL_ARRAY_BUFFER, _VBO);
-
-        glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, nullptr, GL_DYNAMIC_DRAW);
-        glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
-        glEnableVertexAttribArray(0);
-
-        glBindVertexArray(0);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-    }
-
-    void render() override {
-        glBindTexture(GL_TEXTURE_2D, _currCharacter.texture);
-        glBindBuffer(GL_ARRAY_BUFFER, _VBO);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, _vertices.size() * sizeof(GLfloat), _vertices.data());
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glDrawArrays(GL_TRIANGLES, 0, 6);
-    }
-
-    void renderText(std::string& text, float x, float y, float scale = 1.0f) {
-        _shader.use();
-
-        bind();
-
-        for (char c : text) {
-            _currCharacter = _characters[c];
-
-            float xpos = x + _currCharacter.bearing.x * scale;
-            float ypos = y - (_currCharacter.size.y - _currCharacter.bearing.y) * scale;
-
-            float w = _currCharacter.size.x * scale;
-            float h = _currCharacter.size.y * scale;
-
-            _vertices = {
-                xpos, ypos + h, 0.0f, 0.0f,
-                xpos, ypos, 0.0f, 1.0f,
-                xpos + w, ypos, 1.0f, 1.0f,
-
-                xpos, ypos + h, 0.0f, 0.0f,
-                xpos + w, ypos, 1.0f, 1.0f,
-                xpos + w, ypos + h, 1.0f, 0.0f,
-            };
-
-            x += (_currCharacter.advance >> 6) * scale;
-
-            render();
-        }
-
-        unbind();
-
-        _shader.disuse();
-    }
-
-private:
     void bind() {
         glActiveTexture(GL_TEXTURE0);
-        glBindVertexArray(_VAO);
     }
 
     void unbind() {
-        glBindVertexArray(0);
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 
     float _width;
     float _height;
+    std::string _text;
+    std::string _font;
+    float _scale{ 1.0f };
+    float _x{ 0 }, _y{ 0 }, _z{ 0 };
+    glm::vec4 _color{ 1.0f, 1.0f, 1.0f, 1.0f };
+
+    Shader _shader;
+    ShaderManager _shaderManager{ _shader };
+    OpenGLEngineBackend _engineBackend{ _shaderManager };
+
     glm::mat4 _projection{};
     std::vector<float> _vertices{};
+
     FT_Face _face = nullptr;
     FT_Library _library = nullptr;
+
     Character _currCharacter{};
     std::map<GLubyte, Character> _characters{};
-    std::string _font; // En Bloc.ttf or DungeonFont.ttf
 
 };
