@@ -78,6 +78,24 @@ public:
         unbind();
     }
 
+    void setSubDataBuffer(const aux::SubDataBuffer& subDataB) {
+        bind();
+        subdataBuffer(subDataB);
+        unbind();
+    }
+
+    void setAttribute(const aux::Attribute& attributes) {
+        bind();
+        attribute(attributes);
+        unbind();
+    }
+
+    void setEnable(const aux::Index& index) {
+        bind();
+        enable(index);
+        unbind();
+    }
+
     template<typename T>
     void setSubDataBuffer(aux::Index index, const typename std::vector<T>& vec, GLintptr offset) {
         indexCheck(index, vec);
@@ -111,6 +129,18 @@ public:
             return;
         }
         _drawCount = drawCount;
+    }
+
+    void bindVAO() {
+        glBindVertexArray(_VAO);
+    }
+
+    void bindVBO() {
+        glBindBuffer(GL_ARRAY_BUFFER, _VBO);
+    }
+
+    void bindEBO() {
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
     }
 
 private:
@@ -173,18 +203,6 @@ private:
         bindVAO();
         bindVBO();
         bindEBO();
-    }
-
-    void bindVAO() {
-        glBindVertexArray(_VAO);
-    }
-
-    void bindVBO() {
-        glBindBuffer(GL_ARRAY_BUFFER, _VBO);
-    }
-
-    void bindEBO() {
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
     }
 
     void unbind() {
