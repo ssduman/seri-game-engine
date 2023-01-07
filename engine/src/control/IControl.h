@@ -2,7 +2,7 @@
 
 #include "../core/State.h"
 #include "../logging/Logger.h"
-#include "../window/WindowManager.h"
+#include "../window/IWindowManager.h"
 
 #include <memory>
 #include <string>
@@ -10,9 +10,9 @@
 
 class IControl {
 public:
-    IControl(std::shared_ptr<WindowManager> windowManager) : _windowManager(windowManager) {}
+    IControl(std::shared_ptr<IWindowManager> windowManager) : _windowManager(windowManager) {}
 
-    IControl(std::shared_ptr<WindowManager> windowManager, std::shared_ptr<State> state) : _windowManager(windowManager), _state(state) {}
+    IControl(std::shared_ptr<IWindowManager> windowManager, std::shared_ptr<State> state) : _windowManager(windowManager), _state(state) {}
 
     virtual ~IControl() = default;
 
@@ -138,7 +138,7 @@ public:
     }
 
 protected:
-    std::shared_ptr<WindowManager> _windowManager;
+    std::shared_ptr<IWindowManager> _windowManager;
     std::shared_ptr<State> _state;
 
     std::string _userInputString;
