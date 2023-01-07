@@ -5,7 +5,7 @@
 
 #include <memory>
 
-class WindowFactory {
+class WindowManagerFactory {
 public:
     static std::shared_ptr<IWindowManager> instance() {
         return _windowManagerInstance;

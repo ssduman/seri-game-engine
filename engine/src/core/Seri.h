@@ -21,4 +21,5 @@
 #include "../control/IControl.h"
 #include "../event/EventManager.h"
 #include "../window/IWindowManager.h"
+#include "../window/WindowManagerFactory.h"
 #include "../renderer/OpenGLEngineBackend.h"
