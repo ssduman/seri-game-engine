@@ -9,15 +9,15 @@
 
 #include <utility>
 
-class WindowManager : public IWindowManager {
+class WindowsWindowManager : public IWindowManager {
 public:
-    WindowManager(WindowProperties windowProperties) : IWindowManager(windowProperties) {}
+    WindowsWindowManager() = default;
 
-    ~WindowManager() override {
+    ~WindowsWindowManager() override {
         glfwDestroyWindow(_window);
         glfwTerminate();
 
-        LOGGER(info, "window manager destroyed and terminated successfully");
+        LOGGER(info, "windows window manager destroyed and terminated successfully");
     }
 
     bool init() override {
@@ -50,6 +50,7 @@ public:
         logInfoStrings();
 
         LOGGER(info, "window manager created successfully");
+        _initialized = true;
         return true;
     }
 
@@ -79,68 +80,72 @@ public:
         return _window;
     }
 
-    void hideCursor() {
+    void hideCursor() override {
         glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
     }
 
-    void enableCursor() {
+    void enableCursor() override {
         glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
 
-    void disableCursor() {
+    void disableCursor() override {
         glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
 
-    void setCursorPosMiddle() {
+    void setCursorPosMiddle() override {
         auto xmid = _windowProperties.windowWidth / 2.0;
         auto ymid = _windowProperties.windowHeight / 2.0;
         setCursorPos(xmid, ymid);
     }
 
-    void setCursorPos(double xpos, double ypos) {
+    void setCursorPos(double xpos, double ypos) override {
         glfwSetCursorPos(_window, xpos, ypos);
     }
 
-    std::pair<double, double> getCursorPositions() {
+    std::pair<double, double> getCursorPositions() override {
         getCursorPosition();
         return std::make_pair(_mouseXPosition, _mouseYPosition);
     }
 
-    void viewport(int x, int y, int width, int height) {
+    void viewport(int x, int y, int width, int height) override {
         _windowProperties.windowWidth = width;
         _windowProperties.windowHeight = height;
         glViewport(x, y, _windowProperties.windowWidth, _windowProperties.windowHeight);
     }
 
-    int windowShouldClose() {
+    int windowShouldClose() override {
         return glfwWindowShouldClose(_window);
     }
 
-    void clear(unsigned int mask = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT) {
-        glClear(mask);
+    void clear() override {
+        glClear(getClearMask());
     }
 
-    void clearColor(float red = 0.2f, float green = 0.2f, float blue = 0.2f, float alpha = 1.0f) {
+    unsigned int getClearMask() override {
+        return GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT;
+    }
+
+    void clearColor(float red = 0.2f, float green = 0.2f, float blue = 0.2f, float alpha = 1.0f) override {
         glClearColor(red, green, blue, alpha);
     }
 
-    void pollEvents() {
+    void pollEvents() override {
         glfwPollEvents();
     }
 
-    void swapBuffers() {
+    void swapBuffers() override {
         glfwSwapBuffers(_window);
     }
 
-    void setWindowShouldCloseToTrue() {
+    void setWindowShouldCloseToTrue() override {
         glfwSetWindowShouldClose(_window, GLFW_TRUE);
     }
 
-    void setPointSize(float size) {
+    void setPointSize(float size) override {
         glPointSize(size);
     }
 
-    void setLineWidth(float width) {
+    void setLineWidth(float width) override {
         glLineWidth(width);
     }
 
