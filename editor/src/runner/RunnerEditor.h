@@ -49,14 +49,41 @@ public:
             typer1->setPosition(10.0f, 20.0f);
             auto typer1Scene = builder.setName("Typer1").setObject(typer1).build();
 
+            std::vector<std::string> face = {
+                "editor-assets/textures/skybox/right.jpg",
+                "editor-assets/textures/skybox/left.jpg",
+                "editor-assets/textures/skybox/bottom.jpg",
+                "editor-assets/textures/skybox/top.jpg",
+                "editor-assets/textures/skybox/front.jpg",
+                "editor-assets/textures/skybox/back.jpg",
+            };
+            auto skybox1 = std::make_shared<Skybox>(camera, face);
+            skybox1->getShader().init("editor-assets/shaders/skybox_vs.shader", "editor-assets/shaders/skybox_fs.shader");
+            skybox1->init();
+            auto skybox1Scene = builder.setName("Skybox2").setObject(skybox1).build();
+
+            auto model1 = std::make_shared<Model>(camera);
+            model1->getShader().init("editor-assets/shaders/entity_vs.shader", "editor-assets/shaders/entity_fs.shader");
+            model1->init();
+            model1->load("editor-assets/models/spider.obj");
+            model1->getTransform()._scale = glm::vec3{ 0.05f, 0.05f, 0.05f };
+            model1->getTransform()._position = glm::vec3{ 180.0f, 20.0f, 500.0f };
+            model1->getShaderManager().setModel(model1->getTransform().apply());
+            model1->getShaderManager().setColor({ 0.1f, 0.1f, 0.1f, 1.0f });
+            auto model1Scene = builder.setName("Spider1").setObject(model1).build();
+
             auto component1Scene = builder.setName("Component1").add(triangle1Scene).add(rectangle1Scene).build();
             auto component2Scene = builder.setName("Component2").add(circle1Scene).build();
             auto component3Scene = builder.setName("Text1").add(typer1Scene).build();
+            auto component4Scene = builder.setName("Model1").add(model1Scene).build();
+            auto component5Scene = builder.setName("Skybox1").add(skybox1Scene).build();
 
             scene->add(cameraScene);
             scene->add(component1Scene);
             scene->add(component2Scene);
             scene->add(component3Scene);
+            scene->add(component4Scene);
+            scene->add(component5Scene);
         }
 
         scene->visit(makeSceneVisitor(
