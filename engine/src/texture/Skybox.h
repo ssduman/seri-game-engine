@@ -1,26 +1,71 @@
 #pragma once
 
 #include "Texture.h"
-#include "../core/Entity.h"
+#include "../core/Object.h"
+#include "../core/AuxiliaryStructs.h"
+#include "../core/AuxiliaryStructsBuilder.h"
+#include "../camera/ICamera.h"
+#include "../renderer/IEngineBackend.h"
+#include "../renderer/OpenGLEngineBackend.h"
 
-class Skybox : public Entity {
+#include <memory>
+#include <vector>
+
+class Skybox : public Object {
 public:
-    Skybox(ICamera* camera) : Entity(camera) {
-        LOGGER(info, "skybox init succeeded");
+    Skybox(std::shared_ptr<ICamera> camera, std::vector<std::string> faces)
+        : _camera(camera), _faces(std::move(faces)) {}
+
+    ~Skybox() override {}
+
+    void init() override {
+        initMVP();
+        setDefaultPositions();
+        loadCubemap();
     }
 
-    ~Skybox() override {
-        glDeleteVertexArrays(1, &_VAO);
-        glDeleteBuffers(1, &_VBO);
-
-        LOGGER(info, "skybox delete succeeded");
-    }
-
-    void initMVP() override {
+    void render() override {
         _shader.use();
-        _shader.setMat4("u_model", glm::mat4{ 1.0f });
-        _shader.setMat4("u_view", glm::mat4(glm::mat3(_camera->getView())));
-        _shader.setMat4("u_projection", _camera->getProjection());
+
+        bind();
+
+        glDepthFunc(GL_LEQUAL);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, _tex);
+
+        _engineBackend.draw();
+
+        glBindVertexArray(0);
+        glDepthFunc(GL_LESS);
+
+        unbind();
+
+        _shader.disuse();
+    }
+
+    void update() override {
+        if (_camera) {
+            _shaderManager.setView(glm::mat4(glm::mat3(_camera->getView())));
+        }
+    }
+
+    Shader& getShader() {
+        return _shader;
+    }
+
+    ShaderManager& getShaderManager() {
+        return _shaderManager;
+    }
+
+    OpenGLEngineBackend& getDrawer() {
+        return _engineBackend;
+    }
+
+private:
+    void initMVP() {
+        _shader.use();
+        _shaderManager.setModel(glm::mat4{ 1.0f });
+        _shaderManager.setView(glm::mat4(glm::mat3(_camera->getView())));
+        _shaderManager.setProjection(_camera->getProjection());
         _shader.disuse();
     }
 
@@ -68,11 +113,27 @@ public:
             { -1.0f, -1.0f, 1.0f },
             { 1.0f, -1.0f, 1.0f },
         };
-        setDataBuffer(aux::Index::position, positions);
-    }
 
-    void setFaces(const std::vector<std::string>& faces) {
-        _faces = faces;
+        aux::DataBufferBuilder dataBufferBuilder;
+        aux::AttributeBuilder attributeBuilder;
+
+        auto dataBuffer = dataBufferBuilder
+            .setTarget(aux::Target::vbo)
+            .setSize(aux::count(positions) * 12)
+            .setData(aux::data(positions))
+            .setUsage(aux::Usage::static_draw)
+            .build();
+        _engineBackend.setDataBuffer(dataBuffer);
+
+        auto attribute = attributeBuilder
+            .setIndex(aux::Index::position)
+            .setSize(aux::length(positions))
+            .setPointer(nullptr)
+            .build();
+        _engineBackend.setAttribute(attribute);
+
+        _engineBackend.setEnable(aux::Index::position);
+        _engineBackend.setDrawCount(aux::count(positions));
     }
 
     void loadCubemap(bool flip = false) {
@@ -92,11 +153,18 @@ public:
         int width, height, components;
         for (size_t i = 0; i < _faces.size(); i++) {
             if (auto image = Texture::loadTexture(_faces[i], width, height, components, 0)) {
-                glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + static_cast<GLenum>(i), 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+                GLenum format = GL_RED;
+                if (components == 3) {
+                    format = GL_RGB;
+                }
+                if (components == 4) {
+                    format = GL_RGBA;
+                }
+                glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + static_cast<GLenum>(i), 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, image);
                 Texture::unloadTexture(image);
             }
             else {
-                LOGGER(error, "texture " << _faces[i] << " could not loaded");
+                LOGGER(error, "texture " << _faces[i] << " could not loaded: " << stbi_failure_reason());
             }
         }
 
@@ -107,24 +175,20 @@ public:
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
     }
 
-    void update() override {
-        if (_camera) {
-            getShader().setMat4("u_view", glm::mat4(glm::mat3(_camera->getView())));
-        }
-    }
-
-    void render() override {
-        _shader.use();
-        glDepthFunc(GL_LEQUAL);
-        glBindVertexArray(_VAO);
+    void bind() {
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_CUBE_MAP, _tex);
-        glDrawArrays(_drawMode, 0, _drawArrayCount);
-        glBindVertexArray(0);
-        glDepthFunc(GL_LESS);
     }
 
-private:
+    void unbind() {
+        glBindTexture(GL_TEXTURE_2D, 0);
+    }
+
+    std::shared_ptr<ICamera> _camera;
+
+    Shader _shader;
+    ShaderManager _shaderManager{ _shader };
+    OpenGLEngineBackend _engineBackend{ _shaderManager };
+
     unsigned int _tex{ 0 };
     std::vector<std::string> _faces;
 
