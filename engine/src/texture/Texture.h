@@ -46,7 +46,7 @@ public:
             init(image, width, height, components);
         }
         else {
-            LOGGER(error, "init texture '" << texturePath << "' failed");
+            LOGGER(error, "init texture '" << texturePath << "' failed: " << stbi_failure_reason());
         }
     }
 
@@ -56,7 +56,7 @@ public:
             init(image, width, height, components);
         }
         else {
-            LOGGER(error, "init texture from buffer with size " << size << " failed");
+            LOGGER(error, "init texture from buffer with size " << size << " failed: " << stbi_failure_reason());
         }
     }
 
