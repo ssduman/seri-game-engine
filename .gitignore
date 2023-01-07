@@ -117,6 +117,7 @@ StyleCopReport.xml
 
 # models
 !mics/mics-assets/models/*.obj
+!editor/editor-assets/models/*.obj
 
 # Chutzpah Test files
 _Chutzpah*
