@@ -20,5 +20,5 @@
 #include "../logging/Logger.h"
 #include "../control/IControl.h"
 #include "../event/EventManager.h"
-#include "../window/WindowManager.h"
+#include "../window/IWindowManager.h"
 #include "../renderer/OpenGLEngineBackend.h"

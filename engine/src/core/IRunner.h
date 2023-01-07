@@ -4,7 +4,7 @@
 #include "../util/Util.h"
 #include "../scene/Layer.h"
 #include "../logging/Logger.h"
-#include "../window/WindowManager.h"
+#include "../window/IWindowManager.h"
 
 class IRunner {
 public:
