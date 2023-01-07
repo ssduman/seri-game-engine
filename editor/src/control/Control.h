@@ -10,7 +10,7 @@
 
 class Control : public IControl {
 public:
-    Control(std::shared_ptr<WindowManager> windowManager, std::shared_ptr<State> state, std::shared_ptr<Camera> camera)
+    Control(std::shared_ptr<IWindowManager> windowManager, std::shared_ptr<State> state, std::shared_ptr<Camera> camera)
         : IControl(windowManager, state), _camera(camera) {
         _windowManager->setWindowUserPointer(static_cast<void*>(this));
 

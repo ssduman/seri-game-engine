@@ -14,7 +14,7 @@
 class GUI : public Object {
 public:
     GUI(
-        std::shared_ptr<WindowManager> windowManager,
+        std::shared_ptr<IWindowManager> windowManager,
         std::shared_ptr<Camera> camera,
         std::shared_ptr<IScene> scene,
         std::shared_ptr<State> state)
@@ -433,7 +433,7 @@ private:
         _currentEntity = std::dynamic_pointer_cast<Entity>(entity);
     }
 
-    std::shared_ptr<WindowManager> _windowManager;
+    std::shared_ptr<IWindowManager> _windowManager;
     std::shared_ptr<Camera> _camera;
     std::shared_ptr<IScene> _scene;
     std::shared_ptr<State> _state;
