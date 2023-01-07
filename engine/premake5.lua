@@ -23,6 +23,7 @@ project "Engine"
 
   includedirs {
     "src",
+    "src/core",
     "%{IncludeDir.glad}",
     "%{IncludeDir.GLFW}",
     "%{IncludeDir.glm}",
