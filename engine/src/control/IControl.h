@@ -3,6 +3,7 @@
 #include "../core/State.h"
 #include "../logging/Logger.h"
 #include "../window/IWindowManager.h"
+#include "../window/WindowManagerFactory.h"
 
 #include <memory>
 #include <string>
@@ -10,9 +11,9 @@
 
 class IControl {
 public:
-    IControl(std::shared_ptr<IWindowManager> windowManager) : _windowManager(windowManager) {}
+    IControl() : _windowManager(WindowManagerFactory::instance()) {}
 
-    IControl(std::shared_ptr<IWindowManager> windowManager, std::shared_ptr<State> state) : _windowManager(windowManager), _state(state) {}
+    IControl(std::shared_ptr<State> state) : _windowManager(WindowManagerFactory::instance()), _state(state) {}
 
     virtual ~IControl() = default;
 
