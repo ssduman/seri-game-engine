@@ -85,13 +85,13 @@ public:
             scene->add(component3Scene);
             scene->add(component4Scene);
             scene->add(component5Scene);
-        }
 
-        scene->visit(makeSceneVisitor(
-            [](std::shared_ptr<IScene>& scene) {
-                LOGGER(verbose, "scene id: " << scene->getId() << ", name: " << scene->getName());
-            }
-        ));
+            scene->visit(makeSceneVisitor(
+                [](std::shared_ptr<IScene>& scene) {
+                    LOGGER(verbose, "scene id: " << scene->getId() << ", name: " << scene->getName());
+                }
+            ));
+        }
 
         Control control{ camera, state };
         control.init();
