@@ -2,8 +2,8 @@
 
 #include <core/Seri.h>
 
-#include "camera/Camera.h"
 #include "app/Factory.h"
+#include "camera/Camera.h"
 
 #include <imgui.h>
 #include <backends/imgui_impl_glfw.h>
@@ -14,11 +14,10 @@
 class GUI : public Object {
 public:
     GUI(
-        std::shared_ptr<IWindowManager> windowManager,
         std::shared_ptr<Camera> camera,
         std::shared_ptr<IScene> scene,
         std::shared_ptr<State> state)
-        : _windowManager(windowManager), _camera(camera), _scene(scene), _state{ state } {
+        : _windowManager(WindowManagerFactory::instance()), _camera(camera), _scene(scene), _state{ state } {
         LOGGER(info, "gui init succeeded");
     }
 

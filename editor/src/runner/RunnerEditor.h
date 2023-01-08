@@ -93,10 +93,10 @@ public:
             }
         ));
 
-        Control control{ windowManager, state, camera };
+        Control control{ camera, state };
         control.init();
 
-        GUI gui{ windowManager, camera, scene, state };
+        GUI gui{ camera, scene, state };
         gui.init();
 
         LOGGER(info, "starting seri game engine - editor loop");
