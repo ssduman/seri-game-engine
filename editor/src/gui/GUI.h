@@ -350,10 +350,6 @@ private:
 
             ImGui::Separator();
 
-            ImGui::SliderFloat("speed", &_camera->getCameraProperties().speed, 0.0f, 100.0f, "%.4f");
-
-            ImGui::Separator();
-
             auto& sceneName = _currentScene->getName();
             ImGui::InputText("name", (char*)sceneName.c_str(), sceneName.size() + 1);
 
