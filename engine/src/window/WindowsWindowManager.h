@@ -2,10 +2,6 @@
 #pragma warning(disable: 4100)
 
 #include "IWindowManager.h"
-#include "../logging/Logger.h"
-
-#include <glad/gl.h>
-#include <GLFW/glfw3.h>
 
 #include <utility>
 

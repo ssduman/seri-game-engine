@@ -13,8 +13,6 @@
 #include "../renderer/IEngineBackend.h"
 #include "../renderer/OpenGLEngineBackend.h"
 
-#include <glad/gl.h>
-
 #include <memory>
 #include <string>
 #include <vector>
