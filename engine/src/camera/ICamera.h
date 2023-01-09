@@ -72,8 +72,12 @@ public:
         return _projection;
     }
 
-    CameraProperties& getCameraProperties() {
+    const CameraProperties& getCameraProperties() {
         return _cameraProperties;
+    }
+
+    void setCameraProperties(CameraProperties cameraProperties) {
+        _cameraProperties = std::move(cameraProperties);
     }
 
 protected:
@@ -104,6 +108,7 @@ protected:
 
     CameraProperties _cameraProperties;
     std::shared_ptr<State> _state;
+    
     glm::mat4 _model{ 1.0f };
     glm::mat4 _view{};
     glm::mat4 _projection{};
