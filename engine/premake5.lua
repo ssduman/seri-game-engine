@@ -19,7 +19,9 @@ project "Engine"
     "vendor/stb/stb_image.cpp",
   }
 
-  defines {}
+  defines {
+    "GLFW_INCLUDE_NONE",
+  }
 
   includedirs {
     "src",
