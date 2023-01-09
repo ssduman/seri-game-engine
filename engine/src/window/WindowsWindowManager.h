@@ -3,7 +3,11 @@
 
 #include "IWindowManager.h"
 
+#include <glad/gl.h>
+#include <GLFW/glfw3.h>
+
 #include <utility>
+#include <stdexcept>
 
 class WindowsWindowManager : public IWindowManager {
 public:
@@ -16,52 +20,39 @@ public:
         LOGGER(info, "windows window manager destroyed and terminated successfully");
     }
 
-    bool init() override {
-        if (!initglfw()) {
-            return false;
+    void init() override {
+        if (_initialized) {
+            throw std::runtime_error("window manager is already initialized");
         }
+
+        initglfw();
 
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-        if (!createWindow()) {
-            return false;
-        }
+        createWindow();
 
         glfwSwapInterval(1);
         glfwMakeContextCurrent(_window);
 
-        if (!initglad()) {
-            return false;
-        }
+        initglad();
 
         glEnable(GL_BLEND);
         glEnable(GL_DEPTH_TEST);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        setErrorCallback();
-        setWindowCloseCallback();
-        //enableDebugOutput();
         logInfoStrings();
 
-        LOGGER(info, "window manager created successfully");
+        setWindowUserPointer(static_cast<void*>(this));
+
         _initialized = true;
-        return true;
+
+        LOGGER(info, "window manager created successfully");
     }
 
     double getTime() override {
         return glfwGetTime();
-    }
-
-    double getMouseX() override {
-        getCursorPosition();
-        return _mouseXPosition;
-    }
-
-    double getMouseY() override {
-        getCursorPosition();
-        return _mouseYPosition;
     }
 
     float updateDeltaTime() override {
@@ -88,19 +79,24 @@ public:
         glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
 
-    void setCursorPosMiddle() override {
-        auto xmid = _windowProperties.windowWidth / 2.0;
-        auto ymid = _windowProperties.windowHeight / 2.0;
-        setCursorPos(xmid, ymid);
+    double getCursorX() override {
+        auto [x, y] = getCursorPosition();
+        return x;
     }
 
-    void setCursorPos(double xpos, double ypos) override {
+    double getCursorY() override {
+        auto [x, y] = getCursorPosition();
+        return y;
+    }
+
+    std::pair<double, double> getCursorPosition() override {
+        double mouseXPosition, mouseYPosition;
+        glfwGetCursorPos(_window, &mouseXPosition, &mouseYPosition);
+        return { mouseXPosition, mouseYPosition };
+    }
+
+    void setCursorPosition(double xpos, double ypos) override {
         glfwSetCursorPos(_window, xpos, ypos);
-    }
-
-    std::pair<double, double> getCursorPositions() override {
-        getCursorPosition();
-        return std::make_pair(_mouseXPosition, _mouseYPosition);
     }
 
     void viewport(int x, int y, int width, int height) override {
@@ -115,10 +111,6 @@ public:
 
     void clear() override {
         glClear(getClearMask());
-    }
-
-    unsigned int getClearMask() override {
-        return GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT;
     }
 
     void clearColor(float red = 0.2f, float green = 0.2f, float blue = 0.2f, float alpha = 1.0f) override {
@@ -154,33 +146,28 @@ public:
     }
 
 private:
-    bool initglfw() {
+    void initglfw() {
         if (!glfwInit()) {
-            LOGGER(error, "glfwInit error");
-            return false;
+            throw std::runtime_error("glfw init error");
         }
 
         LOGGER(info, "gflw version '" << glfwGetVersionString() << "' init succeeded");
-        return true;
     }
 
-    bool initglad() {
+    void initglad() {
         int version = gladLoadGL(glfwGetProcAddress);
         if (version == 0) {
-            LOGGER(error, "glad load error");
-            return false;
+            throw std::runtime_error("glad load error");
         }
 
         LOGGER(info, "loaded opengl " << GLAD_VERSION_MAJOR(version) << "." << GLAD_VERSION_MINOR(version));
-        return true;
     }
 
-    bool createWindow() {
+    void createWindow() {
         if (_windowProperties.isFullscreen) {
             GLFWmonitor* glfwMonitor = glfwGetPrimaryMonitor();
             if (!glfwMonitor) {
-                LOGGER(error, "getting glfw monitor failed");
-                return false;
+                throw std::runtime_error("getting glfw monitor failed");
             }
 
             int monXPos, monYPos;
@@ -192,23 +179,17 @@ private:
         }
 
         if (!_window) {
-            LOGGER(error, "glfw window creating error");
-            return false;
+            throw std::runtime_error("glfw window creating error");
         }
 
         LOGGER(info, "glfw window created");
-        return true;
     }
 
     void logInfoStrings() {
-        //LOGGER(info, "vendor: " << glGetString(GL_VENDOR));
-        //LOGGER(info, "version: " << glGetString(GL_VERSION));
-        //LOGGER(info, "renderer: " << glGetString(GL_RENDERER));
-        //LOGGER(info, "shading language version: " << glGetString(GL_SHADING_LANGUAGE_VERSION));
-    }
-
-    void getCursorPosition() {
-        glfwGetCursorPos(_window, &_mouseXPosition, &_mouseYPosition);
+        LOGGER(info, "vendor: " << glGetString(GL_VENDOR));
+        LOGGER(info, "version: " << glGetString(GL_VERSION));
+        LOGGER(info, "renderer: " << glGetString(GL_RENDERER));
+        LOGGER(info, "shading language version: " << glGetString(GL_SHADING_LANGUAGE_VERSION));
     }
 
     void checkGLError() {
@@ -218,25 +199,8 @@ private:
         }
     }
 
-    void setErrorCallback() {
-        glfwSetErrorCallback(
-            [](int error, const char* description) {
-                LOGGER(error, "glfw error " << error << ": " << description);
-            }
-        );
-    }
-
-    void setWindowCloseCallback() {
-        glfwSetWindowCloseCallback(_window,
-            [](GLFWwindow* window) {
-                LOGGER(info, "window is attempting to close");
-            }
-        );
-    }
-
-    /*
     void enableDebugOutput() {
-        constexpr auto getDebugSourceString = [](GLenum source) {
+        static const auto getDebugSourceString = [](GLenum source) {
             if (source == GL_DEBUG_SOURCE_API) {
                 return "Calls to the OpenGL API";
             }
@@ -259,7 +223,7 @@ private:
             return "Unknown source";
         };
 
-        constexpr auto getDebugTypeString = [](GLenum type) {
+        static const auto getDebugTypeString = [](GLenum type) {
             if (type == GL_DEBUG_TYPE_ERROR) {
                 return "An error, typically from the API";
             }
@@ -291,7 +255,7 @@ private:
             return "Unknown type";
         };
 
-        constexpr auto getDebugSeverityString = [](GLenum severity) {
+        static const auto getDebugSeverityString = [](GLenum severity) {
             if (severity == GL_DEBUG_SEVERITY_HIGH) {
                 return "All OpenGL Errors, shader compilation / linking errors, or highly - dangerous undefined behavior";
             }
@@ -308,19 +272,28 @@ private:
             return "Unknown source";
         };
 
+        /*
         glEnable(GL_DEBUG_OUTPUT);
-        glDebugMessageCallback([](GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei len, const GLchar* message, const void* param) {
-            LOGGER(debug, "gl debug message:" << "\n"
-            << "severity: " << getDebugSeverityString(severity) << "\n"
-                               << "type: " << getDebugTypeString(type) << "\n"
-                               << "source: " << getDebugSourceString(source) << "\n"
-                               << "id: " << id << "\n"
-                               << "message: " << message);
-        }, nullptr);
+        glDebugMessageCallback(
+            [](GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam) {
+                LOGGER(debug, "gl debug message:" << "\n"
+                    << "severity: " << getDebugSeverityString(severity) << "\n"
+                    << "type: " << getDebugTypeString(type) << "\n"
+                    << "source: " << getDebugSourceString(source) << "\n"
+                    << "id: " << id << "\n"
+                    << "message: " << message);
+            },
+            nullptr
+        );
+        */
     }
-    */
+
     void disableDebugOutput() {
         glDisable(GL_DEBUG_OUTPUT);
+    }
+
+    unsigned int getClearMask() {
+        return GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT;
     }
 
     GLFWwindow* _window{ nullptr };

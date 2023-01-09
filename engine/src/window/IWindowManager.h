@@ -1,7 +1,5 @@
 #pragma once
 
-#include <glad/gl.h>
-#include <GLFW/glfw3.h>
 
 struct WindowProperties {
     const char* windowTitle = nullptr;
@@ -16,37 +14,33 @@ public:
 
     virtual ~IWindowManager() = default;
 
-    virtual bool init() = 0;
+    virtual void init() = 0;
 
     virtual double getTime() = 0;
-
-    virtual double getMouseX() = 0;
-
-    virtual double getMouseY() = 0;
 
     virtual float updateDeltaTime() = 0;
 
     virtual void* getWindow() = 0;
 
-    virtual  void hideCursor() = 0;
+    virtual void hideCursor() = 0;
 
     virtual void enableCursor() = 0;
 
-    virtual  void disableCursor() = 0;
+    virtual void disableCursor() = 0;
 
-    virtual void setCursorPosMiddle() = 0;
+    virtual double getCursorX() = 0;
 
-    virtual void setCursorPos(double xpos, double ypos) = 0;
+    virtual double getCursorY() = 0;
 
-    virtual std::pair<double, double> getCursorPositions() = 0;
+    virtual std::pair<double, double> getCursorPosition() = 0;
+
+    virtual void setCursorPosition(double xpos, double ypos) = 0;
 
     virtual void viewport(int x, int y, int width, int height) = 0;
 
     virtual int windowShouldClose() = 0;
 
     virtual void clear() = 0;
-    
-    virtual unsigned int getClearMask() = 0;
 
     virtual void clearColor(float red = 0.2f, float green = 0.2f, float blue = 0.2f, float alpha = 1.0f) = 0;
 
@@ -98,7 +92,5 @@ protected:
 
     double _lastFrame{ 0.0 };
     double _deltaTime{ 0.0 };
-    double _mouseXPosition{ 0.0 };
-    double _mouseYPosition{ 0.0 };
 
 };
