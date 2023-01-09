@@ -1,7 +1,6 @@
 #pragma once
 
 #include "IWindowManager.h"
-#include "WindowsWindowManager.h"
 
 #include <memory>
 
