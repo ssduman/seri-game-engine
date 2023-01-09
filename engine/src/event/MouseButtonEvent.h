@@ -1,7 +1,8 @@
 #pragma once
 
+#include "../control/InputAction.h"
+#include "../control/InputModifier.h"
 #include "../control/MouseButtonCode.h"
-#include "../control/MouseButtonAction.h"
 
 #include <memory>
 
@@ -12,7 +13,7 @@ namespace events {
 
         virtual ~IMouseButtonEvent() = default;
 
-        virtual void onEvent(MouseButtonCode mouseButtonCode, MouseButtonAction mouseButtonAction) = 0;
+        virtual void onEvent(MouseButtonCode button, InputAction action, InputModifier mods) = 0;
 
     };
 
@@ -23,8 +24,8 @@ namespace events {
 
         ~MouseButtonEvent() override = default;
 
-        void onEvent(MouseButtonCode mouseButtonCode, MouseButtonAction mouseButtonAction) override {
-            _f(mouseButtonCode, mouseButtonAction);
+        void onEvent(MouseButtonCode button, InputAction action, InputModifier mods) override {
+            _f(button, action, mods);
         }
 
     private:

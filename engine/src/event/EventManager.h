@@ -1,7 +1,7 @@
 #pragma once
 
+#include "KeyEvent.h"
 #include "EventType.h"
-#include "InputEvent.h"
 #include "WindowEvent.h"
 #include "MouseButtonEvent.h"
 
@@ -28,20 +28,20 @@ public:
         }
     }
 
-    void triggerInputEvent(KeyCode keycode, KeyAction keyAction) {
-        for (auto& inputEvent : _inputEvents) {
-            inputEvent->onEvent(keycode, keyAction);
+    void triggerKeyEvent(KeyCode key, int scancode, InputAction action, InputModifier mods) {
+        for (auto& inputEvent : _keyEvents) {
+            inputEvent->onEvent(key, scancode, action, mods);
         }
     }
 
-    void triggerMouseButtonEvent(MouseButtonCode mouseButtonCode, MouseButtonAction mouseButtonAction) {
+    void triggerMouseButtonEvent(MouseButtonCode button, InputAction action, InputModifier mods) {
         for (auto& mouseButtonEvent : _mouseButtonEvents) {
-            mouseButtonEvent->onEvent(mouseButtonCode, mouseButtonAction);
+            mouseButtonEvent->onEvent(button, action, mods);
         }
     }
 
 private:
-    std::vector<std::shared_ptr<events::IInputEvent>> _inputEvents;
+    std::vector<std::shared_ptr<events::IKeyEvent>> _keyEvents;
     std::vector<std::shared_ptr<events::IWindowEvent>> _windowEvents;
     std::vector<std::shared_ptr<events::IMouseButtonEvent>> _mouseButtonEvents;
 
