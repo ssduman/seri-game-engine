@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../control/KeyCode.h"
-#include "../control/InputAction.h"
-#include "../control/InputModifier.h"
+#include "../input/KeyCode.h"
+#include "../input/InputAction.h"
+#include "../input/InputModifier.h"
 
 #include <memory>
 

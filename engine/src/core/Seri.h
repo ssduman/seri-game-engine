@@ -25,8 +25,6 @@
 
 #include "../logging/Logger.h"
 
-#include "../control/IControl.h"
-
 #include "../event/IEvent.h"
 #include "../event/EventManager.h"
 

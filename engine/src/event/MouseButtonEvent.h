@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../control/InputAction.h"
-#include "../control/InputModifier.h"
-#include "../control/MouseButtonCode.h"
+#include "../input/InputAction.h"
+#include "../input/InputModifier.h"
+#include "../input/MouseButtonCode.h"
 
 #include <memory>
 
