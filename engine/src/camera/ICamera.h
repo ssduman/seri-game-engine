@@ -18,21 +18,24 @@ public:
 
     void render() override {}
 
-    virtual void handleMouse(float xPos, float yPos) {
+    void onMousePositionEvent(const MousePositionEventData& data) override {
         if (_state && _state->gameState() != GameState::game) {
             return;
         }
 
+        auto xpos = static_cast<float>(data.xpos);
+        auto ypos = static_cast<float>(data.ypos);
+
         if (_xPosLast < 0 && _yPosLast < 0) {
-            _xPosLast = xPos;
-            _yPosLast = yPos;
+            _xPosLast = xpos;
+            _yPosLast = ypos;
         }
 
-        const auto deltaX = xPos - _xPosLast;
-        const auto deltaY = _yPosLast - yPos;
+        const auto deltaX = xpos - _xPosLast;
+        const auto deltaY = _yPosLast - ypos;
 
-        _xPosLast = xPos;
-        _yPosLast = yPos;
+        _xPosLast = xpos;
+        _yPosLast = ypos;
 
         _yaw += deltaX * _cameraProperties.sensitivity;
         _pitch += deltaY * _cameraProperties.sensitivity;
@@ -53,11 +56,6 @@ public:
 
         updateEulerAngles();
         updateView();
-    }
-
-    void updateAspect(float aspect) {
-        _cameraProperties.aspect = aspect;
-        updateProjection();
     }
 
     const glm::mat4& getModel() {
