@@ -1,6 +1,8 @@
 #pragma once
 
-class Object {
+#include "../event/IEvent.h"
+
+class Object : public IEvent {
 public:
     virtual ~Object() = default;
 
