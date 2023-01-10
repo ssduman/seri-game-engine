@@ -1,20 +1,36 @@
 #pragma once
 
 enum class EventType {
-    window,
     key,
-    input,
-    mouse,
+    character,
+    character_mods,
+    mouse_enter,
+    mouse_button,
+    mouse_scroll,
+    mouse_position,
+    window_drop,
+    window_close,
+    window_resize,
     app,
+    tick,
+    unknown,
 };
 
 inline const char* toString(EventType eventType) {
     switch (eventType) {
-        case EventType::window: return "window";
         case EventType::key: return "key";
-        case EventType::input: return "input";
-        case EventType::mouse: return "mouse";
+        case EventType::character: return "character";
+        case EventType::character_mods: return "character_mods";
+        case EventType::mouse_enter: return "mouse_enter";
+        case EventType::mouse_button: return "mouse_button";
+        case EventType::mouse_scroll: return "mouse_scroll";
+        case EventType::mouse_position: return "mouse_position";
+        case EventType::window_drop: return "window_drop";
+        case EventType::window_close: return "window_close";
+        case EventType::window_resize: return "window_resize";
         case EventType::app: return "app";
+        case EventType::tick: return "tick";
+        case EventType::unknown: return "unknown";
         default: return "";
     }
 }
