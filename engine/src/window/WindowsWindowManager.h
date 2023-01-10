@@ -45,6 +45,7 @@ public:
         logInfoStrings();
 
         setWindowUserPointer(static_cast<void*>(this));
+        setEventCallbacks();
 
         _initialized = true;
 
@@ -55,11 +56,13 @@ public:
         return glfwGetTime();
     }
 
-    float updateDeltaTime() override {
+    void updateDeltaTime() override {
         auto currentFrame = getTime();
         _deltaTime = currentFrame - _lastFrame;
         _lastFrame = currentFrame;
+    }
 
+    float getDeltaTime() override {
         return static_cast<float>(_deltaTime);
     }
 
@@ -190,6 +193,256 @@ private:
         LOGGER(info, "version: " << glGetString(GL_VERSION));
         LOGGER(info, "renderer: " << glGetString(GL_RENDERER));
         LOGGER(info, "shading language version: " << glGetString(GL_SHADING_LANGUAGE_VERSION));
+    }
+
+    void setEventCallbacks() {
+        // input
+        glfwSetKeyCallback(_window,
+            [](GLFWwindow* window, int key, int scancode, int action, int mods) {
+                if (auto windowManager = static_cast<WindowsWindowManager*>(glfwGetWindowUserPointer(window))) {
+                    auto keyEnum = static_cast<KeyCode>(key);
+                    auto actionEnum = static_cast<InputAction>(action);
+
+                    std::vector<InputModifier> modsVector;
+                    if (mods & static_cast<int>(InputModifier::alt)) {
+                        modsVector.emplace_back(InputModifier::alt);
+                    }
+                    if (mods & static_cast<int>(InputModifier::shift)) {
+                        modsVector.emplace_back(InputModifier::shift);
+                    }
+                    if (mods & static_cast<int>(InputModifier::super)) {
+                        modsVector.emplace_back(InputModifier::super);
+                    }
+                    if (mods & static_cast<int>(InputModifier::control)) {
+                        modsVector.emplace_back(InputModifier::control);
+                    }
+                    if (mods & static_cast<int>(InputModifier::num_lock)) {
+                        modsVector.emplace_back(InputModifier::num_lock);
+                    }
+                    if (mods & static_cast<int>(InputModifier::caps_lock)) {
+                        modsVector.emplace_back(InputModifier::caps_lock);
+                    }
+                    if (modsVector.empty()) {
+                        modsVector.emplace_back(InputModifier::noop);
+                    }
+
+                    KeyEventData data{ keyEnum, scancode, actionEnum, std::move(modsVector) };
+                    auto callback = windowManager->getEventCallback();
+                    if (callback) {
+                        callback->onEvent(data);
+                    }
+
+                    if (keyEnum == KeyCode::escape && actionEnum == InputAction::press) {
+                        windowManager->setWindowShouldCloseToTrue();
+                    }
+                }
+            }
+        );
+
+        glfwSetCharCallback(_window,
+            [](GLFWwindow* window, unsigned int codepoint) {
+                if (auto windowManager = static_cast<WindowsWindowManager*>(glfwGetWindowUserPointer(window))) {
+                    CharacterEventData data{ codepoint };
+                    auto callback = windowManager->getEventCallback();
+                    if (callback) {
+                        callback->onEvent(data);
+                    }
+                }
+            }
+        );
+
+        glfwSetCharModsCallback(_window,
+            [](GLFWwindow* window, unsigned int codepoint, int mods) {
+                if (auto windowManager = static_cast<WindowsWindowManager*>(glfwGetWindowUserPointer(window))) {
+                    std::vector<InputModifier> modsVector;
+                    if (mods & static_cast<int>(InputModifier::alt)) {
+                        modsVector.emplace_back(InputModifier::alt);
+                    }
+                    if (mods & static_cast<int>(InputModifier::shift)) {
+                        modsVector.emplace_back(InputModifier::shift);
+                    }
+                    if (mods & static_cast<int>(InputModifier::super)) {
+                        modsVector.emplace_back(InputModifier::super);
+                    }
+                    if (mods & static_cast<int>(InputModifier::control)) {
+                        modsVector.emplace_back(InputModifier::control);
+                    }
+                    if (mods & static_cast<int>(InputModifier::num_lock)) {
+                        modsVector.emplace_back(InputModifier::num_lock);
+                    }
+                    if (mods & static_cast<int>(InputModifier::caps_lock)) {
+                        modsVector.emplace_back(InputModifier::caps_lock);
+                    }
+                    if (modsVector.empty()) {
+                        modsVector.emplace_back(InputModifier::noop);
+                    }
+
+                    CharacterModsEventData data{ codepoint, std::move(modsVector) };
+                    auto callback = windowManager->getEventCallback();
+                    if (callback) {
+                        callback->onEvent(data);
+                    }
+                }
+            }
+        );
+
+        // mouse
+        glfwSetCursorEnterCallback(_window,
+            [](GLFWwindow* window, int entered) {
+                if (auto windowManager = static_cast<WindowsWindowManager*>(glfwGetWindowUserPointer(window))) {
+                    MouseEnterEventData data{ entered ? true : false };
+                    auto& callback = windowManager->getEventCallback();
+                    if (callback) {
+                        callback->onEvent(data);
+                    }
+                }
+            }
+        );
+
+        glfwSetMouseButtonCallback(_window,
+            [](GLFWwindow* window, int button, int action, int mods) {
+                if (auto windowManager = static_cast<WindowsWindowManager*>(glfwGetWindowUserPointer(window))) {
+                    auto buttonEnum = static_cast<MouseButtonCode>(button);
+                    auto actionEnum = static_cast<InputAction>(action);
+                    auto modsEnum = static_cast<InputModifier>(mods);
+
+                    MouseButtonEventData data{ buttonEnum, actionEnum, modsEnum };
+                    auto callback = windowManager->getEventCallback();
+                    if (callback) {
+                        callback->onEvent(data);
+                    }
+                }
+            }
+        );
+
+        glfwSetScrollCallback(_window,
+            [](GLFWwindow* window, double xoffset, double yoffset) {
+                if (auto windowManager = static_cast<WindowsWindowManager*>(glfwGetWindowUserPointer(window))) {
+                    MouseScrollEventData data{ xoffset, yoffset };
+                    auto callback = windowManager->getEventCallback();
+                    if (callback) {
+                        callback->onEvent(data);
+                    }
+                }
+            }
+        );
+
+        glfwSetCursorPosCallback(_window,
+            [](GLFWwindow* window, double xpos, double ypos) {
+                if (auto windowManager = static_cast<WindowsWindowManager*>(glfwGetWindowUserPointer(window))) {
+                    MousePositionEventData data{ xpos, ypos };
+                    auto callback = windowManager->getEventCallback();
+                    if (callback) {
+                        callback->onEvent(data);
+                    }
+                }
+            }
+        );
+
+        // window
+        glfwSetDropCallback(_window,
+            [](GLFWwindow* window, int path_count, const char* paths[]) {
+                if (auto windowManager = static_cast<WindowsWindowManager*>(glfwGetWindowUserPointer(window))) {
+                    std::vector<std::string> pathVector;
+                    for (int i = 0; i < path_count; i++) {
+                        pathVector.emplace_back(paths[i]);
+                    }
+
+                    WindowDropEventData data{ std::move(pathVector) };
+                    auto& callback = windowManager->getEventCallback();
+                    if (callback) {
+                        callback->onEvent(data);
+                    }
+                }
+            }
+        );
+
+        glfwSetWindowCloseCallback(_window,
+            [](GLFWwindow* window) {
+                if (auto windowManager = static_cast<WindowsWindowManager*>(glfwGetWindowUserPointer(window))) {
+                    WindowCloseEventData data{};
+                    auto callback = windowManager->getEventCallback();
+                    if (callback) {
+                        callback->onEvent(data);
+                    }
+                }
+            }
+        );
+
+        glfwSetFramebufferSizeCallback(_window,
+            [](GLFWwindow* window, int width, int height) {
+                if (auto windowManager = static_cast<WindowsWindowManager*>(glfwGetWindowUserPointer(window))) {
+                    WindowResizeEventData data{ width, height };
+                    auto callback = windowManager->getEventCallback();
+                    if (callback) {
+                        callback->onEvent(data);
+                    }
+                }
+            }
+        );
+
+        glfwSetWindowPosCallback(_window,
+            [](GLFWwindow* window, int xpos, int ypos) {
+                if (auto windowManager = static_cast<WindowsWindowManager*>(glfwGetWindowUserPointer(window))) {
+                    LOGGER(verbose, "window new position: " << xpos << ", " << ypos);
+                }
+            }
+        );
+
+        glfwSetWindowSizeCallback(_window,
+            [](GLFWwindow* window, int width, int height) {
+                if (auto windowManager = static_cast<WindowsWindowManager*>(glfwGetWindowUserPointer(window))) {
+                    LOGGER(verbose, "window new size: " << width << ", " << height);
+                }
+            }
+        );
+
+        glfwSetWindowRefreshCallback(_window,
+            [](GLFWwindow* window) {
+                if (auto windowManager = static_cast<WindowsWindowManager*>(glfwGetWindowUserPointer(window))) {
+                    LOGGER(verbose, "window refresh");
+                }
+            }
+        );
+
+        glfwSetWindowFocusCallback(_window,
+            [](GLFWwindow* window, int focused) {
+                if (auto windowManager = static_cast<WindowsWindowManager*>(glfwGetWindowUserPointer(window))) {
+                    LOGGER(verbose, "window focus state: " << (focused ? "focused" : "not focused"));
+                }
+            }
+        );
+
+        glfwSetWindowIconifyCallback(_window,
+            [](GLFWwindow* window, int iconified) {
+                if (auto windowManager = static_cast<WindowsWindowManager*>(glfwGetWindowUserPointer(window))) {
+                    LOGGER(verbose, "window iconify state: " << (iconified ? "iconified" : "not iconified"));
+                }
+            }
+        );
+
+        glfwSetWindowMaximizeCallback(_window,
+            [](GLFWwindow* window, int maximized) {
+                if (auto windowManager = static_cast<WindowsWindowManager*>(glfwGetWindowUserPointer(window))) {
+                    LOGGER(verbose, "window maximize state: " << (maximized ? "maximized" : "not maximized"));
+                }
+            }
+        );
+
+        glfwSetWindowContentScaleCallback(_window,
+            [](GLFWwindow* window, float xscale, float yscale) {
+                if (auto windowManager = static_cast<WindowsWindowManager*>(glfwGetWindowUserPointer(window))) {
+                    LOGGER(verbose, "window new scale: " << xscale << ", " << yscale);
+                }
+            }
+        );
+
+        // error
+        glfwSetErrorCallback(
+            [](int error, const char* description) {
+                LOGGER(error, "glfw error " << error << ": " << description);
+            }
+        );
     }
 
     void checkGLError() {
