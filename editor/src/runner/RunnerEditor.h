@@ -22,7 +22,13 @@ public:
         windowManager->init();
 
         SceneBuilder builder;
-        auto scene = builder.setName("Main").build();
+        auto rootScene = builder.setName("Main").build();
+
+        windowManager->setEventCallback(events::makeEventCallback(
+            [&rootScene](IEventData& data) {
+                EventDispatcher{}(rootScene, data);
+            }
+        ));
 
         auto state = std::make_shared<State>();
         state->gameState() = GameState::menu;
@@ -76,24 +82,15 @@ public:
             auto component4Scene = builder.setName("Model1").add(model1Scene).build();
             auto component5Scene = builder.setName("Skybox1").add(skybox1Scene).build();
 
-            scene->add(cameraScene);
-            scene->add(component1Scene);
-            scene->add(component2Scene);
-            scene->add(component3Scene);
-            scene->add(component4Scene);
-            scene->add(component5Scene);
-
-            scene->visit(makeSceneVisitor(
-                [](std::shared_ptr<IScene>& scene) {
-                    LOGGER(verbose, "scene id: " << scene->getId() << ", name: " << scene->getName());
-                }
-            ));
+            rootScene->add(cameraScene);
+            rootScene->add(component1Scene);
+            rootScene->add(component2Scene);
+            rootScene->add(component3Scene);
+            rootScene->add(component4Scene);
+            rootScene->add(component5Scene);
         }
 
-        Control control{ camera, state };
-        control.init();
-
-        GUI gui{ camera, scene, state };
+        GUI gui{ camera, rootScene, state };
         gui.init();
 
         LOGGER(info, "starting seri game engine - editor loop");
@@ -101,11 +98,10 @@ public:
         while (!windowManager->windowShouldClose()) {
             windowManager->clear();
             windowManager->clearColor();
+            windowManager->updateDeltaTime();
 
-            control.processInput(windowManager->updateDeltaTime());
-
-            //scene->draw();
-            SceneIterator iter(scene);
+            //rootScene->draw();
+            SceneIterator iter(rootScene);
             for (auto& s : iter) {
                 s->draw();
             }
