@@ -1,5 +1,10 @@
 #pragma once
 
+#include "../logging/Logger.h"
+#include "../event/EventData.h"
+#include "../event/EventCallback.h"
+
+#include <memory>
 
 struct WindowProperties {
     const char* windowTitle = nullptr;
@@ -18,7 +23,9 @@ public:
 
     virtual double getTime() = 0;
 
-    virtual float updateDeltaTime() = 0;
+    virtual void updateDeltaTime() = 0;
+
+    virtual float getDeltaTime() = 0;
 
     virtual void* getWindow() = 0;
 
@@ -58,6 +65,14 @@ public:
 
     virtual void* getWindowUserPointer() = 0;
 
+    const std::shared_ptr<events::IEventCallback>& getEventCallback() {
+        return _eventCallback;
+    }
+
+    void setEventCallback(std::shared_ptr<events::IEventCallback> eventCallback) {
+        _eventCallback = std::move(eventCallback);
+    }
+
     void setWindowProperties(WindowProperties windowProperties) {
         if (_initialized) {
             throw std::runtime_error("window is already initialized");
@@ -88,9 +103,10 @@ public:
 protected:
     WindowProperties _windowProperties;
 
-    bool _initialized{ false };
-
     double _lastFrame{ 0.0 };
     double _deltaTime{ 0.0 };
+    bool _initialized{ false };
+
+    std::shared_ptr<events::IEventCallback> _eventCallback;
 
 };
