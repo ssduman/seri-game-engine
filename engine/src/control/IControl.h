@@ -1,9 +1,6 @@
 #pragma once
 
-#include "../core/State.h"
 #include "../logging/Logger.h"
-#include "../window/IWindowManager.h"
-#include "../window/WindowManagerFactory.h"
 
 #include <memory>
 #include <string>
@@ -11,75 +8,9 @@
 
 class IControl {
 public:
-    IControl() : _windowManager(WindowManagerFactory::instance()) {}
-
-    IControl(std::shared_ptr<State> state) : _windowManager(WindowManagerFactory::instance()), _state(state) {}
+    IControl() = default;
 
     virtual ~IControl() = default;
-
-    virtual void init() {
-        auto window = static_cast<GLFWwindow*>(_windowManager->getWindow());
-
-        glfwSetCharCallback(window,
-            [](GLFWwindow* window, unsigned int codepoint) {
-                if (auto control = static_cast<IControl*>(glfwGetWindowUserPointer(window))) {
-                    control->charCallback(window, codepoint);
-                }
-            }
-        );
-
-        glfwSetMouseButtonCallback(window,
-            [](GLFWwindow* window, int button, int action, int mods) {
-                if (auto control = static_cast<IControl*>(glfwGetWindowUserPointer(window))) {
-                    control->mouseButtonCallback(window, button, action, mods);
-                }
-            }
-        );
-
-        glfwSetScrollCallback(window,
-            [](GLFWwindow* window, double xoffset, double yoffset) {
-                if (auto control = static_cast<IControl*>(glfwGetWindowUserPointer(window))) {
-                    control->scrollCallback(window, xoffset, yoffset);
-                }
-            }
-        );
-
-        glfwSetFramebufferSizeCallback(window,
-            [](GLFWwindow* window, int width, int height) {
-                if (auto control = static_cast<IControl*>(glfwGetWindowUserPointer(window))) {
-                    control->framebufferSizeCallback(window, width, height);
-                }
-            }
-        );
-
-        glfwSetCursorPosCallback(window,
-            [](GLFWwindow* window, double xpos, double ypos) {
-                if (auto control = static_cast<IControl*>(glfwGetWindowUserPointer(window))) {
-                    control->cursorPosCallback(window, xpos, ypos);
-                }
-            }
-        );
-
-        glfwSetKeyCallback(window,
-            [](GLFWwindow* window, int key, int scancode, int action, int mods) {
-                if (auto control = static_cast<IControl*>(glfwGetWindowUserPointer(window))) {
-                    control->keyCallback(window, key, scancode, action, mods);
-                }
-            }
-        );
-    }
-
-    virtual void charCallback(GLFWwindow* window, unsigned int codepoint) = 0;
-
-    virtual void cursorPosCallback(GLFWwindow* window, double xpos, double ypos) = 0;
-
-    virtual void scrollCallback(GLFWwindow* window, double xoffset, double yoffset) = 0;
-
-    virtual void framebufferSizeCallback(GLFWwindow* window, int width, int height) = 0;
-
-    virtual void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods) = 0;
-
-    virtual void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) = 0;
 
     void clearUserInput() {
         _userInputString.clear();
@@ -113,7 +44,7 @@ public:
         return _userInputVector;
     }
 
-    std::string encodeUTF8(const unsigned int codepoint) {
+    static std::string encodeUTF8(const unsigned int codepoint) {
         std::string str;
 
         if (codepoint < 0x80) {
@@ -139,9 +70,6 @@ public:
     }
 
 protected:
-    std::shared_ptr<IWindowManager> _windowManager;
-    std::shared_ptr<State> _state;
-
     std::string _userInputString;
     std::vector<std::string> _userInputVector;
 
