@@ -3,6 +3,7 @@
 #include <GLFW/glfw3.h>
 
 enum class InputModifier : int {
+    noop = 0,
     alt = GLFW_MOD_ALT,
     shift = GLFW_MOD_SHIFT,
     super = GLFW_MOD_SUPER,
@@ -13,6 +14,7 @@ enum class InputModifier : int {
 
 inline const char* toString(InputModifier inputModifier) {
     switch (inputModifier) {
+        case InputModifier::noop: return "noop";
         case InputModifier::alt: return "alt";
         case InputModifier::shift: return "shift";
         case InputModifier::super: return "super";
