@@ -3,9 +3,8 @@
 #include <core/Seri.h>
 
 #include "gui/GUI.h"
-#include "camera/Camera.h"
-#include "control/Control.h"
 #include "app/Factory.h"
+#include "camera/Camera.h"
 
 #include <memory>
 #include <stdexcept>
@@ -20,9 +19,7 @@ public:
         WindowProperties windowProperties{ /*title*/ "Seri Game Engine - Editor", /*fullscreen*/ false, /*w*/ 1280, /*h*/ 720 };
         auto windowManager = WindowManagerFactory::instance();
         windowManager->setWindowProperties(std::move(windowProperties));
-        if (!windowManager->init()) {
-            throw std::runtime_error("could not create window manager");
-        }
+        windowManager->init();
 
         SceneBuilder builder;
         auto scene = builder.setName("Main").build();
