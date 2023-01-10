@@ -27,6 +27,7 @@
 
 #include "../event/IEvent.h"
 #include "../event/EventManager.h"
+#include "../event/EventDispatcher.h"
 
 #include "../window/IWindowManager.h"
 #include "../window/WindowManagerFactory.h"

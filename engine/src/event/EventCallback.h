@@ -1,5 +1,6 @@
 #pragma once
 
+#include "EventData.h"
 #include "EventManager.h"
 
 #include <memory>
@@ -11,7 +12,7 @@ namespace events {
 
         virtual ~IEventCallback() = default;
 
-        virtual void onEvent() = 0;
+        virtual void onEvent(IEventData& data) = 0;
 
     };
 
@@ -22,8 +23,8 @@ namespace events {
 
         ~EventCallback() override = default;
 
-        void onEvent() override {
-            _f();
+        void onEvent(IEventData& data) override {
+            _f(data);
         }
 
     private:
