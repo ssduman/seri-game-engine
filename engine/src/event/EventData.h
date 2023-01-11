@@ -1,9 +1,10 @@
 #pragma once
 
-#include "KeyEvent.h"
 #include "EventType.h"
-#include "WindowEvent.h"
-#include "MouseButtonEvent.h"
+#include "../input/KeyCode.h"
+#include "../input/InputAction.h"
+#include "../input/InputModifier.h"
+#include "../input/MouseButtonCode.h"
 
 #include <vector>
 #include <string>
@@ -11,13 +12,13 @@
 
 // interface
 struct IEventData {
-    IEventData(EventType type_) : type(type_) {}
+    IEventData(EventType eventType_) : eventType(eventType_) {}
 
     virtual ~IEventData() {}
 
     virtual std::string toString() = 0;
 
-    EventType type = EventType::unknown;
+    EventType eventType = EventType::unknown;
 };
 
 // input
@@ -34,7 +35,7 @@ struct KeyEventData : public IEventData {
         }
 
         std::stringstream ss;
-        ss << ::toString(type) << ": {"
+        ss << ::toString(eventType) << ": {"
             << "'key': " << ::toString(key) << ", "
             << "'scancode': " << scancode << ", "
             << "'action': " << ::toString(action) << ", "
@@ -58,7 +59,7 @@ struct CharacterEventData : public IEventData {
 
     std::string toString() override {
         std::stringstream ss;
-        ss << ::toString(type) << ": {"
+        ss << ::toString(eventType) << ": {"
             << "'codepoint': " << codepoint
             << "}";
 
@@ -81,7 +82,7 @@ struct CharacterModsEventData : public IEventData {
         }
 
         std::stringstream ss;
-        ss << ::toString(type) << ": {"
+        ss << ::toString(eventType) << ": {"
             << "'codepoint': " << codepoint << ", "
             << "'mods': " << modss.str()
             << "}";
@@ -102,7 +103,7 @@ struct MouseEnterEventData : public IEventData {
 
     std::string toString() override {
         std::stringstream ss;
-        ss << ::toString(type) << ": {"
+        ss << ::toString(eventType) << ": {"
             << "'entered': " << (entered ? "true" : "false")
             << "}";
 
@@ -120,7 +121,7 @@ struct MouseButtonEventData : public IEventData {
 
     std::string toString() override {
         std::stringstream ss;
-        ss << ::toString(type) << ": {"
+        ss << ::toString(eventType) << ": {"
             << "'button': " << ::toString(button) << ", "
             << "'action': " << ::toString(action) << ", "
             << "'mods': " << ::toString(mods)
@@ -142,7 +143,7 @@ struct MouseScrollEventData : public IEventData {
 
     std::string toString() override {
         std::stringstream ss;
-        ss << ::toString(type) << ": {"
+        ss << ::toString(eventType) << ": {"
             << "'xoffset': " << xoffset << ", "
             << "'yoffset': " << yoffset
             << "}";
@@ -162,7 +163,7 @@ struct MousePositionEventData : public IEventData {
 
     std::string toString() override {
         std::stringstream ss;
-        ss << ::toString(type) << ": {"
+        ss << ::toString(eventType) << ": {"
             << "'xpos': " << xpos << ", "
             << "'ypos': " << ypos
             << "}";
@@ -188,7 +189,7 @@ struct WindowDropEventData : public IEventData {
         }
 
         std::stringstream ss;
-        ss << ::toString(type) << ": {"
+        ss << ::toString(eventType) << ": {"
             << "'paths': " << pathss.str()
             << "}";
 
@@ -206,7 +207,7 @@ struct WindowCloseEventData : public IEventData {
 
     std::string toString() override {
         std::stringstream ss;
-        ss << ::toString(type) << ": {"
+        ss << ::toString(eventType) << ": {"
             << "'window_close'"
             << "}";
 
@@ -222,7 +223,7 @@ struct WindowResizeEventData : public IEventData {
 
     std::string toString() override {
         std::stringstream ss;
-        ss << ::toString(type) << ": {"
+        ss << ::toString(eventType) << ": {"
             << "'width': " << width << ", "
             << "'height': " << height
             << "}";

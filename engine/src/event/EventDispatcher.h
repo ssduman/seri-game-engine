@@ -9,7 +9,7 @@
 struct EventDispatcher {
     void operator()(const std::shared_ptr<IScene>& rootScene, IEventData& data) {
         LOGGER(info, "event: " << data.toString());
-        switch (data.type) {
+        switch (data.eventType) {
             case EventType::key:
             {
                 auto& d = getData<KeyEventData&>(data);
@@ -130,8 +130,19 @@ struct EventDispatcher {
                 );
                 break;
             }
-            case EventType::app:
+            case EventType::tick:
                 break;
+            case EventType::user:
+            {
+                rootScene->visit(makeSceneVisitor(
+                    [&data](std::shared_ptr<IScene>& scene) {
+                        if (auto& object = scene->getObject()) {
+                            object->onUserEvent(data);
+                        }
+                    })
+                );
+                break;
+            }
             case EventType::unknown:
                 break;
             default:

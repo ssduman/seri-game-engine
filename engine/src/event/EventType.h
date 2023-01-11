@@ -11,8 +11,8 @@ enum class EventType {
     window_drop,
     window_close,
     window_resize,
-    app,
     tick,
+    user,
     unknown,
 };
 
@@ -28,8 +28,8 @@ inline const char* toString(EventType eventType) {
         case EventType::window_drop: return "window_drop";
         case EventType::window_close: return "window_close";
         case EventType::window_resize: return "window_resize";
-        case EventType::app: return "app";
         case EventType::tick: return "tick";
+        case EventType::user: return "user";
         case EventType::unknown: return "unknown";
         default: return "";
     }

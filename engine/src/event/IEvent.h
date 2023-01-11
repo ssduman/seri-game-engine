@@ -1,10 +1,6 @@
 #pragma once
 
 #include "EventData.h"
-#include "../input/KeyCode.h"
-#include "../input/InputAction.h"
-#include "../input/InputModifier.h"
-#include "../input/MouseButtonCode.h"
 
 class IEvent {
 public:
@@ -29,6 +25,8 @@ public:
     virtual void onWindowCloseEvent(const WindowCloseEventData& data) {}
 
     virtual void onWindowResizeEvent(const WindowResizeEventData& data) {}
+
+    virtual void onUserEvent(const IEventData& data) {}
 
 private:
 

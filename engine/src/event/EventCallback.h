@@ -1,7 +1,6 @@
 #pragma once
 
 #include "EventData.h"
-#include "EventManager.h"
 
 #include <memory>
 
