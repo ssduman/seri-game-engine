@@ -18,6 +18,16 @@ public:
 
     void render() override {}
 
+    void onWindowResizeEvent(const WindowResizeEventData& data) override {
+        auto width = static_cast<float>(data.width);
+        auto height = static_cast<float>(data.height);
+
+        _cameraProperties.width = width;
+        _cameraProperties.height = height;
+        _cameraProperties.aspect = width / height;
+        updateProjection();
+    }
+
     void onMousePositionEvent(const MousePositionEventData& data) override {
         if (_state && _state->gameState() != GameState::game) {
             return;
