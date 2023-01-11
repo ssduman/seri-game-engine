@@ -40,10 +40,8 @@ public:
     }
 
     void update() override {
-        if (_camera) {
-            _shaderManager.setView(_camera->getView());
-            _shaderManager.setProjection(_camera->getProjection());
-        }
+        _shaderManager.setView(_camera->getView());
+        _shaderManager.setProjection(_camera->getProjection());
     }
 
     Color& getColor() {
@@ -79,7 +77,5 @@ protected:
     ShaderManager _shaderManager{ _shader };
     OpenGLEngineBackend _engineBackend{ _shaderManager };
     EntityType _entityType{ EntityType::unknown };
-
-    bool _shouldDeleteThis = true;
 
 };
