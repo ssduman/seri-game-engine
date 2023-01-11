@@ -28,21 +28,19 @@ public:
         initglfw();
 
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
         createWindow();
-
         glfwSwapInterval(1);
         glfwMakeContextCurrent(_window);
 
         initglad();
+        logInfoStrings();
 
         glEnable(GL_BLEND);
         glEnable(GL_DEPTH_TEST);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-        logInfoStrings();
 
         setWindowUserPointer(static_cast<void*>(this));
         setEventCallbacks();
@@ -377,6 +375,8 @@ private:
                     if (callback) {
                         callback->onEvent(data);
                     }
+
+                    windowManager->viewport(0, 0, width, height);
                 }
             }
         );
@@ -453,6 +453,7 @@ private:
     }
 
     void enableDebugOutput() {
+        /*
         static const auto getDebugSourceString = [](GLenum source) {
             if (source == GL_DEBUG_SOURCE_API) {
                 return "Calls to the OpenGL API";
@@ -525,7 +526,6 @@ private:
             return "Unknown source";
         };
 
-        /*
         glEnable(GL_DEBUG_OUTPUT);
         glDebugMessageCallback(
             [](GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam) {
