@@ -22,9 +22,9 @@ public:
         if (_state->gameState() != GameState::game) {
             return;
         }
-        
+
         auto deltaTime = WindowManagerFactory::instance()->getDeltaTime();
-        float movementSpeed = _cameraProperties.speed * deltaTime;
+        auto movementSpeed = _cameraProperties.speed * deltaTime;
 
         if (_moveRequest & _wRequest) {
             _cameraProperties.position += _cameraProperties.front * movementSpeed;
@@ -38,6 +38,8 @@ public:
         if (_moveRequest & _dRequest) {
             _cameraProperties.position += _cameraProperties.right * movementSpeed;
         }
+
+        updateView();
     }
 
     void onKeyEvent(const KeyEventData& data) override {
@@ -73,8 +75,6 @@ public:
         else if (key == KeyCode::d && action == InputAction::release) {
             _moveRequest ^= _dRequest;
         }
-
-        updateView();
     }
 
 private:
