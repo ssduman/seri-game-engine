@@ -26,7 +26,8 @@ public:
         auto xpos = static_cast<float>(data.xpos);
         auto ypos = static_cast<float>(data.ypos);
 
-        if (_xPosLast < 0 && _yPosLast < 0) {
+        if (!_init) {
+            _init = true;
             _xPosLast = xpos;
             _yPosLast = ypos;
         }
@@ -106,11 +107,12 @@ protected:
 
     CameraProperties _cameraProperties;
     std::shared_ptr<State> _state;
-    
+
     glm::mat4 _model{ 1.0f };
     glm::mat4 _view{};
     glm::mat4 _projection{};
 
+    bool _init{ false };
     float _roll{ 0.0f };
     float _pitch{ 0.0f };
     float _yaw{ 90.0f };
