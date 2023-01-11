@@ -23,42 +23,16 @@ public:
 
     Entity(std::shared_ptr<ICamera> camera) : _camera(camera) {}
 
-    Entity(Entity&& other) noexcept {
-        _camera = std::move(other._camera);
-        _shader = std::move(other._shader);
-        _texture = std::move(other._texture);
-        _color = std::move(other._color);
-        _transform = std::move(other._transform);
-        _entityType = std::move(other._entityType);
-        _engineBackend = std::move(other._engineBackend);
-        _shaderManager = std::move(other._shaderManager);
-
-        other._shouldDeleteThis = false;
-    }
+    Entity(Entity&& other) noexcept = default;
 
     Entity(const Entity& other) = delete;
 
-    Entity& operator=(Entity&& other) noexcept {
-        _camera = std::move(other._camera);
-        _shader = std::move(other._shader);
-        _texture = std::move(other._texture);
-        _color = std::move(other._color);
-        _transform = std::move(other._transform);
-        _entityType = std::move(other._entityType);
-        _engineBackend = std::move(other._engineBackend);
-        _shaderManager = std::move(other._shaderManager);
-
-        other._shouldDeleteThis = false;
-
-        return *this;
-    }
+    Entity& operator=(Entity&& other) noexcept = default;
 
     Entity& operator=(const Entity& other) = delete;
 
     ~Entity() override {
-        if (_shouldDeleteThis) {
-            _engineBackend.release();
-        }
+        _engineBackend.release();
     }
 
     void init() override {
@@ -68,6 +42,7 @@ public:
     void update() override {
         if (_camera) {
             _shaderManager.setView(_camera->getView());
+            _shaderManager.setProjection(_camera->getProjection());
         }
     }
 
