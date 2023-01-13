@@ -1,5 +1,5 @@
 # Seri Game Engine #
-* A 2D/3D OpenGL Game Engine. Started July, 2019 and developed from time to time.
+* A 2D/3D OpenGL Game Engine.
 ## Dependencies: ##
 * [GLFW](https://www.glfw.org)
 * [glad](https://github.com/Dav1dde/glad)
