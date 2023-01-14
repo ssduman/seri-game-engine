@@ -2,7 +2,6 @@
 
 #include "CameraProperties.h"
 #include "../util/Util.h"
-#include "../core/State.h"
 #include "../core/Object.h"
 #include "../logging/Logger.h"
 
@@ -11,8 +10,6 @@
 class ICamera : public Object {
 public:
     ICamera(CameraProperties cameraProperties) : _cameraProperties{ cameraProperties } {}
-
-    ICamera(CameraProperties cameraProperties, std::shared_ptr<State> state) : _cameraProperties{ cameraProperties }, _state{ state } {}
 
     ~ICamera() override = default;
 
@@ -29,7 +26,7 @@ public:
     }
 
     void onMousePositionEvent(const MousePositionEventData& data) override {
-        if (_state && _state->gameState() != GameState::game) {
+        if (!isPlayable()) {
             return;
         }
 
@@ -68,6 +65,8 @@ public:
         updateEulerAngles();
         updateView();
     }
+
+    virtual bool isPlayable() = 0;
 
     const glm::mat4& getModel() {
         return _model;
@@ -116,7 +115,6 @@ protected:
     }
 
     CameraProperties _cameraProperties;
-    std::shared_ptr<State> _state;
 
     glm::mat4 _model{ 1.0f };
     glm::mat4 _view{};
