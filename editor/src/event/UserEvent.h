@@ -1,41 +1,43 @@
 #pragma once
 
+#include "GameState.h"
+
 #include <core/Seri.h>
 
 enum class UserEventType {
-    test,
+    game_state,
     unknown,
 };
 
 inline const char* toString(UserEventType userEventType) {
     switch (userEventType) {
-        case UserEventType::test: return "test";
+        case UserEventType::game_state: return "game_state";
         case UserEventType::unknown: return "unknown";
         default: return "";
     }
 }
 
 struct IUserEventData : public IEventData {
-    IUserEventData(UserEventType type_): IEventData(EventType::user), userEventType(type_) {}
+    IUserEventData(UserEventType type_) : IEventData(EventType::user), userEventType(type_) {}
 
     ~IUserEventData() override = default;
 
-    UserEventType userEventType = UserEventType::unknown;
+    UserEventType userEventType{ UserEventType::unknown };
 };
 
-struct UserTestEventData : public IUserEventData {
-    UserTestEventData(int data_) : IUserEventData(UserEventType::test), data(data_) {}
+struct UserGameStateEventData : public IUserEventData {
+    UserGameStateEventData(GameState gameState_) : IUserEventData(UserEventType::game_state), gameState(gameState_) {}
 
-    ~UserTestEventData() override = default;
+    ~UserGameStateEventData() override = default;
 
     std::string toString() override {
         std::stringstream ss;
         ss << ::toString(eventType) << "/" << ::toString(userEventType) << ": {"
-            << "'data': " << data
+            << "'gameState': " << ::toString(gameState)
             << "}";
 
         return ss.str();
     }
 
-    int data;
+    GameState gameState;
 };
