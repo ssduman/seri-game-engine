@@ -2,7 +2,6 @@
 
 #include "../util/Util.h"
 
-#include "../core/State.h"
 #include "../core/Object.h"
 #include "../core/Entity.h"
 #include "../core/IRunner.h"
