@@ -26,7 +26,7 @@ public:
 
     virtual void onWindowResizeEvent(const WindowResizeEventData& data) {}
 
-    virtual void onUserEvent(const IEventData& data) {}
+    virtual void onUserEvent(IEventData& data) {}
 
 private:
 
