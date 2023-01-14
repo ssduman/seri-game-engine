@@ -11,7 +11,7 @@ namespace events {
 
         virtual ~IEventCallback() = default;
 
-        virtual void onEvent(IEventData& data) = 0;
+        virtual void fireEvent(IEventData& data) = 0;
 
     };
 
@@ -22,7 +22,7 @@ namespace events {
 
         ~EventCallback() override = default;
 
-        void onEvent(IEventData& data) override {
+        void fireEvent(IEventData& data) override {
             _f(data);
         }
 
