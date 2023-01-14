@@ -5,6 +5,7 @@
 #include "gui/GUI.h"
 #include "app/Factory.h"
 #include "camera/Camera.h"
+#include "event/UserEvent.h"
 
 #include <memory>
 #include <stdexcept>
@@ -30,12 +31,9 @@ public:
             }
         ));
 
-        auto state = std::make_shared<State>();
-        state->gameState() = GameState::menu;
-
         CameraProperties cameraProperties;
         cameraProperties.aspect = windowManager->getAspect();
-        auto camera = std::make_shared<Camera>(std::move(cameraProperties), state);
+        auto camera = std::make_shared<Camera>(std::move(cameraProperties));
         camera->init();
 
         if (_showDemoScene) {
@@ -90,7 +88,7 @@ public:
             rootScene->add(component5Scene);
         }
 
-        GUI gui{ camera, rootScene, state };
+        GUI gui{ camera, rootScene };
         gui.init();
 
         LOGGER(info, "starting seri game engine - editor loop");
