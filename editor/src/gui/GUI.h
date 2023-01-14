@@ -392,17 +392,16 @@ private:
         if (ImGui::Button(text.c_str())) {
             if (text == "Play") {
                 text = "Stop";
-                _windowManager->getEventCallback()->onEvent(UserGameStateEventData{ GameState::game });
+                _windowManager->fireEvent(UserGameStateEventData{ GameState::game });
                 _windowManager->disableCursor();
                 //_io->MouseDrawCursor = true;
             }
             else {
                 text = "Play";
-                _windowManager->getEventCallback()->onEvent(UserGameStateEventData{ GameState::idle });
+                _windowManager->fireEvent(UserGameStateEventData{ GameState::idle });
                 _windowManager->enableCursor();
                 //_io->MouseDrawCursor = false;
             }
-            LOGGER(info, "game status changed to '" << text << "'");
         }
         ImGui::PopStyleColor(3);
     }
