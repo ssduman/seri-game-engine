@@ -138,6 +138,14 @@ public:
         glLineWidth(width);
     }
 
+    const char* getClipboard() override {
+        return glfwGetClipboardString(nullptr);
+    }
+
+    void setClipboard(const char* str) override {
+        glfwSetClipboardString(nullptr, str);
+    }
+
     void setWindowUserPointer(void* pointer) {
         glfwSetWindowUserPointer(_window, pointer);
     }

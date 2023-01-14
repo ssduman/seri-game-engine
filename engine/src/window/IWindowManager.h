@@ -61,6 +61,10 @@ public:
 
     virtual void setLineWidth(float width) = 0;
 
+    virtual const char* getClipboard() = 0;
+
+    virtual void setClipboard(const char* str) = 0;
+
     virtual void setWindowUserPointer(void* pointer) = 0;
 
     virtual void* getWindowUserPointer() = 0;
