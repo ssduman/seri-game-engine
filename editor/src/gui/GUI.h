@@ -13,11 +13,7 @@
 
 class GUI : public Object {
 public:
-    GUI(
-        std::shared_ptr<Camera> camera,
-        std::shared_ptr<IScene> scene,
-        std::shared_ptr<State> state)
-        : _windowManager(WindowManagerFactory::instance()), _camera(camera), _scene(scene), _state{ state } {
+    GUI(std::shared_ptr<Camera> camera, std::shared_ptr<IScene> scene) : _windowManager(WindowManagerFactory::instance()), _camera(camera), _scene(scene) {
         LOGGER(info, "gui init succeeded");
     }
 
@@ -396,17 +392,17 @@ private:
         if (ImGui::Button(text.c_str())) {
             if (text == "Play") {
                 text = "Stop";
-                _state->gameState() = GameState::game;
-                //_io->MouseDrawCursor = true;
+                _windowManager->getEventCallback()->onEvent(UserGameStateEventData{ GameState::game });
                 _windowManager->disableCursor();
+                //_io->MouseDrawCursor = true;
             }
             else {
                 text = "Play";
-                _state->gameState() = GameState::idle;
+                _windowManager->getEventCallback()->onEvent(UserGameStateEventData{ GameState::idle });
                 _windowManager->enableCursor();
                 //_io->MouseDrawCursor = false;
             }
-            LOGGER(info, "game status changed to '" << to_string(_state->gameState()) << "'");
+            LOGGER(info, "game status changed to '" << text << "'");
         }
         ImGui::PopStyleColor(3);
     }
@@ -431,7 +427,6 @@ private:
     std::shared_ptr<IWindowManager> _windowManager;
     std::shared_ptr<Camera> _camera;
     std::shared_ptr<IScene> _scene;
-    std::shared_ptr<State> _state;
     std::shared_ptr<IScene> _currentScene;
     std::shared_ptr<Entity> _currentEntity;
 
