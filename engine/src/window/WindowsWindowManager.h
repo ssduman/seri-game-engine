@@ -146,6 +146,10 @@ public:
         return glfwGetWindowUserPointer(_window);
     }
 
+    void fireEvent(IEventData& data) override {
+        _eventCallback->fireEvent(data);
+    }
+
 private:
     void initglfw() {
         if (!glfwInit()) {
@@ -224,11 +228,7 @@ private:
                         modsVector.emplace_back(InputModifier::noop);
                     }
 
-                    KeyEventData data{ keyEnum, scancode, actionEnum, std::move(modsVector) };
-                    auto callback = windowManager->getEventCallback();
-                    if (callback) {
-                        callback->onEvent(data);
-                    }
+                    windowManager->fireEvent(KeyEventData{ keyEnum, scancode, actionEnum, std::move(modsVector) });
 
                     if (keyEnum == KeyCode::escape && actionEnum == InputAction::press) {
                         windowManager->setWindowShouldCloseToTrue();
@@ -240,11 +240,7 @@ private:
         glfwSetCharCallback(_window,
             [](GLFWwindow* window, unsigned int codepoint) {
                 if (auto windowManager = static_cast<WindowsWindowManager*>(glfwGetWindowUserPointer(window))) {
-                    CharacterEventData data{ codepoint };
-                    auto callback = windowManager->getEventCallback();
-                    if (callback) {
-                        callback->onEvent(data);
-                    }
+                    windowManager->fireEvent(CharacterEventData{ codepoint });
                 }
             }
         );
@@ -275,11 +271,7 @@ private:
                         modsVector.emplace_back(InputModifier::noop);
                     }
 
-                    CharacterModsEventData data{ codepoint, std::move(modsVector) };
-                    auto callback = windowManager->getEventCallback();
-                    if (callback) {
-                        callback->onEvent(data);
-                    }
+                    windowManager->fireEvent(CharacterModsEventData{ codepoint, std::move(modsVector) });
                 }
             }
         );
@@ -288,11 +280,7 @@ private:
         glfwSetCursorEnterCallback(_window,
             [](GLFWwindow* window, int entered) {
                 if (auto windowManager = static_cast<WindowsWindowManager*>(glfwGetWindowUserPointer(window))) {
-                    MouseEnterEventData data{ entered ? true : false };
-                    auto& callback = windowManager->getEventCallback();
-                    if (callback) {
-                        callback->onEvent(data);
-                    }
+                    windowManager->fireEvent(MouseEnterEventData{ entered ? true : false });
                 }
             }
         );
@@ -304,11 +292,7 @@ private:
                     auto actionEnum = static_cast<InputAction>(action);
                     auto modsEnum = static_cast<InputModifier>(mods);
 
-                    MouseButtonEventData data{ buttonEnum, actionEnum, modsEnum };
-                    auto callback = windowManager->getEventCallback();
-                    if (callback) {
-                        callback->onEvent(data);
-                    }
+                    windowManager->fireEvent(MouseButtonEventData{ buttonEnum, actionEnum, modsEnum });
                 }
             }
         );
@@ -316,11 +300,7 @@ private:
         glfwSetScrollCallback(_window,
             [](GLFWwindow* window, double xoffset, double yoffset) {
                 if (auto windowManager = static_cast<WindowsWindowManager*>(glfwGetWindowUserPointer(window))) {
-                    MouseScrollEventData data{ xoffset, yoffset };
-                    auto callback = windowManager->getEventCallback();
-                    if (callback) {
-                        callback->onEvent(data);
-                    }
+                    windowManager->fireEvent(MouseScrollEventData{ xoffset, yoffset });
                 }
             }
         );
@@ -328,11 +308,7 @@ private:
         glfwSetCursorPosCallback(_window,
             [](GLFWwindow* window, double xpos, double ypos) {
                 if (auto windowManager = static_cast<WindowsWindowManager*>(glfwGetWindowUserPointer(window))) {
-                    MousePositionEventData data{ xpos, ypos };
-                    auto callback = windowManager->getEventCallback();
-                    if (callback) {
-                        callback->onEvent(data);
-                    }
+                    windowManager->fireEvent(MousePositionEventData{ xpos, ypos });
                 }
             }
         );
@@ -346,11 +322,7 @@ private:
                         pathVector.emplace_back(paths[i]);
                     }
 
-                    WindowDropEventData data{ std::move(pathVector) };
-                    auto& callback = windowManager->getEventCallback();
-                    if (callback) {
-                        callback->onEvent(data);
-                    }
+                    windowManager->fireEvent(WindowDropEventData{ std::move(pathVector) });
                 }
             }
         );
@@ -358,11 +330,7 @@ private:
         glfwSetWindowCloseCallback(_window,
             [](GLFWwindow* window) {
                 if (auto windowManager = static_cast<WindowsWindowManager*>(glfwGetWindowUserPointer(window))) {
-                    WindowCloseEventData data{};
-                    auto callback = windowManager->getEventCallback();
-                    if (callback) {
-                        callback->onEvent(data);
-                    }
+                    windowManager->fireEvent(WindowCloseEventData{});
                 }
             }
         );
@@ -370,11 +338,7 @@ private:
         glfwSetFramebufferSizeCallback(_window,
             [](GLFWwindow* window, int width, int height) {
                 if (auto windowManager = static_cast<WindowsWindowManager*>(glfwGetWindowUserPointer(window))) {
-                    WindowResizeEventData data{ width, height };
-                    auto callback = windowManager->getEventCallback();
-                    if (callback) {
-                        callback->onEvent(data);
-                    }
+                    windowManager->fireEvent(WindowResizeEventData{ width, height });
 
                     windowManager->viewport(0, 0, width, height);
                 }

@@ -65,6 +65,8 @@ public:
 
     virtual void* getWindowUserPointer() = 0;
 
+    virtual void fireEvent(IEventData& data) = 0;
+
     const std::shared_ptr<events::IEventCallback>& getEventCallback() {
         return _eventCallback;
     }
