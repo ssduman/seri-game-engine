@@ -138,6 +138,16 @@ public:
         glLineWidth(width);
     }
 
+    std::pair<int, int> getWindowPosition() override {
+        int xpos, ypos;
+        glfwGetWindowPos(_window, &xpos, &ypos);
+        return { xpos, ypos };
+    }
+
+    void setWindowPosition(int xpos, int ypos) override {
+        glfwSetWindowPos(_window, xpos, ypos);
+    }
+
     const char* getClipboard() override {
         return glfwGetClipboardString(nullptr);
     }

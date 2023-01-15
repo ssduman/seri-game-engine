@@ -61,6 +61,10 @@ public:
 
     virtual void setLineWidth(float width) = 0;
 
+    virtual std::pair<int, int> getWindowPosition() = 0;
+
+    virtual void setWindowPosition(int xpos, int ypos) = 0;
+
     virtual const char* getClipboard() = 0;
 
     virtual void setClipboard(const char* str) = 0;
