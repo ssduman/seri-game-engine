@@ -31,10 +31,9 @@ public:
 
         setIO();
         setStyle();
-        setWindowFlags();
 
         ImGui_ImplGlfw_InitForOpenGL(static_cast<GLFWwindow*>(_windowManager->getWindow()), true);
-        ImGui_ImplOpenGL3_Init(glsl_version);
+        ImGui_ImplOpenGL3_Init("#version 460");
     }
 
     void update() override {
@@ -73,43 +72,32 @@ private:
     }
 
     void setIO() {
-        _io = &ImGui::GetIO();
-        _io->ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-        _io->ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
-        _io->ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
-        _io->ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-        _io->FontGlobalScale = 1.5;
-        _io->ConfigWindowsMoveFromTitleBarOnly = true;
-        //_io->Fonts->AddFontFromFileTTF(font_filename, 14.0f);
+        auto& io = ImGui::GetIO();
+        io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+        io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+        io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+        io.ConfigWindowsMoveFromTitleBarOnly = true;
     }
 
     void setStyle() {
         ImGui::StyleColorsDark();
-        _style = &ImGui::GetStyle();
+        auto& style = ImGui::GetStyle();
 
-        _style->GrabRounding = 6.0f;
-        _style->ChildRounding = 6.0f;
-        _style->FrameRounding = 6.0f;
-        _style->PopupRounding = 6.0f;
-        _style->WindowRounding = 6.0f;
-        _style->ScrollbarRounding = 6.0f;
+        style.GrabRounding = 6.0f;
+        style.ChildRounding = 6.0f;
+        style.FrameRounding = 6.0f;
+        style.PopupRounding = 6.0f;
+        style.WindowRounding = 6.0f;
+        style.ScrollbarRounding = 6.0f;
 
-        _style->FrameBorderSize = 1.0f;
-        _style->WindowTitleAlign = ImVec2(0.5f, 0.50f);
-        _style->WindowMenuButtonPosition = ImGuiDir_Right;
+        style.FrameBorderSize = 1.0f;
+        style.WindowTitleAlign = ImVec2(0.5f, 0.50f);
+        style.WindowMenuButtonPosition = ImGuiDir_Right;
 
-        _style->Colors[ImGuiCol_WindowBg].w = 1.0f;
-        _style->Colors[ImGuiCol_TitleBg] = ImVec4(0.1f, 0.1f, 0.1f, 1.0f);
-        _style->Colors[ImGuiCol_TitleBgActive] = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
-        _style->Colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
-
-        _style->ScaleAllSizes(1.5f);
-    }
-
-    void setWindowFlags() {
-        _windowFlags = 0;
-        _windowFlags |= ImGuiWindowFlags_MenuBar;
-        //_windowFlags |= ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
+        style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+        style.Colors[ImGuiCol_TitleBg] = ImVec4(0.1f, 0.1f, 0.1f, 1.0f);
+        style.Colors[ImGuiCol_TitleBgActive] = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
+        style.Colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
     }
 
     void showDemoWindow() {
@@ -120,38 +108,50 @@ private:
     }
 
     void showMainMenuBar() {
-        if (ImGui::BeginMainMenuBar()) {
-            if (ImGui::BeginMenu("File")) {
-                showMenuFile();
-                ImGui::EndMenu();
-            }
-            if (ImGui::BeginMenu("Edit")) {
-                if (ImGui::MenuItem("Undo", "CTRL+Z")) {
-                }
-                if (ImGui::MenuItem("Redo", "CTRL+Y", false, false)) {
-                }
-                ImGui::Separator();
-                if (ImGui::MenuItem("Cut", "CTRL+X")) {
-                }
-                if (ImGui::MenuItem("Copy", "CTRL+C")) {
-                }
-                if (ImGui::MenuItem("Paste", "CTRL+V")) {
-                }
-                ImGui::EndMenu();
+        static bool show_menu_window = true;
+        if (show_menu_window) {
+            if (!ImGui::Begin("Seri", &show_menu_window)) {
+                ImGui::End();
+                return;
             }
 
-            buttonPlayCenter();
+            if (ImGui::BeginMainMenuBar()) {
+                if (ImGui::BeginMenu("File")) {
+                    showMenuFile();
+                    ImGui::EndMenu();
+                }
+                if (ImGui::BeginMenu("Edit")) {
+                    if (ImGui::MenuItem("Undo", "CTRL+Z")) {
+                    }
+                    if (ImGui::MenuItem("Redo", "CTRL+Y", false, false)) {
+                    }
+                    ImGui::Separator();
+                    if (ImGui::MenuItem("Cut", "CTRL+X")) {
+                    }
+                    if (ImGui::MenuItem("Copy", "CTRL+C")) {
+                    }
+                    if (ImGui::MenuItem("Paste", "CTRL+V")) {
+                    }
+                    ImGui::EndMenu();
+                }
 
-            textRight("Seri Game Engine");
+                buttonPlayCenter();
 
-            ImGui::EndMainMenuBar();
+                textRight("Seri Game Engine");
+
+                ImGui::EndMainMenuBar();
+            }
+
+            ImGui::End();
         }
     }
 
     void showSceneWindow() {
         static bool show_scene_window = true;
         if (show_scene_window) {
-            if (!ImGui::Begin("Scene", &show_scene_window, _windowFlags)) {
+            auto windowFlags = 0;
+            windowFlags |= ImGuiWindowFlags_MenuBar;
+            if (!ImGui::Begin("Scene", &show_scene_window, windowFlags)) {
                 ImGui::End();
                 return;
             }
@@ -254,21 +254,21 @@ private:
         if (ImGui::MenuItem("Save As..")) {
         }
         if (ImGui::MenuItem("Quit", "Alt+F4")) {
-            _windowManager->windowShouldClose();
+            _windowManager->setWindowShouldCloseToTrue();
         }
     }
 
     void showEntityWindow() {
         static bool show_entity_window = true;
         if (show_entity_window) {
-            if (!ImGui::Begin("Maze", &show_entity_window, _windowFlags)) {
+            auto windowFlags = 0;
+            windowFlags |= ImGuiWindowFlags_MenuBar;
+            if (!ImGui::Begin("Maze", &show_entity_window, windowFlags)) {
                 ImGui::End();
                 return;
             }
 
             showEntityWindowMenuBar();
-
-            showEntityCreateButtons();
 
             showEntityTransformationOptions();
 
@@ -296,38 +296,6 @@ private:
             }
             ImGui::EndMenuBar();
         }
-    }
-
-    void showEntityCreateButtons() {
-        /*
-        if (ImGui::Button("Create point")) {
-            _layers.addLayer(Factory::CreateEntity(_camera, EntityType::point));
-        }
-        if (ImGui::Button("Create line")) {
-            _layers.addLayer(Factory::CreateEntity(_camera, EntityType::line));
-        }
-        if (ImGui::Button("Create triangle")) {
-            _layers.addLayer(Factory::CreateEntity(_camera, EntityType::triangle));
-        }
-        if (ImGui::Button("Create rectangle")) {
-            _layers.addLayer(Factory::CreateEntity(_camera, EntityType::rectangle));
-        }
-        if (ImGui::Button("Create circle")) {
-            _layers.addLayer(Factory::CreateEntity(_camera, EntityType::circle));
-        }
-        if (ImGui::Button("Create cube")) {
-            _layers.addLayer(Factory::CreateEntity(_camera, EntityType::cube));
-        }
-        if (ImGui::Button("Create polygon")) {
-            _layers.addLayer(Factory::CreateEntity(_camera, EntityType::polygon));
-        }
-        if (ImGui::Button("Delete entity")) {
-            _currentEntity = nullptr;
-            _layers.deleteLayer();
-        }
-        */
-
-        ImGui::Separator();
     }
 
     void showEntityTransformationOptions() {
@@ -362,11 +330,6 @@ private:
         if (ImGui::Button("Disable cursor")) {
             _windowManager->disableCursor();
         }
-
-        ImGui::Separator();
-
-        ImGui::CheckboxFlags("io.ConfigFlags: NavEnableKeyboard", &_io->ConfigFlags, ImGuiConfigFlags_NavEnableKeyboard);
-        ImGui::SameLine(); helpMarker("Enable keyboard controls.");
 
         ImGui::Separator();
     }
@@ -428,12 +391,5 @@ private:
     std::shared_ptr<IScene> _scene;
     std::shared_ptr<IScene> _currentScene;
     std::shared_ptr<Entity> _currentEntity;
-
-    ImGuiIO* _io{ nullptr };
-    ImGuiStyle* _style{ nullptr };
-    ImGuiWindowFlags _windowFlags{ 0 };
-
-    const char* glsl_version{ "#version 130" };
-    const char* font_filename{ "editor-assets/fonts/En Bloc.ttf" };
 
 };
