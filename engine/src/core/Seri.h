@@ -16,13 +16,15 @@
 
 #include "../model/Model.h"
 
+#include "../logging/Logger.h"
+
 #include "../camera/ICamera.h"
 
 #include "../texture/Color.h"
 #include "../texture/Typer.h"
 #include "../texture/Skybox.h"
 
-#include "../logging/Logger.h"
+#include "../input/Input.h"
 
 #include "../event/IEvent.h"
 #include "../event/EventDispatcher.h"

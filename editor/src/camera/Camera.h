@@ -41,36 +41,31 @@ public:
     }
 
     void onKeyEvent(const KeyEventData& data) override {
-        auto key = data.key;
-        auto scancode = data.scancode;
-        auto action = data.action;
-        auto mods = data.mods;
-
-        if (key == KeyCode::w && action == InputAction::press) {
+        if (Input::isPressed(data, KeyCode::w)) {
             _moveRequest |= _wRequest;
         }
-        else if (key == KeyCode::w && action == InputAction::release) {
+        else if (Input::isReleased(data, KeyCode::w)) {
             _moveRequest ^= _wRequest;
         }
 
-        if (key == KeyCode::s && action == InputAction::press) {
+        if (Input::isPressed(data, KeyCode::s)) {
             _moveRequest |= _sRequest;
         }
-        else if (key == KeyCode::s && action == InputAction::release) {
+        else if (Input::isReleased(data, KeyCode::s)) {
             _moveRequest ^= _sRequest;
         }
 
-        if (key == KeyCode::a && action == InputAction::press) {
+        if (Input::isPressed(data, KeyCode::a)) {
             _moveRequest |= _aRequest;
         }
-        else if (key == KeyCode::a && action == InputAction::release) {
+        else if (Input::isReleased(data, KeyCode::a)) {
             _moveRequest ^= _aRequest;
         }
 
-        if (key == KeyCode::d && action == InputAction::press) {
+        if (Input::isPressed(data, KeyCode::d)) {
             _moveRequest |= _dRequest;
         }
-        else if (key == KeyCode::d && action == InputAction::release) {
+        else if (Input::isReleased(data, KeyCode::d)) {
             _moveRequest ^= _dRequest;
         }
     }
