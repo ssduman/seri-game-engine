@@ -6,28 +6,31 @@
 #include <vector>
 
 struct SceneIterator {
-    SceneIterator(std::shared_ptr<IScene>& scene) : _scene(scene) {
-        prepareSceneVector(_scene);
+    SceneIterator(std::shared_ptr<IScene> scene) {
+        prepareDrawVector(std::move(scene));
+    }
+
+    auto getDrawVector() {
+        return _drawVector;
     }
 
     auto begin() {
-        return _scenes.rbegin();
+        return _drawVector.rbegin();
     }
 
     auto end() {
-        return _scenes.rend();
+        return _drawVector.rend();
     }
 
 private:
-    void prepareSceneVector(const std::shared_ptr<IScene>& scene) {
-        _scenes.push_back(scene);
-
+    void prepareDrawVector(const std::shared_ptr<IScene>& scene) {
+        _drawVector.push_back(scene);
+       
         for (const auto& s : scene->getChildren()) {
-            prepareSceneVector(s);
+            prepareDrawVector(s);
         }
     }
 
-    std::shared_ptr<IScene>& _scene;
-    std::vector<std::shared_ptr<IScene>> _scenes;
+    std::vector<std::shared_ptr<IScene>> _drawVector;
 
 };
