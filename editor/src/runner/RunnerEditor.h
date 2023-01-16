@@ -88,8 +88,8 @@ public:
             rootScene->add(component5Scene);
         }
 
-        GUI gui{ camera, rootScene };
-        gui.init();
+        auto gui = std::make_shared<GUI>(camera, rootScene);
+        gui->init();
 
         LOGGER(info, "starting seri game engine - editor loop");
 
@@ -98,13 +98,12 @@ public:
             windowManager->clearColor();
             windowManager->updateDeltaTime();
 
-            //rootScene->draw();
             SceneIterator iter(rootScene);
             for (auto& s : iter) {
                 s->draw();
             }
 
-            gui.display();
+            gui->display();
 
             windowManager->pollEvents();
             windowManager->swapBuffers();
