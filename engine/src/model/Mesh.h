@@ -18,23 +18,13 @@ class Mesh : public Object {
 public:
     Mesh(Shader shader) : _shader(shader) {}
 
-    Mesh(Mesh& other) = delete;
+    Mesh(Mesh& other) = default;
 
-    Mesh(Mesh&& other) noexcept : _shader(other._shader) {
-        _positions = std::move(other._positions);
-        _colors = std::move(other._colors);
-        _textureCoords = std::move(other._textureCoords);
-        _normals = std::move(other._normals);
-        _textures = std::move(other._textures);
-        _indices = std::move(other._indices);
-        _transformation = std::move(other._transformation);
-        _shaderManager = std::move(other._shaderManager);
-        _engineBackend = std::move(other._engineBackend);
-    }
+    Mesh(Mesh&& other) = default;
 
     Mesh& operator=(Mesh& other) = delete;
 
-    Mesh& operator=(Mesh&& other) = delete;
+    Mesh& operator=(Mesh&& other) = default;
 
     ~Mesh() override = default;
 

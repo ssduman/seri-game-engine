@@ -14,23 +14,13 @@ class Shader {
 public:
     Shader() = default;
 
-    Shader(Shader& other) noexcept {
-        _program = other._program;
-    }
+    Shader(Shader& other) = default;
 
-    Shader(Shader&& other) noexcept {
-        _program = other._program;
-    }
+    Shader(Shader&& other) = default;
 
-    Shader& operator=(Shader& other) noexcept {
-        _program = other._program;
-        return *this;
-    }
+    Shader& operator=(Shader& other) = default;
 
-    Shader& operator=(Shader&& other) noexcept {
-        _program = other._program;
-        return *this;
-    }
+    Shader& operator=(Shader&& other) = default;
 
     ~Shader() = default;
 

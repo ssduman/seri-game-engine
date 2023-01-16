@@ -23,11 +23,11 @@ public:
 
     Entity(std::shared_ptr<ICamera> camera) : _camera(camera) {}
 
-    Entity(Entity&& other) noexcept = default;
+    Entity(Entity&& other) = default;
 
     Entity(const Entity& other) = delete;
 
-    Entity& operator=(Entity&& other) noexcept = default;
+    Entity& operator=(Entity&& other) = default;
 
     Entity& operator=(const Entity& other) = delete;
 

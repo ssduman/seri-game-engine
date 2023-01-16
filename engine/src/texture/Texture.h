@@ -9,35 +9,17 @@ class Texture {
 public:
     Texture() = default;
 
-    Texture(Texture&& other) noexcept {
-        _tex = other._tex;
+    Texture(Texture&& other) = default;
 
-        other._shouldDeleteThis = false;
-    }
+    Texture(Texture& other) = default;
 
-    Texture(const Texture& other) = delete;
+    Texture& operator=(Texture&& other) = default;
 
-    Texture& operator=(Texture&& other) noexcept {
-        _tex = other._tex;
-
-        other._shouldDeleteThis = false;
-
-        return *this;
-    }
-
-    Texture& operator=(Texture& other) noexcept {
-        _tex = other._tex;
-
-        other._shouldDeleteThis = false;
-
-        return *this;
-    }
+    Texture& operator=(Texture& other) = default;
 
     ~Texture() {
-        if (_shouldDeleteThis && _tex != 0) {
-            unbind();
-            del();
-        }
+        unbind();
+        del();
     }
 
     void init(const std::string& texturePath) {
@@ -118,6 +100,5 @@ private:
     }
 
     unsigned int _tex{ 0 };
-    bool _shouldDeleteThis{ true };
 
 };

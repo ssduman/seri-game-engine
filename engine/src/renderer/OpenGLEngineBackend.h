@@ -18,26 +18,17 @@ public:
         bind();
     }
 
-    OpenGLEngineBackend(OpenGLEngineBackend& other) = delete;
+    OpenGLEngineBackend(OpenGLEngineBackend& other) = default;
 
     OpenGLEngineBackend(OpenGLEngineBackend&& other) = delete;
 
     OpenGLEngineBackend& operator=(OpenGLEngineBackend& other) = delete;
 
-    OpenGLEngineBackend& operator=(OpenGLEngineBackend&& other) noexcept {
-        _shaderManager = std::move(other._shaderManager);
+    OpenGLEngineBackend& operator=(OpenGLEngineBackend&& other) = default;
 
-        _VAO = other._VAO;
-        _VBO = other._VBO;
-        _EBO = other._EBO;
-        _drawMode = other._drawMode;
-        _drawType = other._drawType;
-        _drawCount = other._drawCount;
-
-        return *this;
+    ~OpenGLEngineBackend() override {
+        //release();
     }
-
-    ~OpenGLEngineBackend() override = default;
 
     void draw() override {
         bindVAO();

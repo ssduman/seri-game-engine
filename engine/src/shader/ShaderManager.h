@@ -11,19 +11,13 @@ public:
 
     ShaderManager(Shader& shader) : _shader(shader) {}
 
-    ShaderManager(ShaderManager& other) noexcept : _shader(other._shader) {}
+    ShaderManager(ShaderManager& other) = default;
 
-    ShaderManager(ShaderManager&& other) noexcept : _shader(other._shader) {}
+    ShaderManager(ShaderManager&& other) = default;
 
-    ShaderManager& operator=(ShaderManager& other) noexcept {
-        _shader = std::move(other._shader);
-        return *this;
-    }
+    ShaderManager& operator=(ShaderManager& other) = default;
 
-    ShaderManager& operator=(ShaderManager&& other) noexcept {
-        _shader = std::move(other._shader);
-        return *this;
-    }
+    ShaderManager& operator=(ShaderManager&& other) = default;
 
     ~ShaderManager() = default;
 
