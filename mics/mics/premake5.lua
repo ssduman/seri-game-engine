@@ -5,7 +5,7 @@ project "Mics"
   staticruntime "off"
 
   targetdir("%{wks.location}/bin/" .. outputdir .. "/%{prj.name}")
-  objdir("%{wks.location}/bin-int/" .. outputdir .. "/%{prj.name}")
+  objdir("%{wks.location}/bin/int/" .. outputdir .. "/%{prj.name}")
 
   files {
     "src/**.h",
@@ -20,8 +20,8 @@ project "Mics"
 
   includedirs {
     "src",
-    "%{wks.location}/engine/src",
-    "%{wks.location}/engine/vendor",
+    "%{wks.location}/seri/src",
+    "%{wks.location}/seri/vendor",
     "%{IncludeDir.glad}",
     "%{IncludeDir.GLFW}",
     "%{IncludeDir.glm}",
@@ -31,11 +31,7 @@ project "Mics"
   }
 
   links {
-    "Engine",
-  }
-
-  libdirs {
-    "%{wks.location}/engine/vendor/assimp/bin/Debug-x86_64/assimp",
+    "Seri",
   }
 
   filter "system:windows"
