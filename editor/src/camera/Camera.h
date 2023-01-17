@@ -41,6 +41,10 @@ public:
     }
 
     void onKeyEvent(const KeyEventData& data) override {
+        if (!isPlayable()) {
+            return;
+        }
+
         if (Input::isPressed(data, KeyCode::w)) {
             _moveRequest |= _wRequest;
         }
