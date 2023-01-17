@@ -3,8 +3,8 @@ project "glad"
   language "C"
   staticruntime "off"
 
-  targetdir ("bin/" .. outputdir .. "/%{prj.name}")
-  objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+  targetdir("bin/" .. outputdir .. "/%{prj.name}")
+  objdir("bin/int/" .. outputdir .. "/%{prj.name}")
 
   files {
     "include/glad/gl.h",

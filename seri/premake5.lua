@@ -1,18 +1,18 @@
-project "Engine"
+project "Seri"
   kind "StaticLib"
   language "C++"
   cppdialect "C++17"
   staticruntime "off"
 
   pchheader "Seripch.h"
-  pchsource "src/core/Seripch.cpp"
+  pchsource "src/seri/core/Seripch.cpp"
 
   targetdir("%{wks.location}/bin/" .. outputdir .. "/%{prj.name}")
-  objdir("%{wks.location}/bin-int/" .. outputdir .. "/%{prj.name}")
+  objdir("%{wks.location}/bin/int/" .. outputdir .. "/%{prj.name}")
 
   files {
-    "src/**.h",
-    "src/**.cpp",
+    "src/seri/**.h",
+    "src/seri/**.cpp",
     "vendor/glm/glm/**.hpp",
     "vendor/glm/glm/**.inl",
     "vendor/stb/stb_image.h",
@@ -24,8 +24,8 @@ project "Engine"
   }
 
   includedirs {
-    "src",
-    "src/core",
+    "src/seri",
+    "src/seri/core",
     "%{IncludeDir.glad}",
     "%{IncludeDir.GLFW}",
     "%{IncludeDir.glm}",
