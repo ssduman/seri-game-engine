@@ -1,13 +1,13 @@
 outputdir = "%{cfg.buildcfg}-%{cfg.architecture}"
 
 IncludeDir = {}
-IncludeDir["glad"] = "%{wks.location}/engine/vendor/glad/include"
-IncludeDir["GLFW"] = "%{wks.location}/engine/vendor/glfw/include"
-IncludeDir["glm"] = "%{wks.location}/engine/vendor/glm"
-IncludeDir["stb"] = "%{wks.location}/engine/vendor/stb"
-IncludeDir["ImGui"] = "%{wks.location}/engine/vendor/imgui"
-IncludeDir["assimp"] = "%{wks.location}/engine/vendor/assimp/include"
-IncludeDir["freetype"] = "%{wks.location}/engine/vendor/freetype/include"
+IncludeDir["glad"] = "%{wks.location}/seri/vendor/glad/include"
+IncludeDir["GLFW"] = "%{wks.location}/seri/vendor/glfw/include"
+IncludeDir["glm"] = "%{wks.location}/seri/vendor/glm"
+IncludeDir["stb"] = "%{wks.location}/seri/vendor/stb"
+IncludeDir["ImGui"] = "%{wks.location}/seri/vendor/imgui"
+IncludeDir["assimp"] = "%{wks.location}/seri/vendor/assimp/include"
+IncludeDir["freetype"] = "%{wks.location}/seri/vendor/freetype/include"
 
 workspace "Seri Game Engine"
   architecture "x86_64"
@@ -16,7 +16,7 @@ workspace "Seri Game Engine"
   flags { "MultiProcessorCompile" }
 
   group "Core"
-    include "engine"
+    include "seri"
   group ""
 
   group "Editor"
@@ -24,18 +24,16 @@ workspace "Seri Game Engine"
   group ""
 
   group "Misc"
-    include "mics"
-    --[[
-    include "maze"
-    include "snake"
-    include "tetris"
-    --]]
+    include "mics/mics"
+    -- include "mics/maze"
+    -- include "mics/snake"
+    -- include "mics/tetris"
   group ""
   
   group "Dependencies"
-    include "engine/vendor/glad"
-    include "engine/vendor/glfw"
-    include "engine/vendor/imgui"
-    include "engine/vendor/assimp"
-    include "engine/vendor/freetype"
+    include "seri/vendor/glad"
+    include "seri/vendor/glfw"
+    include "seri/vendor/imgui"
+    include "seri/vendor/assimp"
+    include "seri/vendor/freetype"
   group ""
