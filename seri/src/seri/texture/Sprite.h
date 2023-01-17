@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Color.h"
+#include "seri/texture/Color.h"
 
 #include <glm/glm.hpp>
 

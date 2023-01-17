@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Texture.h"
-#include "../core/Object.h"
-#include "../camera/ICamera.h"
-#include "../renderer/OpenGLEngineBackend.h"
-#include "../renderer/AuxiliaryStructsBuilder.h"
+#include "seri/core/Object.h"
+#include "seri/camera/ICamera.h"
+#include "seri/texture/Texture.h"
+#include "seri/renderer/OpenGLEngineBackend.h"
+#include "seri/renderer/AuxiliaryStructsBuilder.h"
 
 #include <memory>
 #include <vector>

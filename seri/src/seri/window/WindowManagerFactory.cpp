@@ -1,7 +1,7 @@
 #include "Seripch.h"
 
-#include "WindowManagerFactory.h"
-#include "WindowsWindowManager.h"
+#include "seri/window/WindowManagerFactory.h"
+#include "seri/window/WindowsWindowManager.h"
 
 #ifdef __linux__
 static_assert(false, "linux platform not supported");

@@ -1,15 +1,15 @@
 #pragma once
 
-#include "Object.h"
-#include "EntityType.h"
-#include "../math/Transform.h"
-#include "../camera/ICamera.h"
-#include "../logging/Logger.h"
-#include "../shader/Shader.h"
-#include "../shader/ShaderManager.h"
-#include "../texture/Color.h"
-#include "../texture/Texture.h"
-#include "../renderer/OpenGLEngineBackend.h"
+#include "seri/core/Object.h"
+#include "seri/core/EntityType.h"
+#include "seri/texture/Color.h"
+#include "seri/texture/Texture.h"
+#include "seri/shader/Shader.h"
+#include "seri/shader/ShaderManager.h"
+#include "seri/math/Transform.h"
+#include "seri/camera/ICamera.h"
+#include "seri/logging/Logger.h"
+#include "seri/renderer/OpenGLEngineBackend.h"
 
 #include <memory>
 #include <string>

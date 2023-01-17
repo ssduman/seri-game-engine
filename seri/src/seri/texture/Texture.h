@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../logging/Logger.h"
+#include "seri/logging/Logger.h"
 
 #include <glad/gl.h>
 #include <stb_image.h>

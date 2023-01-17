@@ -1,6 +1,6 @@
 #pragma once
 
-#include "IWindowManager.h"
+#include "seri/window/IWindowManager.h"
 
 #include <memory>
 

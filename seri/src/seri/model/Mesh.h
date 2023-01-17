@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Material.h"
-#include "../core/Object.h"
-#include "../shader/Shader.h"
-#include "../shader/ShaderManager.h"
-#include "../texture/Texture.h"
-#include "../renderer/OpenGLEngineBackend.h"
+#include "seri/core/Object.h"
+#include "seri/shader/Shader.h"
+#include "seri/shader/ShaderManager.h"
+#include "seri/model/Material.h"
+#include "seri/texture/Texture.h"
+#include "seri/renderer/OpenGLEngineBackend.h"
 
 #include <glm/glm.hpp>
 

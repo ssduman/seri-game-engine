@@ -1,10 +1,10 @@
 #pragma once
 
-#include "EventType.h"
-#include "../input/KeyCode.h"
-#include "../input/InputAction.h"
-#include "../input/InputModifier.h"
-#include "../input/MouseButtonCode.h"
+#include "seri/event/EventType.h"
+#include "seri/input/KeyCode.h"
+#include "seri/input/InputAction.h"
+#include "seri/input/InputModifier.h"
+#include "seri/input/MouseButtonCode.h"
 
 #include <vector>
 #include <string>

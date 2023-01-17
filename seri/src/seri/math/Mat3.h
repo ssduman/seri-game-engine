@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Vec3.h"
+#include "seri/math/Vec3.h"
 
 #include <cmath>
 #include <iostream>

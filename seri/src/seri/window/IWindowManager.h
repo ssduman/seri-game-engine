@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../logging/Logger.h"
-#include "../event/EventData.h"
-#include "../event/EventCallback.h"
+#include "seri/logging/Logger.h"
+#include "seri/event/EventData.h"
+#include "seri/event/EventCallback.h"
 
 #include <memory>
 

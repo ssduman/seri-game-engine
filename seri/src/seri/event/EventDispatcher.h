@@ -1,7 +1,7 @@
 #pragma once
 
-#include "EventData.h"
-#include "../scene/Scene.h"
+#include "seri/scene/Scene.h"
+#include "seri/event/EventData.h"
 
 #include <stdexcept>
 #include <functional>

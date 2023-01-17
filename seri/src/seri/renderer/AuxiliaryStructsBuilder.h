@@ -1,6 +1,6 @@
 #pragma once
 
-#include "AuxiliaryStructs.h"
+#include "seri/renderer/AuxiliaryStructs.h"
 
 #include <stdexcept>
 

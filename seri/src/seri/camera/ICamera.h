@@ -1,9 +1,9 @@
 #pragma once
 
-#include "CameraProperties.h"
-#include "../util/Util.h"
-#include "../core/Object.h"
-#include "../logging/Logger.h"
+#include "seri/util/Util.h"
+#include "seri/core/Object.h"
+#include "seri/logging/Logger.h"
+#include "seri/camera/CameraProperties.h"
 
 #include <memory>
 

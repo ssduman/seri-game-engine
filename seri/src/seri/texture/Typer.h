@@ -1,10 +1,10 @@
 #pragma once
 
-#include "../util/Util.h"
-#include "../core/Object.h"
-#include "../logging/Logger.h"
-#include "../renderer/OpenGLEngineBackend.h"
-#include "../renderer/AuxiliaryStructsBuilder.h"
+#include "seri/util/Util.h"
+#include "seri/core/Object.h"
+#include "seri/logging/Logger.h"
+#include "seri/renderer/OpenGLEngineBackend.h"
+#include "seri/renderer/AuxiliaryStructsBuilder.h"
 
 #include <ft2build.h>
 #include FT_FREETYPE_H

@@ -1,12 +1,12 @@
 #pragma once
 
-#include "Mesh.h"
-#include "Material.h"
-#include "../core/Object.h"
-#include "../logging/Logger.h"
-#include "../math/Transform.h"
-#include "../shader/Shader.h"
-#include "../shader/ShaderManager.h"
+#include "seri/model/Mesh.h"
+#include "seri/model/Material.h"
+#include "seri/core/Object.h"
+#include "seri/logging/Logger.h"
+#include "seri/math/Transform.h"
+#include "seri/shader/Shader.h"
+#include "seri/shader/ShaderManager.h"
 
 #include <assimp/scene.h>
 #include <assimp/Importer.hpp>

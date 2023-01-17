@@ -1,34 +1,34 @@
 #pragma once
 
-#include "../util/Util.h"
+#include "seri/util/Util.h"
 
-#include "../core/Object.h"
-#include "../core/Entity.h"
-#include "../core/IRunner.h"
+#include "seri/core/Object.h"
+#include "seri/core/Entity.h"
+#include "seri/core/IRunner.h"
 
-#include "../scene/Layer.h"
-#include "../scene/Scene.h"
-#include "../scene/SceneBuilder.h"
-#include "../scene/SceneVisitor.h"
-#include "../scene/SceneIterator.h"
+#include "seri/scene/Layer.h"
+#include "seri/scene/Scene.h"
+#include "seri/scene/SceneBuilder.h"
+#include "seri/scene/SceneVisitor.h"
+#include "seri/scene/SceneIterator.h"
 
-#include "../model/Model.h"
+#include "seri/model/Model.h"
 
-#include "../logging/Logger.h"
+#include "seri/logging/Logger.h"
 
-#include "../camera/ICamera.h"
+#include "seri/camera/ICamera.h"
 
-#include "../texture/Color.h"
-#include "../texture/Typer.h"
-#include "../texture/Skybox.h"
+#include "seri/texture/Color.h"
+#include "seri/texture/Typer.h"
+#include "seri/texture/Skybox.h"
 
-#include "../input/Input.h"
+#include "seri/input/Input.h"
 
-#include "../event/IEvent.h"
-#include "../event/EventDispatcher.h"
+#include "seri/event/IEvent.h"
+#include "seri/event/EventDispatcher.h"
 
-#include "../window/IWindowManager.h"
-#include "../window/WindowManagerFactory.h"
+#include "seri/window/IWindowManager.h"
+#include "seri/window/WindowManagerFactory.h"
 
-#include "../renderer/OpenGLEngineBackend.h"
-#include "../renderer/AuxiliaryStructsBuilder.h"
+#include "seri/renderer/OpenGLEngineBackend.h"
+#include "seri/renderer/AuxiliaryStructsBuilder.h"

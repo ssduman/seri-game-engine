@@ -1,6 +1,6 @@
 #pragma once
 
-#include "EventData.h"
+#include "seri/event/EventData.h"
 
 #include <memory>
 

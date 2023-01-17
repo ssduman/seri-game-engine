@@ -1,8 +1,8 @@
 #pragma once
 
-#include "SceneVisitor.h"
-#include "../core/Object.h"
-#include "../logging/Logger.h"
+#include "seri/scene/SceneVisitor.h"
+#include "seri/core/Object.h"
+#include "seri/logging/Logger.h"
 
 #include <memory>
 #include <string>

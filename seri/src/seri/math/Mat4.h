@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Vec4.h"
-#include "../util/Util.h"
+#include "seri/math/Vec4.h"
+#include "seri/util/Util.h"
 
 #include <cmath>
 #include <iostream>

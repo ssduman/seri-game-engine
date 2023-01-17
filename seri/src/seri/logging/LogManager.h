@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Logger.h"
+#include "seri/logging/Logger.h"
 
 class LogManager {
 public:

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../core/Entity.h"
+#include "seri/core/Entity.h"
 
 class Cube : public Entity {
 public:

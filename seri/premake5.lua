@@ -24,7 +24,7 @@ project "Seri"
   }
 
   includedirs {
-    "src/seri",
+    "src",
     "src/seri/core",
     "%{IncludeDir.glad}",
     "%{IncludeDir.GLFW}",

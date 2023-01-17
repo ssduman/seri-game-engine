@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Shader.h"
-#include "../camera/ICamera.h"
+#include "seri/shader/Shader.h"
+#include "seri/camera/ICamera.h"
 
 #include <memory>
 

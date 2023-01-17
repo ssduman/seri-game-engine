@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../event/IEvent.h"
+#include "seri/event/IEvent.h"
 
 class Object : public IEvent {
 public:

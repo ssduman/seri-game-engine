@@ -1,7 +1,7 @@
 #pragma once
 #pragma warning(disable: 4100)
 
-#include "IWindowManager.h"
+#include "seri/window/IWindowManager.h"
 
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>

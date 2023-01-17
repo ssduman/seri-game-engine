@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Scene.h"
+#include "seri/scene/Scene.h"
 
 #include <memory>
 #include <string>
