@@ -3,8 +3,8 @@ project "freetype"
   language "C"
   staticruntime "off"
 
-  targetdir ("bin/" .. outputdir .. "/%{prj.name}")
-  objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+  targetdir("bin/" .. outputdir .. "/%{prj.name}")
+  objdir("bin/int/" .. outputdir .. "/%{prj.name}")
 
   defines {
     "_LIB",

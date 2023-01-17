@@ -4,8 +4,8 @@ project "assimp"
   cppdialect "C++17"
   staticruntime "off"
 
-  targetdir ("bin/" .. outputdir .. "/%{prj.name}")
-  objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+  targetdir("bin/" .. outputdir .. "/%{prj.name}")
+  objdir("bin/int/" .. outputdir .. "/%{prj.name}")
 
   disablewarnings {
     "4244",
