@@ -5,7 +5,7 @@ project "Editor"
   staticruntime "off"
 
   targetdir("%{wks.location}/bin/" .. outputdir .. "/%{prj.name}")
-  objdir("%{wks.location}/bin-int/" .. outputdir .. "/%{prj.name}")
+  objdir("%{wks.location}/bin/int/" .. outputdir .. "/%{prj.name}")
 
   defines {
     "GLFW_INCLUDE_NONE",
@@ -22,8 +22,8 @@ project "Editor"
 
   includedirs {
     "src",
-    "%{wks.location}/engine/src",
-    "%{wks.location}/engine/vendor",
+    "%{wks.location}/seri/src",
+    "%{wks.location}/seri/vendor",
     "%{IncludeDir.glad}",
     "%{IncludeDir.GLFW}",
     "%{IncludeDir.glm}",
@@ -34,7 +34,7 @@ project "Editor"
   }
 
   links {
-    "Engine",
+    "Seri",
   }
 
   filter "system:windows"

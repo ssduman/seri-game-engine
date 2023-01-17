@@ -1,13 +1,13 @@
 #pragma once
 
-#include <core/Seri.h>
-#include <shape/Cube.h>
-#include <shape/Line.h>
-#include <shape/Point.h>
-#include <shape/Circle.h>
-#include <shape/Polygon.h>
-#include <shape/Triangle.h>
-#include <shape/Rectangle.h>
+#include <seri/core/Seri.h>
+#include <seri/shape/Cube.h>
+#include <seri/shape/Line.h>
+#include <seri/shape/Point.h>
+#include <seri/shape/Circle.h>
+#include <seri/shape/Polygon.h>
+#include <seri/shape/Triangle.h>
+#include <seri/shape/Rectangle.h>
 
 #include "camera/Camera.h"
 

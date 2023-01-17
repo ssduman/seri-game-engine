@@ -2,7 +2,7 @@
 
 #include "GameState.h"
 
-#include <core/Seri.h>
+#include <seri/core/Seri.h>
 
 enum class UserEventType {
     game_state,
