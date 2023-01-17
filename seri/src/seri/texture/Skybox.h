@@ -2,11 +2,9 @@
 
 #include "Texture.h"
 #include "../core/Object.h"
-#include "../core/AuxiliaryStructs.h"
-#include "../core/AuxiliaryStructsBuilder.h"
 #include "../camera/ICamera.h"
-#include "../renderer/IEngineBackend.h"
 #include "../renderer/OpenGLEngineBackend.h"
+#include "../renderer/AuxiliaryStructsBuilder.h"
 
 #include <memory>
 #include <vector>

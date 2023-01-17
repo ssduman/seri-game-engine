@@ -2,7 +2,6 @@
 
 #include "Object.h"
 #include "EntityType.h"
-#include "AuxiliaryStructs.h"
 #include "../math/Transform.h"
 #include "../camera/ICamera.h"
 #include "../logging/Logger.h"
@@ -10,7 +9,6 @@
 #include "../shader/ShaderManager.h"
 #include "../texture/Color.h"
 #include "../texture/Texture.h"
-#include "../renderer/IEngineBackend.h"
 #include "../renderer/OpenGLEngineBackend.h"
 
 #include <memory>

@@ -1,9 +1,9 @@
 #pragma once
 
 #include "IEngineBackend.h"
+#include "AuxiliaryStructs.h"
 #include "../logging/Logger.h"
 #include "../shader/ShaderManager.h"
-#include "../core/AuxiliaryStructs.h"
 
 #include <glad/gl.h>
 

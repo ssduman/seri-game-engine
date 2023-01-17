@@ -5,8 +5,6 @@
 #include "../core/Object.h"
 #include "../core/Entity.h"
 #include "../core/IRunner.h"
-#include "../core/AuxiliaryStructs.h"
-#include "../core/AuxiliaryStructsBuilder.h"
 
 #include "../scene/Layer.h"
 #include "../scene/Scene.h"
@@ -33,3 +31,4 @@
 #include "../window/WindowManagerFactory.h"
 
 #include "../renderer/OpenGLEngineBackend.h"
+#include "../renderer/AuxiliaryStructsBuilder.h"

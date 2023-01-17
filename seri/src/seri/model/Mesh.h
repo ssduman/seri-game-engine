@@ -2,7 +2,6 @@
 
 #include "Material.h"
 #include "../core/Object.h"
-#include "../core/AuxiliaryStructs.h"
 #include "../shader/Shader.h"
 #include "../shader/ShaderManager.h"
 #include "../texture/Texture.h"

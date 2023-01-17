@@ -2,11 +2,9 @@
 
 #include "../util/Util.h"
 #include "../core/Object.h"
-#include "../core/AuxiliaryStructs.h"
-#include "../core/AuxiliaryStructsBuilder.h"
 #include "../logging/Logger.h"
-#include "../renderer/IEngineBackend.h"
 #include "../renderer/OpenGLEngineBackend.h"
+#include "../renderer/AuxiliaryStructsBuilder.h"
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
