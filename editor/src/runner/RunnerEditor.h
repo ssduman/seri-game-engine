@@ -42,8 +42,8 @@ public:
             auto triangle1Scene = builder.setName("Triangle1").setObject(Factory::CreateEntity(camera, EntityType::triangle)).build();
             auto rectangle1Scene = builder.setName("Rectangle1").setObject(Factory::CreateEntity(camera, EntityType::rectangle)).build();
 
-            auto typer1 = std::make_shared<Typer>(windowManager->getWidth(), windowManager->getHeight(), "editor-assets/fonts/En Bloc.ttf");
-            typer1->getShader().init("editor-assets/shaders/typer_vs.shader", "editor-assets/shaders/typer_fs.shader");
+            auto typer1 = std::make_shared<Typer>(windowManager->getWidth(), windowManager->getHeight(), "assets/fonts/En Bloc.ttf");
+            typer1->getShader().init("assets/shaders/typer_vs.shader", "assets/shaders/typer_fs.shader");
             typer1->getShaderManager().setProjection(glm::ortho(0.0f, windowManager->getWidthF(), 0.0f, windowManager->getHeightF()));
             typer1->init();
             typer1->setText("hello, world!");
@@ -52,22 +52,22 @@ public:
             auto typer1Scene = builder.setName("Typer1").setObject(typer1).build();
 
             std::vector<std::string> face = {
-                "editor-assets/textures/skybox/right.jpg",
-                "editor-assets/textures/skybox/left.jpg",
-                "editor-assets/textures/skybox/bottom.jpg",
-                "editor-assets/textures/skybox/top.jpg",
-                "editor-assets/textures/skybox/front.jpg",
-                "editor-assets/textures/skybox/back.jpg",
+                "assets/textures/skybox/right.jpg",
+                "assets/textures/skybox/left.jpg",
+                "assets/textures/skybox/bottom.jpg",
+                "assets/textures/skybox/top.jpg",
+                "assets/textures/skybox/front.jpg",
+                "assets/textures/skybox/back.jpg",
             };
             auto skybox1 = std::make_shared<Skybox>(camera, face);
-            skybox1->getShader().init("editor-assets/shaders/skybox_vs.shader", "editor-assets/shaders/skybox_fs.shader");
+            skybox1->getShader().init("assets/shaders/skybox_vs.shader", "assets/shaders/skybox_fs.shader");
             skybox1->init();
             auto skybox1Scene = builder.setName("Skybox2").setObject(skybox1).build();
 
             auto model1 = std::make_shared<Model>(camera);
-            model1->getShader().init("editor-assets/shaders/entity_vs.shader", "editor-assets/shaders/entity_fs.shader");
+            model1->getShader().init("assets/shaders/entity_vs.shader", "assets/shaders/entity_fs.shader");
             model1->init();
-            model1->load("editor-assets/models/spider.obj");
+            model1->load("assets/models/spider.obj");
             model1->getTransform()._scale = glm::vec3{ 0.05f, 0.05f, 0.05f };
             model1->getTransform()._position = glm::vec3{ 180.0f, 20.0f, 500.0f };
             model1->getShaderManager().setModel(model1->getTransform().apply());
