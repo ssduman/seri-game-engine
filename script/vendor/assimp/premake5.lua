@@ -2,7 +2,7 @@ project "assimp"
   kind "StaticLib"
   language "C++"
   cppdialect "C++17"
-  staticruntime "off"
+  staticruntime "Off"
 
   targetdir("bin/" .. outputdir .. "/%{prj.name}")
   objdir("bin/int/" .. outputdir .. "/%{prj.name}")
@@ -114,8 +114,8 @@ project "assimp"
 
   filter "configurations:Debug"
     runtime "Debug"
-    symbols "on"
+    symbols "On"
 
   filter "configurations:Release"
     runtime "Release"
-    optimize "on"
+    optimize "On"
