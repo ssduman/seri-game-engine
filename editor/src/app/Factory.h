@@ -1,5 +1,7 @@
 #pragma once
 
+#include "camera/Camera.h"
+
 #include <seri/core/Seri.h>
 #include <seri/shape/Cube.h>
 #include <seri/shape/Line.h>
@@ -9,7 +11,7 @@
 #include <seri/shape/Triangle.h>
 #include <seri/shape/Rectangle.h>
 
-#include "camera/Camera.h"
+#include <glm/gtc/random.hpp>
 
 #include <ctime>
 #include <memory>

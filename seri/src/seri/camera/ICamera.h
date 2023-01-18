@@ -5,6 +5,10 @@
 #include "seri/logging/Logger.h"
 #include "seri/camera/CameraProperties.h"
 
+#include <glm/glm.hpp>
+#include <glm/gtx/transform.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 #include <memory>
 
 class ICamera : public Object {
