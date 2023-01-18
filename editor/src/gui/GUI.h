@@ -226,6 +226,9 @@ private:
                         auto parentWeak = scene->getParent();
                         if (auto parent = parentWeak.lock()) {
                             parent->remove(scene);
+                            ImGui::EndPopup();
+                            ImGui::TreePop();
+                            break;
                         }
                     }
 
@@ -263,7 +266,7 @@ private:
         if (show_entity_window) {
             auto windowFlags = 0;
             windowFlags |= ImGuiWindowFlags_MenuBar;
-            if (!ImGui::Begin("Maze", &show_entity_window, windowFlags)) {
+            if (!ImGui::Begin("Components", &show_entity_window, windowFlags)) {
                 ImGui::End();
                 return;
             }
