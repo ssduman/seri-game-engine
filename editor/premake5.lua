@@ -37,6 +37,10 @@ project "Editor"
     "Seri",
   }
 
+  postbuildcommands {
+    "{COPYDIR} %{prj.location}assets %{cfg.buildtarget.directory}assets",
+  }
+
   filter "system:windows"
     systemversion "latest"
 
