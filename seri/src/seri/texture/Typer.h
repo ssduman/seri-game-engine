@@ -31,7 +31,7 @@ public:
     }
 
     ~Typer() override {
-        //_engineBackend.release();
+        _engineBackend.release();
         delete _face;
     }
 

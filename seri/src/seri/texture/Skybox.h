@@ -14,7 +14,9 @@ public:
     Skybox(std::shared_ptr<ICamera> camera, std::vector<std::string> faces)
         : _camera(camera), _faces(std::move(faces)) {}
 
-    ~Skybox() override {}
+    ~Skybox() override {
+        _engineBackend.release();
+    }
 
     void init() override {
         initMVP();
