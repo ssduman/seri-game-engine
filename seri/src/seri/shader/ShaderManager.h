@@ -21,9 +21,16 @@ public:
 
     ~ShaderManager() = default;
 
-    void initMVP(std::shared_ptr<ICamera> camera) {
+    void initMVP(const std::shared_ptr<ICamera>& camera) {
         ShaderManager::Use(_shader);
         ShaderManager::SetMat4(_shader, "u_model", glm::mat4{ 1.0f });
+        ShaderManager::SetMat4(_shader, "u_view", camera->getView());
+        ShaderManager::SetMat4(_shader, "u_projection", camera->getProjection());
+        ShaderManager::Disuse();
+    }
+
+    void initVP(const std::shared_ptr<ICamera>& camera) {
+        ShaderManager::Use(_shader);
         ShaderManager::SetMat4(_shader, "u_view", camera->getView());
         ShaderManager::SetMat4(_shader, "u_projection", camera->getProjection());
         ShaderManager::Disuse();
@@ -60,15 +67,8 @@ public:
     }
 
     void setColor(const glm::vec4& color) {
-        useColor(true);
         ShaderManager::Use(_shader);
         ShaderManager::SetVec4(_shader, "u_color", color);
-        ShaderManager::Disuse();
-    }
-
-    void useColor(bool flag) {
-        ShaderManager::Use(_shader);
-        ShaderManager::SetBool(_shader, "u_useColor", flag);
         ShaderManager::Disuse();
     }
 
@@ -84,18 +84,24 @@ public:
         ShaderManager::Disuse();
     }
 
-    static void Use(const Shader& shader) {
-        const auto program = shader.getProgram();
-        if (program == 0) {
-            LOGGER(error, "shader is not active");
-            return;
-        }
+    static Shader Create() {
+        return Shader{};
+    }
 
-        glUseProgram(program);
+    static void Init(Shader& shader, const char* vsCodePath, const char* fsCodePath, bool readFromFile = true) {
+        shader.init(vsCodePath, fsCodePath, readFromFile);
+    }
+
+    static void Use(Shader& shader) {
+        shader.use();
     }
 
     static void Disuse() {
         glUseProgram(0);
+    }
+
+    static void Disuse(Shader& shader) {
+        shader.disuse();
     }
 
     static int GetUniformLocation(const Shader& shader, const char* name) {
