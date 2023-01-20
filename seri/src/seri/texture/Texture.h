@@ -9,13 +9,13 @@ class Texture {
 public:
     Texture() = default;
 
-    Texture(Texture&& other) = default;
-
     Texture(Texture& other) = default;
 
-    Texture& operator=(Texture&& other) = default;
+    Texture(Texture&& other) = default;
 
     Texture& operator=(Texture& other) = default;
+
+    Texture& operator=(Texture&& other) = default;
 
     ~Texture() {
         unbind();
