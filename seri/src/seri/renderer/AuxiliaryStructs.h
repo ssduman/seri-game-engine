@@ -4,6 +4,7 @@
 
 #include <vector>
 
+// enum class
 namespace aux {
     enum class Dimension : int {
         two_d = 2,
@@ -59,7 +60,10 @@ namespace aux {
         write = GL_WRITE_ONLY,
         read_write = GL_READ_WRITE,
     };
+}
 
+// function
+namespace aux {
     template<typename T>
     int length(const typename std::vector<T>& vec) {
         return static_cast<int>(T::length());
@@ -104,7 +108,10 @@ namespace aux {
     auto toGLenum(Enumeration const value) -> typename std::underlying_type<Enumeration>::type {
         return static_cast<typename std::underlying_type<Enumeration>::type>(value);
     }
+}
 
+// struct
+namespace aux {
     struct Attribute {
         Attribute() = default;
 
