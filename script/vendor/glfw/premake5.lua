@@ -16,6 +16,8 @@ project "GLFW"
     "src/monitor.c",
     "src/vulkan.c",
     "src/window.c",
+    "src/*.c",
+    "src/*.h",
   }
 
   includedirs {
@@ -28,6 +30,7 @@ project "GLFW"
     files {
       "src/win32_init.c",
       "src/win32_joystick.c",
+      "src/win32_module.c",
       "src/win32_monitor.c",
       "src/win32_time.c",
       "src/win32_thread.c",

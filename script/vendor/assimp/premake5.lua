@@ -15,6 +15,7 @@ project "assimp"
   files {
     "code/CApi/**",
     "code/Common/**",
+    "code/Geometry/**",
     "code/Material/**",
     "code/AssetLib/Obj/**",
     "code/PostProcessing/**",
@@ -22,6 +23,7 @@ project "assimp"
     "contrib/zlib/*",
     "contrib/unzip/**",
     "contrib/irrXML/**",
+    "contrib/utf8cpp/source/**",
   }
 
   defines {
@@ -78,6 +80,7 @@ project "assimp"
     "ASSIMP_BUILD_NO_MMD_IMPORTER",
     "ASSIMP_BUILD_NO_M3D_IMPORTER",
     "ASSIMP_BUILD_NO_IQM_IMPORTER",
+    "ASSIMP_BUILD_NO_USD_IMPORTER",
     
     "ASSIMP_BUILD_NO_COLLADA_EXPORTER",
     "ASSIMP_BUILD_NO_X_EXPORTER",
@@ -102,6 +105,7 @@ project "assimp"
     "contrib/unzip/",
     "contrib/irrXML/",
     "contrib/pugixml/src/",
+    "contrib/utf8cpp/source",
     "contrib/rapidjson/include/",
     "code/",
     "include/",

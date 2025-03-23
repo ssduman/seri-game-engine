@@ -7,13 +7,14 @@ project "Editor"
   targetdir("%{wks.location}/bin/" .. outputdir .. "/%{prj.name}")
   objdir("%{wks.location}/bin/int/" .. outputdir .. "/%{prj.name}")
 
-  defines {
-    "GLFW_INCLUDE_NONE",
-  }
-  
   files {
     "src/**.h",
     "src/**.cpp",
+  }
+
+  defines {
+    "GLFW_INCLUDE_NONE",
+    "GLM_ENABLE_EXPERIMENTAL",
   }
 
   linkoptions {

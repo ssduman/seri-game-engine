@@ -24,7 +24,7 @@ workspace "Seri Game Engine"
   group ""
 
   group "Misc"
-    include "mics/mics"
+    -- include "mics/mics"
     -- include "mics/maze"
     -- include "mics/snake"
     -- include "mics/tetris"

@@ -12,7 +12,9 @@ project "Mics"
     "src/**.cpp",
   }
 
-  defines {}
+  defines {
+    "GLFW_INCLUDE_NONE",
+  }
 
   linkoptions {
     "-IGNORE:4098",
@@ -28,6 +30,7 @@ project "Mics"
     "%{IncludeDir.stb}",
     "%{IncludeDir.ImGui}",
     "%{IncludeDir.assimp}",
+    "%{IncludeDir.freetype}",
   }
 
   links {

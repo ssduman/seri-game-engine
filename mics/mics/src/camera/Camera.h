@@ -1,6 +1,6 @@
 #pragma once
 
-#include <core/Seri.h>
+#include <seri/core/Seri.h>
 
 class Camera : public ICamera {
 public:

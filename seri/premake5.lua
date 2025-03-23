@@ -21,6 +21,7 @@ project "Seri"
 
   defines {
     "GLFW_INCLUDE_NONE",
+    "GLM_ENABLE_EXPERIMENTAL",
   }
 
   includedirs {
