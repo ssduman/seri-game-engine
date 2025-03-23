@@ -5,8 +5,8 @@ in vec2 sent_texCoord;
 
 uniform vec4 u_color = vec4(1.0, 1.0, 1.0, 1.0);
 uniform sampler2D u_texture;
-uniform bool u_useColors = false;
-uniform bool u_useTexture = false;
+uniform bool u_useColors = true;
+uniform bool u_useTexture = true;
 
 out vec4 final_color;
 

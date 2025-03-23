@@ -14,6 +14,10 @@
 
 #include "seri/model/Model.h"
 
+#include "seri/graphic/MeshG.h"
+#include "seri/graphic/Graphic.h"
+#include "seri/graphic/MaterialG.h"
+
 #include "seri/logging/Logger.h"
 
 #include "seri/camera/ICamera.h"

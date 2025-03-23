@@ -8,7 +8,7 @@
 
 struct EventDispatcher {
     void operator()(const std::shared_ptr<IScene>& rootScene, IEventData& data) {
-        LOGGER(info, "event: " << data.toString());
+        //LOGGER(info, "event: " << data.toString());
         switch (data.eventType) {
             case EventType::key:
             {

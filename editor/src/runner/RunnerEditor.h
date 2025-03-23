@@ -36,8 +36,10 @@ public:
         auto camera = std::make_shared<Camera>(std::move(cameraProperties));
         camera->init();
 
+        auto cameraScene = builder.setName("Camera").setObject(camera).build();
+        rootScene->add(cameraScene);
+
         if (_showDemoScene) {
-            auto cameraScene = builder.setName("Camera").setObject(camera).build();
             auto circle1Scene = builder.setName("Circle1").setObject(Factory::CreateEntity(camera, EntityType::circle)).build();
             auto triangle1Scene = builder.setName("Triangle1").setObject(Factory::CreateEntity(camera, EntityType::triangle)).build();
             auto rectangle1Scene = builder.setName("Rectangle1").setObject(Factory::CreateEntity(camera, EntityType::rectangle)).build();
@@ -80,7 +82,6 @@ public:
             auto component4Scene = builder.setName("Model1").add(model1Scene).build();
             auto component5Scene = builder.setName("Skybox1").add(skybox1Scene).build();
 
-            rootScene->add(cameraScene);
             rootScene->add(component1Scene);
             rootScene->add(component2Scene);
             rootScene->add(component3Scene);
@@ -91,6 +92,25 @@ public:
         auto gui = std::make_shared<GUI>(camera, rootScene);
         gui->init();
 
+        auto graphic = std::make_shared<Graphic>();
+
+        auto quad1Mesh = MeshG::quad1();
+        auto quad2Mesh = MeshG::quad2();
+        auto cube1Mesh = MeshG::cube1();
+        auto cube2Mesh = MeshG::cube2();
+        auto triangleMesh = MeshG::triangle();
+
+        auto entityShader = std::make_shared<Shader>();
+        entityShader->init("assets/shaders/entity_vs.shader", "assets/shaders/entity_fs.shader");
+
+        Texture::setTextureFlip(true);
+        auto passageTexture = std::make_shared<Texture>();
+        passageTexture->init("assets/textures/passage.png");
+
+        auto material = std::make_shared<MaterialG>();
+        material->shader = entityShader;
+        material->texture = passageTexture;
+
         LOGGER(info, "starting seri game engine - editor loop");
 
         while (!windowManager->windowShouldClose()) {
@@ -98,10 +118,20 @@ public:
             windowManager->clearColor();
             windowManager->updateDeltaTime();
 
+            /*
             SceneIterator iter(rootScene);
             for (auto& s : iter) {
                 s->draw();
             }
+            */
+
+            camera->update();
+
+            //graphic->draw(quad1Mesh, glm::mat4{1.0f}, material, camera);
+            graphic->draw(quad2Mesh, glm::mat4{1.0f}, material, camera);
+            //graphic->draw(triangleMesh, glm::mat4{1.0f}, material, camera);
+            //graphic->draw(cube1Mesh, glm::mat4{1.0f}, material, camera);
+            //graphic->draw(cube2Mesh, glm::mat4{1.0f}, material, camera);
 
             gui->display();
 
@@ -113,6 +143,6 @@ public:
     }
 
 private:
-    bool _showDemoScene{ true };
+    bool _showDemoScene{ false };
 
 };

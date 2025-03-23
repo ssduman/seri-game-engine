@@ -1,7 +1,7 @@
 #pragma once
 
-#include <core/Seri.h>
-#include <model/Model.h>
+#include <seri/core/Seri.h>
+#include <seri/model/Model.h>
 
 #include "camera/Camera.h"
 #include "control/Control.h"

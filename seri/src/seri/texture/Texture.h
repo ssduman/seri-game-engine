@@ -1,6 +1,7 @@
 #pragma once
 
 #include "seri/logging/Logger.h"
+#include "seri/renderer/AuxiliaryStructs.h"
 
 #include <glad/gl.h>
 #include <stb_image.h>
@@ -50,12 +51,12 @@ public:
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 
-    static unsigned char* loadTexture(const std::string& texturePath, int& width, int& height, int& components, int req_comp) {
-        return stbi_load(texturePath.c_str(), &width, &height, &components, req_comp);
+    static unsigned char* loadTexture(const std::string& texturePath, int& width, int& height, int& components, int reqComp) {
+        return stbi_load(texturePath.c_str(), &width, &height, &components, reqComp);
     }
 
-    static unsigned char* loadTexture(const void* data, unsigned int size, int& width, int& height, int& components, int req_comp) {
-        return stbi_load_from_memory((const stbi_uc*)data, size, &width, &height, &components, req_comp);
+    static unsigned char* loadTexture(const void* data, unsigned int size, int& width, int& height, int& components, int reqComp) {
+        return stbi_load_from_memory((const stbi_uc*)data, size, &width, &height, &components, reqComp);
     }
 
     static void setTextureFlip(bool flip) {
@@ -68,23 +69,34 @@ public:
 
 private:
     void init(unsigned char* image, int width, int height, int components) {
-        GLenum format = GL_RED;
+        aux::TextureFormat format = aux::TextureFormat::red;
         if (components == 3) {
-            format = GL_RGB;
+            format = aux::TextureFormat::rgb;
         }
         if (components == 4) {
-            format = GL_RGBA;
+            format = aux::TextureFormat::rgba;
         }
 
         generate();
         bind();
 
-        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, image);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-        glGenerateMipmap(GL_TEXTURE_2D);
+        aux::Texture texture{};
+        texture.target = aux::toGLenum(aux::TextureTarget::two_d);
+        texture.level = 0;
+        texture.internalformat = aux::toGLenum(format);
+        texture.width = width;
+        texture.height = height;
+        texture.border = 0;
+        texture.format = aux::toGLenum(format);
+        texture.type = aux::toGLenum(aux::Type::ubyte_type);
+        texture.pixels = image;
+
+        glTexImage2D(texture.target, texture.level, texture.format, texture.width, texture.height, texture.border, texture.format, texture.type, texture.pixels);
+        glTexParameteri(texture.target, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(texture.target, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(texture.target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(texture.target, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glGenerateMipmap(texture.target);
 
         unbind();
         unloadTexture(image);

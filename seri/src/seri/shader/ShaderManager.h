@@ -21,6 +21,14 @@ public:
 
     ~ShaderManager() = default;
 
+    void setTRS(Shader& shader, const std::shared_ptr<ICamera>& camera) {
+        ShaderManager::Use(shader);
+        ShaderManager::SetMat4(shader, "u_model", glm::mat4{ 1.0f });
+        ShaderManager::SetMat4(shader, "u_view", camera->getView());
+        ShaderManager::SetMat4(shader, "u_projection", camera->getProjection());
+        ShaderManager::Disuse();
+    }
+
     void initMVP(const std::shared_ptr<ICamera>& camera) {
         ShaderManager::Use(_shader);
         ShaderManager::SetMat4(_shader, "u_model", glm::mat4{ 1.0f });
@@ -96,6 +104,10 @@ public:
         shader.use();
     }
 
+    static void Use(const std::shared_ptr<Shader>& shader) {
+        shader->use();
+    }
+
     static void Disuse() {
         glUseProgram(0);
     }
@@ -106,6 +118,10 @@ public:
 
     static int GetUniformLocation(const Shader& shader, const char* name) {
         return glGetUniformLocation(shader.getProgram(), name);
+    }
+
+    static int GetUniformLocation(const std::shared_ptr<Shader>& shader, const char* name) {
+        return glGetUniformLocation(shader->getProgram(), name);
     }
 
     static void SetBool(const Shader& shader, const char* name, bool val) {
@@ -136,6 +152,9 @@ public:
         glUniformMatrix4fv(ShaderManager::GetUniformLocation(shader, name), 1, GL_FALSE, &val[0][0]);
     }
 
+    static void SetMat4(const std::shared_ptr<Shader>& shader, const char* name, const glm::mat4& val) {
+        glUniformMatrix4fv(ShaderManager::GetUniformLocation(shader, name), 1, GL_FALSE, &val[0][0]);
+    }
 private:
     Shader& _shader;
 

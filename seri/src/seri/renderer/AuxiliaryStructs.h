@@ -60,12 +60,87 @@ namespace aux {
         write = GL_WRITE_ONLY,
         read_write = GL_READ_WRITE,
     };
+
+    enum class Component : GLenum {
+        one = 1,
+        two = 2,
+        three = 3,
+        four = 4,
+        bgra = GL_BGRA,
+    };
+
+    enum class TextureTarget : GLenum {
+        two_d = GL_TEXTURE_2D,
+        three_d = GL_TEXTURE_3D,
+        cube_map = GL_TEXTURE_CUBE_MAP,
+        cube_map_negative_x = GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
+        cube_map_negative_y = GL_TEXTURE_CUBE_MAP_NEGATIVE_Y,
+        cube_map_negative_z = GL_TEXTURE_CUBE_MAP_NEGATIVE_Z,
+        cube_map_positive_x = GL_TEXTURE_CUBE_MAP_POSITIVE_X,
+        cube_map_positive_y = GL_TEXTURE_CUBE_MAP_POSITIVE_Y,
+        cube_map_positive_z = GL_TEXTURE_CUBE_MAP_POSITIVE_Z,
+    };
+
+    enum class TextureFormat : GLenum {
+        red = GL_RED,
+        rgb = GL_RGB,
+        rgba = GL_RGBA,
+        srgb = GL_SRGB,
+        srgba = GL_SRGB_ALPHA,
+    };
+
+    enum class TextureParamName : GLenum {
+        depth_stencil_mode = GL_DEPTH_STENCIL_TEXTURE_MODE,
+        base_level = GL_TEXTURE_BASE_LEVEL,
+        compare_func = GL_TEXTURE_COMPARE_FUNC,
+        compare_mode = GL_TEXTURE_COMPARE_MODE,
+        lod_bias = GL_TEXTURE_LOD_BIAS,
+        min_filter = GL_TEXTURE_MIN_FILTER,
+        mag_filter = GL_TEXTURE_MAG_FILTER,
+        min_lod = GL_TEXTURE_MIN_LOD,
+        max_lod = GL_TEXTURE_MAX_LOD,
+        max_level = GL_TEXTURE_MAX_LEVEL,
+        swizzle_r = GL_TEXTURE_SWIZZLE_R,
+        swizzle_g = GL_TEXTURE_SWIZZLE_G,
+        swizzle_b = GL_TEXTURE_SWIZZLE_B,
+        swizzle_a = GL_TEXTURE_SWIZZLE_A,
+        wrap_s = GL_TEXTURE_WRAP_S,
+        wrap_t = GL_TEXTURE_WRAP_T,
+        wrap_r = GL_TEXTURE_WRAP_R,
+    };
+
+    enum class TextureWrap : GLenum {
+        clamp_to_edge = GL_CLAMP_TO_EDGE,
+        clamp_to_border = GL_CLAMP_TO_BORDER,
+        repeat = GL_REPEAT,
+        mirrored_repeat = GL_MIRRORED_REPEAT,
+        mirror_clamp_to_edge = GL_MIRROR_CLAMP_TO_EDGE,
+    };
+
+    enum class TextureMinFilter : GLenum {
+        linear = GL_LINEAR,
+        nearest = GL_NEAREST,
+        linear_mipmap_linear = GL_LINEAR_MIPMAP_LINEAR,
+        nearest_mipmap_linear = GL_NEAREST_MIPMAP_LINEAR,
+        linear_mipmap_nearest = GL_LINEAR_MIPMAP_NEAREST,
+        nearest_mipmap_nearest = GL_NEAREST_MIPMAP_NEAREST,
+    };
+
+    enum class TextureMagFilter : GLenum {
+        linear = GL_LINEAR,
+        nearest = GL_NEAREST,
+    };
 }
 
 // function
 namespace aux {
     template<typename T>
     int length(const typename std::vector<T>& vec) {
+        return static_cast<int>(T::length());
+    }
+
+    template<typename T>
+    int component(const typename std::vector<T>& vec) {
         return static_cast<int>(T::length());
     }
 
@@ -203,4 +278,30 @@ namespace aux {
         size_t size = 0;
         const void* data = nullptr;
     };
+
+    struct Texture {
+        GLenum target;
+        GLint level;
+        GLint internalformat;
+        GLsizei width;
+        GLsizei height;
+        GLint border;
+        GLenum format;
+        GLenum type;
+        const void* pixels;
+    };
+
+    struct DrawElement {
+        GLenum mode;
+        GLsizei count;
+        GLenum type;
+        const void* indices;
+    };
+
+    struct DrawArray {
+        GLenum mode;
+        GLint first;
+        GLsizei count;
+    };
+
 }

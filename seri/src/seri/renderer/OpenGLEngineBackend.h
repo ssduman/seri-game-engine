@@ -53,12 +53,12 @@ public:
     }
 
     template<typename T>
-    void setDataBuffer(aux::Index index, const typename std::vector<T>& vec, GLintptr offset = 0) {
+    void setDataBuffer(aux::Index index, const typename std::vector<T>& vec, const void * pointer = nullptr) {
         indexCheck(index, vec);
 
         bind();
         dataBuffer({ aux::size(vec), aux::data(vec) });
-        attribute({ index, aux::length(vec), (const void*)offset });
+        attribute({ index, aux::length(vec), pointer });
         enable(index);
         unbind();
     }
@@ -88,7 +88,7 @@ public:
     }
 
     template<typename T>
-    void setSubDataBuffer(aux::Index index, const typename std::vector<T>& vec, GLintptr offset) {
+    void setSubDataBuffer(aux::Index index, const typename std::vector<T>& vec, GLintptr offset, const void* pointer = nullptr) {
         indexCheck(index, vec);
 
         bind();

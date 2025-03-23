@@ -37,9 +37,11 @@ public:
 
         initglad();
         logInfoStrings();
+        enableDebugOutput();
 
         glEnable(GL_BLEND);
         glEnable(GL_DEPTH_TEST);
+        //glEnable(GL_FRAMEBUFFER_SRGB);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         setWindowUserPointer(static_cast<void*>(this));
@@ -366,7 +368,7 @@ private:
         glfwSetWindowPosCallback(_window,
             [](GLFWwindow* window, int xpos, int ypos) {
                 if (auto windowManager = static_cast<WindowsWindowManager*>(glfwGetWindowUserPointer(window))) {
-                    LOGGER(verbose, "window new position: " << xpos << ", " << ypos);
+                    //LOGGER(verbose, "window new position: " << xpos << ", " << ypos);
                 }
             }
         );
@@ -382,7 +384,7 @@ private:
         glfwSetWindowRefreshCallback(_window,
             [](GLFWwindow* window) {
                 if (auto windowManager = static_cast<WindowsWindowManager*>(glfwGetWindowUserPointer(window))) {
-                    LOGGER(verbose, "window refresh");
+                    //LOGGER(verbose, "window refresh");
                 }
             }
         );
@@ -435,7 +437,6 @@ private:
     }
 
     void enableDebugOutput() {
-        /*
         static const auto getDebugSourceString = [](GLenum source) {
             if (source == GL_DEBUG_SOURCE_API) {
                 return "Calls to the OpenGL API";
@@ -520,7 +521,6 @@ private:
             },
             nullptr
         );
-        */
     }
 
     void disableDebugOutput() {
