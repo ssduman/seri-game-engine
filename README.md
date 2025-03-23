@@ -8,6 +8,7 @@
 * [freetype](https://www.freetype.org)
 * [assimp](https://github.com/assimp/assimp)
 * [ImGui](https://github.com/ocornut/imgui)
+* [Premake](https://github.com/premake/premake-core)
 ## Build: ##
 * Run `git clone --recursive https://github.com/ssduman/seri-game-engine`
 * Double click to `generate.bat` (this generates solution files)
