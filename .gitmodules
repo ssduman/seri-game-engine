@@ -1,18 +1,24 @@
 [submodule "seri/vendor/glfw"]
 	path = seri/vendor/glfw
 	url = https://github.com/glfw/glfw.git
+	ignore = dirty
 [submodule "seri/vendor/stb"]
 	path = seri/vendor/stb
 	url = https://github.com/nothings/stb.git
+	ignore = dirty
 [submodule "seri/vendor/glm"]
 	path = seri/vendor/glm
 	url = https://github.com/g-truc/glm.git
+	ignore = dirty
 [submodule "seri/vendor/freetype"]
 	path = seri/vendor/freetype
 	url = https://github.com/freetype/freetype
+	ignore = dirty
 [submodule "seri/vendor/assimp"]
 	path = seri/vendor/assimp
 	url = https://github.com/assimp/assimp.git
+	ignore = dirty
 [submodule "seri/vendor/imgui"]
 	path = seri/vendor/imgui
 	url = https://github.com/ocornut/imgui.git
+	ignore = dirty
