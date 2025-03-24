@@ -1,8 +1,9 @@
 #pragma once
 
-class IRunner {
+class IRunner
+{
 public:
-    IRunner() = default;
+	IRunner() = default;
 
-    virtual ~IRunner() = default;
+	virtual ~IRunner() = default;
 };

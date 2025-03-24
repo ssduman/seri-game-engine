@@ -1,14 +1,15 @@
 #pragma once
 
-namespace seri {
+namespace seri
+{
+	struct Random
+	{
+		Random();
 
-    struct Random {
-        Random();
+		unsigned long long get();
 
-        unsigned long long get();
+	private:
+		unsigned long long _random;
 
-    private:
-        unsigned long long _random;
-
-    };
+	};
 }

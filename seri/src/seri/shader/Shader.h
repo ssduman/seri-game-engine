@@ -10,129 +10,150 @@
 #include <sstream>
 #include <iostream>
 
-class Shader {
+class Shader
+{
 public:
-    Shader() = default;
+	Shader() = default;
 
-    Shader(Shader& other) = default;
+	Shader(Shader& other) = default;
 
-    Shader(Shader&& other) = default;
+	Shader(Shader&& other) = default;
 
-    Shader& operator=(Shader& other) = default;
+	Shader& operator=(Shader& other) = default;
 
-    Shader& operator=(Shader&& other) = default;
+	Shader& operator=(Shader&& other) = default;
 
-    ~Shader() = default;
+	~Shader() = default;
 
-    void init(const char* vsCodePath, const char* fsCodePath, bool readFromFile = true) {
-        unsigned int vertexShader = compileShader(GL_VERTEX_SHADER, vsCodePath, readFromFile);
-        unsigned int fragmentShader = compileShader(GL_FRAGMENT_SHADER, fsCodePath, readFromFile);
+	void init(const char* vsCodePath, const char* fsCodePath, bool readFromFile = true)
+	{
+		unsigned int vertexShader = compileShader(GL_VERTEX_SHADER, vsCodePath, readFromFile);
+		unsigned int fragmentShader = compileShader(GL_FRAGMENT_SHADER, fsCodePath, readFromFile);
 
-        _program = glCreateProgram();
-        glAttachShader(_program, vertexShader);
-        glAttachShader(_program, fragmentShader);
-        glLinkProgram(_program);
-        glDeleteShader(vertexShader);
-        glDeleteShader(fragmentShader);
+		_program = glCreateProgram();
+		glAttachShader(_program, vertexShader);
+		glAttachShader(_program, fragmentShader);
+		glLinkProgram(_program);
+		glDeleteShader(vertexShader);
+		glDeleteShader(fragmentShader);
 
-        checkProgramLinkingError();
-    }
+		checkProgramLinkingError();
+	}
 
-    void use() {
-        if (!isActiveForUsing()) {
-            LOGGER(error, "shader is not active");
-            return;
-        }
+	void use()
+	{
+		if (!isActiveForUsing())
+		{
+			LOGGER(error, "shader is not active");
+			return;
+		}
 
-        glUseProgram(_program);
-    }
+		glUseProgram(_program);
+	}
 
-    void disuse() {
-        glUseProgram(0);
-    }
+	void disuse()
+	{
+		glUseProgram(0);
+	}
 
-    void release() {
-        if (_program != 0) {
-            LOGGER(verbose, "deleted shader: " << _program);
-            disuse();
-            del();
-        }
-    }
+	void release()
+	{
+		if (_program != 0)
+		{
+			LOGGER(verbose, "deleted shader: " << _program);
+			disuse();
+			del();
+		}
+	}
 
-    unsigned int getProgram() {
-        return _program;
-    }
+	unsigned int getProgram()
+	{
+		return _program;
+	}
 
-    const unsigned int getProgram() const {
-        return _program;
-    }
+	const unsigned int getProgram() const
+	{
+		return _program;
+	}
 
 private:
-    unsigned int compileShader(GLenum type, const char* code, bool readFromFile) {
-        unsigned int shader = glCreateShader(type);
-        auto codeCStr = code;
-        std::string codeStr;
-        if (readFromFile) {
-            codeStr = readShaderCode(code);
-            codeCStr = codeStr.c_str();
-        }
-        glShaderSource(shader, 1, &codeCStr, nullptr);
-        glCompileShader(shader);
-        checkShaderCompilationError(shader);
-        return shader;
-    }
+	unsigned int compileShader(GLenum type, const char* code, bool readFromFile)
+	{
+		unsigned int shader = glCreateShader(type);
+		auto codeCStr = code;
+		std::string codeStr;
+		if (readFromFile)
+		{
+			codeStr = readShaderCode(code);
+			codeCStr = codeStr.c_str();
+		}
+		glShaderSource(shader, 1, &codeCStr, nullptr);
+		glCompileShader(shader);
+		checkShaderCompilationError(shader);
+		return shader;
+	}
 
-    std::string readShaderCode(const char* shaderCodePath) {
-        try {
-            std::stringstream ss;
-            std::ifstream shaderFile(shaderCodePath);
-            if (shaderFile.is_open()) {
-                ss << shaderFile.rdbuf();
-                shaderFile.close();
-            }
-            return ss.str();
-        }
-        catch (const std::exception& ex) {
-            LOGGER(error, "exception occurred while reading shader code: " << ex.what());
-            return std::string{};
-        }
-    }
+	std::string readShaderCode(const char* shaderCodePath)
+	{
+		try
+		{
+			std::stringstream ss;
+			std::ifstream shaderFile(shaderCodePath);
+			if (shaderFile.is_open())
+			{
+				ss << shaderFile.rdbuf();
+				shaderFile.close();
+			}
+			return ss.str();
+		}
+		catch (const std::exception& ex)
+		{
+			LOGGER(error, "exception occurred while reading shader code: " << ex.what());
+			return std::string{};
+		}
+	}
 
-    bool checkShaderCompilationError(unsigned int shader) {
-        int errorStatusSuccess;
-        char errorStatusLog[512];
-        glGetShaderiv(shader, GL_COMPILE_STATUS, &errorStatusSuccess);
-        if (!errorStatusSuccess) {
-            glGetShaderInfoLog(shader, 512, nullptr, errorStatusLog);
-            LOGGER(error, "shader compilation failed: " << errorStatusLog);
-            return false;
-        }
+	bool checkShaderCompilationError(unsigned int shader)
+	{
+		int errorStatusSuccess;
+		char errorStatusLog[512];
+		glGetShaderiv(shader, GL_COMPILE_STATUS, &errorStatusSuccess);
+		if (!errorStatusSuccess)
+		{
+			glGetShaderInfoLog(shader, 512, nullptr, errorStatusLog);
+			LOGGER(error, "shader compilation failed: " << errorStatusLog);
+			return false;
+		}
 
-        return true;
-    }
+		return true;
+	}
 
-    bool checkProgramLinkingError() {
-        int errorStatusSuccess;
-        char errorStatusLog[512];
-        glGetProgramiv(_program, GL_LINK_STATUS, &errorStatusSuccess);
-        if (!errorStatusSuccess) {
-            glGetShaderInfoLog(_program, 512, nullptr, errorStatusLog);
-            LOGGER(error, "program linking failed: " << errorStatusLog);
-            return false;
-        }
+	bool checkProgramLinkingError()
+	{
+		int errorStatusSuccess;
+		char errorStatusLog[512];
+		glGetProgramiv(_program, GL_LINK_STATUS, &errorStatusSuccess);
+		if (!errorStatusSuccess)
+		{
+			glGetShaderInfoLog(_program, 512, nullptr, errorStatusLog);
+			LOGGER(error, "program linking failed: " << errorStatusLog);
+			return false;
+		}
 
-        return true;
-    }
+		return true;
+	}
 
-    bool isActiveForUsing() {
-        return _program != 0;
-    }
+	bool isActiveForUsing()
+	{
+		return _program != 0;
+	}
 
-    void del() {
-        glDeleteProgram(_program);
-        _program = 0;
-    }
+	void del()
+	{
+		glDeleteProgram(_program);
+		_program = 0;
+	}
 
-    unsigned int _program{ 0 };
+	unsigned int _program{ 0 };
 
 };

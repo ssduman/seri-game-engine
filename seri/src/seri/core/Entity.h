@@ -15,65 +15,75 @@
 #include <string>
 #include <vector>
 
-class Entity : public Object {
+class Entity : public Object
+{
 public:
-    Entity() = delete;
+	Entity() = delete;
 
-    Entity(std::shared_ptr<ICamera> camera) : _camera(camera) {}
+	Entity(std::shared_ptr<ICamera> camera) : _camera(camera) {}
 
-    Entity(Entity&& other) = default;
+	Entity(Entity&& other) = default;
 
-    Entity(const Entity& other) = delete;
+	Entity(const Entity& other) = delete;
 
-    Entity& operator=(Entity&& other) = default;
+	Entity& operator=(Entity&& other) = default;
 
-    Entity& operator=(const Entity& other) = delete;
+	Entity& operator=(const Entity& other) = delete;
 
-    ~Entity() override {
-        _engineBackend.release();
-    }
+	~Entity() override
+	{
+		_engineBackend.release();
+	}
 
-    void init() override {
-        _shaderManager.initMVP(_camera);
-    }
+	void init() override
+	{
+		_shaderManager.initMVP(_camera);
+	}
 
-    void update() override {
-        _shaderManager.setView(_camera->getView());
-        _shaderManager.setProjection(_camera->getProjection());
-    }
+	void update() override
+	{
+		_shaderManager.setView(_camera->getView());
+		_shaderManager.setProjection(_camera->getProjection());
+	}
 
-    Color& getColor() {
-        return _color;
-    }
+	Color& getColor()
+	{
+		return _color;
+	}
 
-    Shader& getShader() {
-        return _shader;
-    }
+	Shader& getShader()
+	{
+		return _shader;
+	}
 
-    Texture& getTexture() {
-        return _texture;
-    }
+	Texture& getTexture()
+	{
+		return _texture;
+	}
 
-    Transform& getTransform() {
-        return _transform;
-    }
+	Transform& getTransform()
+	{
+		return _transform;
+	}
 
-    ShaderManager& getShaderManager() {
-        return _shaderManager;
-    }
+	ShaderManager& getShaderManager()
+	{
+		return _shaderManager;
+	}
 
-    OpenGLEngineBackend& getDrawer() {
-        return _engineBackend;
-    }
+	OpenGLEngineBackend& getDrawer()
+	{
+		return _engineBackend;
+	}
 
 protected:
-    std::shared_ptr<ICamera> _camera;
-    Color _color;
-    Shader _shader;
-    Texture _texture;
-    Transform _transform;
-    ShaderManager _shaderManager{ _shader };
-    OpenGLEngineBackend _engineBackend{ _shaderManager };
-    EntityType _entityType{ EntityType::unknown };
+	std::shared_ptr<ICamera> _camera;
+	Color _color;
+	Shader _shader;
+	Texture _texture;
+	Transform _transform;
+	ShaderManager _shaderManager{ _shader };
+	OpenGLEngineBackend _engineBackend{ _shaderManager };
+	EntityType _entityType{ EntityType::unknown };
 
 };
