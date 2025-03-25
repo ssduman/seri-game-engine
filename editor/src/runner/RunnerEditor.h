@@ -29,12 +29,13 @@ public:
 
 		windowManager->setEventCallback(events::makeEventCallback(
 			[&rootScene](IEventData& data)
-		{
-			EventDispatcher{}(rootScene, data);
-		}
+			{
+				EventDispatcher{}(rootScene, data);
+			}
 		));
 
 		CameraProperties cameraProperties;
+		cameraProperties.isOrtho = true;
 		cameraProperties.aspect = windowManager->getAspect();
 		auto camera = std::make_shared<Camera>(std::move(cameraProperties));
 		camera->init();
@@ -98,6 +99,7 @@ public:
 
 		auto graphic = std::make_shared<Graphic>();
 
+		auto quad2DMesh = MeshG::quad2D();
 		auto quad1Mesh = MeshG::quad1();
 		auto quad2Mesh = MeshG::quad2();
 		auto cube1Mesh = MeshG::cube1();
@@ -123,20 +125,16 @@ public:
 			windowManager->clearColor();
 			windowManager->updateDeltaTime();
 
-			/*
-			SceneIterator iter(rootScene);
-			for (auto& s : iter) {
-				s->draw();
-			}
-			*/
+			//SceneIterator iter(rootScene);
+			//for (auto& s : iter)
+			//{
+			//	s->draw();
+			//}
 
 			camera->update();
 
-			//graphic->draw(quad1Mesh, glm::mat4{1.0f}, material, camera);
-			graphic->draw(quad2Mesh, glm::mat4{ 1.0f }, material, camera);
-			//graphic->draw(triangleMesh, glm::mat4{1.0f}, material, camera);
-			//graphic->draw(cube1Mesh, glm::mat4{1.0f}, material, camera);
-			//graphic->draw(cube2Mesh, glm::mat4{1.0f}, material, camera);
+			graphic->draw(quad2DMesh, glm::mat4{ 1.0f }, material, camera);
+			//graphic->draw(cube2Mesh, glm::mat4{ 1.0f }, material, camera);
 
 			gui->display();
 

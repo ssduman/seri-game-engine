@@ -109,19 +109,42 @@ public:
 protected:
 	virtual void updateView()
 	{
-		_view = glm::lookAt(
-			_cameraProperties.position,
-			_cameraProperties.position + _cameraProperties.front,
-			_cameraProperties.up);
+		if (_cameraProperties.isOrtho)
+		{
+			_view = glm::translate(glm::mat4{ 1.0f }, glm::vec3(0.0f, 0.0f, -1.0f));
+		}
+		else
+		{
+			_view = glm::lookAt(
+				_cameraProperties.position,
+				_cameraProperties.position + _cameraProperties.front,
+				_cameraProperties.up
+			);
+		}
 	}
 
 	virtual void updateProjection()
 	{
-		_projection = glm::perspective(
-			glm::radians(_cameraProperties.fov),
-			_cameraProperties.aspect,
-			_cameraProperties.near,
-			_cameraProperties.far);
+		if (_cameraProperties.isOrtho)
+		{
+			_projection = glm::ortho(
+				0.0f,
+				_cameraProperties.width,
+				_cameraProperties.height,
+				0.0f,
+				_cameraProperties.near,
+				_cameraProperties.far
+			);
+		}
+		else
+		{
+			_projection = glm::perspective(
+				glm::radians(_cameraProperties.fov),
+				_cameraProperties.aspect,
+				_cameraProperties.near,
+				_cameraProperties.far
+			);
+		}
 	}
 
 	virtual void updateEulerAngles()

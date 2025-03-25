@@ -18,12 +18,12 @@ struct EventDispatcher
 				auto& d = getData<KeyEventData&>(data);
 				rootScene->visit(makeSceneVisitor(
 					[&d](std::shared_ptr<IScene>& scene)
-				{
-					if (auto& object = scene->getObject())
 					{
-						object->onKeyEvent(d);
-					}
-				})
+						if (auto& object = scene->getObject())
+						{
+							object->onKeyEvent(d);
+						}
+					})
 				);
 				break;
 			}
@@ -32,12 +32,12 @@ struct EventDispatcher
 				auto d = getData<CharacterEventData&>(data);
 				rootScene->visit(makeSceneVisitor(
 					[&d](std::shared_ptr<IScene>& scene)
-				{
-					if (auto& object = scene->getObject())
 					{
-						object->onCharacterEvent(d);
-					}
-				})
+						if (auto& object = scene->getObject())
+						{
+							object->onCharacterEvent(d);
+						}
+					})
 				);
 				break;
 			}
@@ -46,12 +46,12 @@ struct EventDispatcher
 				auto& d = getData<CharacterModsEventData&>(data);
 				rootScene->visit(makeSceneVisitor(
 					[&d](std::shared_ptr<IScene>& scene)
-				{
-					if (auto& object = scene->getObject())
 					{
-						object->onCharacterModsEvent(d);
-					}
-				})
+						if (auto& object = scene->getObject())
+						{
+							object->onCharacterModsEvent(d);
+						}
+					})
 				);
 				break;
 			}
@@ -60,12 +60,12 @@ struct EventDispatcher
 				auto& d = getData<MouseEnterEventData&>(data);
 				rootScene->visit(makeSceneVisitor(
 					[&d](std::shared_ptr<IScene>& scene)
-				{
-					if (auto& object = scene->getObject())
 					{
-						object->onMouseEnterEvent(d);
-					}
-				})
+						if (auto& object = scene->getObject())
+						{
+							object->onMouseEnterEvent(d);
+						}
+					})
 				);
 				break;
 			}
@@ -74,12 +74,12 @@ struct EventDispatcher
 				auto& d = getData<MouseButtonEventData&>(data);
 				rootScene->visit(makeSceneVisitor(
 					[&d](std::shared_ptr<IScene>& scene)
-				{
-					if (auto& object = scene->getObject())
 					{
-						object->onMouseButtonEvent(d);
-					}
-				})
+						if (auto& object = scene->getObject())
+						{
+							object->onMouseButtonEvent(d);
+						}
+					})
 				);
 				break;
 			}
@@ -88,12 +88,12 @@ struct EventDispatcher
 				auto& d = getData<MouseScrollEventData&>(data);
 				rootScene->visit(makeSceneVisitor(
 					[&d](std::shared_ptr<IScene>& scene)
-				{
-					if (auto& object = scene->getObject())
 					{
-						object->onMouseScrollEvent(d);
-					}
-				})
+						if (auto& object = scene->getObject())
+						{
+							object->onMouseScrollEvent(d);
+						}
+					})
 				);
 				break;
 			}
@@ -102,12 +102,12 @@ struct EventDispatcher
 				auto& d = getData<MousePositionEventData&>(data);
 				rootScene->visit(makeSceneVisitor(
 					[&d](std::shared_ptr<IScene>& scene)
-				{
-					if (auto& object = scene->getObject())
 					{
-						object->onMousePositionEvent(d);
-					}
-				})
+						if (auto& object = scene->getObject())
+						{
+							object->onMousePositionEvent(d);
+						}
+					})
 				);
 				break;
 			}
@@ -116,12 +116,12 @@ struct EventDispatcher
 				auto& d = getData<WindowDropEventData&>(data);
 				rootScene->visit(makeSceneVisitor(
 					[&d](std::shared_ptr<IScene>& scene)
-				{
-					if (auto& object = scene->getObject())
 					{
-						object->onWindowDropEvent(d);
-					}
-				})
+						if (auto& object = scene->getObject())
+						{
+							object->onWindowDropEvent(d);
+						}
+					})
 				);
 				break;
 			}
@@ -130,12 +130,12 @@ struct EventDispatcher
 				auto& d = getData<WindowCloseEventData&>(data);
 				rootScene->visit(makeSceneVisitor(
 					[&d](std::shared_ptr<IScene>& scene)
-				{
-					if (auto& object = scene->getObject())
 					{
-						object->onWindowCloseEvent(d);
-					}
-				})
+						if (auto& object = scene->getObject())
+						{
+							object->onWindowCloseEvent(d);
+						}
+					})
 				);
 				break;
 			}
@@ -144,12 +144,12 @@ struct EventDispatcher
 				auto& d = getData<WindowResizeEventData&>(data);
 				rootScene->visit(makeSceneVisitor(
 					[&d](std::shared_ptr<IScene>& scene)
-				{
-					if (auto& object = scene->getObject())
 					{
-						object->onWindowResizeEvent(d);
-					}
-				})
+						if (auto& object = scene->getObject())
+						{
+							object->onWindowResizeEvent(d);
+						}
+					})
 				);
 				break;
 			}
@@ -159,12 +159,12 @@ struct EventDispatcher
 			{
 				rootScene->visit(makeSceneVisitor(
 					[&data](std::shared_ptr<IScene>& scene)
-				{
-					if (auto& object = scene->getObject())
 					{
-						object->onUserEvent(data);
-					}
-				})
+						if (auto& object = scene->getObject())
+						{
+							object->onUserEvent(data);
+						}
+					})
 				);
 				break;
 			}

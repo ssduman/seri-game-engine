@@ -33,6 +33,34 @@ public:
 
 	unsigned int count = 6;
 
+	static std::shared_ptr<MeshG> quad2D()
+	{
+		std::shared_ptr<MeshG> mesh = std::make_shared<MeshG>();
+
+		mesh->vertices = {
+			{600.0f, 600.0f, 0.0f},
+			{800.0f, 600.0f, 0.0f},
+			{800.0f, 800.0f, 0.0f},
+			{600.0f, 800.0f, 0.0f},
+		};
+
+		mesh->uv0s = {
+			{0.0f, 0.0f},
+			{1.0f, 0.0f},
+			{1.0f, 1.0f},
+			{0.0f, 1.0f},
+		};
+
+		mesh->indices = {
+			0, 1, 3,
+			1, 2, 3,
+		};
+
+		mesh->build();
+
+		return mesh;
+	}
+
 	static std::shared_ptr<MeshG> quad1()
 	{
 		std::shared_ptr<MeshG> mesh = std::make_shared<MeshG>();
