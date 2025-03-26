@@ -133,7 +133,11 @@ public:
 
 			camera->update();
 
-			graphic->draw(quad2DMesh, glm::mat4{ 1.0f }, material, camera);
+			glm::vec3 pos(660.0f, 660.0f, 0.0f);
+			glm::quat rot = glm::quat(glm::vec3(0.0f, glm::radians(0.0f), 0.0f));
+			glm::vec3 scale(100.0f, 100.0f, 100.0f);
+
+			graphic->draw(quad2DMesh, Util::GetTRS(pos, rot, scale), material, camera);
 			//graphic->draw(cube2Mesh, glm::mat4{ 1.0f }, material, camera);
 
 			gui->display();

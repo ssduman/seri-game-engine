@@ -38,10 +38,10 @@ public:
 		std::shared_ptr<MeshG> mesh = std::make_shared<MeshG>();
 
 		mesh->vertices = {
-			{600.0f, 600.0f, 0.0f},
-			{800.0f, 600.0f, 0.0f},
-			{800.0f, 800.0f, 0.0f},
-			{600.0f, 800.0f, 0.0f},
+			{0.0f, 0.0f, 0.0f},
+			{1.0f, 0.0f, 0.0f},
+			{1.0f, 1.0f, 0.0f},
+			{0.0f, 1.0f, 0.0f},
 		};
 
 		mesh->uv0s = {
