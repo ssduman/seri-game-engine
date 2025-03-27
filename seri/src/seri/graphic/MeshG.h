@@ -31,9 +31,11 @@ public:
 	std::vector<glm::vec3> normals;
 	std::vector<glm::vec3> tangents;
 
+	aux::DrawMode drawMode = aux::DrawMode::triangles;
+
 	unsigned int count = 6;
 
-	static std::shared_ptr<MeshG> quad2D()
+	static std::shared_ptr<MeshG> quad_2d()
 	{
 		std::shared_ptr<MeshG> mesh = std::make_shared<MeshG>();
 
@@ -150,7 +152,7 @@ public:
 		return mesh;
 	}
 
-	static std::shared_ptr<MeshG> cube1()
+	static std::shared_ptr<MeshG> cube_3d()
 	{
 		std::shared_ptr<MeshG> mesh = std::make_shared<MeshG>();
 
@@ -280,6 +282,22 @@ public:
 			{1.0f, 0.0f},
 			{0.0f, 0.0f},
 			{0.0f, 1.0f},
+		};
+
+		mesh->build();
+
+		return mesh;
+	}
+
+	static std::shared_ptr<MeshG> line()
+	{
+		std::shared_ptr<MeshG> mesh = std::make_shared<MeshG>();
+
+		mesh->drawMode = aux::DrawMode::lines;
+
+		mesh->vertices = {
+			{-0.5f, -0.5f, 0.0f},
+			{+0.5f, +0.5f, 0.0f},
 		};
 
 		mesh->build();

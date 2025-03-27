@@ -26,11 +26,11 @@ public:
 
 		if (mesh->hasIndex())
 		{
-			drawElements(mesh->count);
+			drawElements(mesh->count, mesh->drawMode);
 		}
 		else
 		{
-			drawArrays(mesh->count);
+			drawArrays(mesh->count, mesh->drawMode);
 		}
 
 		mesh->unbind();
@@ -46,10 +46,10 @@ public:
 
 private:
 
-	void drawElements(GLsizei count)
+	void drawElements(GLsizei count, aux::DrawMode drawMode = aux::DrawMode::triangles)
 	{
 		aux::DrawElement draw;
-		draw.mode = aux::toGLenum(aux::DrawMode::triangles);
+		draw.mode = aux::toGLenum(drawMode);
 		draw.count = count;
 		draw.type = aux::toGLenum(aux::Type::uint_type);
 		draw.indices = nullptr;
@@ -57,10 +57,10 @@ private:
 		glDrawElements(draw.mode, draw.count, draw.type, draw.indices);
 	}
 
-	void drawArrays(GLsizei count)
+	void drawArrays(GLsizei count, aux::DrawMode drawMode = aux::DrawMode::triangles)
 	{
 		aux::DrawArray draw;
-		draw.mode = aux::toGLenum(aux::DrawMode::triangles);
+		draw.mode = aux::toGLenum(drawMode);
 		draw.first = 0;
 		draw.count = count;
 
