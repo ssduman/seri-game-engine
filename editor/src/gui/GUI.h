@@ -368,12 +368,12 @@ private:
 			ImGui::SliderFloat3("position", &_currentEntity->getTransform()._position[0], -1.0f, 1.0f, "%.4f");
 			ImGui::SliderFloat3("rotation", &_currentEntity->getTransform()._rotation[0], -180.0f, 180.0f, "%.4f");
 			ImGui::SliderFloat3("scale", &_currentEntity->getTransform()._scale[0], 0.0f, 100.0f, "%.4f");
-			_currentEntity->getShaderManager().setModel(_currentEntity->getTransform().apply());
+			ShaderManager::GetInstance().setModel(_currentEntity->getShader(), _currentEntity->getTransform().apply());
 
 			ImGui::Separator();
 
 			ImGui::ColorEdit4("color", &_currentEntity->getColor().r);
-			_currentEntity->getShaderManager().setColor(_currentEntity->getColor().getColorRGBA());
+			ShaderManager::GetInstance().setColor(_currentEntity->getShader(), _currentEntity->getColor().getColorRGBA());
 
 			ImGui::Separator();
 

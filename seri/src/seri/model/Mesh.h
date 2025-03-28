@@ -130,8 +130,7 @@ private:
 	}
 
 	Shader _shader;
-	ShaderManager _shaderManager{ _shader };
-	OpenGLEngineBackend _engineBackend{ _shaderManager };
+	OpenGLEngineBackend _engineBackend{};
 
 	std::vector<Texture> _textures;
 	std::vector<glm::vec3> _positions;

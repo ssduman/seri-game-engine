@@ -19,6 +19,8 @@ public:
 
 	void operator()()
 	{
+		ShaderManager::GetInstance();
+
 		WindowProperties windowProperties{ /*title*/ "Seri Game Engine - Editor", /*fullscreen*/ false, /*w*/ 1280, /*h*/ 720 };
 		auto windowManager = WindowManagerFactory::instance();
 		windowManager->setWindowProperties(std::move(windowProperties));
@@ -90,9 +92,9 @@ public:
 
 			glm::vec3 pos_line{ 0.0f, 0.0f, 0.0f };
 			glm::quat rot_line = glm::quat(glm::vec3{ glm::radians(0.0f), glm::radians(0.0f), glm::radians(0.0f) });
-			glm::vec3 scale_line{ 1.0f, 1.0f, 1.0f };
+			glm::vec3 scale_line{ 10.0f, 10.0f, 10.0f };
 
-			//graphic->draw(quad_2d, Util::GetTRS(pos_2d, rot_2d, scale_2d), material, cameraOrtho);
+			graphic->draw(quad_2d, Util::GetTRS(pos_2d, rot_2d, scale_2d), material, cameraOrtho);
 			//graphic->draw(cube_3d, Util::GetTRS(pos_3d, rot_3d, scale_3d), material, cameraPerspective);
 			graphic->draw(line, Util::GetTRS(pos_line, rot_line, scale_line), material, cameraPerspective);
 
@@ -119,7 +121,7 @@ private:
 
 		auto typer1 = std::make_shared<Typer>(windowManager->getWidth(), windowManager->getHeight(), "assets/fonts/En Bloc.ttf");
 		typer1->getShader().init("assets/shaders/typer_vs.shader", "assets/shaders/typer_fs.shader");
-		typer1->getShaderManager().setProjection(glm::ortho(0.0f, windowManager->getWidthF(), 0.0f, windowManager->getHeightF()));
+		ShaderManager::GetInstance().setProjection(typer1->getShader(), glm::ortho(0.0f, windowManager->getWidthF(), 0.0f, windowManager->getHeightF()));
 		typer1->init();
 		typer1->setText("hello, world!");
 		typer1->setColor({ 0.6f, 0.1f, 0.3f, 1.0f });
@@ -145,8 +147,8 @@ private:
 		model1->load("assets/models/spider.obj");
 		model1->getTransform()._scale = glm::vec3{ 0.05f, 0.05f, 0.05f };
 		model1->getTransform()._position = glm::vec3{ 180.0f, 20.0f, 500.0f };
-		model1->getShaderManager().setModel(model1->getTransform().apply());
-		model1->getShaderManager().setColor({ 0.1f, 0.1f, 0.1f, 1.0f });
+		ShaderManager::GetInstance().setModel(model1->getShader(), model1->getTransform().apply());
+		ShaderManager::GetInstance().setColor(model1->getShader(), glm::vec4{ 0.1f, 0.1f, 0.1f, 1.0f });
 		auto model1Scene = builder.setName("Spider1").setObject(model1).build();
 
 		auto component1Scene = builder.setName("Component1").add(triangle1Scene).add(rectangle1Scene).build();

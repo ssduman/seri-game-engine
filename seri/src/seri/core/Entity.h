@@ -37,13 +37,13 @@ public:
 
 	void init() override
 	{
-		_shaderManager.initMVP(_camera);
+		ShaderManager::GetInstance().initMVP(_shader, _camera);
 	}
 
 	void update() override
 	{
-		_shaderManager.setView(_camera->getView());
-		_shaderManager.setProjection(_camera->getProjection());
+		ShaderManager::GetInstance().setView(_shader, _camera->getView());
+		ShaderManager::GetInstance().setProjection(_shader, _camera->getProjection());
 	}
 
 	Color& getColor()
@@ -66,11 +66,6 @@ public:
 		return _transform;
 	}
 
-	ShaderManager& getShaderManager()
-	{
-		return _shaderManager;
-	}
-
 	OpenGLEngineBackend& getDrawer()
 	{
 		return _engineBackend;
@@ -82,8 +77,7 @@ protected:
 	Shader _shader;
 	Texture _texture;
 	Transform _transform;
-	ShaderManager _shaderManager{ _shader };
-	OpenGLEngineBackend _engineBackend{ _shaderManager };
+	OpenGLEngineBackend _engineBackend{};
 	EntityType _entityType{ EntityType::unknown };
 
 };

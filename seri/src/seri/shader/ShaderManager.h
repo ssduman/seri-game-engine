@@ -8,21 +8,17 @@
 class ShaderManager
 {
 public:
-	ShaderManager() = delete;
+	static ShaderManager& GetInstance()
+	{
+		static ShaderManager instance;
+		return instance;
+	}
 
-	ShaderManager(Shader& shader) : _shader(shader) {}
+	ShaderManager(ShaderManager const&) = delete;
 
-	ShaderManager(ShaderManager& other) = default;
+	void operator=(ShaderManager const&) = delete;
 
-	ShaderManager(ShaderManager&& other) = default;
-
-	ShaderManager& operator=(ShaderManager& other) = default;
-
-	ShaderManager& operator=(ShaderManager&& other) = default;
-
-	~ShaderManager() = default;
-
-	void setTRS(Shader& shader, const std::shared_ptr<ICamera>& camera)
+	static void setTRS(Shader& shader, const std::shared_ptr<ICamera>& camera)
 	{
 		ShaderManager::Use(shader);
 		ShaderManager::SetMat4(shader, "u_model", glm::mat4{ 1.0f });
@@ -31,82 +27,63 @@ public:
 		ShaderManager::Disuse();
 	}
 
-	void initMVP(const std::shared_ptr<ICamera>& camera)
+	static void initMVP(Shader& shader, const std::shared_ptr<ICamera>& camera)
 	{
-		ShaderManager::Use(_shader);
-		ShaderManager::SetMat4(_shader, "u_model", glm::mat4{ 1.0f });
-		ShaderManager::SetMat4(_shader, "u_view", camera->getView());
-		ShaderManager::SetMat4(_shader, "u_projection", camera->getProjection());
+		ShaderManager::Use(shader);
+		ShaderManager::SetMat4(shader, "u_model", glm::mat4{ 1.0f });
+		ShaderManager::SetMat4(shader, "u_view", camera->getView());
+		ShaderManager::SetMat4(shader, "u_projection", camera->getProjection());
 		ShaderManager::Disuse();
 	}
 
-	void initVP(const std::shared_ptr<ICamera>& camera)
+	static void initVP(Shader& shader, const std::shared_ptr<ICamera>& camera)
 	{
-		ShaderManager::Use(_shader);
-		ShaderManager::SetMat4(_shader, "u_view", camera->getView());
-		ShaderManager::SetMat4(_shader, "u_projection", camera->getProjection());
+		ShaderManager::Use(shader);
+		ShaderManager::SetMat4(shader, "u_view", camera->getView());
+		ShaderManager::SetMat4(shader, "u_projection", camera->getProjection());
 		ShaderManager::Disuse();
 	}
 
-	void setModel(const glm::mat4& model)
+	static void setModel(Shader& shader, const glm::mat4& model)
 	{
-		ShaderManager::Use(_shader);
-		ShaderManager::SetMat4(_shader, "u_model", model);
+		ShaderManager::Use(shader);
+		ShaderManager::SetMat4(shader, "u_model", model);
 		ShaderManager::Disuse();
 	}
 
-	void setView(const glm::mat4& view)
+	static void setView(Shader& shader, const glm::mat4& view)
 	{
-		ShaderManager::Use(_shader);
-		ShaderManager::SetMat4(_shader, "u_view", view);
+		ShaderManager::Use(shader);
+		ShaderManager::SetMat4(shader, "u_view", view);
 		ShaderManager::Disuse();
 	}
 
-	void setProjection(const glm::mat4& projection)
+	static void setProjection(Shader& shader, const glm::mat4& projection)
 	{
-		ShaderManager::Use(_shader);
-		ShaderManager::SetMat4(_shader, "u_projection", projection);
+		ShaderManager::Use(shader);
+		ShaderManager::SetMat4(shader, "u_projection", projection);
 		ShaderManager::Disuse();
 	}
 
-	void setPosition(const glm::vec2& position)
+	static void setPosition(Shader& shader, const glm::vec2& position)
 	{
-		ShaderManager::Use(_shader);
-		ShaderManager::SetVec2(_shader, "u_position", position);
+		ShaderManager::Use(shader);
+		ShaderManager::SetVec2(shader, "u_position", position);
 		ShaderManager::Disuse();
 	}
 
-	void setPosition(const glm::vec3& position)
+	static void setPosition(Shader& shader, const glm::vec3& position)
 	{
-		ShaderManager::Use(_shader);
-		ShaderManager::SetVec3(_shader, "u_position", position);
+		ShaderManager::Use(shader);
+		ShaderManager::SetVec3(shader, "u_position", position);
 		ShaderManager::Disuse();
 	}
 
-	void setColor(const glm::vec4& color)
+	static void setColor(Shader& shader, const glm::vec4& color)
 	{
-		ShaderManager::Use(_shader);
-		ShaderManager::SetVec4(_shader, "u_color", color);
+		ShaderManager::Use(shader);
+		ShaderManager::SetVec4(shader, "u_color", color);
 		ShaderManager::Disuse();
-	}
-
-	void useColors(bool flag)
-	{
-		ShaderManager::Use(_shader);
-		ShaderManager::SetBool(_shader, "u_useColors", flag);
-		ShaderManager::Disuse();
-	}
-
-	void useTexture(bool flag)
-	{
-		ShaderManager::Use(_shader);
-		ShaderManager::SetBool(_shader, "u_useTexture", flag);
-		ShaderManager::Disuse();
-	}
-
-	static Shader Create()
-	{
-		return Shader{};
 	}
 
 	static void Init(Shader& shader, const char* vsCodePath, const char* fsCodePath, bool readFromFile = true)
@@ -184,6 +161,16 @@ public:
 		glUniformMatrix4fv(ShaderManager::GetUniformLocation(shader, name), 1, GL_FALSE, &val[0][0]);
 	}
 private:
-	Shader& _shader;
+	ShaderManager()
+	{
+		LOGGER(info, "shader manager init");
+	}
+
+	~ShaderManager()
+	{
+		LOGGER(info, "shader manager release");
+	}
+
+	//Shader& _shader;
 
 };

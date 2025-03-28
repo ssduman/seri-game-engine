@@ -51,18 +51,13 @@ public:
 	{
 		if (_camera)
 		{
-			_shaderManager.setView(glm::mat4(glm::mat3(_camera->getView())));
+			ShaderManager::GetInstance().setView(_shader, glm::mat4(glm::mat3(_camera->getView())));
 		}
 	}
 
 	Shader& getShader()
 	{
 		return _shader;
-	}
-
-	ShaderManager& getShaderManager()
-	{
-		return _shaderManager;
 	}
 
 	OpenGLEngineBackend& getDrawer()
@@ -73,11 +68,9 @@ public:
 private:
 	void initMVP()
 	{
-		_shader.use();
-		_shaderManager.setModel(glm::mat4{ 1.0f });
-		_shaderManager.setView(glm::mat4(glm::mat3(_camera->getView())));
-		_shaderManager.setProjection(_camera->getProjection());
-		_shader.disuse();
+		ShaderManager::GetInstance().setModel(_shader, glm::mat4{ 1.0f });
+		ShaderManager::GetInstance().setView(_shader, glm::mat4(glm::mat3(_camera->getView())));
+		ShaderManager::GetInstance().setProjection(_shader, _camera->getProjection());
 	}
 
 	void setDefaultPositions()
@@ -208,8 +201,7 @@ private:
 	std::shared_ptr<ICamera> _camera;
 
 	Shader _shader;
-	ShaderManager _shaderManager{ _shader };
-	OpenGLEngineBackend _engineBackend{ _shaderManager };
+	OpenGLEngineBackend _engineBackend{};
 
 	unsigned int _tex{ 0 };
 	std::vector<std::string> _faces;

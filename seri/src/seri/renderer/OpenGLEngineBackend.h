@@ -12,9 +12,7 @@
 class OpenGLEngineBackend : public IEngineBackend
 {
 public:
-	OpenGLEngineBackend() = delete;
-
-	OpenGLEngineBackend(ShaderManager shaderManager) : _shaderManager(shaderManager)
+	OpenGLEngineBackend()
 	{
 		generate();
 		bind();
@@ -196,11 +194,11 @@ private:
 		}
 		if (aux::Index::color == index)
 		{
-			_shaderManager.useColors(true);
+			//_shaderManager.useColors(true);
 		}
 		if (aux::Index::texture == index)
 		{
-			_shaderManager.useTexture(true);
+			//_shaderManager.useTexture(true);
 		}
 	}
 
@@ -279,8 +277,6 @@ private:
 		glDeleteBuffers(1, &_EBO);
 		_EBO = 0;
 	}
-
-	ShaderManager _shaderManager;
 
 	unsigned int _VAO{ 0 };
 	unsigned int _VBO{ 0 };

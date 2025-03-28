@@ -125,7 +125,7 @@ public:
 	void setColor(glm::vec4 color)
 	{
 		_color = std::move(color);
-		_shaderManager.setColor(_color);
+		ShaderManager::GetInstance().setColor(_shader, _color);
 	}
 
 	void setPosition(float x, float y, float z = 1.0f)
@@ -146,11 +146,6 @@ public:
 	Shader& getShader()
 	{
 		return _shader;
-	}
-
-	ShaderManager& getShaderManager()
-	{
-		return _shaderManager;
 	}
 
 	OpenGLEngineBackend& getDrawer()
@@ -251,8 +246,7 @@ private:
 	glm::vec4 _color{ 1.0f, 1.0f, 1.0f, 1.0f };
 
 	Shader _shader;
-	ShaderManager _shaderManager{ _shader };
-	OpenGLEngineBackend _engineBackend{ _shaderManager };
+	OpenGLEngineBackend _engineBackend{};
 
 	glm::mat4 _projection{};
 	std::vector<float> _vertices{};

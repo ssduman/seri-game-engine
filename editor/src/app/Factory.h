@@ -29,9 +29,9 @@ public:
 		static auto minColor = glm::vec4{ 0.0f, 0.0f, 0.0f, 1.0f };
 		static auto maxColor = glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f };
 		static auto randomColor = []() -> glm::vec4
-		{
-			return glm::linearRand(minColor, maxColor);
-		};
+			{
+				return glm::linearRand(minColor, maxColor);
+			};
 
 		switch (entityType)
 		{
@@ -159,7 +159,7 @@ public:
 				circle->getTexture().init("assets/textures/passage.png");
 				circle->init();
 
-				circle->getShaderManager().setColor(randomColor());
+				ShaderManager::GetInstance().setColor(circle->getShader(), randomColor());
 
 				circle->getDrawer().reserveDataBufferSize(positionsSize + colorsSize + texturePositionsSize);
 				circle->getDrawer().setSubDataBuffer(aux::Index::position, positions, 0);
@@ -267,7 +267,7 @@ public:
 				cube->getTexture().init("assets/textures/wall2.png");
 				cube->init();
 
-				cube->getShaderManager().setColor(randomColor());
+				ShaderManager::GetInstance().setColor(cube->getShader(), randomColor());
 
 				cube->getDrawer().reserveDataBufferSize(positionsSize + texturePositionsSize);
 				cube->getDrawer().setSubDataBuffer(aux::Index::position, positions, 0);

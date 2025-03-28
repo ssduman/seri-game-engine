@@ -28,14 +28,14 @@ public:
 
 	void init() override
 	{
-		_shaderManager.initMVP(_camera);
+		ShaderManager::GetInstance().initMVP(_shader, _camera);
 	};
 
 	void update() override
 	{
 		if (_camera)
 		{
-			_shaderManager.setView(_camera->getView());
+			ShaderManager::GetInstance().setView(_shader, _camera->getView());
 		}
 	};
 
@@ -63,7 +63,7 @@ public:
 		}
 
 		convertMatrix(scene->mRootNode->mTransformation, _globalTransformation);
-		_shaderManager.setModel(_globalTransformation);
+		ShaderManager::GetInstance().setModel(_shader, _globalTransformation);
 
 		_modelDirectory = modelPath.substr(0, modelPath.find_last_of("/")) + "/";
 
@@ -83,11 +83,6 @@ public:
 	Transform& getTransform()
 	{
 		return _transform;
-	}
-
-	ShaderManager& getShaderManager()
-	{
-		return _shaderManager;
 	}
 
 private:
@@ -373,7 +368,6 @@ private:
 
 	std::shared_ptr<ICamera> _camera;
 	Shader _shader;
-	ShaderManager _shaderManager{ _shader };
 
 	Transform _transform;
 	std::vector<Mesh> _meshes;
