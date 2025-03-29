@@ -20,7 +20,7 @@ public:
 		material->texture->bind();
 		mesh->bind();
 
-		//ShaderManager::SetUInt(material->shader, "u_texture", material->texture->GetTex());
+		ShaderManager::SetUInt(material->shader, "u_texture", 0);
 		ShaderManager::SetColor(material->shader, "u_color", glm::vec4{1.0f, 0.0f, 0.0f, 1.0f});
 		ShaderManager::SetMat4(material->shader, "u_model", trs);
 		ShaderManager::SetMat4(material->shader, "u_view", camera->getView());

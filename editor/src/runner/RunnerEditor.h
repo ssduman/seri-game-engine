@@ -71,8 +71,6 @@ public:
 		material->shader = entityShader;
 		material->texture = passageTexture;
 		
-		ShaderManager::SetUInt(material->shader, "u_texture", material->texture->GetTex());
-
 		LOGGER(info, "starting seri game engine - editor loop");
 
 		while (!windowManager->windowShouldClose())
