@@ -6,9 +6,6 @@
 #include <glm/glm.hpp>
 
 #include <string>
-#include <fstream>
-#include <sstream>
-#include <iostream>
 
 class Shader
 {
@@ -84,33 +81,13 @@ private:
 		std::string codeStr;
 		if (readFromFile)
 		{
-			codeStr = readShaderCode(code);
+			codeStr = Util::readFileAtPath(code);
 			codeCStr = codeStr.c_str();
 		}
 		glShaderSource(shader, 1, &codeCStr, nullptr);
 		glCompileShader(shader);
 		checkShaderCompilationError(shader);
 		return shader;
-	}
-
-	std::string readShaderCode(const char* shaderCodePath)
-	{
-		try
-		{
-			std::stringstream ss;
-			std::ifstream shaderFile(shaderCodePath);
-			if (shaderFile.is_open())
-			{
-				ss << shaderFile.rdbuf();
-				shaderFile.close();
-			}
-			return ss.str();
-		}
-		catch (const std::exception& ex)
-		{
-			LOGGER(error, "exception occurred while reading shader code: " << ex.what());
-			return std::string{};
-		}
 	}
 
 	bool checkShaderCompilationError(unsigned int shader)

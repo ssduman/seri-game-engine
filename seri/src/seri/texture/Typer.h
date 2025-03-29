@@ -125,7 +125,7 @@ public:
 	void setColor(glm::vec4 color)
 	{
 		_color = std::move(color);
-		ShaderManager::GetInstance().setColor(_shader, _color);
+		ShaderManager::GetInstance().SetColor(_shader, _color);
 	}
 
 	void setPosition(float x, float y, float z = 1.0f)

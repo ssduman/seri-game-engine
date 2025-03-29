@@ -4,19 +4,90 @@
 #include "seri/camera/ICamera.h"
 
 #include <memory>
+#include <vector>
+#include <filesystem>
 
 class ShaderManager
 {
 public:
+	ShaderManager(ShaderManager const&) = delete;
+
+	void operator=(ShaderManager const&) = delete;
+
+	static void Init(const char* shaderFolderPath)
+	{
+		GetInstance()._predefinedShaders = {};
+
+		for (const auto& entry : std::filesystem::directory_iterator(shaderFolderPath))
+		{
+			std::string filename = entry.path().stem().string();
+			std::string name = filename.substr(0, filename.find_last_of('_'));
+			std::string type = filename.substr(name.size() + 1, filename.size());
+			std::string content = Util::readFileAtPath(entry.path().string().c_str());
+
+			bool found = false;
+			for (auto& predef : GetInstance()._predefinedShaders)
+			{
+				if (predef.name == name)
+				{
+					found = true;
+					if (type == "vs")
+					{
+						predef.vsCode = content;
+					}
+					else if (type == "fs")
+					{
+						predef.fsCode = content;
+					}
+					else
+					{
+						LOGGER(error, "unknown shader type: " << type);
+					}
+				}
+			}
+			if (!found)
+			{
+				ShaderInfo info;
+				info.name = name;
+				if (type == "vs")
+				{
+					info.vsCode = content;
+				}
+				else if (type == "fs")
+				{
+					info.fsCode = content;
+				}
+				else
+				{
+					LOGGER(error, "unknown shader type: " << type);
+				}
+				GetInstance()._predefinedShaders.push_back(info);
+			}
+		}
+
+		LOGGER(info, "shader manager init done");
+	}
+
 	static ShaderManager& GetInstance()
 	{
 		static ShaderManager instance;
 		return instance;
 	}
 
-	ShaderManager(ShaderManager const&) = delete;
-
-	void operator=(ShaderManager const&) = delete;
+	static std::shared_ptr<Shader> Find(std::string name)
+	{
+		for (auto& predef : GetInstance()._predefinedShaders)
+		{
+			if (predef.name == name)
+			{
+				auto shader = std::make_shared<Shader>();
+				shader->init(predef.vsCode.c_str(), predef.fsCode.c_str(), /*readFromFile*/ false);
+				return shader;
+			}
+		}
+		LOGGER(error, "shader not found: " << name);
+		return nullptr;
+	}
 
 	static void setTRS(Shader& shader, const std::shared_ptr<ICamera>& camera)
 	{
@@ -79,16 +150,16 @@ public:
 		ShaderManager::Disuse();
 	}
 
-	static void setColor(Shader& shader, const glm::vec4& color)
+	static void SetColor(Shader& shader, const glm::vec4& color)
 	{
 		ShaderManager::Use(shader);
 		ShaderManager::SetVec4(shader, "u_color", color);
 		ShaderManager::Disuse();
 	}
-
-	static void Init(Shader& shader, const char* vsCodePath, const char* fsCodePath, bool readFromFile = true)
+	
+	static void SetColor(const std::shared_ptr<Shader>& shader, const char* name, const glm::vec4& color)
 	{
-		shader.init(vsCodePath, fsCodePath, readFromFile);
+		glUniform4fv(ShaderManager::GetUniformLocation(shader, name), 1, &color[0]);
 	}
 
 	static void Use(Shader& shader)
@@ -130,6 +201,11 @@ public:
 	{
 		glUniform1i(ShaderManager::GetUniformLocation(shader, name), val);
 	}
+	
+	static void SetUInt(const std::shared_ptr<Shader>& shader, const char* name, unsigned int val)
+	{
+		glUniform1i(ShaderManager::GetUniformLocation(shader, name), val);
+	}
 
 	static void SetFloat(const Shader& shader, const char* name, float val)
 	{
@@ -150,6 +226,11 @@ public:
 	{
 		glUniform4fv(ShaderManager::GetUniformLocation(shader, name), 1, &val[0]);
 	}
+	
+	static void SetVec4(const std::shared_ptr<Shader>& shader, const char* name, const glm::vec4& val)
+	{
+		glUniform4fv(ShaderManager::GetUniformLocation(shader, name), 1, &val[0]);
+	}
 
 	static void SetMat4(const Shader& shader, const char* name, const glm::mat4& val)
 	{
@@ -160,6 +241,7 @@ public:
 	{
 		glUniformMatrix4fv(ShaderManager::GetUniformLocation(shader, name), 1, GL_FALSE, &val[0][0]);
 	}
+
 private:
 	ShaderManager()
 	{
@@ -171,6 +253,13 @@ private:
 		LOGGER(info, "shader manager release");
 	}
 
-	//Shader& _shader;
+	struct ShaderInfo
+	{
+		std::string name;
+		std::string vsCode;
+		std::string fsCode;
+	};
+
+	std::vector<ShaderInfo> _predefinedShaders;
 
 };

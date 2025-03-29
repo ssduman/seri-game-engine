@@ -16,8 +16,8 @@ namespace aux
 	enum class Index : GLuint
 	{
 		position = 0,
-		color = 1,
-		texture = 2,
+		texture = 1,
+		color = 2,
 		normal = 3,
 	};
 

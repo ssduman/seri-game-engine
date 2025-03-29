@@ -3,10 +3,15 @@
 #define PI 3.14159265359f
 
 #include <seri/core/Seri.h>
+#include <seri/logging/Logger.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+
+#include <fstream>
+#include <sstream>
+#include <iostream>
 
 struct Util
 {
@@ -31,6 +36,26 @@ struct Util
 		glm::mat4 R = glm::mat4_cast(rot);
 		glm::mat4 S = glm::scale(glm::mat4(1.0f), scale);
 		return T * R * S;
+	}
+
+	static std::string readFileAtPath(const char* path)
+	{
+		try
+		{
+			std::stringstream ss;
+			std::ifstream stream(path);
+			if (stream.is_open())
+			{
+				ss << stream.rdbuf();
+				stream.close();
+			}
+			return ss.str();
+		}
+		catch (const std::exception& ex)
+		{
+			LOGGER(error, "exception occurred while reading path: " << path << ", exception: " << ex.what());
+			return std::string{};
+		}
 	}
 
 };

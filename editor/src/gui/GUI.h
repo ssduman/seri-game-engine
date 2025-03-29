@@ -373,7 +373,7 @@ private:
 			ImGui::Separator();
 
 			ImGui::ColorEdit4("color", &_currentEntity->getColor().r);
-			ShaderManager::GetInstance().setColor(_currentEntity->getShader(), _currentEntity->getColor().getColorRGBA());
+			ShaderManager::GetInstance().SetColor(_currentEntity->getShader(), _currentEntity->getColor().getColorRGBA());
 
 			ImGui::Separator();
 

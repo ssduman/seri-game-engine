@@ -19,7 +19,7 @@ public:
 
 	void operator()()
 	{
-		ShaderManager::GetInstance();
+		ShaderManager::Init("assets/shaders/");
 
 		WindowProperties windowProperties{ /*title*/ "Seri Game Engine - Editor", /*fullscreen*/ false, /*w*/ 1280, /*h*/ 720 };
 		auto windowManager = WindowManagerFactory::instance();
@@ -57,11 +57,11 @@ public:
 		auto graphic = std::make_shared<Graphic>();
 
 		auto quad_2d = MeshG::quad_2d();
+		auto quad_3d = MeshG::quad_3d();
 		auto cube_3d = MeshG::cube_3d();
-		auto line = MeshG::line();
+		//auto line = MeshG::line();
 
-		auto entityShader = std::make_shared<Shader>();
-		entityShader->init("assets/shaders/entity_vs.shader", "assets/shaders/entity_fs.shader");
+		auto entityShader = ShaderManager::Find("entity");
 
 		Texture::setTextureFlip(true);
 		auto passageTexture = std::make_shared<Texture>();
@@ -70,6 +70,8 @@ public:
 		auto material = std::make_shared<MaterialG>();
 		material->shader = entityShader;
 		material->texture = passageTexture;
+		
+		ShaderManager::SetUInt(material->shader, "u_texture", material->texture->GetTex());
 
 		LOGGER(info, "starting seri game engine - editor loop");
 
@@ -86,7 +88,7 @@ public:
 			glm::quat rot_2d = glm::quat(glm::vec3{ glm::radians(0.0f), glm::radians(0.0f), glm::radians(0.0f) });
 			glm::vec3 scale_2d{ 100.0f, 100.0f, 100.0f };
 
-			glm::vec3 pos_3d{ 10.0f, 10.0f, 10.0f };
+			glm::vec3 pos_3d{ 1.0f, 0.0f, 1.0f };
 			glm::quat rot_3d = glm::quat(glm::vec3{ glm::radians(0.0f), glm::radians(0.0f), glm::radians(0.0f) });
 			glm::vec3 scale_3d{ 1.0f, 1.0f, 1.0f };
 
@@ -94,9 +96,10 @@ public:
 			glm::quat rot_line = glm::quat(glm::vec3{ glm::radians(0.0f), glm::radians(0.0f), glm::radians(0.0f) });
 			glm::vec3 scale_line{ 10.0f, 10.0f, 10.0f };
 
-			graphic->draw(quad_2d, Util::GetTRS(pos_2d, rot_2d, scale_2d), material, cameraOrtho);
-			//graphic->draw(cube_3d, Util::GetTRS(pos_3d, rot_3d, scale_3d), material, cameraPerspective);
-			graphic->draw(line, Util::GetTRS(pos_line, rot_line, scale_line), material, cameraPerspective);
+			//graphic->draw(quad_2d, Util::GetTRS(pos_2d, rot_2d, scale_2d), material, cameraOrtho);
+			graphic->draw(quad_3d, Util::GetTRS(pos_3d, rot_3d, scale_3d), material, cameraPerspective);
+			graphic->draw(cube_3d, Util::GetTRS(pos_3d, rot_3d, scale_3d), material, cameraPerspective);
+			//graphic->draw(line, Util::GetTRS(pos_line, rot_line, scale_line), material, cameraPerspective);
 
 			gui->display();
 
@@ -148,7 +151,7 @@ private:
 		model1->getTransform()._scale = glm::vec3{ 0.05f, 0.05f, 0.05f };
 		model1->getTransform()._position = glm::vec3{ 180.0f, 20.0f, 500.0f };
 		ShaderManager::GetInstance().setModel(model1->getShader(), model1->getTransform().apply());
-		ShaderManager::GetInstance().setColor(model1->getShader(), glm::vec4{ 0.1f, 0.1f, 0.1f, 1.0f });
+		ShaderManager::GetInstance().SetColor(model1->getShader(), glm::vec4{ 0.1f, 0.1f, 0.1f, 1.0f });
 		auto model1Scene = builder.setName("Spider1").setObject(model1).build();
 
 		auto component1Scene = builder.setName("Component1").add(triangle1Scene).add(rectangle1Scene).build();

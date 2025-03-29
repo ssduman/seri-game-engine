@@ -159,7 +159,7 @@ public:
 				circle->getTexture().init("assets/textures/passage.png");
 				circle->init();
 
-				ShaderManager::GetInstance().setColor(circle->getShader(), randomColor());
+				ShaderManager::GetInstance().SetColor(circle->getShader(), randomColor());
 
 				circle->getDrawer().reserveDataBufferSize(positionsSize + colorsSize + texturePositionsSize);
 				circle->getDrawer().setSubDataBuffer(aux::Index::position, positions, 0);
@@ -267,7 +267,7 @@ public:
 				cube->getTexture().init("assets/textures/wall2.png");
 				cube->init();
 
-				ShaderManager::GetInstance().setColor(cube->getShader(), randomColor());
+				ShaderManager::GetInstance().SetColor(cube->getShader(), randomColor());
 
 				cube->getDrawer().reserveDataBufferSize(positionsSize + texturePositionsSize);
 				cube->getDrawer().setSubDataBuffer(aux::Index::position, positions, 0);

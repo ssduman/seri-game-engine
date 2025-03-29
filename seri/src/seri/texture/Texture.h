@@ -23,6 +23,8 @@ public:
 	{
 		unbind();
 		del();
+
+		LOGGER(info, "texture destroyed");
 	}
 
 	void init(const std::string& texturePath)
@@ -53,12 +55,18 @@ public:
 
 	void bind()
 	{
+		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, _tex);
 	}
 
 	void unbind()
 	{
 		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+
+	unsigned int GetTex()
+	{
+		return _tex;
 	}
 
 	static unsigned char* loadTexture(const std::string& texturePath, int& width, int& height, int& components, int reqComp)
