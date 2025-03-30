@@ -9,6 +9,8 @@
 #include <vector>
 #include <memory>
 
+class Graphic;
+
 class MeshG
 {
 public:
@@ -157,15 +159,19 @@ public:
 		return mesh;
 	}
 
-	static std::shared_ptr<MeshG> line()
+	static std::shared_ptr<MeshG> line_2d(glm::vec2 beg, glm::vec2 end)
 	{
 		std::shared_ptr<MeshG> mesh = std::make_shared<MeshG>();
 
 		mesh->drawMode = aux::DrawMode::lines;
 
+		glm::mat4 proj = Graphic::GetCameraOrtho()->getProjection();
+		glm::vec4 beg_ = proj * glm::vec4(beg.x, beg.y, 0.0f, 1.0f);
+		glm::vec4 end_ = proj * glm::vec4(end.x, end.y, 0.0f, 1.0f);
+
 		mesh->vertices = {
-			{-0.5f, -0.5f, 0.0f},
-			{+0.5f, +0.5f, 0.0f},
+			{beg_.x, beg_.y, 0.0f},
+			{end_.x, end_.y, 0.0f},
 		};
 
 		mesh->build();

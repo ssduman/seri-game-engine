@@ -16,9 +16,9 @@
 
 #include "seri/behaviour/BehaviourManager.h"
 
-#include "seri/graphic/MeshG.h"
+//#include "seri/graphic/MeshG.h"
 #include "seri/graphic/Graphic.h"
-#include "seri/graphic/MaterialG.h"
+//#include "seri/graphic/MaterialG.h"
 
 #include "seri/logging/Logger.h"
 

@@ -1,11 +1,13 @@
 #pragma once
 
-#include "seri/graphic/MeshG.h"
-#include "seri/graphic/MaterialG.h"
+#include "seri/core/Seri.h"
 #include "seri/camera/ICamera.h"
 
 #include <vector>
 #include <memory>
+
+class MeshG;
+class MaterialG;
 
 class Graphic
 {
@@ -26,61 +28,13 @@ public:
 		return instance;
 	}
 
-	static void AddCamera(std::shared_ptr<ICamera> camera)
-	{
-		GetInstance()._cameras.push_back(camera);
+	static void AddCamera(std::shared_ptr<ICamera> camera);
 
-		if (camera->IsOrtho())
-		{
-			GetInstance()._cameraOrtho = camera;
-		}
-		else
-		{
-			GetInstance()._cameraPerspective = camera;
-		}
-	}
+	static std::shared_ptr<ICamera> GetCameraOrtho();
 
-	static std::shared_ptr<ICamera> GetCameraOrtho()
-	{
-		return GetInstance()._cameraOrtho;
-	}
+	static std::shared_ptr<ICamera> GetCameraPerspective();
 
-	static std::shared_ptr<ICamera> GetCameraPerspective()
-	{
-		return GetInstance()._cameraPerspective;
-	}
-
-	static void Draw(std::shared_ptr<MeshG> mesh, const glm::mat4& trs, std::shared_ptr<MaterialG> material, std::shared_ptr<ICamera> camera)
-	{
-		ShaderManager::Use(material->shader);
-		material->texture->bind();
-		mesh->bind();
-
-		ShaderManager::SetUInt(material->shader, "u_texture", 0);
-		ShaderManager::SetColor(material->shader, "u_color", glm::vec4{ 1.0f, 0.0f, 0.0f, 1.0f });
-		ShaderManager::SetMat4(material->shader, "u_model", trs);
-		ShaderManager::SetMat4(material->shader, "u_view", camera->getView());
-		ShaderManager::SetMat4(material->shader, "u_projection", camera->getProjection());
-
-		if (mesh->hasIndex())
-		{
-			drawElements(mesh->count, mesh->drawMode);
-		}
-		else
-		{
-			drawArrays(mesh->count, mesh->drawMode);
-		}
-
-		mesh->unbind();
-		material->texture->unbind();
-		ShaderManager::Disuse();
-	}
-
-	static void DrawMesh(std::shared_ptr<MeshG> mesh, std::shared_ptr<MaterialG> material, const glm::mat4& trs)
-	{}
-
-	static void DrawMeshInstanced(std::shared_ptr<MeshG> mesh, std::shared_ptr<MaterialG> material, glm::mat4 trs[])
-	{}
+	static void Draw(std::shared_ptr<MeshG> mesh, const glm::mat4& trs, std::shared_ptr<MaterialG> material, std::shared_ptr<ICamera> camera);
 
 private:
 	Graphic()

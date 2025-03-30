@@ -37,6 +37,11 @@ struct Util
 		glm::mat4 S = glm::scale(glm::mat4{ 1.0f }, scale);
 		return T * R * S;
 	}
+	
+	static glm::mat4 GetIdentityMatrix()
+	{
+		return glm::mat4{ 1.0f };
+	}
 
 	static std::string readFileAtPath(const char* path)
 	{

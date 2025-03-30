@@ -1,7 +1,5 @@
 #pragma once
 
-//#include "seri/behaviour/BehaviourManager.h"
-
 class BehaviourManager;
 
 class IBehaviour
