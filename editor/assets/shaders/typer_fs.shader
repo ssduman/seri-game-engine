@@ -7,7 +7,8 @@ uniform sampler2D u_texture;
 
 out vec4 final_color;
 
-void main() {
+void main()
+{
     vec4 sampled = vec4(1.0, 1.0, 1.0, texture(u_texture, sent_texCoord).r);
     final_color = u_color * sampled;
 }

@@ -8,6 +8,7 @@ uniform sampler2D u_texture;
 
 out vec4 final_color;
 
-void main() {
+void main()
+{
     final_color = texture(u_texture, sent_uv);
 }

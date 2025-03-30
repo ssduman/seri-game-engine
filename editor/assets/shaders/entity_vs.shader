@@ -12,7 +12,8 @@ uniform mat4 u_projection;
 out vec2 sent_uv;
 out vec4 sent_color;
 
-void main() {
+void main()
+{
     sent_uv = in_uv;
     sent_color = in_color;
 

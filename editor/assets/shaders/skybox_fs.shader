@@ -7,6 +7,7 @@ uniform samplerCube u_skybox;
 
 out vec4 final_color;
 
-void main() {
+void main()
+{
     final_color = texture(u_skybox, sent_texCoord) * u_color;
 }

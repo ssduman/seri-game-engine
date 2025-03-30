@@ -54,6 +54,9 @@ public:
 		_xPosLast = xpos;
 		_yPosLast = ypos;
 
+		float& _yaw = _cameraProperties.rotation.x;
+		float& _pitch = _cameraProperties.rotation.y;
+
 		_yaw += deltaX * _cameraProperties.sensitivity;
 		_pitch += deltaY * _cameraProperties.sensitivity;
 
@@ -120,6 +123,14 @@ protected:
 		}
 		else
 		{
+			auto quat = glm::quat(
+				glm::vec3{
+					glm::radians(_cameraProperties.rotation.x),
+					glm::radians(_cameraProperties.rotation.y),
+					glm::radians(_cameraProperties.rotation.z)
+				}
+			);
+
 			_view = glm::lookAt(
 				_cameraProperties.position,
 				_cameraProperties.position + _cameraProperties.front,
@@ -155,9 +166,9 @@ protected:
 	virtual void updateEulerAngles()
 	{
 		glm::vec3 eulerAngle{};
-		eulerAngle.x = cos(glm::radians(_pitch)) * cos(glm::radians(_yaw));
-		eulerAngle.y = sin(glm::radians(_pitch));
-		eulerAngle.z = cos(glm::radians(_pitch)) * sin(glm::radians(_yaw));
+		eulerAngle.x = cos(glm::radians(_cameraProperties.rotation.y)) * cos(glm::radians(_cameraProperties.rotation.x));
+		eulerAngle.y = sin(glm::radians(_cameraProperties.rotation.y));
+		eulerAngle.z = cos(glm::radians(_cameraProperties.rotation.y)) * sin(glm::radians(_cameraProperties.rotation.x));
 
 		_cameraProperties.front = glm::normalize(eulerAngle);
 		_cameraProperties.right = glm::normalize(glm::cross(_cameraProperties.front, _cameraProperties.up));
@@ -170,9 +181,6 @@ protected:
 	glm::mat4 _projection{};
 
 	bool _init{ false };
-	float _roll{ 0.0f };
-	float _pitch{ 0.0f };
-	float _yaw{ 90.0f };
 	float _xPosLast{ -1.0f };
 	float _yPosLast{ -1.0f };
 

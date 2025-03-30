@@ -9,7 +9,8 @@ uniform mat4 u_projection;
 
 out vec3 sent_texCoord;
 
-void main() {
+void main()
+{
     sent_texCoord = in_coord;
     
     vec4 position = u_projection * u_view * u_model * vec4(in_coord + u_position, 1.0);

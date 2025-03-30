@@ -19,9 +19,10 @@ public:
 			{ Graphic::GetCameraOrtho()->getCameraProperties().width / 2.0f, Graphic::GetCameraOrtho()->getCameraProperties().height / 2.0f },
 			{ Graphic::GetCameraOrtho()->getCameraProperties().width, Graphic::GetCameraOrtho()->getCameraProperties().height }
 		);
-		
+
 		auto entityShader = ShaderManager::Find("entity");
-		auto gridShader = ShaderManager::Find("line");
+		auto lineShader = ShaderManager::Find("line");
+		auto gridShader = ShaderManager::Find("grid");
 
 		auto passageTexture = std::make_shared<Texture>();
 		passageTexture->init("assets/textures/passage.png");
@@ -29,6 +30,10 @@ public:
 		material = std::make_shared<MaterialG>();
 		material->shader = entityShader;
 		material->texture = passageTexture;
+
+		materialLine = std::make_shared<MaterialG>();
+		materialLine->shader = lineShader;
+		materialLine->texture = nullptr;
 
 		materialGrid = std::make_shared<MaterialG>();
 		materialGrid->shader = gridShader;
@@ -41,14 +46,15 @@ public:
 		glm::quat rot_2d = glm::quat(glm::vec3{ glm::radians(0.0f), glm::radians(0.0f), glm::radians(0.0f) });
 		glm::vec3 scale_2d{ 100.0f, 100.0f, 100.0f };
 
-		glm::vec3 pos_3d{ 1.0f, 0.0f, 1.0f };
+		glm::vec3 pos_3d{ 0.0f, 0.0f, 0.0f };
 		glm::quat rot_3d = glm::quat(glm::vec3{ glm::radians(0.0f), glm::radians(0.0f), glm::radians(0.0f) });
 		glm::vec3 scale_3d{ 1.0f, 1.0f, 1.0f };
 
-		Graphic::Draw(line_2d, Util::GetIdentityMatrix(), materialGrid, Graphic::GetCameraOrtho());
-		//Graphic::Draw(quad_2d, Util::GetTRS(pos_2d, rot_2d, scale_2d), material, Graphic::GetCameraOrtho());
+		//Graphic::Draw(line_2d, Util::GetIdentityMatrix(), materialLine, Graphic::GetCameraOrtho());
 		//Graphic::Draw(quad_3d, Util::GetTRS(pos_3d, rot_3d, scale_3d), material, Graphic::GetCameraPerspective());
-		//Graphic::Draw(cube_3d, Util::GetTRS(pos_3d, rot_3d, scale_3d), material, Graphic::GetCameraPerspective());
+		Graphic::Draw(cube_3d, Util::GetTRS(pos_3d, rot_3d, scale_3d), material, Graphic::GetCameraPerspective());
+
+		Graphic::Draw(quad_2d, Util::GetIdentityMatrix(), materialGrid, Graphic::GetCameraPerspective());
 	}
 
 	void Destroy() override
@@ -63,6 +69,7 @@ private:
 	std::shared_ptr<MeshG> line_2d;
 
 	std::shared_ptr<MaterialG> material;
+	std::shared_ptr<MaterialG> materialLine;
 	std::shared_ptr<MaterialG> materialGrid;
 
 };
