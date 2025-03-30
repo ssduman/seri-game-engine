@@ -14,6 +14,8 @@
 
 #include "seri/model/Model.h"
 
+#include "seri/behaviour/BehaviourManager.h"
+
 #include "seri/graphic/MeshG.h"
 #include "seri/graphic/Graphic.h"
 #include "seri/graphic/MaterialG.h"

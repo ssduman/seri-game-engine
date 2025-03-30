@@ -96,6 +96,11 @@ public:
 		return _projection;
 	}
 
+	const bool IsOrtho() const
+	{
+		return _cameraProperties.isOrtho;
+	}
+
 	const CameraProperties& getCameraProperties()
 	{
 		return _cameraProperties;

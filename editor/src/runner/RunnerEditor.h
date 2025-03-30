@@ -6,6 +6,7 @@
 #include "app/Factory.h"
 #include "camera/Camera.h"
 #include "event/UserEvent.h"
+#include "behaviour/SimpleDrawerBehaviour.h"
 
 #include <memory>
 #include <stdexcept>
@@ -19,12 +20,15 @@ public:
 
 	void operator()()
 	{
-		ShaderManager::Init("assets/shaders/");
-
 		WindowProperties windowProperties{ /*title*/ "Seri Game Engine - Editor", /*fullscreen*/ false, /*w*/ 1280, /*h*/ 720 };
 		auto windowManager = WindowManagerFactory::instance();
 		windowManager->setWindowProperties(std::move(windowProperties));
 		windowManager->init();
+
+		Graphic::Init();
+		BehaviourManager::Init();
+		ShaderManager::Init("assets/shaders/");
+		Texture::setTextureFlip(true);
 
 		SceneBuilder builder;
 		auto rootScene = builder.setName("Main").build();
@@ -48,29 +52,19 @@ public:
 		auto cameraPerspective = std::make_shared<Camera>(std::move(cameraPropertiesPerspective));
 		cameraPerspective->init();
 
+		Graphic::AddCamera(cameraOrtho);
+		Graphic::AddCamera(cameraPerspective);
+
 		auto cameraScene = builder.setName("Camera").setObject(cameraPerspective).build();
 		rootScene->add(cameraScene);
 
 		auto gui = std::make_shared<GUI>(cameraPerspective, rootScene);
 		gui->init();
 
-		auto graphic = std::make_shared<Graphic>();
+		SimpleDrawerBehaviour simpleDrawerBehaviour{};
 
-		auto quad_2d = MeshG::quad_2d();
-		auto quad_3d = MeshG::quad_3d();
-		auto cube_3d = MeshG::cube_3d();
-		//auto line = MeshG::line();
+		BehaviourManager::InitBehaviours();
 
-		auto entityShader = ShaderManager::Find("entity");
-
-		Texture::setTextureFlip(true);
-		auto passageTexture = std::make_shared<Texture>();
-		passageTexture->init("assets/textures/passage.png");
-
-		auto material = std::make_shared<MaterialG>();
-		material->shader = entityShader;
-		material->texture = passageTexture;
-		
 		LOGGER(info, "starting seri game engine - editor loop");
 
 		while (!windowManager->windowShouldClose())
@@ -80,30 +74,17 @@ public:
 			windowManager->updateDeltaTime();
 
 			cameraOrtho->update();
-			cameraPerspective->update();
+			Graphic::GetCameraPerspective()->update();
 
-			glm::vec3 pos_2d{ 660.0f, 660.0f, 0.0f };
-			glm::quat rot_2d = glm::quat(glm::vec3{ glm::radians(0.0f), glm::radians(0.0f), glm::radians(0.0f) });
-			glm::vec3 scale_2d{ 100.0f, 100.0f, 100.0f };
-
-			glm::vec3 pos_3d{ 1.0f, 0.0f, 1.0f };
-			glm::quat rot_3d = glm::quat(glm::vec3{ glm::radians(0.0f), glm::radians(0.0f), glm::radians(0.0f) });
-			glm::vec3 scale_3d{ 1.0f, 1.0f, 1.0f };
-
-			glm::vec3 pos_line{ 0.0f, 0.0f, 0.0f };
-			glm::quat rot_line = glm::quat(glm::vec3{ glm::radians(0.0f), glm::radians(0.0f), glm::radians(0.0f) });
-			glm::vec3 scale_line{ 10.0f, 10.0f, 10.0f };
-
-			//graphic->draw(quad_2d, Util::GetTRS(pos_2d, rot_2d, scale_2d), material, cameraOrtho);
-			graphic->draw(quad_3d, Util::GetTRS(pos_3d, rot_3d, scale_3d), material, cameraPerspective);
-			graphic->draw(cube_3d, Util::GetTRS(pos_3d, rot_3d, scale_3d), material, cameraPerspective);
-			//graphic->draw(line, Util::GetTRS(pos_line, rot_line, scale_line), material, cameraPerspective);
+			BehaviourManager::UpdateBehaviours();
 
 			gui->display();
 
 			windowManager->pollEvents();
 			windowManager->swapBuffers();
 		}
+
+		BehaviourManager::DestroyBehaviours();
 
 		LOGGER(info, "seri game engine - editor loop stopped");
 	}

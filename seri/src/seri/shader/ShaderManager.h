@@ -156,7 +156,7 @@ public:
 		ShaderManager::SetVec4(shader, "u_color", color);
 		ShaderManager::Disuse();
 	}
-	
+
 	static void SetColor(const std::shared_ptr<Shader>& shader, const char* name, const glm::vec4& color)
 	{
 		glUniform4fv(ShaderManager::GetUniformLocation(shader, name), 1, &color[0]);
@@ -201,7 +201,7 @@ public:
 	{
 		glUniform1i(ShaderManager::GetUniformLocation(shader, name), val);
 	}
-	
+
 	static void SetUInt(const std::shared_ptr<Shader>& shader, const char* name, unsigned int val)
 	{
 		glUniform1i(ShaderManager::GetUniformLocation(shader, name), val);
@@ -226,7 +226,7 @@ public:
 	{
 		glUniform4fv(ShaderManager::GetUniformLocation(shader, name), 1, &val[0]);
 	}
-	
+
 	static void SetVec4(const std::shared_ptr<Shader>& shader, const char* name, const glm::vec4& val)
 	{
 		glUniform4fv(ShaderManager::GetUniformLocation(shader, name), 1, &val[0]);
