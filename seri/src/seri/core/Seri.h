@@ -3,7 +3,6 @@
 #include "seri/util/Util.h"
 
 #include "seri/core/Object.h"
-#include "seri/core/Entity.h"
 #include "seri/core/IRunner.h"
 
 #include "seri/scene/Layer.h"
@@ -12,13 +11,13 @@
 #include "seri/scene/SceneVisitor.h"
 #include "seri/scene/SceneIterator.h"
 
-#include "seri/model/Model.h"
+#include "seri/model/ModelImporter.h"
+
+#include "seri/shader/ShaderManager.h"
 
 #include "seri/behaviour/BehaviourManager.h"
 
-//#include "seri/graphic/MeshG.h"
 #include "seri/graphic/Graphic.h"
-//#include "seri/graphic/MaterialG.h"
 
 #include "seri/logging/Logger.h"
 
@@ -27,6 +26,7 @@
 #include "seri/texture/Color.h"
 #include "seri/texture/Typer.h"
 #include "seri/texture/Skybox.h"
+#include "seri/texture/Texture.h"
 
 #include "seri/input/Input.h"
 

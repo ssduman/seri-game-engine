@@ -2,6 +2,7 @@
 
 #include "seri/core/Seri.h"
 #include "seri/camera/ICamera.h"
+#include "seri/renderer/AuxiliaryStructs.h"
 
 #include <vector>
 #include <memory>

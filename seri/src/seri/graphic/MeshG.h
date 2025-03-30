@@ -1,5 +1,6 @@
 #pragma once
 
+#include "seri/texture/Texture.h"
 #include "seri/renderer/AuxiliaryStructs.h"
 
 #include <glad/gl.h>
@@ -14,11 +15,11 @@ class Graphic;
 class MeshG
 {
 public:
-
 	MeshG() = default;
 
 	~MeshG() = default;
 
+	std::vector<Texture> textures;
 	std::vector<glm::vec3> vertices;
 	std::vector<unsigned int> indices;
 	std::vector<glm::vec2> uv0s;
@@ -32,6 +33,8 @@ public:
 	std::vector<glm::vec3> colors;
 	std::vector<glm::vec3> normals;
 	std::vector<glm::vec3> tangents;
+
+	glm::mat4 transformation{ 1.0f };
 
 	aux::DrawMode drawMode = aux::DrawMode::triangles;
 
@@ -60,7 +63,7 @@ public:
 			1, 2, 3,
 		};
 
-		mesh->build();
+		mesh->Build();
 
 		return mesh;
 	}
@@ -88,7 +91,7 @@ public:
 			1, 2, 3,
 		};
 
-		mesh->build();
+		mesh->Build();
 
 		return mesh;
 	}
@@ -114,7 +117,7 @@ public:
 			0, 1, 2,
 		};
 
-		mesh->build();
+		mesh->Build();
 
 		return mesh;
 	}
@@ -154,7 +157,7 @@ public:
 			1, 5, 7, 1, 7, 3,
 		};
 
-		mesh->build();
+		mesh->Build();
 
 		return mesh;
 	}
@@ -174,12 +177,50 @@ public:
 			{end_.x, end_.y, 0.0f},
 		};
 
-		mesh->build();
+		mesh->Build();
 
 		return mesh;
 	}
 
-	void build()
+	void SetTransformation(glm::mat4 t)
+	{
+		transformation = std::move(t);
+	}
+
+	void AddVertices(std::vector<glm::vec3> ver)
+	{
+		vertices.insert(vertices.end(), ver.begin(), ver.end());
+	}
+
+	void AddColors(std::vector<glm::vec4> col)
+	{
+		colors.insert(colors.end(), col.begin(), col.end());
+	}
+
+	void AddUV(std::vector<glm::vec2> uv)
+	{
+		uv0s.insert(uv0s.end(), uv.begin(), uv.end());
+	}
+
+	void AddNormals(std::vector<glm::vec3> nor)
+	{
+		normals.insert(normals.end(), nor.begin(), nor.end());
+	}
+
+	void AddTextures(std::vector<Texture> texs)
+	{
+		for (auto& tex : texs)
+		{
+			textures.emplace_back(std::move(tex));
+		}
+	}
+
+	void AddIndices(std::vector<unsigned int> ind)
+	{
+		indices.insert(indices.end(), ind.begin(), ind.end());
+	}
+
+	void Build()
 	{
 		if (_VAO != 0)
 		{
@@ -187,13 +228,13 @@ public:
 			return;
 		}
 
-		generate();
+		Generate();
 
-		bind_vao();
+		Bind_vao();
 
 		if (!vertices.empty())
 		{
-			bind_vbo_vertex();
+			Bind_vbo_vertex();
 
 			unsigned int index = aux::toGLenum(aux::Index::position);
 
@@ -218,7 +259,7 @@ public:
 
 		if (!uv0s.empty())
 		{
-			bind_vbo_uv0();
+			Bind_vbo_uv0();
 
 			unsigned int index = aux::toGLenum(aux::Index::texture);
 
@@ -243,7 +284,7 @@ public:
 
 		if (!colors.empty())
 		{
-			bind_vbo_color();
+			Bind_vbo_color();
 
 			unsigned int index = aux::toGLenum(aux::Index::color);
 
@@ -268,7 +309,7 @@ public:
 
 		if (!indices.empty())
 		{
-			bind_index();
+			Bind_index();
 
 			aux::DataBuffer dataBuffer;
 			dataBuffer.target = aux::toGLenum(aux::Target::ebo);
@@ -281,27 +322,27 @@ public:
 
 		count = !indices.empty() ? static_cast<unsigned int>(indices.size()) : static_cast<unsigned int>(vertices.size());
 
-		unbind_all();
+		Unbind_all();
 	}
 
-	bool hasIndex()
+	bool HasIndex()
 	{
 		return !indices.empty();
 	}
 
-	void bind()
+	void Bind()
 	{
-		bind_vao();
+		Bind_vao();
 	}
 
-	void unbind()
+	void Unbind()
 	{
-		unbind_vao();
+		Unbind_vao();
 	}
 
 private:
 
-	void generate()
+	void Generate()
 	{
 		glGenVertexArrays(1, &_VAO);
 		glGenBuffers(1, &_VBO_VER);
@@ -311,59 +352,59 @@ private:
 		glGenBuffers(1, &_EBO);
 	}
 
-	void bind_vao()
+	void Bind_vao()
 	{
 		glBindVertexArray(_VAO);
 	}
 
-	void bind_vbo_vertex()
+	void Bind_vbo_vertex()
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, _VBO_VER);
 	}
 
-	void bind_vbo_uv0()
+	void Bind_vbo_uv0()
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, _VBO_UV0);
 	}
 
-	void bind_vbo_uv1()
+	void Bind_vbo_uv1()
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, _VBO_UV1);
 	}
 
-	void bind_vbo_color()
+	void Bind_vbo_color()
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, _VBO_COL);
 	}
 
-	void bind_index()
+	void Bind_index()
 	{
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
 	}
 
-	void unbind_all()
+	void Unbind_all()
 	{
-		unbind_vao();
-		unbind_vbo();
-		unbind_index();
+		Unbind_vao();
+		Unbind_vbo();
+		Unbind_index();
 	}
 
-	void unbind_vao()
+	void Unbind_vao()
 	{
 		glBindVertexArray(0);
 	}
 
-	void unbind_vbo()
+	void Unbind_vbo()
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
-	void unbind_index()
+	void Unbind_index()
 	{
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
 
-	void deleteVAO()
+	void DeleteVAO()
 	{
 		glDeleteVertexArrays(1, &_VAO);
 		glDeleteBuffers(1, &_VBO_VER);

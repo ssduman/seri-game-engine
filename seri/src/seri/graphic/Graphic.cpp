@@ -36,7 +36,7 @@ void Graphic::Draw(std::shared_ptr<MeshG> mesh, const glm::mat4& trs, std::share
 	{
 		material->texture->bind();
 	}
-	mesh->bind();
+	mesh->Bind();
 
 	ShaderManager::SetUInt(material->shader, "u_texture", 0);
 	ShaderManager::SetColor(material->shader, "u_color", glm::vec4{ 1.0f, 0.0f, 0.0f, 1.0f });
@@ -44,7 +44,7 @@ void Graphic::Draw(std::shared_ptr<MeshG> mesh, const glm::mat4& trs, std::share
 	ShaderManager::SetMat4(material->shader, "u_view", camera->getView());
 	ShaderManager::SetMat4(material->shader, "u_projection", camera->getProjection());
 
-	if (mesh->hasIndex())
+	if (mesh->HasIndex())
 	{
 		drawElements(mesh->count, mesh->drawMode);
 	}
@@ -53,7 +53,7 @@ void Graphic::Draw(std::shared_ptr<MeshG> mesh, const glm::mat4& trs, std::share
 		drawArrays(mesh->count, mesh->drawMode);
 	}
 
-	mesh->unbind();
+	mesh->Unbind();
 	if (material->texture != nullptr)
 	{
 		material->texture->unbind();

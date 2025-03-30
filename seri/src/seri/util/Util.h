@@ -2,8 +2,7 @@
 
 #define PI 3.14159265359f
 
-#include <seri/core/Seri.h>
-#include <seri/logging/Logger.h>
+#include "seri/logging/Logger.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>

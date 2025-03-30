@@ -1,7 +1,6 @@
 #pragma once
 
 #include "seri/logging/Logger.h"
-#include "seri/shader/ShaderManager.h"
 #include "seri/renderer/IEngineBackend.h"
 #include "seri/renderer/AuxiliaryStructs.h"
 
@@ -194,11 +193,9 @@ private:
 		}
 		if (aux::Index::color == index)
 		{
-			//_shaderManager.useColors(true);
 		}
 		if (aux::Index::texture == index)
 		{
-			//_shaderManager.useTexture(true);
 		}
 	}
 

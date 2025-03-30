@@ -99,53 +99,53 @@ private:
 			return;
 		}
 
-		auto circle1Scene = builder.setName("Circle1").setObject(Factory::CreateEntity(cameraPerspective, EntityType::circle)).build();
-		auto triangle1Scene = builder.setName("Triangle1").setObject(Factory::CreateEntity(cameraPerspective, EntityType::triangle)).build();
-		auto rectangle1Scene = builder.setName("Rectangle1").setObject(Factory::CreateEntity(cameraPerspective, EntityType::rectangle)).build();
+		//auto circle1Scene = builder.setName("Circle1").setObject(Factory::CreateEntity(cameraPerspective, EntityType::circle)).build();
+		//auto triangle1Scene = builder.setName("Triangle1").setObject(Factory::CreateEntity(cameraPerspective, EntityType::triangle)).build();
+		//auto rectangle1Scene = builder.setName("Rectangle1").setObject(Factory::CreateEntity(cameraPerspective, EntityType::rectangle)).build();
 
-		auto typer1 = std::make_shared<Typer>(windowManager->getWidth(), windowManager->getHeight(), "assets/fonts/En Bloc.ttf");
-		typer1->getShader().init("assets/shaders/typer_vs.shader", "assets/shaders/typer_fs.shader");
-		ShaderManager::GetInstance().setProjection(typer1->getShader(), glm::ortho(0.0f, windowManager->getWidthF(), 0.0f, windowManager->getHeightF()));
-		typer1->init();
-		typer1->setText("hello, world!");
-		typer1->setColor({ 0.6f, 0.1f, 0.3f, 1.0f });
-		typer1->setPosition(10.0f, 20.0f);
-		auto typer1Scene = builder.setName("Typer1").setObject(typer1).build();
+		//auto typer1 = std::make_shared<Typer>(windowManager->getWidth(), windowManager->getHeight(), "assets/fonts/En Bloc.ttf");
+		//typer1->getShader().init("assets/shaders/typer_vs.shader", "assets/shaders/typer_fs.shader");
+		//ShaderManager::GetInstance().setProjection(typer1->getShader(), glm::ortho(0.0f, windowManager->getWidthF(), 0.0f, windowManager->getHeightF()));
+		//typer1->init();
+		//typer1->setText("hello, world!");
+		//typer1->setColor({ 0.6f, 0.1f, 0.3f, 1.0f });
+		//typer1->setPosition(10.0f, 20.0f);
+		//auto typer1Scene = builder.setName("Typer1").setObject(typer1).build();
 
-		std::vector<std::string> face = {
-			"assets/textures/skybox/right.jpg",
-			"assets/textures/skybox/left.jpg",
-			"assets/textures/skybox/bottom.jpg",
-			"assets/textures/skybox/top.jpg",
-			"assets/textures/skybox/front.jpg",
-			"assets/textures/skybox/back.jpg",
-		};
-		auto skybox1 = std::make_shared<Skybox>(cameraPerspective, face);
-		skybox1->getShader().init("assets/shaders/skybox_vs.shader", "assets/shaders/skybox_fs.shader");
-		skybox1->init();
-		auto skybox1Scene = builder.setName("Skybox2").setObject(skybox1).build();
+		//std::vector<std::string> face = {
+		//	"assets/textures/skybox/right.jpg",
+		//	"assets/textures/skybox/left.jpg",
+		//	"assets/textures/skybox/bottom.jpg",
+		//	"assets/textures/skybox/top.jpg",
+		//	"assets/textures/skybox/front.jpg",
+		//	"assets/textures/skybox/back.jpg",
+		//};
+		//auto skybox1 = std::make_shared<Skybox>(cameraPerspective, face);
+		//skybox1->getShader().init("assets/shaders/skybox_vs.shader", "assets/shaders/skybox_fs.shader");
+		//skybox1->init();
+		//auto skybox1Scene = builder.setName("Skybox2").setObject(skybox1).build();
 
-		auto model1 = std::make_shared<Model>(cameraPerspective);
-		model1->getShader().init("assets/shaders/entity_vs.shader", "assets/shaders/entity_fs.shader");
-		model1->init();
-		model1->load("assets/models/spider.obj");
-		model1->getTransform()._scale = glm::vec3{ 0.05f, 0.05f, 0.05f };
-		model1->getTransform()._position = glm::vec3{ 180.0f, 20.0f, 500.0f };
-		ShaderManager::GetInstance().setModel(model1->getShader(), model1->getTransform().apply());
-		ShaderManager::GetInstance().SetColor(model1->getShader(), glm::vec4{ 0.1f, 0.1f, 0.1f, 1.0f });
-		auto model1Scene = builder.setName("Spider1").setObject(model1).build();
+		//auto model1 = std::make_shared<Model>(cameraPerspective);
+		//model1->getShader().init("assets/shaders/entity_vs.shader", "assets/shaders/entity_fs.shader");
+		//model1->init();
+		//model1->load("assets/models/spider.obj");
+		//model1->getTransform()._scale = glm::vec3{ 0.05f, 0.05f, 0.05f };
+		//model1->getTransform()._position = glm::vec3{ 180.0f, 20.0f, 500.0f };
+		//ShaderManager::GetInstance().setModel(model1->getShader(), model1->getTransform().apply());
+		//ShaderManager::GetInstance().SetColor(model1->getShader(), glm::vec4{ 0.1f, 0.1f, 0.1f, 1.0f });
+		//auto model1Scene = builder.setName("Spider1").setObject(model1).build();
 
-		auto component1Scene = builder.setName("Component1").add(triangle1Scene).add(rectangle1Scene).build();
-		auto component2Scene = builder.setName("Component2").add(circle1Scene).build();
-		auto component3Scene = builder.setName("Text1").add(typer1Scene).build();
-		auto component4Scene = builder.setName("Model1").add(model1Scene).build();
-		auto component5Scene = builder.setName("Skybox1").add(skybox1Scene).build();
+		//auto component1Scene = builder.setName("Component1").add(triangle1Scene).add(rectangle1Scene).build();
+		//auto component2Scene = builder.setName("Component2").add(circle1Scene).build();
+		//auto component3Scene = builder.setName("Text1").add(typer1Scene).build();
+		//auto component4Scene = builder.setName("Model1").add(model1Scene).build();
+		//auto component5Scene = builder.setName("Skybox1").add(skybox1Scene).build();
 
-		rootScene->add(component1Scene);
-		rootScene->add(component2Scene);
-		rootScene->add(component3Scene);
-		rootScene->add(component4Scene);
-		rootScene->add(component5Scene);
+		//rootScene->add(component1Scene);
+		//rootScene->add(component2Scene);
+		//rootScene->add(component3Scene);
+		//rootScene->add(component4Scene);
+		//rootScene->add(component5Scene);
 	}
 
 	void DrawScene(std::shared_ptr<IScene> rootScene)
