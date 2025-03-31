@@ -26,40 +26,40 @@ public:
 
 	~ModelImporter() = default;
 
-	std::shared_ptr<MeshG> load(const std::string& modelPath);
+	std::shared_ptr<MeshG> Load(const std::string& modelPath);
 
 private:
-	void processNode(const aiScene* scene, const aiNode* node, std::shared_ptr<MeshG> mesh_);
+	unsigned int FlagBuilder();
 
-	void processMesh(const aiScene* scene, const aiNode* node, const aiMesh* mesh, std::shared_ptr<MeshG> mesh_);
+	void ProcessNode(const aiScene* scene, const aiNode* node, std::shared_ptr<MeshG> mesh_);
 
-	void loadIndices(const aiScene* scene, const aiMesh* mesh, std::shared_ptr<MeshG> mesh_);
+	void ProcessMesh(const aiScene* scene, const aiNode* node, const aiMesh* mesh, std::shared_ptr<MeshG> mesh_);
 
-	void loadVertices(const aiScene* scene, const aiMesh* mesh, std::shared_ptr<MeshG> mesh_);
+	void LoadIndices(const aiScene* scene, const aiMesh* mesh, std::shared_ptr<MeshG> mesh_);
 
-	void loadMaterial(const aiScene* scene, const aiMesh* mesh, std::shared_ptr<MeshG> mesh_);
+	void LoadVertices(const aiScene* scene, const aiMesh* mesh, std::shared_ptr<MeshG> mesh_);
 
-	void loadTexture(const aiScene* scene, const aiMaterial* material, const aiTextureType textureType, std::shared_ptr<MeshG> mesh_);
+	void LoadMaterial(const aiScene* scene, const aiMesh* mesh, std::shared_ptr<MeshG> mesh_);
 
-	void loadEmbeddedTexture(const aiTexture* ai_texture, const aiTextureType textureType, std::shared_ptr<MeshG> mesh_);
+	void LoadTexture(const aiScene* scene, const aiMaterial* material, const aiTextureType textureType, std::shared_ptr<MeshG> mesh_);
 
-	void loadFileTexture(const std::string& texturePath, const aiTextureType textureType, std::shared_ptr<MeshG> mesh_);
+	void LoadEmbeddedTexture(const aiTexture* ai_texture, const aiTextureType textureType, std::shared_ptr<MeshG> mesh_);
 
-	void loadColors(const aiScene* scene, const aiMaterial* material);
-	
-	unsigned int flagBuilder();
+	void LoadFileTexture(const std::string& texturePath, const aiTextureType textureType, std::shared_ptr<MeshG> mesh_);
 
-	static void convertVector(const aiVector2D& aiVec, glm::vec2& glmVec);
+	void LoadColors(const aiScene* scene, const aiMaterial* material);
 
-	static void convertVector(const aiVector3D& aiVec, glm::vec2& glmVec);
+	static void ConvertVector(const aiVector2D& aiVec, glm::vec2& glmVec);
 
-	static void convertVector(const aiVector3D& aiVec, glm::vec3& glmVec);
+	static void ConvertVector(const aiVector3D& aiVec, glm::vec2& glmVec);
 
-	static void convertVector(const aiColor4D& aiVec, glm::vec4& glmVec);
+	static void ConvertVector(const aiVector3D& aiVec, glm::vec3& glmVec);
 
-	static void convertMatrix(const aiMatrix4x4& aiMat, glm::mat4& glmMat);
+	static void ConvertVector(const aiColor4D& aiVec, glm::vec4& glmVec);
 
-	static std::string getString(const aiTextureType textureType);
+	static void ConvertMatrix(const aiMatrix4x4& aiMat, glm::mat4& glmMat);
+
+	static std::string GetString(const aiTextureType textureType);
 
 	std::map<std::string, Texture> _texturesLoaded;
 	std::string _modelDirectory;

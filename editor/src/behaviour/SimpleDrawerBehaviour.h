@@ -21,7 +21,7 @@ public:
 			{ Graphic::GetCameraOrtho()->getCameraProperties().width, Graphic::GetCameraOrtho()->getCameraProperties().height }
 		);
 
-		model_0 = ModelImporter{}.load("assets/models/spider.obj");
+		model_0 = ModelImporter{}.Load("assets/models/spider.obj");
 
 		auto entityShader = ShaderManager::Find("entity");
 		auto lineShader = ShaderManager::Find("line");

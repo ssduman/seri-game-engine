@@ -40,148 +40,6 @@ public:
 
 	unsigned int count = 6;
 
-	static std::shared_ptr<MeshG> quad_2d()
-	{
-		std::shared_ptr<MeshG> mesh = std::make_shared<MeshG>();
-
-		mesh->vertices = {
-			{-1.0f, -1.0f, 0.0f},
-			{+1.0f, -1.0f, 0.0f},
-			{+1.0f, +1.0f, 0.0f},
-			{-1.0f, +1.0f, 0.0f},
-		};
-
-		mesh->uv0s = {
-			{0.0f, 0.0f},
-			{1.0f, 0.0f},
-			{1.0f, 1.0f},
-			{0.0f, 1.0f},
-		};
-
-		mesh->indices = {
-			0, 1, 3,
-			1, 2, 3,
-		};
-
-		mesh->Build();
-
-		return mesh;
-	}
-
-	static std::shared_ptr<MeshG> quad_3d()
-	{
-		std::shared_ptr<MeshG> mesh = std::make_shared<MeshG>();
-
-		mesh->vertices = {
-			{0.0f, 0.0f, 0.0f},
-			{1.0f, 0.0f, 0.0f},
-			{1.0f, 1.0f, 0.0f},
-			{0.0f, 1.0f, 0.0f},
-		};
-
-		mesh->uv0s = {
-			{0.0f, 0.0f},
-			{1.0f, 0.0f},
-			{1.0f, 1.0f},
-			{0.0f, 1.0f},
-		};
-
-		mesh->indices = {
-			0, 1, 3,
-			1, 2, 3,
-		};
-
-		mesh->Build();
-
-		return mesh;
-	}
-
-	static std::shared_ptr<MeshG> triangle()
-	{
-		std::shared_ptr<MeshG> mesh = std::make_shared<MeshG>();
-
-		mesh->vertices = {
-			{0.0f, 0.0f, 0.0f},
-			{1.0f, 1.0f, 0.0f},
-			{1.0f, 0.0f, 0.0f},
-		};
-
-		mesh->uv0s = {
-			{0.0f, 0.0f},
-			{1.0f, 1.0f},
-			{1.0f, 0.0f},
-			{0.0f, 1.0f},
-		};
-
-		mesh->indices = {
-			0, 1, 2,
-		};
-
-		mesh->Build();
-
-		return mesh;
-	}
-
-	static std::shared_ptr<MeshG> cube_3d()
-	{
-		std::shared_ptr<MeshG> mesh = std::make_shared<MeshG>();
-
-		mesh->vertices = {
-			  {-1.0f, +1.0f, +1.0f},
-			  {-1.0f, -1.0f, +1.0f},
-			  {+1.0f, +1.0f, +1.0f},
-			  {+1.0f, -1.0f, +1.0f},
-			  {-1.0f, +1.0f, -1.0f},
-			  {-1.0f, -1.0f, -1.0f},
-			  {+1.0f, +1.0f, -1.0f},
-			  {+1.0f, -1.0f, -1.0f},
-		};
-
-		mesh->uv0s = {
-			{0.0f, 0.0f},
-			{1.0f, 1.0f},
-			{1.0f, 0.0f},
-			{0.0f, 1.0f},
-			{0.0f, 0.0f},
-			{1.0f, 1.0f},
-			{1.0f, 0.0f},
-			{0.0f, 1.0f},
-		};
-
-		mesh->indices = {
-			0, 2, 3, 0, 3, 1,
-			2, 6, 7, 2, 7, 3,
-			6, 4, 5, 6, 5, 7,
-			4, 0, 1, 4, 1, 5,
-			0, 4, 6, 0, 6, 2,
-			1, 5, 7, 1, 7, 3,
-		};
-
-		mesh->Build();
-
-		return mesh;
-	}
-
-	static std::shared_ptr<MeshG> line_2d(glm::vec2 beg, glm::vec2 end)
-	{
-		std::shared_ptr<MeshG> mesh = std::make_shared<MeshG>();
-
-		mesh->drawMode = aux::DrawMode::lines;
-
-		glm::mat4 proj = Graphic::GetCameraOrtho()->getProjection();
-		glm::vec4 beg_ = proj * glm::vec4(beg.x, beg.y, 0.0f, 1.0f);
-		glm::vec4 end_ = proj * glm::vec4(end.x, end.y, 0.0f, 1.0f);
-
-		mesh->vertices = {
-			{beg_.x, beg_.y, 0.0f},
-			{end_.x, end_.y, 0.0f},
-		};
-
-		mesh->Build();
-
-		return mesh;
-	}
-
 	void SetTransformation(glm::mat4 t)
 	{
 		transformation = std::move(t);
@@ -222,7 +80,7 @@ public:
 
 	void Build()
 	{
-		if (_VAO != 0)
+		if (_vao != 0)
 		{
 			LOGGER(warning, "vao already generated");
 			return;
@@ -340,46 +198,188 @@ public:
 		Unbind_vao();
 	}
 
+	static std::shared_ptr<MeshG> tri_2d()
+	{
+		std::shared_ptr<MeshG> mesh = std::make_shared<MeshG>();
+
+		mesh->vertices = {
+			{0.0f, 0.0f, 0.0f},
+			{1.0f, 1.0f, 0.0f},
+			{1.0f, 0.0f, 0.0f},
+		};
+
+		mesh->uv0s = {
+			{0.0f, 0.0f},
+			{1.0f, 1.0f},
+			{1.0f, 0.0f},
+			{0.0f, 1.0f},
+		};
+
+		mesh->indices = {
+			0, 1, 2,
+		};
+
+		mesh->Build();
+
+		return mesh;
+	}
+
+	static std::shared_ptr<MeshG> quad_2d()
+	{
+		std::shared_ptr<MeshG> mesh = std::make_shared<MeshG>();
+
+		mesh->vertices = {
+			{-1.0f, -1.0f, 0.0f},
+			{+1.0f, -1.0f, 0.0f},
+			{+1.0f, +1.0f, 0.0f},
+			{-1.0f, +1.0f, 0.0f},
+		};
+
+		mesh->uv0s = {
+			{0.0f, 0.0f},
+			{1.0f, 0.0f},
+			{1.0f, 1.0f},
+			{0.0f, 1.0f},
+		};
+
+		mesh->indices = {
+			0, 1, 3,
+			1, 2, 3,
+		};
+
+		mesh->Build();
+
+		return mesh;
+	}
+
+	static std::shared_ptr<MeshG> quad_3d()
+	{
+		std::shared_ptr<MeshG> mesh = std::make_shared<MeshG>();
+
+		mesh->vertices = {
+			{0.0f, 0.0f, 0.0f},
+			{1.0f, 0.0f, 0.0f},
+			{1.0f, 1.0f, 0.0f},
+			{0.0f, 1.0f, 0.0f},
+		};
+
+		mesh->uv0s = {
+			{0.0f, 0.0f},
+			{1.0f, 0.0f},
+			{1.0f, 1.0f},
+			{0.0f, 1.0f},
+		};
+
+		mesh->indices = {
+			0, 1, 3,
+			1, 2, 3,
+		};
+
+		mesh->Build();
+
+		return mesh;
+	}
+
+	static std::shared_ptr<MeshG> cube_3d()
+	{
+		std::shared_ptr<MeshG> mesh = std::make_shared<MeshG>();
+
+		mesh->vertices = {
+			  {-1.0f, +1.0f, +1.0f},
+			  {-1.0f, -1.0f, +1.0f},
+			  {+1.0f, +1.0f, +1.0f},
+			  {+1.0f, -1.0f, +1.0f},
+			  {-1.0f, +1.0f, -1.0f},
+			  {-1.0f, -1.0f, -1.0f},
+			  {+1.0f, +1.0f, -1.0f},
+			  {+1.0f, -1.0f, -1.0f},
+		};
+
+		mesh->uv0s = {
+			{0.0f, 0.0f},
+			{1.0f, 1.0f},
+			{1.0f, 0.0f},
+			{0.0f, 1.0f},
+			{0.0f, 0.0f},
+			{1.0f, 1.0f},
+			{1.0f, 0.0f},
+			{0.0f, 1.0f},
+		};
+
+		mesh->indices = {
+			0, 2, 3, 0, 3, 1,
+			2, 6, 7, 2, 7, 3,
+			6, 4, 5, 6, 5, 7,
+			4, 0, 1, 4, 1, 5,
+			0, 4, 6, 0, 6, 2,
+			1, 5, 7, 1, 7, 3,
+		};
+
+		mesh->Build();
+
+		return mesh;
+	}
+
+	static std::shared_ptr<MeshG> line_2d(glm::vec2 beg, glm::vec2 end)
+	{
+		std::shared_ptr<MeshG> mesh = std::make_shared<MeshG>();
+
+		mesh->drawMode = aux::DrawMode::lines;
+
+		glm::mat4 proj = Graphic::GetCameraOrtho()->getProjection();
+		glm::vec4 beg_ = proj * glm::vec4(beg.x, beg.y, 0.0f, 1.0f);
+		glm::vec4 end_ = proj * glm::vec4(end.x, end.y, 0.0f, 1.0f);
+
+		mesh->vertices = {
+			{beg_.x, beg_.y, 0.0f},
+			{end_.x, end_.y, 0.0f},
+		};
+
+		mesh->Build();
+
+		return mesh;
+	}
+
 private:
 
 	void Generate()
 	{
-		glGenVertexArrays(1, &_VAO);
-		glGenBuffers(1, &_VBO_VER);
-		glGenBuffers(1, &_VBO_UV0);
-		glGenBuffers(1, &_VBO_UV1);
-		glGenBuffers(1, &_VBO_COL);
-		glGenBuffers(1, &_EBO);
+		glGenVertexArrays(1, &_vao);
+		glGenBuffers(1, &_vbo_ver);
+		glGenBuffers(1, &_vbo_uv0);
+		glGenBuffers(1, &_vbo_uv1);
+		glGenBuffers(1, &_vbo_col);
+		glGenBuffers(1, &_ebo);
 	}
 
 	void Bind_vao()
 	{
-		glBindVertexArray(_VAO);
+		glBindVertexArray(_vao);
 	}
 
 	void Bind_vbo_vertex()
 	{
-		glBindBuffer(GL_ARRAY_BUFFER, _VBO_VER);
+		glBindBuffer(GL_ARRAY_BUFFER, _vbo_ver);
 	}
 
 	void Bind_vbo_uv0()
 	{
-		glBindBuffer(GL_ARRAY_BUFFER, _VBO_UV0);
+		glBindBuffer(GL_ARRAY_BUFFER, _vbo_uv0);
 	}
 
 	void Bind_vbo_uv1()
 	{
-		glBindBuffer(GL_ARRAY_BUFFER, _VBO_UV1);
+		glBindBuffer(GL_ARRAY_BUFFER, _vbo_uv1);
 	}
 
 	void Bind_vbo_color()
 	{
-		glBindBuffer(GL_ARRAY_BUFFER, _VBO_COL);
+		glBindBuffer(GL_ARRAY_BUFFER, _vbo_col);
 	}
 
 	void Bind_index()
 	{
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ebo);
 	}
 
 	void Unbind_all()
@@ -404,20 +404,20 @@ private:
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
 
-	void DeleteVAO()
+	void Delete_vao()
 	{
-		glDeleteVertexArrays(1, &_VAO);
-		glDeleteBuffers(1, &_VBO_VER);
-		glDeleteBuffers(1, &_VBO_UV0);
-		glDeleteBuffers(1, &_VBO_UV1);
-		glDeleteBuffers(1, &_EBO);
+		glDeleteVertexArrays(1, &_vao);
+		glDeleteBuffers(1, &_vbo_ver);
+		glDeleteBuffers(1, &_vbo_uv0);
+		glDeleteBuffers(1, &_vbo_uv1);
+		glDeleteBuffers(1, &_ebo);
 	}
 
-	unsigned int _VAO{ 0 };
-	unsigned int _VBO_VER{ 0 };
-	unsigned int _VBO_UV0{ 0 };
-	unsigned int _VBO_UV1{ 0 };
-	unsigned int _VBO_COL{ 0 };
-	unsigned int _EBO{ 0 };
+	unsigned int _vao{ 0 };
+	unsigned int _vbo_ver{ 0 };
+	unsigned int _vbo_uv0{ 0 };
+	unsigned int _vbo_uv1{ 0 };
+	unsigned int _vbo_col{ 0 };
+	unsigned int _ebo{ 0 };
 
 };
