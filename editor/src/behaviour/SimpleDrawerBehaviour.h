@@ -21,9 +21,11 @@ public:
 			{ Graphic::GetCameraOrtho()->getCameraProperties().width, Graphic::GetCameraOrtho()->getCameraProperties().height }
 		);
 
-		//model_0 = ModelImporter{}.Load("assets/models/spider.obj");
-		//model_0 = ModelImporter{}.Load("assets/models/lightpole_a.fbx");
-		models_0 = ModelImporter{}.Load("assets/models/X Bot@Hip Hop Dancing.fbx");
+		//models_0 = ModelImporter{}.Load("assets/models/spider.obj");
+		models_0 = ModelImporter{}.Load("assets/models/tank.fbx");
+		//models_0 = ModelImporter{}.Load("assets/models/prop_0.fbx");
+		//models_0 = ModelImporter{}.Load("assets/models/prop_0_crk.fbx");
+		//models_0 = ModelImporter{}.Load("assets/models/X Bot@Hip Hop Dancing.fbx");
 
 		auto entityShader = ShaderManager::Find("entity");
 		auto lineShader = ShaderManager::Find("line");
@@ -43,6 +45,10 @@ public:
 		materialGrid = std::make_shared<MaterialG>();
 		materialGrid->shader = gridShader;
 		materialGrid->texture = nullptr;
+
+		materialModel = std::make_shared<MaterialG>();
+		materialModel->shader = entityShader;
+		materialModel->texture = nullptr;
 	}
 
 	void Update() override
@@ -83,5 +89,6 @@ private:
 	std::shared_ptr<MaterialG> material;
 	std::shared_ptr<MaterialG> materialLine;
 	std::shared_ptr<MaterialG> materialGrid;
+	std::shared_ptr<MaterialG> materialModel;
 
 };

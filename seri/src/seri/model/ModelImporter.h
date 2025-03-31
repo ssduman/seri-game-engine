@@ -49,15 +49,13 @@ private:
 
 	void LoadColors(const aiScene* scene, const aiMaterial* material);
 
-	static void ConvertVector(const aiVector2D& aiVec, glm::vec2& glmVec);
+	static glm::vec2 ConvertVector(const aiVector2D& aiVec);
 
-	static void ConvertVector(const aiVector3D& aiVec, glm::vec2& glmVec);
+	static glm::vec3 ConvertVector(const aiVector3D& aiVec);
 
-	static void ConvertVector(const aiVector3D& aiVec, glm::vec3& glmVec);
+	static glm::vec4 ConvertVector(const aiColor4D& aiVec);
 
-	static void ConvertVector(const aiColor4D& aiVec, glm::vec4& glmVec);
-
-	static void ConvertMatrix(const aiMatrix4x4& aiMat, glm::mat4& glmMat);
+	static glm::mat4 ConvertMatrix(const aiMatrix4x4& aiMat);
 
 	static std::string GetString(const aiTextureType textureType);
 

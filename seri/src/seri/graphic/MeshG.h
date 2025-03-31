@@ -40,11 +40,6 @@ public:
 
 	unsigned int count = 6;
 
-	void SetTransformation(glm::mat4 t)
-	{
-		transformation = std::move(t);
-	}
-
 	void AddVertices(std::vector<glm::vec3> ver)
 	{
 		vertices.insert(vertices.end(), ver.begin(), ver.end());
