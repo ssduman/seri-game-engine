@@ -26,12 +26,12 @@ public:
 
 	~ModelImporter() = default;
 
-	std::shared_ptr<MeshG> Load(const std::string& modelPath);
+	std::vector<std::shared_ptr<MeshG>> Load(const std::string& modelPath);
 
 private:
 	unsigned int FlagBuilder();
 
-	void ProcessNode(const aiScene* scene, const aiNode* node, std::shared_ptr<MeshG> mesh_);
+	void ProcessNode(const aiScene* scene, const aiNode* node, std::vector<std::shared_ptr<MeshG>>& meshes);
 
 	void ProcessMesh(const aiScene* scene, const aiNode* node, const aiMesh* mesh, std::shared_ptr<MeshG> mesh_);
 

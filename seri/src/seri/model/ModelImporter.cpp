@@ -19,7 +19,7 @@ unsigned int ModelImporter::FlagBuilder()
 		;
 }
 
-std::shared_ptr<MeshG> ModelImporter::Load(const std::string& modelPath)
+std::vector<std::shared_ptr<MeshG>> ModelImporter::Load(const std::string& modelPath)
 {
 	Assimp::Importer importer;
 
@@ -27,37 +27,40 @@ std::shared_ptr<MeshG> ModelImporter::Load(const std::string& modelPath)
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 	{
 		LOGGER(error, "read model path '" << modelPath << "' failed: " << importer.GetErrorString());
-		return nullptr;
+		return {};
 	}
-
-	std::shared_ptr<MeshG> mesh_ = std::make_shared<MeshG>();
-
-	ConvertMatrix(scene->mRootNode->mTransformation, mesh_->transformation);
-
+	
 	_modelDirectory = modelPath.substr(0, modelPath.find_last_of("/")) + "/";
 
+	std::vector<std::shared_ptr<MeshG>> meshes{};
+
+	//ConvertMatrix(scene->mRootNode->mTransformation, mesh_->transformation);
+
+	ProcessNode(scene, scene->mRootNode, meshes);
+
+	for (auto& mesh : meshes)
+	{
+		mesh->Build();
+	}
+
 	LOGGER(info, "read model path '" << modelPath << "' succeeded");
-	LOGGER(info, "model directory: " << _modelDirectory);
+	LOGGER(info, "mesh count: " << meshes.size());
 
-	ProcessNode(scene, scene->mRootNode, mesh_);
-
-	_texturesLoaded.clear();
-
-	mesh_->Build();
-
-	return mesh_;
+	return meshes;
 }
 
-void ModelImporter::ProcessNode(const aiScene* scene, const aiNode* node, std::shared_ptr<MeshG> mesh_)
+void ModelImporter::ProcessNode(const aiScene* scene, const aiNode* node, std::vector<std::shared_ptr<MeshG>>& meshes)
 {
 	for (unsigned int i = 0; i < node->mNumMeshes; i++)
 	{
+		std::shared_ptr<MeshG> mesh_ = std::make_shared<MeshG>();
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
 		ProcessMesh(scene, node, mesh, mesh_);
+		meshes.emplace_back(std::move(mesh_));
 	}
 	for (unsigned int i = 0; i < node->mNumChildren; i++)
 	{
-		ProcessNode(scene, node->mChildren[i], mesh_);
+		ProcessNode(scene, node->mChildren[i], meshes);
 	}
 }
 
@@ -75,7 +78,7 @@ void ModelImporter::ProcessMesh(const aiScene* scene, const aiNode* node, const 
 
 void ModelImporter::LoadIndices(const aiScene* scene, const aiMesh* mesh, std::shared_ptr<MeshG> mesh_)
 {
-	unsigned int offset = mesh_->indices.size();
+	unsigned int offset = static_cast<unsigned int>(mesh_->indices.size());
 
 	std::vector<unsigned int> indices;
 	for (unsigned int i = 0; i < mesh->mNumFaces; i++)

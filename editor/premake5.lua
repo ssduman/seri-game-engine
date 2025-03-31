@@ -19,6 +19,7 @@ project "Editor"
 
   linkoptions {
     "-IGNORE:4098",
+    "-IGNORE:4267",
   }
 
   includedirs {
