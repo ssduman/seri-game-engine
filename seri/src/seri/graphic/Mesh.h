@@ -12,12 +12,12 @@
 
 class Graphic;
 
-class MeshG
+class Mesh
 {
 public:
-	MeshG() = default;
+	Mesh() = default;
 
-	~MeshG() = default;
+	~Mesh() = default;
 
 	std::vector<Texture> textures;
 	std::vector<glm::vec3> vertices;
@@ -193,9 +193,9 @@ public:
 		Unbind_vao();
 	}
 
-	static std::shared_ptr<MeshG> tri_2d()
+	static std::shared_ptr<Mesh> tri_2d()
 	{
-		std::shared_ptr<MeshG> mesh = std::make_shared<MeshG>();
+		std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
 
 		mesh->vertices = {
 			{0.0f, 0.0f, 0.0f},
@@ -219,9 +219,9 @@ public:
 		return mesh;
 	}
 
-	static std::shared_ptr<MeshG> quad_2d()
+	static std::shared_ptr<Mesh> quad_2d()
 	{
-		std::shared_ptr<MeshG> mesh = std::make_shared<MeshG>();
+		std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
 
 		mesh->vertices = {
 			{-1.0f, -1.0f, 0.0f},
@@ -247,9 +247,9 @@ public:
 		return mesh;
 	}
 
-	static std::shared_ptr<MeshG> quad_3d()
+	static std::shared_ptr<Mesh> quad_3d()
 	{
-		std::shared_ptr<MeshG> mesh = std::make_shared<MeshG>();
+		std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
 
 		mesh->vertices = {
 			{0.0f, 0.0f, 0.0f},
@@ -275,9 +275,9 @@ public:
 		return mesh;
 	}
 
-	static std::shared_ptr<MeshG> cube_3d()
+	static std::shared_ptr<Mesh> cube_3d()
 	{
-		std::shared_ptr<MeshG> mesh = std::make_shared<MeshG>();
+		std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
 
 		mesh->vertices = {
 			  {-1.0f, +1.0f, +1.0f},
@@ -315,9 +315,9 @@ public:
 		return mesh;
 	}
 
-	static std::shared_ptr<MeshG> line_2d(glm::vec2 beg, glm::vec2 end)
+	static std::shared_ptr<Mesh> line_2d(glm::vec2 beg, glm::vec2 end)
 	{
-		std::shared_ptr<MeshG> mesh = std::make_shared<MeshG>();
+		std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
 
 		mesh->drawMode = aux::DrawMode::lines;
 

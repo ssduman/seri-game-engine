@@ -1,8 +1,8 @@
 #include "Seripch.h"
 
 #include "seri/graphic/Graphic.h"
-#include "seri/graphic/MeshG.h"
-#include "seri/graphic/MaterialG.h"
+#include "seri/graphic/Mesh.h"
+#include "seri/graphic/Material.h"
 #include "seri/camera/ICamera.h"
 
 void Graphic::AddCamera(std::shared_ptr<ICamera> camera)
@@ -29,7 +29,7 @@ std::shared_ptr<ICamera> Graphic::GetCameraPerspective()
 	return GetInstance()._cameraPerspective;
 }
 
-void Graphic::Draw(std::shared_ptr<MeshG> mesh, const glm::mat4& trs, std::shared_ptr<MaterialG> material, std::shared_ptr<ICamera> camera)
+void Graphic::Draw(std::shared_ptr<Mesh> mesh, const glm::mat4& trs, std::shared_ptr<Material> material, std::shared_ptr<ICamera> camera)
 {
 	ShaderManager::Use(material->shader);
 	if (material->texture != nullptr)

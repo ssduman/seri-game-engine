@@ -7,8 +7,8 @@
 #include <vector>
 #include <memory>
 
-class MeshG;
-class MaterialG;
+class Mesh;
+class Material;
 
 class Graphic
 {
@@ -35,7 +35,7 @@ public:
 
 	static std::shared_ptr<ICamera> GetCameraPerspective();
 
-	static void Draw(std::shared_ptr<MeshG> mesh, const glm::mat4& trs, std::shared_ptr<MaterialG> material, std::shared_ptr<ICamera> camera);
+	static void Draw(std::shared_ptr<Mesh> mesh, const glm::mat4& trs, std::shared_ptr<Material> material, std::shared_ptr<ICamera> camera);
 
 private:
 	Graphic()

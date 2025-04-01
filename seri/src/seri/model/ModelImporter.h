@@ -14,7 +14,7 @@
 #include <vector>
 #include <string>
 
-class MeshG;
+class Mesh;
 
 class ModelImporter
 {
@@ -26,28 +26,28 @@ public:
 
 	~ModelImporter() = default;
 
-	std::vector<std::shared_ptr<MeshG>> Load(const std::string& modelPath);
+	std::vector<std::shared_ptr<Mesh>> Load(const std::string& modelPath);
 
 private:
 	unsigned int FlagBuilder();
 
-	void ProcessNode(const aiScene* scene, const aiNode* node, std::vector<std::shared_ptr<MeshG>>& meshes);
+	void ProcessNode(const aiScene* aiScene, const aiNode* aiNode, std::vector<std::shared_ptr<Mesh>>& meshes);
 
-	void ProcessMesh(const aiScene* scene, const aiNode* node, const aiMesh* mesh, std::shared_ptr<MeshG> mesh_);
+	void ProcessMesh(const aiScene* aiScene, const aiNode* aiNode, const aiMesh* mesh, std::shared_ptr<Mesh> mesh_);
 
-	void LoadIndices(const aiScene* scene, const aiMesh* mesh, std::shared_ptr<MeshG> mesh_);
+	void LoadIndices(const aiScene* aiScene, const aiMesh* aiMesh, std::shared_ptr<Mesh> mesh_);
 
-	void LoadVertices(const aiScene* scene, const aiMesh* mesh, std::shared_ptr<MeshG> mesh_);
+	void LoadVertices(const aiScene* aiScene, const aiMesh* aiMesh, std::shared_ptr<Mesh> mesh_);
 
-	void LoadMaterial(const aiScene* scene, const aiMesh* mesh, std::shared_ptr<MeshG> mesh_);
+	void LoadMaterial(const aiScene* aiScene, const aiMesh* aiMesh, std::shared_ptr<Mesh> mesh_);
 
-	void LoadTexture(const aiScene* scene, const aiMaterial* material, const aiTextureType textureType, std::shared_ptr<MeshG> mesh_);
+	void LoadTexture(const aiScene* aiScene, const aiMaterial* aiMaterial, const aiTextureType aiTextureType, std::shared_ptr<Mesh> mesh_);
 
-	void LoadEmbeddedTexture(const aiTexture* ai_texture, const aiTextureType textureType, std::shared_ptr<MeshG> mesh_);
+	void LoadEmbeddedTexture(const aiTexture* aiTexture, const aiTextureType aiTextureType, std::shared_ptr<Mesh> mesh_);
 
-	void LoadFileTexture(const std::string& texturePath, const aiTextureType textureType, std::shared_ptr<MeshG> mesh_);
+	void LoadFileTexture(const aiTextureType aiTextureType, const std::string& texturePath, std::shared_ptr<Mesh> mesh_);
 
-	void LoadColors(const aiScene* scene, const aiMaterial* material);
+	void LoadColors(const aiScene* aiScene, const aiMaterial* aiMaterial);
 
 	static glm::vec2 ConvertVector(const aiVector2D& aiVec);
 
@@ -57,7 +57,7 @@ private:
 
 	static glm::mat4 ConvertMatrix(const aiMatrix4x4& aiMat);
 
-	static std::string GetString(const aiTextureType textureType);
+	static std::string GetString(const aiTextureType aiTextureType);
 
 	std::map<std::string, Texture> _texturesLoaded;
 	std::string _modelDirectory;

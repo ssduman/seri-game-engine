@@ -3,8 +3,8 @@
 #include "seri/model/ModelImporter.h"
 
 #include "seri/graphic/Graphic.h"
-#include "seri/graphic/MeshG.h"
-#include "seri/graphic/MaterialG.h"
+#include "seri/graphic/Mesh.h"
+#include "seri/graphic/Material.h"
 #include "seri/camera/ICamera.h"
 
 unsigned int ModelImporter::FlagBuilder()
@@ -19,7 +19,7 @@ unsigned int ModelImporter::FlagBuilder()
 		;
 }
 
-std::vector<std::shared_ptr<MeshG>> ModelImporter::Load(const std::string& modelPath)
+std::vector<std::shared_ptr<Mesh>> ModelImporter::Load(const std::string& modelPath)
 {
 	Assimp::Importer importer;
 
@@ -32,7 +32,7 @@ std::vector<std::shared_ptr<MeshG>> ModelImporter::Load(const std::string& model
 
 	_modelDirectory = modelPath.substr(0, modelPath.find_last_of("/")) + "/";
 
-	std::vector<std::shared_ptr<MeshG>> meshes{};
+	std::vector<std::shared_ptr<Mesh>> meshes{};
 
 	glm::mat4 globalTransformation = ConvertMatrix(scene->mRootNode->mTransformation);
 
@@ -44,158 +44,157 @@ std::vector<std::shared_ptr<MeshG>> ModelImporter::Load(const std::string& model
 		mesh->Build();
 	}
 
-	LOGGER(info, "read model path '" << modelPath << "' succeeded");
-	LOGGER(info, "mesh count: " << meshes.size());
+	LOGGER(info, "loaded '" << modelPath << "', " << "mesh count: " << meshes.size());
 
 	return meshes;
 }
 
-void ModelImporter::ProcessNode(const aiScene* scene, const aiNode* node, std::vector<std::shared_ptr<MeshG>>& meshes)
+void ModelImporter::ProcessNode(const aiScene* aiScene, const aiNode* aiNode, std::vector<std::shared_ptr<Mesh>>& meshes)
 {
-	for (unsigned int i = 0; i < node->mNumMeshes; i++)
+	for (unsigned int i = 0; i < aiNode->mNumMeshes; i++)
 	{
-		std::shared_ptr<MeshG> mesh_ = std::make_shared<MeshG>();
-		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-		ProcessMesh(scene, node, mesh, mesh_);
-		meshes.emplace_back(std::move(mesh_));
+		std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
+		aiMesh* aiMesh = aiScene->mMeshes[aiNode->mMeshes[i]];
+		ProcessMesh(aiScene, aiNode, aiMesh, mesh);
+		meshes.emplace_back(std::move(mesh));
 	}
-	for (unsigned int i = 0; i < node->mNumChildren; i++)
+	for (unsigned int i = 0; i < aiNode->mNumChildren; i++)
 	{
-		ProcessNode(scene, node->mChildren[i], meshes);
+		ProcessNode(aiScene, aiNode->mChildren[i], meshes);
 	}
 }
 
-void ModelImporter::ProcessMesh(const aiScene* scene, const aiNode* node, const aiMesh* mesh, std::shared_ptr<MeshG> mesh_)
+void ModelImporter::ProcessMesh(const aiScene* aiScene, const aiNode* aiNode, const aiMesh* aiMesh, std::shared_ptr<Mesh> mesh)
 {
-	glm::mat4 transformation = ConvertMatrix(node->mTransformation);
+	glm::mat4 transformation = ConvertMatrix(aiNode->mTransformation);
 
-	LoadIndices(scene, mesh, mesh_);
-	LoadVertices(scene, mesh, mesh_);
-	//LoadMaterial(scene, mesh, mesh_);
+	LoadIndices(aiScene, aiMesh, mesh);
+	LoadVertices(aiScene, aiMesh, mesh);
+	//LoadMaterial(aiScene, aiMesh, mesh);
 
-	mesh_->transformation = transformation;
+	mesh->transformation = transformation;
 }
 
-void ModelImporter::LoadIndices(const aiScene* scene, const aiMesh* mesh, std::shared_ptr<MeshG> mesh_)
+void ModelImporter::LoadIndices(const aiScene* aiScene, const aiMesh* aiMesh, std::shared_ptr<Mesh> mesh)
 {
-	unsigned int offset = static_cast<unsigned int>(mesh_->indices.size());
+	unsigned int offset = static_cast<unsigned int>(mesh->indices.size());
 
 	std::vector<unsigned int> indices;
-	for (unsigned int i = 0; i < mesh->mNumFaces; i++)
+	for (unsigned int i = 0; i < aiMesh->mNumFaces; i++)
 	{
-		aiFace face = mesh->mFaces[i];
-		for (unsigned int j = 0; j < face.mNumIndices; j++)
+		aiFace aiFace = aiMesh->mFaces[i];
+		for (unsigned int j = 0; j < aiFace.mNumIndices; j++)
 		{
-			indices.emplace_back(face.mIndices[j] + offset);
+			indices.emplace_back(aiFace.mIndices[j] + offset);
 		}
 	}
 
-	mesh_->AddIndices(std::move(indices));
+	mesh->AddIndices(std::move(indices));
 }
 
-void ModelImporter::LoadVertices(const aiScene* scene, const aiMesh* mesh, std::shared_ptr<MeshG> mesh_)
+void ModelImporter::LoadVertices(const aiScene* aiScene, const aiMesh* aiMesh, std::shared_ptr<Mesh> mesh)
 {
 	std::vector<glm::vec3> positions;
 	std::vector<glm::vec4> colors;
 	std::vector<glm::vec2> textureCoords;
 	std::vector<glm::vec3> normals;
-	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
+	for (unsigned int i = 0; i < aiMesh->mNumVertices; i++)
 	{
-		if (mesh->HasPositions())
+		if (aiMesh->HasPositions())
 		{
-			glm::vec3 position = ConvertVector(mesh->mVertices[i]);
+			glm::vec3 position = ConvertVector(aiMesh->mVertices[i]);
 			positions.emplace_back(std::move(position));
 		}
-		if (mesh->HasVertexColors(0))
+		if (aiMesh->HasVertexColors(0))
 		{
-			glm::vec4 color = ConvertVector(mesh->mColors[0][i]);
+			glm::vec4 color = ConvertVector(aiMesh->mColors[0][i]);
 			colors.emplace_back(std::move(color));
 		}
-		if (mesh->HasTextureCoords(0))
+		if (aiMesh->HasTextureCoords(0))
 		{
-			glm::vec2 textureCoord = ConvertVector(mesh->mTextureCoords[0][i]);
+			glm::vec2 textureCoord = ConvertVector(aiMesh->mTextureCoords[0][i]);
 			textureCoords.emplace_back(std::move(textureCoord));
 		}
-		if (mesh->HasNormals())
+		if (aiMesh->HasNormals())
 		{
-			glm::vec3 normal = ConvertVector(mesh->mNormals[i]);
+			glm::vec3 normal = ConvertVector(aiMesh->mNormals[i]);
 			normals.emplace_back(std::move(normal));
 		}
-		if (mesh->HasBones())
+		if (aiMesh->HasBones())
 		{
 		}
-		if (mesh->HasFaces())
+		if (aiMesh->HasFaces())
 		{
 		}
-		if (mesh->HasTangentsAndBitangents())
+		if (aiMesh->HasTangentsAndBitangents())
 		{
 		}
-		if (mesh->HasTextureCoordsName(0))
+		if (aiMesh->HasTextureCoordsName(0))
 		{
 		}
 	}
 
-	mesh_->AddVertices(std::move(positions));
-	mesh_->AddColors(std::move(colors));
-	mesh_->AddUV(std::move(textureCoords));
-	mesh_->AddNormals(std::move(normals));
+	mesh->AddVertices(std::move(positions));
+	mesh->AddColors(std::move(colors));
+	mesh->AddUV(std::move(textureCoords));
+	mesh->AddNormals(std::move(normals));
 }
 
-void ModelImporter::LoadMaterial(const aiScene* scene, const aiMesh* mesh, std::shared_ptr<MeshG> mesh_)
+void ModelImporter::LoadMaterial(const aiScene* aiScene, const aiMesh* aiMesh, std::shared_ptr<Mesh> mesh)
 {
-	aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+	aiMaterial* aiMaterial = aiScene->mMaterials[aiMesh->mMaterialIndex];
 
-	LoadTexture(scene, material, aiTextureType_DIFFUSE, mesh_);
-	//LoadTexture(scene, material, aiTextureType_SPECULAR, mesh_);
-	//LoadTexture(scene, material, aiTextureType_AMBIENT, mesh_);
-	//LoadTexture(scene, material, aiTextureType_HEIGHT, mesh_);
-	//LoadTexture(scene, material, aiTextureType_NORMALS, mesh_);
-	//LoadTexture(scene, material, aiTextureType_SHININESS, mesh_);
+	LoadTexture(aiScene, aiMaterial, aiTextureType_DIFFUSE, mesh);
+	//LoadTexture(aiScene, aiMaterial, aiTextureType_SPECULAR, mesh);
+	//LoadTexture(aiScene, aiMaterial, aiTextureType_AMBIENT, mesh);
+	//LoadTexture(aiScene, aiMaterial, aiTextureType_HEIGHT, mesh);
+	//LoadTexture(aiScene, aiMaterial, aiTextureType_NORMALS, mesh);
+	//LoadTexture(aiScene, aiMaterial, aiTextureType_SHININESS, mesh);
 
-	LoadColors(scene, material);
+	LoadColors(aiScene, aiMaterial);
 }
 
-void ModelImporter::LoadTexture(const aiScene* scene, const aiMaterial* material, const aiTextureType textureType, std::shared_ptr<MeshG> mesh_)
+void ModelImporter::LoadTexture(const aiScene* aiScene, const aiMaterial* aiMaterial, const aiTextureType aiTextureType, std::shared_ptr<Mesh> mesh)
 {
-	for (unsigned int i = 0; i < material->GetTextureCount(textureType); i++)
+	for (unsigned int i = 0; i < aiMaterial->GetTextureCount(aiTextureType); i++)
 	{
 		aiString aiTexturePath;
-		if (material->GetTexture(textureType, i, &aiTexturePath) == aiReturn::aiReturn_SUCCESS)
+		if (aiMaterial->GetTexture(aiTextureType, i, &aiTexturePath) == aiReturn::aiReturn_SUCCESS)
 		{
 			const std::string texturePath{ aiTexturePath.C_Str() };
-			const aiTexture* ai_texture = scene->GetEmbeddedTexture(aiTexturePath.C_Str());
-			if (ai_texture)
+			const aiTexture* aiTexture = aiScene->GetEmbeddedTexture(aiTexturePath.C_Str());
+			if (aiTexture)
 			{
-				LoadEmbeddedTexture(ai_texture, textureType, mesh_);
+				LoadEmbeddedTexture(aiTexture, aiTextureType, mesh);
 			}
 			else
 			{
-				LoadFileTexture(texturePath, textureType, mesh_);
+				LoadFileTexture(aiTextureType, texturePath, mesh);
 			}
 		}
 		else
 		{
-			LOGGER(error, "getting " << GetString(textureType) << " texture with index " << i << " failed");
+			LOGGER(error, "getting " << GetString(aiTextureType) << " texture with index " << i << " failed");
 		}
 	}
 }
 
-void ModelImporter::LoadEmbeddedTexture(const aiTexture* ai_texture, const aiTextureType textureType, std::shared_ptr<MeshG> mesh_)
+void ModelImporter::LoadEmbeddedTexture(const aiTexture* aiTexture, const aiTextureType aiTextureType, std::shared_ptr<Mesh> mesh)
 {
-	unsigned int width = ai_texture->mWidth;
-	unsigned int height = ai_texture->mHeight;
+	unsigned int width = aiTexture->mWidth;
+	unsigned int height = aiTexture->mHeight;
 	unsigned int size = std::max(width, height);
 	size = std::max(size, width * height);
 
 	std::vector<Texture> textures;
 	Texture texture;
-	texture.init(ai_texture->pcData, size);
+	texture.init(aiTexture->pcData, size);
 	textures.emplace_back(std::move(texture));
 
-	mesh_->AddTextures(std::move(textures));
+	mesh->AddTextures(std::move(textures));
 }
 
-void ModelImporter::LoadFileTexture(const std::string& texturePath, const aiTextureType textureType, std::shared_ptr<MeshG> mesh_)
+void ModelImporter::LoadFileTexture(const aiTextureType aiTextureType, const std::string& texturePath, std::shared_ptr<Mesh> mesh)
 {
 	Texture texture;
 	std::vector<Texture> textures;
@@ -212,37 +211,37 @@ void ModelImporter::LoadFileTexture(const std::string& texturePath, const aiText
 
 	textures.emplace_back(std::move(texture));
 
-	mesh_->AddTextures(std::move(textures));
+	mesh->AddTextures(std::move(textures));
 }
 
-void ModelImporter::LoadColors(const aiScene* scene, const aiMaterial* material)
+void ModelImporter::LoadColors(const aiScene* aiScene, const aiMaterial* aiMaterial)
 {
 	aiColor4D aiColor;
-	if (material->Get(AI_MATKEY_COLOR_DIFFUSE, aiColor) == aiReturn::aiReturn_SUCCESS)
+	if (aiMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, aiColor) == aiReturn::aiReturn_SUCCESS)
 	{
 		glm::vec4 glmColor = ConvertVector(aiColor);
 	}
-	if (material->Get(AI_MATKEY_COLOR_AMBIENT, aiColor) == aiReturn::aiReturn_SUCCESS)
+	if (aiMaterial->Get(AI_MATKEY_COLOR_AMBIENT, aiColor) == aiReturn::aiReturn_SUCCESS)
 	{
 		glm::vec4 glmColor = ConvertVector(aiColor);
 	}
-	if (material->Get(AI_MATKEY_COLOR_SPECULAR, aiColor) == aiReturn::aiReturn_SUCCESS)
+	if (aiMaterial->Get(AI_MATKEY_COLOR_SPECULAR, aiColor) == aiReturn::aiReturn_SUCCESS)
 	{
 		glm::vec4 glmColor = ConvertVector(aiColor);
 	}
-	if (material->Get(AI_MATKEY_COLOR_EMISSIVE, aiColor) == aiReturn::aiReturn_SUCCESS)
+	if (aiMaterial->Get(AI_MATKEY_COLOR_EMISSIVE, aiColor) == aiReturn::aiReturn_SUCCESS)
 	{
 		glm::vec4 glmColor = ConvertVector(aiColor);
 	}
-	if (material->Get(AI_MATKEY_COLOR_REFLECTIVE, aiColor) == aiReturn::aiReturn_SUCCESS)
+	if (aiMaterial->Get(AI_MATKEY_COLOR_REFLECTIVE, aiColor) == aiReturn::aiReturn_SUCCESS)
 	{
 		glm::vec4 glmColor = ConvertVector(aiColor);
 	}
-	if (material->Get(AI_MATKEY_COLOR_TRANSPARENT, aiColor) == aiReturn::aiReturn_SUCCESS)
+	if (aiMaterial->Get(AI_MATKEY_COLOR_TRANSPARENT, aiColor) == aiReturn::aiReturn_SUCCESS)
 	{
 		glm::vec4 glmColor = ConvertVector(aiColor);
 	}
-	if (material->Get(AI_MATKEY_SHININESS, aiColor) == aiReturn::aiReturn_SUCCESS)
+	if (aiMaterial->Get(AI_MATKEY_SHININESS, aiColor) == aiReturn::aiReturn_SUCCESS)
 	{
 		glm::vec4 glmColor = ConvertVector(aiColor);
 	}
@@ -285,9 +284,9 @@ glm::mat4 ModelImporter::ConvertMatrix(const aiMatrix4x4& aiMat)
 	};
 }
 
-std::string ModelImporter::GetString(const aiTextureType textureType)
+std::string ModelImporter::GetString(const aiTextureType aiTextureType)
 {
-	switch (textureType)
+	switch (aiTextureType)
 	{
 		case aiTextureType_NONE: return "none";
 		case aiTextureType_DIFFUSE: return "diffuse";

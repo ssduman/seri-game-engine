@@ -1,8 +1,8 @@
 #pragma once
 
 #include <seri/logging/Logger.h>
-#include <seri/graphic/MeshG.h>
-#include <seri/graphic/MaterialG.h>
+#include <seri/graphic/Mesh.h>
+#include <seri/graphic/Material.h>
 #include <seri/behaviour/IBehaviour.h>
 #include <seri/model/ModelImporter.h>
 
@@ -13,10 +13,10 @@ public:
 	{
 		LOGGER(info, "SimpleDrawerBehaviour Init");
 
-		quad_2d = MeshG::quad_2d();
-		quad_3d = MeshG::quad_3d();
-		cube_3d = MeshG::cube_3d();
-		line_2d = MeshG::line_2d(
+		quad_2d = Mesh::quad_2d();
+		quad_3d = Mesh::quad_3d();
+		cube_3d = Mesh::cube_3d();
+		line_2d = Mesh::line_2d(
 			{ Graphic::GetCameraOrtho()->getCameraProperties().width / 2.0f, Graphic::GetCameraOrtho()->getCameraProperties().height / 2.0f },
 			{ Graphic::GetCameraOrtho()->getCameraProperties().width, Graphic::GetCameraOrtho()->getCameraProperties().height }
 		);
@@ -34,19 +34,19 @@ public:
 		auto passageTexture = std::make_shared<Texture>();
 		passageTexture->init("assets/textures/passage.png");
 
-		material = std::make_shared<MaterialG>();
+		material = std::make_shared<Material>();
 		material->shader = entityShader;
 		material->texture = passageTexture;
 
-		materialLine = std::make_shared<MaterialG>();
+		materialLine = std::make_shared<Material>();
 		materialLine->shader = lineShader;
 		materialLine->texture = nullptr;
 
-		materialGrid = std::make_shared<MaterialG>();
+		materialGrid = std::make_shared<Material>();
 		materialGrid->shader = gridShader;
 		materialGrid->texture = nullptr;
 
-		materialModel = std::make_shared<MaterialG>();
+		materialModel = std::make_shared<Material>();
 		materialModel->shader = entityShader;
 		materialModel->texture = nullptr;
 	}
@@ -79,16 +79,16 @@ public:
 	}
 
 private:
-	std::shared_ptr<MeshG> quad_2d;
-	std::shared_ptr<MeshG> quad_3d;
-	std::shared_ptr<MeshG> cube_3d;
-	std::shared_ptr<MeshG> line_2d;
+	std::shared_ptr<Mesh> quad_2d;
+	std::shared_ptr<Mesh> quad_3d;
+	std::shared_ptr<Mesh> cube_3d;
+	std::shared_ptr<Mesh> line_2d;
 
-	std::vector<std::shared_ptr<MeshG>> models_0;
+	std::vector<std::shared_ptr<Mesh>> models_0;
 
-	std::shared_ptr<MaterialG> material;
-	std::shared_ptr<MaterialG> materialLine;
-	std::shared_ptr<MaterialG> materialGrid;
-	std::shared_ptr<MaterialG> materialModel;
+	std::shared_ptr<Material> material;
+	std::shared_ptr<Material> materialLine;
+	std::shared_ptr<Material> materialGrid;
+	std::shared_ptr<Material> materialModel;
 
 };

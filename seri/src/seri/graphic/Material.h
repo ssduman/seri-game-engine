@@ -3,12 +3,12 @@
 #include "seri/shader/Shader.h"
 #include "seri/texture/Texture.h"
 
-class MaterialG
+class Material
 {
 public:
-	MaterialG() = default;
+	Material() = default;
 
-	~MaterialG() = default;
+	~Material() = default;
 
 	std::shared_ptr<Shader> shader;
 
