@@ -12,9 +12,10 @@ unsigned int ModelImporter::FlagBuilder()
 	return
 		aiProcess_Triangulate |
 		aiProcess_GenSmoothNormals |
-		aiProcess_FlipUVs |
+		//aiProcess_FlipUVs |
 		aiProcess_CalcTangentSpace |
 		aiProcess_OptimizeMeshes |
+		aiProcess_ValidateDataStructure |
 		0
 		;
 }

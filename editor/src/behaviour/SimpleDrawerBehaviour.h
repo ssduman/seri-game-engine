@@ -33,6 +33,9 @@ public:
 
 		auto passageTexture = std::make_shared<Texture>();
 		passageTexture->init("assets/textures/passage.png");
+		
+		auto tankTexture = std::make_shared<Texture>();
+		tankTexture->init("assets/textures/tank/tank_diffuse.tga");
 
 		material = std::make_shared<Material>();
 		material->shader = entityShader;
@@ -48,7 +51,7 @@ public:
 
 		materialModel = std::make_shared<Material>();
 		materialModel->shader = entityShader;
-		materialModel->texture = nullptr;
+		materialModel->texture = tankTexture;
 	}
 
 	void Update() override
@@ -67,10 +70,10 @@ public:
 
 		for (auto& model : models_0)
 		{
-			Graphic::Draw(model, Util::GetTRS(pos_3d, rot_3d, scale_3d), material, Graphic::GetCameraPerspective());
+			Graphic::Draw(model, Util::GetTRS(pos_3d, rot_3d, scale_3d), materialModel, Graphic::GetCameraPerspective());
 		}
 
-		Graphic::Draw(quad_2d, Util::GetIdentityMatrix(), materialGrid, Graphic::GetCameraPerspective());
+		//Graphic::Draw(quad_2d, Util::GetIdentityMatrix(), materialGrid, Graphic::GetCameraPerspective());
 	}
 
 	void Destroy() override
