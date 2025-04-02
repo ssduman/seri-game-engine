@@ -71,6 +71,12 @@ void ModelImporter::ProcessNode(const aiScene* aiScene, const aiNode* aiNode, st
 		std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
 		aiMesh* aiMesh = aiScene->mMeshes[aiNode->mMeshes[i]];
 		ProcessMesh(aiScene, aiNode, aiMesh, mesh);
+
+		if (aiMesh->HasBones())
+		{
+			LoadBones(aiMesh, mesh);
+		}
+
 		meshes.emplace_back(std::move(mesh));
 	}
 	for (unsigned int i = 0; i < aiNode->mNumChildren; i++)
@@ -262,20 +268,47 @@ void ModelImporter::LoadColors(const aiScene* aiScene, const aiMaterial* aiMater
 	}
 }
 
+void ModelImporter::LoadBones(const aiMesh* aiMesh, std::shared_ptr<Mesh>& mesh)
+{
+	mesh->bones.resize(mesh->vertices.size());
+
+	for (unsigned int i = 0; i < aiMesh->mNumBones; i++)
+	{
+		std::string boneName{ aiMesh->mBones[i]->mName.data };
+		unsigned int boneIndex = 0;
+		if (_internalBoneNameToIndexMap.find(boneName) == _internalBoneNameToIndexMap.end())
+		{
+			boneIndex = static_cast<unsigned int>(_internalBoneNameToIndexMap.size());
+			_internalBoneNameToIndexMap[boneName] = boneIndex;
+		}
+		else
+		{
+			boneIndex = _internalBoneNameToIndexMap[boneName];
+		}
+
+		for (unsigned int j = 0; j < aiMesh->mBones[i]->mNumWeights; j++)
+		{
+			const aiVertexWeight& aiVW = aiMesh->mBones[i]->mWeights[j];
+			unsigned int vertexId = aiMesh->mBones[i]->mWeights[j].mVertexId;
+			mesh->bones[vertexId].AddBoneData(boneIndex, aiVW.mWeight);
+		}
+	}
+}
+
 void ModelImporter::LoadAnimations(const aiScene* aiScene)
 {
 	unsigned int numAnims = aiScene->mNumAnimations;
 	for (unsigned int i = 0; i < numAnims; ++i)
 	{
-		aiAnimation* animation = aiScene->mAnimations[i];
+		aiAnimation* aiAnimation = aiScene->mAnimations[i];
 
-		const char* animName = animation->mName.C_Str();
+		const char* animName = aiAnimation->mName.C_Str();
 
 		LOGGER(info,
-			"anim: " << animName << ", duration: " << animation->mDuration << ", has " <<
-			animation->mNumChannels << " skeletal channels, " <<
-			animation->mNumMeshChannels << " mesh channels, " <<
-			animation->mNumMorphMeshChannels << " morph mesh channels"
+			"anim: " << animName << ", duration: " << aiAnimation->mDuration << ", has " <<
+			aiAnimation->mNumChannels << " skeletal channels, " <<
+			aiAnimation->mNumMeshChannels << " mesh channels, " <<
+			aiAnimation->mNumMorphMeshChannels << " morph mesh channels"
 		);
 	}
 }

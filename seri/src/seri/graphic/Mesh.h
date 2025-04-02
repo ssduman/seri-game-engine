@@ -10,7 +10,51 @@
 #include <vector>
 #include <memory>
 
+#define MAX_BONES 200
+#define MAX_NUM_BONES_PER_VERTEX 4
+
 class Graphic;
+
+struct VertexBoneData
+{
+public:
+	VertexBoneData() = default;
+
+	~VertexBoneData() = default;
+
+	void AddBoneData(unsigned int boneId, float weight)
+	{
+		if (_index >= MAX_NUM_BONES_PER_VERTEX)
+		{
+			return;
+		}
+
+		if (weight < 0.001f)
+		{
+			return;
+		}
+
+		for (int i = 0; i < _index; i++)
+		{
+			if (boneIds[i] == boneId)
+			{
+				return;
+			}
+		}
+
+		boneIds[_index] = boneId;
+		weights[_index] = weight;
+
+		_index += 1;
+	}
+
+	unsigned int boneIds[MAX_NUM_BONES_PER_VERTEX] = { 0 };
+	float weights[MAX_NUM_BONES_PER_VERTEX] = { 0.0f };
+
+private:
+	int _index = 0;
+
+};
 
 class Mesh
 {
@@ -33,6 +77,7 @@ public:
 	std::vector<glm::vec3> colors;
 	std::vector<glm::vec3> normals;
 	std::vector<glm::vec3> tangents;
+	std::vector<VertexBoneData> bones;
 
 	glm::mat4 transformation{ 1.0f };
 

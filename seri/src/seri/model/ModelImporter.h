@@ -49,6 +49,8 @@ private:
 
 	void LoadColors(const aiScene* aiScene, const aiMaterial* aiMaterial);
 
+	void LoadBones(const aiMesh* aiMesh, std::shared_ptr<Mesh>& mesh);
+
 	void LoadAnimations(const aiScene* aiScene);
 
 	static glm::vec2 ConvertVector(const aiVector2D& aiVec);
@@ -62,6 +64,7 @@ private:
 	static std::string GetString(const aiTextureType aiTextureType);
 
 	std::map<std::string, Texture> _texturesLoaded;
+	std::map<std::string, int> _internalBoneNameToIndexMap;
 	std::string _modelDirectory;
 
 };
