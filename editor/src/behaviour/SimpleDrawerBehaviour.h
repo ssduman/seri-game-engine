@@ -3,10 +3,10 @@
 #include <seri/logging/Logger.h>
 #include <seri/graphic/Mesh.h>
 #include <seri/graphic/Material.h>
-#include <seri/behaviour/IBehaviour.h>
+#include <seri/behaviour/BehaviourBase.h>
 #include <seri/model/ModelImporter.h>
 
-class SimpleDrawerBehaviour : public IBehaviour
+class SimpleDrawerBehaviour : public BehaviourBase
 {
 public:
 	void Init() override

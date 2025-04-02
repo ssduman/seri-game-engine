@@ -5,7 +5,7 @@
 #include <vector>
 #include <memory>
 
-class IBehaviour;
+class BehaviourBase;
 
 class BehaviourManager
 {
@@ -25,7 +25,7 @@ public:
 		return instance;
 	}
 
-	static void Add(IBehaviour* behaviour);
+	static void Add(BehaviourBase* behaviour);
 
 	static void InitBehaviours();
 
@@ -44,6 +44,6 @@ private:
 		LOGGER(info, "behaviour manager release");
 	}
 
-	std::vector<IBehaviour*> _behaviours;
+	std::vector<BehaviourBase*> _behaviours;
 
 };

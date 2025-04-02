@@ -1,9 +1,9 @@
 #include "Seripch.h"
 
 #include "seri/behaviour/BehaviourManager.h"
-#include "seri/behaviour/IBehaviour.h"
+#include "seri/behaviour/BehaviourBase.h"
 
-void BehaviourManager::Add(IBehaviour* behaviour)
+void BehaviourManager::Add(BehaviourBase* behaviour)
 {
 	GetInstance()._behaviours.push_back(behaviour);
 }

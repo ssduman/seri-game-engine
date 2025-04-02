@@ -2,10 +2,10 @@
 
 class BehaviourManager;
 
-class IBehaviour
+class BehaviourBase
 {
 public:
-	IBehaviour()
+	BehaviourBase()
 	{
 		BehaviourManager::Add(this);
 	}
