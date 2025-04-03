@@ -22,7 +22,8 @@ public:
 		);
 
 		//models_0 = ModelImporter{}.Load("assets/models/spider.obj");
-		models_0 = ModelImporter{}.Load("assets/models/tank.fbx");
+		//models_0 = ModelImporter{}.Load("assets/models/tank.fbx");
+		models_0 = ModelImporter{}.Load("assets/models/blendshape.fbx");
 		//models_0 = ModelImporter{}.Load("assets/models/prop_0.fbx");
 		//models_0 = ModelImporter{}.Load("assets/models/prop_0_crk.fbx");
 		//models_0 = ModelImporter{}.Load("assets/models/X Bot@Hip Hop Dancing.fbx");

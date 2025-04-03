@@ -31,40 +31,43 @@ public:
 private:
 	unsigned int FlagBuilder();
 
-	void ProcessNode(const aiScene* aiScene, const aiNode* aiNode, std::vector<std::shared_ptr<Mesh>>& meshes);
+	void ProcessNode(const aiScene* ai_scene, const aiNode* ai_node, std::vector<std::shared_ptr<Mesh>>& meshes);
 
-	void ProcessMesh(const aiScene* aiScene, const aiNode* aiNode, const aiMesh* mesh, std::shared_ptr<Mesh>& mesh_);
+	void ProcessMesh(const aiScene* ai_scene, const aiNode* ai_node, const aiMesh* ai_mesh, std::shared_ptr<Mesh>& mesh);
 
-	void LoadIndices(const aiScene* aiScene, const aiMesh* aiMesh, std::shared_ptr<Mesh>& mesh_);
+	void LoadIndices(const aiMesh* ai_mesh, std::shared_ptr<Mesh>& mesh);
 
-	void LoadVertices(const aiScene* aiScene, const aiMesh* aiMesh, std::shared_ptr<Mesh>& mesh_);
+	void LoadVertices(const aiMesh* ai_mesh, std::shared_ptr<Mesh>& mesh);
 
-	void LoadMaterial(const aiScene* aiScene, const aiMesh* aiMesh, std::shared_ptr<Mesh>& mesh_);
+	void LoadMaterial(const aiScene* ai_scene, const aiMesh* ai_mesh, std::shared_ptr<Mesh>& mesh);
 
-	void LoadTexture(const aiScene* aiScene, const aiMaterial* aiMaterial, const aiTextureType aiTextureType, std::shared_ptr<Mesh>& mesh_);
+	void LoadTexture(const aiScene* ai_scene, const aiMaterial* ai_material, const aiTextureType ai_tt, std::shared_ptr<Mesh>& mesh);
 
-	void LoadEmbeddedTexture(const aiTexture* aiTexture, const aiTextureType aiTextureType, std::shared_ptr<Mesh>& mesh_);
+	void LoadEmbeddedTexture(const aiTexture* ai_texture, const aiTextureType ai_tt, std::shared_ptr<Mesh>& mesh);
 
-	void LoadFileTexture(const aiTextureType aiTextureType, const std::string& texturePath, std::shared_ptr<Mesh>& mesh_);
+	void LoadFileTexture(const aiTextureType ai_tt, const std::string& texturePath, std::shared_ptr<Mesh>& mesh);
 
-	void LoadColors(const aiScene* aiScene, const aiMaterial* aiMaterial);
+	void LoadColors(const aiMaterial* ai_material);
 
-	void LoadBones(const aiMesh* aiMesh, std::shared_ptr<Mesh>& mesh);
+	void LoadBones(const aiMesh* ai_mesh, std::shared_ptr<Mesh>& mesh);
 
-	void LoadAnimations(const aiScene* aiScene);
+	void LoadAnimations(const aiScene* ai_scene);
 
-	static glm::vec2 ConvertVector(const aiVector2D& aiVec);
+	void LoadBlendShapes(const aiMesh* ai_mesh, std::shared_ptr<Mesh>& mesh);
 
-	static glm::vec3 ConvertVector(const aiVector3D& aiVec);
+	static glm::vec2 ConvertVector(const aiVector2D& ai_vec);
 
-	static glm::vec4 ConvertVector(const aiColor4D& aiVec);
+	static glm::vec3 ConvertVector(const aiVector3D& ai_vec);
 
-	static glm::mat4 ConvertMatrix(const aiMatrix4x4& aiMat);
+	static glm::vec4 ConvertVector(const aiColor4D& ai_vec);
 
-	static std::string GetString(const aiTextureType aiTextureType);
+	static glm::mat4 ConvertMatrix(const aiMatrix4x4& ai_mat);
+
+	static std::string GetString(const aiTextureType ai_tt);
 
 	std::map<std::string, Texture> _texturesLoaded;
-	std::map<std::string, int> _internalBoneNameToIndexMap;
+	std::map<std::string, int> _boneNameToIndexMap;
+	std::map<std::string, glm::mat4> _boneNameToOffsetMatrixMap;
 	std::string _modelDirectory;
 
 };

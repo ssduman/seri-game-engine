@@ -77,7 +77,9 @@ public:
 	std::vector<glm::vec3> colors;
 	std::vector<glm::vec3> normals;
 	std::vector<glm::vec3> tangents;
+
 	std::vector<VertexBoneData> bones;
+	std::vector<glm::vec3> blendShapes;
 
 	glm::mat4 transformation{ 1.0f };
 

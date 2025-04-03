@@ -24,12 +24,12 @@ unsigned int ModelImporter::FlagBuilder()
 
 std::vector<std::shared_ptr<Mesh>> ModelImporter::Load(const std::string& modelPath)
 {
-	Assimp::Importer aiImporter;
+	Assimp::Importer ai_importer;
 
-	const aiScene* aiScene = aiImporter.ReadFile(modelPath, FlagBuilder());
-	if (!aiScene || aiScene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !aiScene->mRootNode)
+	const aiScene* ai_scene = ai_importer.ReadFile(modelPath, FlagBuilder());
+	if (!ai_scene || ai_scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !ai_scene->mRootNode)
 	{
-		LOGGER(error, "read model path '" << modelPath << "' failed: " << aiImporter.GetErrorString());
+		LOGGER(error, "read model path '" << modelPath << "' failed: " << ai_importer.GetErrorString());
 		return {};
 	}
 
@@ -39,19 +39,17 @@ std::vector<std::shared_ptr<Mesh>> ModelImporter::Load(const std::string& modelP
 
 	std::vector<std::shared_ptr<Mesh>> meshes{};
 
-	glm::mat4 globalTransformation = ConvertMatrix(aiScene->mRootNode->mTransformation);
+	glm::mat4 globalTransformation = ConvertMatrix(ai_scene->mRootNode->mTransformation);
 
 	unsigned int triCount = 0;
-	for (unsigned int i = 0; i < aiScene->mNumMeshes; ++i)
+	for (unsigned int i = 0; i < ai_scene->mNumMeshes; ++i)
 	{
-		unsigned int numFaces = aiScene->mMeshes[i]->mNumFaces;
-
-		triCount += numFaces;
+		triCount += ai_scene->mMeshes[i]->mNumFaces;
 	}
 
-	ProcessNode(aiScene, aiScene->mRootNode, meshes);
+	ProcessNode(ai_scene, ai_scene->mRootNode, meshes);
 
-	LoadAnimations(aiScene);
+	LoadAnimations(ai_scene);
 
 	for (auto& mesh : meshes)
 	{
@@ -59,51 +57,59 @@ std::vector<std::shared_ptr<Mesh>> ModelImporter::Load(const std::string& modelP
 		mesh->Build();
 	}
 
-	LOGGER(info, "loaded '" << modelName << "', " << "mesh count: " << meshes.size() << ", tri count: " << triCount);
+	const char* hasMat = ai_scene->HasMaterials() ? "yes" : "no";
+	const char* hasSkel = ai_scene->hasSkeletons() ? "yes" : "no";
+	const char* hasAnim = ai_scene->HasAnimations() ? "yes" : "no";
+
+	LOGGER(info,
+		"loaded '" << modelName << "', mesh: " << meshes.size() << ", tri: " << triCount <<
+		", mat: " << hasMat << ", anim: " << hasAnim << ", skeleton: " << hasSkel
+	);
 
 	return meshes;
 }
 
-void ModelImporter::ProcessNode(const aiScene* aiScene, const aiNode* aiNode, std::vector<std::shared_ptr<Mesh>>& meshes)
+void ModelImporter::ProcessNode(const aiScene* ai_scene, const aiNode* ai_node, std::vector<std::shared_ptr<Mesh>>& meshes)
 {
-	for (unsigned int i = 0; i < aiNode->mNumMeshes; i++)
+	for (unsigned int i = 0; i < ai_node->mNumMeshes; i++)
 	{
+		aiMesh* ai_mesh = ai_scene->mMeshes[ai_node->mMeshes[i]];
 		std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
-		aiMesh* aiMesh = aiScene->mMeshes[aiNode->mMeshes[i]];
-		ProcessMesh(aiScene, aiNode, aiMesh, mesh);
 
-		if (aiMesh->HasBones())
+		ProcessMesh(ai_scene, ai_node, ai_mesh, mesh);
+
+		if (ai_mesh->HasBones())
 		{
-			LoadBones(aiMesh, mesh);
+			LoadBones(ai_mesh, mesh);
 		}
 
 		meshes.emplace_back(std::move(mesh));
 	}
-	for (unsigned int i = 0; i < aiNode->mNumChildren; i++)
+	for (unsigned int i = 0; i < ai_node->mNumChildren; i++)
 	{
-		ProcessNode(aiScene, aiNode->mChildren[i], meshes);
+		ProcessNode(ai_scene, ai_node->mChildren[i], meshes);
 	}
 }
 
-void ModelImporter::ProcessMesh(const aiScene* aiScene, const aiNode* aiNode, const aiMesh* aiMesh, std::shared_ptr<Mesh>& mesh)
+void ModelImporter::ProcessMesh(const aiScene* ai_scene, const aiNode* ai_node, const aiMesh* ai_mesh, std::shared_ptr<Mesh>& mesh)
 {
-	glm::mat4 transformation = ConvertMatrix(aiNode->mTransformation);
+	mesh->transformation = ConvertMatrix(ai_node->mTransformation);
 
-	LoadIndices(aiScene, aiMesh, mesh);
-	LoadVertices(aiScene, aiMesh, mesh);
-	//LoadMaterial(aiScene, aiMesh, mesh);
+	LoadIndices(ai_mesh, mesh);
+	LoadVertices(ai_mesh, mesh);
+	//LoadMaterial(ai_scene, ai_mesh, mesh);
 
-	mesh->transformation = transformation;
+	LoadBlendShapes(ai_mesh, mesh);
 }
 
-void ModelImporter::LoadIndices(const aiScene* aiScene, const aiMesh* aiMesh, std::shared_ptr<Mesh>& mesh)
+void ModelImporter::LoadIndices(const aiMesh* ai_mesh, std::shared_ptr<Mesh>& mesh)
 {
 	unsigned int offset = static_cast<unsigned int>(mesh->indices.size());
 
 	std::vector<unsigned int> indices;
-	for (unsigned int i = 0; i < aiMesh->mNumFaces; i++)
+	for (unsigned int i = 0; i < ai_mesh->mNumFaces; i++)
 	{
-		aiFace aiFace = aiMesh->mFaces[i];
+		aiFace aiFace = ai_mesh->mFaces[i];
 		for (unsigned int j = 0; j < aiFace.mNumIndices; j++)
 		{
 			indices.emplace_back(aiFace.mIndices[j] + offset);
@@ -113,94 +119,95 @@ void ModelImporter::LoadIndices(const aiScene* aiScene, const aiMesh* aiMesh, st
 	mesh->AddIndices(std::move(indices));
 }
 
-void ModelImporter::LoadVertices(const aiScene* aiScene, const aiMesh* aiMesh, std::shared_ptr<Mesh>& mesh)
+void ModelImporter::LoadVertices(const aiMesh* ai_mesh, std::shared_ptr<Mesh>& mesh)
 {
-	std::vector<glm::vec3> positions;
+	std::vector<glm::vec3> vertices;
 	std::vector<glm::vec4> colors;
-	std::vector<glm::vec2> textureCoords;
+	std::vector<glm::vec2> uvs0;
 	std::vector<glm::vec3> normals;
-	for (unsigned int i = 0; i < aiMesh->mNumVertices; i++)
+
+	for (unsigned int i = 0; i < ai_mesh->mNumVertices; i++)
 	{
-		if (aiMesh->HasPositions())
+		if (ai_mesh->HasPositions())
 		{
-			glm::vec3 position = ConvertVector(aiMesh->mVertices[i]);
-			positions.emplace_back(std::move(position));
+			glm::vec3 vertex = ConvertVector(ai_mesh->mVertices[i]);
+			vertices.emplace_back(std::move(vertex));
 		}
-		if (aiMesh->HasVertexColors(0))
+		if (ai_mesh->HasTextureCoords(0))
 		{
-			glm::vec4 color = ConvertVector(aiMesh->mColors[0][i]);
+			glm::vec2 uv = ConvertVector(ai_mesh->mTextureCoords[0][i]);
+			uvs0.emplace_back(std::move(uv));
+		}
+		if (ai_mesh->HasVertexColors(0))
+		{
+			glm::vec4 color = ConvertVector(ai_mesh->mColors[0][i]);
 			colors.emplace_back(std::move(color));
 		}
-		if (aiMesh->HasTextureCoords(0))
+		if (ai_mesh->HasNormals())
 		{
-			glm::vec2 textureCoord = ConvertVector(aiMesh->mTextureCoords[0][i]);
-			textureCoords.emplace_back(std::move(textureCoord));
-		}
-		if (aiMesh->HasNormals())
-		{
-			glm::vec3 normal = ConvertVector(aiMesh->mNormals[i]);
+			glm::vec3 normal = ConvertVector(ai_mesh->mNormals[i]);
 			normals.emplace_back(std::move(normal));
 		}
-		if (aiMesh->HasBones())
+		if (ai_mesh->HasBones())
 		{
 		}
-		if (aiMesh->HasFaces())
+		if (ai_mesh->HasFaces())
 		{
 		}
-		if (aiMesh->HasTangentsAndBitangents())
+		if (ai_mesh->HasTangentsAndBitangents())
 		{
 		}
-		if (aiMesh->HasTextureCoordsName(0))
+		if (ai_mesh->HasTextureCoordsName(0))
 		{
 		}
 	}
 
-	mesh->AddVertices(std::move(positions));
+	mesh->AddVertices(std::move(vertices));
+	mesh->AddUV(std::move(uvs0));
 	mesh->AddColors(std::move(colors));
-	mesh->AddUV(std::move(textureCoords));
 	mesh->AddNormals(std::move(normals));
 }
 
-void ModelImporter::LoadMaterial(const aiScene* aiScene, const aiMesh* aiMesh, std::shared_ptr<Mesh>& mesh)
+void ModelImporter::LoadMaterial(const aiScene* ai_scene, const aiMesh* ai_mesh, std::shared_ptr<Mesh>& mesh)
 {
-	aiMaterial* aiMaterial = aiScene->mMaterials[aiMesh->mMaterialIndex];
+	aiMaterial* ai_material = ai_scene->mMaterials[ai_mesh->mMaterialIndex];
 
-	LoadTexture(aiScene, aiMaterial, aiTextureType_DIFFUSE, mesh);
-	//LoadTexture(aiScene, aiMaterial, aiTextureType_SPECULAR, mesh);
-	//LoadTexture(aiScene, aiMaterial, aiTextureType_AMBIENT, mesh);
-	//LoadTexture(aiScene, aiMaterial, aiTextureType_HEIGHT, mesh);
-	//LoadTexture(aiScene, aiMaterial, aiTextureType_NORMALS, mesh);
-	//LoadTexture(aiScene, aiMaterial, aiTextureType_SHININESS, mesh);
+	LoadTexture(ai_scene, ai_material, aiTextureType_DIFFUSE, mesh);
+	//LoadTexture(ai_scene, ai_material, aiTextureType_SPECULAR, mesh);
+	//LoadTexture(ai_scene, ai_material, aiTextureType_AMBIENT, mesh);
+	//LoadTexture(ai_scene, ai_material, aiTextureType_HEIGHT, mesh);
+	//LoadTexture(ai_scene, ai_material, aiTextureType_NORMALS, mesh);
+	//LoadTexture(ai_scene, ai_material, aiTextureType_SHININESS, mesh);
 
-	LoadColors(aiScene, aiMaterial);
+	LoadColors(ai_material);
 }
 
-void ModelImporter::LoadTexture(const aiScene* aiScene, const aiMaterial* aiMaterial, const aiTextureType aiTextureType, std::shared_ptr<Mesh>& mesh)
+void ModelImporter::LoadTexture(const aiScene* ai_scene, const aiMaterial* ai_material, const aiTextureType ai_tt, std::shared_ptr<Mesh>& mesh)
 {
-	for (unsigned int i = 0; i < aiMaterial->GetTextureCount(aiTextureType); i++)
+	for (unsigned int i = 0; i < ai_material->GetTextureCount(ai_tt); i++)
 	{
-		aiString aiTexturePath;
-		if (aiMaterial->GetTexture(aiTextureType, i, &aiTexturePath) == aiReturn::aiReturn_SUCCESS)
+		aiString ai_tp;
+		if (ai_material->GetTexture(ai_tt, i, &ai_tp) == aiReturn::aiReturn_SUCCESS)
 		{
-			const std::string texturePath{ aiTexturePath.C_Str() };
-			const aiTexture* aiTexture = aiScene->GetEmbeddedTexture(aiTexturePath.C_Str());
-			if (aiTexture)
+			const aiTexture* ai_texture = ai_scene->GetEmbeddedTexture(ai_tp.C_Str());
+			if (ai_texture)
 			{
-				LoadEmbeddedTexture(aiTexture, aiTextureType, mesh);
+				LoadEmbeddedTexture(ai_texture, ai_tt, mesh);
 			}
 			else
 			{
-				LoadFileTexture(aiTextureType, texturePath, mesh);
+				const std::string texturePath{ ai_tp.C_Str() };
+				LoadFileTexture(ai_tt, texturePath, mesh);
 			}
 		}
 		else
 		{
-			LOGGER(error, "getting " << GetString(aiTextureType) << " texture with index " << i << " failed");
+			LOGGER(error, "getting " << GetString(ai_tt) << " texture with index " << i << " failed");
 		}
 	}
 }
 
-void ModelImporter::LoadEmbeddedTexture(const aiTexture* aiTexture, const aiTextureType aiTextureType, std::shared_ptr<Mesh>& mesh)
+void ModelImporter::LoadEmbeddedTexture(const aiTexture* aiTexture, const aiTextureType ai_tt, std::shared_ptr<Mesh>& mesh)
 {
 	unsigned int width = aiTexture->mWidth;
 	unsigned int height = aiTexture->mHeight;
@@ -215,7 +222,7 @@ void ModelImporter::LoadEmbeddedTexture(const aiTexture* aiTexture, const aiText
 	mesh->AddTextures(std::move(textures));
 }
 
-void ModelImporter::LoadFileTexture(const aiTextureType aiTextureType, const std::string& texturePath, std::shared_ptr<Mesh>& mesh)
+void ModelImporter::LoadFileTexture(const aiTextureType ai_tt, const std::string& texturePath, std::shared_ptr<Mesh>& mesh)
 {
 	Texture texture;
 	std::vector<Texture> textures;
@@ -235,124 +242,156 @@ void ModelImporter::LoadFileTexture(const aiTextureType aiTextureType, const std
 	mesh->AddTextures(std::move(textures));
 }
 
-void ModelImporter::LoadColors(const aiScene* aiScene, const aiMaterial* aiMaterial)
+void ModelImporter::LoadColors(const aiMaterial* ai_material)
 {
-	aiColor4D aiColor;
-	if (aiMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, aiColor) == aiReturn::aiReturn_SUCCESS)
+	aiColor4D ai_color;
+	if (ai_material->Get(AI_MATKEY_COLOR_DIFFUSE, ai_color) == aiReturn::aiReturn_SUCCESS)
 	{
-		glm::vec4 glmColor = ConvertVector(aiColor);
+		glm::vec4 glmColor = ConvertVector(ai_color);
 	}
-	if (aiMaterial->Get(AI_MATKEY_COLOR_AMBIENT, aiColor) == aiReturn::aiReturn_SUCCESS)
+	if (ai_material->Get(AI_MATKEY_COLOR_AMBIENT, ai_color) == aiReturn::aiReturn_SUCCESS)
 	{
-		glm::vec4 glmColor = ConvertVector(aiColor);
+		glm::vec4 glmColor = ConvertVector(ai_color);
 	}
-	if (aiMaterial->Get(AI_MATKEY_COLOR_SPECULAR, aiColor) == aiReturn::aiReturn_SUCCESS)
+	if (ai_material->Get(AI_MATKEY_COLOR_SPECULAR, ai_color) == aiReturn::aiReturn_SUCCESS)
 	{
-		glm::vec4 glmColor = ConvertVector(aiColor);
+		glm::vec4 glmColor = ConvertVector(ai_color);
 	}
-	if (aiMaterial->Get(AI_MATKEY_COLOR_EMISSIVE, aiColor) == aiReturn::aiReturn_SUCCESS)
+	if (ai_material->Get(AI_MATKEY_COLOR_EMISSIVE, ai_color) == aiReturn::aiReturn_SUCCESS)
 	{
-		glm::vec4 glmColor = ConvertVector(aiColor);
+		glm::vec4 glmColor = ConvertVector(ai_color);
 	}
-	if (aiMaterial->Get(AI_MATKEY_COLOR_REFLECTIVE, aiColor) == aiReturn::aiReturn_SUCCESS)
+	if (ai_material->Get(AI_MATKEY_COLOR_REFLECTIVE, ai_color) == aiReturn::aiReturn_SUCCESS)
 	{
-		glm::vec4 glmColor = ConvertVector(aiColor);
+		glm::vec4 glmColor = ConvertVector(ai_color);
 	}
-	if (aiMaterial->Get(AI_MATKEY_COLOR_TRANSPARENT, aiColor) == aiReturn::aiReturn_SUCCESS)
+	if (ai_material->Get(AI_MATKEY_COLOR_TRANSPARENT, ai_color) == aiReturn::aiReturn_SUCCESS)
 	{
-		glm::vec4 glmColor = ConvertVector(aiColor);
+		glm::vec4 glmColor = ConvertVector(ai_color);
 	}
-	if (aiMaterial->Get(AI_MATKEY_SHININESS, aiColor) == aiReturn::aiReturn_SUCCESS)
+	if (ai_material->Get(AI_MATKEY_SHININESS, ai_color) == aiReturn::aiReturn_SUCCESS)
 	{
-		glm::vec4 glmColor = ConvertVector(aiColor);
+		glm::vec4 glmColor = ConvertVector(ai_color);
 	}
 }
 
-void ModelImporter::LoadBones(const aiMesh* aiMesh, std::shared_ptr<Mesh>& mesh)
+void ModelImporter::LoadBones(const aiMesh* ai_mesh, std::shared_ptr<Mesh>& mesh)
 {
 	mesh->bones.resize(mesh->vertices.size());
 
-	for (unsigned int i = 0; i < aiMesh->mNumBones; i++)
+	for (unsigned int i = 0; i < ai_mesh->mNumBones; i++)
 	{
-		std::string boneName{ aiMesh->mBones[i]->mName.data };
+		std::string boneName{ ai_mesh->mBones[i]->mName.data };
 		unsigned int boneIndex = 0;
-		if (_internalBoneNameToIndexMap.find(boneName) == _internalBoneNameToIndexMap.end())
+		if (_boneNameToIndexMap.find(boneName) == _boneNameToIndexMap.end())
 		{
-			boneIndex = static_cast<unsigned int>(_internalBoneNameToIndexMap.size());
-			_internalBoneNameToIndexMap[boneName] = boneIndex;
+			boneIndex = static_cast<unsigned int>(_boneNameToIndexMap.size());
+			_boneNameToIndexMap[boneName] = boneIndex;
+			_boneNameToOffsetMatrixMap[boneName] = ConvertMatrix(ai_mesh->mBones[i]->mOffsetMatrix);
 		}
 		else
 		{
-			boneIndex = _internalBoneNameToIndexMap[boneName];
+			boneIndex = _boneNameToIndexMap[boneName];
 		}
 
-		for (unsigned int j = 0; j < aiMesh->mBones[i]->mNumWeights; j++)
+		for (unsigned int j = 0; j < ai_mesh->mBones[i]->mNumWeights; j++)
 		{
-			const aiVertexWeight& aiVW = aiMesh->mBones[i]->mWeights[j];
-			unsigned int vertexId = aiMesh->mBones[i]->mWeights[j].mVertexId;
-			mesh->bones[vertexId].AddBoneData(boneIndex, aiVW.mWeight);
+			const aiVertexWeight& ai_vw = ai_mesh->mBones[i]->mWeights[j];
+			mesh->bones[ai_vw.mVertexId].AddBoneData(boneIndex, ai_vw.mWeight);
 		}
 	}
 }
 
-void ModelImporter::LoadAnimations(const aiScene* aiScene)
+void ModelImporter::LoadAnimations(const aiScene* ai_scene)
 {
-	unsigned int numAnims = aiScene->mNumAnimations;
+	if (!ai_scene->HasAnimations())
+	{
+		LOGGER(info, "no animations found");
+		return;
+	}
+
+	unsigned int numAnims = ai_scene->mNumAnimations;
 	for (unsigned int i = 0; i < numAnims; ++i)
 	{
-		aiAnimation* aiAnimation = aiScene->mAnimations[i];
+		aiAnimation* ai_animation = ai_scene->mAnimations[i];
 
-		const char* animName = aiAnimation->mName.C_Str();
+		const char* animName = ai_animation->mName.C_Str();
 
 		LOGGER(info,
-			"anim: " << animName << ", duration: " << aiAnimation->mDuration << ", has " <<
-			aiAnimation->mNumChannels << " skeletal channels, " <<
-			aiAnimation->mNumMeshChannels << " mesh channels, " <<
-			aiAnimation->mNumMorphMeshChannels << " morph mesh channels"
+			"anim: " << animName << ", duration: " << ai_animation->mDuration << ", has " <<
+			ai_animation->mNumChannels << " skeletal channels, " <<
+			ai_animation->mNumMeshChannels << " mesh channels, " <<
+			ai_animation->mNumMorphMeshChannels << " morph mesh channels"
 		);
 	}
 }
 
-glm::vec2 ModelImporter::ConvertVector(const aiVector2D& aiVec)
+void ModelImporter::LoadBlendShapes(const aiMesh* ai_mesh, std::shared_ptr<Mesh>& mesh)
+{
+	assert(ai_mesh->mNumAnimMeshes <= 1, "unexpected blend shape count");
+
+	for (unsigned int i = 0; i < ai_mesh->mNumAnimMeshes; i++)
+	{
+		aiAnimMesh* ai_anim_mesh = ai_mesh->mAnimMeshes[i];
+
+		const char* blendShapeName = ai_anim_mesh->mName.C_Str();
+		float weight = ai_anim_mesh->mWeight;
+
+		LOGGER(info, "blend shape name: '" << blendShapeName << "', weight: " << weight);
+
+		if (ai_anim_mesh->HasPositions())
+		{
+			for (unsigned int v = 0; v < ai_anim_mesh->mNumVertices; v++)
+			{
+				glm::vec3 vertex = ConvertVector(ai_anim_mesh->mVertices[v]);
+				mesh->blendShapes.emplace_back(vertex);
+			}
+		}
+
+		LOGGER(info, "loaded " << ai_mesh->mNumAnimMeshes << " blend shape");
+	}
+}
+
+glm::vec2 ModelImporter::ConvertVector(const aiVector2D& ai_vec)
 {
 	return {
-		aiVec.x,
-		aiVec.y
+		ai_vec.x,
+		ai_vec.y
 	};
 }
 
-glm::vec3 ModelImporter::ConvertVector(const aiVector3D& aiVec)
+glm::vec3 ModelImporter::ConvertVector(const aiVector3D& ai_vec)
 {
 	return {
-		aiVec.x,
-		aiVec.y,
-		aiVec.z
+		ai_vec.x,
+		ai_vec.y,
+		ai_vec.z
 	};
 }
 
-glm::vec4 ModelImporter::ConvertVector(const aiColor4D& aiVec)
+glm::vec4 ModelImporter::ConvertVector(const aiColor4D& ai_vec)
 {
 	return {
-		aiVec.r,
-		aiVec.g,
-		aiVec.b,
-		aiVec.a
+		ai_vec.r,
+		ai_vec.g,
+		ai_vec.b,
+		ai_vec.a
 	};
 }
 
-glm::mat4 ModelImporter::ConvertMatrix(const aiMatrix4x4& aiMat)
+glm::mat4 ModelImporter::ConvertMatrix(const aiMatrix4x4& ai_mat)
 {
 	return {
-		aiMat.a1, aiMat.b1, aiMat.c1, aiMat.d1,
-		aiMat.a2, aiMat.b2, aiMat.c2, aiMat.d2,
-		aiMat.a3, aiMat.b3, aiMat.c3, aiMat.d3,
-		aiMat.a4, aiMat.b4, aiMat.c4, aiMat.d4
+		ai_mat.a1, ai_mat.b1, ai_mat.c1, ai_mat.d1,
+		ai_mat.a2, ai_mat.b2, ai_mat.c2, ai_mat.d2,
+		ai_mat.a3, ai_mat.b3, ai_mat.c3, ai_mat.d3,
+		ai_mat.a4, ai_mat.b4, ai_mat.c4, ai_mat.d4
 	};
 }
 
-std::string ModelImporter::GetString(const aiTextureType aiTextureType)
+std::string ModelImporter::GetString(const aiTextureType ai_tt)
 {
-	switch (aiTextureType)
+	switch (ai_tt)
 	{
 		case aiTextureType_NONE: return "none";
 		case aiTextureType_DIFFUSE: return "diffuse";
