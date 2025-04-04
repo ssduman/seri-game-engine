@@ -53,6 +53,8 @@ private:
 
 	void LoadAnimations(const aiScene* ai_scene);
 
+	void LoadNodeAnimation(const aiNodeAnim* ai_node_anim, int boneIndex, float tickPerSec);
+
 	void LoadBlendShapes(const aiMesh* ai_mesh, std::shared_ptr<Mesh>& mesh);
 
 	static glm::vec2 ConvertVector(const aiVector2D& ai_vec);
@@ -60,6 +62,8 @@ private:
 	static glm::vec3 ConvertVector(const aiVector3D& ai_vec);
 
 	static glm::vec4 ConvertVector(const aiColor4D& ai_vec);
+
+	static glm::quat ConvertQuat(const aiQuaternion& ai_quat);
 
 	static glm::mat4 ConvertMatrix(const aiMatrix4x4& ai_mat);
 

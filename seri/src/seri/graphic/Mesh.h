@@ -56,6 +56,31 @@ private:
 
 };
 
+struct AnimPositionKey
+{
+	float time;
+	glm::vec3 position;
+};
+
+struct AnimRotationKey
+{
+	float time;
+	glm::quat quaternion;
+};
+
+struct AnimScaleKey
+{
+	float time;
+	glm::vec3 scale;
+};
+
+struct Anim
+{
+	std::vector<AnimPositionKey> positions;
+	std::vector<AnimRotationKey> rotations;
+	std::vector<AnimScaleKey> scales;
+};
+
 class Mesh
 {
 public:
@@ -80,6 +105,8 @@ public:
 
 	std::vector<VertexBoneData> bones;
 	std::vector<glm::vec3> blendShapes;
+
+	Anim animation;
 
 	glm::mat4 transformation{ 1.0f };
 

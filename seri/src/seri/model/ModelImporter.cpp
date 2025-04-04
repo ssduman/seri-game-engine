@@ -316,9 +316,27 @@ void ModelImporter::LoadAnimations(const aiScene* ai_scene)
 		aiAnimation* ai_animation = ai_scene->mAnimations[i];
 
 		const char* animName = ai_animation->mName.C_Str();
+		float durInTick = static_cast<float>(ai_animation->mDuration != 0 ? ai_animation->mDuration : 30.0);
+		float tickPerSec = static_cast<float>(ai_animation->mTicksPerSecond);
+		float duration = durInTick / tickPerSec;
+
+		for (unsigned int c = 0; c < ai_animation->mNumChannels; c++)
+		{
+			aiNodeAnim* ai_node_anim = ai_animation->mChannels[c];
+
+			const char* nodeName = ai_node_anim->mNodeName.C_Str();
+			if (_boneNameToIndexMap.find(nodeName) == _boneNameToIndexMap.end())
+			{
+				LOGGER(info, "could not found node: " << nodeName);
+				continue;
+			}
+			int boneIndex = _boneNameToIndexMap[nodeName];
+
+			LoadNodeAnimation(ai_node_anim, boneIndex, tickPerSec);
+		}
 
 		LOGGER(info,
-			"anim: " << animName << ", duration: " << ai_animation->mDuration << ", has " <<
+			"anim: " << animName << ", duration: " << duration << ", has " <<
 			ai_animation->mNumChannels << " skeletal channels, " <<
 			ai_animation->mNumMeshChannels << " mesh channels, " <<
 			ai_animation->mNumMorphMeshChannels << " morph mesh channels"
@@ -326,9 +344,36 @@ void ModelImporter::LoadAnimations(const aiScene* ai_scene)
 	}
 }
 
+void ModelImporter::LoadNodeAnimation(const aiNodeAnim* ai_node_anim, int boneIndex, float tickPerSec)
+{
+	for (unsigned int i = 0; i < ai_node_anim->mNumPositionKeys; i++)
+	{
+		aiVectorKey ai_vector_key = ai_node_anim->mPositionKeys[i];
+
+		float time = static_cast<float>(ai_vector_key.mTime) / tickPerSec;
+		glm::vec3 position = ConvertVector(ai_vector_key.mValue);
+	}
+
+	for (unsigned int i = 0; i < ai_node_anim->mNumRotationKeys; i++)
+	{
+		aiQuatKey ai_quat_key = ai_node_anim->mRotationKeys[i];
+
+		float time = static_cast<float>(ai_quat_key.mTime) / tickPerSec;
+		glm::quat rotation = ConvertQuat(ai_quat_key.mValue);
+	}
+
+	for (unsigned int i = 0; i < ai_node_anim->mNumScalingKeys; i++)
+	{
+		aiVectorKey ai_vector_key = ai_node_anim->mScalingKeys[i];
+
+		float time = static_cast<float>(ai_vector_key.mTime) / tickPerSec;
+		glm::vec3 scale = ConvertVector(ai_vector_key.mValue);
+	}
+}
+
 void ModelImporter::LoadBlendShapes(const aiMesh* ai_mesh, std::shared_ptr<Mesh>& mesh)
 {
-	assert(ai_mesh->mNumAnimMeshes <= 1, "unexpected blend shape count");
+	assert(ai_mesh->mNumAnimMeshes <= 1);
 
 	for (unsigned int i = 0; i < ai_mesh->mNumAnimMeshes; i++)
 	{
@@ -376,6 +421,16 @@ glm::vec4 ModelImporter::ConvertVector(const aiColor4D& ai_vec)
 		ai_vec.g,
 		ai_vec.b,
 		ai_vec.a
+	};
+}
+
+glm::quat ModelImporter::ConvertQuat(const aiQuaternion& ai_quat)
+{
+	return {
+		ai_quat.x,
+		ai_quat.y,
+		ai_quat.z,
+		ai_quat.w
 	};
 }
 
