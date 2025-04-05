@@ -44,6 +44,20 @@ void Graphic::Draw(std::shared_ptr<Mesh> mesh, const glm::mat4& trs, std::shared
 	ShaderManager::SetMat4(material->shader, "u_view", camera->getView());
 	ShaderManager::SetMat4(material->shader, "u_projection", camera->getProjection());
 
+	if (mesh->bonesForVertices.size() > 0)
+	{
+		for (auto i = 0; i < mesh->bones.size(); i++)
+		{
+			std::string loc = "u_bones[" + std::to_string(i) + "]";
+			ShaderManager::SetMat4(material->shader, loc.c_str(), glm::mat4{ 1.0f });
+		}
+		for (auto i = mesh->bones.size(); i < MAX_BONES; i++)
+		{
+			std::string loc = "u_bones[" + std::to_string(i) + "]";
+			ShaderManager::SetMat4(material->shader, loc.c_str(), glm::mat4{ 1.0f });
+		}
+	}
+
 	if (mesh->HasIndex())
 	{
 		drawElements(mesh->count, mesh->drawMode);

@@ -7,7 +7,11 @@
 #include "seri/graphic/Material.h"
 #include "seri/camera/ICamera.h"
 
+#include <string>
 #include <filesystem>
+
+#include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 unsigned int ModelImporter::FlagBuilder()
 {
@@ -47,13 +51,15 @@ std::vector<std::shared_ptr<Mesh>> ModelImporter::Load(const std::string& modelP
 		triCount += ai_scene->mMeshes[i]->mNumFaces;
 	}
 
-	ProcessNode(ai_scene, ai_scene->mRootNode, meshes);
+	BoneNode boneNode = ProcessNode(ai_scene, ai_scene->mRootNode, meshes);
 
-	LoadAnimations(ai_scene);
+	Animation animation = LoadAnimations(ai_scene);
 
 	for (auto& mesh : meshes)
 	{
 		mesh->transformation = globalTransformation * mesh->transformation;
+		mesh->boneNode = boneNode;
+		mesh->animation = animation;
 		mesh->Build();
 	}
 
@@ -69,14 +75,24 @@ std::vector<std::shared_ptr<Mesh>> ModelImporter::Load(const std::string& modelP
 	return meshes;
 }
 
-void ModelImporter::ProcessNode(const aiScene* ai_scene, const aiNode* ai_node, std::vector<std::shared_ptr<Mesh>>& meshes)
+BoneNode ModelImporter::ProcessNode(const aiScene* ai_scene, const aiNode* ai_node, std::vector<std::shared_ptr<Mesh>>& meshes)
 {
+	BoneNode boneNode;
+	boneNode.name = ai_node->mName.C_Str();
+	boneNode.transformation = ConvertMatrix(ai_node->mTransformation);
+	boneNode.children.reserve(ai_node->mNumChildren);
+
 	for (unsigned int i = 0; i < ai_node->mNumMeshes; i++)
 	{
 		aiMesh* ai_mesh = ai_scene->mMeshes[ai_node->mMeshes[i]];
+
 		std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
 
-		ProcessMesh(ai_scene, ai_node, ai_mesh, mesh);
+		mesh->name = ai_mesh->mName.C_Str();
+		mesh->nodeName = boneNode.name;
+		mesh->transformation = boneNode.transformation;
+
+		ProcessMesh(ai_scene, ai_mesh, mesh);
 
 		if (ai_mesh->HasBones())
 		{
@@ -85,16 +101,17 @@ void ModelImporter::ProcessNode(const aiScene* ai_scene, const aiNode* ai_node, 
 
 		meshes.emplace_back(std::move(mesh));
 	}
+
 	for (unsigned int i = 0; i < ai_node->mNumChildren; i++)
 	{
-		ProcessNode(ai_scene, ai_node->mChildren[i], meshes);
+		boneNode.children.emplace_back(ProcessNode(ai_scene, ai_node->mChildren[i], meshes));
 	}
+
+	return boneNode;
 }
 
-void ModelImporter::ProcessMesh(const aiScene* ai_scene, const aiNode* ai_node, const aiMesh* ai_mesh, std::shared_ptr<Mesh>& mesh)
+void ModelImporter::ProcessMesh(const aiScene* ai_scene, const aiMesh* ai_mesh, std::shared_ptr<Mesh>& mesh)
 {
-	mesh->transformation = ConvertMatrix(ai_node->mTransformation);
-
 	LoadIndices(ai_mesh, mesh);
 	LoadVertices(ai_mesh, mesh);
 	//LoadMaterial(ai_scene, ai_mesh, mesh);
@@ -277,62 +294,80 @@ void ModelImporter::LoadColors(const aiMaterial* ai_material)
 
 void ModelImporter::LoadBones(const aiMesh* ai_mesh, std::shared_ptr<Mesh>& mesh)
 {
-	mesh->bones.resize(mesh->vertices.size());
+	mesh->bonesForVertices.resize(mesh->vertices.size());
+
+	if (ai_mesh->mNumBones > 1)
+	{
+		LOGGER(info, "mesh '" << ai_mesh->mName.C_Str() << "' has " << ai_mesh->mNumBones << " bones");
+	}
 
 	for (unsigned int i = 0; i < ai_mesh->mNumBones; i++)
 	{
-		std::string boneName{ ai_mesh->mBones[i]->mName.data };
+		aiBone* ai_bone = ai_mesh->mBones[i];
+
+		const char* boneName = ai_bone->mName.C_Str();
+		glm::mat4 boneOffsetMatrix = ConvertMatrix(ai_bone->mOffsetMatrix);
+
 		unsigned int boneIndex = 0;
+
 		if (_boneNameToIndexMap.find(boneName) == _boneNameToIndexMap.end())
 		{
 			boneIndex = static_cast<unsigned int>(_boneNameToIndexMap.size());
+			
 			_boneNameToIndexMap[boneName] = boneIndex;
-			_boneNameToOffsetMatrixMap[boneName] = ConvertMatrix(ai_mesh->mBones[i]->mOffsetMatrix);
+
+			mesh->bones.emplace_back(Bone{ boneIndex , boneName , boneOffsetMatrix });
 		}
 		else
 		{
 			boneIndex = _boneNameToIndexMap[boneName];
 		}
 
-		for (unsigned int j = 0; j < ai_mesh->mBones[i]->mNumWeights; j++)
+		for (unsigned int j = 0; j < ai_bone->mNumWeights; j++)
 		{
-			const aiVertexWeight& ai_vw = ai_mesh->mBones[i]->mWeights[j];
-			mesh->bones[ai_vw.mVertexId].AddBoneData(boneIndex, ai_vw.mWeight);
+			const aiVertexWeight& ai_vw = ai_bone->mWeights[j];
+			mesh->bonesForVertices[ai_vw.mVertexId].AddBoneData(boneIndex, ai_vw.mWeight);
 		}
 	}
 }
 
-void ModelImporter::LoadAnimations(const aiScene* ai_scene)
+Animation ModelImporter::LoadAnimations(const aiScene* ai_scene)
 {
 	if (!ai_scene->HasAnimations())
 	{
 		LOGGER(info, "no animations found");
-		return;
+		return {};
 	}
 
+	Animation animation{};
+
 	unsigned int numAnims = ai_scene->mNumAnimations;
+
 	for (unsigned int i = 0; i < numAnims; ++i)
 	{
 		aiAnimation* ai_animation = ai_scene->mAnimations[i];
 
 		const char* animName = ai_animation->mName.C_Str();
-		float durInTick = static_cast<float>(ai_animation->mDuration != 0 ? ai_animation->mDuration : 30.0);
-		float tickPerSec = static_cast<float>(ai_animation->mTicksPerSecond);
-		float duration = durInTick / tickPerSec;
+		double durInTick = ai_animation->mDuration != 0 ? ai_animation->mDuration : 30.0;
+		double tickPerSec = ai_animation->mTicksPerSecond;
+		float duration = static_cast<float>(durInTick) / static_cast<float>(tickPerSec);
+
+		animation.name = animName;
+		animation.durationInTick = durInTick;
+		animation.tickPerSecond = tickPerSec;
 
 		for (unsigned int c = 0; c < ai_animation->mNumChannels; c++)
 		{
 			aiNodeAnim* ai_node_anim = ai_animation->mChannels[c];
+			std::string boneName = ai_node_anim->mNodeName.C_Str();
 
-			const char* nodeName = ai_node_anim->mNodeName.C_Str();
-			if (_boneNameToIndexMap.find(nodeName) == _boneNameToIndexMap.end())
+			if (animation.boneAnimations.find(boneName) != animation.boneAnimations.end())
 			{
-				LOGGER(info, "could not found node: " << nodeName);
+				LOGGER(error, "duplicate bone animation found: " << boneName);
 				continue;
 			}
-			int boneIndex = _boneNameToIndexMap[nodeName];
 
-			LoadNodeAnimation(ai_node_anim, boneIndex, tickPerSec);
+			animation.boneAnimations[boneName] = LoadNodeAnimation(ai_node_anim, tickPerSec);
 		}
 
 		LOGGER(info,
@@ -342,16 +377,31 @@ void ModelImporter::LoadAnimations(const aiScene* ai_scene)
 			ai_animation->mNumMorphMeshChannels << " morph mesh channels"
 		);
 	}
+
+	return animation;
 }
 
-void ModelImporter::LoadNodeAnimation(const aiNodeAnim* ai_node_anim, int boneIndex, float tickPerSec)
+BoneAnimation ModelImporter::LoadNodeAnimation(const aiNodeAnim* ai_node_anim, float tickPerSec)
 {
+	const char* nodeName = ai_node_anim->mNodeName.C_Str();
+	if (_boneNameToIndexMap.find(nodeName) == _boneNameToIndexMap.end())
+	{
+		LOGGER(error, "could not found node: " << nodeName);
+		return {};
+	}
+	int boneIndex = _boneNameToIndexMap[nodeName];
+
+	BoneAnimation anim{};
+	anim.name = nodeName;
+
 	for (unsigned int i = 0; i < ai_node_anim->mNumPositionKeys; i++)
 	{
 		aiVectorKey ai_vector_key = ai_node_anim->mPositionKeys[i];
 
 		float time = static_cast<float>(ai_vector_key.mTime) / tickPerSec;
 		glm::vec3 position = ConvertVector(ai_vector_key.mValue);
+
+		anim.positions.emplace_back(AnimPositionKey{ time, position });
 	}
 
 	for (unsigned int i = 0; i < ai_node_anim->mNumRotationKeys; i++)
@@ -360,6 +410,8 @@ void ModelImporter::LoadNodeAnimation(const aiNodeAnim* ai_node_anim, int boneIn
 
 		float time = static_cast<float>(ai_quat_key.mTime) / tickPerSec;
 		glm::quat rotation = ConvertQuat(ai_quat_key.mValue);
+
+		anim.rotations.emplace_back(AnimRotationKey{ time, rotation });
 	}
 
 	for (unsigned int i = 0; i < ai_node_anim->mNumScalingKeys; i++)
@@ -368,7 +420,11 @@ void ModelImporter::LoadNodeAnimation(const aiNodeAnim* ai_node_anim, int boneIn
 
 		float time = static_cast<float>(ai_vector_key.mTime) / tickPerSec;
 		glm::vec3 scale = ConvertVector(ai_vector_key.mValue);
+
+		anim.scales.emplace_back(AnimScaleKey{ time, scale });
 	}
+
+	return anim;
 }
 
 void ModelImporter::LoadBlendShapes(const aiMesh* ai_mesh, std::shared_ptr<Mesh>& mesh)

@@ -4,6 +4,7 @@
 #include "seri/texture/Texture.h"
 
 #include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 #include <assimp/scene.h>
 #include <assimp/Importer.hpp>
@@ -15,6 +16,14 @@
 #include <string>
 
 class Mesh;
+struct Animation;
+struct Bone;
+struct AnimPositionKey;
+struct AnimRotationKey;
+struct AnimScaleKey;
+struct BoneAnimation;
+
+struct BoneNode;
 
 class ModelImporter
 {
@@ -31,9 +40,9 @@ public:
 private:
 	unsigned int FlagBuilder();
 
-	void ProcessNode(const aiScene* ai_scene, const aiNode* ai_node, std::vector<std::shared_ptr<Mesh>>& meshes);
+	BoneNode ProcessNode(const aiScene* ai_scene, const aiNode* ai_node, std::vector<std::shared_ptr<Mesh>>& meshes);
 
-	void ProcessMesh(const aiScene* ai_scene, const aiNode* ai_node, const aiMesh* ai_mesh, std::shared_ptr<Mesh>& mesh);
+	void ProcessMesh(const aiScene* ai_scene, const aiMesh* ai_mesh, std::shared_ptr<Mesh>& mesh);
 
 	void LoadIndices(const aiMesh* ai_mesh, std::shared_ptr<Mesh>& mesh);
 
@@ -51,9 +60,9 @@ private:
 
 	void LoadBones(const aiMesh* ai_mesh, std::shared_ptr<Mesh>& mesh);
 
-	void LoadAnimations(const aiScene* ai_scene);
+	Animation LoadAnimations(const aiScene* ai_scene);
 
-	void LoadNodeAnimation(const aiNodeAnim* ai_node_anim, int boneIndex, float tickPerSec);
+	BoneAnimation LoadNodeAnimation(const aiNodeAnim* ai_node_anim, float tickPerSec);
 
 	void LoadBlendShapes(const aiMesh* ai_mesh, std::shared_ptr<Mesh>& mesh);
 
@@ -69,9 +78,9 @@ private:
 
 	static std::string GetString(const aiTextureType ai_tt);
 
-	std::map<std::string, Texture> _texturesLoaded;
 	std::map<std::string, int> _boneNameToIndexMap;
-	std::map<std::string, glm::mat4> _boneNameToOffsetMatrixMap;
+
 	std::string _modelDirectory;
+	std::map<std::string, Texture> _texturesLoaded;
 
 };

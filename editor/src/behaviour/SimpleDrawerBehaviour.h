@@ -26,9 +26,11 @@ public:
 		//models_0 = ModelImporter{}.Load("assets/models/blendshape.fbx");
 		//models_0 = ModelImporter{}.Load("assets/models/prop_0.fbx");
 		//models_0 = ModelImporter{}.Load("assets/models/prop_0_crk.fbx");
-		models_0 = ModelImporter{}.Load("assets/models/X Bot@Hip Hop Dancing.fbx");
+		//models_0 = ModelImporter{}.Load("assets/models/X Bot@Hip Hop Dancing.fbx");
+		models_0 = ModelImporter{}.Load("assets/models/Hip Hop Dancing.dae");
 
 		auto entityShader = ShaderManager::Find("entity");
+		auto entitySkinnedShader = ShaderManager::Find("entity_skinned");
 		auto lineShader = ShaderManager::Find("line");
 		auto gridShader = ShaderManager::Find("grid");
 
@@ -53,6 +55,10 @@ public:
 		materialModel = std::make_shared<Material>();
 		materialModel->shader = entityShader;
 		materialModel->texture = tankTexture;
+
+		materialSkinned = std::make_shared<Material>();
+		materialSkinned->shader = entitySkinnedShader;
+		materialSkinned->texture = tankTexture;
 	}
 
 	void Update() override
@@ -63,7 +69,8 @@ public:
 
 		glm::vec3 pos_3d{ 0.0f, 0.0f, 0.0f };
 		glm::quat rot_3d = glm::quat(glm::vec3{ glm::radians(0.0f), glm::radians(0.0f), glm::radians(0.0f) });
-		glm::vec3 scale_3d{ 0.01f, 0.01f, 0.01f };
+		glm::vec3 scale_3d{ 1.0f, 1.0f, 1.0f };
+		//glm::vec3 scale_3d{ 0.01f, 0.01f, 0.01f };
 
 		//Graphic::Draw(line_2d, Util::GetIdentityMatrix(), materialLine, Graphic::GetCameraOrtho());
 		//Graphic::Draw(quad_3d, Util::GetTRS(pos_3d, rot_3d, scale_3d), material, Graphic::GetCameraPerspective());
@@ -71,7 +78,8 @@ public:
 
 		for (auto& model : models_0)
 		{
-			Graphic::Draw(model, Util::GetTRS(pos_3d, rot_3d, scale_3d), materialModel, Graphic::GetCameraPerspective());
+			model->UpdateAnimation();
+			Graphic::Draw(model, Util::GetTRS(pos_3d, rot_3d, scale_3d), materialSkinned, Graphic::GetCameraPerspective());
 		}
 
 		//Graphic::Draw(quad_2d, Util::GetIdentityMatrix(), materialGrid, Graphic::GetCameraPerspective());
@@ -94,5 +102,6 @@ private:
 	std::shared_ptr<Material> materialLine;
 	std::shared_ptr<Material> materialGrid;
 	std::shared_ptr<Material> materialModel;
+	std::shared_ptr<Material> materialSkinned;
 
 };

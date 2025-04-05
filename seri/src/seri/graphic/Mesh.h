@@ -6,6 +6,7 @@
 #include <glad/gl.h>
 
 #include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 #include <vector>
 #include <memory>
@@ -14,6 +15,20 @@
 #define MAX_NUM_BONES_PER_VERTEX 4
 
 class Graphic;
+
+struct Bone
+{
+	unsigned int index;
+	std::string name;
+	glm::mat4 offsetMatrix;
+};
+
+struct BoneNode
+{
+	std::string name;
+	glm::mat4 transformation;
+	std::vector<BoneNode> children;
+};
 
 struct VertexBoneData
 {
@@ -24,7 +39,7 @@ public:
 
 	void AddBoneData(unsigned int boneId, float weight)
 	{
-		if (_index >= MAX_NUM_BONES_PER_VERTEX)
+		if (_count >= MAX_NUM_BONES_PER_VERTEX)
 		{
 			return;
 		}
@@ -34,7 +49,7 @@ public:
 			return;
 		}
 
-		for (int i = 0; i < _index; i++)
+		for (int i = 0; i < _count; i++)
 		{
 			if (boneIds[i] == boneId)
 			{
@@ -42,43 +57,59 @@ public:
 			}
 		}
 
-		boneIds[_index] = boneId;
-		weights[_index] = weight;
+		boneIds[_count] = boneId;
+		weights[_count] = weight;
 
-		_index += 1;
+		_count += 1;
 	}
 
 	unsigned int boneIds[MAX_NUM_BONES_PER_VERTEX] = { 0 };
 	float weights[MAX_NUM_BONES_PER_VERTEX] = { 0.0f };
 
 private:
-	int _index = 0;
+	int _count = 0;
 
 };
 
 struct AnimPositionKey
 {
+	AnimPositionKey(float t, glm::vec3 p) : time{ t }, position{ p } {}
+
 	float time;
 	glm::vec3 position;
 };
 
 struct AnimRotationKey
 {
+	AnimRotationKey(float t, glm::quat q) : time{ t }, quaternion{ q } {}
+
 	float time;
 	glm::quat quaternion;
 };
 
 struct AnimScaleKey
 {
+	AnimScaleKey(float t, glm::vec3 s) : time{ t }, scale{ s } {}
+
 	float time;
 	glm::vec3 scale;
 };
 
-struct Anim
+struct BoneAnimation
 {
-	std::vector<AnimPositionKey> positions;
-	std::vector<AnimRotationKey> rotations;
-	std::vector<AnimScaleKey> scales;
+	std::string name;
+
+	std::vector<AnimPositionKey> positions{};
+	std::vector<AnimRotationKey> rotations{};
+	std::vector<AnimScaleKey> scales{};
+};
+
+struct Animation
+{
+	std::string name;
+	double durationInTick;
+	double tickPerSecond;
+	std::map<std::string, BoneAnimation> boneAnimations;
 };
 
 class Mesh
@@ -103,10 +134,15 @@ public:
 	std::vector<glm::vec3> normals;
 	std::vector<glm::vec3> tangents;
 
-	std::vector<VertexBoneData> bones;
+	BoneNode boneNode;
+	Animation animation;
+
+	std::vector<Bone> bones;
+	std::vector<VertexBoneData> bonesForVertices;
 	std::vector<glm::vec3> blendShapes;
 
-	Anim animation;
+	std::string name;
+	std::string nodeName;
 
 	glm::mat4 transformation{ 1.0f };
 
@@ -145,6 +181,16 @@ public:
 	void AddIndices(std::vector<unsigned int> ind)
 	{
 		indices.insert(indices.end(), ind.begin(), ind.end());
+	}
+
+	void UpdateAnimation()
+	{
+		localAnimationTime += WindowManagerFactory::instance()->getDeltaTime();
+
+		auto timeInTicks = localAnimationTime * animation.tickPerSecond;
+
+		localAnimationTime = std::fmod(timeInTicks, animation.durationInTick);
+		//LOGGER(info, "localAnimationTime: " << localAnimationTime / (float)animation.durationInTick);
 	}
 
 	void Build()
@@ -245,6 +291,44 @@ public:
 			dataBuffer.usage = aux::toGLenum(aux::Usage::static_draw);
 
 			glBufferData(dataBuffer.target, dataBuffer.size, dataBuffer.data, dataBuffer.usage);
+		}
+
+		if (!bonesForVertices.empty())
+		{
+			Bind_vbo_skin();
+
+			unsigned int index_bone_id = aux::toGLenum(aux::Index::skin_bone_id);
+			unsigned int index_weight = aux::toGLenum(aux::Index::skin_weight);
+
+			aux::DataBuffer dataBuffer;
+			dataBuffer.target = aux::toGLenum(aux::Target::vbo);
+			dataBuffer.size = aux::size(bonesForVertices);
+			dataBuffer.data = aux::data(bonesForVertices);
+			dataBuffer.usage = aux::toGLenum(aux::Usage::static_draw);
+
+			aux::Attribute attr_bone_id;
+			attr_bone_id.index = index_bone_id;
+			attr_bone_id.size = 4;
+			attr_bone_id.type = aux::toGLenum(aux::Type::int_type);
+			attr_bone_id.normalized = false;
+			attr_bone_id.stride = sizeof(VertexBoneData);
+			attr_bone_id.pointer = nullptr;
+
+			aux::Attribute attr_weight;
+			attr_weight.index = index_weight;
+			attr_weight.size = 4;
+			attr_weight.type = aux::toGLenum(aux::Type::float_type);
+			attr_weight.normalized = false;
+			attr_weight.stride = sizeof(VertexBoneData);
+			attr_weight.pointer = (const void*)(16);
+
+			glBufferData(dataBuffer.target, dataBuffer.size, dataBuffer.data, dataBuffer.usage);
+
+			glEnableVertexAttribArray(attr_bone_id.index);
+			glVertexAttribIPointer(attr_bone_id.index, attr_bone_id.size, attr_bone_id.type, attr_bone_id.stride, attr_bone_id.pointer);
+
+			glEnableVertexAttribArray(attr_weight.index);
+			glVertexAttribPointer(attr_weight.index, attr_weight.size, attr_weight.type, attr_weight.normalized, attr_weight.stride, attr_weight.pointer);
 		}
 
 		count = !indices.empty() ? static_cast<unsigned int>(indices.size()) : static_cast<unsigned int>(vertices.size());
@@ -418,6 +502,7 @@ private:
 		glGenBuffers(1, &_vbo_uv0);
 		glGenBuffers(1, &_vbo_uv1);
 		glGenBuffers(1, &_vbo_col);
+		glGenBuffers(1, &_vbo_skin);
 		glGenBuffers(1, &_ebo);
 	}
 
@@ -444,6 +529,11 @@ private:
 	void Bind_vbo_color()
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, _vbo_col);
+	}
+
+	void Bind_vbo_skin()
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, _vbo_skin);
 	}
 
 	void Bind_index()
@@ -479,6 +569,7 @@ private:
 		glDeleteBuffers(1, &_vbo_ver);
 		glDeleteBuffers(1, &_vbo_uv0);
 		glDeleteBuffers(1, &_vbo_uv1);
+		glDeleteBuffers(1, &_vbo_skin);
 		glDeleteBuffers(1, &_ebo);
 	}
 
@@ -487,6 +578,9 @@ private:
 	unsigned int _vbo_uv0{ 0 };
 	unsigned int _vbo_uv1{ 0 };
 	unsigned int _vbo_col{ 0 };
+	unsigned int _vbo_skin{ 0 };
 	unsigned int _ebo{ 0 };
+
+	float localAnimationTime{ 0.0f };
 
 };

@@ -8,14 +8,6 @@ call git --git-dir seri/vendor/stb/.git switch --detach master
 call git --git-dir seri/vendor/assimp/.git switch --detach v5.4.3
 call git --git-dir seri/vendor/freetype/.git switch --detach VER-2-13-3
 
-:: :: gitignore
-:: echo * >> seri/vendor/stb/.gitignore
-:: echo * >> seri/vendor/glm/.gitignore
-:: echo * >> seri/vendor/glfw/.gitignore
-:: echo * >> seri/vendor/imgui/.gitignore
-:: echo * >> seri/vendor/assimp/.gitignore
-:: echo * >> seri/vendor/freetype/.gitignore
-
 :: copy premake5.lua
 echo f | xcopy /f /y "script/vendor/glad/premake5.lua" "seri/vendor/glad/premake5.lua"
 echo f | xcopy /f /y "script/vendor/glfw/premake5.lua" "seri/vendor/glfw/premake5.lua"
@@ -27,7 +19,6 @@ echo f | xcopy /f /y "script/vendor/freetype/premake5.lua" "seri/vendor/freetype
 echo f | xcopy /f /y "script/vendor/stb/stb_image.cpp" "seri/vendor/stb/stb_image.cpp"
 echo f | xcopy /f /y "script/vendor/assimp/zconf.h" "seri/vendor/assimp/contrib/zlib/zconf.h"
 echo f | xcopy /f /y "script/vendor/assimp/config.h" "seri/vendor/assimp/include/assimp/config.h"
-:: echo f | xcopy /f /y "script/vendor/assimp/revision.h" "seri/vendor/assimp/include/assimp/revision.h"
 echo f | xcopy /f /y "script/vendor/assimp/revision.h" "seri/vendor/assimp/code/assimp/revision.h"
 
 :: premake

@@ -20,49 +20,14 @@ public:
 
 		for (const auto& entry : std::filesystem::directory_iterator(shaderFolderPath))
 		{
-			std::string filename = entry.path().stem().string();
-			std::string name = filename.substr(0, filename.find_last_of('_'));
-			std::string type = filename.substr(name.size() + 1, filename.size());
-			std::string content = Util::readFileAtPath(entry.path().string().c_str());
+			std::string name = entry.path().stem().string();
+			std::string text = Util::ReadFileAtPath(entry.path().string().c_str());
 
-			bool found = false;
-			for (auto& predef : GetInstance()._predefinedShaders)
-			{
-				if (predef.name == name)
-				{
-					found = true;
-					if (type == "vs")
-					{
-						predef.vsCode = content;
-					}
-					else if (type == "fs")
-					{
-						predef.fsCode = content;
-					}
-					else
-					{
-						LOGGER(error, "unknown shader type: " << type);
-					}
-				}
-			}
-			if (!found)
-			{
-				ShaderInfo info;
-				info.name = name;
-				if (type == "vs")
-				{
-					info.vsCode = content;
-				}
-				else if (type == "fs")
-				{
-					info.fsCode = content;
-				}
-				else
-				{
-					LOGGER(error, "unknown shader type: " << type);
-				}
-				GetInstance()._predefinedShaders.push_back(info);
-			}
+			ShaderInfo info;
+			info.name = name;
+			info.vsCode = Util::GetContentOfToken(text, "#beg_vs", "#end_vs");
+			info.fsCode = Util::GetContentOfToken(text, "#beg_fs", "#end_fs");
+			GetInstance()._predefinedShaders.push_back(info);
 		}
 
 		LOGGER(info, "shader manager init done");
@@ -240,6 +205,11 @@ public:
 	static void SetMat4(const std::shared_ptr<Shader>& shader, const char* name, const glm::mat4& val)
 	{
 		glUniformMatrix4fv(ShaderManager::GetUniformLocation(shader, name), 1, GL_FALSE, &val[0][0]);
+	}
+	
+	static void SetMat4(const std::shared_ptr<Shader>& shader, const char* name, const int count, const std::vector<glm::mat4>& val)
+	{
+		glUniformMatrix4fv(ShaderManager::GetUniformLocation(shader, name), count, GL_FALSE, &val[0][0][0]);
 	}
 
 private:

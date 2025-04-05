@@ -81,7 +81,7 @@ private:
 		std::string codeStr;
 		if (readFromFile)
 		{
-			codeStr = Util::readFileAtPath(code);
+			codeStr = Util::ReadFileAtPath(code);
 			codeCStr = codeStr.c_str();
 		}
 		glShaderSource(shader, 1, &codeCStr, nullptr);

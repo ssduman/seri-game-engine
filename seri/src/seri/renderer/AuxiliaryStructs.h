@@ -19,6 +19,8 @@ namespace aux
 		texture = 1,
 		color = 2,
 		normal = 3,
+		skin_bone_id = 4,
+		skin_weight = 5,
 	};
 
 	enum class Type : GLenum
