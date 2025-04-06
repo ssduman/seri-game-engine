@@ -17,7 +17,7 @@ class GUI : public Object
 public:
 	GUI(std::shared_ptr<Camera> camera, std::shared_ptr<IScene> scene) : _windowManager(WindowManagerFactory::instance()), _camera(camera), _scene(scene)
 	{
-		LOGGER(info, "gui init succeeded");
+		//LOGGER(info, "gui init succeeded");
 	}
 
 	~GUI() override
@@ -26,7 +26,7 @@ public:
 		ImGui_ImplGlfw_Shutdown();
 		ImGui::DestroyContext();
 
-		LOGGER(info, "gui delete succeeded");
+		//LOGGER(info, "gui delete succeeded");
 	}
 
 	void init() override

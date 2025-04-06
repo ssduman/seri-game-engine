@@ -29,7 +29,7 @@ std::shared_ptr<ICamera> Graphic::GetCameraPerspective()
 	return GetInstance()._cameraPerspective;
 }
 
-void Graphic::Draw(std::shared_ptr<Mesh> mesh, const glm::mat4& trs, std::shared_ptr<Material> material, std::shared_ptr<ICamera> camera)
+void Graphic::Draw(const std::unique_ptr<Mesh>& mesh, const glm::mat4& trs, std::shared_ptr<Material> material, std::shared_ptr<ICamera> camera)
 {
 	ShaderManager::Use(material->shader);
 	if (material->texture != nullptr)
@@ -46,15 +46,20 @@ void Graphic::Draw(std::shared_ptr<Mesh> mesh, const glm::mat4& trs, std::shared
 
 	if (mesh->bonesForVertices.size() > 0)
 	{
-		for (auto i = 0; i < mesh->bones.size(); i++)
+		//for (const auto& bone : mesh->bones)
+		//{
+		//	std::string loc = "u_bones[" + std::to_string(bone.second.index) + "]";
+		//	ShaderManager::SetMat4(material->shader, loc.c_str(), bone.second.transform);
+		//}
+		for (auto i = 0; i < MAX_BONES; i++)
 		{
 			std::string loc = "u_bones[" + std::to_string(i) + "]";
-			ShaderManager::SetMat4(material->shader, loc.c_str(), glm::mat4{ 1.0f });
-		}
-		for (auto i = mesh->bones.size(); i < MAX_BONES; i++)
-		{
-			std::string loc = "u_bones[" + std::to_string(i) + "]";
-			ShaderManager::SetMat4(material->shader, loc.c_str(), glm::mat4{ 1.0f });
+			glm::mat4 transform = glm::mat4{ 1.0f };
+			if (mesh->bones.find(i) != mesh->bones.end())
+			{
+				transform = mesh->bones[i].transform;
+			}
+			ShaderManager::SetMat4(material->shader, loc.c_str(), transform);
 		}
 	}
 

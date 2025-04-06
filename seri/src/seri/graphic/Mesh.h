@@ -8,6 +8,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 
+#include <map>
 #include <vector>
 #include <memory>
 
@@ -18,16 +19,17 @@ class Graphic;
 
 struct Bone
 {
-	unsigned int index;
+	unsigned int index{};
 	std::string name;
-	glm::mat4 offsetMatrix;
+	glm::mat4 offsetMatrix{};
+	glm::mat4 transform{ 1.0f };
 };
 
-struct BoneNode
+struct NodeData
 {
 	std::string name;
-	glm::mat4 transformation;
-	std::vector<BoneNode> children;
+	glm::mat4 transformation{};
+	std::vector<NodeData> children;
 };
 
 struct VertexBoneData
@@ -73,31 +75,25 @@ private:
 
 struct AnimPositionKey
 {
-	AnimPositionKey(float t, glm::vec3 p) : time{ t }, position{ p } {}
-
-	float time;
+	double timeInTick;
 	glm::vec3 position;
 };
 
 struct AnimRotationKey
 {
-	AnimRotationKey(float t, glm::quat q) : time{ t }, quaternion{ q } {}
-
-	float time;
+	double timeInTick;
 	glm::quat quaternion;
 };
 
 struct AnimScaleKey
 {
-	AnimScaleKey(float t, glm::vec3 s) : time{ t }, scale{ s } {}
-
-	float time;
+	double timeInTick;
 	glm::vec3 scale;
 };
 
-struct BoneAnimation
+struct NodeAnimation
 {
-	std::string name;
+	std::string nodeName;
 
 	std::vector<AnimPositionKey> positions{};
 	std::vector<AnimRotationKey> rotations{};
@@ -107,15 +103,18 @@ struct BoneAnimation
 struct Animation
 {
 	std::string name;
-	double durationInTick;
-	double tickPerSecond;
-	std::map<std::string, BoneAnimation> boneAnimations;
+	double durationInTick{};
+	double tickPerSecond{};
+	std::map<std::string, NodeAnimation> nodeAnimations;
 };
 
 class Mesh
 {
 public:
-	Mesh() = default;
+	Mesh()
+	{
+		bones.clear();
+	}
 
 	~Mesh() = default;
 
@@ -134,15 +133,16 @@ public:
 	std::vector<glm::vec3> normals;
 	std::vector<glm::vec3> tangents;
 
-	BoneNode boneNode;
-	Animation animation;
+	NodeData nodeData{};
+	Animation animation{};
 
-	std::vector<Bone> bones;
-	std::vector<VertexBoneData> bonesForVertices;
-	std::vector<glm::vec3> blendShapes;
+	std::map<int, Bone> bones{};
+	std::vector<VertexBoneData> bonesForVertices{};
+	std::vector<glm::vec3> blendShapes{};
 
-	std::string name;
-	std::string nodeName;
+	std::string name{};
+	std::string nodeName{};
+	std::map<std::string, int> boneNameToIndexMap{};
 
 	glm::mat4 transformation{ 1.0f };
 
@@ -185,12 +185,59 @@ public:
 
 	void UpdateAnimation()
 	{
-		localAnimationTime += WindowManagerFactory::instance()->getDeltaTime();
+		auto time = WindowManagerFactory::instance()->getTime();
+		auto timeInTicks = time * animation.tickPerSecond;
 
-		auto timeInTicks = localAnimationTime * animation.tickPerSecond;
+		animTimeInTick = std::fmod(timeInTicks, animation.durationInTick);
+		animTime = static_cast<float>(animTimeInTick) / static_cast<float>(animation.tickPerSecond);
+		//LOGGER(info, "time: " << time << ", localAnimationTime: " << localAnimationTime);
 
-		localAnimationTime = std::fmod(timeInTicks, animation.durationInTick);
-		//LOGGER(info, "localAnimationTime: " << localAnimationTime / (float)animation.durationInTick);
+		UpdateAnimation(nodeData, glm::mat4{ 1.0f });
+	}
+
+	void UpdateAnimation(const NodeData& node, const glm::mat4& parentTransform)
+	{
+		std::string nodeName = node.name;
+		glm::mat4 nodeTransform = node.transformation;
+		glm::mat4 trs = glm::mat4{ 1.0f };
+
+		int boneIndex = -1;
+		if (animation.nodeAnimations.find(nodeName) != animation.nodeAnimations.end() && boneNameToIndexMap.find(nodeName) != boneNameToIndexMap.end())
+		{
+			const NodeAnimation& nodeAnim = animation.nodeAnimations[nodeName];
+
+			if (nodeAnim.nodeName != nodeName)
+			{
+				LOGGER(error, "bone anim name mismatch: " << nodeAnim.nodeName << ", " << nodeName);
+			}
+
+			boneIndex = boneNameToIndexMap[nodeName];
+
+			glm::vec3 position = InterpolatePosition(nodeAnim);
+			glm::quat rotation = InterpolateRotation(nodeAnim);
+			glm::vec3 scale = InterpolateScale(nodeAnim);
+
+			trs = Util::GetTRS(position, rotation, scale);
+		}
+
+		glm::mat4 globalTransform = parentTransform * trs;
+
+		if (boneIndex != -1 && bones.find(boneIndex) != bones.end())
+		{
+			if (bones.at(boneIndex).name != nodeName)
+			{
+				LOGGER(error, "bone name mismatch: " << nodeName << ", " << bones.at(boneIndex).name);
+			}
+			else
+			{
+				bones.at(boneIndex).transform = globalTransform * bones.at(boneIndex).offsetMatrix;
+			}
+		}
+
+		for (const NodeData& child : node.children)
+		{
+			UpdateAnimation(child, globalTransform);
+		}
 	}
 
 	void Build()
@@ -351,9 +398,9 @@ public:
 		Unbind_vao();
 	}
 
-	static std::shared_ptr<Mesh> tri_2d()
+	static std::unique_ptr<Mesh> tri_2d()
 	{
-		std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
+		std::unique_ptr<Mesh> mesh = std::make_unique<Mesh>();
 
 		mesh->vertices = {
 			{0.0f, 0.0f, 0.0f},
@@ -377,9 +424,9 @@ public:
 		return mesh;
 	}
 
-	static std::shared_ptr<Mesh> quad_2d()
+	static std::unique_ptr<Mesh> quad_2d()
 	{
-		std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
+		std::unique_ptr<Mesh> mesh = std::make_unique<Mesh>();
 
 		mesh->vertices = {
 			{-1.0f, -1.0f, 0.0f},
@@ -405,9 +452,9 @@ public:
 		return mesh;
 	}
 
-	static std::shared_ptr<Mesh> quad_3d()
+	static std::unique_ptr<Mesh> quad_3d()
 	{
-		std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
+		std::unique_ptr<Mesh> mesh = std::make_unique<Mesh>();
 
 		mesh->vertices = {
 			{0.0f, 0.0f, 0.0f},
@@ -433,9 +480,9 @@ public:
 		return mesh;
 	}
 
-	static std::shared_ptr<Mesh> cube_3d()
+	static std::unique_ptr<Mesh> cube_3d()
 	{
-		std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
+		std::unique_ptr<Mesh> mesh = std::make_unique<Mesh>();
 
 		mesh->vertices = {
 			  {-1.0f, +1.0f, +1.0f},
@@ -473,9 +520,9 @@ public:
 		return mesh;
 	}
 
-	static std::shared_ptr<Mesh> line_2d(glm::vec2 beg, glm::vec2 end)
+	static std::unique_ptr<Mesh> line_2d(glm::vec2 beg, glm::vec2 end)
 	{
-		std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
+		std::unique_ptr<Mesh> mesh = std::make_unique<Mesh>();
 
 		mesh->drawMode = aux::DrawMode::lines;
 
@@ -573,6 +620,117 @@ private:
 		glDeleteBuffers(1, &_ebo);
 	}
 
+	glm::vec3 InterpolatePosition(const NodeAnimation& nodeAnim)
+	{
+		if (nodeAnim.positions.empty())
+		{
+			return glm::vec3{ 0.0f, 0.0f, 0.0f };
+		}
+
+		if (nodeAnim.positions.size() == 1)
+		{
+			return nodeAnim.positions[0].position;
+		}
+
+		unsigned int prevIndex = 0;
+		for (unsigned int i = 0; i < nodeAnim.positions.size() - 1; i++)
+		{
+			if (animTimeInTick < nodeAnim.positions[i + 1].timeInTick)
+			{
+				prevIndex = i;
+				break;
+			}
+		}
+
+		unsigned int nextIndex = prevIndex + 1;
+
+		auto t1 = nodeAnim.positions[prevIndex].timeInTick;
+		auto t2 = nodeAnim.positions[nextIndex].timeInTick;
+
+		float ratio = (animTimeInTick - t1) / static_cast<float>(t2 - t1);
+		ratio = glm::clamp(ratio, 0.0f, 1.0f);
+
+		const glm::vec3& beg = nodeAnim.positions[prevIndex].position;
+		const glm::vec3& end = nodeAnim.positions[nextIndex].position;
+
+		return glm::mix(beg, end, ratio);
+	}
+
+	glm::quat InterpolateRotation(const NodeAnimation& nodeAnim)
+	{
+		if (nodeAnim.rotations.empty())
+		{
+			return glm::quat{ 0.0f, 0.0f, 0.0f, 1.0f };
+		}
+
+		if (nodeAnim.rotations.size() == 1)
+		{
+			return nodeAnim.rotations[0].quaternion;
+		}
+
+		unsigned int prevIndex = 0;
+		for (unsigned int i = 0; i < nodeAnim.rotations.size() - 1; i++)
+		{
+			if (animTimeInTick < nodeAnim.rotations[i + 1].timeInTick)
+			{
+				prevIndex = i;
+				break;
+			}
+		}
+
+		unsigned int nextIndex = prevIndex + 1;
+
+		auto t1 = nodeAnim.positions[prevIndex].timeInTick;
+		auto t2 = nodeAnim.positions[nextIndex].timeInTick;
+
+		float ratio = (animTimeInTick - t1) / static_cast<float>(t2 - t1);
+		ratio = glm::clamp(ratio, 0.0f, 1.0f);
+
+		const glm::quat& beg = nodeAnim.rotations[prevIndex].quaternion;
+		const glm::quat& end = nodeAnim.rotations[nextIndex].quaternion;
+
+		glm::quat begNorm = glm::normalize(beg);
+		glm::quat endNorm = glm::normalize(end);
+
+		return glm::slerp(begNorm, endNorm, ratio);
+	}
+
+	glm::vec3 InterpolateScale(const NodeAnimation& nodeAnim)
+	{
+		if (nodeAnim.scales.empty())
+		{
+			return glm::vec3{ 1.0f, 1.0f, 1.0f };
+		}
+
+		if (nodeAnim.scales.size() == 1)
+		{
+			return nodeAnim.scales[0].scale;
+		}
+
+		unsigned int prevIndex = 0;
+		for (unsigned int i = 0; i < nodeAnim.scales.size() - 1; i++)
+		{
+			if (animTimeInTick < nodeAnim.scales[i + 1].timeInTick)
+			{
+				prevIndex = i;
+				break;
+			}
+		}
+
+		unsigned int nextIndex = prevIndex + 1;
+
+		auto t1 = nodeAnim.positions[prevIndex].timeInTick;
+		auto t2 = nodeAnim.positions[nextIndex].timeInTick;
+
+		float ratio = (animTimeInTick - t1) / static_cast<float>(t2 - t1);
+		ratio = glm::clamp(ratio, 0.0f, 1.0f);
+
+		const glm::vec3& beg = nodeAnim.scales[prevIndex].scale;
+		const glm::vec3& end = nodeAnim.scales[nextIndex].scale;
+
+		return glm::mix(beg, end, ratio);
+	}
+
 	unsigned int _vao{ 0 };
 	unsigned int _vbo_ver{ 0 };
 	unsigned int _vbo_uv0{ 0 };
@@ -581,6 +739,7 @@ private:
 	unsigned int _vbo_skin{ 0 };
 	unsigned int _ebo{ 0 };
 
-	float localAnimationTime{ 0.0f };
+	float animTime{ 0.0f };
+	double animTimeInTick{ 0.0 };
 
 };

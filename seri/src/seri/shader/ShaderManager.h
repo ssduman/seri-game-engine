@@ -30,7 +30,7 @@ public:
 			GetInstance()._predefinedShaders.push_back(info);
 		}
 
-		LOGGER(info, "shader manager init done");
+		//LOGGER(info, "shader manager init done");
 	}
 
 	static ShaderManager& GetInstance()
@@ -215,12 +215,12 @@ public:
 private:
 	ShaderManager()
 	{
-		LOGGER(info, "shader manager init");
+		//LOGGER(info, "shader manager init");
 	}
 
 	~ShaderManager()
 	{
-		LOGGER(info, "shader manager release");
+		//LOGGER(info, "shader manager release");
 	}
 
 	struct ShaderInfo

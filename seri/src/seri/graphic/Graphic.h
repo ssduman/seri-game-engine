@@ -20,7 +20,7 @@ public:
 	static void Init()
 	{
 		GetInstance();
-		LOGGER(info, "graphic manager init done");
+		//LOGGER(info, "graphic manager init done");
 	}
 
 	static Graphic& GetInstance()
@@ -35,17 +35,17 @@ public:
 
 	static std::shared_ptr<ICamera> GetCameraPerspective();
 
-	static void Draw(std::shared_ptr<Mesh> mesh, const glm::mat4& trs, std::shared_ptr<Material> material, std::shared_ptr<ICamera> camera);
+	static void Draw(const std::unique_ptr<Mesh>& mesh, const glm::mat4& trs, std::shared_ptr<Material> material, std::shared_ptr<ICamera> camera);
 
 private:
 	Graphic()
 	{
-		LOGGER(info, "graphic manager init");
+		//LOGGER(info, "graphic manager init");
 	}
 
 	~Graphic()
 	{
-		LOGGER(info, "graphic manager release");
+		//LOGGER(info, "graphic manager release");
 	}
 
 	static void drawElements(GLsizei count, aux::DrawMode drawMode = aux::DrawMode::triangles)

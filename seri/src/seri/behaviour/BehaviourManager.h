@@ -16,7 +16,7 @@ public:
 
 	static void Init()
 	{
-		LOGGER(info, "shader manager init done");
+		//LOGGER(info, "shader manager init done");
 	}
 
 	static BehaviourManager& GetInstance()
@@ -36,7 +36,7 @@ public:
 private:
 	BehaviourManager()
 	{
-		LOGGER(info, "behaviour manager init");
+		//LOGGER(info, "behaviour manager init");
 	}
 
 	~BehaviourManager()

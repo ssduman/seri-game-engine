@@ -11,8 +11,6 @@ class SimpleDrawerBehaviour : public BehaviourBase
 public:
 	void Init() override
 	{
-		LOGGER(info, "SimpleDrawerBehaviour Init");
-
 		quad_2d = Mesh::quad_2d();
 		quad_3d = Mesh::quad_3d();
 		cube_3d = Mesh::cube_3d();
@@ -36,7 +34,7 @@ public:
 
 		auto passageTexture = std::make_shared<Texture>();
 		passageTexture->init("assets/textures/passage.png");
-		
+
 		auto tankTexture = std::make_shared<Texture>();
 		tankTexture->init("assets/textures/tank/tank_diffuse.tga");
 
@@ -69,6 +67,7 @@ public:
 
 		glm::vec3 pos_3d{ 0.0f, 0.0f, 0.0f };
 		glm::quat rot_3d = glm::quat(glm::vec3{ glm::radians(0.0f), glm::radians(0.0f), glm::radians(0.0f) });
+		//glm::vec3 scale_3d{ 100.0f, 100.0f, 100.0f };
 		glm::vec3 scale_3d{ 1.0f, 1.0f, 1.0f };
 		//glm::vec3 scale_3d{ 0.01f, 0.01f, 0.01f };
 
@@ -76,27 +75,25 @@ public:
 		//Graphic::Draw(quad_3d, Util::GetTRS(pos_3d, rot_3d, scale_3d), material, Graphic::GetCameraPerspective());
 		//Graphic::Draw(cube_3d, Util::GetTRS(pos_3d, rot_3d, scale_3d), material, Graphic::GetCameraPerspective());
 
-		for (auto& model : models_0)
+		for (const auto& model : models_0)
 		{
 			model->UpdateAnimation();
 			Graphic::Draw(model, Util::GetTRS(pos_3d, rot_3d, scale_3d), materialSkinned, Graphic::GetCameraPerspective());
 		}
 
-		//Graphic::Draw(quad_2d, Util::GetIdentityMatrix(), materialGrid, Graphic::GetCameraPerspective());
+		Graphic::Draw(quad_2d, Util::GetIdentityMatrix(), materialGrid, Graphic::GetCameraPerspective());
 	}
 
 	void Destroy() override
-	{
-		LOGGER(info, "SimpleDrawerBehaviour Destroy");
-	}
+	{}
 
 private:
-	std::shared_ptr<Mesh> quad_2d;
-	std::shared_ptr<Mesh> quad_3d;
-	std::shared_ptr<Mesh> cube_3d;
-	std::shared_ptr<Mesh> line_2d;
+	std::unique_ptr<Mesh> quad_2d;
+	std::unique_ptr<Mesh> quad_3d;
+	std::unique_ptr<Mesh> cube_3d;
+	std::unique_ptr<Mesh> line_2d;
 
-	std::vector<std::shared_ptr<Mesh>> models_0;
+	std::vector<std::unique_ptr<Mesh>> models_0;
 
 	std::shared_ptr<Material> material;
 	std::shared_ptr<Material> materialLine;

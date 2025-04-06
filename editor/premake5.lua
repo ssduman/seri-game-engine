@@ -20,6 +20,11 @@ project "Editor"
   linkoptions {
     "-IGNORE:4098",
     "-IGNORE:4267",
+    "-IGNORE:4244",
+  }
+
+  disablewarnings {
+    "4244"
   }
 
   includedirs {

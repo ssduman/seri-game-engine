@@ -24,7 +24,7 @@ public:
 		unbind();
 		del();
 
-		LOGGER(info, "texture destroyed");
+		//LOGGER(info, "texture destroyed");
 	}
 
 	void init(const std::string& texturePath)

@@ -24,6 +24,16 @@ project "Seri"
     "GLM_ENABLE_EXPERIMENTAL",
   }
 
+  linkoptions {
+    "-IGNORE:4098",
+    "-IGNORE:4267",
+    "-IGNORE:4244",
+  }
+
+  disablewarnings {
+    "4244"
+  }
+
   includedirs {
     "src",
     "src/seri/core",

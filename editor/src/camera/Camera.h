@@ -9,12 +9,12 @@ class Camera : public ICamera
 public:
 	Camera(CameraProperties cameraProperties) : ICamera(cameraProperties)
 	{
-		LOGGER(info, "camera init succeeded");
+		//LOGGER(info, "camera init succeeded");
 	}
 
 	~Camera() override
 	{
-		LOGGER(info, "camera delete succeeded");
+		//LOGGER(info, "camera delete succeeded");
 	}
 
 	void init() override
