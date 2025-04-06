@@ -20,12 +20,12 @@ public:
 		);
 
 		//models_0 = ModelImporter{}.Load("assets/models/spider.obj");
-		//models_0 = ModelImporter{}.Load("assets/models/tank.fbx");
+		models_0 = ModelImporter{}.Load("assets/models/tank.fbx");
 		//models_0 = ModelImporter{}.Load("assets/models/blendshape.fbx");
 		//models_0 = ModelImporter{}.Load("assets/models/prop_0.fbx");
 		//models_0 = ModelImporter{}.Load("assets/models/prop_0_crk.fbx");
 		//models_0 = ModelImporter{}.Load("assets/models/X Bot@Hip Hop Dancing.fbx");
-		models_0 = ModelImporter{}.Load("assets/models/Hip Hop Dancing.dae");
+		//models_0 = ModelImporter{}.Load("assets/models/Hip Hop Dancing.dae");
 
 		auto entityShader = ShaderManager::Find("entity");
 		auto entitySkinnedShader = ShaderManager::Find("entity_skinned");
@@ -67,9 +67,8 @@ public:
 
 		glm::vec3 pos_3d{ 0.0f, 0.0f, 0.0f };
 		glm::quat rot_3d = glm::quat(glm::vec3{ glm::radians(0.0f), glm::radians(0.0f), glm::radians(0.0f) });
-		//glm::vec3 scale_3d{ 100.0f, 100.0f, 100.0f };
-		glm::vec3 scale_3d{ 1.0f, 1.0f, 1.0f };
-		//glm::vec3 scale_3d{ 0.01f, 0.01f, 0.01f };
+		//glm::vec3 scale_3d{ 1.0f, 1.0f, 1.0f };
+		glm::vec3 scale_3d{ 0.01f, 0.01f, 0.01f };
 
 		//Graphic::Draw(line_2d, Util::GetIdentityMatrix(), materialLine, Graphic::GetCameraOrtho());
 		//Graphic::Draw(quad_3d, Util::GetTRS(pos_3d, rot_3d, scale_3d), material, Graphic::GetCameraPerspective());
@@ -78,10 +77,10 @@ public:
 		for (const auto& model : models_0)
 		{
 			model->UpdateAnimation();
-			Graphic::Draw(model, Util::GetTRS(pos_3d, rot_3d, scale_3d), materialSkinned, Graphic::GetCameraPerspective());
+			Graphic::Draw(model, Util::GetTRS(pos_3d, rot_3d, scale_3d), materialModel, Graphic::GetCameraPerspective());
 		}
 
-		Graphic::Draw(quad_2d, Util::GetIdentityMatrix(), materialGrid, Graphic::GetCameraPerspective());
+		//Graphic::Draw(quad_2d, Util::GetIdentityMatrix(), materialGrid, Graphic::GetCameraPerspective());
 	}
 
 	void Destroy() override

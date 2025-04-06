@@ -58,7 +58,7 @@ std::vector<std::unique_ptr<Mesh>> ModelImporter::Load(const std::string& modelP
 
 	for (auto& mesh : meshes)
 	{
-		mesh->transformation = globalTransformation;
+		mesh->transformation = globalTransformation * mesh->transformation;
 		mesh->nodeData = nodeData;
 		mesh->animation = animation;
 		mesh->boneNameToIndexMap = _boneNameToIndexMap;

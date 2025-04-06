@@ -202,35 +202,65 @@ public:
 		glm::mat4 trs = glm::mat4{ 1.0f };
 
 		int boneIndex = -1;
-		if (animation.nodeAnimations.find(nodeName) != animation.nodeAnimations.end() && boneNameToIndexMap.find(nodeName) != boneNameToIndexMap.end())
+
 		{
-			const NodeAnimation& nodeAnim = animation.nodeAnimations[nodeName];
-
-			if (nodeAnim.nodeName != nodeName)
+			if (animation.nodeAnimations.find(nodeName) != animation.nodeAnimations.end())
 			{
-				LOGGER(error, "bone anim name mismatch: " << nodeAnim.nodeName << ", " << nodeName);
+				const NodeAnimation& nodeAnim = animation.nodeAnimations[nodeName];
+
+				if (nodeAnim.nodeName != nodeName)
+				{
+					LOGGER(error, "bone anim name mismatch: " << nodeAnim.nodeName << ", " << nodeName);
+				}
+
+				if (bones.size() > 0)
+				{
+					if (boneNameToIndexMap.find(nodeName) != boneNameToIndexMap.end())
+					{
+						boneIndex = boneNameToIndexMap[nodeName];
+
+						glm::vec3 position = InterpolatePosition(nodeAnim);
+						glm::quat rotation = InterpolateRotation(nodeAnim);
+						glm::vec3 scale = InterpolateScale(nodeAnim);
+
+						trs = Util::GetTRS(position, rotation, scale);
+					}
+				}
+				else
+				{
+					if (this->nodeName == nodeName)
+					{
+						glm::vec3 position = InterpolatePosition(nodeAnim);
+						glm::quat rotation = InterpolateRotation(nodeAnim);
+						glm::vec3 scale = InterpolateScale(nodeAnim);
+
+						trs = Util::GetTRS(position, rotation, scale);
+					}
+				}
 			}
-
-			boneIndex = boneNameToIndexMap[nodeName];
-
-			glm::vec3 position = InterpolatePosition(nodeAnim);
-			glm::quat rotation = InterpolateRotation(nodeAnim);
-			glm::vec3 scale = InterpolateScale(nodeAnim);
-
-			trs = Util::GetTRS(position, rotation, scale);
 		}
 
 		glm::mat4 globalTransform = parentTransform * trs;
 
-		if (boneIndex != -1 && bones.find(boneIndex) != bones.end())
+		if (bones.size() > 0)
 		{
-			if (bones.at(boneIndex).name != nodeName)
+			if (boneIndex != -1 && bones.find(boneIndex) != bones.end())
 			{
-				LOGGER(error, "bone name mismatch: " << nodeName << ", " << bones.at(boneIndex).name);
+				if (bones.at(boneIndex).name != nodeName)
+				{
+					LOGGER(error, "bone name mismatch: " << nodeName << ", " << bones.at(boneIndex).name);
+				}
+				else
+				{
+					bones.at(boneIndex).transform = globalTransform * bones.at(boneIndex).offsetMatrix;
+				}
 			}
-			else
+		}
+		else
+		{
+			if (this->nodeName == nodeName)
 			{
-				bones.at(boneIndex).transform = globalTransform * bones.at(boneIndex).offsetMatrix;
+				transformation = globalTransform;
 			}
 		}
 
