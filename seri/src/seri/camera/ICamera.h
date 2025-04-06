@@ -11,177 +11,180 @@
 
 #include <memory>
 
-class ICamera : public Object
+namespace seri
 {
-public:
-	ICamera(CameraProperties cameraProperties) : _cameraProperties{ cameraProperties } {}
-
-	~ICamera() override = default;
-
-	void render() override {}
-
-	void onWindowResizeEvent(const WindowResizeEventData& data) override
+	class ICamera : public Object
 	{
-		auto width = static_cast<float>(data.width);
-		auto height = static_cast<float>(data.height);
+	public:
+		ICamera(CameraProperties cameraProperties) : _cameraProperties{ cameraProperties } {}
 
-		_cameraProperties.width = width;
-		_cameraProperties.height = height;
-		_cameraProperties.aspect = width / height;
-		updateProjection();
-	}
+		~ICamera() override = default;
 
-	void onMousePositionEvent(const MousePositionEventData& data) override
-	{
-		if (!isPlayable())
+		void render() override {}
+
+		void onWindowResizeEvent(const event::WindowResizeEventData& data) override
 		{
-			return;
+			auto width = static_cast<float>(data.width);
+			auto height = static_cast<float>(data.height);
+
+			_cameraProperties.width = width;
+			_cameraProperties.height = height;
+			_cameraProperties.aspect = width / height;
+			updateProjection();
 		}
 
-		auto xpos = static_cast<float>(data.xpos);
-		auto ypos = static_cast<float>(data.ypos);
-
-		if (!_init)
+		void onMousePositionEvent(const event::MousePositionEventData& data) override
 		{
-			_init = true;
+			if (!isPlayable())
+			{
+				return;
+			}
+
+			auto xpos = static_cast<float>(data.xpos);
+			auto ypos = static_cast<float>(data.ypos);
+
+			if (!_init)
+			{
+				_init = true;
+				_xPosLast = xpos;
+				_yPosLast = ypos;
+			}
+
+			const auto deltaX = xpos - _xPosLast;
+			const auto deltaY = _yPosLast - ypos;
+
 			_xPosLast = xpos;
 			_yPosLast = ypos;
+
+			float& _yaw = _cameraProperties.rotation.x;
+			float& _pitch = _cameraProperties.rotation.y;
+
+			_yaw += deltaX * _cameraProperties.sensitivity;
+			_pitch += deltaY * _cameraProperties.sensitivity;
+
+			if (_pitch > 89.0f)
+			{
+				_pitch = 89.0f;
+			}
+			if (_pitch < -89.0f)
+			{
+				_pitch = -89.0f;
+			}
+
+			while (_yaw < -180.0f)
+			{
+				_yaw += 360.0f;
+			}
+			while (_yaw > 180.0f)
+			{
+				_yaw -= 360.0f;
+			}
+
+			updateEulerAngles();
+			updateView();
 		}
 
-		const auto deltaX = xpos - _xPosLast;
-		const auto deltaY = _yPosLast - ypos;
+		virtual bool isPlayable() = 0;
 
-		_xPosLast = xpos;
-		_yPosLast = ypos;
-
-		float& _yaw = _cameraProperties.rotation.x;
-		float& _pitch = _cameraProperties.rotation.y;
-
-		_yaw += deltaX * _cameraProperties.sensitivity;
-		_pitch += deltaY * _cameraProperties.sensitivity;
-
-		if (_pitch > 89.0f)
+		const glm::mat4& getModel()
 		{
-			_pitch = 89.0f;
+			return _model;
 		}
-		if (_pitch < -89.0f)
+
+		const glm::mat4& getView()
 		{
-			_pitch = -89.0f;
+			return _view;
 		}
 
-		while (_yaw < -180.0f)
+		const glm::mat4& getProjection()
 		{
-			_yaw += 360.0f;
+			return _projection;
 		}
-		while (_yaw > 180.0f)
+
+		const bool IsOrtho() const
 		{
-			_yaw -= 360.0f;
+			return _cameraProperties.isOrtho;
 		}
 
-		updateEulerAngles();
-		updateView();
-	}
-
-	virtual bool isPlayable() = 0;
-
-	const glm::mat4& getModel()
-	{
-		return _model;
-	}
-
-	const glm::mat4& getView()
-	{
-		return _view;
-	}
-
-	const glm::mat4& getProjection()
-	{
-		return _projection;
-	}
-
-	const bool IsOrtho() const
-	{
-		return _cameraProperties.isOrtho;
-	}
-
-	const CameraProperties& getCameraProperties()
-	{
-		return _cameraProperties;
-	}
-
-	void setCameraProperties(CameraProperties cameraProperties)
-	{
-		_cameraProperties = std::move(cameraProperties);
-	}
-
-protected:
-	virtual void updateView()
-	{
-		if (_cameraProperties.isOrtho)
+		const CameraProperties& getCameraProperties()
 		{
-			_view = glm::translate(glm::mat4{ 1.0f }, glm::vec3(0.0f, 0.0f, -1.0f));
+			return _cameraProperties;
 		}
-		else
+
+		void setCameraProperties(CameraProperties cameraProperties)
 		{
-			auto quat = glm::quat(
-				glm::vec3{
-					glm::radians(_cameraProperties.rotation.x),
-					glm::radians(_cameraProperties.rotation.y),
-					glm::radians(_cameraProperties.rotation.z)
-				}
-			);
-
-			_view = glm::lookAt(
-				_cameraProperties.position,
-				_cameraProperties.position + _cameraProperties.front,
-				_cameraProperties.up
-			);
+			_cameraProperties = std::move(cameraProperties);
 		}
-	}
 
-	virtual void updateProjection()
-	{
-		if (_cameraProperties.isOrtho)
+	protected:
+		virtual void updateView()
 		{
-			_projection = glm::ortho(
-				0.0f,
-				_cameraProperties.width,
-				_cameraProperties.height,
-				0.0f,
-				_cameraProperties.near,
-				_cameraProperties.far
-			);
+			if (_cameraProperties.isOrtho)
+			{
+				_view = glm::translate(glm::mat4{ 1.0f }, glm::vec3(0.0f, 0.0f, -1.0f));
+			}
+			else
+			{
+				auto quat = glm::quat(
+					glm::vec3{
+						glm::radians(_cameraProperties.rotation.x),
+						glm::radians(_cameraProperties.rotation.y),
+						glm::radians(_cameraProperties.rotation.z)
+					}
+				);
+
+				_view = glm::lookAt(
+					_cameraProperties.position,
+					_cameraProperties.position + _cameraProperties.front,
+					_cameraProperties.up
+				);
+			}
 		}
-		else
+
+		virtual void updateProjection()
 		{
-			_projection = glm::perspective(
-				glm::radians(_cameraProperties.fov),
-				_cameraProperties.aspect,
-				_cameraProperties.near,
-				_cameraProperties.far
-			);
+			if (_cameraProperties.isOrtho)
+			{
+				_projection = glm::ortho(
+					0.0f,
+					_cameraProperties.width,
+					_cameraProperties.height,
+					0.0f,
+					_cameraProperties.near,
+					_cameraProperties.far
+				);
+			}
+			else
+			{
+				_projection = glm::perspective(
+					glm::radians(_cameraProperties.fov),
+					_cameraProperties.aspect,
+					_cameraProperties.near,
+					_cameraProperties.far
+				);
+			}
 		}
-	}
 
-	virtual void updateEulerAngles()
-	{
-		glm::vec3 eulerAngle{};
-		eulerAngle.x = cos(glm::radians(_cameraProperties.rotation.y)) * cos(glm::radians(_cameraProperties.rotation.x));
-		eulerAngle.y = sin(glm::radians(_cameraProperties.rotation.y));
-		eulerAngle.z = cos(glm::radians(_cameraProperties.rotation.y)) * sin(glm::radians(_cameraProperties.rotation.x));
+		virtual void updateEulerAngles()
+		{
+			glm::vec3 eulerAngle{};
+			eulerAngle.x = cos(glm::radians(_cameraProperties.rotation.y)) * cos(glm::radians(_cameraProperties.rotation.x));
+			eulerAngle.y = sin(glm::radians(_cameraProperties.rotation.y));
+			eulerAngle.z = cos(glm::radians(_cameraProperties.rotation.y)) * sin(glm::radians(_cameraProperties.rotation.x));
 
-		_cameraProperties.front = glm::normalize(eulerAngle);
-		_cameraProperties.right = glm::normalize(glm::cross(_cameraProperties.front, _cameraProperties.up));
-	}
+			_cameraProperties.front = glm::normalize(eulerAngle);
+			_cameraProperties.right = glm::normalize(glm::cross(_cameraProperties.front, _cameraProperties.up));
+		}
 
-	CameraProperties _cameraProperties;
+		CameraProperties _cameraProperties;
 
-	glm::mat4 _model{ 1.0f };
-	glm::mat4 _view{};
-	glm::mat4 _projection{};
+		glm::mat4 _model{ 1.0f };
+		glm::mat4 _view{};
+		glm::mat4 _projection{};
 
-	bool _init{ false };
-	float _xPosLast{ -1.0f };
-	float _yPosLast{ -1.0f };
+		bool _init{ false };
+		float _xPosLast{ -1.0f };
+		float _yPosLast{ -1.0f };
 
-};
+	};
+}

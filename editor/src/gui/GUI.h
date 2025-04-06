@@ -12,10 +12,10 @@
 
 #include <memory>
 
-class GUI : public Object
+class GUI : public seri::Object
 {
 public:
-	GUI(std::shared_ptr<Camera> camera, std::shared_ptr<IScene> scene) : _windowManager(WindowManagerFactory::instance()), _camera(camera), _scene(scene)
+	GUI(std::shared_ptr<Camera> camera, std::shared_ptr<seri::IScene> scene) : _windowManager(seri::WindowManagerFactory::instance()), _camera(camera), _scene(scene)
 	{
 		//LOGGER(info, "gui init succeeded");
 	}
@@ -194,7 +194,7 @@ private:
 		}
 	}
 
-	void showSceneWindowImpl(std::shared_ptr<IScene> scenes)
+	void showSceneWindowImpl(std::shared_ptr<seri::IScene> scenes)
 	{
 		static ImGuiTreeNodeFlags treeBaseFlags =
 			ImGuiTreeNodeFlags_OpenOnArrow |
@@ -224,41 +224,41 @@ private:
 				{
 					if (ImGui::BeginMenu("Add ..."))
 					{
-						SceneBuilder builder;
+						seri::SceneBuilder builder;
 
 						if (ImGui::MenuItem("Point"))
 						{
-							scene->add(std::move(builder.setName("Point").setObject(Factory::CreateEntity(_camera, EntityType::point)).build()));
+							scene->add(std::move(builder.setName("Point").setObject(Factory::CreateEntity(_camera, seri::EntityType::point)).build()));
 						}
 
 						if (ImGui::MenuItem("Line"))
 						{
-							scene->add(std::move(builder.setName("Line").setObject(Factory::CreateEntity(_camera, EntityType::line)).build()));
+							scene->add(std::move(builder.setName("Line").setObject(Factory::CreateEntity(_camera, seri::EntityType::line)).build()));
 						}
 
 						if (ImGui::MenuItem("Triangle"))
 						{
-							scene->add(std::move(builder.setName("Triangle").setObject(Factory::CreateEntity(_camera, EntityType::triangle)).build()));
+							scene->add(std::move(builder.setName("Triangle").setObject(Factory::CreateEntity(_camera, seri::EntityType::triangle)).build()));
 						}
 
 						if (ImGui::MenuItem("Rectangle"))
 						{
-							scene->add(std::move(builder.setName("Rectangle").setObject(Factory::CreateEntity(_camera, EntityType::rectangle)).build()));
+							scene->add(std::move(builder.setName("Rectangle").setObject(Factory::CreateEntity(_camera, seri::EntityType::rectangle)).build()));
 						}
 
 						if (ImGui::MenuItem("Circle"))
 						{
-							scene->add(std::move(builder.setName("Circle").setObject(Factory::CreateEntity(_camera, EntityType::circle)).build()));
+							scene->add(std::move(builder.setName("Circle").setObject(Factory::CreateEntity(_camera, seri::EntityType::circle)).build()));
 						}
 
 						if (ImGui::MenuItem("Cube"))
 						{
-							scene->add(std::move(builder.setName("Cube").setObject(Factory::CreateEntity(_camera, EntityType::cube)).build()));
+							scene->add(std::move(builder.setName("Cube").setObject(Factory::CreateEntity(_camera, seri::EntityType::cube)).build()));
 						}
 
 						if (ImGui::MenuItem("Polygon"))
 						{
-							scene->add(std::move(builder.setName("Polygon").setObject(Factory::CreateEntity(_camera, EntityType::polygon)).build()));
+							scene->add(std::move(builder.setName("Polygon").setObject(Factory::CreateEntity(_camera, seri::EntityType::polygon)).build()));
 						}
 
 						ImGui::EndMenu();
@@ -368,12 +368,12 @@ private:
 			ImGui::SliderFloat3("position", &_currentEntity->getTransform()._position[0], -1.0f, 1.0f, "%.4f");
 			ImGui::SliderFloat3("rotation", &_currentEntity->getTransform()._rotation[0], -180.0f, 180.0f, "%.4f");
 			ImGui::SliderFloat3("scale", &_currentEntity->getTransform()._scale[0], 0.0f, 100.0f, "%.4f");
-			ShaderManager::GetInstance().setModel(_currentEntity->getShader(), _currentEntity->getTransform().apply());
+			seri::ShaderManager::GetInstance().setModel(_currentEntity->getShader(), _currentEntity->getTransform().apply());
 
 			ImGui::Separator();
 
 			ImGui::ColorEdit4("color", &_currentEntity->getColor().r);
-			ShaderManager::GetInstance().SetColor(_currentEntity->getShader(), _currentEntity->getColor().getColorRGBA());
+			seri::ShaderManager::GetInstance().SetColor(_currentEntity->getShader(), _currentEntity->getColor().getColorRGBA());
 
 			ImGui::Separator();
 
@@ -449,7 +449,7 @@ private:
 		ImGui::Text(text.c_str());
 	}
 
-	void registerScene(std::shared_ptr<IScene> scene)
+	void registerScene(std::shared_ptr<seri::IScene> scene)
 	{
 		_currentScene = scene;
 		registerEntity(scene->getObject());
@@ -457,13 +457,13 @@ private:
 
 	void registerEntity(std::shared_ptr<Object> entity)
 	{
-		_currentEntity = std::dynamic_pointer_cast<Entity>(entity);
+		_currentEntity = std::dynamic_pointer_cast<seri::Entity>(entity);
 	}
 
-	std::shared_ptr<IWindowManager> _windowManager;
+	std::shared_ptr<seri::IWindowManager> _windowManager;
 	std::shared_ptr<Camera> _camera;
-	std::shared_ptr<IScene> _scene;
-	std::shared_ptr<IScene> _currentScene;
-	std::shared_ptr<Entity> _currentEntity;
+	std::shared_ptr<seri::IScene> _scene;
+	std::shared_ptr<seri::IScene> _currentScene;
+	std::shared_ptr<seri::Entity> _currentEntity;
 
 };

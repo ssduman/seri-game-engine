@@ -6,43 +6,37 @@
 #include <sstream>
 #include <iostream>
 
-enum class LogLevel
+namespace seri
 {
-	none,
-	error,
-	warning,
-	info,
-	debug,
-	verbose,
-};
-
-struct LoggerProperties
-{
-	LogLevel level = LogLevel::info;
-};
-
-#define LOGGER_IMPL(lvl, msg) std::cout \
-    << getDateTime() \
-    << " [" << toString(lvl) << "] " \
-    << msg \
-    << std::endl
-
-#define LOGGER(lvl, msg) LOGGER_IMPL(LogLevel::lvl, msg)
-
-inline std::string getDateTime()
-{
-	std::time_t t = std::time(nullptr);
-	std::tm tm{};
-	localtime_s(&tm, &t);
-	std::stringstream ss;
-	ss << std::put_time(&tm, "%d.%m.%Y %H:%M:%S");
-	return ss.str();
-}
-
-inline std::string toString(LogLevel lvl)
-{
-	switch (lvl)
+	enum class LogLevel
 	{
+		none,
+		error,
+		warning,
+		info,
+		debug,
+		verbose,
+	};
+
+	struct LoggerProperties
+	{
+		LogLevel level = LogLevel::info;
+	};
+
+	inline std::string GetDateTime()
+	{
+		std::time_t t = std::time(nullptr);
+		std::tm tm{};
+		localtime_s(&tm, &t);
+		std::stringstream ss;
+		ss << std::put_time(&tm, "%d.%m.%Y %H:%M:%S");
+		return ss.str();
+	}
+
+	inline std::string ToString(LogLevel lvl)
+	{
+		switch (lvl)
+		{
 		case LogLevel::none:
 			return "none";
 		case LogLevel::error:
@@ -57,5 +51,14 @@ inline std::string toString(LogLevel lvl)
 			return "verbose";
 		default:
 			return "unknown";
+		}
 	}
 }
+
+#define LOGGER_IMPL(lvl, msg) std::cout \
+    << seri::GetDateTime() \
+    << " [" << seri::ToString(lvl) << "] " \
+    << msg \
+    << std::endl
+
+#define LOGGER(lvl, msg) LOGGER_IMPL(seri::LogLevel::lvl, msg)

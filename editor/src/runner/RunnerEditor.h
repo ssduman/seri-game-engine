@@ -11,7 +11,7 @@
 #include <memory>
 #include <stdexcept>
 
-class RunnerEditor : public IRunner
+class RunnerEditor : public seri::IRunner
 {
 public:
 	RunnerEditor() = default;
@@ -20,33 +20,33 @@ public:
 
 	void operator()()
 	{
-		WindowProperties windowProperties{ /*title*/ "Seri Game Engine - Editor", /*fullscreen*/ false, /*w*/ 1280, /*h*/ 720 };
-		auto windowManager = WindowManagerFactory::instance();
+		seri::WindowProperties windowProperties{ /*title*/ "Seri Game Engine - Editor", /*fullscreen*/ false, /*w*/ 1280, /*h*/ 720 };
+		auto windowManager = seri::WindowManagerFactory::instance();
 		windowManager->setWindowProperties(std::move(windowProperties));
 		windowManager->init();
 
-		Graphic::Init();
-		BehaviourManager::Init();
-		ShaderManager::Init("assets/shaders/");
-		Texture::setTextureFlip(true);
+		seri::Graphic::Init();
+		seri::BehaviourManager::Init();
+		seri::ShaderManager::Init("assets/shaders/");
+		seri::Texture::setTextureFlip(true);
 
-		SceneBuilder builder;
+		seri::SceneBuilder builder;
 		auto rootScene = builder.setName("Main").build();
 
-		windowManager->setEventCallback(events::makeEventCallback(
-			[&rootScene](IEventData& data)
+		windowManager->setEventCallback(seri::event::makeEventCallback(
+			[&rootScene](seri::event::IEventData& data)
 			{
-				EventDispatcher{}(rootScene, data);
+				seri::event::EventDispatcher{}(rootScene, data);
 			}
 		));
 
-		CameraProperties cameraPropertiesOrtho;
+		seri::CameraProperties cameraPropertiesOrtho;
 		cameraPropertiesOrtho.isOrtho = true;
 		cameraPropertiesOrtho.aspect = windowManager->getAspect();
 		auto cameraOrtho = std::make_shared<Camera>(std::move(cameraPropertiesOrtho));
 		cameraOrtho->init();
 
-		CameraProperties cameraPropertiesPerspective;
+		seri::CameraProperties cameraPropertiesPerspective;
 		cameraPropertiesPerspective.isOrtho = false;
 		cameraPropertiesPerspective.aspect = windowManager->getAspect();
 		cameraPropertiesPerspective.rotation = { 0.0f, -45.0f, 0.0f };
@@ -54,8 +54,8 @@ public:
 		auto cameraPerspective = std::make_shared<Camera>(std::move(cameraPropertiesPerspective));
 		cameraPerspective->init();
 
-		Graphic::AddCamera(cameraOrtho);
-		Graphic::AddCamera(cameraPerspective);
+		seri::Graphic::AddCamera(cameraOrtho);
+		seri::Graphic::AddCamera(cameraPerspective);
 
 		auto cameraScene = builder.setName("Camera").setObject(cameraPerspective).build();
 		rootScene->add(cameraScene);
@@ -65,7 +65,7 @@ public:
 
 		SimpleDrawerBehaviour simpleDrawerBehaviour{};
 
-		BehaviourManager::InitBehaviours();
+		seri::BehaviourManager::InitBehaviours();
 
 		LOGGER(info, "starting seri game engine - editor loop");
 
@@ -76,9 +76,9 @@ public:
 			windowManager->updateDeltaTime();
 
 			cameraOrtho->update();
-			Graphic::GetCameraPerspective()->update();
+			seri::Graphic::GetCameraPerspective()->update();
 
-			BehaviourManager::UpdateBehaviours();
+			seri::BehaviourManager::UpdateBehaviours();
 
 			gui->display();
 
@@ -86,13 +86,13 @@ public:
 			windowManager->swapBuffers();
 		}
 
-		BehaviourManager::DestroyBehaviours();
+		seri::BehaviourManager::DestroyBehaviours();
 
 		LOGGER(info, "seri game engine - editor loop stopped");
 	}
 
 private:
-	void CreateDemoScene(std::shared_ptr<IWindowManager> windowManager, SceneBuilder builder, std::shared_ptr<IScene> rootScene, std::shared_ptr<Camera> cameraPerspective)
+	void CreateDemoScene(std::shared_ptr<seri::IWindowManager> windowManager, seri::SceneBuilder builder, std::shared_ptr<seri::IScene> rootScene, std::shared_ptr<Camera> cameraPerspective)
 	{
 		if (!_showDemoScene)
 		{
@@ -148,9 +148,9 @@ private:
 		//rootScene->add(component5Scene);
 	}
 
-	void DrawScene(std::shared_ptr<IScene> rootScene)
+	void DrawScene(std::shared_ptr<seri::IScene> rootScene)
 	{
-		SceneIterator iter(rootScene);
+		seri::SceneIterator iter(rootScene);
 		for (auto& s : iter)
 		{
 			s->draw();

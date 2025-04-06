@@ -3,17 +3,20 @@
 #include "seri/shader/Shader.h"
 #include "seri/texture/Texture.h"
 
-class Material
+namespace seri
 {
-public:
-	Material() = default;
+	class Material
+	{
+	public:
+		Material() = default;
 
-	~Material() = default;
+		~Material() = default;
 
-	std::shared_ptr<Shader> shader;
+		std::shared_ptr<Shader> shader;
 
-	std::shared_ptr<Texture> texture;
+		std::shared_ptr<Texture> texture;
 
-private:
+	private:
 
-};
+	};
+}

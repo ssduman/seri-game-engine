@@ -2,24 +2,27 @@
 
 #include "seri/core/Entity.h"
 
-class Triangle : public Entity
+namespace seri
 {
-public:
-	Triangle(std::shared_ptr<ICamera> camera) : Entity(camera)
+	class Triangle : public Entity
 	{
-		_entityType = EntityType::triangle;
-		_engineBackend.setDrawMode(aux::DrawMode::triangles);
-	}
+	public:
+		Triangle(std::shared_ptr<ICamera> camera) : Entity(camera)
+		{
+			_entityType = EntityType::triangle;
+			_engineBackend.setDrawMode(aux::DrawMode::triangles);
+		}
 
-	~Triangle() override = default;
+		~Triangle() override = default;
 
-	void render() override
-	{
-		_shader.use();
-		_texture.bind();
-		_engineBackend.draw();
-	}
+		void render() override
+		{
+			_shader.use();
+			_texture.bind();
+			_engineBackend.draw();
+		}
 
-private:
+	private:
 
-};
+	};
+}

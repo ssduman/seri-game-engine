@@ -5,45 +5,48 @@
 #include <vector>
 #include <memory>
 
-class BehaviourBase;
-
-class BehaviourManager
+namespace seri
 {
-public:
-	BehaviourManager(BehaviourManager const&) = delete;
+	class BehaviourBase;
 
-	void operator=(BehaviourManager const&) = delete;
-
-	static void Init()
+	class BehaviourManager
 	{
-		//LOGGER(info, "shader manager init done");
-	}
+	public:
+		BehaviourManager(BehaviourManager const&) = delete;
 
-	static BehaviourManager& GetInstance()
-	{
-		static BehaviourManager instance;
-		return instance;
-	}
+		void operator=(BehaviourManager const&) = delete;
 
-	static void Add(BehaviourBase* behaviour);
+		static void Init()
+		{
+			//LOGGER(info, "shader manager init done");
+		}
 
-	static void InitBehaviours();
+		static BehaviourManager& GetInstance()
+		{
+			static BehaviourManager instance;
+			return instance;
+		}
 
-	static void UpdateBehaviours();
+		static void Add(BehaviourBase* behaviour);
 
-	static void DestroyBehaviours();
+		static void InitBehaviours();
 
-private:
-	BehaviourManager()
-	{
-		//LOGGER(info, "behaviour manager init");
-	}
+		static void UpdateBehaviours();
 
-	~BehaviourManager()
-	{
-		LOGGER(info, "behaviour manager release");
-	}
+		static void DestroyBehaviours();
 
-	std::vector<BehaviourBase*> _behaviours;
+	private:
+		BehaviourManager()
+		{
+			//LOGGER(info, "behaviour manager init");
+		}
 
-};
+		~BehaviourManager()
+		{
+			LOGGER(info, "behaviour manager release");
+		}
+
+		std::vector<BehaviourBase*> _behaviours;
+
+	};
+}

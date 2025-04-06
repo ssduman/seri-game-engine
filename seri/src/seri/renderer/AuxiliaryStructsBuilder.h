@@ -4,7 +4,7 @@
 
 #include <stdexcept>
 
-namespace aux
+namespace seri::aux
 {
 	class AttributeBuilder
 	{

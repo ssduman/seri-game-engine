@@ -7,70 +7,73 @@
 #include <vector>
 #include <memory>
 
-class Mesh;
-class Material;
-
-class Graphic
+namespace seri
 {
-public:
-	Graphic(Graphic const&) = delete;
+	class Mesh;
+	class Material;
 
-	void operator=(Graphic const&) = delete;
-
-	static void Init()
+	class Graphic
 	{
-		GetInstance();
-		//LOGGER(info, "graphic manager init done");
-	}
+	public:
+		Graphic(Graphic const&) = delete;
 
-	static Graphic& GetInstance()
-	{
-		static Graphic instance;
-		return instance;
-	}
+		void operator=(Graphic const&) = delete;
 
-	static void AddCamera(std::shared_ptr<ICamera> camera);
+		static void Init()
+		{
+			GetInstance();
+			//LOGGER(info, "graphic manager init done");
+		}
 
-	static std::shared_ptr<ICamera> GetCameraOrtho();
+		static Graphic& GetInstance()
+		{
+			static Graphic instance;
+			return instance;
+		}
 
-	static std::shared_ptr<ICamera> GetCameraPerspective();
+		static void AddCamera(std::shared_ptr<ICamera> camera);
 
-	static void Draw(const std::unique_ptr<Mesh>& mesh, const glm::mat4& trs, std::shared_ptr<Material> material, std::shared_ptr<ICamera> camera);
+		static std::shared_ptr<ICamera> GetCameraOrtho();
 
-private:
-	Graphic()
-	{
-		//LOGGER(info, "graphic manager init");
-	}
+		static std::shared_ptr<ICamera> GetCameraPerspective();
 
-	~Graphic()
-	{
-		//LOGGER(info, "graphic manager release");
-	}
+		static void Draw(const std::unique_ptr<Mesh>& mesh, const glm::mat4& trs, std::shared_ptr<Material> material, std::shared_ptr<ICamera> camera);
 
-	static void drawElements(GLsizei count, aux::DrawMode drawMode = aux::DrawMode::triangles)
-	{
-		aux::DrawElement draw;
-		draw.mode = aux::toGLenum(drawMode);
-		draw.count = count;
-		draw.type = aux::toGLenum(aux::Type::uint_type);
-		draw.indices = nullptr;
+	private:
+		Graphic()
+		{
+			//LOGGER(info, "graphic manager init");
+		}
 
-		glDrawElements(draw.mode, draw.count, draw.type, draw.indices);
-	}
+		~Graphic()
+		{
+			//LOGGER(info, "graphic manager release");
+		}
 
-	static void drawArrays(GLsizei count, aux::DrawMode drawMode = aux::DrawMode::triangles)
-	{
-		aux::DrawArray draw;
-		draw.mode = aux::toGLenum(drawMode);
-		draw.first = 0;
-		draw.count = count;
+		static void DrawElements(GLsizei count, aux::DrawMode drawMode = aux::DrawMode::triangles)
+		{
+			aux::DrawElement draw;
+			draw.mode = aux::toGLenum(drawMode);
+			draw.count = count;
+			draw.type = aux::toGLenum(aux::Type::uint_type);
+			draw.indices = nullptr;
 
-		glDrawArrays(draw.mode, draw.first, draw.count);
-	}
+			glDrawElements(draw.mode, draw.count, draw.type, draw.indices);
+		}
 
-	std::shared_ptr<ICamera> _cameraOrtho;
-	std::shared_ptr<ICamera> _cameraPerspective;
-	std::vector<std::shared_ptr<ICamera>> _cameras;
+		static void DrawArrays(GLsizei count, aux::DrawMode drawMode = aux::DrawMode::triangles)
+		{
+			aux::DrawArray draw;
+			draw.mode = aux::toGLenum(drawMode);
+			draw.first = 0;
+			draw.count = count;
 
-};
+			glDrawArrays(draw.mode, draw.first, draw.count);
+		}
+
+		std::shared_ptr<ICamera> _cameraOrtho;
+		std::shared_ptr<ICamera> _cameraPerspective;
+		std::vector<std::shared_ptr<ICamera>> _cameras;
+
+	};
+}

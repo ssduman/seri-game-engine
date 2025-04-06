@@ -15,69 +15,72 @@
 #include <string>
 #include <vector>
 
-class Entity : public Object
+namespace seri
 {
-public:
-	Entity() = delete;
-
-	Entity(std::shared_ptr<ICamera> camera) : _camera(camera) {}
-
-	Entity(Entity&& other) = default;
-
-	Entity(const Entity& other) = delete;
-
-	Entity& operator=(Entity&& other) = default;
-
-	Entity& operator=(const Entity& other) = delete;
-
-	~Entity() override
+	class Entity : public Object
 	{
-		_engineBackend.release();
-	}
+	public:
+		Entity() = delete;
 
-	void init() override
-	{
-		ShaderManager::GetInstance().initMVP(_shader, _camera);
-	}
+		Entity(std::shared_ptr<ICamera> camera) : _camera(camera) {}
 
-	void update() override
-	{
-		ShaderManager::GetInstance().setView(_shader, _camera->getView());
-		ShaderManager::GetInstance().setProjection(_shader, _camera->getProjection());
-	}
+		Entity(Entity&& other) = default;
 
-	Color& getColor()
-	{
-		return _color;
-	}
+		Entity(const Entity& other) = delete;
 
-	Shader& getShader()
-	{
-		return _shader;
-	}
+		Entity& operator=(Entity&& other) = default;
 
-	Texture& getTexture()
-	{
-		return _texture;
-	}
+		Entity& operator=(const Entity& other) = delete;
 
-	Transform& getTransform()
-	{
-		return _transform;
-	}
+		~Entity() override
+		{
+			_engineBackend.release();
+		}
 
-	OpenGLEngineBackend& getDrawer()
-	{
-		return _engineBackend;
-	}
+		void init() override
+		{
+			ShaderManager::GetInstance().initMVP(_shader, _camera);
+		}
 
-protected:
-	std::shared_ptr<ICamera> _camera;
-	Color _color;
-	Shader _shader;
-	Texture _texture;
-	Transform _transform;
-	OpenGLEngineBackend _engineBackend{};
-	EntityType _entityType{ EntityType::unknown };
+		void update() override
+		{
+			ShaderManager::GetInstance().setView(_shader, _camera->getView());
+			ShaderManager::GetInstance().setProjection(_shader, _camera->getProjection());
+		}
 
-};
+		Color& getColor()
+		{
+			return _color;
+		}
+
+		Shader& getShader()
+		{
+			return _shader;
+		}
+
+		Texture& getTexture()
+		{
+			return _texture;
+		}
+
+		Transform& getTransform()
+		{
+			return _transform;
+		}
+
+		OpenGLEngineBackend& getDrawer()
+		{
+			return _engineBackend;
+		}
+
+	protected:
+		std::shared_ptr<ICamera> _camera;
+		Color _color;
+		Shader _shader;
+		Texture _texture;
+		Transform _transform;
+		OpenGLEngineBackend _engineBackend{};
+		EntityType _entityType{ EntityType::unknown };
+
+	};
+}

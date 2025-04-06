@@ -4,10 +4,10 @@
 
 #include <seri/core/Seri.h>
 
-class Camera : public ICamera
+class Camera : public seri::ICamera
 {
 public:
-	Camera(CameraProperties cameraProperties) : ICamera(cameraProperties)
+	Camera(seri::CameraProperties cameraProperties) : ICamera(cameraProperties)
 	{
 		//LOGGER(info, "camera init succeeded");
 	}
@@ -26,7 +26,7 @@ public:
 
 	void update() override
 	{
-		auto deltaTime = WindowManagerFactory::instance()->getDeltaTime();
+		auto deltaTime = seri::WindowManagerFactory::instance()->getDeltaTime();
 		auto movementSpeed = _cameraProperties.speed * deltaTime;
 
 		if (_moveRequest & _wRequest)
@@ -49,51 +49,51 @@ public:
 		updateView();
 	}
 
-	void onKeyEvent(const KeyEventData& data) override
+	void onKeyEvent(const seri::event::KeyEventData& data) override
 	{
 		if (!isPlayable())
 		{
 			return;
 		}
 
-		if (Input::isPressed(data, KeyCode::w))
+		if (seri::Input::isPressed(data, seri::KeyCode::w))
 		{
 			_moveRequest |= _wRequest;
 		}
-		else if (Input::isReleased(data, KeyCode::w))
+		else if (seri::Input::isReleased(data, seri::KeyCode::w))
 		{
 			_moveRequest ^= _wRequest;
 		}
 
-		if (Input::isPressed(data, KeyCode::s))
+		if (seri::Input::isPressed(data, seri::KeyCode::s))
 		{
 			_moveRequest |= _sRequest;
 		}
-		else if (Input::isReleased(data, KeyCode::s))
+		else if (seri::Input::isReleased(data, seri::KeyCode::s))
 		{
 			_moveRequest ^= _sRequest;
 		}
 
-		if (Input::isPressed(data, KeyCode::a))
+		if (seri::Input::isPressed(data, seri::KeyCode::a))
 		{
 			_moveRequest |= _aRequest;
 		}
-		else if (Input::isReleased(data, KeyCode::a))
+		else if (seri::Input::isReleased(data, seri::KeyCode::a))
 		{
 			_moveRequest ^= _aRequest;
 		}
 
-		if (Input::isPressed(data, KeyCode::d))
+		if (seri::Input::isPressed(data, seri::KeyCode::d))
 		{
 			_moveRequest |= _dRequest;
 		}
-		else if (Input::isReleased(data, KeyCode::d))
+		else if (seri::Input::isReleased(data, seri::KeyCode::d))
 		{
 			_moveRequest ^= _dRequest;
 		}
 	}
 
-	void onUserEvent(IEventData& data) override
+	void onUserEvent(seri::event::IEventData& data) override
 	{
 		auto& d = dynamic_cast<IUserEventData&>(data);
 		if (d.userEventType == UserEventType::game_state)

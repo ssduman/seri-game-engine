@@ -1,21 +1,24 @@
 #pragma once
 
-class BehaviourManager;
-
-class BehaviourBase
+namespace seri
 {
-public:
-	BehaviourBase()
+	class BehaviourManager;
+
+	class BehaviourBase
 	{
-		BehaviourManager::Add(this);
-	}
+	public:
+		BehaviourBase()
+		{
+			BehaviourManager::Add(this);
+		}
 
-	virtual void Init() = 0;
-	virtual void Update() = 0;
-	virtual void Destroy() = 0;
+		virtual void Init() = 0;
+		virtual void Update() = 0;
+		virtual void Destroy() = 0;
 
-protected:
+	protected:
 
-private:
+	private:
 
-};
+	};
+}

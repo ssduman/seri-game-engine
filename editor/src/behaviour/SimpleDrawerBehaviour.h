@@ -6,55 +6,55 @@
 #include <seri/behaviour/BehaviourBase.h>
 #include <seri/model/ModelImporter.h>
 
-class SimpleDrawerBehaviour : public BehaviourBase
+class SimpleDrawerBehaviour : public seri::BehaviourBase
 {
 public:
 	void Init() override
 	{
-		quad_2d = Mesh::quad_2d();
-		quad_3d = Mesh::quad_3d();
-		cube_3d = Mesh::cube_3d();
-		line_2d = Mesh::line_2d(
-			{ Graphic::GetCameraOrtho()->getCameraProperties().width / 2.0f, Graphic::GetCameraOrtho()->getCameraProperties().height / 2.0f },
-			{ Graphic::GetCameraOrtho()->getCameraProperties().width, Graphic::GetCameraOrtho()->getCameraProperties().height }
+		quad_2d = seri::Mesh::quad_2d();
+		quad_3d = seri::Mesh::quad_3d();
+		cube_3d = seri::Mesh::cube_3d();
+		line_2d = seri::Mesh::line_2d(
+			{ seri::Graphic::GetCameraOrtho()->getCameraProperties().width / 2.0f, seri::Graphic::GetCameraOrtho()->getCameraProperties().height / 2.0f },
+			{ seri::Graphic::GetCameraOrtho()->getCameraProperties().width, seri::Graphic::GetCameraOrtho()->getCameraProperties().height }
 		);
 
-		//models_0 = ModelImporter{}.Load("assets/models/spider.obj");
-		models_0 = ModelImporter{}.Load("assets/models/tank.fbx");
-		//models_0 = ModelImporter{}.Load("assets/models/blendshape.fbx");
-		//models_0 = ModelImporter{}.Load("assets/models/prop_0.fbx");
-		//models_0 = ModelImporter{}.Load("assets/models/prop_0_crk.fbx");
-		//models_0 = ModelImporter{}.Load("assets/models/X Bot@Hip Hop Dancing.fbx");
-		//models_0 = ModelImporter{}.Load("assets/models/Hip Hop Dancing.dae");
+		//models_0 = seri::ModelImporter{}.Load("assets/models/spider.obj");
+		//models_0 = seri::ModelImporter{}.Load("assets/models/tank.fbx");
+		//models_0 = seri::ModelImporter{}.Load("assets/models/blendshape.fbx");
+		//models_0 = seri::ModelImporter{}.Load("assets/models/prop_0.fbx");
+		//models_0 = seri::ModelImporter{}.Load("assets/models/prop_0_crk.fbx");
+		models_0 = seri::ModelImporter{}.Load("assets/models/X Bot@Hip Hop Dancing.fbx");
+		//models_0 = seri::ModelImporter{}.Load("assets/models/Hip Hop Dancing.dae");
 
-		auto entityShader = ShaderManager::Find("entity");
-		auto entitySkinnedShader = ShaderManager::Find("entity_skinned");
-		auto lineShader = ShaderManager::Find("line");
-		auto gridShader = ShaderManager::Find("grid");
+		auto entityShader = seri::ShaderManager::Find("entity");
+		auto entitySkinnedShader = seri::ShaderManager::Find("entity_skinned");
+		auto lineShader = seri::ShaderManager::Find("line");
+		auto gridShader = seri::ShaderManager::Find("grid");
 
-		auto passageTexture = std::make_shared<Texture>();
+		auto passageTexture = std::make_shared<seri::Texture>();
 		passageTexture->init("assets/textures/passage.png");
 
-		auto tankTexture = std::make_shared<Texture>();
+		auto tankTexture = std::make_shared<seri::Texture>();
 		tankTexture->init("assets/textures/tank/tank_diffuse.tga");
 
-		material = std::make_shared<Material>();
+		material = std::make_shared<seri::Material>();
 		material->shader = entityShader;
 		material->texture = passageTexture;
 
-		materialLine = std::make_shared<Material>();
+		materialLine = std::make_shared<seri::Material>();
 		materialLine->shader = lineShader;
 		materialLine->texture = nullptr;
 
-		materialGrid = std::make_shared<Material>();
+		materialGrid = std::make_shared<seri::Material>();
 		materialGrid->shader = gridShader;
 		materialGrid->texture = nullptr;
 
-		materialModel = std::make_shared<Material>();
+		materialModel = std::make_shared<seri::Material>();
 		materialModel->shader = entityShader;
 		materialModel->texture = tankTexture;
 
-		materialSkinned = std::make_shared<Material>();
+		materialSkinned = std::make_shared<seri::Material>();
 		materialSkinned->shader = entitySkinnedShader;
 		materialSkinned->texture = tankTexture;
 	}
@@ -77,27 +77,28 @@ public:
 		for (const auto& model : models_0)
 		{
 			model->UpdateAnimation();
-			Graphic::Draw(model, Util::GetTRS(pos_3d, rot_3d, scale_3d), materialModel, Graphic::GetCameraPerspective());
+			seri::Graphic::Draw(model, seri::Util::GetTRS(pos_3d, rot_3d, scale_3d), materialSkinned, seri::Graphic::GetCameraPerspective());
 		}
 
 		//Graphic::Draw(quad_2d, Util::GetIdentityMatrix(), materialGrid, Graphic::GetCameraPerspective());
 	}
 
 	void Destroy() override
-	{}
+	{
+	}
 
 private:
-	std::unique_ptr<Mesh> quad_2d;
-	std::unique_ptr<Mesh> quad_3d;
-	std::unique_ptr<Mesh> cube_3d;
-	std::unique_ptr<Mesh> line_2d;
+	std::unique_ptr<seri::Mesh> quad_2d;
+	std::unique_ptr<seri::Mesh> quad_3d;
+	std::unique_ptr<seri::Mesh> cube_3d;
+	std::unique_ptr<seri::Mesh> line_2d;
 
-	std::vector<std::unique_ptr<Mesh>> models_0;
+	std::vector<std::unique_ptr<seri::Mesh>> models_0;
 
-	std::shared_ptr<Material> material;
-	std::shared_ptr<Material> materialLine;
-	std::shared_ptr<Material> materialGrid;
-	std::shared_ptr<Material> materialModel;
-	std::shared_ptr<Material> materialSkinned;
+	std::shared_ptr<seri::Material> material;
+	std::shared_ptr<seri::Material> materialLine;
+	std::shared_ptr<seri::Material> materialGrid;
+	std::shared_ptr<seri::Material> materialModel;
+	std::shared_ptr<seri::Material> materialSkinned;
 
 };

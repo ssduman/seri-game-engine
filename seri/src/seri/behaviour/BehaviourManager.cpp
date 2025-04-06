@@ -3,31 +3,34 @@
 #include "seri/behaviour/BehaviourManager.h"
 #include "seri/behaviour/BehaviourBase.h"
 
-void BehaviourManager::Add(BehaviourBase* behaviour)
+namespace seri
 {
-	GetInstance()._behaviours.push_back(behaviour);
-}
-
-void BehaviourManager::InitBehaviours()
-{
-	for (auto& behaviour : GetInstance()._behaviours)
+	void BehaviourManager::Add(BehaviourBase* behaviour)
 	{
-		behaviour->Init();
+		GetInstance()._behaviours.push_back(behaviour);
 	}
-}
 
-void BehaviourManager::UpdateBehaviours()
-{
-	for (auto& behaviour : GetInstance()._behaviours)
+	void BehaviourManager::InitBehaviours()
 	{
-		behaviour->Update();
+		for (auto& behaviour : GetInstance()._behaviours)
+		{
+			behaviour->Init();
+		}
 	}
-}
 
-void BehaviourManager::DestroyBehaviours()
-{
-	for (auto& behaviour : GetInstance()._behaviours)
+	void BehaviourManager::UpdateBehaviours()
 	{
-		behaviour->Destroy();
+		for (auto& behaviour : GetInstance()._behaviours)
+		{
+			behaviour->Update();
+		}
+	}
+
+	void BehaviourManager::DestroyBehaviours()
+	{
+		for (auto& behaviour : GetInstance()._behaviours)
+		{
+			behaviour->Destroy();
+		}
 	}
 }

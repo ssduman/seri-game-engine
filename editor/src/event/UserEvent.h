@@ -20,9 +20,9 @@ inline const char* toString(UserEventType userEventType)
 	}
 }
 
-struct IUserEventData : public IEventData
+struct IUserEventData : public seri::event::IEventData
 {
-	IUserEventData(UserEventType type_) : IEventData(EventType::user), userEventType(type_) {}
+	IUserEventData(UserEventType type_) : IEventData(seri::event::EventType::user), userEventType(type_) {}
 
 	~IUserEventData() override = default;
 
@@ -38,7 +38,7 @@ struct UserGameStateEventData : public IUserEventData
 	std::string toString() override
 	{
 		std::stringstream ss;
-		ss << ::toString(eventType) << "/" << ::toString(userEventType) << ": {"
+		ss << seri::event::toString(eventType) << "/" << ::toString(userEventType) << ": {"
 			<< "'gameState': " << ::toString(gameState)
 			<< "}";
 

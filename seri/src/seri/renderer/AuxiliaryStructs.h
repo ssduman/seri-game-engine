@@ -5,7 +5,7 @@
 #include <vector>
 
 // enum class
-namespace aux
+namespace seri::aux
 {
 	enum class Dimension : int
 	{
@@ -151,7 +151,7 @@ namespace aux
 }
 
 // function
-namespace aux
+namespace seri::aux
 {
 	template<typename T>
 	int length(const typename std::vector<T>& vec)
@@ -215,7 +215,7 @@ namespace aux
 }
 
 // struct
-namespace aux
+namespace seri::aux
 {
 	struct Attribute
 	{

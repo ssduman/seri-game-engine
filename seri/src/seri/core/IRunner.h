@@ -1,9 +1,12 @@
 #pragma once
 
-class IRunner
+namespace seri
 {
-public:
-	IRunner() = default;
+	class IRunner
+	{
+	public:
+		IRunner() = default;
 
-	virtual ~IRunner() = default;
-};
+		virtual ~IRunner() = default;
+	};
+}

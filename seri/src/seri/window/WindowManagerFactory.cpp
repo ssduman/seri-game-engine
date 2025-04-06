@@ -6,7 +6,7 @@
 #ifdef __linux__
 static_assert(false, "linux platform not supported");
 #elif _WIN32
-std::shared_ptr<IWindowManager> WindowManagerFactory::_windowManagerInstance = std::make_shared<WindowsWindowManager>();
+std::shared_ptr<seri::IWindowManager> seri::WindowManagerFactory::_windowManagerInstance = std::make_shared<seri::WindowsWindowManager>();
 #else
 static_assert(false, "unknown platform");
 #endif

@@ -2,21 +2,24 @@
 
 #include "seri/event/IEvent.h"
 
-class Object : public IEvent
+namespace seri
 {
-public:
-	virtual ~Object() = default;
-
-	virtual void init() = 0;
-
-	virtual void update() = 0;
-
-	virtual void render() = 0;
-
-	virtual void display()
+	class Object : public event::IEvent
 	{
-		update();
-		render();
-	}
+	public:
+		virtual ~Object() = default;
 
-};
+		virtual void init() = 0;
+
+		virtual void update() = 0;
+
+		virtual void render() = 0;
+
+		virtual void display()
+		{
+			update();
+			render();
+		}
+
+	};
+}

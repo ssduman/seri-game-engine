@@ -2,20 +2,23 @@
 
 #include <GLFW/glfw3.h>
 
-enum class InputAction : int
+namespace seri
 {
-	press = GLFW_PRESS,
-	repeat = GLFW_REPEAT,
-	release = GLFW_RELEASE,
-};
-
-inline const char* toString(InputAction inputAction)
-{
-	switch (inputAction)
+	enum class InputAction : int
 	{
-		case InputAction::press: return "press";
-		case InputAction::repeat: return "repeat";
-		case InputAction::release: return "release";
-		default: return "";
+		press = GLFW_PRESS,
+		repeat = GLFW_REPEAT,
+		release = GLFW_RELEASE,
+	};
+
+	inline const char* toString(InputAction inputAction)
+	{
+		switch (inputAction)
+		{
+			case InputAction::press: return "press";
+			case InputAction::repeat: return "repeat";
+			case InputAction::release: return "release";
+			default: return "";
+		}
 	}
 }
