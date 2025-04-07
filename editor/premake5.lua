@@ -38,6 +38,7 @@ project "Editor"
     "%{IncludeDir.ImGui}",
     "%{IncludeDir.assimp}",
     "%{IncludeDir.freetype}",
+    "%{IncludeDir.nlohmann}",
   }
 
   links {

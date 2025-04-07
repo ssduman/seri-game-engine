@@ -27,8 +27,9 @@ public:
 
 		seri::Graphic::Init();
 		seri::BehaviourManager::Init();
-		seri::ShaderManager::Init("assets/shaders/");
 		seri::Texture::setTextureFlip(true);
+		seri::ShaderManager::Init("assets/shaders/");
+		seri::font::FontManager::Init("assets/fonts/");
 
 		seri::SceneBuilder builder;
 		auto rootScene = builder.setName("Main").build();

@@ -28,6 +28,8 @@
 #include "seri/texture/Skybox.h"
 #include "seri/texture/Texture.h"
 
+#include "seri/font/FontManager.h"
+
 #include "seri/input/Input.h"
 
 #include "seri/event/IEvent.h"
