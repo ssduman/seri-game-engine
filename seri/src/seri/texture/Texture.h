@@ -23,18 +23,16 @@ namespace seri
 
 		~Texture()
 		{
-			unbind();
-			del();
-
-			//LOGGER(info, "texture destroyed");
+			Unbind();
+			Del();
 		}
 
-		void init(const std::string& texturePath)
+		void Init(const std::string& texturePath)
 		{
 			int width, height, components;
-			if (auto image = loadTexture(texturePath, width, height, components, 0))
+			if (auto image = LoadTexture(texturePath, width, height, components, 0))
 			{
-				init(image, width, height, components);
+				Build(image, width, height, components);
 			}
 			else
 			{
@@ -42,12 +40,12 @@ namespace seri
 			}
 		}
 
-		void init(const void* data, unsigned int size)
+		void Init(const void* data, unsigned int size)
 		{
 			int width, height, components;
-			if (auto image = loadTexture(data, size, width, height, components, 0))
+			if (auto image = LoadTexture(data, size, width, height, components, 0))
 			{
-				init(image, width, height, components);
+				Build(image, width, height, components);
 			}
 			else
 			{
@@ -55,44 +53,7 @@ namespace seri
 			}
 		}
 
-		void bind()
-		{
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, _tex);
-		}
-
-		void unbind()
-		{
-			glBindTexture(GL_TEXTURE_2D, 0);
-		}
-
-		unsigned int GetTex()
-		{
-			return _tex;
-		}
-
-		static unsigned char* loadTexture(const std::string& texturePath, int& width, int& height, int& components, int reqComp)
-		{
-			return stbi_load(texturePath.c_str(), &width, &height, &components, reqComp);
-		}
-
-		static unsigned char* loadTexture(const void* data, unsigned int size, int& width, int& height, int& components, int reqComp)
-		{
-			return stbi_load_from_memory((const stbi_uc*)data, size, &width, &height, &components, reqComp);
-		}
-
-		static void setTextureFlip(bool flip)
-		{
-			stbi_set_flip_vertically_on_load(flip);
-		}
-
-		static void unloadTexture(unsigned char* image)
-		{
-			stbi_image_free(image);
-		}
-
-	private:
-		void init(unsigned char* image, int width, int height, int components)
+		void Build(unsigned char* image, int width, int height, int components)
 		{
 			aux::TextureFormat format = aux::TextureFormat::red;
 			if (components == 3)
@@ -104,8 +65,8 @@ namespace seri
 				format = aux::TextureFormat::rgba;
 			}
 
-			generate();
-			bind();
+			Generate();
+			Bind();
 
 			aux::Texture texture{};
 			texture.target = aux::toGLenum(aux::TextureTarget::two_d);
@@ -125,16 +86,54 @@ namespace seri
 			glTexParameteri(texture.target, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 			glGenerateMipmap(texture.target);
 
-			unbind();
-			unloadTexture(image);
+			Unbind();
+			UnloadTexture(image);
 		}
 
-		void generate()
+
+		void Bind()
+		{
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, _tex);
+		}
+
+		void Unbind()
+		{
+			glBindTexture(GL_TEXTURE_2D, 0);
+		}
+
+		unsigned int GetTex()
+		{
+			return _tex;
+		}
+
+		static unsigned char* LoadTexture(const std::string& texturePath, int& width, int& height, int& components, int reqComp)
+		{
+			return stbi_load(texturePath.c_str(), &width, &height, &components, reqComp);
+		}
+
+		static unsigned char* LoadTexture(const void* data, unsigned int size, int& width, int& height, int& components, int reqComp)
+		{
+			return stbi_load_from_memory((const stbi_uc*)data, size, &width, &height, &components, reqComp);
+		}
+
+		static void SetTextureFlip(bool flip)
+		{
+			stbi_set_flip_vertically_on_load(flip);
+		}
+
+		static void UnloadTexture(unsigned char* image)
+		{
+			stbi_image_free(image);
+		}
+
+	private:
+		void Generate()
 		{
 			glGenTextures(1, &_tex);
 		}
 
-		void del()
+		void Del()
 		{
 			glDeleteTextures(1, &_tex);
 			_tex = 0;

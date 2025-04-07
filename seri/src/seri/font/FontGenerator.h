@@ -88,7 +88,7 @@ namespace seri::font
 
 		void Init(FontGeneratorInitParams init_params);
 
-		void Generate();
+		std::shared_ptr<FontData> Generate();
 
 	private:
 		FontGeneratorParams _params;

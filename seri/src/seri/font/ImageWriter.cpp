@@ -88,4 +88,12 @@ namespace seri::font
 
 		return calculated_height;
 	}
+
+	std::shared_ptr<Texture> ImageWriter::CreateTexture()
+	{
+		std::shared_ptr texture = std::make_unique<Texture>();
+		texture->Build(_buffer, _params.texture_width, _params.texture_height, _params.texture_comp);
+		return std::move(texture);
+	}
+
 }

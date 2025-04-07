@@ -1,9 +1,12 @@
 #pragma once
 
+#include <memory>
 #include <string>
 #include <vector>
 #include <iostream>
 #include <algorithm>
+
+#include "seri/texture/Texture.h"
 
 namespace seri::font
 {
@@ -44,8 +47,54 @@ namespace seri::font
 		charset_len
 	};
 
-	const static double DEGREE_TO_RADIAN = 3.1415926 / 180.0;
-	const static double RADIAN_TO_DEGREE = 180.0 / 3.1415926;
+	struct GlyphData
+	{
+		int unicode;
+		int width;
+		int height;
+		int advance;
+		int bearingX;
+		int bearingY;
+		int uvL;
+		int uvB;
+		int uvW;
+		int uvH;
+	};
+
+	struct KerningData
+	{
+		int unicode_l;
+		int unicode_r;
+		int x;
+		int y;
+	};
+
+	struct FontMetadata
+	{
+		std::string name;
+		std::string style;
+		std::string renderMode;
+		int count;
+		int atlasW;
+		int atlasH;
+		int pointSize;
+		int lineHeight;
+		int ascentLine;
+		int descentLine;
+	};
+
+	struct FontInfo
+	{
+		FontMetadata metadata;
+		std::vector<seri::font::GlyphData> glyph_data_list;
+		std::vector<seri::font::KerningData> kerning_data_list;
+	};
+
+	struct FontData
+	{
+		FontInfo fontInfo;
+		std::shared_ptr<Texture> texture;
+	};
 
 	std::vector<std::string> split_str(std::string str, std::string delimiter = ",");
 

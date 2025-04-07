@@ -4,6 +4,7 @@
 
 #include "seri/font/FontGenerator.h"
 
+#include <memory>
 #include <vector>
 #include <filesystem>
 
@@ -20,15 +21,29 @@ namespace seri::font
 		{
 			GetInstance();
 
-			FontGenerator fontGenerator{ FontGeneratorParams{} };
-			fontGenerator.Init(FontGeneratorInitParams{});
-			fontGenerator.Generate();
-
 			for (const auto& entry : std::filesystem::directory_iterator(fontFolderPath))
 			{
-				std::string name = entry.path().stem().string();
-				LOGGER(info, "font found: " << name);
+				if (!entry.is_regular_file())
+				{
+					continue;
+				}
+
+				std::string fontName = entry.path().stem().string();
+				LOGGER(info, "font found: " << fontName);
+
+				FontGeneratorParams genParams{};
+				FontGeneratorInitParams initParams{};
+
+				genParams.font_name = fontName;
+
+				FontGenerator fontGenerator{ genParams };
+				fontGenerator.Init(initParams);
+				std::shared_ptr fontData = std::move(fontGenerator.Generate());
+
+				GetInstance()._predefinedFonts.push_back(std::move(fontData));
 			}
+
+			auto& instance = GetInstance();
 		}
 
 		static FontManager& GetInstance()
@@ -37,11 +52,16 @@ namespace seri::font
 			return instance;
 		}
 
+		std::vector<std::shared_ptr<FontData>>& GetPredefinedFonts()
+		{
+			return GetInstance()._predefinedFonts;
+		}
+
 	private:
 		FontManager() = default;
 		~FontManager() = default;
 
-		std::vector<std::string> _predefinedFonts;
+		std::vector<std::shared_ptr<FontData>> _predefinedFonts;
 
 	};
 }

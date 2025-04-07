@@ -182,6 +182,15 @@ namespace seri::font
 		return _font_info;
 	}
 
+	FontInfo FontInfoHandler::CloneFontInfo()
+	{
+		return FontInfo{
+			_font_info.metadata,
+			_font_info.glyph_data_list,
+			_font_info.kerning_data_list
+		};
+	}
+
 	std::string FontInfoHandler::Dump(int indent)
 	{
 		return (nlohmann::ordered_json{ _font_info })[0].dump(indent);
@@ -197,4 +206,5 @@ namespace seri::font
 		json_dump_stream << Dump(indent) << std::endl;
 		json_dump_stream.close();
 	}
+
 }

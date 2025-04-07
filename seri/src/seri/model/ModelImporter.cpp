@@ -234,7 +234,7 @@ namespace seri
 
 		std::vector<Texture> textures;
 		Texture texture;
-		texture.init(aiTexture->pcData, size);
+		texture.Init(aiTexture->pcData, size);
 		textures.emplace_back(std::move(texture));
 
 		mesh->AddTextures(std::move(textures));
@@ -251,7 +251,7 @@ namespace seri
 		}
 		else
 		{
-			texture.init(_modelDirectory + texturePath);
+			texture.Init(_modelDirectory + texturePath);
 			_texturesLoaded[texturePath] = texture;
 		}
 

@@ -18,7 +18,7 @@ namespace seri
 		void render() override
 		{
 			_shader.use();
-			_texture.bind();
+			_texture.Bind();
 			_engineBackend.draw();
 		}
 

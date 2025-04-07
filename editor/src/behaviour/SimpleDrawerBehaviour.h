@@ -33,10 +33,12 @@ public:
 		auto gridShader = seri::ShaderManager::Find("grid");
 
 		auto passageTexture = std::make_shared<seri::Texture>();
-		passageTexture->init("assets/textures/passage.png");
+		passageTexture->Init("assets/textures/passage.png");
 
 		auto tankTexture = std::make_shared<seri::Texture>();
-		tankTexture->init("assets/textures/tank/tank_diffuse.tga");
+		tankTexture->Init("assets/textures/tank/tank_diffuse.tga");
+		
+		auto& fontTexture = seri::font::FontManager::GetInstance().GetPredefinedFonts()[0]->texture;
 
 		material = std::make_shared<seri::Material>();
 		material->shader = entityShader;
@@ -50,6 +52,10 @@ public:
 		materialGrid->shader = gridShader;
 		materialGrid->texture = nullptr;
 
+		materialFont = std::make_shared<seri::Material>();
+		materialFont->shader = entityShader;
+		materialFont->texture = fontTexture;
+		
 		materialModel = std::make_shared<seri::Material>();
 		materialModel->shader = entityShader;
 		materialModel->texture = tankTexture;
@@ -70,9 +76,9 @@ public:
 		//glm::vec3 scale_3d{ 1.0f, 1.0f, 1.0f };
 		glm::vec3 scale_3d{ 0.01f, 0.01f, 0.01f };
 
-		//Graphic::Draw(line_2d, Util::GetIdentityMatrix(), materialLine, Graphic::GetCameraOrtho());
-		//Graphic::Draw(quad_3d, Util::GetTRS(pos_3d, rot_3d, scale_3d), material, Graphic::GetCameraPerspective());
-		//Graphic::Draw(cube_3d, Util::GetTRS(pos_3d, rot_3d, scale_3d), material, Graphic::GetCameraPerspective());
+		//seri::Graphic::Draw(line_2d, seri::Util::GetIdentityMatrix(), materialLine, seri::Graphic::GetCameraOrtho());
+		//seri::Graphic::Draw(quad_3d, seri::Util::GetTRS(pos_3d, rot_3d, scale_3d), material, seri::Graphic::GetCameraPerspective());
+		//seri::Graphic::Draw(cube_3d, seri::Util::GetTRS(pos_3d, rot_3d, scale_3d), material, seri::Graphic::GetCameraPerspective());
 
 		for (const auto& model : models_0)
 		{
@@ -80,7 +86,9 @@ public:
 			seri::Graphic::Draw(model, seri::Util::GetTRS(pos_3d, rot_3d, scale_3d), materialSkinned, seri::Graphic::GetCameraPerspective());
 		}
 
-		//Graphic::Draw(quad_2d, Util::GetIdentityMatrix(), materialGrid, Graphic::GetCameraPerspective());
+		seri::Graphic::Draw(quad_3d, seri::Util::GetIdentityMatrix(), materialFont, seri::Graphic::GetCameraPerspective());
+
+		seri::Graphic::Draw(quad_2d, seri::Util::GetIdentityMatrix(), materialGrid, seri::Graphic::GetCameraPerspective());
 	}
 
 	void Destroy() override
@@ -98,6 +106,7 @@ private:
 	std::shared_ptr<seri::Material> material;
 	std::shared_ptr<seri::Material> materialLine;
 	std::shared_ptr<seri::Material> materialGrid;
+	std::shared_ptr<seri::Material> materialFont;
 	std::shared_ptr<seri::Material> materialModel;
 	std::shared_ptr<seri::Material> materialSkinned;
 

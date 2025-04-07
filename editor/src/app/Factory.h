@@ -96,7 +96,7 @@ public:
 
 			auto triangle = std::make_shared<seri::Triangle>(camera);
 			triangle->getShader().init("assets/shaders/entity_vs.shader", "assets/shaders/entity_fs.shader");
-			triangle->getTexture().init("assets/textures/passage.png");
+			triangle->getTexture().Init("assets/textures/passage.png");
 			triangle->init();
 
 			triangle->getDrawer().reserveDataBufferSize(positionsSize + colorsSize + texturePositionsSize);
@@ -118,7 +118,7 @@ public:
 
 			auto rectangle = std::make_shared<seri::Rectangle>(camera);
 			rectangle->getShader().init("assets/shaders/entity_vs.shader", "assets/shaders/entity_fs.shader");
-			rectangle->getTexture().init("assets/textures/wall1.png");
+			rectangle->getTexture().Init("assets/textures/wall1.png");
 			rectangle->init();
 
 			const std::vector<GLuint> indices{ 0, 1, 3, 1, 2, 3 };
@@ -156,7 +156,7 @@ public:
 
 			auto circle = std::make_shared<seri::Circle>(camera);
 			circle->getShader().init("assets/shaders/entity_vs.shader", "assets/shaders/entity_fs.shader");
-			circle->getTexture().init("assets/textures/passage.png");
+			circle->getTexture().Init("assets/textures/passage.png");
 			circle->init();
 
 			seri::ShaderManager::GetInstance().SetColor(circle->getShader(), randomColor());
@@ -264,7 +264,7 @@ public:
 
 			auto cube = std::make_shared<seri::Cube>(camera);
 			cube->getShader().init("assets/shaders/entity_vs.shader", "assets/shaders/entity_fs.shader");
-			cube->getTexture().init("assets/textures/wall2.png");
+			cube->getTexture().Init("assets/textures/wall2.png");
 			cube->init();
 
 			seri::ShaderManager::GetInstance().SetColor(cube->getShader(), randomColor());

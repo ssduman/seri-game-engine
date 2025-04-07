@@ -27,7 +27,7 @@ public:
 
 		seri::Graphic::Init();
 		seri::BehaviourManager::Init();
-		seri::Texture::setTextureFlip(true);
+		seri::Texture::SetTextureFlip(true);
 		seri::ShaderManager::Init("assets/shaders/");
 		seri::font::FontManager::Init("assets/fonts/");
 

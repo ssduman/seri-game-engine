@@ -36,7 +36,7 @@ namespace seri
 		ShaderManager::Use(material->shader);
 		if (material->texture != nullptr)
 		{
-			material->texture->bind();
+			material->texture->Bind();
 		}
 		mesh->Bind();
 
@@ -77,7 +77,7 @@ namespace seri
 		mesh->Unbind();
 		if (material->texture != nullptr)
 		{
-			material->texture->unbind();
+			material->texture->Unbind();
 		}
 		ShaderManager::Disuse();
 	}

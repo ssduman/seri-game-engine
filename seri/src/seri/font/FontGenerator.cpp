@@ -83,11 +83,6 @@ namespace seri::font
 
 	void FontGenerator::InitFreeType()
 	{
-		/*
-		16.16 format, 65536, variable << 16, (0x10000L)
-		26.6  format,    64, variable << 6
-		*/
-
 		_error = FT_Init_FreeType(&_library);
 		if (_error)
 		{
@@ -294,14 +289,8 @@ namespace seri::font
 		LOGGER(info, "[font] inited font: " << font_metadata.name << ", style: " << font_metadata.style << ", size: " << font_metadata.pointSize);
 	}
 
-	void FontGenerator::Generate()
+	std::shared_ptr<FontData> FontGenerator::Generate()
 	{
-		// early exit for pixel size
-		if (_init_params.pixel_size <= 0)
-		{
-			return;
-		}
-
 		// chronometer beg
 		std::chrono::steady_clock::time_point beg = std::chrono::steady_clock::now();
 
@@ -328,10 +317,17 @@ namespace seri::font
 		// log
 		LOGGER(info, "[font] generated font: " << font_metadata.name << ", style: " << font_metadata.style << ", size: " << font_metadata.pointSize << ", timetaken: " << timetaken << " ms");
 
+		// create font data
+		std::shared_ptr<FontData> fontData = std::make_shared<FontData>();
+		fontData->fontInfo = std::move(_font_info_handler->CloneFontInfo());
+		fontData->texture = std::move(_image_writer->CreateTexture());
+
 		// reset
 		_glyph_packer->Reset();
-		_image_writer->Reset();
+		//_image_writer->Reset();
 		_font_info_handler->Reset();
+
+		return fontData;
 	}
 
 	void FontGenerator::GenerateGlyph(int unicode, FT_Int32 load_flags, FT_Render_Mode render_mode)
@@ -342,7 +338,7 @@ namespace seri::font
 		{
 			if (unicode >= 32)
 			{
-				LOGGER(error, "[font] error in get glyph: " << unicode);
+				//LOGGER(error, "[font] error in get glyph: " << unicode);
 			}
 			_font_info_handler->AddGlyphData(unicode);
 			return;
@@ -407,7 +403,7 @@ namespace seri::font
 		// glyph metrics
 		int width = std::round(slot->metrics.width / 64.0);
 		int height = std::round(slot->metrics.height / 64.0);
-		int advance = std::round(slot->metrics.horiAdvance / 64.0 ) + delta_diff;
+		int advance = std::round(slot->metrics.horiAdvance / 64.0) + delta_diff;
 		int bearing_x = std::round(slot->metrics.horiBearingX / 64.0) - offset_x;
 		int bearing_y = std::round(slot->metrics.horiBearingY / 64.0) + offset_y;
 
@@ -429,7 +425,7 @@ namespace seri::font
 			int b = uv_b + offset_y;
 			_image_writer->Draw(bitmap_main->buffer, bitmap_main->pitch, bitmap_main->width, bitmap_main->rows, l, b, DrawMode::draw_main);
 		}
-		
+
 		// uv normalize, start from bottom left
 		uv_b = _params.texture_height - (uv_b + uv_h);
 
@@ -504,6 +500,11 @@ namespace seri::font
 
 	FT_Vector FontGenerator::MakeVector(float delta_x, float delta_y)
 	{
+		/*
+		16.16 format, 65536, variable << 16, (0x10000L)
+		26.6  format,    64, variable << 6
+		*/
+
 		FT_Vector vector{};
 		vector.x = delta_x * 64;
 		vector.y = delta_y * 64;

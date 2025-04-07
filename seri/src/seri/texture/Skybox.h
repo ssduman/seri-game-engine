@@ -158,12 +158,12 @@ namespace seri
 			{
 				std::swap(_faces[2], _faces[3]);
 			}
-			Texture::setTextureFlip(flip);
+			Texture::SetTextureFlip(flip);
 
 			int width, height, components;
 			for (size_t i = 0; i < _faces.size(); i++)
 			{
-				if (auto image = Texture::loadTexture(_faces[i], width, height, components, 0))
+				if (auto image = Texture::LoadTexture(_faces[i], width, height, components, 0))
 				{
 					GLenum format = GL_RED;
 					if (components == 3)
@@ -175,7 +175,7 @@ namespace seri
 						format = GL_RGBA;
 					}
 					glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + static_cast<GLenum>(i), 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, image);
-					Texture::unloadTexture(image);
+					Texture::UnloadTexture(image);
 				}
 				else
 				{
