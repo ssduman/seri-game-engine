@@ -5,6 +5,7 @@
 #include <seri/graphic/Material.h>
 #include <seri/behaviour/BehaviourBase.h>
 #include <seri/model/ModelImporter.h>
+#include <seri/netcode/Socket.h>
 
 class SimpleDrawerBehaviour : public seri::BehaviourBase
 {
@@ -63,6 +64,12 @@ public:
 		materialSkinned = std::make_shared<seri::Material>();
 		materialSkinned->shader = entitySkinnedShader;
 		materialSkinned->texture = tankTexture;
+
+		udpSocketServer = std::make_unique<seri::netcode::Socket>(seri::netcode::SocketType::udp);
+		udpSocketServer->Bind({ "localhost", 5200 });
+
+		udpSocketClient = std::make_unique<seri::netcode::Socket>(seri::netcode::SocketType::udp);
+		udpSocketClient->Connect({ "127.0.0.1", 5200 });
 	}
 
 	void Update() override
@@ -89,6 +96,9 @@ public:
 		seri::Graphic::Draw(quad_3d, seri::Util::GetIdentityMatrix(), materialFont, seri::Graphic::GetCameraPerspective());
 
 		seri::Graphic::Draw(quad_2d, seri::Util::GetIdentityMatrix(), materialGrid, seri::Graphic::GetCameraPerspective());
+
+		udpSocketServer->Listen(1);
+		udpSocketClient->SendToServer();
 	}
 
 	void Destroy() override
@@ -109,5 +119,8 @@ private:
 	std::shared_ptr<seri::Material> materialFont;
 	std::shared_ptr<seri::Material> materialModel;
 	std::shared_ptr<seri::Material> materialSkinned;
+
+	std::unique_ptr<seri::netcode::Socket> udpSocketServer;
+	std::unique_ptr<seri::netcode::Socket> udpSocketClient;
 
 };

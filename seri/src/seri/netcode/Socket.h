@@ -7,6 +7,8 @@
 #include <ws2tcpip.h>
 #include <winsock2.h>
 
+#pragma comment(lib, "ws2_32.lib")
+
 namespace seri::netcode
 {
 	enum SocketType
@@ -17,19 +19,8 @@ namespace seri::netcode
 
 	struct RemoteEndpoint
 	{
-		RemoteEndpoint()
-		{
-			FillDefaults();
-		}
-
 		const char* ip;
 		unsigned int port;
-
-		void FillDefaults()
-		{
-			ip = "localhost";
-			port = 5200;
-		}
 	};
 
 	class Socket
@@ -37,7 +28,6 @@ namespace seri::netcode
 	public:
 		Socket(SocketType st)
 		{
-			char buffer[1024];
 			if (WSAStartup(MAKEWORD(2, 2), &_wsaData) != 0)
 			{
 				_success = false;
@@ -53,49 +43,115 @@ namespace seri::netcode
 				return;
 			}
 
+			static u_long mode = 1; // 1 = non-blocking
+			ioctlsocket(_sockfd, FIONBIO, &mode);
+
 			_success = true;
 		}
 
-		~Socket() = default;
+		~Socket()
+		{
+			if (_success)
+			{
+				closesocket(_sockfd);
+				WSACleanup();
+			}
+		}
 
 		bool Bind(RemoteEndpoint re)
 		{
 			if (!_success)
 			{
-				return;
+				return false;
 			}
 
-			sockaddr_in serverAddr{};
+			_serverAddr.sin_family = AF_INET;
+			_serverAddr.sin_port = htons(re.port);
+			_serverAddr.sin_addr.s_addr = INADDR_ANY; // inet_addr(re.ip);
 
-			serverAddr.sin_family = AF_INET;
-			serverAddr.sin_port = htons(re.port);
-			serverAddr.sin_addr.s_addr = INADDR_ANY; // inet_addr(re.ip);
+			InetPton(AF_INET, (const WCHAR*)re.ip, &_serverAddr.sin_addr.s_addr);
 
-			InetPton(AF_INET, (const WCHAR*)re.ip, &serverAddr.sin_addr.s_addr);
-
-			if (bind(_sockfd, (sockaddr*)&serverAddr, sizeof(serverAddr)) == SOCKET_ERROR)
+			if (bind(_sockfd, (sockaddr*)&_serverAddr, sizeof(_serverAddr)) == SOCKET_ERROR)
 			{
 				_success = false;
 				LOGGER(error, "[netcode] bind failed");
 				closesocket(_sockfd);
 				WSACleanup();
-				return;
+				return false;
 			}
 
 			LOGGER(info, "[netcode] server is running on port: " << re.port);
+
+			return true;
 		}
 
-		void Connect()
+		bool Connect(RemoteEndpoint re)
 		{
+			if (!_success)
+			{
+				return false;
+			}
 
+			_serverAddr.sin_family = AF_INET;
+			_serverAddr.sin_port = htons(re.port);
+			_serverAddr.sin_addr.s_addr = inet_addr(re.ip);
+
+			InetPton(AF_INET, (const WCHAR*)re.ip, &_serverAddr.sin_addr.s_addr);
+
+			LOGGER(info, "[netcode] client connected to port: " << re.port);
 		}
 
 		bool Available()
 		{
+			sockaddr_in clientAddr{};
+
+			char temp[1];
+			int clientLen = sizeof(clientAddr);
+			int res = recvfrom(_sockfd, temp, 1, MSG_PEEK, (sockaddr*)&clientAddr, &clientLen);
+			if (res == SOCKET_ERROR)
+			{
+				int err = WSAGetLastError();
+				return err == WSAEWOULDBLOCK ? false : true;
+			}
+			return true;
 		}
 
 		void Listen(int maxListener = 1)
 		{
+			sockaddr_in clientAddr{};
+
+			if (Available())
+			{
+				int clientLen = sizeof(clientAddr);
+				int recvLen = recvfrom(_sockfd, _buffer, sizeof(_buffer), 0, (sockaddr*)&clientAddr, &clientLen);
+				if (recvLen == SOCKET_ERROR)
+				{
+					LOGGER(info, "[netcode] recvfrom failed");
+					return;
+				}
+
+				char ipStr[INET_ADDRSTRLEN];
+				inet_ntop(AF_INET, &(clientAddr.sin_addr), ipStr, INET_ADDRSTRLEN);
+				int port = ntohs(clientAddr.sin_port);
+
+				LOGGER(info, "[netcode] message from: " << ipStr << ":" << port << ", received: " << recvLen);
+
+				Send(clientAddr);
+			}
+		}
+
+		void Send(const sockaddr_in& clientAddr)
+		{
+			std::string reply = "pong!";
+			int clientLen = sizeof(clientAddr);
+			sendto(_sockfd, reply.c_str(), reply.length(), 0, (sockaddr*)&clientAddr, clientLen);
+		}
+
+		void SendToServer()
+		{
+			std::string reply = "ping!";
+			int clientLen = sizeof(_serverAddr);
+			sendto(_sockfd, reply.c_str(), reply.length(), 0, (sockaddr*)&_serverAddr, clientLen);
 		}
 
 	private:
@@ -103,6 +159,10 @@ namespace seri::netcode
 
 		WSADATA _wsaData;
 		SOCKET _sockfd{ 0 };
+
+		sockaddr_in _serverAddr{};
+
+		char _buffer[65536]{};
 
 	};
 
