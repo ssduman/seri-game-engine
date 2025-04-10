@@ -58,8 +58,11 @@ public:
 		seri::Graphic::AddCamera(cameraOrtho);
 		seri::Graphic::AddCamera(cameraPerspective);
 
-		auto cameraScene = builder.setName("Camera").setObject(cameraPerspective).build();
-		rootScene->add(cameraScene);
+		auto cameraOrthoScene = builder.setName("Camera Ortho").setObject(cameraOrtho).build();
+		rootScene->add(cameraOrthoScene);
+
+		auto cameraPerspectiveScene = builder.setName("Camera Perspective").setObject(cameraPerspective).build();
+		rootScene->add(cameraPerspectiveScene);
 
 		auto gui = std::make_shared<GUI>(cameraPerspective, rootScene);
 		gui->init();

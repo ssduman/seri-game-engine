@@ -67,7 +67,11 @@ namespace seri::font
 
 	int ImageWriter::Write(std::string name, std::string style, int pixel_size)
 	{
-		int calculated_height = get_next_power_of_two(_maximum_height);
+		int calculated_height = _params.texture_height;
+		if (_params.clamp_height)
+		{
+			calculated_height = get_next_power_of_two(_maximum_height);
+		}
 
 		std::string pretty_name = get_pretty_name(name, style, pixel_size);
 		std::string write_path = (output_path / std::filesystem::path{ pretty_name + ".png" }).string();

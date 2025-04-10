@@ -121,6 +121,7 @@ namespace seri::font
 		image_writer_params.texture_width = _params.texture_width;
 		image_writer_params.texture_height = _params.texture_height;
 		image_writer_params.texture_comp = 4;
+		image_writer_params.clamp_height = false;
 		_image_writer = new ImageWriter(image_writer_params);
 
 		FontInfoHandlerParams font_info_handler_params{};

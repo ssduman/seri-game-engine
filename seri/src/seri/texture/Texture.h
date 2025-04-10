@@ -90,7 +90,6 @@ namespace seri
 			UnloadTexture(image);
 		}
 
-
 		void Bind()
 		{
 			glActiveTexture(GL_TEXTURE0);

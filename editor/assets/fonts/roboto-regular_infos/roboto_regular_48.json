@@ -5,7 +5,7 @@
     "renderMode": "light",
     "count": 202,
     "atlasW": 1024,
-    "atlasH": 256,
+    "atlasH": 1024,
     "pointSize": 48,
     "lineHeight": 56,
     "ascentLine": 45,

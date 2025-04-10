@@ -20,6 +20,7 @@ namespace seri::font
 		int texture_width;
 		int texture_height;
 		int texture_comp;
+		bool clamp_height;
 	};
 
 	class ImageWriter

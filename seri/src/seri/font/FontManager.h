@@ -8,6 +8,8 @@
 #include <vector>
 #include <filesystem>
 
+class seri::Mesh;
+
 namespace seri::font
 {
 	class FontManager
@@ -17,34 +19,7 @@ namespace seri::font
 
 		void operator=(FontManager const&) = delete;
 
-		static void Init(const char* fontFolderPath)
-		{
-			GetInstance();
-
-			for (const auto& entry : std::filesystem::directory_iterator(fontFolderPath))
-			{
-				if (!entry.is_regular_file())
-				{
-					continue;
-				}
-
-				std::string fontName = entry.path().stem().string();
-				LOGGER(info, "font found: " << fontName);
-
-				FontGeneratorParams genParams{};
-				FontGeneratorInitParams initParams{};
-
-				genParams.font_name = fontName;
-
-				FontGenerator fontGenerator{ genParams };
-				fontGenerator.Init(initParams);
-				std::shared_ptr fontData = std::move(fontGenerator.Generate());
-
-				GetInstance()._predefinedFonts.push_back(std::move(fontData));
-			}
-
-			auto& instance = GetInstance();
-		}
+		static void Init(const char* fontFolderPath);
 
 		static FontManager& GetInstance()
 		{
@@ -52,10 +27,12 @@ namespace seri::font
 			return instance;
 		}
 
-		std::vector<std::shared_ptr<FontData>>& GetPredefinedFonts()
+		static std::vector<std::shared_ptr<FontData>>& GetPredefinedFonts()
 		{
 			return GetInstance()._predefinedFonts;
 		}
+
+		static void MakeText(std::unique_ptr<seri::Mesh>& mesh, const FontInfo& fontInfo, std::string text);
 
 	private:
 		FontManager() = default;

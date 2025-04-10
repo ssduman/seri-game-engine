@@ -19,6 +19,7 @@ public:
 			{ seri::Graphic::GetCameraOrtho()->getCameraProperties().width / 2.0f, seri::Graphic::GetCameraOrtho()->getCameraProperties().height / 2.0f },
 			{ seri::Graphic::GetCameraOrtho()->getCameraProperties().width, seri::Graphic::GetCameraOrtho()->getCameraProperties().height }
 		);
+		font_mesh = std::make_unique<seri::Mesh>();
 
 		//models_0 = seri::ModelImporter{}.Load("assets/models/spider.obj");
 		//models_0 = seri::ModelImporter{}.Load("assets/models/tank.fbx");
@@ -32,14 +33,17 @@ public:
 		auto entitySkinnedShader = seri::ShaderManager::Find("entity_skinned");
 		auto lineShader = seri::ShaderManager::Find("line");
 		auto gridShader = seri::ShaderManager::Find("grid");
+		auto typerShader = seri::ShaderManager::Find("typer");
 
 		auto passageTexture = std::make_shared<seri::Texture>();
 		passageTexture->Init("assets/textures/passage.png");
 
 		auto tankTexture = std::make_shared<seri::Texture>();
 		tankTexture->Init("assets/textures/tank/tank_diffuse.tga");
-		
-		auto& fontTexture = seri::font::FontManager::GetInstance().GetPredefinedFonts()[0]->texture;
+
+		const int fontIndex = 2;
+		const auto& fontInfo = seri::font::FontManager::GetPredefinedFonts()[fontIndex]->fontInfo;
+		const auto& fontTexture = seri::font::FontManager::GetPredefinedFonts()[fontIndex]->texture;
 
 		material = std::make_shared<seri::Material>();
 		material->shader = entityShader;
@@ -54,9 +58,9 @@ public:
 		materialGrid->texture = nullptr;
 
 		materialFont = std::make_shared<seri::Material>();
-		materialFont->shader = entityShader;
+		materialFont->shader = typerShader;
 		materialFont->texture = fontTexture;
-		
+
 		materialModel = std::make_shared<seri::Material>();
 		materialModel->shader = entityShader;
 		materialModel->texture = tankTexture;
@@ -70,6 +74,8 @@ public:
 
 		udpSocketClient = std::make_unique<seri::netcode::Socket>(seri::netcode::SocketType::udp);
 		udpSocketClient->Connect({ "127.0.0.1", 5200 });
+
+		seri::font::FontManager::MakeText(font_mesh, fontInfo, "Hello World");
 	}
 
 	void Update() override
@@ -93,12 +99,12 @@ public:
 			seri::Graphic::Draw(model, seri::Util::GetTRS(pos_3d, rot_3d, scale_3d), materialSkinned, seri::Graphic::GetCameraPerspective());
 		}
 
-		seri::Graphic::Draw(quad_3d, seri::Util::GetIdentityMatrix(), materialFont, seri::Graphic::GetCameraPerspective());
+		seri::Graphic::Draw(font_mesh, seri::Util::GetIdentityMatrix(), materialFont, seri::Graphic::GetCameraOrtho());
 
 		seri::Graphic::Draw(quad_2d, seri::Util::GetIdentityMatrix(), materialGrid, seri::Graphic::GetCameraPerspective());
 
-		udpSocketServer->Listen(1);
-		udpSocketClient->SendToServer();
+		//udpSocketServer->Listen(1);
+		//udpSocketClient->SendToServer();
 	}
 
 	void Destroy() override
@@ -110,6 +116,7 @@ private:
 	std::unique_ptr<seri::Mesh> quad_3d;
 	std::unique_ptr<seri::Mesh> cube_3d;
 	std::unique_ptr<seri::Mesh> line_2d;
+	std::unique_ptr<seri::Mesh> font_mesh;
 
 	std::vector<std::unique_ptr<seri::Mesh>> models_0;
 
