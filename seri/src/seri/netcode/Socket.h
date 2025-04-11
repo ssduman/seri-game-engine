@@ -99,6 +99,8 @@ namespace seri::netcode
 			InetPton(AF_INET, (const WCHAR*)re.ip, &_serverAddr.sin_addr.s_addr);
 
 			LOGGER(info, "[netcode] client connected to port: " << re.port);
+
+			return true;
 		}
 
 		bool Available()

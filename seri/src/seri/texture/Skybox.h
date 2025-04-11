@@ -1,8 +1,8 @@
 #pragma once
 
-#include "seri/core/Object.h"
 #include "seri/camera/ICamera.h"
 #include "seri/texture/Texture.h"
+#include "seri/shader/ShaderManager.h"
 #include "seri/renderer/OpenGLEngineBackend.h"
 #include "seri/renderer/AuxiliaryStructsBuilder.h"
 
@@ -11,30 +11,49 @@
 
 namespace seri
 {
-	class Skybox : public Object
+	class Skybox
 	{
 	public:
+		Skybox(std::shared_ptr<ICamera> camera)
+			: _camera(camera)
+		{
+			_faces = {
+				"assets/textures/skybox/right.jpg",
+				"assets/textures/skybox/left.jpg",
+				"assets/textures/skybox/bottom.jpg",
+				"assets/textures/skybox/top.jpg",
+				"assets/textures/skybox/front.jpg",
+				"assets/textures/skybox/back.jpg",
+			};
+
+			Init();
+		}
+
 		Skybox(std::shared_ptr<ICamera> camera, std::vector<std::string> faces)
 			: _camera(camera), _faces(std::move(faces))
-		{}
+		{
+			Init();
+		}
 
-		~Skybox() override
+		~Skybox()
 		{
 			_engineBackend.release();
 		}
 
-		void init() override
+		void Init()
 		{
-			initMVP();
-			setDefaultPositions();
-			loadCubemap();
+			_shader = ShaderManager::Find("skybox");
+
+			InitMVP();
+			SetDefaultPositions();
+			LoadCubemap();
 		}
 
-		void render() override
+		void Render()
 		{
-			_shader.use();
+			_shader->use();
 
-			bind();
+			Bind();
 
 			glDepthFunc(GL_LEQUAL);
 			glBindTexture(GL_TEXTURE_CUBE_MAP, _tex);
@@ -44,38 +63,28 @@ namespace seri
 			glBindVertexArray(0);
 			glDepthFunc(GL_LESS);
 
-			unbind();
+			Unbind();
 
-			_shader.disuse();
+			_shader->disuse();
 		}
 
-		void update() override
+		void Update()
 		{
 			if (_camera)
 			{
-				ShaderManager::GetInstance().setView(_shader, glm::mat4(glm::mat3(_camera->getView())));
+				ShaderManager::SetView(_shader, glm::mat4(glm::mat3(_camera->getView())));
 			}
 		}
 
-		Shader& getShader()
-		{
-			return _shader;
-		}
-
-		OpenGLEngineBackend& getDrawer()
-		{
-			return _engineBackend;
-		}
-
 	private:
-		void initMVP()
+		void InitMVP()
 		{
-			ShaderManager::GetInstance().setModel(_shader, glm::mat4{ 1.0f });
-			ShaderManager::GetInstance().setView(_shader, glm::mat4(glm::mat3(_camera->getView())));
-			ShaderManager::GetInstance().setProjection(_shader, _camera->getProjection());
+			ShaderManager::SetModel(_shader, glm::mat4{ 1.0f });
+			ShaderManager::SetView(_shader, glm::mat4(glm::mat3(_camera->getView())));
+			ShaderManager::SetProjection(_shader, _camera->getProjection());
 		}
 
-		void setDefaultPositions()
+		void SetDefaultPositions()
 		{
 			const std::vector<glm::vec3> positions = {
 				{ -1.0f, 1.0f, -1.0f },
@@ -143,7 +152,7 @@ namespace seri
 			_engineBackend.setDrawCount(aux::count(positions));
 		}
 
-		void loadCubemap(bool flip = false)
+		void LoadCubemap(bool flip = false)
 		{
 			if (_faces.empty() || _faces.size() != 6)
 			{
@@ -190,19 +199,19 @@ namespace seri
 			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 		}
 
-		void bind()
+		void Bind()
 		{
 			glActiveTexture(GL_TEXTURE0);
 		}
 
-		void unbind()
+		void Unbind()
 		{
 			glBindTexture(GL_TEXTURE_2D, 0);
 		}
 
 		std::shared_ptr<ICamera> _camera;
 
-		Shader _shader;
+		std::shared_ptr<Shader> _shader;
 		OpenGLEngineBackend _engineBackend{};
 
 		unsigned int _tex{ 0 };

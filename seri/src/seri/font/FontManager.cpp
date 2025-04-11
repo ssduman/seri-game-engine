@@ -48,8 +48,6 @@ void seri::font::FontManager::MakeText(std::unique_ptr<seri::Mesh>& mesh, const 
 		{
 			if (glyph.unicode == unicode)
 			{
-				LOGGER(info, "[font] glyph found: " << glyph.unicode);
-
 				float altasW = fontInfo.metadata.atlasW;
 				float altasH = fontInfo.metadata.atlasH;
 

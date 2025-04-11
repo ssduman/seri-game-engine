@@ -103,6 +103,27 @@ namespace seri
 			ShaderManager::Disuse();
 		}
 
+		static void SetModel(std::shared_ptr<Shader>& shader, const glm::mat4& model)
+		{
+			ShaderManager::Use(shader);
+			ShaderManager::SetMat4(shader, "u_model", model);
+			ShaderManager::Disuse();
+		}
+
+		static void SetView(std::shared_ptr<Shader>& shader, const glm::mat4& view)
+		{
+			ShaderManager::Use(shader);
+			ShaderManager::SetMat4(shader, "u_view", view);
+			ShaderManager::Disuse();
+		}
+
+		static void SetProjection(std::shared_ptr<Shader>& shader, const glm::mat4& projection)
+		{
+			ShaderManager::Use(shader);
+			ShaderManager::SetMat4(shader, "u_projection", projection);
+			ShaderManager::Disuse();
+		}
+
 		static void setPosition(Shader& shader, const glm::vec2& position)
 		{
 			ShaderManager::Use(shader);
