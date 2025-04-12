@@ -1,6 +1,7 @@
 #include "Seripch.h"
 
 #include "seri/logging/Logger.h"
+#include "seri/util/Util.h"
 
 #include "FontGenerator.h"
 
@@ -393,8 +394,8 @@ namespace seri::font
 		bitmap_main = &bitmap_glyph_main->bitmap;
 
 		// calculate wh and offset
-		max_w = std::max(max_w, (int)bitmap_main->width);
-		max_h = std::max(max_h, (int)bitmap_main->rows);
+		max_w = Util::Max(max_w, (int)bitmap_main->width);
+		max_h = Util::Max(max_h, (int)bitmap_main->rows);
 		offset_main_x = (int)bitmap_main->width;
 		offset_main_y = (int)bitmap_main->rows;
 

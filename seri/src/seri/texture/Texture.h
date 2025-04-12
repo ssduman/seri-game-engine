@@ -3,7 +3,6 @@
 #include "seri/logging/Logger.h"
 #include "seri/renderer/AuxiliaryStructs.h"
 
-#include <glad/gl.h>
 #include <stb_image.h>
 
 namespace seri

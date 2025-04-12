@@ -103,8 +103,8 @@ public:
 
 		seri::Graphic::Draw(quad_2d, seri::Util::GetIdentityMatrix(), materialGrid, seri::Graphic::GetCameraPerspective());
 
-		//udpSocketServer->Listen(1);
-		//udpSocketClient->SendToServer();
+		udpSocketServer->Listen(1);
+		udpSocketClient->SendToServer();
 	}
 
 	void Destroy() override

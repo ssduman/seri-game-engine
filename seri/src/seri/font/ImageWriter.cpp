@@ -1,6 +1,7 @@
 #include "Seripch.h"
 
 #include "seri/logging/Logger.h"
+#include "seri/util/Util.h"
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 
@@ -41,7 +42,7 @@ namespace seri::font
 		static int B = 2;
 		static int A = 3;
 
-		_maximum_height = std::max(_maximum_height, uv_b + uv_h);
+		_maximum_height = Util::Max(_maximum_height, uv_b + uv_h);
 
 		for (int h = 0; h < uv_h; h++)
 		{

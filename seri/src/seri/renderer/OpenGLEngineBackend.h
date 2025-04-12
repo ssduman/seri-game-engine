@@ -4,8 +4,6 @@
 #include "seri/renderer/IEngineBackend.h"
 #include "seri/renderer/AuxiliaryStructs.h"
 
-#include <glad/gl.h>
-
 #include <vector>
 
 namespace seri

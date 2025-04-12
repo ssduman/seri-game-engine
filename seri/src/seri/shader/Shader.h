@@ -1,8 +1,8 @@
 #pragma once
 
 #include "seri/logging/Logger.h"
+#include "seri/renderer/AuxiliaryStructs.h"
 
-#include <glad/gl.h>
 #include <glm/glm.hpp>
 
 #include <string>

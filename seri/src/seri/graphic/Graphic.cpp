@@ -1,5 +1,6 @@
 #include "Seripch.h"
 
+#include "seri/logging/Logger.h"
 #include "seri/graphic/Graphic.h"
 #include "seri/graphic/Mesh.h"
 #include "seri/graphic/Material.h"
@@ -13,10 +14,22 @@ namespace seri
 
 		if (camera->IsOrtho())
 		{
+			if (GetInstance()._cameraOrtho != nullptr)
+			{
+				LOGGER(warning, "there is already ortho camera");
+				return;
+			}
+
 			GetInstance()._cameraOrtho = camera;
 		}
 		else
 		{
+			if (GetInstance()._cameraPerspective != nullptr)
+			{
+				LOGGER(warning, "there is already perspective camera");
+				return;
+			}
+
 			GetInstance()._cameraPerspective = camera;
 		}
 	}

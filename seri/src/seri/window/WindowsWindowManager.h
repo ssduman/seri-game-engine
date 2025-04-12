@@ -2,9 +2,7 @@
 #pragma warning(disable: 4100)
 
 #include "seri/window/IWindowManager.h"
-
-#include <glad/gl.h>
-#include <GLFW/glfw3.h>
+#include "seri/renderer/AuxiliaryStructs.h"
 
 #include <utility>
 #include <stdexcept>

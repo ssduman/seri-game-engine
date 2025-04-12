@@ -2,10 +2,13 @@
 
 #include "seri/logging/Logger.h"
 
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+
 #include <cstring>
-#include <iostream>
-#include <ws2tcpip.h>
 #include <winsock2.h>
+#include <ws2tcpip.h>
 
 #pragma comment(lib, "ws2_32.lib")
 
@@ -94,9 +97,8 @@ namespace seri::netcode
 
 			_serverAddr.sin_family = AF_INET;
 			_serverAddr.sin_port = htons(re.port);
-			_serverAddr.sin_addr.s_addr = inet_addr(re.ip);
 
-			InetPton(AF_INET, (const WCHAR*)re.ip, &_serverAddr.sin_addr.s_addr);
+			inet_pton(AF_INET, re.ip, &_serverAddr.sin_addr.s_addr);
 
 			LOGGER(info, "[netcode] client connected to port: " << re.port);
 

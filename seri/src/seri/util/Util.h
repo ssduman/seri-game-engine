@@ -18,6 +18,19 @@ namespace seri
 {
 	struct Util
 	{
+		template <typename T>
+		static T Max(T a, T b)
+		{
+			if (a > b)
+			{
+				return a;
+			}
+			else
+			{
+				return b;
+			}
+		}
+
 		static float ToDegree(float radian)
 		{
 			return radian * (180.0f / PI);

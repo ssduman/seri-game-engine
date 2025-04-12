@@ -3,8 +3,6 @@
 #include "seri/texture/Texture.h"
 #include "seri/renderer/AuxiliaryStructs.h"
 
-#include <glad/gl.h>
-
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 
