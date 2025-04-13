@@ -2,6 +2,7 @@
 
 #include <seri/logging/Logger.h>
 #include <seri/graphic/Mesh.h>
+#include <seri/graphic/Model.h>
 #include <seri/graphic/Material.h>
 #include <seri/behaviour/BehaviourBase.h>
 #include <seri/model/ModelImporter.h>
@@ -21,15 +22,16 @@ public:
 		);
 		font_mesh = std::make_unique<seri::Mesh>();
 
-		//models_0 = seri::ModelImporter{}.Load("assets/models/spider.obj");
-		//models_0 = seri::ModelImporter{}.Load("assets/models/tank.fbx");
-		//models_0 = seri::ModelImporter{}.Load("assets/models/blendshape.fbx");
-		//models_0 = seri::ModelImporter{}.Load("assets/models/prop_0.fbx");
-		//models_0 = seri::ModelImporter{}.Load("assets/models/prop_0_crk.fbx");
-		models_0 = seri::ModelImporter{}.Load("assets/models/X Bot@Hip Hop Dancing.fbx");
-		//models_0 = seri::ModelImporter{}.Load("assets/models/Hip Hop Dancing.dae");
+		//model_0 = seri::ModelImporter{}.Load("assets/models/spider.obj");
+		//model_0 = seri::ModelImporter{}.Load("assets/models/tank.fbx");
+		//model_0 = seri::ModelImporter{}.Load("assets/models/blendshape.fbx");
+		//model_0 = seri::ModelImporter{}.Load("assets/models/prop_0.fbx");
+		//model_0 = seri::ModelImporter{}.Load("assets/models/prop_0_crk.fbx");
+		model_0 = seri::ModelImporter{}.Load("assets/models/X Bot@Hip Hop Dancing.fbx");
+		//model_0 = seri::ModelImporter{}.Load("assets/models/Hip Hop Dancing.dae");
 
 		auto entityShader = seri::ShaderManager::Find("entity");
+		auto entityInstancedShader = seri::ShaderManager::Find("entity_instanced");
 		auto entitySkinnedShader = seri::ShaderManager::Find("entity_skinned");
 		auto lineShader = seri::ShaderManager::Find("line");
 		auto gridShader = seri::ShaderManager::Find("grid");
@@ -48,6 +50,10 @@ public:
 		material = std::make_shared<seri::Material>();
 		material->shader = entityShader;
 		material->texture = passageTexture;
+
+		materialInstanced = std::make_shared<seri::Material>();
+		materialInstanced->shader = entityInstancedShader;
+		materialInstanced->texture = passageTexture;
 
 		materialLine = std::make_shared<seri::Material>();
 		materialLine->shader = lineShader;
@@ -76,6 +82,18 @@ public:
 		udpSocketClient->Connect({ "127.0.0.1", 5200 });
 
 		seri::font::FontManager::MakeText(font_mesh, fontInfo, "Hello World");
+
+		for (unsigned int i = 0; i < 100; i++)
+		{
+			float row = i % 20;
+			float col = i / 20;
+			instancedTRSs.push_back(
+				seri::Util::GetTRS(
+				glm::vec3{ row, col, 0.0f },
+				glm::quat(glm::vec3{ glm::radians(i * 4.0f), glm::radians(0.0f), glm::radians(0.0f) }),
+				glm::vec3{ 0.1f, 0.1f, 0.1f })
+			);
+		}
 	}
 
 	void Update() override
@@ -86,25 +104,24 @@ public:
 
 		glm::vec3 pos_3d{ 0.0f, 0.0f, 0.0f };
 		glm::quat rot_3d = glm::quat(glm::vec3{ glm::radians(0.0f), glm::radians(0.0f), glm::radians(0.0f) });
-		//glm::vec3 scale_3d{ 1.0f, 1.0f, 1.0f };
-		glm::vec3 scale_3d{ 0.01f, 0.01f, 0.01f };
+		glm::vec3 scale_3d{ 1.0f, 1.0f, 1.0f };
+		glm::vec3 scale_model{ 0.01f, 0.01f, 0.01f };
 
 		//seri::Graphic::Draw(line_2d, seri::Util::GetIdentityMatrix(), materialLine, seri::Graphic::GetCameraOrtho());
 		//seri::Graphic::Draw(quad_3d, seri::Util::GetTRS(pos_3d, rot_3d, scale_3d), material, seri::Graphic::GetCameraPerspective());
 		//seri::Graphic::Draw(cube_3d, seri::Util::GetTRS(pos_3d, rot_3d, scale_3d), material, seri::Graphic::GetCameraPerspective());
 
-		for (const auto& model : models_0)
-		{
-			model->UpdateAnimation();
-			seri::Graphic::Draw(model, seri::Util::GetTRS(pos_3d, rot_3d, scale_3d), materialSkinned, seri::Graphic::GetCameraPerspective());
-		}
+		seri::Graphic::DrawInstanced(cube_3d, instancedTRSs, materialInstanced, seri::Graphic::GetCameraPerspective());
+
+		//model_0->UpdateAnimations();
+		//seri::Graphic::DrawModel(model_0, seri::Util::GetTRS(pos_3d, rot_3d, scale_model), materialSkinned, seri::Graphic::GetCameraPerspective());
 
 		seri::Graphic::Draw(font_mesh, seri::Util::GetIdentityMatrix(), materialFont, seri::Graphic::GetCameraOrtho());
 
 		seri::Graphic::Draw(quad_2d, seri::Util::GetIdentityMatrix(), materialGrid, seri::Graphic::GetCameraPerspective());
 
-		udpSocketServer->Listen(1);
-		udpSocketClient->SendToServer();
+		//udpSocketServer->Listen(1);
+		//udpSocketClient->SendToServer();
 	}
 
 	void Destroy() override
@@ -118,9 +135,10 @@ private:
 	std::unique_ptr<seri::Mesh> line_2d;
 	std::unique_ptr<seri::Mesh> font_mesh;
 
-	std::vector<std::unique_ptr<seri::Mesh>> models_0;
+	std::unique_ptr<seri::Model> model_0;
 
 	std::shared_ptr<seri::Material> material;
+	std::shared_ptr<seri::Material> materialInstanced;
 	std::shared_ptr<seri::Material> materialLine;
 	std::shared_ptr<seri::Material> materialGrid;
 	std::shared_ptr<seri::Material> materialFont;
@@ -129,5 +147,7 @@ private:
 
 	std::unique_ptr<seri::netcode::Socket> udpSocketServer;
 	std::unique_ptr<seri::netcode::Socket> udpSocketClient;
+
+	std::vector<glm::mat4> instancedTRSs;
 
 };

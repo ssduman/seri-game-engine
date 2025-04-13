@@ -18,6 +18,7 @@
 namespace seri
 {
 	class Mesh;
+	class Model;
 	struct Bone;
 	struct Animation;
 	struct AnimPositionKey;
@@ -36,12 +37,12 @@ namespace seri
 
 		~ModelImporter() = default;
 
-		std::vector<std::unique_ptr<Mesh>> Load(const std::string& modelPath);
+		std::unique_ptr<Model> Load(const std::string& modelPath);
 
 	private:
 		unsigned int FlagBuilder();
 
-		NodeData ProcessNode(const aiScene* ai_scene, const aiNode* ai_node, std::vector<std::unique_ptr<Mesh>>& meshes);
+		NodeData ProcessNode(const aiScene* ai_scene, const aiNode* ai_node, std::unique_ptr<Model>& model);
 
 		void ProcessMesh(const aiScene* ai_scene, const aiMesh* ai_mesh, std::unique_ptr<Mesh>& mesh);
 

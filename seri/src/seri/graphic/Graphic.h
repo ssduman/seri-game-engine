@@ -10,6 +10,7 @@
 namespace seri
 {
 	class Mesh;
+	class Model;
 	class Material;
 
 	class Graphic
@@ -37,7 +38,11 @@ namespace seri
 
 		static std::shared_ptr<ICamera> GetCameraPerspective();
 
-		static void Draw(const std::unique_ptr<Mesh>& mesh, const glm::mat4& trs, std::shared_ptr<Material> material, std::shared_ptr<ICamera> camera);
+		static void Draw(const std::unique_ptr<Mesh>& mesh, const glm::mat4& trs, std::shared_ptr<Material>& material, std::shared_ptr<ICamera>& camera);
+
+		static void DrawModel(const std::unique_ptr<Model>& model, const glm::mat4& trs, std::shared_ptr<Material>& material, std::shared_ptr<ICamera>& camera);
+
+		static void DrawInstanced(const std::unique_ptr<Mesh>& mesh, const std::vector<glm::mat4>& trs, std::shared_ptr<Material>& material, std::shared_ptr<ICamera>& camera);
 
 	private:
 		Graphic()
@@ -59,6 +64,17 @@ namespace seri
 			draw.indices = nullptr;
 
 			glDrawElements(draw.mode, draw.count, draw.type, draw.indices);
+		}
+		
+		static void DrawElementsInstanced(GLsizei count, GLsizei instanceCount, aux::DrawMode drawMode = aux::DrawMode::triangles)
+		{
+			aux::DrawElement draw;
+			draw.mode = aux::toGLenum(drawMode);
+			draw.count = count;
+			draw.type = aux::toGLenum(aux::Type::uint_type);
+			draw.indices = nullptr;
+
+			glDrawElementsInstanced(draw.mode, draw.count, draw.type, 0, instanceCount);
 		}
 
 		static void DrawArrays(GLsizei count, aux::DrawMode drawMode = aux::DrawMode::triangles)

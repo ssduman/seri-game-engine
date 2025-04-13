@@ -12,11 +12,10 @@
 
 #define MAX_BONES 200
 #define MAX_NUM_BONES_PER_VERTEX 4
+#define MAX_INSTANCED_COUNT 256
 
 namespace seri
 {
-	class Graphic;
-
 	struct Bone
 	{
 		unsigned int index{};
@@ -413,6 +412,51 @@ namespace seri
 			Unbind_all();
 		}
 
+		void MakeInstanced(const std::vector<glm::mat4>& modelMatrices)
+		{
+			if (modelMatrices.size() > MAX_INSTANCED_COUNT)
+			{
+				LOGGER(error, "model matrices size exceeds max instanced count");
+				return;
+			}
+
+			if (_vbo_instanced != 0)
+			{
+				return;
+			}
+
+			GenerateInstanced();
+
+			Bind_vao();
+
+			Bind_vbo_instanced();
+
+			unsigned int index = aux::toGLenum(aux::Index::instanced_mat4);
+
+			aux::DataBuffer dataBuffer;
+			dataBuffer.target = aux::toGLenum(aux::Target::vbo);
+			dataBuffer.size = aux::size(modelMatrices);
+			dataBuffer.data = aux::data(modelMatrices);
+			dataBuffer.usage = aux::toGLenum(aux::Usage::static_draw);
+
+			aux::Attribute attr;
+			attr.index = index;
+			attr.size = aux::component(modelMatrices);
+			attr.type = aux::toGLenum(aux::Type::float_type);
+			attr.normalized = false;
+			attr.stride = 0;
+			attr.pointer = nullptr;
+
+			glBufferData(dataBuffer.target, dataBuffer.size, dataBuffer.data, dataBuffer.usage);
+
+			for (unsigned int i = 0; i < 4; i++)
+			{
+				glEnableVertexAttribArray(attr.index + i);
+				glVertexAttribPointer(attr.index + i, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (const GLvoid*)(sizeof(GLfloat) * i * 4));
+				glVertexAttribDivisor(attr.index + i, 1);
+			}
+		}
+
 		bool HasIndex()
 		{
 			return !indices.empty();
@@ -556,9 +600,21 @@ namespace seri
 
 			mesh->drawMode = aux::DrawMode::lines;
 
-			glm::mat4 proj = Graphic::GetCameraOrtho()->getProjection();
-			glm::vec4 beg_ = proj * glm::vec4(beg.x, beg.y, 0.0f, 1.0f);
-			glm::vec4 end_ = proj * glm::vec4(end.x, end.y, 0.0f, 1.0f);
+			float screenW = WindowManagerFactory::instance()->getWidthF();
+			float screenH = WindowManagerFactory::instance()->getHeightF();
+
+			glm::vec4 beg_ = {
+				Util::Map(beg.x, 0.0f, screenW, -1.0f, 1.0f),
+				Util::Map(beg.y, 0.0f, screenH, -1.0f, 1.0f),
+				0.0f,
+				0.0f
+			};
+			glm::vec4 end_ = {
+				Util::Map(end.x, 0.0f, screenW, -1.0f, 1.0f),
+				Util::Map(end.y, 0.0f, screenH, -1.0f, 1.0f),
+				0.0f,
+				0.0f
+			};
 
 			mesh->vertices = {
 				{beg_.x, beg_.y, 0.0f},
@@ -571,7 +627,6 @@ namespace seri
 		}
 
 	private:
-
 		void Generate()
 		{
 			glGenVertexArrays(1, &_vao);
@@ -581,6 +636,11 @@ namespace seri
 			glGenBuffers(1, &_vbo_col);
 			glGenBuffers(1, &_vbo_skin);
 			glGenBuffers(1, &_ebo);
+		}
+
+		void GenerateInstanced()
+		{
+			glGenBuffers(1, &_vbo_instanced);
 		}
 
 		void Bind_vao()
@@ -611,6 +671,11 @@ namespace seri
 		void Bind_vbo_skin()
 		{
 			glBindBuffer(GL_ARRAY_BUFFER, _vbo_skin);
+		}
+
+		void Bind_vbo_instanced()
+		{
+			glBindBuffer(GL_ARRAY_BUFFER, _vbo_instanced);
 		}
 
 		void Bind_index()
@@ -647,6 +712,7 @@ namespace seri
 			glDeleteBuffers(1, &_vbo_uv0);
 			glDeleteBuffers(1, &_vbo_uv1);
 			glDeleteBuffers(1, &_vbo_skin);
+			glDeleteBuffers(1, &_vbo_instanced);
 			glDeleteBuffers(1, &_ebo);
 		}
 
@@ -767,6 +833,7 @@ namespace seri
 		unsigned int _vbo_uv1{ 0 };
 		unsigned int _vbo_col{ 0 };
 		unsigned int _vbo_skin{ 0 };
+		unsigned int _vbo_instanced{ 0 };
 		unsigned int _ebo{ 0 };
 
 		float animTime{ 0.0f };

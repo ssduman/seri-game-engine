@@ -22,6 +22,10 @@ namespace seri::aux
 		normal = 3,
 		skin_bone_id = 4,
 		skin_weight = 5,
+		instanced_mat4 = 6,
+		instanced_mat4_reserved_1 = 7,
+		instanced_mat4_reserved_2 = 8,
+		instanced_mat4_reserved_3 = 9,
 	};
 
 	enum class Type : GLenum
@@ -228,7 +232,8 @@ namespace seri::aux
 			size(size_),
 			stride(size * sizeof(GLfloat)),
 			pointer(pointer_)
-		{}
+		{
+		}
 
 		GLuint index = 0;
 		GLint size = 0;
@@ -245,20 +250,23 @@ namespace seri::aux
 		DataBuffer(GLsizeiptr size_)
 			:
 			size(size_)
-		{}
+		{
+		}
 
 		DataBuffer(GLsizeiptr size_, const void* data_)
 			:
 			size(size_),
 			data(data_)
-		{}
+		{
+		}
 
 		DataBuffer(Target target_, GLsizeiptr size_, const void* data_)
 			:
 			target(toGLenum(target_)),
 			size(size_),
 			data(data_)
-		{}
+		{
+		}
 
 		DataBuffer(Target target_, GLsizeiptr size_, const void* data_, Usage usage_)
 			:
@@ -266,7 +274,8 @@ namespace seri::aux
 			size(size_),
 			data(data_),
 			usage(toGLenum(usage_))
-		{}
+		{
+		}
 
 		GLenum target = GL_ARRAY_BUFFER;
 		GLsizeiptr size = 0;
@@ -283,7 +292,8 @@ namespace seri::aux
 			offset(offset_),
 			size(size_),
 			data(data_)
-		{}
+		{
+		}
 
 		SubDataBuffer(Target target_, GLintptr offset_, GLsizeiptr size_, const void* data_)
 			:
@@ -291,7 +301,8 @@ namespace seri::aux
 			offset(offset_),
 			size(size_),
 			data(data_)
-		{}
+		{
+		}
 
 		GLenum target = GL_ARRAY_BUFFER;
 		GLintptr offset = 0;
@@ -307,7 +318,8 @@ namespace seri::aux
 			:
 			size(size_),
 			data(data_)
-		{}
+		{
+		}
 
 		MapBuffer(Target target_, Access access_, size_t size_, const void* data_)
 			:
@@ -315,7 +327,8 @@ namespace seri::aux
 			access(toGLenum(access_)),
 			size(size_),
 			data(data_)
-		{}
+		{
+		}
 
 		GLenum target = GL_ARRAY_BUFFER;
 		GLenum access = GL_WRITE_ONLY;

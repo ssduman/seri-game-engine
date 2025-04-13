@@ -5,6 +5,7 @@
 #include "seri/graphic/Graphic.h"
 #include "seri/graphic/Mesh.h"
 #include "seri/graphic/Material.h"
+#include "seri/graphic/Model.h"
 #include "seri/camera/ICamera.h"
 
 #include <string>
@@ -28,7 +29,7 @@ namespace seri
 			;
 	}
 
-	std::vector<std::unique_ptr<Mesh>> ModelImporter::Load(const std::string& modelPath)
+	std::unique_ptr<Model> ModelImporter::Load(const std::string& modelPath)
 	{
 		Assimp::Importer ai_importer;
 
@@ -44,7 +45,8 @@ namespace seri
 
 		std::string modelName = std::filesystem::path(modelPath).filename().string();
 
-		std::vector<std::unique_ptr<Mesh>> meshes{};
+		std::unique_ptr<Model> model = std::make_unique<Model>();
+		model->meshes.reserve(ai_scene->mNumMeshes);
 
 		glm::mat4 globalTransformation = ConvertMatrix(ai_scene->mRootNode->mTransformation);
 
@@ -54,11 +56,11 @@ namespace seri
 			triCount += ai_scene->mMeshes[i]->mNumFaces;
 		}
 
-		NodeData nodeData = ProcessNode(ai_scene, ai_scene->mRootNode, meshes);
+		NodeData nodeData = ProcessNode(ai_scene, ai_scene->mRootNode, model);
 
 		Animation animation = LoadAnimations(ai_scene);
 
-		for (auto& mesh : meshes)
+		for (auto& mesh : model->meshes)
 		{
 			mesh->transformation = globalTransformation * mesh->transformation;
 			mesh->nodeData = nodeData;
@@ -72,14 +74,14 @@ namespace seri
 		std::string hasAnim = ai_scene->HasAnimations() ? "yes" : "no";
 
 		LOGGER(info,
-			"loaded '" << modelName << "', mesh: " << meshes.size() << ", tri: " << triCount <<
+			"loaded '" << modelName << "', mesh: " << model->meshes.size() << ", tri: " << triCount <<
 			", mat: " << hasMat << ", anim: " << hasAnim << ", skeleton: " << hasSkel
 		);
 
-		return meshes;
+		return model;
 	}
 
-	NodeData ModelImporter::ProcessNode(const aiScene* ai_scene, const aiNode* ai_node, std::vector<std::unique_ptr<Mesh>>& meshes)
+	NodeData ModelImporter::ProcessNode(const aiScene* ai_scene, const aiNode* ai_node, std::unique_ptr<Model>& model)
 	{
 		NodeData nodeData;
 		nodeData.name = ai_node->mName.C_Str();
@@ -100,12 +102,12 @@ namespace seri
 
 			LoadBones(ai_mesh, mesh);
 
-			meshes.emplace_back(std::move(mesh));
+			model->meshes.emplace_back(std::move(mesh));
 		}
 
 		for (unsigned int i = 0; i < ai_node->mNumChildren; i++)
 		{
-			nodeData.children.emplace_back(ProcessNode(ai_scene, ai_node->mChildren[i], meshes));
+			nodeData.children.emplace_back(ProcessNode(ai_scene, ai_node->mChildren[i], model));
 		}
 
 		return nodeData;
