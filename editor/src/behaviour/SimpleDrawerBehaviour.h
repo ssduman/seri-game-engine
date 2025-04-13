@@ -87,12 +87,11 @@ public:
 		{
 			float row = i % 20;
 			float col = i / 20;
-			instancedTRSs.push_back(
-				seri::Util::GetTRS(
+			instancedTRSs.push_back(seri::Util::GetTRS(
 				glm::vec3{ row, col, 0.0f },
 				glm::quat(glm::vec3{ glm::radians(i * 4.0f), glm::radians(0.0f), glm::radians(0.0f) }),
-				glm::vec3{ 0.1f, 0.1f, 0.1f })
-			);
+				glm::vec3{ 0.1f, 0.1f, 0.1f }
+			));
 		}
 	}
 
@@ -111,6 +110,12 @@ public:
 		//seri::Graphic::Draw(quad_3d, seri::Util::GetTRS(pos_3d, rot_3d, scale_3d), material, seri::Graphic::GetCameraPerspective());
 		//seri::Graphic::Draw(cube_3d, seri::Util::GetTRS(pos_3d, rot_3d, scale_3d), material, seri::Graphic::GetCameraPerspective());
 
+		for (unsigned int i = 0; i < 100; i++)
+		{
+			float row = i % 20;
+			float col = i / 20;
+			instancedTRSs[i] *= glm::mat4_cast(glm::quat(glm::vec3{ glm::radians(1.0f), glm::radians(0.0f), glm::radians(0.0f) }));
+		}
 		seri::Graphic::DrawInstanced(cube_3d, instancedTRSs, materialInstanced, seri::Graphic::GetCameraPerspective());
 
 		//model_0->UpdateAnimations();

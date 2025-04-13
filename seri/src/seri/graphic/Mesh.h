@@ -422,6 +422,14 @@ namespace seri
 
 			if (_vbo_instanced != 0)
 			{
+				Bind_vao();
+
+				Bind_vbo_instanced();
+
+				void* ptr = glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+				memcpy(ptr, modelMatrices.data(), modelMatrices.size() * sizeof(glm::mat4));
+				glUnmapBuffer(GL_ARRAY_BUFFER);
+
 				return;
 			}
 
