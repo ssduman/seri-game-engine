@@ -54,8 +54,8 @@ public:
 		cameraPropertiesPerspective.height = windowProperties.windowHeight;
 		cameraPropertiesPerspective.isOrtho = false;
 		cameraPropertiesPerspective.aspect = windowManager->getAspect();
-		cameraPropertiesPerspective.rotation = { 0.0f, -45.0f, 0.0f };
-		cameraPropertiesPerspective.position = { -6.0f, 6.0f, 0.0f };
+		cameraPropertiesPerspective.position = { 0.0f, 4.0f, 6.0f };
+		cameraPropertiesPerspective.rotation = { -90.0f, -30.0f, 0.0f };
 		auto cameraPerspective = std::make_shared<Camera>(std::move(cameraPropertiesPerspective));
 		cameraPerspective->init();
 

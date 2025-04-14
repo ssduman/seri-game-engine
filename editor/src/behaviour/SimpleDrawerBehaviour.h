@@ -7,6 +7,7 @@
 #include <seri/behaviour/BehaviourBase.h>
 #include <seri/model/ModelImporter.h>
 #include <seri/netcode/Socket.h>
+#include <seri/random/Random.h>
 
 class SimpleDrawerBehaviour : public seri::BehaviourBase
 {
@@ -89,7 +90,7 @@ public:
 			float col = i / 20;
 			instancedTRSs.push_back(seri::Util::GetTRS(
 				glm::vec3{ row, col, 0.0f },
-				glm::quat(glm::vec3{ glm::radians(i * 4.0f), glm::radians(0.0f), glm::radians(0.0f) }),
+				glm::quat(glm::vec3{ glm::radians(i * 6.0f), glm::radians(0.0f), glm::radians(0.0f) }),
 				glm::vec3{ 0.1f, 0.1f, 0.1f }
 			));
 		}
@@ -114,12 +115,12 @@ public:
 		{
 			float row = i % 20;
 			float col = i / 20;
-			instancedTRSs[i] *= glm::mat4_cast(glm::quat(glm::vec3{ glm::radians(1.0f), glm::radians(0.0f), glm::radians(0.0f) }));
+			instancedTRSs[i] *= glm::mat4_cast(glm::quat(glm::vec3{ glm::radians(seri::Random::Range(0.5f, 2.0f)), glm::radians(seri::Random::Range(0.5f, 2.0f)), glm::radians(0.0f) }));
 		}
 		seri::Graphic::DrawInstanced(cube_3d, instancedTRSs, materialInstanced, seri::Graphic::GetCameraPerspective());
 
-		//model_0->UpdateAnimations();
-		//seri::Graphic::DrawModel(model_0, seri::Util::GetTRS(pos_3d, rot_3d, scale_model), materialSkinned, seri::Graphic::GetCameraPerspective());
+		model_0->UpdateAnimations();
+		seri::Graphic::DrawModel(model_0, seri::Util::GetTRS(pos_3d, rot_3d, scale_model), materialSkinned, seri::Graphic::GetCameraPerspective());
 
 		seri::Graphic::Draw(font_mesh, seri::Util::GetIdentityMatrix(), materialFont, seri::Graphic::GetCameraOrtho());
 

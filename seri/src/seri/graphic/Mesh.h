@@ -281,7 +281,7 @@ namespace seri
 
 			Bind_vao();
 
-			if (!vertices.empty())
+			if (vertices.size() > 0)
 			{
 				Bind_vbo_vertex();
 
@@ -306,7 +306,7 @@ namespace seri
 				glVertexAttribPointer(attr.index, attr.size, attr.type, attr.normalized, attr.stride, attr.pointer);
 			}
 
-			if (!uv0s.empty())
+			if (uv0s.size() > 0)
 			{
 				Bind_vbo_uv0();
 
@@ -331,7 +331,7 @@ namespace seri
 				glVertexAttribPointer(attr.index, attr.size, attr.type, attr.normalized, attr.stride, attr.pointer);
 			}
 
-			if (!colors.empty())
+			if (colors.size() > 0)
 			{
 				Bind_vbo_color();
 
@@ -356,7 +356,32 @@ namespace seri
 				glVertexAttribPointer(attr.index, attr.size, attr.type, attr.normalized, attr.stride, attr.pointer);
 			}
 
-			if (!indices.empty())
+			if (normals.size() > 0)
+			{
+				Bind_vbo_normal();
+
+				unsigned int index = aux::toGLenum(aux::Index::normal);
+
+				aux::DataBuffer dataBuffer;
+				dataBuffer.target = aux::toGLenum(aux::Target::vbo);
+				dataBuffer.size = aux::size(normals);
+				dataBuffer.data = aux::data(normals);
+				dataBuffer.usage = aux::toGLenum(aux::Usage::static_draw);
+
+				aux::Attribute attr;
+				attr.index = index;
+				attr.size = aux::component(normals);
+				attr.type = aux::toGLenum(aux::Type::float_type);
+				attr.normalized = false;
+				attr.stride = 0;
+				attr.pointer = nullptr;
+
+				glEnableVertexAttribArray(index);
+				glBufferData(dataBuffer.target, dataBuffer.size, dataBuffer.data, dataBuffer.usage);
+				glVertexAttribPointer(attr.index, attr.size, attr.type, attr.normalized, attr.stride, attr.pointer);
+			}
+
+			if (indices.size() > 0)
 			{
 				Bind_index();
 
@@ -369,7 +394,7 @@ namespace seri
 				glBufferData(dataBuffer.target, dataBuffer.size, dataBuffer.data, dataBuffer.usage);
 			}
 
-			if (!bonesForVertices.empty())
+			if (bonesForVertices.size() > 0)
 			{
 				Bind_vbo_skin();
 
@@ -407,7 +432,7 @@ namespace seri
 				glVertexAttribPointer(attr_weight.index, attr_weight.size, attr_weight.type, attr_weight.normalized, attr_weight.stride, attr_weight.pointer);
 			}
 
-			count = !indices.empty() ? static_cast<unsigned int>(indices.size()) : static_cast<unsigned int>(vertices.size());
+			count = indices.size() > 0 ? static_cast<unsigned int>(indices.size()) : static_cast<unsigned int>(vertices.size());
 
 			Unbind_all();
 		}
@@ -640,8 +665,8 @@ namespace seri
 			glGenVertexArrays(1, &_vao);
 			glGenBuffers(1, &_vbo_ver);
 			glGenBuffers(1, &_vbo_uv0);
-			glGenBuffers(1, &_vbo_uv1);
 			glGenBuffers(1, &_vbo_col);
+			glGenBuffers(1, &_vbo_normal);
 			glGenBuffers(1, &_vbo_skin);
 			glGenBuffers(1, &_ebo);
 		}
@@ -666,14 +691,14 @@ namespace seri
 			glBindBuffer(GL_ARRAY_BUFFER, _vbo_uv0);
 		}
 
-		void Bind_vbo_uv1()
-		{
-			glBindBuffer(GL_ARRAY_BUFFER, _vbo_uv1);
-		}
-
 		void Bind_vbo_color()
 		{
 			glBindBuffer(GL_ARRAY_BUFFER, _vbo_col);
+		}
+
+		void Bind_vbo_normal()
+		{
+			glBindBuffer(GL_ARRAY_BUFFER, _vbo_normal);
 		}
 
 		void Bind_vbo_skin()
@@ -718,7 +743,8 @@ namespace seri
 			glDeleteVertexArrays(1, &_vao);
 			glDeleteBuffers(1, &_vbo_ver);
 			glDeleteBuffers(1, &_vbo_uv0);
-			glDeleteBuffers(1, &_vbo_uv1);
+			glDeleteBuffers(1, &_vbo_col);
+			glDeleteBuffers(1, &_vbo_normal);
 			glDeleteBuffers(1, &_vbo_skin);
 			glDeleteBuffers(1, &_vbo_instanced);
 			glDeleteBuffers(1, &_ebo);
@@ -838,8 +864,8 @@ namespace seri
 		unsigned int _vao{ 0 };
 		unsigned int _vbo_ver{ 0 };
 		unsigned int _vbo_uv0{ 0 };
-		unsigned int _vbo_uv1{ 0 };
 		unsigned int _vbo_col{ 0 };
+		unsigned int _vbo_normal{ 0 };
 		unsigned int _vbo_skin{ 0 };
 		unsigned int _vbo_instanced{ 0 };
 		unsigned int _ebo{ 0 };

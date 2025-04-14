@@ -1,15 +1,15 @@
 #pragma once
 
+#include "seri/util/Util.h"
+
 namespace seri
 {
-	struct Random
+	class Random
 	{
-		Random();
-
-		unsigned long long get();
+	public:
+		static float Range(float min, float max);
 
 	private:
-		unsigned long long _random;
 
 	};
 }

@@ -20,6 +20,7 @@ namespace seri
 	{
 		return
 			aiProcess_Triangulate |
+			//aiProcess_GenNormals |
 			aiProcess_GenSmoothNormals |
 			//aiProcess_FlipUVs |
 			aiProcess_CalcTangentSpace |
