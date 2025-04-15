@@ -25,13 +25,14 @@ void main()
 {
     sent_uv = in_uv;
     sent_color = in_color;
-    sent_normal = normalize(mat3(transpose(inverse(u_model))) * in_normal);
 
     mat4 boneTransform = 
         u_bones[in_bone_ids[0]] * in_weights[0] +
         u_bones[in_bone_ids[1]] * in_weights[1] +
         u_bones[in_bone_ids[2]] * in_weights[2] +
         u_bones[in_bone_ids[3]] * in_weights[3];
+
+    sent_normal = normalize(mat3(transpose(inverse(u_model * boneTransform))) * in_normal);
 
     gl_Position =  u_projection * u_view * u_model * (boneTransform * vec4(in_vertex, 1.0));
 }
@@ -46,6 +47,9 @@ in vec2 sent_uv;
 in vec4 sent_color;
 in vec3 sent_normal;
 
+uniform vec3 u_view_pos;
+uniform vec3 u_light_dir;
+uniform vec4 u_light_color;
 uniform vec4 u_color = vec4(1.0, 1.0, 1.0, 1.0);
 uniform sampler2D u_texture;
 
@@ -53,7 +57,11 @@ out vec4 final_color;
 
 void main()
 {
-    final_color = texture(u_texture, sent_uv);
+    vec3 light_dir_norm = normalize(-u_light_dir);
+
+    vec3 diffuse = max(dot(sent_normal, light_dir_norm), 0.0) * u_light_color.xyz;
+
+    final_color = texture(u_texture, sent_uv) * vec4(diffuse.xyz, 1.0);
 }
 
 #end_fs

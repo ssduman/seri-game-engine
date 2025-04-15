@@ -1,6 +1,7 @@
 #pragma once
 
 #include <seri/logging/Logger.h>
+#include <seri/light/Light.h>
 #include <seri/graphic/Mesh.h>
 #include <seri/graphic/Model.h>
 #include <seri/graphic/Material.h>
@@ -124,7 +125,7 @@ public:
 
 		seri::Graphic::Draw(font_mesh, seri::Util::GetIdentityMatrix(), materialFont, seri::Graphic::GetCameraOrtho());
 
-		seri::Graphic::Draw(quad_2d, seri::Util::GetIdentityMatrix(), materialGrid, seri::Graphic::GetCameraPerspective());
+		//seri::Graphic::Draw(quad_2d, seri::Util::GetIdentityMatrix(), materialGrid, seri::Graphic::GetCameraPerspective());
 
 		//udpSocketServer->Listen(1);
 		//udpSocketClient->SendToServer();
@@ -135,6 +136,8 @@ public:
 	}
 
 private:
+	seri::Light light;
+
 	std::unique_ptr<seri::Mesh> quad_2d;
 	std::unique_ptr<seri::Mesh> quad_3d;
 	std::unique_ptr<seri::Mesh> cube_3d;

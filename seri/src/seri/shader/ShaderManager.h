@@ -209,6 +209,11 @@ namespace seri
 		{
 			glUniform3fv(ShaderManager::GetUniformLocation(shader, name), 1, &val[0]);
 		}
+		
+		static void SetVec3(const std::shared_ptr<Shader>& shader, const char* name, const glm::vec3& val)
+		{
+			glUniform3fv(ShaderManager::GetUniformLocation(shader, name), 1, &val[0]);
+		}
 
 		static void SetVec4(const Shader& shader, const char* name, const glm::vec4& val)
 		{
