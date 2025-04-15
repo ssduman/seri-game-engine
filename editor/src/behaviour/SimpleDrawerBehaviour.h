@@ -90,7 +90,7 @@ public:
 			float row = i % 20;
 			float col = i / 20;
 			instancedTRSs.push_back(seri::Util::GetTRS(
-				glm::vec3{ row, col, 0.0f },
+				glm::vec3{ 4.0f + row, col, 0.0f },
 				glm::quat(glm::vec3{ glm::radians(i * 6.0f), glm::radians(0.0f), glm::radians(0.0f) }),
 				glm::vec3{ 0.1f, 0.1f, 0.1f }
 			));
