@@ -23,6 +23,8 @@
 
 #include "seri/camera/ICamera.h"
 
+#include "seri/sound/SoundManager.h"
+
 #include "seri/texture/Color.h"
 #include "seri/texture/Typer.h"
 #include "seri/texture/Skybox.h"

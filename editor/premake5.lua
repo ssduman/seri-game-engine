@@ -39,6 +39,7 @@ project "Editor"
     "%{IncludeDir.assimp}",
     "%{IncludeDir.freetype}",
     "%{IncludeDir.nlohmann}",
+    "%{IncludeDir.miniaudio}",
   }
 
   links {

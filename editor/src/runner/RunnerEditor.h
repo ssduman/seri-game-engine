@@ -30,6 +30,7 @@ public:
 		seri::Texture::SetTextureFlip(true);
 		seri::ShaderManager::Init("assets/shaders/");
 		seri::font::FontManager::Init("assets/fonts/");
+		seri::sound::SoundManager::Init("assets/sounds/");
 
 		seri::SceneBuilder builder;
 		auto rootScene = builder.setName("Main").build();

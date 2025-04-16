@@ -9,6 +9,7 @@ IncludeDir["ImGui"] = "%{wks.location}/seri/vendor/imgui"
 IncludeDir["assimp"] = "%{wks.location}/seri/vendor/assimp/include"
 IncludeDir["freetype"] = "%{wks.location}/seri/vendor/freetype/include"
 IncludeDir["nlohmann"] = "%{wks.location}/seri/vendor/nlohmann"
+IncludeDir["miniaudio"] = "%{wks.location}/seri/vendor/miniaudio"
 
 workspace "Seri Game Engine"
   architecture "x86_64"
