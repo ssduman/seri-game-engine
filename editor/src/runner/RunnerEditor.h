@@ -31,6 +31,7 @@ public:
 		seri::ShaderManager::Init("assets/shaders/");
 		seri::font::FontManager::Init("assets/fonts/");
 		seri::sound::SoundManager::Init("assets/sounds/");
+		//seri::sound::SoundManager::Play("jingles/Preview.wav");
 
 		seri::SceneBuilder builder;
 		auto rootScene = builder.setName("Main").build();
@@ -78,7 +79,7 @@ public:
 
 		seri::BehaviourManager::InitBehaviours();
 
-		LOGGER(info, "starting seri game engine - editor loop");
+		LOGGER(info, "[editor] starting seri game engine - editor loop");
 
 		while (!windowManager->windowShouldClose())
 		{
@@ -104,7 +105,7 @@ public:
 
 		seri::BehaviourManager::DestroyBehaviours();
 
-		LOGGER(info, "seri game engine - editor loop stopped");
+		LOGGER(info, "[editor] seri game engine - editor loop stopped");
 	}
 
 private:

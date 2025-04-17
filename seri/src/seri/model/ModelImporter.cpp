@@ -37,8 +37,8 @@ namespace seri
 		const aiScene* ai_scene = ai_importer.ReadFile(modelPath, FlagBuilder());
 		if (!ai_scene || ai_scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !ai_scene->mRootNode)
 		{
-			LOGGER(error, "read model path '" << modelPath << "' failed: " << ai_importer.GetErrorString());
-			return {};
+			LOGGER(error, "[model] read model path '" << modelPath << "' failed: " << ai_importer.GetErrorString());
+			return nullptr;
 		}
 
 		_modelDirectory = modelPath.substr(0, modelPath.find_last_of("/")) + "/";
@@ -70,12 +70,12 @@ namespace seri
 			mesh->Build();
 		}
 
-		std::string hasMat = ai_scene->HasMaterials() ? "yes" : "no";
-		std::string hasSkel = ai_scene->hasSkeletons() ? "yes" : "no";
-		std::string hasAnim = ai_scene->HasAnimations() ? "yes" : "no";
+		std::string hasMat = ai_scene->HasMaterials() ? "y" : "n";
+		std::string hasSkel = ai_scene->hasSkeletons() ? "y" : "n";
+		std::string hasAnim = ai_scene->HasAnimations() ? "y" : "n";
 
 		LOGGER(info,
-			"loaded '" << modelName << "', mesh: " << model->meshes.size() << ", tri: " << triCount <<
+			"[model] loaded '" << modelName << "', mesh: " << model->meshes.size() << ", tri: " << triCount <<
 			", mat: " << hasMat << ", anim: " << hasAnim << ", skeleton: " << hasSkel
 		);
 
@@ -223,7 +223,7 @@ namespace seri
 			}
 			else
 			{
-				LOGGER(error, "getting " << GetString(ai_tt) << " texture with index " << i << " failed");
+				LOGGER(error, "[model] getting " << GetString(ai_tt) << " texture with index " << i << " failed");
 			}
 		}
 	}
@@ -303,7 +303,7 @@ namespace seri
 			return;
 		}
 
-		LOGGER(info, "mesh '" << ai_mesh->mName.C_Str() << "' has " << ai_mesh->mNumBones << " bones");
+		LOGGER(info, "[model] mesh '" << ai_mesh->mName.C_Str() << "' has " << ai_mesh->mNumBones << " bones");
 
 		mesh->bonesForVertices.resize(mesh->vertices.size());
 
@@ -331,7 +331,7 @@ namespace seri
 				mesh->bones[boneIndex] = Bone{ boneIndex, boneName, boneOffsetMatrix };
 			}
 
-			//LOGGER(info, "mesh: " << mesh->name << ", bone index: " << boneIndex << ", bone name: " << boneName);
+			//LOGGER(info, "[model] mesh: " << mesh->name << ", bone index: " << boneIndex << ", bone name: " << boneName);
 
 			for (unsigned int j = 0; j < ai_bone->mNumWeights; j++)
 			{
@@ -345,7 +345,7 @@ namespace seri
 	{
 		if (!ai_scene->HasAnimations())
 		{
-			LOGGER(info, "no animations found");
+			LOGGER(info, "[model] no animations found");
 			return {};
 		}
 
@@ -374,7 +374,7 @@ namespace seri
 
 				if (animation.nodeAnimations.find(nodeName) != animation.nodeAnimations.end())
 				{
-					LOGGER(error, "duplicate node animation found: " << nodeName);
+					LOGGER(error, "[model] duplicate node animation found: " << nodeName);
 					continue;
 				}
 
@@ -382,10 +382,10 @@ namespace seri
 			}
 
 			LOGGER(info,
-				"anim: " << animName << ", duration: " << duration << ", has " <<
-				ai_animation->mNumChannels << " skeletal channels, " <<
+				"[model] anim: " << animName << ", duration: " << duration << ", has " <<
+				ai_animation->mNumChannels << " skeletal, " <<
 				ai_animation->mNumMeshChannels << " mesh channels, " <<
-				ai_animation->mNumMorphMeshChannels << " morph mesh channels"
+				ai_animation->mNumMorphMeshChannels << " morph mesh"
 			);
 		}
 
@@ -461,7 +461,7 @@ namespace seri
 			std::string blendShapeName = ai_anim_mesh->mName.C_Str();
 			float weight = ai_anim_mesh->mWeight;
 
-			LOGGER(info, "blend shape name: '" << blendShapeName << "', weight: " << weight);
+			LOGGER(info, "[model] blend shape name: '" << blendShapeName << "', weight: " << weight);
 
 			if (ai_anim_mesh->HasPositions())
 			{
@@ -472,7 +472,7 @@ namespace seri
 				}
 			}
 
-			LOGGER(info, "loaded " << ai_mesh->mNumAnimMeshes << " blend shape");
+			LOGGER(info, "[model] loaded " << ai_mesh->mNumAnimMeshes << " blend shape");
 		}
 	}
 

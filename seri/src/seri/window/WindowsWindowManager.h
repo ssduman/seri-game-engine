@@ -19,14 +19,14 @@ namespace seri
 			glfwDestroyWindow(_window);
 			glfwTerminate();
 
-			LOGGER(info, "windows window manager destroyed and terminated successfully");
+			LOGGER(info, "[window] windows window manager destroyed and terminated successfully");
 		}
 
 		void init() override
 		{
 			if (_initialized)
 			{
-				throw std::runtime_error("window manager is already initialized");
+				throw std::runtime_error("[window] window manager is already initialized");
 			}
 
 			initglfw();
@@ -53,7 +53,7 @@ namespace seri
 
 			_initialized = true;
 
-			LOGGER(info, "window manager created successfully");
+			LOGGER(info, "[window] window manager created successfully");
 		}
 
 		double getTime() override
@@ -206,10 +206,10 @@ namespace seri
 		{
 			if (!glfwInit())
 			{
-				throw std::runtime_error("glfw init error");
+				throw std::runtime_error("[window] glfw init error");
 			}
 
-			LOGGER(info, "gflw version '" << glfwGetVersionString() << "' init succeeded");
+			LOGGER(info, "[window] gflw version '" << glfwGetVersionString() << "' init succeeded");
 		}
 
 		void initglad()
@@ -217,10 +217,10 @@ namespace seri
 			int version = gladLoadGL(glfwGetProcAddress);
 			if (version == 0)
 			{
-				throw std::runtime_error("glad load error");
+				throw std::runtime_error("[window] glad load error");
 			}
 
-			LOGGER(info, "loaded opengl " << GLAD_VERSION_MAJOR(version) << "." << GLAD_VERSION_MINOR(version));
+			LOGGER(info, "[window] loaded opengl " << GLAD_VERSION_MAJOR(version) << "." << GLAD_VERSION_MINOR(version));
 		}
 
 		void createWindow()
@@ -230,7 +230,7 @@ namespace seri
 				GLFWmonitor* glfwMonitor = glfwGetPrimaryMonitor();
 				if (!glfwMonitor)
 				{
-					throw std::runtime_error("getting glfw monitor failed");
+					throw std::runtime_error("[window] getting glfw monitor failed");
 				}
 
 				int monXPos, monYPos;
@@ -244,18 +244,18 @@ namespace seri
 
 			if (!_window)
 			{
-				throw std::runtime_error("glfw window creating error");
+				throw std::runtime_error("[window] glfw window creating error");
 			}
 
-			LOGGER(info, "glfw window created");
+			LOGGER(info, "[window] glfw window created");
 		}
 
 		void logInfoStrings()
 		{
-			LOGGER(info, "vendor: " << glGetString(GL_VENDOR));
-			LOGGER(info, "version: " << glGetString(GL_VERSION));
-			LOGGER(info, "renderer: " << glGetString(GL_RENDERER));
-			LOGGER(info, "shading language version: " << glGetString(GL_SHADING_LANGUAGE_VERSION));
+			LOGGER(info, "[window] vendor: " << glGetString(GL_VENDOR));
+			LOGGER(info, "[window] version: " << glGetString(GL_VERSION));
+			LOGGER(info, "[window] renderer: " << glGetString(GL_RENDERER));
+			LOGGER(info, "[window] shading language version: " << glGetString(GL_SHADING_LANGUAGE_VERSION));
 		}
 
 		void setEventCallbacks()
@@ -448,7 +448,7 @@ namespace seri
 				{
 					if (auto windowManager = static_cast<WindowsWindowManager*>(glfwGetWindowUserPointer(window)))
 					{
-						//LOGGER(verbose, "window new position: " << xpos << ", " << ypos);
+						//LOGGER(verbose, "[window] window new position: " << xpos << ", " << ypos);
 					}
 				}
 			);
@@ -458,7 +458,7 @@ namespace seri
 				{
 					if (auto windowManager = static_cast<WindowsWindowManager*>(glfwGetWindowUserPointer(window)))
 					{
-						LOGGER(verbose, "window new size: " << width << ", " << height);
+						LOGGER(verbose, "[window] window new size: " << width << ", " << height);
 					}
 				}
 			);
@@ -468,7 +468,7 @@ namespace seri
 				{
 					if (auto windowManager = static_cast<WindowsWindowManager*>(glfwGetWindowUserPointer(window)))
 					{
-						//LOGGER(verbose, "window refresh");
+						//LOGGER(verbose, "[window] window refresh");
 					}
 				}
 			);
@@ -478,7 +478,7 @@ namespace seri
 				{
 					if (auto windowManager = static_cast<WindowsWindowManager*>(glfwGetWindowUserPointer(window)))
 					{
-						LOGGER(verbose, "window focus state: " << (focused ? "focused" : "not focused"));
+						LOGGER(verbose, "[window] window focus state: " << (focused ? "focused" : "not focused"));
 					}
 				}
 			);
@@ -488,7 +488,7 @@ namespace seri
 				{
 					if (auto windowManager = static_cast<WindowsWindowManager*>(glfwGetWindowUserPointer(window)))
 					{
-						LOGGER(verbose, "window iconify state: " << (iconified ? "iconified" : "not iconified"));
+						LOGGER(verbose, "[window] window iconify state: " << (iconified ? "iconified" : "not iconified"));
 					}
 				}
 			);
@@ -498,7 +498,7 @@ namespace seri
 				{
 					if (auto windowManager = static_cast<WindowsWindowManager*>(glfwGetWindowUserPointer(window)))
 					{
-						LOGGER(verbose, "window maximize state: " << (maximized ? "maximized" : "not maximized"));
+						LOGGER(verbose, "[window] window maximize state: " << (maximized ? "maximized" : "not maximized"));
 					}
 				}
 			);
@@ -508,7 +508,7 @@ namespace seri
 				{
 					if (auto windowManager = static_cast<WindowsWindowManager*>(glfwGetWindowUserPointer(window)))
 					{
-						LOGGER(verbose, "window new scale: " << xscale << ", " << yscale);
+						LOGGER(verbose, "[window] window new scale: " << xscale << ", " << yscale);
 					}
 				}
 			);
@@ -517,7 +517,7 @@ namespace seri
 			glfwSetErrorCallback(
 				[](int error, const char* description)
 				{
-					LOGGER(error, "glfw error " << error << ": " << description);
+					LOGGER(error, "[window] glfw error " << error << ": " << description);
 				}
 			);
 		}
@@ -527,7 +527,7 @@ namespace seri
 			GLenum err;
 			while ((err = glGetError()) != GL_NO_ERROR)
 			{
-				LOGGER(error, "gl error occurred: " << err);
+				LOGGER(error, "[window] gl error occurred: " << err);
 			}
 		}
 
@@ -636,7 +636,7 @@ namespace seri
 						return;
 					}
 
-					LOGGER(debug, "gl debug message:" << "\n"
+					LOGGER(debug, "[window] gl debug message:" << "\n"
 						<< "severity: " << getDebugSeverityString(severity) << "\n"
 						<< "type: " << getDebugTypeString(type) << "\n"
 						<< "source: " << getDebugSourceString(source) << "\n"

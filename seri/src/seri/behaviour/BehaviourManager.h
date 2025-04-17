@@ -16,15 +16,15 @@ namespace seri
 
 		void operator=(BehaviourManager const&) = delete;
 
-		static void Init()
-		{
-			//LOGGER(info, "shader manager init done");
-		}
-
 		static BehaviourManager& GetInstance()
 		{
 			static BehaviourManager instance;
 			return instance;
+		}
+
+		static void Init()
+		{
+			GetInstance();
 		}
 
 		static void Add(BehaviourBase* behaviour);
@@ -38,12 +38,10 @@ namespace seri
 	private:
 		BehaviourManager()
 		{
-			//LOGGER(info, "behaviour manager init");
 		}
 
 		~BehaviourManager()
 		{
-			LOGGER(info, "behaviour manager release");
 		}
 
 		std::vector<BehaviourBase*> _behaviours;

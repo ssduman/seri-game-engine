@@ -120,8 +120,11 @@ public:
 		}
 		seri::Graphic::DrawInstanced(cube_3d, instancedTRSs, materialInstanced, seri::Graphic::GetCameraPerspective());
 
-		model_0->UpdateAnimations();
-		seri::Graphic::DrawModel(model_0, seri::Util::GetTRS(pos_3d, rot_3d, scale_model), materialSkinned, seri::Graphic::GetCameraPerspective());
+		if (model_0)
+		{
+			model_0->UpdateAnimations();
+			seri::Graphic::DrawModel(model_0, seri::Util::GetTRS(pos_3d, rot_3d, scale_model), materialSkinned, seri::Graphic::GetCameraPerspective());
+		}
 
 		seri::Graphic::Draw(font_mesh, seri::Util::GetIdentityMatrix(), materialFont, seri::Graphic::GetCameraOrtho());
 

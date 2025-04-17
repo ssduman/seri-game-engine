@@ -23,6 +23,8 @@ namespace seri::sound
 
 		static void Init(const char* soundFolderPath);
 
+		static void Play(std::string soundFilePath);
+
 	private:
 		SoundManager()
 		{
@@ -34,6 +36,7 @@ namespace seri::sound
 		}
 
 		ma_engine _engine{};
+		std::string _soundFolderPath{};
 
 	};
 }

@@ -30,10 +30,7 @@ namespace seri
 	class ModelImporter
 	{
 	public:
-		ModelImporter()
-		{
-			LOGGER(info, "model importer init succeeded");
-		};
+		ModelImporter() = default;
 
 		~ModelImporter() = default;
 
