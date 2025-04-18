@@ -20,16 +20,15 @@ namespace seri
 
 		void operator=(Graphic const&) = delete;
 
-		static void Init()
-		{
-			GetInstance();
-			//LOGGER(info, "graphic manager init done");
-		}
-
 		static Graphic& GetInstance()
 		{
 			static Graphic instance;
 			return instance;
+		}
+
+		static void Init()
+		{
+			GetInstance();
 		}
 
 		static void AddCamera(std::shared_ptr<ICamera> camera);
@@ -45,15 +44,9 @@ namespace seri
 		static void DrawInstanced(const std::unique_ptr<Mesh>& mesh, const std::vector<glm::mat4>& trs, std::shared_ptr<Material>& material, std::shared_ptr<ICamera>& camera);
 
 	private:
-		Graphic()
-		{
-			//LOGGER(info, "graphic manager init");
-		}
+		Graphic() = default;
 
-		~Graphic()
-		{
-			//LOGGER(info, "graphic manager release");
-		}
+		~Graphic() = default;
 
 		static void DrawElements(GLsizei count, aux::DrawMode drawMode = aux::DrawMode::triangles)
 		{
@@ -65,7 +58,7 @@ namespace seri
 
 			glDrawElements(draw.mode, draw.count, draw.type, draw.indices);
 		}
-		
+
 		static void DrawElementsInstanced(GLsizei count, GLsizei instanceCount, aux::DrawMode drawMode = aux::DrawMode::triangles)
 		{
 			aux::DrawElement draw;
