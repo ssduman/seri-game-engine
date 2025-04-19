@@ -69,6 +69,8 @@ namespace seri
 
 		virtual void setWindowPosition(int xpos, int ypos) = 0;
 
+		virtual unsigned char* GetPixelsInScreen() = 0;
+
 		virtual const char* getClipboard() = 0;
 
 		virtual void setClipboard(const char* str) = 0;

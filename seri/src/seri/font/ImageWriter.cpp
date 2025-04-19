@@ -3,7 +3,9 @@
 #include "seri/logging/Logger.h"
 #include "seri/util/Util.h"
 
+#ifndef STB_IMAGE_WRITE_IMPLEMENTATION
 #define STB_IMAGE_WRITE_IMPLEMENTATION
+#endif
 
 #include "ImageWriter.h"
 

@@ -176,6 +176,18 @@ namespace seri
 			glfwSetWindowPos(_window, xpos, ypos);
 		}
 
+		unsigned char* GetPixelsInScreen() override
+		{
+			int width = getWidth();
+			int height = getHeight();
+
+			unsigned char* pixels = new unsigned char[width * height * 4];
+
+			glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+
+			return pixels;
+		}
+
 		const char* getClipboard() override
 		{
 			return glfwGetClipboardString(nullptr);
