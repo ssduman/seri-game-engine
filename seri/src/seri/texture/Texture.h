@@ -125,6 +125,8 @@ namespace seri
 			stbi_image_free(image);
 		}
 
+		static void WriteToFile(std::string path, unsigned char* image, int width, int height);
+
 	private:
 		void Generate()
 		{

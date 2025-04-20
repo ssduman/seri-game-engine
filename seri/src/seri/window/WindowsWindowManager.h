@@ -185,6 +185,15 @@ namespace seri
 
 			glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
 
+			for (int y = 0; y < height / 2; ++y)
+			{
+				int oppositeY = height - 1 - y;
+				for (int x = 0; x < width * 4; ++x)
+				{
+					std::swap(pixels[y * width * 4 + x], pixels[oppositeY * width * 4 + x]);
+				}
+			}
+
 			return pixels;
 		}
 
