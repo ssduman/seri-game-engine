@@ -4,6 +4,41 @@
 
 namespace seri
 {
+	enum class InputAction : int
+	{
+		noop = -1,
+		press = GLFW_PRESS,
+		repeat = GLFW_REPEAT,
+		release = GLFW_RELEASE,
+	};
+
+	enum class InputModifier : int
+	{
+		noop = -1,
+		alt = GLFW_MOD_ALT,
+		shift = GLFW_MOD_SHIFT,
+		super = GLFW_MOD_SUPER,
+		control = GLFW_MOD_CONTROL,
+		num_lock = GLFW_MOD_NUM_LOCK,
+		caps_lock = GLFW_MOD_CAPS_LOCK,
+	};
+
+	enum class MouseButtonCode : int
+	{
+		button_1 = GLFW_MOUSE_BUTTON_1,
+		button_2 = GLFW_MOUSE_BUTTON_2,
+		button_3 = GLFW_MOUSE_BUTTON_3,
+		button_4 = GLFW_MOUSE_BUTTON_4,
+		button_5 = GLFW_MOUSE_BUTTON_5,
+		button_6 = GLFW_MOUSE_BUTTON_6,
+		button_7 = GLFW_MOUSE_BUTTON_7,
+		button_8 = GLFW_MOUSE_BUTTON_8,
+		button_last = GLFW_MOUSE_BUTTON_LAST,
+		button_left = GLFW_MOUSE_BUTTON_LEFT,
+		button_right = GLFW_MOUSE_BUTTON_RIGHT,
+		button_middle = GLFW_MOUSE_BUTTON_MIDDLE,
+	};
+
 	enum class KeyCode : int
 	{
 		// arrow
@@ -145,7 +180,52 @@ namespace seri
 		unknown = GLFW_KEY_UNKNOWN,
 		world_1 = GLFW_KEY_WORLD_1,
 		world_2 = GLFW_KEY_WORLD_2,
+
+		// len
+		len = GLFW_KEY_LAST
 	};
+
+	inline const char* toString(InputAction inputAction)
+	{
+		switch (inputAction)
+		{
+			case InputAction::press: return "press";
+			case InputAction::repeat: return "repeat";
+			case InputAction::release: return "release";
+			default: return "";
+		}
+	}
+
+	inline const char* toString(InputModifier inputModifier)
+	{
+		switch (inputModifier)
+		{
+			case InputModifier::noop: return "noop";
+			case InputModifier::alt: return "alt";
+			case InputModifier::shift: return "shift";
+			case InputModifier::super: return "super";
+			case InputModifier::control: return "control";
+			case InputModifier::num_lock: return "num_lock";
+			case InputModifier::caps_lock: return "caps_lock";
+			default: return "";
+		}
+	}
+
+	inline const char* toString(MouseButtonCode mouseButtonCode)
+	{
+		switch (mouseButtonCode)
+		{
+			case MouseButtonCode::button_4: return "button_4";
+			case MouseButtonCode::button_5: return "button_5";
+			case MouseButtonCode::button_6: return "button_6";
+			case MouseButtonCode::button_7: return "button_7";
+			case MouseButtonCode::button_last: return "button_last";
+			case MouseButtonCode::button_left: return "button_left";
+			case MouseButtonCode::button_right: return "button_right";
+			case MouseButtonCode::button_middle: return "button_middle";
+			default: return "";
+		}
+	}
 
 	inline const char* toString(KeyCode keyCode)
 	{
@@ -275,4 +355,5 @@ namespace seri
 			default: return "";
 		}
 	}
+
 }

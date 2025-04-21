@@ -2,9 +2,6 @@
 
 #include "seri/event/EventType.h"
 #include "seri/input/KeyCode.h"
-#include "seri/input/InputAction.h"
-#include "seri/input/InputModifier.h"
-#include "seri/input/MouseButtonCode.h"
 
 #include <vector>
 #include <string>

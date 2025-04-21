@@ -16,6 +16,12 @@ namespace seri
 
 		void operator=(ShaderManager const&) = delete;
 
+		static ShaderManager& GetInstance()
+		{
+			static ShaderManager instance;
+			return instance;
+		}
+
 		static void Init(const char* shaderFolderPath)
 		{
 			GetInstance()._predefinedShaders = {};
@@ -33,12 +39,6 @@ namespace seri
 			}
 
 			//LOGGER(info, "shader manager init done");
-		}
-
-		static ShaderManager& GetInstance()
-		{
-			static ShaderManager instance;
-			return instance;
 		}
 
 		static std::shared_ptr<Shader> Find(std::string name)
