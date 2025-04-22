@@ -1,5 +1,7 @@
 #pragma once
 
+#include <seri/core/Seri.h>
+
 #include <seri/logging/Logger.h>
 #include <seri/light/Light.h>
 #include <seri/graphic/Mesh.h>

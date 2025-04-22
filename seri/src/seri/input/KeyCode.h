@@ -7,6 +7,7 @@ namespace seri
 	enum class InputAction : int
 	{
 		noop = -1,
+
 		press = GLFW_PRESS,
 		repeat = GLFW_REPEAT,
 		release = GLFW_RELEASE,
@@ -15,6 +16,7 @@ namespace seri
 	enum class InputModifier : int
 	{
 		noop = -1,
+
 		alt = GLFW_MOD_ALT,
 		shift = GLFW_MOD_SHIFT,
 		super = GLFW_MOD_SUPER,
@@ -25,6 +27,8 @@ namespace seri
 
 	enum class MouseButtonCode : int
 	{
+		noop = -1,
+
 		button_1 = GLFW_MOUSE_BUTTON_1,
 		button_2 = GLFW_MOUSE_BUTTON_2,
 		button_3 = GLFW_MOUSE_BUTTON_3,
@@ -37,6 +41,8 @@ namespace seri
 		button_left = GLFW_MOUSE_BUTTON_LEFT,
 		button_right = GLFW_MOUSE_BUTTON_RIGHT,
 		button_middle = GLFW_MOUSE_BUTTON_MIDDLE,
+
+		len = GLFW_MOUSE_BUTTON_LAST
 	};
 
 	enum class KeyCode : int

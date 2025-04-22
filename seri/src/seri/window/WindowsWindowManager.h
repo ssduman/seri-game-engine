@@ -3,6 +3,7 @@
 
 #include "seri/window/IWindowManager.h"
 #include "seri/renderer/AuxiliaryStructs.h"
+#include "seri/input/InputManager.h"
 
 #include <utility>
 #include <stdexcept>
@@ -54,6 +55,10 @@ namespace seri
 			_initialized = true;
 
 			LOGGER(info, "[window] window manager created successfully");
+		}
+
+		void Update() override
+		{
 		}
 
 		double getTime() override
@@ -401,16 +406,8 @@ namespace seri
 						auto modsEnum = static_cast<InputModifier>(mods);
 
 						windowManager->fireEvent(event::MouseButtonEventData{ buttonEnum, actionEnum, modsEnum });
-					}
-				}
-			);
 
-			glfwSetScrollCallback(_window,
-				[](GLFWwindow* window, double xoffset, double yoffset)
-				{
-					if (auto windowManager = static_cast<WindowsWindowManager*>(glfwGetWindowUserPointer(window)))
-					{
-						windowManager->fireEvent(event::MouseScrollEventData{ xoffset, yoffset });
+						InputManager::RegisterMouse(buttonEnum, actionEnum);
 					}
 				}
 			);
@@ -421,6 +418,18 @@ namespace seri
 					if (auto windowManager = static_cast<WindowsWindowManager*>(glfwGetWindowUserPointer(window)))
 					{
 						windowManager->fireEvent(event::MousePositionEventData{ xpos, ypos });
+
+						InputManager::RegisterCursorPosition(xpos, ypos);
+					}
+				}
+			);
+
+			glfwSetScrollCallback(_window,
+				[](GLFWwindow* window, double xoffset, double yoffset)
+				{
+					if (auto windowManager = static_cast<WindowsWindowManager*>(glfwGetWindowUserPointer(window)))
+					{
+						windowManager->fireEvent(event::MouseScrollEventData{ xoffset, yoffset });
 					}
 				}
 			);

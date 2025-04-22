@@ -33,6 +33,7 @@
 #include "seri/font/FontManager.h"
 
 #include "seri/input/Input.h"
+#include "seri/input/InputManager.h"
 
 #include "seri/event/IEvent.h"
 #include "seri/event/EventDispatcher.h"

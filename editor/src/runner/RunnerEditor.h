@@ -26,12 +26,12 @@ public:
 		windowManager->init();
 
 		seri::Graphic::Init();
+		seri::InputManager::Init();
 		seri::BehaviourManager::Init();
 		seri::Texture::SetTextureFlip(true);
 		seri::ShaderManager::Init("assets/shaders/");
 		seri::font::FontManager::Init("assets/fonts/");
 		seri::sound::SoundManager::Init("assets/sounds/");
-		//seri::sound::SoundManager::Play("jingles/Preview.wav");
 
 		seri::SceneBuilder builder;
 		auto rootScene = builder.setName("Main").build();
@@ -98,6 +98,8 @@ public:
 			DrawScene(rootScene);
 
 			gui->display();
+
+			seri::InputManager::Reset();
 
 			windowManager->pollEvents();
 			windowManager->swapBuffers();

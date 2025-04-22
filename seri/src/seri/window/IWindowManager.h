@@ -25,6 +25,8 @@ namespace seri
 
 		virtual void init() = 0;
 
+		virtual void Update() = 0;
+
 		virtual double getTime() = 0;
 
 		virtual void updateDeltaTime() = 0;
