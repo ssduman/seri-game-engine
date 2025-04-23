@@ -327,6 +327,8 @@ namespace seri
 
 						windowManager->fireEvent(event::KeyEventData{ keyEnum, scancode, actionEnum, std::move(modsVector) });
 
+						InputManager::RegisterKey(keyEnum, actionEnum);
+
 						if (keyEnum == KeyCode::escape && actionEnum == InputAction::press)
 						{
 							windowManager->setWindowShouldCloseToTrue();
@@ -430,6 +432,8 @@ namespace seri
 					if (auto windowManager = static_cast<WindowsWindowManager*>(glfwGetWindowUserPointer(window)))
 					{
 						windowManager->fireEvent(event::MouseScrollEventData{ xoffset, yoffset });
+
+						InputManager::RegisterScrollDelta(xoffset, yoffset);
 					}
 				}
 			);

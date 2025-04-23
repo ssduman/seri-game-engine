@@ -40,6 +40,9 @@ namespace seri
 			{
 				var = InputAction::noop;
 			}
+
+			GetInstance()._scrollDelta.x = 0.0f;
+			GetInstance()._scrollDelta.y = 0.0f;
 		}
 
 		static void RegisterKey(KeyCode target, InputAction action)
@@ -72,24 +75,25 @@ namespace seri
 			GetInstance()._cursorPosition.y = static_cast<float>(y);
 		}
 
-		static bool IsPressed(KeyCode target)
+		static void RegisterScrollDelta(double x, double y)
+		{
+			GetInstance()._scrollDelta.x = static_cast<float>(x);
+			GetInstance()._scrollDelta.y = static_cast<float>(y);
+		}
+
+		static bool IsKeyDown(KeyCode target)
 		{
 			return GetInstance()._keys[static_cast<int>(target)] == InputAction::press;
 		}
 
-		static bool IsReleased(KeyCode target)
+		static bool IsKeyUp(KeyCode target)
 		{
 			return GetInstance()._keys[static_cast<int>(target)] == InputAction::release;
 		}
 
-		static bool IsRepeating(KeyCode target)
+		static bool IsKeyPressing(KeyCode target)
 		{
 			return GetInstance()._keys[static_cast<int>(target)] == InputAction::repeat;
-		}
-
-		static bool IsPressing(KeyCode target)
-		{
-			return GetInstance()._keys[static_cast<int>(target)] != InputAction::noop;
 		}
 
 		static bool IsMouseButtonDown(MouseButtonCode target)
@@ -112,6 +116,11 @@ namespace seri
 			return GetInstance()._cursorPosition;
 		}
 
+		static glm::vec2 GetScrollDelta()
+		{
+			return GetInstance()._scrollDelta;
+		}
+
 	private:
 		InputManager() = default;
 
@@ -121,6 +130,7 @@ namespace seri
 		std::vector<InputAction> _mouse{};
 		std::vector<bool> _mousePressing{};
 		glm::vec2 _cursorPosition{ 0.0f, 0.0f };
+		glm::vec2 _scrollDelta{ 0.0f, 0.0f };
 
 	};
 }
