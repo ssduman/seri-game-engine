@@ -3,6 +3,7 @@
 
 #include "seri/window/IWindowManager.h"
 #include "seri/renderer/AuxiliaryStructs.h"
+#include "seri/core/Time.h"
 #include "seri/input/InputManager.h"
 
 #include <utility>
@@ -37,8 +38,8 @@ namespace seri
 			glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 			createWindow();
-			glfwSwapInterval(1);
 			glfwMakeContextCurrent(_window);
+			glfwSwapInterval(1);
 
 			initglad();
 			logInfoStrings();
@@ -71,6 +72,8 @@ namespace seri
 			auto currentFrame = getTime();
 			_deltaTime = currentFrame - _lastFrame;
 			_lastFrame = currentFrame;
+
+			Time::RegisterTime(static_cast<float>(currentFrame), static_cast<float>(_deltaTime));
 		}
 
 		float getDeltaTime() override
@@ -98,26 +101,14 @@ namespace seri
 			glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 		}
 
-		double getCursorX() override
-		{
-			auto [x, y] = getCursorPosition();
-			return x;
-		}
-
-		double getCursorY() override
-		{
-			auto [x, y] = getCursorPosition();
-			return y;
-		}
-
-		std::pair<double, double> getCursorPosition() override
+		std::pair<double, double> GetCursorPosition() override
 		{
 			double mouseXPosition, mouseYPosition;
 			glfwGetCursorPos(_window, &mouseXPosition, &mouseYPosition);
 			return { mouseXPosition, mouseYPosition };
 		}
 
-		void setCursorPosition(double xpos, double ypos) override
+		void SetCursorPosition(double xpos, double ypos) override
 		{
 			glfwSetCursorPos(_window, xpos, ypos);
 		}
@@ -169,14 +160,14 @@ namespace seri
 			glLineWidth(width);
 		}
 
-		std::pair<int, int> getWindowPosition() override
+		std::pair<int, int> GetWindowPosition() override
 		{
 			int xpos, ypos;
 			glfwGetWindowPos(_window, &xpos, &ypos);
 			return { xpos, ypos };
 		}
 
-		void setWindowPosition(int xpos, int ypos) override
+		void SetWindowPosition(int xpos, int ypos) override
 		{
 			glfwSetWindowPos(_window, xpos, ypos);
 		}

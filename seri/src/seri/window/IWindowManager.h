@@ -41,13 +41,9 @@ namespace seri
 
 		virtual void disableCursor() = 0;
 
-		virtual double getCursorX() = 0;
+		virtual std::pair<double, double> GetCursorPosition() = 0;
 
-		virtual double getCursorY() = 0;
-
-		virtual std::pair<double, double> getCursorPosition() = 0;
-
-		virtual void setCursorPosition(double xpos, double ypos) = 0;
+		virtual void SetCursorPosition(double xpos, double ypos) = 0;
 
 		virtual void viewport(int x, int y, int width, int height) = 0;
 
@@ -67,9 +63,9 @@ namespace seri
 
 		virtual void setLineWidth(float width) = 0;
 
-		virtual std::pair<int, int> getWindowPosition() = 0;
+		virtual std::pair<int, int> GetWindowPosition() = 0;
 
-		virtual void setWindowPosition(int xpos, int ypos) = 0;
+		virtual void SetWindowPosition(int xpos, int ypos) = 0;
 
 		virtual unsigned char* GetPixelsInScreen() = 0;
 

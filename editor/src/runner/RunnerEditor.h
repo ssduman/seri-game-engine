@@ -9,6 +9,7 @@
 #include "behaviour/SimpleDrawerBehaviour.h"
 
 #include <memory>
+#include <thread>
 #include <stdexcept>
 
 class RunnerEditor : public seri::IRunner
@@ -25,6 +26,8 @@ public:
 		windowManager->setWindowProperties(windowProperties);
 		windowManager->init();
 
+		seri::Time::Init();
+		seri::Application::Init();
 		seri::Graphic::Init();
 		seri::InputManager::Init();
 		seri::BehaviourManager::Init();
@@ -79,10 +82,14 @@ public:
 
 		seri::BehaviourManager::InitBehaviours();
 
+		seri::Application::SetTargetFrameRate(60);
+
 		LOGGER(info, "[editor] starting seri game engine - editor loop");
 
 		while (!windowManager->windowShouldClose())
 		{
+			seri::Application::SetFrameBegin();
+
 			windowManager->clear();
 			windowManager->clearColor();
 			windowManager->updateDeltaTime();
@@ -103,6 +110,14 @@ public:
 
 			windowManager->pollEvents();
 			windowManager->swapBuffers();
+
+			seri::Application::SetFrameEnd();
+
+			double waitTime = seri::Application::GetWaitTime();
+			if (waitTime > 0.0)
+			{
+				//std::this_thread::sleep_for(std::chrono::duration<double, std::milli>(waitTime));
+			}
 		}
 
 		seri::BehaviourManager::DestroyBehaviours();
