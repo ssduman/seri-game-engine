@@ -27,9 +27,17 @@ namespace seri
 			auto width = static_cast<float>(data.width);
 			auto height = static_cast<float>(data.height);
 
+			if (width <= 0.1f || height <= 0.1f)
+			{
+				return;
+			}
+
+			LOGGER(debug, "[camera] window resized to " << width << "x" << height);
+
 			_cameraProperties.width = width;
 			_cameraProperties.height = height;
 			_cameraProperties.aspect = width / height;
+
 			updateProjection();
 		}
 

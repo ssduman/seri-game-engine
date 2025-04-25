@@ -3,6 +3,7 @@
 #pragma once
 
 #include "seri/util/Util.h"
+#include "seri/window/WindowManagerFactory.h"
 
 #include <chrono>
 
@@ -29,6 +30,7 @@ namespace seri
 		static void SetVSyncCount(int count)
 		{
 			GetInstance()._vSyncCount = count;
+			WindowManagerFactory::instance()->SetVSyncCount(count);
 		}
 
 		static void SetTargetFrameRate(int frameRate)

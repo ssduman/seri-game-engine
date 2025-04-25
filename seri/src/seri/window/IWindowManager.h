@@ -53,6 +53,8 @@ namespace seri
 
 		virtual void clearColor(float red = 0.2f, float green = 0.2f, float blue = 0.2f, float alpha = 1.0f) = 0;
 
+		virtual void SetVSyncCount(int count) = 0;
+		
 		virtual void pollEvents() = 0;
 
 		virtual void swapBuffers() = 0;

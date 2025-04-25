@@ -39,7 +39,6 @@ namespace seri
 
 			createWindow();
 			glfwMakeContextCurrent(_window);
-			glfwSwapInterval(1);
 
 			initglad();
 			logInfoStrings();
@@ -133,6 +132,11 @@ namespace seri
 		void clearColor(float red = 0.2f, float green = 0.2f, float blue = 0.2f, float alpha = 1.0f) override
 		{
 			glClearColor(red, green, blue, alpha);
+		}
+
+		void SetVSyncCount(int count) override
+		{
+			glfwSwapInterval(count);
 		}
 
 		void pollEvents() override
