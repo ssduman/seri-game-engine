@@ -82,7 +82,7 @@ public:
 
 		seri::BehaviourManager::InitBehaviours();
 
-		seri::Application::SetVSyncCount(0);
+		seri::Application::SetVSyncCount(1);
 		seri::Application::SetTargetFrameRate(60);
 
 		LOGGER(info, "[editor] starting seri game engine - editor loop");

@@ -34,11 +34,8 @@ void seri::font::FontManager::Init(const char* fontFolderPath)
 	auto& instance = GetInstance();
 }
 
-void seri::font::FontManager::MakeText(std::unique_ptr<seri::Mesh>& mesh, const FontInfo& fontInfo, std::string text)
+void seri::font::FontManager::MakeText(std::unique_ptr<seri::Mesh>& mesh, const FontInfo& fontInfo, std::string text, float posX, float posY)
 {
-	float posX = WindowManagerFactory::instance()->getWidthF() / 2.0f;
-	float posY = WindowManagerFactory::instance()->getHeightF() / 2.0f;
-
 	unsigned int currOffset = 0;
 	for (auto& c : text)
 	{

@@ -32,7 +32,7 @@ namespace seri::font
 			return GetInstance()._predefinedFonts;
 		}
 
-		static void MakeText(std::unique_ptr<seri::Mesh>& mesh, const FontInfo& fontInfo, std::string text);
+		static void MakeText(std::unique_ptr<seri::Mesh>& mesh, const FontInfo& fontInfo, std::string text, float posX, float posY);
 
 	private:
 		FontManager() = default;

@@ -85,7 +85,7 @@ public:
 		udpSocketClient = std::make_unique<seri::netcode::Socket>(seri::netcode::SocketType::udp);
 		udpSocketClient->Connect({ "127.0.0.1", 5200 });
 
-		seri::font::FontManager::MakeText(font_mesh, fontInfo, "Hello World");
+		seri::font::FontManager::MakeText(font_mesh, fontInfo, "hello world", 200, 200);
 
 		for (unsigned int i = 0; i < 100; i++)
 		{
