@@ -95,7 +95,7 @@ public:
 			windowManager->clearColor();
 			windowManager->updateDeltaTime();
 
-			cameraOrtho->update();
+			seri::Graphic::GetCameraOrtho()->update();
 			seri::Graphic::GetCameraPerspective()->update();
 
 			skybox->Update();
