@@ -9,7 +9,7 @@
 #include "seri/math/Transform.h"
 #include "seri/camera/ICamera.h"
 #include "seri/logging/Logger.h"
-#include "seri/renderer/OpenGLEngineBackend.h"
+#include "seri/renderer/OpenGLRendererBackend.h"
 
 #include <memory>
 #include <string>
@@ -68,7 +68,7 @@ namespace seri
 			return _transform;
 		}
 
-		OpenGLEngineBackend& getDrawer()
+		OpenGLRendererBackend& getDrawer()
 		{
 			return _engineBackend;
 		}
@@ -79,7 +79,7 @@ namespace seri
 		Shader _shader;
 		Texture _texture;
 		Transform _transform;
-		OpenGLEngineBackend _engineBackend{};
+		OpenGLRendererBackend _engineBackend{};
 		EntityType _entityType{ EntityType::unknown };
 
 	};

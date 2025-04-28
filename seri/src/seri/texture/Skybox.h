@@ -3,7 +3,7 @@
 #include "seri/camera/ICamera.h"
 #include "seri/texture/Texture.h"
 #include "seri/shader/ShaderManager.h"
-#include "seri/renderer/OpenGLEngineBackend.h"
+#include "seri/renderer/OpenGLRendererBackend.h"
 #include "seri/renderer/AuxiliaryStructsBuilder.h"
 
 #include <memory>
@@ -212,7 +212,7 @@ namespace seri
 		std::shared_ptr<ICamera> _camera;
 
 		std::shared_ptr<Shader> _shader;
-		OpenGLEngineBackend _engineBackend{};
+		OpenGLRendererBackend _engineBackend{};
 
 		unsigned int _tex{ 0 };
 		std::vector<std::string> _faces;

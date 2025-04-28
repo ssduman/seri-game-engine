@@ -3,7 +3,7 @@
 #include "seri/util/Util.h"
 #include "seri/core/Object.h"
 #include "seri/logging/Logger.h"
-#include "seri/renderer/OpenGLEngineBackend.h"
+#include "seri/renderer/OpenGLRendererBackend.h"
 #include "seri/renderer/AuxiliaryStructsBuilder.h"
 
 #include <ft2build.h>
@@ -145,16 +145,6 @@ namespace seri
 			setColor({ 1.0f, 1.0f, 1.0f, 1.0f });
 		}
 
-		Shader& getShader()
-		{
-			return _shader;
-		}
-
-		OpenGLEngineBackend& getDrawer()
-		{
-			return _engineBackend;
-		}
-
 	private:
 		void initFT()
 		{
@@ -248,7 +238,7 @@ namespace seri
 		glm::vec4 _color{ 1.0f, 1.0f, 1.0f, 1.0f };
 
 		Shader _shader;
-		OpenGLEngineBackend _engineBackend{};
+		OpenGLRendererBackend _engineBackend{};
 
 		glm::mat4 _projection{};
 		std::vector<float> _vertices{};

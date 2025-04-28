@@ -2,10 +2,10 @@
 
 namespace seri
 {
-	struct IEngineBackend
+	struct RendererBackendBase
 	{
 
-		virtual ~IEngineBackend() = default;
+		virtual ~RendererBackendBase() = default;
 
 		virtual void draw() = 0;
 

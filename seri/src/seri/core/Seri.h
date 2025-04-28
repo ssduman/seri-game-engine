@@ -43,5 +43,5 @@
 #include "seri/window/IWindowManager.h"
 #include "seri/window/WindowManagerFactory.h"
 
-#include "seri/renderer/OpenGLEngineBackend.h"
+#include "seri/renderer/OpenGLRendererBackend.h"
 #include "seri/renderer/AuxiliaryStructsBuilder.h"
