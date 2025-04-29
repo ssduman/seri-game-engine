@@ -12,6 +12,15 @@ namespace seri
 	class ShaderManager
 	{
 	public:
+
+		struct ShaderInfo
+		{
+			bool valid;
+			std::string name;
+			std::string vsCode;
+			std::string fsCode;
+		};
+
 		ShaderManager(ShaderManager const&) = delete;
 
 		void operator=(ShaderManager const&) = delete;
@@ -32,6 +41,7 @@ namespace seri
 				std::string text = Util::ReadFileAtPath(entry.path().string().c_str());
 
 				ShaderInfo info;
+				info.valid = true;
 				info.name = name;
 				info.vsCode = Util::GetContentOfToken(text, "#beg_vs", "#end_vs");
 				info.fsCode = Util::GetContentOfToken(text, "#beg_fs", "#end_fs");
@@ -40,7 +50,21 @@ namespace seri
 
 			//LOGGER(info, "shader manager init done");
 		}
-
+		
+		static ShaderInfo& Get(std::string name)
+		{
+			for (auto& predef : GetInstance()._predefinedShaders)
+			{
+				if (predef.name == name)
+				{
+					return predef;
+				}
+			}
+			ShaderInfo info{};
+			info.valid = false;
+			return info;
+		}
+		
 		static std::shared_ptr<Shader> Find(std::string name)
 		{
 			for (auto& predef : GetInstance()._predefinedShaders)
@@ -250,13 +274,6 @@ namespace seri
 		{
 			//LOGGER(info, "shader manager release");
 		}
-
-		struct ShaderInfo
-		{
-			std::string name;
-			std::string vsCode;
-			std::string fsCode;
-		};
 
 		std::vector<ShaderInfo> _predefinedShaders;
 
