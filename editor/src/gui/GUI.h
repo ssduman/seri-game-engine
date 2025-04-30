@@ -222,7 +222,7 @@ private:
 				// context menu
 				if (ImGui::BeginPopupContextItem())
 				{
-					if (ImGui::BeginMenu("Add ..."))
+					if (ImGui::BeginMenu("Add..."))
 					{
 						seri::SceneBuilder builder;
 
@@ -384,6 +384,19 @@ private:
 
 			_currentEntity->getShader().disuse();
 		}
+		else if (_currentObject)
+		{
+			ImGui::Separator();
+
+			auto& sceneName = _currentScene->getName();
+			ImGui::InputText("name", (char*)sceneName.c_str(), sceneName.size() + 1);
+
+			glm::vec3 pos = _currentObject->GetPosition();
+			ImGui::InputFloat3("position", &pos[0]);
+			_currentObject->SetPosition(pos);
+
+			ImGui::Separator();
+		}
 	}
 
 	void showGUIOptions()
@@ -458,6 +471,7 @@ private:
 	void registerEntity(std::shared_ptr<Object> entity)
 	{
 		_currentEntity = std::dynamic_pointer_cast<seri::Entity>(entity);
+		_currentObject = std::dynamic_pointer_cast<seri::Object>(entity);
 	}
 
 	std::shared_ptr<seri::IWindowManager> _windowManager;
@@ -465,5 +479,6 @@ private:
 	std::shared_ptr<seri::IScene> _scene;
 	std::shared_ptr<seri::IScene> _currentScene;
 	std::shared_ptr<seri::Entity> _currentEntity;
+	std::shared_ptr<seri::Object> _currentObject;
 
 };

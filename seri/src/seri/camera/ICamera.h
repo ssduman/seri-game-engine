@@ -92,6 +92,16 @@ namespace seri
 			updateView();
 		}
 
+		glm::vec3 GetPosition() override
+		{
+			return _cameraProperties.position;
+		}
+
+		void SetPosition(glm::vec3 position) override
+		{
+			_cameraProperties.position = position;
+		}
+
 		virtual bool isPlayable() = 0;
 
 		const glm::mat4& getModel()

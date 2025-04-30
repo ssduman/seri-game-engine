@@ -1,5 +1,6 @@
 #pragma once
 
+#include "seri/util/Util.h"
 #include "seri/event/IEvent.h"
 
 namespace seri
@@ -19,6 +20,15 @@ namespace seri
 		{
 			update();
 			render();
+		}
+
+		virtual glm::vec3 GetPosition()
+		{
+			return glm::vec3{ 0.0f, 0.0f, 0.0f };
+		}
+
+		virtual void SetPosition(glm::vec3 p)
+		{
 		}
 
 	};
