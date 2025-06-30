@@ -2,7 +2,7 @@
 
 #include "seri/util/Util.h"
 
-#include "seri/core/Time.h"
+#include "seri/core/TimeWrapper.h"
 #include "seri/core/Object.h"
 #include "seri/core/IRunner.h"
 #include "seri/core/Application.h"

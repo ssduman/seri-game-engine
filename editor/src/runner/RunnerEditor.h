@@ -26,7 +26,7 @@ public:
 		windowManager->setWindowProperties(windowProperties);
 		windowManager->init();
 
-		seri::Time::Init();
+		seri::TimeWrapper::Init();
 		seri::Application::Init();
 		seri::Graphic::Init();
 		seri::InputManager::Init();

@@ -6,16 +6,16 @@
 
 namespace seri
 {
-	class Time
+	class TimeWrapper
 	{
 	public:
-		Time(Time const&) = delete;
+		TimeWrapper(TimeWrapper const&) = delete;
 
-		void operator=(Time const&) = delete;
+		void operator=(TimeWrapper const&) = delete;
 
-		static Time& GetInstance()
+		static TimeWrapper& GetInstance()
 		{
-			static Time instance;
+			static TimeWrapper instance;
 			return instance;
 		}
 
@@ -52,8 +52,8 @@ namespace seri
 		}
 
 	private:
-		Time() = default;
-		~Time() = default;
+		TimeWrapper() = default;
+		~TimeWrapper() = default;
 
 		float _time{ 0.0f };
 		float _deltaTime{ 0.016f };

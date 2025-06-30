@@ -1,9 +1,9 @@
 #pragma once
 #pragma warning(disable: 4100)
 
+#include "seri/core/TimeWrapper.h"
 #include "seri/window/IWindowManager.h"
 #include "seri/renderer/AuxiliaryStructs.h"
-#include "seri/core/Time.h"
 #include "seri/input/InputManager.h"
 
 #include <utility>
@@ -72,7 +72,7 @@ namespace seri
 			_deltaTime = currentFrame - _lastFrame;
 			_lastFrame = currentFrame;
 
-			Time::RegisterTime(static_cast<float>(currentFrame), static_cast<float>(_deltaTime));
+			TimeWrapper::RegisterTime(static_cast<float>(currentFrame), static_cast<float>(_deltaTime));
 		}
 
 		float getDeltaTime() override
