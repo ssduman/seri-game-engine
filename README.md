@@ -1,5 +1,18 @@
 # Seri Game Engine #
 * A 2D/3D OpenGL Game Engine.
+## Roadmap: ##
+* [X] FBX Loading and Drawing
+* [X] Skeletal Animation
+* [X] Font Loading and Text Rendering
+* [X] Instancing
+* [X] Basic Lightning
+* [X] Basic Sound
+* [X] Basic Editor GUI
+* [ ] PBR
+* [ ] Physics
+* [ ] NetCode
+* [ ] DirectX Support
+* [ ] C# Scripting
 ## Dependencies: ##
 * [GLFW](https://www.glfw.org)
 * [glad](https://github.com/Dav1dde/glad)
