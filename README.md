@@ -25,8 +25,8 @@
 * [miniaudio](https://github.com/mackron/miniaudio)
 ## Build: ##
 * Run `git clone --recursive https://github.com/ssduman/seri-game-engine`
-* Double click to `generate.bat` (this generates solution files)
-* Build and run in Visual Studio 2022
+* Double click to `generate.bat`
+* Open `Seri Game Engine.sln`, build and run in Visual Studio 2022
 ## Images: ##
 <table>
     <tr>
