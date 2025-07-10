@@ -31,36 +31,36 @@
 <table>
     <tr>
         <td align="center">
-            <img src="https://github.com/ssduman/seri-game-engine/blob/master/mics/images/user-input.png" alt="user-input" width="384" height="216">
+            <img src="https://github.com/ssduman/seri-game-engine/blob/master/misc/images/user-input.png" alt="user-input" width="384" height="216">
             <br />
             <i> giving dimension for the maze <i>
         </td>
         <td align="center">
-            <img src="https://github.com/ssduman/seri-game-engine/blob/master/mics/images/passage-solution.png" alt="sol-path" width="384" height="216">
+            <img src="https://github.com/ssduman/seri-game-engine/blob/master/misc/images/passage-solution.png" alt="sol-path" width="384" height="216">
             <br />
             <i> exit way of the maze <i>
         </td>
     </tr>
     <tr>
         <td align="center">
-            <img src="https://github.com/ssduman/seri-game-engine/blob/master/mics/images/editor.png" alt="sol-path" width="384" height="216">
+            <img src="https://github.com/ssduman/seri-game-engine/blob/master/misc/images/editor.png" alt="sol-path" width="384" height="216">
             <br />
             <i> editor <i>
         </td>
         <td align="center">
-            <img src="https://github.com/ssduman/seri-game-engine/blob/master/mics/images/snake.png" alt="solved" width="384" height="216">
+            <img src="https://github.com/ssduman/seri-game-engine/blob/master/misc/images/snake.png" alt="solved" width="384" height="216">
             <br />
             <i> snake <i>
         </td>
     </tr>
     <tr>
         <td align="center">
-            <img src="https://github.com/ssduman/seri-game-engine/blob/master/mics/images/tetris.png" alt="new-font" width="284" height="384">
+            <img src="https://github.com/ssduman/seri-game-engine/blob/master/misc/images/tetris.png" alt="new-font" width="284" height="384">
             <br />
             <i> tetris <i>
         </td>
         <td align="center">
-            <img src="https://github.com/ssduman/seri-game-engine/blob/master/mics/images/mics.png" alt="solved-new-font" width="284" height="384">
+            <img src="https://github.com/ssduman/seri-game-engine/blob/master/misc/images/misc.png" alt="solved-new-font" width="284" height="384">
             <br />
             <i> miscellaneous <i>
         </td>

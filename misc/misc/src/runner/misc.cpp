@@ -1,8 +1,8 @@
-#include "RunnerMics.h"
+#include "RunnerMisc.h"
 
 int main(int argc, char* argv[]) {
     try {
-        RunnerMics{}();
+        RunnerMisc{}();
     } catch (const std::exception& ex) {
         LOGGER(error, "exception occurred: " << ex.what());
     }

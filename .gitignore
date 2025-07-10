@@ -120,7 +120,7 @@ StyleCopReport.xml
 
 # models
 !editor/assets/models/*.obj
-!mics/mics-assets/models/*.obj
+!misc/misc-assets/models/*.obj
 
 # Chutzpah Test files
 _Chutzpah*

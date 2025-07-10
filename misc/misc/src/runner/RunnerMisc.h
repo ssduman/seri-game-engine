@@ -11,14 +11,14 @@
 #include <memory>
 #include <stdexcept>
 
-class RunnerMics : public IRunner {
+class RunnerMisc : public IRunner {
 public:
-    RunnerMics() = default;
+    RunnerMisc() = default;
 
-    ~RunnerMics() override = default;
+    ~RunnerMisc() override = default;
 
     void operator()() {
-        WindowProperties windowProperties{ /*title*/ "Seri Game Engine - Mics", /*fullscreen*/ false, /*w*/ 800, /*h*/ 800 };
+        WindowProperties windowProperties{ /*title*/ "Seri Game Engine - Misc", /*fullscreen*/ false, /*w*/ 800, /*h*/ 800 };
         auto windowManager = std::make_shared<WindowManager>(std::move(windowProperties));
         if (!windowManager->init()) {
             throw std::runtime_error("could not create window manager");
@@ -45,14 +45,14 @@ public:
 
         if (_showModel) {
             auto model = std::make_shared<Model>(camera);
-            model->getShader().init("mics-assets/shaders/entity_vs.shader", "mics-assets/shaders/entity_fs.shader");
+            model->getShader().init("misc-assets/shaders/entity_vs.shader", "misc-assets/shaders/entity_fs.shader");
             model->init();
 
             if (_loadBackpackModel) {
-                model->load("mics-assets/models/backpack/backpack.obj");
+                model->load("misc-assets/models/backpack/backpack.obj");
             }
             else if (_loadSpiderModel) {
-                model->load("mics-assets/models/spider.obj");
+                model->load("misc-assets/models/spider.obj");
                 model->getTransform()._scale = glm::vec3{ 0.05f, 0.05f, 0.05f };
                 model->getShaderManager().setModel(model->getTransform().apply());
                 model->getShaderManager().setColor({ 0.45f, 0.45f, 0.45f, 1.0f });
@@ -66,7 +66,7 @@ public:
 
         if (_showFractal) {
             auto fractal = std::make_shared<Fractal>(camera);
-            fractal->getShader().init("mics-assets/shaders/entity_vs.shader", "mics-assets/shaders/entity_fs.shader");
+            fractal->getShader().init("misc-assets/shaders/entity_vs.shader", "misc-assets/shaders/entity_fs.shader");
             fractal->init();
             fractal->fern();
             //fractal->tree();
@@ -79,7 +79,7 @@ public:
 
         if (_showPerlinNoise) {
             auto perlinNoise = std::make_shared<PerlinNoise>(camera);
-            perlinNoise->getShader().init("mics-assets/shaders/entity_vs.shader", "mics-assets/shaders/entity_fs.shader");
+            perlinNoise->getShader().init("misc-assets/shaders/entity_vs.shader", "misc-assets/shaders/entity_fs.shader");
             perlinNoise->init();
             perlinNoise->generate();
 
@@ -115,7 +115,7 @@ public:
         eventManager.triggerMouseButtonEvent(MouseButtonCode::button_left, MouseButtonAction::press);
         eventManager.triggerWindowEvent();
 
-        LOGGER(info, "starting mics loop");
+        LOGGER(info, "starting misc loop");
 
         while (!windowManager->windowShouldClose()) {
             windowManager->clear();
@@ -133,7 +133,7 @@ public:
             windowManager->swapBuffers();
         }
 
-        LOGGER(info, "mics loop stopped");
+        LOGGER(info, "misc loop stopped");
     }
 
 private:
