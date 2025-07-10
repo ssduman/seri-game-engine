@@ -5,7 +5,7 @@
 * [X] Skeletal Animation
 * [X] Font Loading and Text Rendering
 * [X] Instancing
-* [X] Basic Lightning
+* [X] Basic Lighting
 * [X] Basic Sound
 * [X] Basic Editor GUI
 * [ ] PBR
