@@ -254,7 +254,7 @@ namespace seri
 		}
 		else
 		{
-			texture.Init(_modelDirectory + texturePath);
+			texture.Init((_modelDirectory + texturePath).c_str());
 			_texturesLoaded[texturePath] = texture;
 		}
 

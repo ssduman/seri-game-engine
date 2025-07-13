@@ -31,7 +31,6 @@ public:
 		seri::Graphic::Init();
 		seri::InputManager::Init();
 		seri::BehaviourManager::Init();
-		seri::Texture::SetTextureFlip(true);
 		seri::ShaderManager::Init("assets/shaders/");
 		seri::font::FontManager::Init("assets/fonts/");
 		seri::sound::SoundManager::Init("assets/sounds/");

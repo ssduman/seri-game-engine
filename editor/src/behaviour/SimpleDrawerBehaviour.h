@@ -26,13 +26,7 @@ public:
 		);
 		font_mesh = std::make_unique<seri::Mesh>();
 
-		//model_0 = seri::ModelImporter{}.Load("assets/models/spider.obj");
-		//model_0 = seri::ModelImporter{}.Load("assets/models/tank.fbx");
-		//model_0 = seri::ModelImporter{}.Load("assets/models/blendshape.fbx");
-		//model_0 = seri::ModelImporter{}.Load("assets/models/prop_0.fbx");
-		//model_0 = seri::ModelImporter{}.Load("assets/models/prop_0_crk.fbx");
-		model_0 = seri::ModelImporter{}.Load("assets/models/X Bot@Hip Hop Dancing.fbx");
-		//model_0 = seri::ModelImporter{}.Load("assets/models/Hip Hop Dancing.dae");
+		model_0 = seri::ModelImporter{}.Load("assets/spiderman/source/Thriller Part 4.fbx");
 
 		auto entityShader = seri::ShaderManager::Find("entity");
 		auto entityInstancedShader = seri::ShaderManager::Find("entity_instanced");
@@ -41,11 +35,11 @@ public:
 		auto gridShader = seri::ShaderManager::Find("grid");
 		auto typerShader = seri::ShaderManager::Find("typer");
 
-		auto passageTexture = std::make_shared<seri::Texture>();
-		passageTexture->Init("assets/textures/passage.png");
+		auto texture_0 = std::make_shared<seri::Texture>();
+		texture_0->Init("assets/textures/passage.png");
 
-		auto tankTexture = std::make_shared<seri::Texture>();
-		tankTexture->Init("assets/textures/tank/tank_diffuse.tga");
+		auto texture_1 = std::make_shared<seri::Texture>();
+		texture_1->Init("assets/spiderman/textures/spiderman.png");
 
 		const int fontIndex = 2;
 		const auto& fontInfo = seri::font::FontManager::GetPredefinedFonts()[fontIndex]->fontInfo;
@@ -53,11 +47,11 @@ public:
 
 		material = std::make_shared<seri::Material>();
 		material->shader = entityShader;
-		material->texture = passageTexture;
+		material->texture = texture_0;
 
 		materialInstanced = std::make_shared<seri::Material>();
 		materialInstanced->shader = entityInstancedShader;
-		materialInstanced->texture = passageTexture;
+		materialInstanced->texture = texture_0;
 
 		materialLine = std::make_shared<seri::Material>();
 		materialLine->shader = lineShader;
@@ -73,11 +67,11 @@ public:
 
 		materialModel = std::make_shared<seri::Material>();
 		materialModel->shader = entityShader;
-		materialModel->texture = tankTexture;
+		materialModel->texture = texture_1;
 
 		materialSkinned = std::make_shared<seri::Material>();
 		materialSkinned->shader = entitySkinnedShader;
-		materialSkinned->texture = tankTexture;
+		materialSkinned->texture = texture_1;
 
 		udpSocketServer = std::make_unique<seri::netcode::Socket>(seri::netcode::SocketType::udp);
 		udpSocketServer->Bind({ "localhost", 5200 });
@@ -108,7 +102,7 @@ public:
 		glm::vec3 pos_3d{ 0.0f, 0.0f, 0.0f };
 		glm::quat rot_3d = glm::quat(glm::vec3{ glm::radians(0.0f), glm::radians(0.0f), glm::radians(0.0f) });
 		glm::vec3 scale_3d{ 1.0f, 1.0f, 1.0f };
-		glm::vec3 scale_model{ 0.01f, 0.01f, 0.01f };
+		glm::vec3 scale_model{ 1.01f, 1.01f, 1.01f };
 
 		//seri::Graphic::Draw(line_2d, seri::Util::GetIdentityMatrix(), materialLine, seri::Graphic::GetCameraOrtho());
 		//seri::Graphic::Draw(quad_3d, seri::Util::GetTRS(pos_3d, rot_3d, scale_3d), material, seri::Graphic::GetCameraPerspective());

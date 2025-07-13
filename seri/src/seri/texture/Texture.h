@@ -26,10 +26,10 @@ namespace seri
 			Del();
 		}
 
-		void Init(const std::string& texturePath)
+		void Init(const char* texturePath, bool flip = true)
 		{
 			int width, height, components;
-			if (auto image = LoadTexture(texturePath, width, height, components, 0))
+			if (auto image = LoadTexture(texturePath, width, height, components, 0, flip))
 			{
 				Build(image, width, height, components);
 			}
@@ -39,10 +39,10 @@ namespace seri
 			}
 		}
 
-		void Init(const void* data, unsigned int size)
+		void Init(const void* data, unsigned int size, bool flip = true)
 		{
 			int width, height, components;
-			if (auto image = LoadTexture(data, size, width, height, components, 0))
+			if (auto image = LoadTexture(data, size, width, height, components, 0, flip))
 			{
 				Build(image, width, height, components);
 			}
@@ -105,19 +105,16 @@ namespace seri
 			return _tex;
 		}
 
-		static unsigned char* LoadTexture(const std::string& texturePath, int& width, int& height, int& components, int reqComp)
+		static unsigned char* LoadTexture(const std::string& texturePath, int& width, int& height, int& components, int reqComp, bool flip)
 		{
+			stbi_set_flip_vertically_on_load(flip);
 			return stbi_load(texturePath.c_str(), &width, &height, &components, reqComp);
 		}
 
-		static unsigned char* LoadTexture(const void* data, unsigned int size, int& width, int& height, int& components, int reqComp)
-		{
-			return stbi_load_from_memory((const stbi_uc*)data, size, &width, &height, &components, reqComp);
-		}
-
-		static void SetTextureFlip(bool flip)
+		static unsigned char* LoadTexture(const void* data, unsigned int size, int& width, int& height, int& components, int reqComp, bool flip)
 		{
 			stbi_set_flip_vertically_on_load(flip);
+			return stbi_load_from_memory((const stbi_uc*)data, size, &width, &height, &components, reqComp);
 		}
 
 		static void UnloadTexture(unsigned char* image)

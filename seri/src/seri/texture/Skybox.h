@@ -167,12 +167,11 @@ namespace seri
 			{
 				std::swap(_faces[2], _faces[3]);
 			}
-			Texture::SetTextureFlip(flip);
 
 			int width, height, components;
 			for (size_t i = 0; i < _faces.size(); i++)
 			{
-				if (auto image = Texture::LoadTexture(_faces[i], width, height, components, 0))
+				if (auto image = Texture::LoadTexture(_faces[i], width, height, components, 0, flip))
 				{
 					GLenum format = GL_RED;
 					if (components == 3)
