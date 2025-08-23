@@ -10,6 +10,10 @@ project "Seri"
   targetdir("%{wks.location}/bin/" .. outputdir .. "/%{prj.name}")
   objdir("%{wks.location}/bin/int/" .. outputdir .. "/%{prj.name}")
 
+  dependson {
+    "sdl"
+  }
+
   files {
     "src/seri/**.h",
     "src/seri/**.cpp",
@@ -46,11 +50,17 @@ project "Seri"
     "%{IncludeDir.freetype}",
     "%{IncludeDir.nlohmann}",
     "%{IncludeDir.miniaudio}",
+    "%{IncludeDir.sdl}",
+  }
+
+  libdirs {
+    "%{LibDir.sdl}"
   }
 
   links {
     "glad",
     "GLFW",
+    "SDL3",
     "ImGui",
     "assimp",
     "freetype",

@@ -12,6 +12,8 @@ project "ImGui"
     "./*.cpp",
     "backends/imgui_impl_glfw.h",
     "backends/imgui_impl_glfw.cpp",
+    "backends/imgui_impl_sdl3.h",
+    "backends/imgui_impl_sdl3.cpp",
     "backends/imgui_impl_opengl3.h",
     "backends/imgui_impl_opengl3.cpp",
     "backends/imgui_impl_opengl3_loader.h",
@@ -20,6 +22,7 @@ project "ImGui"
   includedirs {
     "./",
     "%{IncludeDir.GLFW}",
+    "%{IncludeDir.sdl}",
   }
 
   filter "system:windows"

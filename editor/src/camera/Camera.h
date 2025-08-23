@@ -26,7 +26,7 @@ public:
 
 	void update() override
 	{
-		auto deltaTime = seri::WindowManagerFactory::instance()->getDeltaTime();
+		auto deltaTime = seri::WindowManagerFactory::instance()->GetDeltaTime();
 		auto movementSpeed = _cameraProperties.speed * deltaTime;
 
 		if (_moveRequest & _wRequest)

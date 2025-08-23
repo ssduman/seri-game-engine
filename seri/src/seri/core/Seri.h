@@ -1,5 +1,8 @@
 #pragma once
 
+#define SERI_USE_GLFW
+//#define SERI_USE_SDL3
+
 #include "seri/util/Util.h"
 
 #include "seri/core/TimeWrapper.h"

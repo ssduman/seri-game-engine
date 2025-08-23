@@ -10,6 +10,10 @@ IncludeDir["assimp"] = "%{wks.location}/seri/vendor/assimp/include"
 IncludeDir["freetype"] = "%{wks.location}/seri/vendor/freetype/include"
 IncludeDir["nlohmann"] = "%{wks.location}/seri/vendor/nlohmann"
 IncludeDir["miniaudio"] = "%{wks.location}/seri/vendor/miniaudio"
+IncludeDir["sdl"] = "%{wks.location}/seri/vendor/sdl/include"
+
+LibDir = {}
+LibDir["sdl"] = "%{wks.location}/seri/vendor/sdl/build/%{cfg.buildcfg}"
 
 workspace "Seri Game Engine"
   architecture "x86_64"
@@ -38,4 +42,5 @@ workspace "Seri Game Engine"
     include "seri/vendor/imgui"
     include "seri/vendor/assimp"
     include "seri/vendor/freetype"
+    include "seri/vendor/sdl"
   group ""

@@ -3,8 +3,10 @@
 #include "seri/logging/Logger.h"
 #include "seri/event/EventData.h"
 #include "seri/event/EventCallback.h"
+#include "seri/core/TimeWrapper.h"
 
 #include <memory>
+#include <functional>
 
 namespace seri
 {
@@ -16,6 +18,15 @@ namespace seri
 		int windowHeight = 720;
 	};
 
+	enum CursorMode
+	{
+		normal = 0,
+		hidden = 1,
+		disabled = 2,
+	};
+
+	using ProcessEventDelegate = std::function<void(const void*)>;
+
 	class IWindowManager
 	{
 	public:
@@ -23,75 +34,62 @@ namespace seri
 
 		virtual ~IWindowManager() = default;
 
-		virtual void init() = 0;
+		virtual void Init() = 0;
 
-		virtual void Update() = 0;
+		virtual double GetTime() = 0;
 
-		virtual double getTime() = 0;
+		virtual void* GetWindowHandle() = 0;
 
-		virtual void updateDeltaTime() = 0;
+		virtual void* GetContext() = 0;
 
-		virtual float getDeltaTime() = 0;
-
-		virtual void* getWindow() = 0;
-
-		virtual void hideCursor() = 0;
-
-		virtual void enableCursor() = 0;
-
-		virtual void disableCursor() = 0;
+		virtual void SetCursorMode(CursorMode cursorMode) = 0;
 
 		virtual std::pair<double, double> GetCursorPosition() = 0;
 
 		virtual void SetCursorPosition(double xpos, double ypos) = 0;
 
-		virtual void viewport(int x, int y, int width, int height) = 0;
-
-		virtual int windowShouldClose() = 0;
-
-		virtual void clear() = 0;
-
-		virtual void clearColor(float red = 0.2f, float green = 0.2f, float blue = 0.2f, float alpha = 1.0f) = 0;
-
 		virtual void SetVSyncCount(int count) = 0;
-		
-		virtual void pollEvents() = 0;
 
-		virtual void swapBuffers() = 0;
+		virtual void PollEvents() = 0;
 
-		virtual void setWindowShouldCloseToTrue() = 0;
+		virtual void SwapBuffers() = 0;
 
-		virtual void setPointSize(float size) = 0;
+		virtual bool GetWindowShouldClose() = 0;
 
-		virtual void setLineWidth(float width) = 0;
+		virtual void SetWindowShouldCloseToTrue() = 0;
 
 		virtual std::pair<int, int> GetWindowPosition() = 0;
 
 		virtual void SetWindowPosition(int xpos, int ypos) = 0;
 
-		virtual unsigned char* GetPixelsInScreen() = 0;
+		virtual const char* GetClipboard() = 0;
 
-		virtual const char* getClipboard() = 0;
+		virtual void SetClipboard(const char* str) = 0;
 
-		virtual void setClipboard(const char* str) = 0;
+		virtual void SetWindowUserPointer(void* pointer) = 0;
 
-		virtual void setWindowUserPointer(void* pointer) = 0;
+		virtual void* GetWindowUserPointer() = 0;
 
-		virtual void* getWindowUserPointer() = 0;
-
-		virtual void fireEvent(event::IEventData& data) = 0;
-
-		const std::shared_ptr<event::IEventCallback>& getEventCallback()
+		void UpdateDeltaTime()
 		{
-			return _eventCallback;
+			auto currentFrame = GetTime();
+			_deltaTime = currentFrame - _lastFrame;
+			_lastFrame = currentFrame;
+
+			TimeWrapper::RegisterTime(static_cast<float>(currentFrame), static_cast<float>(_deltaTime));
 		}
 
-		void setEventCallback(std::shared_ptr<event::IEventCallback> eventCallback)
+		float GetDeltaTime()
+		{
+			return static_cast<float>(_deltaTime);
+		}
+
+		void SetEventCallback(std::shared_ptr<event::IEventCallback> eventCallback)
 		{
 			_eventCallback = std::move(eventCallback);
 		}
 
-		void setWindowProperties(WindowProperties windowProperties)
+		void SetWindowProperties(WindowProperties windowProperties)
 		{
 			if (_initialized)
 			{
@@ -100,32 +98,108 @@ namespace seri
 			_windowProperties = std::move(windowProperties);
 		}
 
-		int getWidth()
+		int GetWidth()
 		{
 			return _windowProperties.windowWidth;
 		}
 
-		int getHeight()
+		int GetHeight()
 		{
 			return _windowProperties.windowHeight;
 		}
 
-		float getWidthF()
+		float GetWidthF()
 		{
 			return static_cast<float>(_windowProperties.windowWidth);
 		}
 
-		float getHeightF()
+		float GetHeightF()
 		{
 			return static_cast<float>(_windowProperties.windowHeight);
 		}
 
-		float getAspect()
+		float GetAspectRatio()
 		{
-			return getWidthF() / getHeightF();
+			return GetWidthF() / GetHeightF();
+		}
+
+		void FireEvent(event::IEventData& data)
+		{
+			_eventCallback->fireEvent(data);
+		};
+
+		void SetViewport(int x, int y, int width, int height)
+		{
+			_windowProperties.windowWidth = width;
+			_windowProperties.windowHeight = height;
+			glViewport(x, y, _windowProperties.windowWidth, _windowProperties.windowHeight);
+		}
+
+		void Clear()
+		{
+			const unsigned int mask = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT;
+			glClear(mask);
+		}
+
+		void ClearColor(float red = 0.2f, float green = 0.2f, float blue = 0.2f, float alpha = 1.0f)
+		{
+			glClearColor(red, green, blue, alpha);
+		}
+
+		void SetPointSize(float size)
+		{
+			glPointSize(size);
+		}
+
+		void SetLineWidth(float width)
+		{
+			glLineWidth(width);
+		}
+
+		unsigned char* GetPixelsInScreen()
+		{
+			int width = GetWidth();
+			int height = GetHeight();
+
+			unsigned char* pixels = new unsigned char[width * height * 4];
+
+			glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+
+			for (int y = 0; y < height / 2; ++y)
+			{
+				int oppositeY = height - 1 - y;
+				for (int x = 0; x < width * 4; ++x)
+				{
+					std::swap(pixels[y * width * 4 + x], pixels[oppositeY * width * 4 + x]);
+				}
+			}
+
+			return pixels;
+		}
+
+		void AddProcessEventDelegate(const ProcessEventDelegate& delegate)
+		{
+			processEventDelegateList.emplace_back(delegate);
 		}
 
 	protected:
+		virtual void InitGlad() = 0;
+
+		void SetGLOptions()
+		{
+			glEnable(GL_BLEND);
+			glEnable(GL_DEPTH_TEST);
+			//glEnable(GL_FRAMEBUFFER_SRGB);
+		}
+
+		void LogGLInfo()
+		{
+			LOGGER(info, "[window] vendor: " << glGetString(GL_VENDOR));
+			LOGGER(info, "[window] version: " << glGetString(GL_VERSION));
+			LOGGER(info, "[window] renderer: " << glGetString(GL_RENDERER));
+			LOGGER(info, "[window] shading language version: " << glGetString(GL_SHADING_LANGUAGE_VERSION));
+		}
+
 		WindowProperties _windowProperties;
 
 		double _lastFrame{ 0.0 };
@@ -133,6 +207,8 @@ namespace seri
 		bool _initialized{ false };
 
 		std::shared_ptr<event::IEventCallback> _eventCallback;
+
+		std::vector<ProcessEventDelegate> processEventDelegateList;
 
 	};
 }

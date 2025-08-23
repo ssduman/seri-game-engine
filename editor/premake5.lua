@@ -40,14 +40,21 @@ project "Editor"
     "%{IncludeDir.freetype}",
     "%{IncludeDir.nlohmann}",
     "%{IncludeDir.miniaudio}",
+    "%{IncludeDir.sdl}",
+  }
+
+  libdirs {
+    "%{LibDir.sdl}"
   }
 
   links {
     "Seri",
+    "SDL3",
   }
 
   postbuildcommands {
     "{COPYDIR} %{prj.location}assets %{cfg.buildtarget.directory}assets",
+    "{COPY} %{LibDir.sdl}/SDL3.dll %{cfg.targetdir}"
   }
 
   filter "system:windows"

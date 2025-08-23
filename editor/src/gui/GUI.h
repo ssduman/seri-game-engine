@@ -6,27 +6,39 @@
 #include "camera/Camera.h"
 
 #include <imgui.h>
-#include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
 #include <misc/freetype/imgui_freetype.h>
 
 #include <memory>
+
+#ifdef SERI_USE_GLFW
+#include <backends/imgui_impl_glfw.h>
+#elif defined (SERI_USE_SDL3)
+#include <backends/imgui_impl_sdl3.h>
+#include <SDL3/SDL.h>
+#endif
 
 class GUI : public seri::Object
 {
 public:
 	GUI(std::shared_ptr<Camera> camera, std::shared_ptr<seri::IScene> scene) : _windowManager(seri::WindowManagerFactory::instance()), _camera(camera), _scene(scene)
 	{
-		//LOGGER(info, "gui init succeeded");
+		LOGGER(info, "[gui] init succeeded");
 	}
 
 	~GUI() override
 	{
 		ImGui_ImplOpenGL3_Shutdown();
+
+#ifdef SERI_USE_GLFW
 		ImGui_ImplGlfw_Shutdown();
+#elif defined (SERI_USE_SDL3)
+		ImGui_ImplSDL3_Shutdown();
+#endif
+
 		ImGui::DestroyContext();
 
-		//LOGGER(info, "gui delete succeeded");
+		LOGGER(info, "[gui] delete succeeded");
 	}
 
 	void init() override
@@ -34,40 +46,68 @@ public:
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
 
-		setIO();
-		setStyle();
+		SetIO();
+		SetStyle();
 
-		ImGui_ImplGlfw_InitForOpenGL(static_cast<GLFWwindow*>(_windowManager->getWindow()), true);
+#ifdef SERI_USE_GLFW
+		ImGui_ImplGlfw_InitForOpenGL(static_cast<GLFWwindow*>(_windowManager->GetWindowHandle()), true);
+#elif defined (SERI_USE_SDL3)
+		ImGui_ImplSDL3_InitForOpenGL(static_cast<SDL_Window*>(_windowManager->GetWindowHandle()), _windowManager->GetContext());
+#endif
+
 		ImGui_ImplOpenGL3_Init("#version 460");
 	}
 
 	void update() override
 	{
 		ImGui_ImplOpenGL3_NewFrame();
+
+#ifdef SERI_USE_GLFW
 		ImGui_ImplGlfw_NewFrame();
+#elif defined (SERI_USE_SDL3)
+		ImGui_ImplSDL3_NewFrame();
+#endif
+
 		ImGui::NewFrame();
 
-		showDemoWindow();
+		ShowDemoWindow();
 
-		showMainMenuBar();
+		ShowMainMenuBar();
 
-		showSceneWindow();
+		ShowSceneWindow();
 
-		showEntityWindow();
+		ShowEntityWindow();
 	}
 
 	void render() override
 	{
 		ImGui::Render();
+
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+#ifdef SERI_USE_GLFW
 		GLFWwindow* backup_current_context = glfwGetCurrentContext();
 		ImGui::UpdatePlatformWindows();
 		ImGui::RenderPlatformWindowsDefault();
 		glfwMakeContextCurrent(backup_current_context);
+#elif defined (SERI_USE_SDL3)
+		SDL_Window* backup_current_window = SDL_GL_GetCurrentWindow();
+		SDL_GLContext backup_current_context = SDL_GL_GetCurrentContext();
+		ImGui::UpdatePlatformWindows();
+		ImGui::RenderPlatformWindowsDefault();
+		SDL_GL_MakeCurrent(backup_current_window, backup_current_context);
+#endif
 	}
 
+#ifdef SERI_USE_SDL3
+	void ProcessEvent(const SDL_Event* event)
+	{
+		ImGui_ImplSDL3_ProcessEvent(event);
+	}
+#endif
+
 private:
-	void helpMarker(const char* desc)
+	void HelpMarker(const char* desc)
 	{
 		ImGui::TextDisabled("(?)");
 		if (ImGui::IsItemHovered())
@@ -80,7 +120,7 @@ private:
 		}
 	}
 
-	void setIO()
+	void SetIO()
 	{
 		auto& io = ImGui::GetIO();
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
@@ -89,7 +129,7 @@ private:
 		io.ConfigWindowsMoveFromTitleBarOnly = true;
 	}
 
-	void setStyle()
+	void SetStyle()
 	{
 		ImGui::StyleColorsDark();
 		auto& style = ImGui::GetStyle();
@@ -111,7 +151,7 @@ private:
 		style.Colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
 	}
 
-	void showDemoWindow()
+	void ShowDemoWindow()
 	{
 		static bool show_demo_window = false;
 		if (show_demo_window)
@@ -120,7 +160,7 @@ private:
 		}
 	}
 
-	void showMainMenuBar()
+	void ShowMainMenuBar()
 	{
 		static bool show_menu_window = true;
 		if (show_menu_window)
@@ -135,7 +175,7 @@ private:
 			{
 				if (ImGui::BeginMenu("File"))
 				{
-					showMenuFile();
+					ShowMenuFile();
 					ImGui::EndMenu();
 				}
 				if (ImGui::BeginMenu("Edit"))
@@ -159,9 +199,9 @@ private:
 					ImGui::EndMenu();
 				}
 
-				buttonPlayCenter();
+				ButtonPlayCenter();
 
-				textRight("Seri Game Engine");
+				TextRight("Seri Game Engine");
 
 				ImGui::EndMainMenuBar();
 			}
@@ -170,7 +210,7 @@ private:
 		}
 	}
 
-	void showSceneWindow()
+	void ShowSceneWindow()
 	{
 		static bool show_scene_window = true;
 		if (show_scene_window)
@@ -186,7 +226,7 @@ private:
 			ImGui::SetNextItemOpen(true, ImGuiCond_Once);
 			if (ImGui::TreeNode(_scene->getName().c_str()))
 			{
-				showSceneWindowImpl(_scene);
+				ShowSceneWindowImpl(_scene);
 				ImGui::TreePop();
 			}
 
@@ -194,7 +234,7 @@ private:
 		}
 	}
 
-	void showSceneWindowImpl(std::shared_ptr<seri::IScene> scenes)
+	void ShowSceneWindowImpl(std::shared_ptr<seri::IScene> scenes)
 	{
 		static ImGuiTreeNodeFlags treeBaseFlags =
 			ImGuiTreeNodeFlags_OpenOnArrow |
@@ -213,7 +253,7 @@ private:
 			}
 			if (nodeClickedId == scene->getId())
 			{
-				registerScene(scene);
+				RegisterScene(scene);
 				treeNodeFlags |= ImGuiTreeNodeFlags_Selected;
 			}
 
@@ -285,14 +325,14 @@ private:
 					nodeClickedId = scene->getId();
 				}
 
-				showSceneWindowImpl(scene);
+				ShowSceneWindowImpl(scene);
 
 				ImGui::TreePop();
 			}
 		}
 	}
 
-	void showMenuFile()
+	void ShowMenuFile()
 	{
 		if (ImGui::MenuItem("New"))
 		{
@@ -308,11 +348,11 @@ private:
 		}
 		if (ImGui::MenuItem("Quit", "Alt+F4"))
 		{
-			_windowManager->setWindowShouldCloseToTrue();
+			_windowManager->SetWindowShouldCloseToTrue();
 		}
 	}
 
-	void showEntityWindow()
+	void ShowEntityWindow()
 	{
 		static bool show_entity_window = true;
 		if (show_entity_window)
@@ -325,11 +365,11 @@ private:
 				return;
 			}
 
-			showEntityWindowMenuBar();
+			ShowEntityWindowMenuBar();
 
-			showEntityTransformationOptions();
+			ShowEntityTransformationOptions();
 
-			showGUIOptions();
+			ShowGUIOptions();
 
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
@@ -337,7 +377,7 @@ private:
 		}
 	}
 
-	void showEntityWindowMenuBar()
+	void ShowEntityWindowMenuBar()
 	{
 		ImGui::PushItemWidth(ImGui::GetFontSize() * -12);
 
@@ -359,7 +399,7 @@ private:
 		}
 	}
 
-	void showEntityTransformationOptions()
+	void ShowEntityTransformationOptions()
 	{
 		if (_currentEntity)
 		{
@@ -399,21 +439,21 @@ private:
 		}
 	}
 
-	void showGUIOptions()
+	void ShowGUIOptions()
 	{
 		if (ImGui::Button("Enable cursor"))
 		{
-			_windowManager->enableCursor();
+			_windowManager->SetCursorMode(seri::CursorMode::normal);
 		}
 		if (ImGui::Button("Disable cursor"))
 		{
-			_windowManager->disableCursor();
+			_windowManager->SetCursorMode(seri::CursorMode::disabled);
 		}
 
 		ImGui::Separator();
 	}
 
-	void textCenter(const std::string& text)
+	void TextCenter(const std::string& text)
 	{
 		auto windowWidth = ImGui::GetWindowSize().x;
 		auto textWidth = ImGui::CalcTextSize(text.c_str()).x;
@@ -422,7 +462,16 @@ private:
 		ImGui::Button(text.c_str());
 	}
 
-	void buttonPlayCenter()
+	void TextRight(const std::string& text)
+	{
+		auto windowWidth = ImGui::GetWindowSize().x;
+		auto textWidth = ImGui::CalcTextSize(text.c_str()).x;
+
+		ImGui::SetCursorPosX(windowWidth - textWidth - 5.0f);
+		ImGui::Text(text.c_str());
+	}
+
+	void ButtonPlayCenter()
 	{
 		static std::string text = "Play";
 		auto windowWidth = ImGui::GetWindowSize().x;
@@ -438,43 +487,34 @@ private:
 			if (text == "Play")
 			{
 				text = "Stop";
-				_windowManager->fireEvent(UserGameStateEventData{ GameState::game });
-				_windowManager->disableCursor();
+				_windowManager->FireEvent(UserGameStateEventData{ GameState::game });
+				_windowManager->SetCursorMode(seri::CursorMode::disabled);
 				//_io->MouseDrawCursor = true;
 			}
 			else
 			{
 				text = "Play";
-				_windowManager->fireEvent(UserGameStateEventData{ GameState::idle });
-				_windowManager->enableCursor();
+				_windowManager->FireEvent(UserGameStateEventData{ GameState::idle });
+				_windowManager->SetCursorMode(seri::CursorMode::disabled);
 				//_io->MouseDrawCursor = false;
 			}
 		}
 		ImGui::PopStyleColor(3);
 	}
 
-	void textRight(const std::string& text)
-	{
-		auto windowWidth = ImGui::GetWindowSize().x;
-		auto textWidth = ImGui::CalcTextSize(text.c_str()).x;
-
-		ImGui::SetCursorPosX(windowWidth - textWidth - 5.0f);
-		ImGui::Text(text.c_str());
-	}
-
-	void registerScene(std::shared_ptr<seri::IScene> scene)
+	void RegisterScene(std::shared_ptr<seri::IScene> scene)
 	{
 		_currentScene = scene;
-		registerEntity(scene->getObject());
+		RegisterEntity(scene->getObject());
 	}
 
-	void registerEntity(std::shared_ptr<Object> entity)
+	void RegisterEntity(std::shared_ptr<Object> entity)
 	{
 		_currentEntity = std::dynamic_pointer_cast<seri::Entity>(entity);
 		_currentObject = std::dynamic_pointer_cast<seri::Object>(entity);
 	}
 
-	std::shared_ptr<seri::IWindowManager> _windowManager;
+	std::unique_ptr<seri::IWindowManager>& _windowManager;
 	std::shared_ptr<Camera> _camera;
 	std::shared_ptr<seri::IScene> _scene;
 	std::shared_ptr<seri::IScene> _currentScene;
