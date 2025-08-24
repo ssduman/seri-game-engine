@@ -42,12 +42,6 @@ namespace seri
 
 		virtual void* GetContext() = 0;
 
-		virtual void SetCursorMode(CursorMode cursorMode) = 0;
-
-		virtual std::pair<double, double> GetCursorPosition() = 0;
-
-		virtual void SetCursorPosition(double xpos, double ypos) = 0;
-
 		virtual void SetVSyncCount(int count) = 0;
 
 		virtual void PollEvents() = 0;
@@ -57,6 +51,12 @@ namespace seri
 		virtual bool GetWindowShouldClose() = 0;
 
 		virtual void SetWindowShouldCloseToTrue() = 0;
+
+		virtual void SetCursorMode(CursorMode cursorMode) = 0;
+
+		virtual std::pair<double, double> GetCursorPosition() = 0;
+
+		virtual void SetCursorPosition(double xpos, double ypos) = 0;
 
 		virtual std::pair<int, int> GetWindowPosition() = 0;
 
@@ -128,6 +128,11 @@ namespace seri
 			_eventCallback->fireEvent(data);
 		};
 
+		void AddProcessEventDelegate(const ProcessEventDelegate& delegate)
+		{
+			processEventDelegateList.emplace_back(delegate);
+		}
+
 		void SetViewport(int x, int y, int width, int height)
 		{
 			_windowProperties.windowWidth = width;
@@ -177,11 +182,6 @@ namespace seri
 			return pixels;
 		}
 
-		void AddProcessEventDelegate(const ProcessEventDelegate& delegate)
-		{
-			processEventDelegateList.emplace_back(delegate);
-		}
-
 	protected:
 		virtual void InitGlad() = 0;
 
@@ -190,6 +190,7 @@ namespace seri
 			glEnable(GL_BLEND);
 			glEnable(GL_DEPTH_TEST);
 			//glEnable(GL_FRAMEBUFFER_SRGB);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		}
 
 		void LogGLInfo()

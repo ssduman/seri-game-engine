@@ -100,9 +100,9 @@ public:
 	}
 
 #ifdef SERI_USE_SDL3
-	void ProcessEvent(const SDL_Event* event)
+	void ProcessEvent(const void* event)
 	{
-		ImGui_ImplSDL3_ProcessEvent(event);
+		ImGui_ImplSDL3_ProcessEvent(static_cast<const SDL_Event*>(event));
 	}
 #endif
 

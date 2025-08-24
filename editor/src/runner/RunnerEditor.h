@@ -79,9 +79,9 @@ public:
 
 #ifdef SERI_USE_SDL3
 		windowManager->AddProcessEventDelegate(
-			[&gui](const void* eventData)
+			[&gui](const void* sdlEvent)
 			{
-				gui->ProcessEvent(static_cast<const SDL_Event*>(eventData));
+				gui->ProcessEvent(sdlEvent);
 			}
 		);
 #endif

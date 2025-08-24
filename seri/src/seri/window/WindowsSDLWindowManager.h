@@ -272,7 +272,7 @@ namespace seri
 	private:
 		void InitSDL()
 		{
-			if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+			if (!SDL_Init(SDL_INIT_VIDEO)) {
 				throw std::runtime_error("[window] sdl init error: " + std::string(SDL_GetError()));
 			}
 
