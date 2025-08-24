@@ -56,12 +56,12 @@ namespace seri
 
 		ShaderManager::SetUInt(material->shader, "u_texture", 0);
 		ShaderManager::SetColor(material->shader, "u_color", glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f });
-		ShaderManager::SetVec3(material->shader, "u_view_pos", camera->getCameraProperties().position);
+		ShaderManager::SetVec3(material->shader, "u_view_pos", camera->GetCameraProperties().position);
 		ShaderManager::SetVec3(material->shader, "u_light_dir", glm::vec3{ 0.0f, 0.0f, -1.0f });
 		ShaderManager::SetColor(material->shader, "u_light_color", glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f });
 		ShaderManager::SetMat4(material->shader, "u_model", trs * mesh->transformation);
-		ShaderManager::SetMat4(material->shader, "u_view", camera->getView());
-		ShaderManager::SetMat4(material->shader, "u_projection", camera->getProjection());
+		ShaderManager::SetMat4(material->shader, "u_view", camera->GetView());
+		ShaderManager::SetMat4(material->shader, "u_projection", camera->GetProjection());
 
 		if (mesh->bonesForVertices.size() > 0)
 		{
@@ -120,11 +120,11 @@ namespace seri
 
 		ShaderManager::SetUInt(material->shader, "u_texture", 0);
 		ShaderManager::SetColor(material->shader, "u_color", glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f });
-		ShaderManager::SetVec3(material->shader, "u_view_pos", camera->getCameraProperties().position);
+		ShaderManager::SetVec3(material->shader, "u_view_pos", camera->GetCameraProperties().position);
 		ShaderManager::SetVec3(material->shader, "u_light_dir", glm::vec3{ 1.0f, 0.0f, 0.0f });
 		ShaderManager::SetColor(material->shader, "u_light_color", glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f });
-		ShaderManager::SetMat4(material->shader, "u_view", camera->getView());
-		ShaderManager::SetMat4(material->shader, "u_projection", camera->getProjection());
+		ShaderManager::SetMat4(material->shader, "u_view", camera->GetView());
+		ShaderManager::SetMat4(material->shader, "u_projection", camera->GetProjection());
 
 		if (mesh->bonesForVertices.size() > 0)
 		{

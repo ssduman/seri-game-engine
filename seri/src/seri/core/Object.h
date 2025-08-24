@@ -10,16 +10,16 @@ namespace seri
 	public:
 		virtual ~Object() = default;
 
-		virtual void init() = 0;
+		virtual void Init() = 0;
 
-		virtual void update() = 0;
+		virtual void Update() = 0;
 
-		virtual void render() = 0;
+		virtual void Render() = 0;
 
-		virtual void display()
+		virtual void Display()
 		{
-			update();
-			render();
+			Update();
+			Render();
 		}
 
 		virtual glm::vec3 GetPosition()

@@ -13,7 +13,7 @@ namespace seri::event
 
 		virtual ~IEventCallback() = default;
 
-		virtual void fireEvent(IEventData& data) = 0;
+		virtual void FireEvent(IEventData& data) = 0;
 
 	};
 
@@ -25,7 +25,7 @@ namespace seri::event
 
 		~EventCallback() override = default;
 
-		void fireEvent(IEventData& data) override
+		void FireEvent(IEventData& data) override
 		{
 			_f(data);
 		}
@@ -36,7 +36,7 @@ namespace seri::event
 	};
 
 	template <typename F>
-	inline std::shared_ptr<IEventCallback> makeEventCallback(F f)
+	inline std::shared_ptr<IEventCallback> MakeEventCallback(F f)
 	{
 		return std::make_shared<EventCallback<F>>(std::move(f));
 	}

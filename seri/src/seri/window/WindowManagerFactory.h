@@ -9,7 +9,7 @@ namespace seri
 	class WindowManagerFactory
 	{
 	public:
-		static std::unique_ptr<IWindowManager>& instance()
+		static std::unique_ptr<IWindowManager>& Instance()
 		{
 			return _windowManagerInstance;
 		}

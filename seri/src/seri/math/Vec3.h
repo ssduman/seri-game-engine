@@ -180,27 +180,27 @@ namespace seri
 
 		/* aux */
 
-		float sum()
+		float Sum()
 		{
 			return static_cast<float>(x) + static_cast<float>(y) + static_cast<float>(z);
 		}
 
-		float norm()
+		float Norm()
 		{
-			return (float)sqrt(dot(*this));
+			return (float)sqrt(Dot(*this));
 		}
 
-		Vec3<T> normalize()
+		Vec3<T> Normalize()
 		{
-			return (*this) / norm();
+			return (*this) / Norm();
 		}
 
-		float dot(const Vec3<T>& rhs)
+		float Dot(const Vec3<T>& rhs)
 		{
-			return ((*this) * rhs).sum();
+			return ((*this) * rhs).Sum();
 		}
 
-		Vec3<T> cross(const Vec3<T>& rhs)
+		Vec3<T> Cross(const Vec3<T>& rhs)
 		{
 			auto c_x = y * rhs.z - z * rhs.y;
 			auto c_y = z * rhs.x - x * rhs.z;
@@ -208,14 +208,14 @@ namespace seri
 			return Vec3{ c_x, c_y, c_z };
 		}
 
-		float distance(const Vec3<T>& rhs)
+		float Distance(const Vec3<T>& rhs)
 		{
-			return (float)sqrt(dot((*this) - rhs));
+			return (float)sqrt(Dot((*this) - rhs));
 		}
 
-		float angle(const Vec3<T>& rhs)
+		float Angle(const Vec3<T>& rhs)
 		{
-			return (float)dot(rhs) / (norm() * rhs.norm());
+			return (float)Dot(rhs) / (Norm() * rhs.Norm());
 		}
 
 		T x = 0;

@@ -14,7 +14,7 @@ namespace seri
 			r = c;
 			g = c;
 			b = c;
-			normalize();
+			Normalize();
 		}
 
 		Color(float _r, float _g, float _b)
@@ -22,7 +22,7 @@ namespace seri
 			r = _r;
 			g = _g;
 			b = _b;
-			normalize();
+			Normalize();
 		}
 
 		Color(float _r, float _g, float _b, float _a)
@@ -31,7 +31,7 @@ namespace seri
 			g = _g;
 			b = _b;
 			a = _a;
-			normalize();
+			Normalize();
 		}
 
 		Color(glm::vec3& vec)
@@ -39,7 +39,7 @@ namespace seri
 			r = vec.r;
 			g = vec.g;
 			b = vec.b;
-			normalize();
+			Normalize();
 		}
 
 		Color(const glm::vec3& vec)
@@ -47,7 +47,7 @@ namespace seri
 			r = vec.r;
 			g = vec.g;
 			b = vec.b;
-			normalize();
+			Normalize();
 		}
 
 		Color(glm::vec4& vec)
@@ -56,7 +56,7 @@ namespace seri
 			g = vec.g;
 			b = vec.b;
 			a = vec.a;
-			normalize();
+			Normalize();
 		}
 
 		Color(const glm::vec4& vec)
@@ -65,15 +65,15 @@ namespace seri
 			g = vec.g;
 			b = vec.b;
 			a = vec.a;
-			normalize();
+			Normalize();
 		}
 
-		glm::vec3 getColor()
+		glm::vec3 GetColor()
 		{
 			return { r, g, b };
 		}
 
-		glm::vec4 getColorRGBA()
+		glm::vec4 GetColorRGBA()
 		{
 			return { r, g, b, a };
 		}
@@ -84,7 +84,7 @@ namespace seri
 		float a = 1.0f;
 
 	private:
-		void normalize()
+		void Normalize()
 		{
 			if (r > 1.0f)
 			{

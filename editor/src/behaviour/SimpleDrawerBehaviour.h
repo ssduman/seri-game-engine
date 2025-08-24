@@ -21,8 +21,8 @@ public:
 		quad_3d = seri::Mesh::quad_3d();
 		cube_3d = seri::Mesh::cube_3d();
 		line_2d = seri::Mesh::line_2d(
-			{ seri::Graphic::GetCameraOrtho()->getCameraProperties().width / 2.0f, seri::Graphic::GetCameraOrtho()->getCameraProperties().height / 2.0f },
-			{ seri::Graphic::GetCameraOrtho()->getCameraProperties().width, seri::Graphic::GetCameraOrtho()->getCameraProperties().height }
+			{ seri::Graphic::GetCameraOrtho()->GetCameraProperties().width / 2.0f, seri::Graphic::GetCameraOrtho()->GetCameraProperties().height / 2.0f },
+			{ seri::Graphic::GetCameraOrtho()->GetCameraProperties().width, seri::Graphic::GetCameraOrtho()->GetCameraProperties().height }
 		);
 		font_mesh = std::make_unique<seri::Mesh>();
 

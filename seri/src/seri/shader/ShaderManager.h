@@ -71,7 +71,7 @@ namespace seri
 				if (predef.name == name)
 				{
 					auto shader = std::make_shared<Shader>();
-					shader->init(predef.vsCode.c_str(), predef.fsCode.c_str(), /*readFromFile*/ false);
+					shader->Init(predef.vsCode.c_str(), predef.fsCode.c_str(), /*readFromFile*/ false);
 					return shader;
 				}
 			}
@@ -80,47 +80,47 @@ namespace seri
 			return nullptr;
 		}
 
-		static void setTRS(Shader& shader, const std::shared_ptr<ICamera>& camera)
+		static void SetTRS(Shader& shader, const std::shared_ptr<ICamera>& camera)
 		{
 			ShaderManager::Use(shader);
 			ShaderManager::SetMat4(shader, "u_model", glm::mat4{ 1.0f });
-			ShaderManager::SetMat4(shader, "u_view", camera->getView());
-			ShaderManager::SetMat4(shader, "u_projection", camera->getProjection());
+			ShaderManager::SetMat4(shader, "u_view", camera->GetView());
+			ShaderManager::SetMat4(shader, "u_projection", camera->GetProjection());
 			ShaderManager::Disuse();
 		}
 
-		static void initMVP(Shader& shader, const std::shared_ptr<ICamera>& camera)
+		static void InitMVP(Shader& shader, const std::shared_ptr<ICamera>& camera)
 		{
 			ShaderManager::Use(shader);
 			ShaderManager::SetMat4(shader, "u_model", glm::mat4{ 1.0f });
-			ShaderManager::SetMat4(shader, "u_view", camera->getView());
-			ShaderManager::SetMat4(shader, "u_projection", camera->getProjection());
+			ShaderManager::SetMat4(shader, "u_view", camera->GetView());
+			ShaderManager::SetMat4(shader, "u_projection", camera->GetProjection());
 			ShaderManager::Disuse();
 		}
 
-		static void initVP(Shader& shader, const std::shared_ptr<ICamera>& camera)
+		static void InitVP(Shader& shader, const std::shared_ptr<ICamera>& camera)
 		{
 			ShaderManager::Use(shader);
-			ShaderManager::SetMat4(shader, "u_view", camera->getView());
-			ShaderManager::SetMat4(shader, "u_projection", camera->getProjection());
+			ShaderManager::SetMat4(shader, "u_view", camera->GetView());
+			ShaderManager::SetMat4(shader, "u_projection", camera->GetProjection());
 			ShaderManager::Disuse();
 		}
 
-		static void setModel(Shader& shader, const glm::mat4& model)
+		static void SetModel(Shader& shader, const glm::mat4& model)
 		{
 			ShaderManager::Use(shader);
 			ShaderManager::SetMat4(shader, "u_model", model);
 			ShaderManager::Disuse();
 		}
 
-		static void setView(Shader& shader, const glm::mat4& view)
+		static void SetView(Shader& shader, const glm::mat4& view)
 		{
 			ShaderManager::Use(shader);
 			ShaderManager::SetMat4(shader, "u_view", view);
 			ShaderManager::Disuse();
 		}
 
-		static void setProjection(Shader& shader, const glm::mat4& projection)
+		static void SetProjection(Shader& shader, const glm::mat4& projection)
 		{
 			ShaderManager::Use(shader);
 			ShaderManager::SetMat4(shader, "u_projection", projection);
@@ -176,12 +176,12 @@ namespace seri
 
 		static void Use(Shader& shader)
 		{
-			shader.use();
+			shader.Use();
 		}
 
 		static void Use(const std::shared_ptr<Shader>& shader)
 		{
-			shader->use();
+			shader->Use();
 		}
 
 		static void Disuse()
@@ -191,17 +191,17 @@ namespace seri
 
 		static void Disuse(Shader& shader)
 		{
-			shader.disuse();
+			shader.Disuse();
 		}
 
 		static int GetUniformLocation(const Shader& shader, const char* name)
 		{
-			return glGetUniformLocation(shader.getProgram(), name);
+			return glGetUniformLocation(shader.GetProgram(), name);
 		}
 
 		static int GetUniformLocation(const std::shared_ptr<Shader>& shader, const char* name)
 		{
-			return glGetUniformLocation(shader->getProgram(), name);
+			return glGetUniformLocation(shader->GetProgram(), name);
 		}
 
 		static void SetBool(const Shader& shader, const char* name, bool val)

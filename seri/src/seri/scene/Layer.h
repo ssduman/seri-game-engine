@@ -13,7 +13,7 @@ namespace seri
 
 		virtual ~Layerable() = default;
 
-		virtual void draw() = 0;
+		virtual void Draw() = 0;
 
 		std::string layerName;
 	};
@@ -21,63 +21,63 @@ namespace seri
 	class LayerManager
 	{
 	public:
-		void addGuiLayer(std::shared_ptr<Layerable> layer)
+		void AddGuiLayer(std::shared_ptr<Layerable> layer)
 		{
 			_guiLayer = layer;
 		}
 
-		void deleteGuiLayer(std::shared_ptr<Layerable> layer)
+		void DeleteGuiLayer(std::shared_ptr<Layerable> layer)
 		{
 			_guiLayer.reset();
 		}
 
-		void addDebugLayer(std::shared_ptr<Layerable> layer)
+		void AddDebugLayer(std::shared_ptr<Layerable> layer)
 		{
 			_debugLayer = layer;
 		}
 
-		void deleteDebugLayer(std::shared_ptr<Layerable> layer)
+		void DeleteDebugLayer(std::shared_ptr<Layerable> layer)
 		{
 			_debugLayer.reset();
 		}
 
-		void addUserLayer(std::shared_ptr<Layerable> layer)
+		void AddUserLayer(std::shared_ptr<Layerable> layer)
 		{
 			_userLayer = layer;
 		}
 
-		void deleteUserLayer(std::shared_ptr<Layerable> layer)
+		void DeleteUserLayer(std::shared_ptr<Layerable> layer)
 		{
 			_userLayer.reset();
 		}
 
-		void addSceneLayer(std::shared_ptr<Layerable> layer)
+		void AddSceneLayer(std::shared_ptr<Layerable> layer)
 		{
 			_sceneLayer = layer;
 		}
 
-		void deleteSceneLayer(std::shared_ptr<Layerable> layer)
+		void DeleteSceneLayer(std::shared_ptr<Layerable> layer)
 		{
 			_sceneLayer.reset();
 		}
 
-		void draw()
+		void Draw()
 		{
 			if (_userLayer)
 			{
-				_userLayer->draw();
+				_userLayer->Draw();
 			}
 			if (_sceneLayer)
 			{
-				_sceneLayer->draw();
+				_sceneLayer->Draw();
 			}
 			if (_debugLayer)
 			{
-				_debugLayer->draw();
+				_debugLayer->Draw();
 			}
 			if (_guiLayer)
 			{
-				_guiLayer->draw();
+				_guiLayer->Draw();
 			}
 		}
 

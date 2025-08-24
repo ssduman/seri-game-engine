@@ -275,81 +275,81 @@ namespace seri
 
 		/* aux */
 
-		Vec4<T> getRow(const int& index)
+		Vec4<T> GetRow(const int& index)
 		{
 			return rows[index];
 		}
 
-		Vec4<T> getCol(const int& index)
+		Vec4<T> GetCol(const int& index)
 		{
 			return Vec4{ rows[0][index], rows[1][index], rows[2][index], rows[3][index] };
 		}
 
 		/* transformations */
 
-		Vec4<float> multiply(Vec4<T>& rhs)
+		Vec4<float> Multiply(Vec4<T>& rhs)
 		{
 			return Vec4<float>(
-				getRow(0).dot(rhs),
-				getRow(1).dot(rhs),
-				getRow(2).dot(rhs),
-				getRow(3).dot(rhs)
+				GetRow(0).Dot(rhs),
+				GetRow(1).Dot(rhs),
+				GetRow(2).Dot(rhs),
+				GetRow(3).Dot(rhs)
 			);
 		}
 
-		Vec4<float> multiply(Vec3<T>& rhs)
+		Vec4<float> Multiply(Vec3<T>& rhs)
 		{
 			return Vec4<float>(
-				getRow(0).dot(rhs),
-				getRow(1).dot(rhs),
-				getRow(2).dot(rhs),
+				GetRow(0).Dot(rhs),
+				GetRow(1).Dot(rhs),
+				GetRow(2).Dot(rhs),
 				1
 			);
 		}
 
-		Vec4<float> scale(Vec3<T>& rhs)
+		Vec4<float> Scale(Vec3<T>& rhs)
 		{
-			return multiply(rhs);
+			return Multiply(rhs);
 		}
 
-		Vec4<float> scale(Vec4<T>& rhs)
+		Vec4<float> Scale(Vec4<T>& rhs)
 		{
-			return multiply(rhs);
+			return Multiply(rhs);
 		}
 
-		Vec4<float> translate(Vec3<T>& rhs)
+		Vec4<float> Translate(Vec3<T>& rhs)
 		{
-			return multiply(rhs);
+			return Multiply(rhs);
 		}
 
-		Vec4<float> translate(Vec4<T>& rhs)
+		Vec4<float> Translate(Vec4<T>& rhs)
 		{
-			return multiply(rhs);
+			return Multiply(rhs);
 		}
 
 		/* static transformations */
 
-		static Vec4<float> multiply(Mat4<T>& mat4, Vec3<T>& vec3)
+		static Vec4<float> Multiply(Mat4<T>& mat4, Vec3<T>& vec3)
 		{
 			return Vec4<float>(
-				mat4.getRow(0).dot(vec3),
-				mat4.getRow(1).dot(vec3),
-				mat4.getRow(2).dot(vec3),
+				mat4.GetRow(0).Dot(vec3),
+				mat4.GetRow(1).Dot(vec3),
+				mat4.GetRow(2).Dot(vec3),
 				1.0f
 			);
 		}
 
-		static Vec4<float> multiply(Mat4<T>& mat4, Vec4<T>& vec4)
+		static Vec4<float> Multiply(Mat4<T>& mat4, Vec4<T>& vec4)
 		{
 			return Vec4<float>(
-				mat4.getRow(0).dot(vec4),
-				mat4.getRow(1).dot(vec4),
-				mat4.getRow(2).dot(vec4),
-				mat4.getRow(3).dot(vec4)
+				mat4.GetRow(0).Dot(vec4),
+				mat4.GetRow(1).Dot(vec4),
+				mat4.GetRow(2).Dot(vec4),
+				mat4.GetRow(3).Dot(vec4)
 			);
 		}
 
-		static Mat4<float> scale(Mat4<T>& mat4, Vec3<T> scaler)
+		static Mat4<float> Scale(Mat4<T>& mat4, Vec3<T> scaler)
 		{
 			Mat4 temp{ 1.0f };
 			temp.rows[0] = mat4[0] * scaler[0];
@@ -359,16 +359,16 @@ namespace seri
 			return temp;
 		}
 
-		static Mat4<float> translate(Mat4<T>& mat4, Vec3<T> translator)
+		static Mat4<float> Translate(Mat4<T>& mat4, Vec3<T> translator)
 		{
 			Mat4 temp{ mat4 };
 			temp[3] = mat4[0] * translator[0] + mat4[1] * translator[1] + mat4[2] * translator[2] + mat4[3];
 			return temp;
 		}
 
-		static Mat4<float> rotate(Mat4<T>& mat4, float angle, Vec3<T> axis)
+		static Mat4<float> Rotate(Mat4<T>& mat4, float angle, Vec3<T> axis)
 		{
-			float theta = Util::toRadian(angle);
+			float theta = Util::ToRadian(angle);
 			float cosTheta = cos(theta);
 			float sinTheta = sin(theta);
 
@@ -398,26 +398,26 @@ namespace seri
 
 		/* combinations */
 
-		Mat4<float> multiply(Mat4<T>& rhs)
+		Mat4<float> Multiply(Mat4<T>& rhs)
 		{
 			return Mat4<float>(
-				Vec4<float>{ getRow(0).dot(rhs.getCol(0)), getRow(0).dot(rhs.getCol(1)), getRow(0).dot(rhs.getCol(2)), getRow(0).dot(rhs.getCol(3)) },
-				Vec4<float>{ getRow(1).dot(rhs.getCol(0)), getRow(1).dot(rhs.getCol(1)), getRow(1).dot(rhs.getCol(2)), getRow(1).dot(rhs.getCol(3)) },
-				Vec4<float>{ getRow(2).dot(rhs.getCol(0)), getRow(2).dot(rhs.getCol(1)), getRow(2).dot(rhs.getCol(2)), getRow(2).dot(rhs.getCol(3)) },
-				Vec4<float>{ getRow(3).dot(rhs.getCol(0)), getRow(3).dot(rhs.getCol(1)), getRow(3).dot(rhs.getCol(2)), getRow(3).dot(rhs.getCol(3)) }
+				Vec4<float>{ GetRow(0).Dot(rhs.GetCol(0)), GetRow(0).Dot(rhs.GetCol(1)), GetRow(0).Dot(rhs.GetCol(2)), GetRow(0).Dot(rhs.GetCol(3)) },
+				Vec4<float>{ GetRow(1).Dot(rhs.GetCol(0)), GetRow(1).Dot(rhs.GetCol(1)), GetRow(1).Dot(rhs.GetCol(2)), GetRow(1).Dot(rhs.GetCol(3)) },
+				Vec4<float>{ GetRow(2).Dot(rhs.GetCol(0)), GetRow(2).Dot(rhs.GetCol(1)), GetRow(2).Dot(rhs.GetCol(2)), GetRow(2).Dot(rhs.GetCol(3)) },
+				Vec4<float>{ GetRow(3).Dot(rhs.GetCol(0)), GetRow(3).Dot(rhs.GetCol(1)), GetRow(3).Dot(rhs.GetCol(2)), GetRow(3).Dot(rhs.GetCol(3)) }
 			);
 		}
 
 		/* util */
 
 		template <typename U = float>
-		static glm::mat4 toGLMMat4(Mat4<float>& rhs)
+		static glm::mat4 ToGLMMat4(Mat4<float>& rhs)
 		{
 			return glm::mat4(
-				Vec4<U>::toGLMVec4(rhs.rows[0]),
-				Vec4<U>::toGLMVec4(rhs.rows[1]),
-				Vec4<U>::toGLMVec4(rhs.rows[2]),
-				Vec4<U>::toGLMVec4(rhs.rows[3])
+				Vec4<U>::ToGLMVec4(rhs.rows[0]),
+				Vec4<U>::ToGLMVec4(rhs.rows[1]),
+				Vec4<U>::ToGLMVec4(rhs.rows[2]),
+				Vec4<U>::ToGLMVec4(rhs.rows[3])
 			);
 		}
 

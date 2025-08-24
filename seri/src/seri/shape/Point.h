@@ -15,11 +15,11 @@ namespace seri
 
 		~Point() override = default;
 
-		void render() override
+		void Render() override
 		{
-			_shader.use();
+			_shader.Use();
 			_texture.Bind();
-			_engineBackend.draw();
+			_engineBackend.Draw();
 		}
 
 	private:

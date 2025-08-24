@@ -36,285 +36,284 @@ public:
 		switch (entityType)
 		{
 			case seri::EntityType::point:
-			{
-				constexpr auto numSegments = 40;
-				std::vector<glm::vec3> positions;
-				std::vector<glm::vec4> colors;
-				for (int i = 0; i < numSegments; i++)
 				{
-					float theta = 2.0f * PI * static_cast<float>(i) / static_cast<float>(numSegments);
-					float x = 0.5f * cosf(theta);
-					float y = 0.5f * sinf(theta);
-					positions.emplace_back(x, y, 0.0f);
-					colors.push_back(randomColor());
+					constexpr auto numSegments = 40;
+					std::vector<glm::vec3> positions;
+					std::vector<glm::vec4> colors;
+					for (int i = 0; i < numSegments; i++)
+					{
+						float theta = 2.0f * PI * static_cast<float>(i) / static_cast<float>(numSegments);
+						float x = 0.5f * cosf(theta);
+						float y = 0.5f * sinf(theta);
+						positions.emplace_back(x, y, 0.0f);
+						colors.push_back(randomColor());
+					}
+
+					auto positionsSize = seri::aux::size(positions);
+					auto colorsSize = seri::aux::size(colors);
+
+					auto& shaderInfo = seri::ShaderManager::Get("entity");
+
+					auto point = std::make_shared<seri::Point>(camera);
+					point->GetShader().Init(shaderInfo.vsCode.c_str(), shaderInfo.fsCode.c_str(), /*readFromFile*/ false);
+					point->Init();
+
+					point->GetDrawer().reserveDataBufferSize(positionsSize + colorsSize);
+					point->GetDrawer().setSubDataBuffer(seri::aux::Index::position, positions, 0);
+					point->GetDrawer().setSubDataBuffer(seri::aux::Index::color, colors, positionsSize);
+
+					LOGGER(info, "point created");
+
+					return point;
 				}
-
-				auto positionsSize = seri::aux::size(positions);
-				auto colorsSize = seri::aux::size(colors);
-
-				auto& shaderInfo = seri::ShaderManager::Get("entity");
-
-				auto point = std::make_shared<seri::Point>(camera);
-				point->getShader().init(shaderInfo.vsCode.c_str(), shaderInfo.fsCode.c_str(), /*readFromFile*/ false);
-				point->init();
-
-				point->getDrawer().reserveDataBufferSize(positionsSize + colorsSize);
-				point->getDrawer().setSubDataBuffer(seri::aux::Index::position, positions, 0);
-				point->getDrawer().setSubDataBuffer(seri::aux::Index::color, colors, positionsSize);
-
-				LOGGER(info, "point created");
-
-				return point;
-			}
 			case seri::EntityType::line:
-			{
-				std::vector<glm::vec3> positions{ { -0.5f, -0.5f, 0.0f }, { 0.0f, 0.5f, 0.0f }, { 0.5f, -0.5f, 0.0f } };
-				std::vector<glm::vec4> colors{ randomColor(), randomColor(), randomColor() };
-
-				auto positionsSize = seri::aux::size(positions);
-				auto colorsSize = seri::aux::size(colors);
-
-				auto& shaderInfo = seri::ShaderManager::Get("entity");
-
-				auto line = std::make_shared<seri::Line>(camera);
-				line->getShader().init(shaderInfo.vsCode.c_str(), shaderInfo.fsCode.c_str(), /*readFromFile*/ false);
-				line->init();
-
-				line->getDrawer().reserveDataBufferSize(positionsSize + colorsSize);
-				line->getDrawer().setSubDataBuffer(seri::aux::Index::position, positions, 0);
-				line->getDrawer().setSubDataBuffer(seri::aux::Index::color, colors, positionsSize);
-
-				LOGGER(info, "line created");
-
-				return line;
-			}
-			case seri::EntityType::triangle:
-			{
-				std::vector<glm::vec3> positions{ { -0.5f, -0.5f, 0.0f }, { 0.0f, 0.5f, 0.0f }, { 0.5f, -0.5f, 0.0f } };
-				std::vector<glm::vec4> colors{ randomColor(), randomColor(), randomColor() };
-				std::vector<glm::vec2> texturePositions{ { 1.0f, 1.0f }, { 1.0f, 0.0f }, { 0.0f, 0.0f }, { 0.0f, 1.0f } };
-
-				auto positionsSize = seri::aux::size(positions);
-				auto colorsSize = seri::aux::size(colors);
-				auto texturePositionsSize = seri::aux::size(texturePositions);
-
-				auto& shaderInfo = seri::ShaderManager::Get("entity");
-
-				auto triangle = std::make_shared<seri::Triangle>(camera);
-				triangle->getShader().init(shaderInfo.vsCode.c_str(), shaderInfo.fsCode.c_str(), /*readFromFile*/ false);
-				triangle->getTexture().Init("assets/textures/passage.png");
-				triangle->init();
-
-				triangle->getDrawer().reserveDataBufferSize(positionsSize + colorsSize + texturePositionsSize);
-				triangle->getDrawer().setSubDataBuffer(seri::aux::Index::position, positions, 0);
-				triangle->getDrawer().setSubDataBuffer(seri::aux::Index::color, colors, positionsSize);
-				triangle->getDrawer().setSubDataBuffer(seri::aux::Index::texture, texturePositions, positionsSize + colorsSize);
-
-				LOGGER(info, "triangle created");
-
-				return triangle;
-			}
-			case seri::EntityType::rectangle:
-			{
-				std::vector<glm::vec3> positions{ { -0.5f, -0.5f, 0 }, { -0.5f, 0.5f, 0 }, { 0.5f, 0.5f, 0 }, { 0.5f, -0.5f, 0 } };
-				std::vector<glm::vec2> texturePositions{ { 1.0f, 1.0f }, { 1.0f, 0.0f }, { 0.0f, 0.0f }, { 0.0f, 1.0f } };
-
-				auto positionsSize = seri::aux::size(positions);
-				auto texturePositionsSize = seri::aux::size(texturePositions);
-
-				auto& shaderInfo = seri::ShaderManager::Get("entity");
-
-				auto rectangle = std::make_shared<seri::Rectangle>(camera);
-				rectangle->getShader().init(shaderInfo.vsCode.c_str(), shaderInfo.fsCode.c_str(), /*readFromFile*/ false);
-				rectangle->getTexture().Init("assets/textures/wall1.png");
-				rectangle->init();
-
-				const std::vector<GLuint> indices{ 0, 1, 3, 1, 2, 3 };
-				rectangle->getDrawer().setDataBuffer(seri::aux::DataBuffer{ seri::aux::Target::ebo, seri::aux::size(indices), indices.data() });
-				rectangle->getDrawer().setDrawCount(seri::aux::count(indices));
-				rectangle->getDrawer().setDrawType(seri::aux::DrawType::elements);
-
-				rectangle->getDrawer().reserveDataBufferSize(positionsSize + texturePositionsSize);
-				rectangle->getDrawer().setSubDataBuffer(seri::aux::Index::position, positions, 0);
-				rectangle->getDrawer().setSubDataBuffer(seri::aux::Index::texture, texturePositions, positionsSize);
-
-				LOGGER(info, "rectangle created");
-
-				return rectangle;
-			}
-			case seri::EntityType::circle:
-			{
-				constexpr auto numSegments = 40;
-				std::vector<glm::vec3> positions;
-				std::vector<glm::vec4> colors;
-				std::vector<glm::vec2> texturePositions;
-				for (int i = 0; i < numSegments; i++)
 				{
-					float theta = 2.0f * PI * static_cast<float>(i) / static_cast<float>(numSegments);
-					float x = 0.5f * cosf(theta);
-					float y = 0.5f * sinf(theta);
-					positions.emplace_back(x, y, 0.0f);
-					colors.push_back(randomColor());
-					texturePositions.emplace_back(x, y);
+					std::vector<glm::vec3> positions{ { -0.5f, -0.5f, 0.0f }, { 0.0f, 0.5f, 0.0f }, { 0.5f, -0.5f, 0.0f } };
+					std::vector<glm::vec4> colors{ randomColor(), randomColor(), randomColor() };
+
+					auto positionsSize = seri::aux::size(positions);
+					auto colorsSize = seri::aux::size(colors);
+
+					auto& shaderInfo = seri::ShaderManager::Get("entity");
+
+					auto line = std::make_shared<seri::Line>(camera);
+					line->GetShader().Init(shaderInfo.vsCode.c_str(), shaderInfo.fsCode.c_str(), /*readFromFile*/ false);
+					line->Init();
+
+					line->GetDrawer().reserveDataBufferSize(positionsSize + colorsSize);
+					line->GetDrawer().setSubDataBuffer(seri::aux::Index::position, positions, 0);
+					line->GetDrawer().setSubDataBuffer(seri::aux::Index::color, colors, positionsSize);
+
+					LOGGER(info, "line created");
+
+					return line;
 				}
+			case seri::EntityType::triangle:
+				{
+					std::vector<glm::vec3> positions{ { -0.5f, -0.5f, 0.0f }, { 0.0f, 0.5f, 0.0f }, { 0.5f, -0.5f, 0.0f } };
+					std::vector<glm::vec4> colors{ randomColor(), randomColor(), randomColor() };
+					std::vector<glm::vec2> texturePositions{ { 1.0f, 1.0f }, { 1.0f, 0.0f }, { 0.0f, 0.0f }, { 0.0f, 1.0f } };
 
-				auto positionsSize = seri::aux::size(positions);
-				auto colorsSize = seri::aux::size(colors);
-				auto texturePositionsSize = seri::aux::size(texturePositions);
+					auto positionsSize = seri::aux::size(positions);
+					auto colorsSize = seri::aux::size(colors);
+					auto texturePositionsSize = seri::aux::size(texturePositions);
 
-				auto& shaderInfo = seri::ShaderManager::Get("entity");
+					auto& shaderInfo = seri::ShaderManager::Get("entity");
 
-				auto circle = std::make_shared<seri::Circle>(camera);
-				circle->getShader().init(shaderInfo.vsCode.c_str(), shaderInfo.fsCode.c_str(), /*readFromFile*/ false);
-				circle->getTexture().Init("assets/textures/passage.png");
-				circle->init();
+					auto triangle = std::make_shared<seri::Triangle>(camera);
+					triangle->GetShader().Init(shaderInfo.vsCode.c_str(), shaderInfo.fsCode.c_str(), /*readFromFile*/ false);
+					triangle->GetTexture().Init("assets/textures/passage.png");
+					triangle->Init();
 
-				seri::ShaderManager::GetInstance().SetColor(circle->getShader(), randomColor());
+					triangle->GetDrawer().reserveDataBufferSize(positionsSize + colorsSize + texturePositionsSize);
+					triangle->GetDrawer().setSubDataBuffer(seri::aux::Index::position, positions, 0);
+					triangle->GetDrawer().setSubDataBuffer(seri::aux::Index::color, colors, positionsSize);
+					triangle->GetDrawer().setSubDataBuffer(seri::aux::Index::texture, texturePositions, positionsSize + colorsSize);
 
-				circle->getDrawer().reserveDataBufferSize(positionsSize + colorsSize + texturePositionsSize);
-				circle->getDrawer().setSubDataBuffer(seri::aux::Index::position, positions, 0);
-				circle->getDrawer().setSubDataBuffer(seri::aux::Index::color, colors, positionsSize);
-				circle->getDrawer().setSubDataBuffer(seri::aux::Index::texture, texturePositions, positionsSize + colorsSize);
+					LOGGER(info, "triangle created");
 
-				LOGGER(info, "circle created");
+					return triangle;
+				}
+			case seri::EntityType::rectangle:
+				{
+					std::vector<glm::vec3> positions{ { -0.5f, -0.5f, 0 }, { -0.5f, 0.5f, 0 }, { 0.5f, 0.5f, 0 }, { 0.5f, -0.5f, 0 } };
+					std::vector<glm::vec2> texturePositions{ { 1.0f, 1.0f }, { 1.0f, 0.0f }, { 0.0f, 0.0f }, { 0.0f, 1.0f } };
 
-				return circle;
-			}
+					auto positionsSize = seri::aux::size(positions);
+					auto texturePositionsSize = seri::aux::size(texturePositions);
+
+					auto& shaderInfo = seri::ShaderManager::Get("entity");
+
+					auto rectangle = std::make_shared<seri::Rectangle>(camera);
+					rectangle->GetShader().Init(shaderInfo.vsCode.c_str(), shaderInfo.fsCode.c_str(), /*readFromFile*/ false);
+					rectangle->GetTexture().Init("assets/textures/wall1.png");
+					rectangle->Init();
+
+					const std::vector<GLuint> indices{ 0, 1, 3, 1, 2, 3 };
+					rectangle->GetDrawer().setDataBuffer(seri::aux::DataBuffer{ seri::aux::Target::ebo, seri::aux::size(indices), indices.data() });
+					rectangle->GetDrawer().setDrawCount(seri::aux::count(indices));
+					rectangle->GetDrawer().setDrawType(seri::aux::DrawType::elements);
+					rectangle->GetDrawer().reserveDataBufferSize(positionsSize + texturePositionsSize);
+					rectangle->GetDrawer().setSubDataBuffer(seri::aux::Index::position, positions, 0);
+					rectangle->GetDrawer().setSubDataBuffer(seri::aux::Index::texture, texturePositions, positionsSize);
+
+					LOGGER(info, "rectangle created");
+
+					return rectangle;
+				}
+			case seri::EntityType::circle:
+				{
+					constexpr auto numSegments = 40;
+					std::vector<glm::vec3> positions;
+					std::vector<glm::vec4> colors;
+					std::vector<glm::vec2> texturePositions;
+					for (int i = 0; i < numSegments; i++)
+					{
+						float theta = 2.0f * PI * static_cast<float>(i) / static_cast<float>(numSegments);
+						float x = 0.5f * cosf(theta);
+						float y = 0.5f * sinf(theta);
+						positions.emplace_back(x, y, 0.0f);
+						colors.push_back(randomColor());
+						texturePositions.emplace_back(x, y);
+					}
+
+					auto positionsSize = seri::aux::size(positions);
+					auto colorsSize = seri::aux::size(colors);
+					auto texturePositionsSize = seri::aux::size(texturePositions);
+
+					auto& shaderInfo = seri::ShaderManager::Get("entity");
+
+					auto circle = std::make_shared<seri::Circle>(camera);
+					circle->GetShader().Init(shaderInfo.vsCode.c_str(), shaderInfo.fsCode.c_str(), /*readFromFile*/ false);
+					circle->GetTexture().Init("assets/textures/passage.png");
+					circle->Init();
+
+					seri::ShaderManager::GetInstance().SetColor(circle->GetShader(), randomColor());
+
+					circle->GetDrawer().reserveDataBufferSize(positionsSize + colorsSize + texturePositionsSize);
+					circle->GetDrawer().setSubDataBuffer(seri::aux::Index::position, positions, 0);
+					circle->GetDrawer().setSubDataBuffer(seri::aux::Index::color, colors, positionsSize);
+					circle->GetDrawer().setSubDataBuffer(seri::aux::Index::texture, texturePositions, positionsSize + colorsSize);
+
+					LOGGER(info, "circle created");
+
+					return circle;
+				}
 			case seri::EntityType::cube:
-			{
-				std::vector<glm::vec3> positions{
-					{ -0.5f, -0.5f, -0.5f, },
-					{ 0.5f, -0.5f, -0.5f, },
-					{ 0.5f, 0.5f, -0.5f, },
-					{ 0.5f, 0.5f, -0.5f, },
-					{ -0.5f, 0.5f, -0.5f, },
-					{ -0.5f, -0.5f, -0.5f, },
+				{
+					std::vector<glm::vec3> positions{
+						{ -0.5f, -0.5f, -0.5f, },
+						{ 0.5f, -0.5f, -0.5f, },
+						{ 0.5f, 0.5f, -0.5f, },
+						{ 0.5f, 0.5f, -0.5f, },
+						{ -0.5f, 0.5f, -0.5f, },
+						{ -0.5f, -0.5f, -0.5f, },
 
-					{ -0.5f, -0.5f, 0.5f, },
-					{ 0.5f, -0.5f, 0.5f, },
-					{ 0.5f, 0.5f, 0.5f, },
-					{ 0.5f, 0.5f, 0.5f, },
-					{ -0.5f, 0.5f, 0.5f, },
-					{ -0.5f, -0.5f, 0.5f, },
+						{ -0.5f, -0.5f, 0.5f, },
+						{ 0.5f, -0.5f, 0.5f, },
+						{ 0.5f, 0.5f, 0.5f, },
+						{ 0.5f, 0.5f, 0.5f, },
+						{ -0.5f, 0.5f, 0.5f, },
+						{ -0.5f, -0.5f, 0.5f, },
 
-					{ -0.5f, 0.5f, 0.5f, },
-					{ -0.5f, 0.5f, -0.5f, },
-					{ -0.5f, -0.5f, -0.5f, },
-					{ -0.5f, -0.5f, -0.5f, },
-					{ -0.5f, -0.5f, 0.5f, },
-					{ -0.5f, 0.5f, 0.5f, },
+						{ -0.5f, 0.5f, 0.5f, },
+						{ -0.5f, 0.5f, -0.5f, },
+						{ -0.5f, -0.5f, -0.5f, },
+						{ -0.5f, -0.5f, -0.5f, },
+						{ -0.5f, -0.5f, 0.5f, },
+						{ -0.5f, 0.5f, 0.5f, },
 
-					{ 0.5f, 0.5f, 0.5f, },
-					{ 0.5f, 0.5f, -0.5f, },
-					{ 0.5f, -0.5f, -0.5f, },
-					{ 0.5f, -0.5f, -0.5f, },
-					{ 0.5f, -0.5f, 0.5f, },
-					{ 0.5f, 0.5f, 0.5f, },
+						{ 0.5f, 0.5f, 0.5f, },
+						{ 0.5f, 0.5f, -0.5f, },
+						{ 0.5f, -0.5f, -0.5f, },
+						{ 0.5f, -0.5f, -0.5f, },
+						{ 0.5f, -0.5f, 0.5f, },
+						{ 0.5f, 0.5f, 0.5f, },
 
-					{ -0.5f, -0.5f, -0.5f, },
-					{ 0.5f, -0.5f, -0.5f, },
-					{ 0.5f, -0.5f, 0.5f, },
-					{ 0.5f, -0.5f, 0.5f, },
-					{ -0.5f, -0.5f, 0.5f, },
-					{ -0.5f, -0.5f, -0.5f, },
+						{ -0.5f, -0.5f, -0.5f, },
+						{ 0.5f, -0.5f, -0.5f, },
+						{ 0.5f, -0.5f, 0.5f, },
+						{ 0.5f, -0.5f, 0.5f, },
+						{ -0.5f, -0.5f, 0.5f, },
+						{ -0.5f, -0.5f, -0.5f, },
 
-					{ -0.5f, 0.5f, -0.5f, },
-					{ 0.5f, 0.5f, -0.5f, },
-					{ 0.5f, 0.5f, 0.5f, },
-					{ 0.5f, 0.5f, 0.5f, },
-					{ -0.5f, 0.5f, 0.5f, },
-					{ -0.5f, 0.5f, -0.5f, },
-				};
-				std::vector<glm::vec2> texturePositions{
-					{ 0.0f, 0.0f },
-					{ 1.0f, 0.0f },
-					{ 1.0f, 1.0f },
-					{ 1.0f, 1.0f },
-					{ 0.0f, 1.0f },
-					{ 0.0f, 0.0f },
+						{ -0.5f, 0.5f, -0.5f, },
+						{ 0.5f, 0.5f, -0.5f, },
+						{ 0.5f, 0.5f, 0.5f, },
+						{ 0.5f, 0.5f, 0.5f, },
+						{ -0.5f, 0.5f, 0.5f, },
+						{ -0.5f, 0.5f, -0.5f, },
+					};
+					std::vector<glm::vec2> texturePositions{
+						{ 0.0f, 0.0f },
+						{ 1.0f, 0.0f },
+						{ 1.0f, 1.0f },
+						{ 1.0f, 1.0f },
+						{ 0.0f, 1.0f },
+						{ 0.0f, 0.0f },
 
-					{ 0.0f, 0.0f },
-					{ 1.0f, 0.0f },
-					{ 1.0f, 1.0f },
-					{ 1.0f, 1.0f },
-					{ 0.0f, 1.0f },
-					{ 0.0f, 0.0f },
+						{ 0.0f, 0.0f },
+						{ 1.0f, 0.0f },
+						{ 1.0f, 1.0f },
+						{ 1.0f, 1.0f },
+						{ 0.0f, 1.0f },
+						{ 0.0f, 0.0f },
 
-					{ 1.0f, 0.0f },
-					{ 1.0f, 1.0f },
-					{ 0.0f, 1.0f },
-					{ 0.0f, 1.0f },
-					{ 0.0f, 0.0f },
-					{ 1.0f, 0.0f },
+						{ 1.0f, 0.0f },
+						{ 1.0f, 1.0f },
+						{ 0.0f, 1.0f },
+						{ 0.0f, 1.0f },
+						{ 0.0f, 0.0f },
+						{ 1.0f, 0.0f },
 
-					{ 1.0f, 0.0f },
-					{ 1.0f, 1.0f },
-					{ 0.0f, 1.0f },
-					{ 0.0f, 1.0f },
-					{ 0.0f, 0.0f },
-					{ 1.0f, 0.0f },
+						{ 1.0f, 0.0f },
+						{ 1.0f, 1.0f },
+						{ 0.0f, 1.0f },
+						{ 0.0f, 1.0f },
+						{ 0.0f, 0.0f },
+						{ 1.0f, 0.0f },
 
-					{ 0.0f, 1.0f },
-					{ 1.0f, 1.0f },
-					{ 1.0f, 0.0f },
-					{ 1.0f, 0.0f },
-					{ 0.0f, 0.0f },
-					{ 0.0f, 1.0f },
+						{ 0.0f, 1.0f },
+						{ 1.0f, 1.0f },
+						{ 1.0f, 0.0f },
+						{ 1.0f, 0.0f },
+						{ 0.0f, 0.0f },
+						{ 0.0f, 1.0f },
 
-					{ 0.0f, 1.0f },
-					{ 1.0f, 1.0f },
-					{ 1.0f, 0.0f },
-					{ 1.0f, 0.0f },
-					{ 0.0f, 0.0f },
-					{ 0.0f, 1.0f },
-				};
+						{ 0.0f, 1.0f },
+						{ 1.0f, 1.0f },
+						{ 1.0f, 0.0f },
+						{ 1.0f, 0.0f },
+						{ 0.0f, 0.0f },
+						{ 0.0f, 1.0f },
+					};
 
-				auto positionsSize = seri::aux::size(positions);
-				auto texturePositionsSize = seri::aux::size(texturePositions);
+					auto positionsSize = seri::aux::size(positions);
+					auto texturePositionsSize = seri::aux::size(texturePositions);
 
-				auto& shaderInfo = seri::ShaderManager::Get("entity");
+					auto& shaderInfo = seri::ShaderManager::Get("entity");
 
-				auto cube = std::make_shared<seri::Cube>(camera);
-				cube->getShader().init(shaderInfo.vsCode.c_str(), shaderInfo.fsCode.c_str(), /*readFromFile*/ false);
-				cube->getTexture().Init("assets/textures/wall2.png");
-				cube->init();
+					auto cube = std::make_shared<seri::Cube>(camera);
+					cube->GetShader().Init(shaderInfo.vsCode.c_str(), shaderInfo.fsCode.c_str(), /*readFromFile*/ false);
+					cube->GetTexture().Init("assets/textures/wall2.png");
+					cube->Init();
 
-				seri::ShaderManager::GetInstance().SetColor(cube->getShader(), randomColor());
+					seri::ShaderManager::GetInstance().SetColor(cube->GetShader(), randomColor());
 
-				cube->getDrawer().reserveDataBufferSize(positionsSize + texturePositionsSize);
-				cube->getDrawer().setSubDataBuffer(seri::aux::Index::position, positions, 0);
-				cube->getDrawer().setSubDataBuffer(seri::aux::Index::texture, texturePositions, positionsSize);
+					cube->GetDrawer().reserveDataBufferSize(positionsSize + texturePositionsSize);
+					cube->GetDrawer().setSubDataBuffer(seri::aux::Index::position, positions, 0);
+					cube->GetDrawer().setSubDataBuffer(seri::aux::Index::texture, texturePositions, positionsSize);
 
-				LOGGER(info, "cube created");
+					LOGGER(info, "cube created");
 
-				return cube;
-			}
+					return cube;
+				}
 			case seri::EntityType::polygon:
-			{
-				std::vector<glm::vec3> positions{
-					{ -0.5f, -0.5f, 0.0f },
-					{ -0.5f, 0.5f, 0.0f },
-					{ 0.5f, 0.5f, 0.0f },
-					{ 0.0f, 0.0f, 0.0f },
-					{ 0.5f, -0.5f, 0.0f },
-				};
+				{
+					std::vector<glm::vec3> positions{
+						{ -0.5f, -0.5f, 0.0f },
+						{ -0.5f, 0.5f, 0.0f },
+						{ 0.5f, 0.5f, 0.0f },
+						{ 0.0f, 0.0f, 0.0f },
+						{ 0.5f, -0.5f, 0.0f },
+					};
 
-				auto& shaderInfo = seri::ShaderManager::Get("entity");
+					auto& shaderInfo = seri::ShaderManager::Get("entity");
 
-				auto polygon = std::make_shared<seri::Polygon>(camera);
-				polygon->getShader().init(shaderInfo.vsCode.c_str(), shaderInfo.fsCode.c_str(), /*readFromFile*/ false);
-				polygon->init();
+					auto polygon = std::make_shared<seri::Polygon>(camera);
+					polygon->GetShader().Init(shaderInfo.vsCode.c_str(), shaderInfo.fsCode.c_str(), /*readFromFile*/ false);
+					polygon->Init();
 
-				polygon->getDrawer().setDataBuffer(seri::aux::Index::position, positions);
+					polygon->GetDrawer().setDataBuffer(seri::aux::Index::position, positions);
 
-				LOGGER(info, "polygon created");
+					LOGGER(info, "polygon created");
 
-				return polygon;
-			}
+					return polygon;
+				}
 			case seri::EntityType::unknown:
-			{
-				return nullptr;
-			}
+				{
+					return nullptr;
+				}
 		}
 
 		return nullptr;

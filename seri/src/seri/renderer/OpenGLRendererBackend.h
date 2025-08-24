@@ -30,7 +30,7 @@ namespace seri
 			//release();
 		}
 
-		void draw() override
+		void Draw() override
 		{
 			bindVAO();
 			if (aux::DrawType::arrays == _drawType)
@@ -44,7 +44,7 @@ namespace seri
 			unbindVAO();
 		}
 
-		void release() override
+		void Release() override
 		{
 			unbind();
 			del();

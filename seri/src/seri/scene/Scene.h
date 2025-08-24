@@ -13,83 +13,83 @@ namespace seri
 {
 	struct IScene
 	{
-		IScene(std::string name) : _id(generateId()), _name(std::move(name)) {}
+		IScene(std::string name) : _id(GenerateId()), _name(std::move(name)) {}
 
 		virtual ~IScene() = default;
 
-		virtual void draw() = 0;
+		virtual void Draw() = 0;
 
-		virtual void add(std::shared_ptr<IScene> child) = 0;
+		virtual void Add(std::shared_ptr<IScene> child) = 0;
 
-		virtual void remove(std::shared_ptr<IScene> child) = 0;
+		virtual void Remove(std::shared_ptr<IScene> child) = 0;
 
-		virtual void visit(std::shared_ptr<ISceneVisitor>& visitor) = 0;
+		virtual void Visit(std::shared_ptr<ISceneVisitor>& visitor) = 0;
 
-		int getId()
+		int GetId()
 		{
 			return _id;
 		}
 
-		bool isLeaf()
+		bool IsLeaf()
 		{
 			return _children.empty();
 		}
 
-		const std::string& getName()
+		const std::string& GetName()
 		{
 			return _name;
 		}
 
-		void setName(std::string name)
+		void SetName(std::string name)
 		{
 			_name = std::move(name);
 		}
 
-		const std::vector<std::shared_ptr<IScene>>& getChildren()
+		const std::vector<std::shared_ptr<IScene>>& GetChildren()
 		{
 			return _children;
 		}
 
-		const std::weak_ptr<IScene>& getParent()
+		const std::weak_ptr<IScene>& GetParent()
 		{
 			return _parent;
 		}
 
-		void setParent(std::weak_ptr<IScene> parent)
+		void SetParent(std::weak_ptr<IScene> parent)
 		{
 			_parent = std::move(parent);
 		}
 
-		const std::shared_ptr<Object>& getObject()
+		const std::shared_ptr<Object>& GetUnderlyingObject()
 		{
 			return _object;
 		}
 
-		void setObject(std::shared_ptr<Object> object)
+		void SetUnderlyingObject(std::shared_ptr<Object> object)
 		{
 			_object = std::move(object);
 		}
 
-		static IScene* get(std::shared_ptr<IScene> scene, int id)
+		static IScene* Get(std::shared_ptr<IScene> scene, int id)
 		{
 			if (!scene)
 			{
 				return nullptr;
 			}
 
-			if (scene->getId() == id)
+			if (scene->GetId() == id)
 			{
 				return scene.get();
 			}
 
-			if (scene->isLeaf())
+			if (scene->IsLeaf())
 			{
 				return nullptr;
 			}
 
-			for (auto& s : scene->getChildren())
+			for (auto& s : scene->GetChildren())
 			{
-				auto found = IScene::get(s, id);
+				auto found = IScene::Get(s, id);
 				if (found)
 				{
 					return found;
@@ -108,7 +108,7 @@ namespace seri
 		std::vector<std::shared_ptr<IScene>> _children;
 
 	private:
-		int generateId()
+		int GenerateId()
 		{
 			return ++IScene::_id_s;
 		}
@@ -123,36 +123,36 @@ namespace seri
 
 		~SceneComponent() override = default;
 
-		void draw() override
+		void Draw() override
 		{
 			if (_object)
 			{
-				_object->display();
+				_object->Display();
 			}
 
 			for (auto& child : _children)
 			{
-				child->draw();
+				child->Draw();
 			}
 		}
 
-		void visit(std::shared_ptr<ISceneVisitor>& visitor) override
+		void Visit(std::shared_ptr<ISceneVisitor>& visitor) override
 		{
-			visitor->visit(shared_from_this());
+			visitor->Visit(shared_from_this());
 
 			for (auto& child : _children)
 			{
-				child->visit(visitor);
+				child->Visit(visitor);
 			}
 		}
 
-		void add(std::shared_ptr<IScene> child) override
+		void Add(std::shared_ptr<IScene> child) override
 		{
-			child->setParent(shared_from_this());
+			child->SetParent(shared_from_this());
 			_children.emplace_back(std::move(child));
 		}
 
-		void remove(std::shared_ptr<IScene> child) override
+		void Remove(std::shared_ptr<IScene> child) override
 		{
 			_children.erase(std::remove(_children.begin(), _children.end(), child), _children.end());
 		}

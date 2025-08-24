@@ -9,27 +9,27 @@ namespace seri::event
 	public:
 		virtual ~IEvent() = default;
 
-		virtual void onKeyEvent(const KeyEventData& data) {}
+		virtual void OnKeyEvent(const KeyEventData& data) {}
 
-		virtual void onCharacterEvent(const CharacterEventData& data) {}
+		virtual void OnCharacterEvent(const CharacterEventData& data) {}
 
-		virtual void onCharacterModsEvent(const CharacterModsEventData& data) {}
+		virtual void OnCharacterModsEvent(const CharacterModsEventData& data) {}
 
-		virtual void onMouseEnterEvent(const MouseEnterEventData& data) {}
+		virtual void OnMouseEnterEvent(const MouseEnterEventData& data) {}
 
-		virtual void onMouseButtonEvent(const MouseButtonEventData& data) {}
+		virtual void OnMouseButtonEvent(const MouseButtonEventData& data) {}
 
-		virtual void onMouseScrollEvent(const MouseScrollEventData& data) {}
+		virtual void OnMouseScrollEvent(const MouseScrollEventData& data) {}
 
-		virtual void onMousePositionEvent(const MousePositionEventData& data) {}
+		virtual void OnMousePositionEvent(const MousePositionEventData& data) {}
 
-		virtual void onWindowDropEvent(const WindowDropEventData& data) {}
+		virtual void OnWindowDropEvent(const WindowDropEventData& data) {}
 
-		virtual void onWindowCloseEvent(const WindowCloseEventData& data) {}
+		virtual void OnWindowCloseEvent(const WindowCloseEventData& data) {}
 
-		virtual void onWindowResizeEvent(const WindowResizeEventData& data) {}
+		virtual void OnWindowResizeEvent(const WindowResizeEventData& data) {}
 
-		virtual void onUserEvent(IEventData& data) {}
+		virtual void OnUserEvent(IEventData& data) {}
 
 	private:
 

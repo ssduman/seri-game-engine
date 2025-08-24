@@ -30,7 +30,7 @@ namespace seri
 		static void SetVSyncCount(int count)
 		{
 			GetInstance()._vSyncCount = count;
-			WindowManagerFactory::instance()->SetVSyncCount(count);
+			WindowManagerFactory::Instance()->SetVSyncCount(count);
 		}
 
 		static void SetTargetFrameRate(int frameRate)

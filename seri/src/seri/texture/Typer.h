@@ -32,16 +32,16 @@ namespace seri
 			_font(std::move(font))
 		{
 			_vertices.reserve(6 * 4);
-			initFT();
+			InitFT();
 		}
 
 		~Typer() override
 		{
-			_engineBackend.release();
+			_engineBackend.Release();
 			delete _face;
 		}
 
-		void init() override
+		void Init() override
 		{
 			aux::DataBufferBuilder dataBufferBuilder;
 			aux::AttributeBuilder attributeBuilder;
@@ -65,11 +65,11 @@ namespace seri
 			_engineBackend.setDrawCount(6);
 		}
 
-		void render() override
+		void Render() override
 		{
-			_shader.use();
+			_shader.Use();
 
-			bind();
+			Bind();
 
 			float xTemp{ _x };
 
@@ -104,49 +104,49 @@ namespace seri
 					.setData(aux::data(_vertices))
 					.build();
 				_engineBackend.setSubDataBuffer(subDataBuffer);
-				_engineBackend.draw();
+				_engineBackend.Draw();
 			}
 
-			unbind();
+			Unbind();
 
-			_shader.disuse();
+			_shader.Disuse();
 		}
 
-		void update() override {}
+		void Update() override {}
 
-		void setText(std::string text)
+		void SetText(std::string text)
 		{
 			_text = std::move(text);
 		}
 
-		void setScale(float scale)
+		void SetScale(float scale)
 		{
 			_scale = scale;
 		}
 
-		void setColor(glm::vec4 color)
+		void SetColor(glm::vec4 color)
 		{
 			_color = std::move(color);
 			ShaderManager::GetInstance().SetColor(_shader, _color);
 		}
 
-		void setPosition(float x, float y, float z = 1.0f)
+		void SetPosition(float x, float y, float z = 1.0f)
 		{
 			_x = x;
 			_y = y;
 			_z = z;
 		}
 
-		void clear()
+		void Clear()
 		{
 			_text.clear();
 			_scale = 1.0f;
 			_x = 0, _y = 0, _z = 0;
-			setColor({ 1.0f, 1.0f, 1.0f, 1.0f });
+			SetColor({ 1.0f, 1.0f, 1.0f, 1.0f });
 		}
 
 	private:
-		void initFT()
+		void InitFT()
 		{
 			if (_font.empty())
 			{
@@ -219,12 +219,12 @@ namespace seri
 			_library = nullptr;
 		}
 
-		void bind()
+		void Bind()
 		{
 			glActiveTexture(GL_TEXTURE0);
 		}
 
-		void unbind()
+		void Unbind()
 		{
 			glBindTexture(GL_TEXTURE_2D, 0);
 		}

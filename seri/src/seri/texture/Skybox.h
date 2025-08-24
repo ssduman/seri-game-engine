@@ -37,7 +37,7 @@ namespace seri
 
 		~Skybox()
 		{
-			_engineBackend.release();
+			_engineBackend.Release();
 		}
 
 		void Init()
@@ -51,28 +51,28 @@ namespace seri
 
 		void Render()
 		{
-			_shader->use();
+			_shader->Use();
 
 			Bind();
 
 			glDepthFunc(GL_LEQUAL);
 			glBindTexture(GL_TEXTURE_CUBE_MAP, _tex);
 
-			_engineBackend.draw();
+			_engineBackend.Draw();
 
 			glBindVertexArray(0);
 			glDepthFunc(GL_LESS);
 
 			Unbind();
 
-			_shader->disuse();
+			_shader->Disuse();
 		}
 
 		void Update()
 		{
 			if (_camera)
 			{
-				ShaderManager::SetView(_shader, glm::mat4(glm::mat3(_camera->getView())));
+				ShaderManager::SetView(_shader, glm::mat4(glm::mat3(_camera->GetView())));
 			}
 		}
 
@@ -80,8 +80,8 @@ namespace seri
 		void InitMVP()
 		{
 			ShaderManager::SetModel(_shader, glm::mat4{ 1.0f });
-			ShaderManager::SetView(_shader, glm::mat4(glm::mat3(_camera->getView())));
-			ShaderManager::SetProjection(_shader, _camera->getProjection());
+			ShaderManager::SetView(_shader, glm::mat4(glm::mat3(_camera->GetView())));
+			ShaderManager::SetProjection(_shader, _camera->GetProjection());
 		}
 
 		void SetDefaultPositions()

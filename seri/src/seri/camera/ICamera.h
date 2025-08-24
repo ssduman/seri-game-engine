@@ -20,9 +20,9 @@ namespace seri
 
 		~ICamera() override = default;
 
-		void render() override {}
+		void Render() override {}
 
-		void onWindowResizeEvent(const event::WindowResizeEventData& data) override
+		void OnWindowResizeEvent(const event::WindowResizeEventData& data) override
 		{
 			auto width = static_cast<float>(data.width);
 			auto height = static_cast<float>(data.height);
@@ -38,12 +38,12 @@ namespace seri
 			_cameraProperties.height = height;
 			_cameraProperties.aspect = width / height;
 
-			updateProjection();
+			UpdateProjection();
 		}
 
-		void onMousePositionEvent(const event::MousePositionEventData& data) override
+		void OnMousePositionEvent(const event::MousePositionEventData& data) override
 		{
-			if (!isPlayable())
+			if (!IsPlayable())
 			{
 				return;
 			}
@@ -88,8 +88,8 @@ namespace seri
 				_yaw -= 360.0f;
 			}
 
-			updateEulerAngles();
-			updateView();
+			UpdateEulerAngles();
+			UpdateView();
 		}
 
 		glm::vec3 GetPosition() override
@@ -102,19 +102,19 @@ namespace seri
 			_cameraProperties.position = position;
 		}
 
-		virtual bool isPlayable() = 0;
+		virtual bool IsPlayable() = 0;
 
-		const glm::mat4& getModel()
+		const glm::mat4& GetModel()
 		{
 			return _model;
 		}
 
-		const glm::mat4& getView()
+		const glm::mat4& GetView()
 		{
 			return _view;
 		}
 
-		const glm::mat4& getProjection()
+		const glm::mat4& GetProjection()
 		{
 			return _projection;
 		}
@@ -124,18 +124,18 @@ namespace seri
 			return _cameraProperties.isOrtho;
 		}
 
-		const CameraProperties& getCameraProperties()
+		const CameraProperties& GetCameraProperties()
 		{
 			return _cameraProperties;
 		}
 
-		void setCameraProperties(CameraProperties cameraProperties)
+		void SetCameraProperties(CameraProperties cameraProperties)
 		{
 			_cameraProperties = std::move(cameraProperties);
 		}
 
 	protected:
-		virtual void updateView()
+		virtual void UpdateView()
 		{
 			if (_cameraProperties.isOrtho)
 			{
@@ -159,7 +159,7 @@ namespace seri
 			}
 		}
 
-		virtual void updateProjection()
+		virtual void UpdateProjection()
 		{
 			if (_cameraProperties.isOrtho)
 			{
@@ -183,7 +183,7 @@ namespace seri
 			}
 		}
 
-		virtual void updateEulerAngles()
+		virtual void UpdateEulerAngles()
 		{
 			glm::vec3 eulerAngle{};
 			eulerAngle.x = cos(glm::radians(_cameraProperties.rotation.y)) * cos(glm::radians(_cameraProperties.rotation.x));

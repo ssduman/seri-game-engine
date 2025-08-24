@@ -19,7 +19,7 @@ namespace seri
 			}
 		}
 
-		void setMinimumLogLevel(LogLevel lvl)
+		void SetMinimumLogLevel(LogLevel lvl)
 		{
 			_loggerProperties.level = lvl;
 		}

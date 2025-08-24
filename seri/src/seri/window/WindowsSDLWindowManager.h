@@ -31,28 +31,25 @@ namespace seri
 		{
 			if (_initialized)
 			{
-				throw std::runtime_error("[window] window manager is already initialized");
+				throw std::runtime_error("[window] windows sdl window manager is already initialized");
 			}
 
 			InitSDL();
-
-			SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-			SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 6);
-			SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-			SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-
-			CreateSDLWindow();
-			SetContext();
-
-			InitGlad();
-			LogGLInfo();
-			SetGLOptions();
+			CreateWindowSDL();
 
 			SetWindowUserPointer(static_cast<void*>(this));
 
+			SetOpenGLHints();
+			SetOpenGLContext();
+
+			InitOpenGLGlad();
+			SetOpenGLOptions();
+			LogOpenGLInfo();
+			EnableOpenGLDebugOutput();
+
 			_initialized = true;
 
-			LOGGER(info, "[window] sdl window manager created successfully");
+			LOGGER(info, "[window] windows sdl window manager created successfully");
 		}
 
 		double GetTime() override
@@ -324,7 +321,7 @@ namespace seri
 							bool down = event.key.down;
 							bool repeat = event.key.repeat;
 
-							KeyCode keyEnum = GetKeyEnum(key);
+							KeyCode keyEnum = GetKeyCodeEnum(key);
 							InputAction actionEnum = repeat ? InputAction::repeat : InputAction::press;
 							std::vector<InputModifier> modsVector;
 							FillModsVector(mods, modsVector);
@@ -355,7 +352,7 @@ namespace seri
 							bool down = event.key.down;
 							bool repeat = event.key.repeat;
 
-							KeyCode keyEnum = GetKeyEnum(key);
+							KeyCode keyEnum = GetKeyCodeEnum(key);
 							InputAction actionEnum = InputAction::release;
 							std::vector<InputModifier> modsVector;
 							FillModsVector(mods, modsVector);
@@ -426,18 +423,18 @@ namespace seri
 			SDL_SetClipboardText(str);
 		}
 
-		void SetWindowUserPointer(void* pointer)
+		void SetWindowUserPointer(void* pointer) override
 		{
-			SDL_SetPointerProperty(SDL_GetWindowProperties(_window), "user.data", pointer);
+			SDL_SetPointerProperty(SDL_GetWindowProperties(_window), "user.pointer", pointer);
 		}
 
-		void* GetWindowUserPointer()
+		void* GetWindowUserPointer() override
 		{
-			return SDL_GetPointerProperty(SDL_GetWindowProperties(_window), "user.data", nullptr);;
+			return SDL_GetPointerProperty(SDL_GetWindowProperties(_window), "user.pointer", nullptr);;
 		}
 
 	protected:
-		void InitGlad() override
+		void InitOpenGLGlad() override
 		{
 			int version = gladLoadGL(SDL_GL_GetProcAddress);
 			if (version == 0) {
@@ -445,6 +442,25 @@ namespace seri
 			}
 
 			LOGGER(info, "[window] loaded opengl " << GLAD_VERSION_MAJOR(version) << "." << GLAD_VERSION_MINOR(version));
+		}
+
+		void SetOpenGLHints() override
+		{
+			SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+			SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 6);
+			SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+			SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+		}
+
+		void SetOpenGLContext() override
+		{
+			_context = SDL_GL_CreateContext(_window);
+			if (!_context)
+			{
+				LOGGER(error, "[window] sdl gl create context error: " + std::string(SDL_GetError()));
+				SDL_DestroyWindow(_window);
+				SDL_Quit();
+			}
 		}
 
 	private:
@@ -457,7 +473,7 @@ namespace seri
 			LOGGER(info, "[window] sdl version '" << SDL_MAJOR_VERSION << "." << SDL_MINOR_VERSION << "." << SDL_MICRO_VERSION << "' init succeeded");
 		}
 
-		void CreateSDLWindow()
+		void CreateWindowSDL()
 		{
 			SDL_WindowFlags flags =
 				SDL_WINDOW_OPENGL |
@@ -484,18 +500,7 @@ namespace seri
 			LOGGER(info, "[window] sdl window created");
 		}
 
-		void SetContext()
-		{
-			_context = SDL_GL_CreateContext(_window);
-			if (!_context)
-			{
-				LOGGER(error, "[window] sdl gl create context error: " + std::string(SDL_GetError()));
-				SDL_DestroyWindow(_window);
-				SDL_Quit();
-			}
-		}
-
-		KeyCode GetKeyEnum(int key)
+		KeyCode GetKeyCodeEnum(int key)
 		{
 			switch (key)
 			{

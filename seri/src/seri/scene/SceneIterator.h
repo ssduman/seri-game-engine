@@ -11,10 +11,10 @@ namespace seri
 	{
 		SceneIterator(std::shared_ptr<IScene> scene)
 		{
-			prepareDrawVector(std::move(scene));
+			PrepareDrawVector(std::move(scene));
 		}
 
-		auto getDrawVector()
+		auto GetDrawVector()
 		{
 			return _drawVector;
 		}
@@ -30,13 +30,13 @@ namespace seri
 		}
 
 	private:
-		void prepareDrawVector(const std::shared_ptr<IScene>& scene)
+		void PrepareDrawVector(const std::shared_ptr<IScene>& scene)
 		{
 			_drawVector.push_back(scene);
 
-			for (const auto& s : scene->getChildren())
+			for (const auto& s : scene->GetChildren())
 			{
-				prepareDrawVector(s);
+				PrepareDrawVector(s);
 			}
 		}
 

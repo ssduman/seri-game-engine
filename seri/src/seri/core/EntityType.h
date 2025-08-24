@@ -16,26 +16,19 @@ namespace seri
 		unknown,
 	};
 
-	inline std::string toString(EntityType entityType)
+	inline std::string ToString(EntityType entityType)
 	{
 		switch (entityType)
 		{
-			case EntityType::point:
-				return "point";
-			case EntityType::line:
-				return "line";
-			case EntityType::triangle:
-				return "triangle";
-			case EntityType::rectangle:
-				return "rectangle";
-			case EntityType::circle:
-				return "circle";
-			case EntityType::cube:
-				return "cube";
-			case EntityType::polygon:
-				return "polygon";
-			case EntityType::unknown:
-				return "unknown";
+			case EntityType::point: return "point";
+			case EntityType::line: return "line";
+			case EntityType::triangle: return "triangle";
+			case EntityType::rectangle: return "rectangle";
+			case EntityType::circle: return "circle";
+			case EntityType::cube: return "cube";
+			case EntityType::polygon: return "polygon";
+			case EntityType::unknown: return "unknown";
+			default: return "";
 		}
 	}
 }

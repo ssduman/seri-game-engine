@@ -10,7 +10,7 @@ namespace seri
 	{
 		virtual ~ISceneVisitor() = default;
 
-		virtual void visit(std::shared_ptr<IScene>& scene) = 0;
+		virtual void Visit(std::shared_ptr<IScene>& scene) = 0;
 
 	};
 
@@ -21,7 +21,7 @@ namespace seri
 
 		~SceneVisitorWrapper() override = default;
 
-		void visit(std::shared_ptr<IScene>& scene) override
+		void Visit(std::shared_ptr<IScene>& scene) override
 		{
 			_f(scene);
 		}
@@ -32,7 +32,7 @@ namespace seri
 	};
 
 	template<typename F>
-	inline std::shared_ptr<ISceneVisitor> makeSceneVisitor(F f)
+	inline std::shared_ptr<ISceneVisitor> MakeSceneVisitor(F f)
 	{
 		return std::make_shared<SceneVisitorWrapper<F>>(std::move(f));
 	}

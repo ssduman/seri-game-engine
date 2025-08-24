@@ -22,7 +22,7 @@ public:
 	void operator()()
 	{
 		seri::WindowProperties windowProperties{ /*title*/ "Seri Game Engine - Editor", /*fullscreen*/ false, /*w*/ 1280, /*h*/ 720 };
-		auto& windowManager = seri::WindowManagerFactory::instance();
+		auto& windowManager = seri::WindowManagerFactory::Instance();
 		windowManager->SetWindowProperties(windowProperties);
 		windowManager->Init();
 
@@ -36,9 +36,9 @@ public:
 		seri::sound::SoundManager::Init("assets/sounds/");
 
 		seri::SceneBuilder builder;
-		auto rootScene = builder.setName("Main").build();
+		auto rootScene = builder.SetName("Main").Build();
 
-		windowManager->SetEventCallback(seri::event::makeEventCallback(
+		windowManager->SetEventCallback(seri::event::MakeEventCallback(
 			[&rootScene](seri::event::IEventData& data)
 			{
 				seri::event::EventDispatcher{}(rootScene, data);
@@ -51,7 +51,7 @@ public:
 		cameraPropertiesOrtho.isOrtho = true;
 		cameraPropertiesOrtho.aspect = windowManager->GetAspectRatio();
 		auto cameraOrtho = std::make_shared<Camera>(std::move(cameraPropertiesOrtho));
-		cameraOrtho->init();
+		cameraOrtho->Init();
 
 		seri::CameraProperties cameraPropertiesPerspective;
 		cameraPropertiesPerspective.width = windowProperties.windowWidth;
@@ -61,21 +61,21 @@ public:
 		cameraPropertiesPerspective.position = { 0.0f, 4.0f, 6.0f };
 		cameraPropertiesPerspective.rotation = { -90.0f, -30.0f, 0.0f };
 		auto cameraPerspective = std::make_shared<Camera>(std::move(cameraPropertiesPerspective));
-		cameraPerspective->init();
+		cameraPerspective->Init();
 
 		seri::Graphic::AddCamera(cameraOrtho);
 		seri::Graphic::AddCamera(cameraPerspective);
 
-		auto cameraOrthoScene = builder.setName("Camera Ortho").setObject(cameraOrtho).build();
-		rootScene->add(cameraOrthoScene);
+		auto cameraOrthoScene = builder.SetName("Camera Ortho").SetUnderlyingObject(cameraOrtho).Build();
+		rootScene->Add(cameraOrthoScene);
 
-		auto cameraPerspectiveScene = builder.setName("Camera Perspective").setObject(cameraPerspective).build();
-		rootScene->add(cameraPerspectiveScene);
+		auto cameraPerspectiveScene = builder.SetName("Camera Perspective").SetUnderlyingObject(cameraPerspective).Build();
+		rootScene->Add(cameraPerspectiveScene);
 
 		auto skybox = std::make_shared<seri::Skybox>(cameraPerspective);
 
 		auto gui = std::make_shared<GUI>(cameraPerspective, rootScene);
-		gui->init();
+		gui->Init();
 
 #ifdef SERI_USE_SDL3
 		windowManager->AddProcessEventDelegate(
@@ -103,8 +103,8 @@ public:
 			windowManager->ClearColor();
 			windowManager->UpdateDeltaTime();
 
-			seri::Graphic::GetCameraOrtho()->update();
-			seri::Graphic::GetCameraPerspective()->update();
+			seri::Graphic::GetCameraOrtho()->Update();
+			seri::Graphic::GetCameraPerspective()->Update();
 
 			skybox->Update();
 			skybox->Render();
@@ -113,7 +113,7 @@ public:
 
 			DrawScene(rootScene);
 
-			gui->display();
+			gui->Display();
 
 			seri::InputManager::Reset();
 
@@ -140,7 +140,7 @@ private:
 		seri::SceneIterator iter(rootScene);
 		for (auto& s : iter)
 		{
-			s->draw();
+			s->Draw();
 		}
 	}
 

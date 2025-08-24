@@ -232,8 +232,8 @@ namespace seri
 	{
 		unsigned int width = aiTexture->mWidth;
 		unsigned int height = aiTexture->mHeight;
-		unsigned int size = std::max(width, height);
-		size = std::max(size, width * height);
+		unsigned int size = (width > height) ? width : height;
+		size = (size > width * height) ? size : width * height;
 
 		std::vector<Texture> textures;
 		Texture texture;

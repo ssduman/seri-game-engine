@@ -184,7 +184,7 @@ namespace seri
 
 		void UpdateAnimation()
 		{
-			auto time = WindowManagerFactory::instance()->GetTime();
+			auto time = WindowManagerFactory::Instance()->GetTime();
 			auto timeInTicks = time * animation.tickPerSecond;
 
 			animTimeInTick = std::fmod(timeInTicks, animation.durationInTick);
@@ -633,8 +633,8 @@ namespace seri
 
 			mesh->drawMode = aux::DrawMode::lines;
 
-			float screenW = WindowManagerFactory::instance()->GetWidthF();
-			float screenH = WindowManagerFactory::instance()->GetHeightF();
+			float screenW = WindowManagerFactory::Instance()->GetWidthF();
+			float screenH = WindowManagerFactory::Instance()->GetHeightF();
 
 			glm::vec4 beg_ = {
 				Util::Map(beg.x, 0.0f, screenW, -1.0f, 1.0f),

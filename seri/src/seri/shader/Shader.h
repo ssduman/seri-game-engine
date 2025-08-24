@@ -24,10 +24,10 @@ namespace seri
 
 		~Shader() = default;
 
-		void init(const char* vsCodePath, const char* fsCodePath, bool readFromFile = true)
+		void Init(const char* vsCodePath, const char* fsCodePath, bool readFromFile = true)
 		{
-			unsigned int vertexShader = compileShader(GL_VERTEX_SHADER, vsCodePath, readFromFile);
-			unsigned int fragmentShader = compileShader(GL_FRAGMENT_SHADER, fsCodePath, readFromFile);
+			unsigned int vertexShader = CompileShader(GL_VERTEX_SHADER, vsCodePath, readFromFile);
+			unsigned int fragmentShader = CompileShader(GL_FRAGMENT_SHADER, fsCodePath, readFromFile);
 
 			_program = glCreateProgram();
 			glAttachShader(_program, vertexShader);
@@ -36,12 +36,12 @@ namespace seri
 			glDeleteShader(vertexShader);
 			glDeleteShader(fragmentShader);
 
-			checkProgramLinkingError();
+			CheckProgramLinkingError();
 		}
 
-		void use()
+		void Use()
 		{
-			if (!isActiveForUsing())
+			if (!IsActiveForUsing())
 			{
 				LOGGER(error, "shader is not active");
 				return;
@@ -50,33 +50,33 @@ namespace seri
 			glUseProgram(_program);
 		}
 
-		void disuse()
+		void Disuse()
 		{
 			glUseProgram(0);
 		}
 
-		void release()
+		void Release()
 		{
 			if (_program != 0)
 			{
 				LOGGER(verbose, "deleted shader: " << _program);
-				disuse();
-				del();
+				Disuse();
+				Del();
 			}
 		}
 
-		unsigned int getProgram()
+		unsigned int GetProgram()
 		{
 			return _program;
 		}
 
-		const unsigned int getProgram() const
+		const unsigned int GetProgram() const
 		{
 			return _program;
 		}
 
 	private:
-		unsigned int compileShader(GLenum type, const char* code, bool readFromFile)
+		unsigned int CompileShader(GLenum type, const char* code, bool readFromFile)
 		{
 			unsigned int shader = glCreateShader(type);
 			auto codeCStr = code;
@@ -88,11 +88,11 @@ namespace seri
 			}
 			glShaderSource(shader, 1, &codeCStr, nullptr);
 			glCompileShader(shader);
-			checkShaderCompilationError(shader);
+			CheckShaderCompilationError(shader);
 			return shader;
 		}
 
-		bool checkShaderCompilationError(unsigned int shader)
+		bool CheckShaderCompilationError(unsigned int shader)
 		{
 			int errorStatusSuccess;
 			char errorStatusLog[512];
@@ -107,7 +107,7 @@ namespace seri
 			return true;
 		}
 
-		bool checkProgramLinkingError()
+		bool CheckProgramLinkingError()
 		{
 			int errorStatusSuccess;
 			char errorStatusLog[512];
@@ -122,12 +122,12 @@ namespace seri
 			return true;
 		}
 
-		bool isActiveForUsing()
+		bool IsActiveForUsing()
 		{
 			return _program != 0;
 		}
 
-		void del()
+		void Del()
 		{
 			glDeleteProgram(_program);
 			_program = 0;

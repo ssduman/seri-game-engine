@@ -34,41 +34,41 @@ namespace seri
 
 		~Entity() override
 		{
-			_engineBackend.release();
+			_engineBackend.Release();
 		}
 
-		void init() override
+		void Init() override
 		{
-			ShaderManager::GetInstance().initMVP(_shader, _camera);
+			ShaderManager::GetInstance().InitMVP(_shader, _camera);
 		}
 
-		void update() override
+		void Update() override
 		{
-			ShaderManager::GetInstance().setView(_shader, _camera->getView());
-			ShaderManager::GetInstance().setProjection(_shader, _camera->getProjection());
+			ShaderManager::GetInstance().SetView(_shader, _camera->GetView());
+			ShaderManager::GetInstance().SetProjection(_shader, _camera->GetProjection());
 		}
 
-		Color& getColor()
+		Color& GetColor()
 		{
 			return _color;
 		}
 
-		Shader& getShader()
+		Shader& GetShader()
 		{
 			return _shader;
 		}
 
-		Texture& getTexture()
+		Texture& GetTexture()
 		{
 			return _texture;
 		}
 
-		Transform& getTransform()
+		Transform& GetTransform()
 		{
 			return _transform;
 		}
 
-		OpenGLRendererBackend& getDrawer()
+		OpenGLRendererBackend& GetDrawer()
 		{
 			return _engineBackend;
 		}

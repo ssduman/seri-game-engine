@@ -249,40 +249,40 @@ namespace seri
 
 		/* aux */
 
-		float sum()
+		float Sum()
 		{
 			return static_cast<float>(x) + static_cast<float>(y) + static_cast<float>(z) + static_cast<float>(w);
 		}
 
-		float norm()
+		float Norm()
 		{
-			return sqrt(dot(*this));
+			return sqrt(Dot(*this));
 		}
 
-		Vec4<T> normalize()
+		Vec4<T> Normalize()
 		{
-			return (*this) / norm();
+			return (*this) / Norm();
 		}
 
-		float dot(const Vec4<T>& rhs)
+		float Dot(const Vec4<T>& rhs)
 		{
-			return ((*this) * rhs).sum();
+			return ((*this) * rhs).Sum();
 		}
 
-		float distance(const Vec4<T>& rhs)
+		float Distance(const Vec4<T>& rhs)
 		{
-			return sqrt(dot(*this - rhs));
+			return sqrt(Dot(*this - rhs));
 		}
 
-		float angle(const Vec4<T>& rhs)
+		float Angle(const Vec4<T>& rhs)
 		{
-			return dot(rhs) / (norm() * rhs.norm());
+			return Dot(rhs) / (Norm() * rhs.Norm());
 		}
 
 		/* util */
 
 		template <typename U = float>
-		static glm::vec4 toGLMVec4(Vec4<U> vec4)
+		static glm::vec4 ToGLMVec4(Vec4<U> vec4)
 		{
 			return glm::vec4{ vec4.x, vec4.y, vec4.z, vec4.w };
 		}

@@ -215,31 +215,31 @@ namespace seri
 
 		/* aux */
 
-		Vec3<T> getRow(const int& index)
+		Vec3<T> GetRow(const int& index)
 		{
 			return rows[index];
 		}
 
-		Vec3<T> getCol(const int& index)
+		Vec3<T> GetCol(const int& index)
 		{
 			return Vec3{ rows[0][index], rows[1][index], rows[2][index] };
 		}
 
-		Vec3<float> multiply(Vec3<T>& rhs)
+		Vec3<float> Multiply(Vec3<T>& rhs)
 		{
 			return Vec3<float>(
-				getRow(0).dot(rhs),
-				getRow(1).dot(rhs),
-				getRow(2).dot(rhs)
+				GetRow(0).dot(rhs),
+				GetRow(1).dot(rhs),
+				GetRow(2).dot(rhs)
 			);
 		}
 
-		Mat3<float> multiply(Mat3<T>& rhs)
+		Mat3<float> Multiply(Mat3<T>& rhs)
 		{
 			return Mat3<float>(
-				Vec3<float>{ getRow(0).dot(rhs.getCol(0)), getRow(0).dot(rhs.getCol(1)), getRow(0).dot(rhs.getCol(2)) },
-				Vec3<float>{ getRow(1).dot(rhs.getCol(0)), getRow(1).dot(rhs.getCol(1)), getRow(1).dot(rhs.getCol(2)) },
-				Vec3<float>{ getRow(2).dot(rhs.getCol(0)), getRow(2).dot(rhs.getCol(1)), getRow(2).dot(rhs.getCol(2)) }
+				Vec3<float>{ GetRow(0).Dot(rhs.GetCol(0)), GetRow(0).Dot(rhs.GetCol(1)), GetRow(0).Dot(rhs.GetCol(2)) },
+				Vec3<float>{ GetRow(1).Dot(rhs.GetCol(0)), GetRow(1).Dot(rhs.GetCol(1)), GetRow(1).Dot(rhs.GetCol(2)) },
+				Vec3<float>{ GetRow(2).Dot(rhs.GetCol(0)), GetRow(2).Dot(rhs.GetCol(1)), GetRow(2).Dot(rhs.GetCol(2)) }
 			);
 		}
 

@@ -17,16 +17,16 @@ public:
 		//LOGGER(info, "camera delete succeeded");
 	}
 
-	void init() override
+	void Init() override
 	{
-		updateEulerAngles();
-		updateView();
-		updateProjection();
+		UpdateEulerAngles();
+		UpdateView();
+		UpdateProjection();
 	}
 
-	void update() override
+	void Update() override
 	{
-		auto deltaTime = seri::WindowManagerFactory::instance()->GetDeltaTime();
+		auto deltaTime = seri::WindowManagerFactory::Instance()->GetDeltaTime();
 		auto movementSpeed = _cameraProperties.speed * deltaTime;
 
 		if (_moveRequest & _wRequest)
@@ -46,12 +46,12 @@ public:
 			_cameraProperties.position += _cameraProperties.right * movementSpeed;
 		}
 
-		updateView();
+		UpdateView();
 	}
 
-	void onKeyEvent(const seri::event::KeyEventData& data) override
+	void OnKeyEvent(const seri::event::KeyEventData& data) override
 	{
-		if (!isPlayable())
+		if (!IsPlayable())
 		{
 			return;
 		}
@@ -93,7 +93,7 @@ public:
 		}
 	}
 
-	void onUserEvent(seri::event::IEventData& data) override
+	void OnUserEvent(seri::event::IEventData& data) override
 	{
 		auto& d = dynamic_cast<IUserEventData&>(data);
 		if (d.userEventType == UserEventType::game_state)
@@ -103,7 +103,7 @@ public:
 		}
 	}
 
-	bool isPlayable() override
+	bool IsPlayable() override
 	{
 		return _gameState == GameState::game;
 	}

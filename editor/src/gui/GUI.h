@@ -22,7 +22,7 @@
 class GUI : public seri::Object
 {
 public:
-	GUI(std::shared_ptr<Camera> camera, std::shared_ptr<seri::IScene> scene) : _windowManager(seri::WindowManagerFactory::instance()), _camera(camera), _scene(scene)
+	GUI(std::shared_ptr<Camera> camera, std::shared_ptr<seri::IScene> scene) : _windowManager(seri::WindowManagerFactory::Instance()), _camera(camera), _scene(scene)
 	{
 		LOGGER(info, "[gui] init succeeded");
 	}
@@ -42,7 +42,7 @@ public:
 		LOGGER(info, "[gui] delete succeeded");
 	}
 
-	void init() override
+	void Init() override
 	{
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
@@ -59,7 +59,7 @@ public:
 		ImGui_ImplOpenGL3_Init("#version 460");
 	}
 
-	void update() override
+	void Update() override
 	{
 		ImGui_ImplOpenGL3_NewFrame();
 
@@ -80,7 +80,7 @@ public:
 		ShowEntityWindow();
 	}
 
-	void render() override
+	void Render() override
 	{
 		ImGui::Render();
 
@@ -225,7 +225,7 @@ private:
 			}
 
 			ImGui::SetNextItemOpen(true, ImGuiCond_Once);
-			if (ImGui::TreeNode(_scene->getName().c_str()))
+			if (ImGui::TreeNode(_scene->GetName().c_str()))
 			{
 				ShowSceneWindowImpl(_scene);
 				ImGui::TreePop();
@@ -244,21 +244,21 @@ private:
 
 		static int nodeClickedId = -1;
 
-		for (auto& scene : scenes->getChildren())
+		for (auto& scene : scenes->GetChildren())
 		{
 			// flags
 			ImGuiTreeNodeFlags treeNodeFlags = treeBaseFlags;
-			if (scene->isLeaf())
+			if (scene->IsLeaf())
 			{
 				treeNodeFlags |= ImGuiTreeNodeFlags_Leaf;
 			}
-			if (nodeClickedId == scene->getId())
+			if (nodeClickedId == scene->GetId())
 			{
 				RegisterScene(scene);
 				treeNodeFlags |= ImGuiTreeNodeFlags_Selected;
 			}
 
-			if (ImGui::TreeNodeEx((void*)(intptr_t)scene->getId(), treeNodeFlags, scene->getName().c_str()))
+			if (ImGui::TreeNodeEx((void*)(intptr_t)scene->GetId(), treeNodeFlags, scene->GetName().c_str()))
 			{
 				// context menu
 				if (ImGui::BeginPopupContextItem())
@@ -269,37 +269,37 @@ private:
 
 						if (ImGui::MenuItem("Point"))
 						{
-							scene->add(std::move(builder.setName("Point").setObject(Factory::CreateEntity(_camera, seri::EntityType::point)).build()));
+							scene->Add(std::move(builder.SetName("Point").SetUnderlyingObject(Factory::CreateEntity(_camera, seri::EntityType::point)).Build()));
 						}
 
 						if (ImGui::MenuItem("Line"))
 						{
-							scene->add(std::move(builder.setName("Line").setObject(Factory::CreateEntity(_camera, seri::EntityType::line)).build()));
+							scene->Add(std::move(builder.SetName("Line").SetUnderlyingObject(Factory::CreateEntity(_camera, seri::EntityType::line)).Build()));
 						}
 
 						if (ImGui::MenuItem("Triangle"))
 						{
-							scene->add(std::move(builder.setName("Triangle").setObject(Factory::CreateEntity(_camera, seri::EntityType::triangle)).build()));
+							scene->Add(std::move(builder.SetName("Triangle").SetUnderlyingObject(Factory::CreateEntity(_camera, seri::EntityType::triangle)).Build()));
 						}
 
 						if (ImGui::MenuItem("Rectangle"))
 						{
-							scene->add(std::move(builder.setName("Rectangle").setObject(Factory::CreateEntity(_camera, seri::EntityType::rectangle)).build()));
+							scene->Add(std::move(builder.SetName("Rectangle").SetUnderlyingObject(Factory::CreateEntity(_camera, seri::EntityType::rectangle)).Build()));
 						}
 
 						if (ImGui::MenuItem("Circle"))
 						{
-							scene->add(std::move(builder.setName("Circle").setObject(Factory::CreateEntity(_camera, seri::EntityType::circle)).build()));
+							scene->Add(std::move(builder.SetName("Circle").SetUnderlyingObject(Factory::CreateEntity(_camera, seri::EntityType::circle)).Build()));
 						}
 
 						if (ImGui::MenuItem("Cube"))
 						{
-							scene->add(std::move(builder.setName("Cube").setObject(Factory::CreateEntity(_camera, seri::EntityType::cube)).build()));
+							scene->Add(std::move(builder.SetName("Cube").SetUnderlyingObject(Factory::CreateEntity(_camera, seri::EntityType::cube)).Build()));
 						}
 
 						if (ImGui::MenuItem("Polygon"))
 						{
-							scene->add(std::move(builder.setName("Polygon").setObject(Factory::CreateEntity(_camera, seri::EntityType::polygon)).build()));
+							scene->Add(std::move(builder.SetName("Polygon").SetUnderlyingObject(Factory::CreateEntity(_camera, seri::EntityType::polygon)).Build()));
 						}
 
 						ImGui::EndMenu();
@@ -307,10 +307,10 @@ private:
 
 					if (ImGui::Button("Delete"))
 					{
-						auto parentWeak = scene->getParent();
+						auto parentWeak = scene->GetParent();
 						if (auto parent = parentWeak.lock())
 						{
-							parent->remove(scene);
+							parent->Remove(scene);
 							ImGui::EndPopup();
 							ImGui::TreePop();
 							break;
@@ -323,7 +323,7 @@ private:
 				// selection
 				if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
 				{
-					nodeClickedId = scene->getId();
+					nodeClickedId = scene->GetId();
 				}
 
 				ShowSceneWindowImpl(scene);
@@ -404,32 +404,32 @@ private:
 	{
 		if (_currentEntity)
 		{
-			_currentEntity->getShader().use();
+			_currentEntity->GetShader().Use();
 
-			ImGui::SliderFloat3("position", &_currentEntity->getTransform()._position[0], -1.0f, 1.0f, "%.4f");
-			ImGui::SliderFloat3("rotation", &_currentEntity->getTransform()._rotation[0], -180.0f, 180.0f, "%.4f");
-			ImGui::SliderFloat3("scale", &_currentEntity->getTransform()._scale[0], 0.0f, 100.0f, "%.4f");
-			seri::ShaderManager::GetInstance().setModel(_currentEntity->getShader(), _currentEntity->getTransform().apply());
-
-			ImGui::Separator();
-
-			ImGui::ColorEdit4("color", &_currentEntity->getColor().r);
-			seri::ShaderManager::GetInstance().SetColor(_currentEntity->getShader(), _currentEntity->getColor().getColorRGBA());
+			ImGui::SliderFloat3("position", &_currentEntity->GetTransform()._position[0], -1.0f, 1.0f, "%.4f");
+			ImGui::SliderFloat3("rotation", &_currentEntity->GetTransform()._rotation[0], -180.0f, 180.0f, "%.4f");
+			ImGui::SliderFloat3("scale", &_currentEntity->GetTransform()._scale[0], 0.0f, 100.0f, "%.4f");
+			seri::ShaderManager::GetInstance().SetModel(_currentEntity->GetShader(), _currentEntity->GetTransform().Apply());
 
 			ImGui::Separator();
 
-			auto& sceneName = _currentScene->getName();
+			ImGui::ColorEdit4("color", &_currentEntity->GetColor().r);
+			seri::ShaderManager::GetInstance().SetColor(_currentEntity->GetShader(), _currentEntity->GetColor().GetColorRGBA());
+
+			ImGui::Separator();
+
+			auto& sceneName = _currentScene->GetName();
 			ImGui::InputText("name", (char*)sceneName.c_str(), sceneName.size() + 1);
 
 			ImGui::Separator();
 
-			_currentEntity->getShader().disuse();
+			_currentEntity->GetShader().Disuse();
 		}
 		else if (_currentObject)
 		{
 			ImGui::Separator();
 
-			auto& sceneName = _currentScene->getName();
+			auto& sceneName = _currentScene->GetName();
 			ImGui::InputText("name", (char*)sceneName.c_str(), sceneName.size() + 1);
 
 			glm::vec3 pos = _currentObject->GetPosition();
@@ -506,7 +506,7 @@ private:
 	void RegisterScene(std::shared_ptr<seri::IScene> scene)
 	{
 		_currentScene = scene;
-		RegisterEntity(scene->getObject());
+		RegisterEntity(scene->GetUnderlyingObject());
 	}
 
 	void RegisterEntity(std::shared_ptr<Object> entity)

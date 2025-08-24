@@ -13,12 +13,12 @@ namespace seri
 
 		~Transform() = default;
 
-		std::vector<glm::vec3>& getCoordinates()
+		std::vector<glm::vec3>& GetCoordinates()
 		{
 			return coordinates;
 		}
 
-		glm::mat4& apply()
+		glm::mat4& Apply()
 		{
 			_transform = glm::mat4{ 1.0f };
 			_transform = glm::scale(_transform, _scale);

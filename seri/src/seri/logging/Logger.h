@@ -37,20 +37,20 @@ namespace seri
 	{
 		switch (lvl)
 		{
-		case LogLevel::none:
-			return "none";
-		case LogLevel::error:
-			return "error";
-		case LogLevel::warning:
-			return "warning";
-		case LogLevel::info:
-			return "info";
-		case LogLevel::debug:
-			return "debug";
-		case LogLevel::verbose:
-			return "verbose";
-		default:
-			return "unknown";
+			case LogLevel::none:
+				return "none";
+			case LogLevel::error:
+				return "error";
+			case LogLevel::warning:
+				return "warning";
+			case LogLevel::info:
+				return "info";
+			case LogLevel::debug:
+				return "debug";
+			case LogLevel::verbose:
+				return "verbose";
+			default:
+				return "unknown";
 		}
 	}
 }
@@ -62,4 +62,3 @@ namespace seri
     << std::endl
 
 #define LOGGER(lvl, msg) SERI_LOGGER_IMPL(seri::LogLevel::lvl, msg)
-#define SERI_LOGGER(lvl, msg) SERI_LOGGER_IMPL(seri::LogLevel::lvl, msg)

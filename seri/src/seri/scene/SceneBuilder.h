@@ -14,40 +14,34 @@ namespace seri
 			_scene = std::make_shared<SceneComponent>("");
 		}
 
-		SceneBuilder& setName(std::string name)
+		SceneBuilder& SetName(std::string name)
 		{
-			_scene->setName(std::move(name));
+			_scene->SetName(std::move(name));
 			return *this;
 		}
 
-		SceneBuilder& setObject(std::shared_ptr<Object> object)
+		SceneBuilder& SetUnderlyingObject(std::shared_ptr<Object> object)
 		{
-			_scene->setObject(std::move(object));
+			_scene->SetUnderlyingObject(std::move(object));
 			return *this;
 		}
 
-		SceneBuilder& add(std::shared_ptr<IScene> child)
+		SceneBuilder& Add(std::shared_ptr<IScene> child)
 		{
-			_scene->add(std::move(child));
+			_scene->Add(std::move(child));
 			return *this;
 		}
 
-		std::shared_ptr<IScene> build()
+		std::shared_ptr<IScene> Build()
 		{
 			auto scene = _scene;
-			make();
+			Make();
 			return scene;
 		}
 
-		SceneBuilder& make()
+		SceneBuilder& Make()
 		{
 			_scene = std::make_shared<SceneComponent>("");
-			return *this;
-		}
-
-		SceneBuilder& reset()
-		{
-			_scene.reset();
 			return *this;
 		}
 

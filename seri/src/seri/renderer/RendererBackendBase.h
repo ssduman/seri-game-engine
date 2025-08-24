@@ -7,9 +7,9 @@ namespace seri
 
 		virtual ~RendererBackendBase() = default;
 
-		virtual void draw() = 0;
+		virtual void Draw() = 0;
 
-		virtual void release() = 0;
+		virtual void Release() = 0;
 
 	};
 }
