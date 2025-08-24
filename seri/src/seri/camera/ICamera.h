@@ -32,8 +32,6 @@ namespace seri
 				return;
 			}
 
-			LOGGER(debug, "[camera] window resized to " << width << "x" << height);
-
 			_cameraProperties.width = width;
 			_cameraProperties.height = height;
 			_cameraProperties.aspect = width / height;

@@ -26,6 +26,11 @@ public:
 		windowManager->SetWindowProperties(windowProperties);
 		windowManager->Init();
 
+		seri::RenderingProperties renderingProperties{};
+		auto& renderingManager = seri::RenderingManagerFactory::Instance();
+		renderingManager->SetRenderingProperties(renderingProperties);
+		renderingManager->Init(windowManager);
+
 		seri::TimeWrapper::Init();
 		seri::Application::Init();
 		seri::Graphic::Init();
@@ -38,10 +43,21 @@ public:
 		seri::SceneBuilder builder;
 		auto rootScene = builder.SetName("Main").Build();
 
-		windowManager->SetEventCallback(seri::event::MakeEventCallback(
+		windowManager->AddEventCallback(seri::event::MakeEventCallback(
 			[&rootScene](seri::event::IEventData& data)
 			{
 				seri::event::EventDispatcher{}(rootScene, data);
+			}
+		));
+
+		windowManager->AddEventCallback(seri::event::MakeEventCallback(
+			[&renderingManager](seri::event::IEventData& data)
+			{
+				if (data.eventType == seri::event::EventType::window_resize)
+				{
+					auto& d = seri::event::EventDispatcher::CastEventData<seri::event::WindowResizeEventData&>(data);
+					renderingManager->SetViewport(0, 0, d.width, d.height);
+				}
 			}
 		));
 
@@ -99,8 +115,8 @@ public:
 		{
 			seri::Application::SetFrameBegin();
 
-			windowManager->Clear();
-			windowManager->ClearColor();
+			renderingManager->Clear();
+			renderingManager->ClearColor();
 			windowManager->UpdateDeltaTime();
 
 			seri::Graphic::GetCameraOrtho()->Update();

@@ -18,7 +18,7 @@ namespace seri::event
 			{
 				case EventType::key:
 					{
-						auto& d = GetData<KeyEventData&>(data);
+						auto& d = CastEventData<KeyEventData&>(data);
 						rootScene->Visit(MakeSceneVisitor(
 							[&d](std::shared_ptr<IScene>& scene)
 							{
@@ -32,7 +32,7 @@ namespace seri::event
 					}
 				case EventType::character:
 					{
-						auto d = GetData<CharacterEventData&>(data);
+						auto d = CastEventData<CharacterEventData&>(data);
 						rootScene->Visit(MakeSceneVisitor(
 							[&d](std::shared_ptr<IScene>& scene)
 							{
@@ -46,7 +46,7 @@ namespace seri::event
 					}
 				case EventType::character_mods:
 					{
-						auto& d = GetData<CharacterModsEventData&>(data);
+						auto& d = CastEventData<CharacterModsEventData&>(data);
 						rootScene->Visit(MakeSceneVisitor(
 							[&d](std::shared_ptr<IScene>& scene)
 							{
@@ -60,7 +60,7 @@ namespace seri::event
 					}
 				case EventType::mouse_enter:
 					{
-						auto& d = GetData<MouseEnterEventData&>(data);
+						auto& d = CastEventData<MouseEnterEventData&>(data);
 						rootScene->Visit(MakeSceneVisitor(
 							[&d](std::shared_ptr<IScene>& scene)
 							{
@@ -74,7 +74,7 @@ namespace seri::event
 					}
 				case EventType::mouse_button:
 					{
-						auto& d = GetData<MouseButtonEventData&>(data);
+						auto& d = CastEventData<MouseButtonEventData&>(data);
 						rootScene->Visit(MakeSceneVisitor(
 							[&d](std::shared_ptr<IScene>& scene)
 							{
@@ -88,7 +88,7 @@ namespace seri::event
 					}
 				case EventType::mouse_scroll:
 					{
-						auto& d = GetData<MouseScrollEventData&>(data);
+						auto& d = CastEventData<MouseScrollEventData&>(data);
 						rootScene->Visit(MakeSceneVisitor(
 							[&d](std::shared_ptr<IScene>& scene)
 							{
@@ -102,7 +102,7 @@ namespace seri::event
 					}
 				case EventType::mouse_position:
 					{
-						auto& d = GetData<MousePositionEventData&>(data);
+						auto& d = CastEventData<MousePositionEventData&>(data);
 						rootScene->Visit(MakeSceneVisitor(
 							[&d](std::shared_ptr<IScene>& scene)
 							{
@@ -116,7 +116,7 @@ namespace seri::event
 					}
 				case EventType::window_drop:
 					{
-						auto& d = GetData<WindowDropEventData&>(data);
+						auto& d = CastEventData<WindowDropEventData&>(data);
 						rootScene->Visit(MakeSceneVisitor(
 							[&d](std::shared_ptr<IScene>& scene)
 							{
@@ -130,7 +130,7 @@ namespace seri::event
 					}
 				case EventType::window_close:
 					{
-						auto& d = GetData<WindowCloseEventData&>(data);
+						auto& d = CastEventData<WindowCloseEventData&>(data);
 						rootScene->Visit(MakeSceneVisitor(
 							[&d](std::shared_ptr<IScene>& scene)
 							{
@@ -144,7 +144,7 @@ namespace seri::event
 					}
 				case EventType::window_resize:
 					{
-						auto& d = GetData<WindowResizeEventData&>(data);
+						auto& d = CastEventData<WindowResizeEventData&>(data);
 						rootScene->Visit(MakeSceneVisitor(
 							[&d](std::shared_ptr<IScene>& scene)
 							{
@@ -178,12 +178,13 @@ namespace seri::event
 			}
 		}
 
-	private:
 		template<typename T>
-		T& GetData(IEventData& data)
+		static T& CastEventData(IEventData& data)
 		{
 			return dynamic_cast<T&>(data);
 		}
+
+	private:
 
 	};
 }

@@ -3,6 +3,9 @@
 #define SERI_USE_GLFW
 //#define SERI_USE_SDL3
 
+#define SERI_USE_OPENGL
+//#define SERI_USE_D3D11
+
 #ifdef SERI_USE_SDL3
 #define SDL_MAIN_HANDLED
 #define SDL_MAIN_USE_CALLBACKS 1
@@ -51,5 +54,7 @@
 #include "seri/window/IWindowManager.h"
 #include "seri/window/WindowManagerFactory.h"
 
+#include "seri/renderer/IRenderingManager.h"
 #include "seri/renderer/OpenGLRendererBackend.h"
 #include "seri/renderer/AuxiliaryStructsBuilder.h"
+#include "seri/renderer/RenderingManagerFactory.h"

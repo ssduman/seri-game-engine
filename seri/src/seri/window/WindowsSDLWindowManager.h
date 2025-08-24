@@ -4,12 +4,12 @@
 #include "seri/window/IWindowManager.h"
 #include "seri/input/InputManager.h"
 
+#include <SDL3/SDL.h>
+#include <SDL3/SDL_opengl.h>
+
 #include <string>
 #include <utility>
 #include <stdexcept>
-
-#include <SDL3/SDL.h>
-#include <SDL3/SDL_opengl.h>
 
 namespace seri
 {
@@ -36,16 +36,7 @@ namespace seri
 
 			InitSDL();
 			CreateWindowSDL();
-
 			SetWindowUserPointer(static_cast<void*>(this));
-
-			SetOpenGLHints();
-			SetOpenGLContext();
-
-			InitOpenGLGlad();
-			SetOpenGLOptions();
-			LogOpenGLInfo();
-			EnableOpenGLDebugOutput();
 
 			_initialized = true;
 
@@ -152,7 +143,7 @@ namespace seri
 							int x = event.window.data1;
 							int y = event.window.data2;
 
-							LOGGER(info, "[window] sdl event: window moved: " << x << ", " << y);
+							//LOGGER(info, "[window] sdl event: window moved: " << x << ", " << y);
 						}
 						break;
 					case SDL_EVENT_WINDOW_MINIMIZED:
@@ -182,7 +173,9 @@ namespace seri
 
 							SetViewport(0, 0, w, h);
 
-							LOGGER(info, "[window] sdl event: window resized: " << w << ", " << h);
+							FireEvent(event::WindowResizeEventData{ w, h });
+
+							//LOGGER(info, "[window] sdl event: window resized: " << w << ", " << h);
 						}
 						break;
 					case SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED:
@@ -192,7 +185,9 @@ namespace seri
 
 							SetViewport(0, 0, w, h);
 
-							LOGGER(info, "[window] sdl event: window pixel size changed: " << w << ", " << h);
+							FireEvent(event::WindowResizeEventData{ w, h });
+
+							//LOGGER(info, "[window] sdl event: window pixel size changed: " << w << ", " << h);
 						}
 						break;
 					case SDL_EVENT_WINDOW_MOUSE_ENTER:
@@ -433,15 +428,9 @@ namespace seri
 			return SDL_GetPointerProperty(SDL_GetWindowProperties(_window), "user.pointer", nullptr);;
 		}
 
-	protected:
-		void InitOpenGLGlad() override
+		void* GetOpenGLProcAddress() override
 		{
-			int version = gladLoadGL(SDL_GL_GetProcAddress);
-			if (version == 0) {
-				throw std::runtime_error("[window] glad load error");
-			}
-
-			LOGGER(info, "[window] loaded opengl " << GLAD_VERSION_MAJOR(version) << "." << GLAD_VERSION_MINOR(version));
+			return SDL_GL_GetProcAddress;
 		}
 
 		void SetOpenGLHints() override

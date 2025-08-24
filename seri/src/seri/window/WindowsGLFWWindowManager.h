@@ -2,7 +2,6 @@
 #pragma warning(disable: 4100)
 
 #include "seri/window/IWindowManager.h"
-#include "seri/renderer/AuxiliaryStructs.h"
 #include "seri/input/InputManager.h"
 
 #include <GLFW/glfw3.h>
@@ -34,17 +33,8 @@ namespace seri
 
 			InitGLFW();
 			CreateWindowGLFW();
-
 			SetWindowUserPointer(static_cast<void*>(this));
 			SetWindowEventCallbacks();
-
-			SetOpenGLHints();
-			SetOpenGLContext();
-
-			InitOpenGLGlad();
-			SetOpenGLOptions();
-			LogOpenGLInfo();
-			EnableOpenGLDebugOutput();
 
 			_initialized = true;
 
@@ -154,16 +144,9 @@ namespace seri
 			return glfwGetWindowUserPointer(_window);
 		}
 
-	protected:
-		void InitOpenGLGlad() override
+		void* GetOpenGLProcAddress() override
 		{
-			int version = gladLoadGL(glfwGetProcAddress);
-			if (version == 0)
-			{
-				throw std::runtime_error("[window] glad load error");
-			}
-
-			LOGGER(info, "[window] loaded opengl " << GLAD_VERSION_MAJOR(version) << "." << GLAD_VERSION_MINOR(version));
+			return glfwGetProcAddress;
 		}
 
 		void SetOpenGLHints() override
@@ -375,7 +358,7 @@ namespace seri
 				{
 					if (auto windowManager = static_cast<WindowsGLFWWindowManager*>(glfwGetWindowUserPointer(window)))
 					{
-						LOGGER(info, "[window] window new size: " << width << ", " << height);
+						//LOGGER(info, "[window] window new size: " << width << ", " << height);
 					}
 				}
 			);
