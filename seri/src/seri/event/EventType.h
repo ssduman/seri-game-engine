@@ -19,7 +19,7 @@ namespace seri::event
 		unknown,
 	};
 
-	inline const char* toString(EventType eventType)
+	inline const char* ToString(EventType eventType)
 	{
 		switch (eventType)
 		{

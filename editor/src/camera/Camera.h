@@ -56,38 +56,38 @@ public:
 			return;
 		}
 
-		if (seri::Input::isPressed(data, seri::KeyCode::w))
+		if (seri::Input::IsPressed(data, seri::KeyCode::w))
 		{
 			_moveRequest |= _wRequest;
 		}
-		else if (seri::Input::isReleased(data, seri::KeyCode::w))
+		else if (seri::Input::IsReleased(data, seri::KeyCode::w))
 		{
 			_moveRequest ^= _wRequest;
 		}
 
-		if (seri::Input::isPressed(data, seri::KeyCode::s))
+		if (seri::Input::IsPressed(data, seri::KeyCode::s))
 		{
 			_moveRequest |= _sRequest;
 		}
-		else if (seri::Input::isReleased(data, seri::KeyCode::s))
+		else if (seri::Input::IsReleased(data, seri::KeyCode::s))
 		{
 			_moveRequest ^= _sRequest;
 		}
 
-		if (seri::Input::isPressed(data, seri::KeyCode::a))
+		if (seri::Input::IsPressed(data, seri::KeyCode::a))
 		{
 			_moveRequest |= _aRequest;
 		}
-		else if (seri::Input::isReleased(data, seri::KeyCode::a))
+		else if (seri::Input::IsReleased(data, seri::KeyCode::a))
 		{
 			_moveRequest ^= _aRequest;
 		}
 
-		if (seri::Input::isPressed(data, seri::KeyCode::d))
+		if (seri::Input::IsPressed(data, seri::KeyCode::d))
 		{
 			_moveRequest |= _dRequest;
 		}
-		else if (seri::Input::isReleased(data, seri::KeyCode::d))
+		else if (seri::Input::IsReleased(data, seri::KeyCode::d))
 		{
 			_moveRequest ^= _dRequest;
 		}

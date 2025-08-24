@@ -12,10 +12,11 @@
 #include <memory>
 
 #ifdef SERI_USE_GLFW
+#include <GLFW/glfw3.h>
 #include <backends/imgui_impl_glfw.h>
 #elif defined (SERI_USE_SDL3)
-#include <backends/imgui_impl_sdl3.h>
 #include <SDL3/SDL.h>
+#include <backends/imgui_impl_sdl3.h>
 #endif
 
 class GUI : public seri::Object

@@ -5,6 +5,8 @@
 #include "seri/renderer/AuxiliaryStructs.h"
 #include "seri/input/InputManager.h"
 
+#include <GLFW/glfw3.h>
+
 #include <utility>
 #include <stdexcept>
 
@@ -169,7 +171,6 @@ namespace seri
 		}
 
 	private:
-
 		void InitGLFW()
 		{
 			if (!glfwInit())
@@ -220,37 +221,15 @@ namespace seri
 				{
 					if (auto windowManager = static_cast<WindowsGLFWWindowManager*>(glfwGetWindowUserPointer(window)))
 					{
-						auto keyEnum = static_cast<KeyCode>(key);
-						auto actionEnum = static_cast<InputAction>(action);
-
+						KeyCode keyEnum = windowManager->GetKeyEnum(key);
+						InputAction actionEnum = windowManager->GetInputActionEnum(action);
 						std::vector<InputModifier> modsVector;
-						if (mods & static_cast<int>(InputModifier::alt))
+						windowManager->FillModsVector(mods, modsVector);
+
+						if (keyEnum == KeyCode::unknown)
 						{
-							modsVector.emplace_back(InputModifier::alt);
-						}
-						if (mods & static_cast<int>(InputModifier::shift))
-						{
-							modsVector.emplace_back(InputModifier::shift);
-						}
-						if (mods & static_cast<int>(InputModifier::super))
-						{
-							modsVector.emplace_back(InputModifier::super);
-						}
-						if (mods & static_cast<int>(InputModifier::control))
-						{
-							modsVector.emplace_back(InputModifier::control);
-						}
-						if (mods & static_cast<int>(InputModifier::num_lock))
-						{
-							modsVector.emplace_back(InputModifier::num_lock);
-						}
-						if (mods & static_cast<int>(InputModifier::caps_lock))
-						{
-							modsVector.emplace_back(InputModifier::caps_lock);
-						}
-						if (modsVector.empty())
-						{
-							modsVector.emplace_back(InputModifier::noop);
+							LOGGER(info, "[window] glfw event: key: unexpected key type");
+							return;
 						}
 
 						windowManager->FireEvent(event::KeyEventData{ keyEnum, scancode, actionEnum, std::move(modsVector) });
@@ -281,34 +260,7 @@ namespace seri
 					if (auto windowManager = static_cast<WindowsGLFWWindowManager*>(glfwGetWindowUserPointer(window)))
 					{
 						std::vector<InputModifier> modsVector;
-						if (mods & static_cast<int>(InputModifier::alt))
-						{
-							modsVector.emplace_back(InputModifier::alt);
-						}
-						if (mods & static_cast<int>(InputModifier::shift))
-						{
-							modsVector.emplace_back(InputModifier::shift);
-						}
-						if (mods & static_cast<int>(InputModifier::super))
-						{
-							modsVector.emplace_back(InputModifier::super);
-						}
-						if (mods & static_cast<int>(InputModifier::control))
-						{
-							modsVector.emplace_back(InputModifier::control);
-						}
-						if (mods & static_cast<int>(InputModifier::num_lock))
-						{
-							modsVector.emplace_back(InputModifier::num_lock);
-						}
-						if (mods & static_cast<int>(InputModifier::caps_lock))
-						{
-							modsVector.emplace_back(InputModifier::caps_lock);
-						}
-						if (modsVector.empty())
-						{
-							modsVector.emplace_back(InputModifier::noop);
-						}
+						windowManager->FillModsVector(mods, modsVector);
 
 						windowManager->FireEvent(event::CharacterModsEventData{ codepoint, std::move(modsVector) });
 					}
@@ -331,9 +283,9 @@ namespace seri
 				{
 					if (auto windowManager = static_cast<WindowsGLFWWindowManager*>(glfwGetWindowUserPointer(window)))
 					{
-						auto buttonEnum = static_cast<MouseButtonCode>(button);
-						auto actionEnum = static_cast<InputAction>(action);
-						auto modsEnum = static_cast<InputModifier>(mods);
+						MouseButtonCode buttonEnum = windowManager->GetMouseButtonEnum(button);
+						InputAction actionEnum = windowManager->GetInputActionEnum(action);
+						InputModifier modsEnum = InputModifier::noop;
 
 						windowManager->FireEvent(event::MouseButtonEventData{ buttonEnum, actionEnum, modsEnum });
 
@@ -410,7 +362,7 @@ namespace seri
 				{
 					if (auto windowManager = static_cast<WindowsGLFWWindowManager*>(glfwGetWindowUserPointer(window)))
 					{
-						//LOGGER(verbose, "[window] window new position: " << xpos << ", " << ypos);
+						//LOGGER(info, "[window] window new position: " << xpos << ", " << ypos);
 					}
 				}
 			);
@@ -420,7 +372,7 @@ namespace seri
 				{
 					if (auto windowManager = static_cast<WindowsGLFWWindowManager*>(glfwGetWindowUserPointer(window)))
 					{
-						LOGGER(verbose, "[window] window new size: " << width << ", " << height);
+						LOGGER(info, "[window] window new size: " << width << ", " << height);
 					}
 				}
 			);
@@ -430,7 +382,7 @@ namespace seri
 				{
 					if (auto windowManager = static_cast<WindowsGLFWWindowManager*>(glfwGetWindowUserPointer(window)))
 					{
-						//LOGGER(verbose, "[window] window refresh");
+						//LOGGER(info, "[window] window refresh");
 					}
 				}
 			);
@@ -440,7 +392,7 @@ namespace seri
 				{
 					if (auto windowManager = static_cast<WindowsGLFWWindowManager*>(glfwGetWindowUserPointer(window)))
 					{
-						LOGGER(verbose, "[window] window focus state: " << (focused ? "focused" : "not focused"));
+						LOGGER(info, "[window] window focus state: " << (focused ? "focused" : "not focused"));
 					}
 				}
 			);
@@ -450,7 +402,7 @@ namespace seri
 				{
 					if (auto windowManager = static_cast<WindowsGLFWWindowManager*>(glfwGetWindowUserPointer(window)))
 					{
-						LOGGER(verbose, "[window] window iconify state: " << (iconified ? "iconified" : "not iconified"));
+						LOGGER(info, "[window] window iconify state: " << (iconified ? "iconified" : "not iconified"));
 					}
 				}
 			);
@@ -460,7 +412,7 @@ namespace seri
 				{
 					if (auto windowManager = static_cast<WindowsGLFWWindowManager*>(glfwGetWindowUserPointer(window)))
 					{
-						LOGGER(verbose, "[window] window maximize state: " << (maximized ? "maximized" : "not maximized"));
+						LOGGER(info, "[window] window maximize state: " << (maximized ? "maximized" : "not maximized"));
 					}
 				}
 			);
@@ -470,7 +422,7 @@ namespace seri
 				{
 					if (auto windowManager = static_cast<WindowsGLFWWindowManager*>(glfwGetWindowUserPointer(window)))
 					{
-						LOGGER(verbose, "[window] window new scale: " << xscale << ", " << yscale);
+						LOGGER(info, "[window] window new scale: " << xscale << ", " << yscale);
 					}
 				}
 			);
@@ -613,6 +565,97 @@ namespace seri
 		void DisableDebugOutput()
 		{
 			glDisable(GL_DEBUG_OUTPUT);
+		}
+
+		KeyCode GetKeyEnum(int key)
+		{
+			switch (key)
+			{
+				case GLFW_KEY_A: return KeyCode::a;
+				case GLFW_KEY_B: return KeyCode::b;
+				case GLFW_KEY_C: return KeyCode::c;
+				case GLFW_KEY_D: return KeyCode::d;
+				case GLFW_KEY_E: return KeyCode::e;
+				case GLFW_KEY_F: return KeyCode::f;
+				case GLFW_KEY_G: return KeyCode::g;
+				case GLFW_KEY_H: return KeyCode::h;
+				case GLFW_KEY_I: return KeyCode::i;
+				case GLFW_KEY_J: return KeyCode::j;
+				case GLFW_KEY_K: return KeyCode::k;
+				case GLFW_KEY_L: return KeyCode::l;
+				case GLFW_KEY_M: return KeyCode::m;
+				case GLFW_KEY_N: return KeyCode::n;
+				case GLFW_KEY_O: return KeyCode::o;
+				case GLFW_KEY_P: return KeyCode::p;
+				case GLFW_KEY_Q: return KeyCode::q;
+				case GLFW_KEY_R: return KeyCode::r;
+				case GLFW_KEY_S: return KeyCode::s;
+				case GLFW_KEY_T: return KeyCode::t;
+				case GLFW_KEY_U: return KeyCode::u;
+				case GLFW_KEY_V: return KeyCode::v;
+				case GLFW_KEY_W: return KeyCode::w;
+				case GLFW_KEY_X: return KeyCode::x;
+				case GLFW_KEY_Y: return KeyCode::x;
+				case GLFW_KEY_Z: return KeyCode::z;
+				case GLFW_KEY_ESCAPE: return KeyCode::escape;
+				default: return KeyCode::unknown;
+			}
+		}
+
+		InputAction GetInputActionEnum(int action)
+		{
+			switch (action)
+			{
+				case GLFW_PRESS: return InputAction::press;
+				case GLFW_RELEASE: return InputAction::release;
+				case GLFW_REPEAT: return InputAction::repeat;
+				default: return InputAction::noop;
+			}
+		}
+
+		MouseButtonCode GetMouseButtonEnum(int button)
+		{
+			switch (button)
+			{
+				case GLFW_MOUSE_BUTTON_LEFT: return MouseButtonCode::button_left;
+				case GLFW_MOUSE_BUTTON_MIDDLE: return MouseButtonCode::button_middle;
+				case GLFW_MOUSE_BUTTON_RIGHT: return MouseButtonCode::button_right;
+				case GLFW_MOUSE_BUTTON_4: return MouseButtonCode::button_4;
+				case GLFW_MOUSE_BUTTON_5: return MouseButtonCode::button_5;
+				default: return MouseButtonCode::noop;
+			}
+		}
+
+		void FillModsVector(int mods, std::vector<InputModifier>& modsVector)
+		{
+			if (mods & GLFW_MOD_ALT)
+			{
+				modsVector.emplace_back(InputModifier::alt);
+			}
+			if (mods & GLFW_MOD_SHIFT)
+			{
+				modsVector.emplace_back(InputModifier::shift);
+			}
+			if (mods & GLFW_MOD_SUPER)
+			{
+				modsVector.emplace_back(InputModifier::super);
+			}
+			if (mods & GLFW_MOD_CONTROL)
+			{
+				modsVector.emplace_back(InputModifier::control);
+			}
+			if (mods & GLFW_MOD_NUM_LOCK)
+			{
+				modsVector.emplace_back(InputModifier::num_lock);
+			}
+			if (mods & GLFW_MOD_CAPS_LOCK)
+			{
+				modsVector.emplace_back(InputModifier::caps_lock);
+			}
+			if (modsVector.empty())
+			{
+				modsVector.emplace_back(InputModifier::noop);
+			}
 		}
 
 		GLFWwindow* _window{ nullptr };

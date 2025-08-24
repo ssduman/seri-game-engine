@@ -48,9 +48,9 @@ namespace seri
 				GetInstance()._predefinedShaders.push_back(info);
 			}
 
-			//LOGGER(info, "shader manager init done");
+			//LOGGER(info, "[shader] init done");
 		}
-		
+
 		static ShaderInfo& Get(std::string name)
 		{
 			for (auto& predef : GetInstance()._predefinedShaders)
@@ -60,11 +60,10 @@ namespace seri
 					return predef;
 				}
 			}
-			ShaderInfo info{};
-			info.valid = false;
-			return info;
+
+			throw std::runtime_error("[shader] not found: " + name);
 		}
-		
+
 		static std::shared_ptr<Shader> Find(std::string name)
 		{
 			for (auto& predef : GetInstance()._predefinedShaders)
@@ -76,7 +75,8 @@ namespace seri
 					return shader;
 				}
 			}
-			LOGGER(error, "shader not found: " << name);
+
+			LOGGER(error, "[shader] not found: " << name);
 			return nullptr;
 		}
 
@@ -233,7 +233,7 @@ namespace seri
 		{
 			glUniform3fv(ShaderManager::GetUniformLocation(shader, name), 1, &val[0]);
 		}
-		
+
 		static void SetVec3(const std::shared_ptr<Shader>& shader, const char* name, const glm::vec3& val)
 		{
 			glUniform3fv(ShaderManager::GetUniformLocation(shader, name), 1, &val[0]);
@@ -267,12 +267,12 @@ namespace seri
 	private:
 		ShaderManager()
 		{
-			//LOGGER(info, "shader manager init");
+			//LOGGER(info, "[shader] manager init");
 		}
 
 		~ShaderManager()
 		{
-			//LOGGER(info, "shader manager release");
+			//LOGGER(info, "[shader] manager release");
 		}
 
 		std::vector<ShaderInfo> _predefinedShaders;

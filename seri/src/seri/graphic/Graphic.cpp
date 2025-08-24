@@ -70,7 +70,7 @@ namespace seri
 			//	std::string loc = "u_bones[" + std::to_string(bone.second.index) + "]";
 			//	ShaderManager::SetMat4(material->shader, loc.c_str(), bone.second.transform);
 			//}
-			for (auto i = 0; i < MAX_BONES; i++)
+			for (auto i = 0; i < SERI_MAX_BONES; i++)
 			{
 				std::string loc = "u_bones[" + std::to_string(i) + "]";
 				glm::mat4 transform = glm::mat4{ 1.0f };
@@ -128,7 +128,7 @@ namespace seri
 
 		if (mesh->bonesForVertices.size() > 0)
 		{
-			for (auto i = 0; i < MAX_BONES; i++)
+			for (auto i = 0; i < SERI_MAX_BONES; i++)
 			{
 				std::string loc = "u_bones[" + std::to_string(i) + "]";
 				glm::mat4 transform = glm::mat4{ 1.0f };

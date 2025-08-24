@@ -3,6 +3,11 @@
 #define SERI_USE_GLFW
 //#define SERI_USE_SDL3
 
+#ifdef SERI_USE_SDL3
+#define SDL_MAIN_HANDLED
+#define SDL_MAIN_USE_CALLBACKS 1
+#endif
+
 #include "seri/util/Util.h"
 
 #include "seri/core/TimeWrapper.h"

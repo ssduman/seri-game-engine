@@ -16,7 +16,7 @@ namespace seri::event
 
 		virtual ~IEventData() {}
 
-		virtual std::string toString() = 0;
+		virtual std::string ToString() = 0;
 
 		EventType eventType = EventType::unknown;
 	};
@@ -26,23 +26,24 @@ namespace seri::event
 	{
 		KeyEventData(KeyCode key_, int scancode_, InputAction action_, std::vector<InputModifier> mods_)
 			: IEventData(EventType::key), key(key_), scancode(scancode_), action(action_), mods(std::move(mods_))
-		{}
+		{
+		}
 
 		~KeyEventData() override = default;
 
-		std::string toString() override
+		std::string ToString() override
 		{
 			std::stringstream modss;
 			for (auto mod : mods)
 			{
-				modss << "|" << ::seri::toString(mod) << "|";
+				modss << "|" << ::seri::ToString(mod) << "|";
 			}
 
 			std::stringstream ss;
-			ss << ::seri::event::toString(eventType) << ": {"
-				<< "'key': " << ::seri::toString(key) << ", "
+			ss << ::seri::event::ToString(eventType) << ": {"
+				<< "'key': " << ::seri::ToString(key) << ", "
 				<< "'scancode': " << scancode << ", "
-				<< "'action': " << ::seri::toString(action) << ", "
+				<< "'action': " << ::seri::ToString(action) << ", "
 				<< "'mods': " << modss.str()
 				<< "}";
 
@@ -59,14 +60,15 @@ namespace seri::event
 	{
 		CharacterEventData(unsigned int codepoint_)
 			: IEventData(EventType::character), codepoint(codepoint_)
-		{}
+		{
+		}
 
 		~CharacterEventData() override = default;
 
-		std::string toString() override
+		std::string ToString() override
 		{
 			std::stringstream ss;
-			ss << ::seri::event::toString(eventType) << ": {"
+			ss << ::seri::event::ToString(eventType) << ": {"
 				<< "'codepoint': " << codepoint
 				<< "}";
 
@@ -80,20 +82,21 @@ namespace seri::event
 	{
 		CharacterModsEventData(unsigned int codepoint_, std::vector<InputModifier> mods_)
 			: IEventData(EventType::character_mods), codepoint(codepoint_), mods(std::move(mods_))
-		{}
+		{
+		}
 
 		~CharacterModsEventData() override = default;
 
-		std::string toString() override
+		std::string ToString() override
 		{
 			std::stringstream modss;
 			for (auto mod : mods)
 			{
-				modss << "|" << ::seri::toString(mod) << "|";
+				modss << "|" << ::seri::ToString(mod) << "|";
 			}
 
 			std::stringstream ss;
-			ss << ::seri::event::toString(eventType) << ": {"
+			ss << ::seri::event::ToString(eventType) << ": {"
 				<< "'codepoint': " << codepoint << ", "
 				<< "'mods': " << modss.str()
 				<< "}";
@@ -110,14 +113,15 @@ namespace seri::event
 	{
 		MouseEnterEventData(bool entered_)
 			: IEventData(EventType::mouse_enter), entered(entered_)
-		{}
+		{
+		}
 
 		~MouseEnterEventData() override = default;
 
-		std::string toString() override
+		std::string ToString() override
 		{
 			std::stringstream ss;
-			ss << ::seri::event::toString(eventType) << ": {"
+			ss << ::seri::event::ToString(eventType) << ": {"
 				<< "'entered': " << (entered ? "true" : "false")
 				<< "}";
 
@@ -131,17 +135,18 @@ namespace seri::event
 	{
 		MouseButtonEventData(MouseButtonCode button_, InputAction action_, InputModifier mods_)
 			: IEventData(EventType::mouse_button), button(button_), action(action_), mods(mods_)
-		{}
+		{
+		}
 
 		~MouseButtonEventData() override = default;
 
-		std::string toString() override
+		std::string ToString() override
 		{
 			std::stringstream ss;
-			ss << ::seri::event::toString(eventType) << ": {"
-				<< "'button': " << ::seri::toString(button) << ", "
-				<< "'action': " << ::seri::toString(action) << ", "
-				<< "'mods': " << ::seri::toString(mods)
+			ss << ::seri::event::ToString(eventType) << ": {"
+				<< "'button': " << ::seri::ToString(button) << ", "
+				<< "'action': " << ::seri::ToString(action) << ", "
+				<< "'mods': " << ::seri::ToString(mods)
 				<< "}";
 
 			return ss.str();
@@ -156,14 +161,15 @@ namespace seri::event
 	{
 		MouseScrollEventData(double xoffset_, double yoffset_)
 			: IEventData(EventType::mouse_scroll), xoffset(xoffset_), yoffset(yoffset_)
-		{}
+		{
+		}
 
 		~MouseScrollEventData() override = default;
 
-		std::string toString() override
+		std::string ToString() override
 		{
 			std::stringstream ss;
-			ss << ::seri::event::toString(eventType) << ": {"
+			ss << ::seri::event::ToString(eventType) << ": {"
 				<< "'xoffset': " << xoffset << ", "
 				<< "'yoffset': " << yoffset
 				<< "}";
@@ -179,14 +185,15 @@ namespace seri::event
 	{
 		MousePositionEventData(double xpos_, double ypos_)
 			: IEventData(EventType::mouse_position), xpos(xpos_), ypos(ypos_)
-		{}
+		{
+		}
 
 		~MousePositionEventData() override = default;
 
-		std::string toString() override
+		std::string ToString() override
 		{
 			std::stringstream ss;
-			ss << ::seri::event::toString(eventType) << ": {"
+			ss << ::seri::event::ToString(eventType) << ": {"
 				<< "'xpos': " << xpos << ", "
 				<< "'ypos': " << ypos
 				<< "}";
@@ -203,11 +210,12 @@ namespace seri::event
 	{
 		WindowDropEventData(std::vector<std::string> paths_)
 			: IEventData(EventType::window_drop), paths(std::move(paths_))
-		{}
+		{
+		}
 
 		~WindowDropEventData() override = default;
 
-		std::string toString() override
+		std::string ToString() override
 		{
 			std::stringstream pathss;
 			for (auto& path : paths)
@@ -216,7 +224,7 @@ namespace seri::event
 			}
 
 			std::stringstream ss;
-			ss << ::seri::event::toString(eventType) << ": {"
+			ss << ::seri::event::ToString(eventType) << ": {"
 				<< "'paths': " << pathss.str()
 				<< "}";
 
@@ -230,14 +238,15 @@ namespace seri::event
 	{
 		WindowCloseEventData()
 			: IEventData(EventType::window_close)
-		{}
+		{
+		}
 
 		~WindowCloseEventData() override = default;
 
-		std::string toString() override
+		std::string ToString() override
 		{
 			std::stringstream ss;
-			ss << ::seri::event::toString(eventType) << ": {"
+			ss << ::seri::event::ToString(eventType) << ": {"
 				<< "'window_close'"
 				<< "}";
 
@@ -249,14 +258,15 @@ namespace seri::event
 	{
 		WindowResizeEventData(int width_, int height_)
 			: IEventData(EventType::window_resize), width(width_), height(height_)
-		{}
+		{
+		}
 
 		~WindowResizeEventData() override = default;
 
-		std::string toString() override
+		std::string ToString() override
 		{
 			std::stringstream ss;
-			ss << ::seri::event::toString(eventType) << ": {"
+			ss << ::seri::event::ToString(eventType) << ": {"
 				<< "'width': " << width << ", "
 				<< "'height': " << height
 				<< "}";

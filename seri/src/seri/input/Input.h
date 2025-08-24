@@ -8,27 +8,27 @@ namespace seri
 {
 	struct Input
 	{
-		static bool isPressed(const event::KeyEventData& data, KeyCode target)
+		static bool IsPressed(const event::KeyEventData& data, KeyCode target)
 		{
 			return data.key == target && data.action == InputAction::press;
 		}
 
-		static bool isReleased(const event::KeyEventData& data, KeyCode target)
+		static bool IsReleased(const event::KeyEventData& data, KeyCode target)
 		{
 			return data.key == target && data.action == InputAction::release;
 		}
 
-		static bool isRepeating(const event::KeyEventData& data, KeyCode target)
+		static bool IsRepeating(const event::KeyEventData& data, KeyCode target)
 		{
 			return data.key == target && data.action == InputAction::repeat;
 		}
 
-		static bool isPressing(const event::KeyEventData& data, KeyCode target)
+		static bool IsPressing(const event::KeyEventData& data, KeyCode target)
 		{
 			return data.key == target && data.action != InputAction::release;
 		}
 
-		static std::string encodeUTF8(unsigned int codepoint)
+		static std::string EncodeUTF8(unsigned int codepoint)
 		{
 			std::string str;
 

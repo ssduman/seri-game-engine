@@ -1,200 +1,195 @@
 #pragma once
 
-#include "seri/renderer/AuxiliaryStructs.h"
-
 namespace seri
 {
 	enum class InputAction : int
 	{
 		noop = -1,
 
-		press = GLFW_PRESS,
-		repeat = GLFW_REPEAT,
-		release = GLFW_RELEASE,
+		press,
+		repeat,
+		release,
+
+		len
 	};
 
 	enum class InputModifier : int
 	{
 		noop = -1,
 
-		alt = GLFW_MOD_ALT,
-		shift = GLFW_MOD_SHIFT,
-		super = GLFW_MOD_SUPER,
-		control = GLFW_MOD_CONTROL,
-		num_lock = GLFW_MOD_NUM_LOCK,
-		caps_lock = GLFW_MOD_CAPS_LOCK,
+		alt,
+		shift,
+		super,
+		control,
+		num_lock,
+		caps_lock,
+
+		len
 	};
 
 	enum class MouseButtonCode : int
 	{
 		noop = -1,
 
-		button_1 = GLFW_MOUSE_BUTTON_1,
-		button_2 = GLFW_MOUSE_BUTTON_2,
-		button_3 = GLFW_MOUSE_BUTTON_3,
-		button_4 = GLFW_MOUSE_BUTTON_4,
-		button_5 = GLFW_MOUSE_BUTTON_5,
-		button_6 = GLFW_MOUSE_BUTTON_6,
-		button_7 = GLFW_MOUSE_BUTTON_7,
-		button_8 = GLFW_MOUSE_BUTTON_8,
-		button_last = GLFW_MOUSE_BUTTON_LAST,
-		button_left = GLFW_MOUSE_BUTTON_LEFT,
-		button_right = GLFW_MOUSE_BUTTON_RIGHT,
-		button_middle = GLFW_MOUSE_BUTTON_MIDDLE,
+		button_left,
+		button_right,
+		button_middle,
+		button_4,
+		button_5,
+		button_6,
+		button_7,
+		button_8,
 
-		len = GLFW_MOUSE_BUTTON_LAST
+		len
 	};
 
 	enum class KeyCode : int
 	{
 		// arrow
-		up = GLFW_KEY_UP,
-		down = GLFW_KEY_DOWN,
-		left = GLFW_KEY_LEFT,
-		right = GLFW_KEY_RIGHT,
+		up,
+		down,
+		left,
+		right,
 
 		// number
-		number_0 = GLFW_KEY_0,
-		number_1 = GLFW_KEY_1,
-		number_2 = GLFW_KEY_2,
-		number_3 = GLFW_KEY_3,
-		number_4 = GLFW_KEY_4,
-		number_5 = GLFW_KEY_5,
-		number_6 = GLFW_KEY_6,
-		number_7 = GLFW_KEY_7,
-		number_8 = GLFW_KEY_8,
-		number_9 = GLFW_KEY_9,
+		number_0,
+		number_1,
+		number_2,
+		number_3,
+		number_4,
+		number_5,
+		number_6,
+		number_7,
+		number_8,
+		number_9,
 
 		// letter
-		a = GLFW_KEY_A,
-		b = GLFW_KEY_B,
-		c = GLFW_KEY_C,
-		d = GLFW_KEY_D,
-		e = GLFW_KEY_E,
-		f = GLFW_KEY_F,
-		g = GLFW_KEY_G,
-		h = GLFW_KEY_H,
-		i = GLFW_KEY_I,
-		j = GLFW_KEY_J,
-		k = GLFW_KEY_K,
-		l = GLFW_KEY_L,
-		m = GLFW_KEY_M,
-		n = GLFW_KEY_N,
-		o = GLFW_KEY_O,
-		p = GLFW_KEY_P,
-		q = GLFW_KEY_Q,
-		r = GLFW_KEY_R,
-		s = GLFW_KEY_S,
-		t = GLFW_KEY_T,
-		u = GLFW_KEY_U,
-		v = GLFW_KEY_V,
-		w = GLFW_KEY_W,
-		x = GLFW_KEY_X,
-		y = GLFW_KEY_Y,
-		z = GLFW_KEY_Z,
+		a,
+		b,
+		c,
+		d,
+		e,
+		f,
+		g,
+		h,
+		i,
+		j,
+		k,
+		l,
+		m,
+		n,
+		o,
+		p,
+		q,
+		r,
+		s,
+		t,
+		u,
+		v,
+		w,
+		x,
+		y,
+		z,
 
 		// punctuation
-		comma = GLFW_KEY_COMMA,
-		equal = GLFW_KEY_EQUAL,
-		minus = GLFW_KEY_MINUS,
-		slash = GLFW_KEY_SLASH,
-		period = GLFW_KEY_PERIOD,
-		semicolon = GLFW_KEY_SEMICOLON,
-		backslash = GLFW_KEY_BACKSLASH,
-		apostrophe = GLFW_KEY_APOSTROPHE,
-		grave_accent = GLFW_KEY_GRAVE_ACCENT,
-		left_bracket = GLFW_KEY_LEFT_BRACKET,
-		right_bracket = GLFW_KEY_RIGHT_BRACKET,
+		comma,
+		equal,
+		minus,
+		slash,
+		period,
+		semicolon,
+		backslash,
+		apostrophe,
+		grave_accent,
+		left_bracket,
+		right_bracket,
 
 		// command
-		end = GLFW_KEY_END,
-		tab = GLFW_KEY_TAB,
-		home = GLFW_KEY_HOME,
-		menu = GLFW_KEY_MENU,
-		del = GLFW_KEY_DELETE,
-		pause = GLFW_KEY_PAUSE,
-		enter = GLFW_KEY_ENTER,
-		space = GLFW_KEY_SPACE,
-		insert = GLFW_KEY_INSERT,
-		escape = GLFW_KEY_ESCAPE,
-		page_up = GLFW_KEY_PAGE_UP,
-		num_lock = GLFW_KEY_NUM_LOCK,
-		page_down = GLFW_KEY_PAGE_DOWN,
-		caps_lock = GLFW_KEY_CAPS_LOCK,
-		backspace = GLFW_KEY_BACKSPACE,
-		scroll_lock = GLFW_KEY_SCROLL_LOCK,
-		print_screen = GLFW_KEY_PRINT_SCREEN,
+		end,
+		tab,
+		home,
+		menu,
+		del,
+		pause,
+		enter,
+		space,
+		insert,
+		escape,
+		page_up,
+		num_lock,
+		page_down,
+		caps_lock,
+		backspace,
+		scroll_lock,
+		print_screen,
 
 		// control
-		left_alt = GLFW_KEY_LEFT_ALT,
-		left_shift = GLFW_KEY_LEFT_SHIFT,
-		left_super = GLFW_KEY_LEFT_SUPER,
-		left_control = GLFW_KEY_LEFT_CONTROL,
-		right_alt = GLFW_KEY_RIGHT_ALT,
-		right_super = GLFW_KEY_RIGHT_SUPER,
-		right_shift = GLFW_KEY_RIGHT_SHIFT,
-		right_control = GLFW_KEY_RIGHT_CONTROL,
+		left_alt,
+		left_shift,
+		left_super,
+		left_control,
+		right_alt,
+		right_shift,
+		right_super,
+		right_control,
 
 		// f
-		f1 = GLFW_KEY_F1,
-		f2 = GLFW_KEY_F2,
-		f3 = GLFW_KEY_F3,
-		f4 = GLFW_KEY_F4,
-		f5 = GLFW_KEY_F5,
-		f6 = GLFW_KEY_F6,
-		f7 = GLFW_KEY_F7,
-		f8 = GLFW_KEY_F8,
-		f9 = GLFW_KEY_F9,
-		f10 = GLFW_KEY_F10,
-		f11 = GLFW_KEY_F11,
-		f12 = GLFW_KEY_F12,
-		f13 = GLFW_KEY_F13,
-		f14 = GLFW_KEY_F14,
-		f15 = GLFW_KEY_F15,
-		f16 = GLFW_KEY_F16,
-		f17 = GLFW_KEY_F17,
-		f18 = GLFW_KEY_F18,
-		f19 = GLFW_KEY_F19,
-		f20 = GLFW_KEY_F20,
-		f21 = GLFW_KEY_F21,
-		f22 = GLFW_KEY_F22,
-		f23 = GLFW_KEY_F23,
-		f24 = GLFW_KEY_F24,
-		f25 = GLFW_KEY_F25,
+		f1,
+		f2,
+		f3,
+		f4,
+		f5,
+		f6,
+		f7,
+		f8,
+		f9,
+		f10,
+		f11,
+		f12,
+		f13,
+		f14,
+		f15,
+		f16,
+		f17,
+		f18,
+		f19,
+		f20,
+		f21,
+		f22,
+		f23,
+		f24,
 
 		// keypad
-		kp_0 = GLFW_KEY_KP_0,
-		kp_1 = GLFW_KEY_KP_1,
-		kp_2 = GLFW_KEY_KP_2,
-		kp_3 = GLFW_KEY_KP_3,
-		kp_4 = GLFW_KEY_KP_4,
-		kp_5 = GLFW_KEY_KP_5,
-		kp_6 = GLFW_KEY_KP_6,
-		kp_7 = GLFW_KEY_KP_7,
-		kp_8 = GLFW_KEY_KP_8,
-		kp_9 = GLFW_KEY_KP_9,
-		kp_add = GLFW_KEY_KP_ADD,
-		kp_enter = GLFW_KEY_KP_ENTER,
-		kp_equal = GLFW_KEY_KP_EQUAL,
-		kp_divide = GLFW_KEY_KP_DIVIDE,
-		kp_decimal = GLFW_KEY_KP_DECIMAL,
-		kp_multiply = GLFW_KEY_KP_MULTIPLY,
-		kp_subtract = GLFW_KEY_KP_SUBTRACT,
+		kp_0,
+		kp_1,
+		kp_2,
+		kp_3,
+		kp_4,
+		kp_5,
+		kp_6,
+		kp_7,
+		kp_8,
+		kp_9,
+		kp_add,
+		kp_enter,
+		kp_equal,
+		kp_divide,
+		kp_decimal,
+		kp_multiply,
+		kp_subtract,
 
 		// other
-		last = GLFW_KEY_MENU,
-		unknown = GLFW_KEY_UNKNOWN,
-		world_1 = GLFW_KEY_WORLD_1,
-		world_2 = GLFW_KEY_WORLD_2,
+		last,
+		unknown,
 
-		// len
-		len = GLFW_KEY_LAST
+		len,
 	};
 
-	inline const char* toString(InputAction inputAction)
+	inline const char* ToString(InputAction inputAction)
 	{
 		switch (inputAction)
 		{
+			case InputAction::noop: return "noop";
 			case InputAction::press: return "press";
 			case InputAction::repeat: return "repeat";
 			case InputAction::release: return "release";
@@ -202,7 +197,7 @@ namespace seri
 		}
 	}
 
-	inline const char* toString(InputModifier inputModifier)
+	inline const char* ToString(InputModifier inputModifier)
 	{
 		switch (inputModifier)
 		{
@@ -217,23 +212,24 @@ namespace seri
 		}
 	}
 
-	inline const char* toString(MouseButtonCode mouseButtonCode)
+	inline const char* ToString(MouseButtonCode mouseButtonCode)
 	{
 		switch (mouseButtonCode)
 		{
+			case MouseButtonCode::noop: return "noop";
+			case MouseButtonCode::button_left: return "button_left";
+			case MouseButtonCode::button_right: return "button_right";
+			case MouseButtonCode::button_middle: return "button_middle";
 			case MouseButtonCode::button_4: return "button_4";
 			case MouseButtonCode::button_5: return "button_5";
 			case MouseButtonCode::button_6: return "button_6";
 			case MouseButtonCode::button_7: return "button_7";
-			case MouseButtonCode::button_last: return "button_last";
-			case MouseButtonCode::button_left: return "button_left";
-			case MouseButtonCode::button_right: return "button_right";
-			case MouseButtonCode::button_middle: return "button_middle";
+			case MouseButtonCode::button_8: return "button_8";
 			default: return "";
 		}
 	}
 
-	inline const char* toString(KeyCode keyCode)
+	inline const char* ToString(KeyCode keyCode)
 	{
 		switch (keyCode)
 		{
@@ -337,7 +333,6 @@ namespace seri
 			case KeyCode::f22: return "f22";
 			case KeyCode::f23: return "f23";
 			case KeyCode::f24: return "f24";
-			case KeyCode::f25: return "f25";
 			case KeyCode::kp_0: return "kp_0";
 			case KeyCode::kp_1: return "kp_1";
 			case KeyCode::kp_2: return "kp_2";
@@ -356,8 +351,6 @@ namespace seri
 			case KeyCode::kp_multiply: return "kp_multiply";
 			case KeyCode::kp_subtract: return "kp_subtract";
 			case KeyCode::unknown: return "unknown";
-			case KeyCode::world_1: return "world_1";
-			case KeyCode::world_2: return "world_2";
 			default: return "";
 		}
 	}

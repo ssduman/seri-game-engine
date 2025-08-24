@@ -8,6 +8,8 @@
 #include <memory>
 #include <functional>
 
+#include <glad/gl.h>
+
 namespace seri
 {
 	struct WindowProperties

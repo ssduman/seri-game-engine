@@ -10,7 +10,7 @@ enum class UserEventType
 	unknown,
 };
 
-inline const char* toString(UserEventType userEventType)
+inline const char* ToString(UserEventType userEventType)
 {
 	switch (userEventType)
 	{
@@ -35,11 +35,12 @@ struct UserGameStateEventData : public IUserEventData
 
 	~UserGameStateEventData() override = default;
 
-	std::string toString() override
+	std::string ToString() override
 	{
 		std::stringstream ss;
-		ss << seri::event::toString(eventType) << "/" << ::toString(userEventType) << ": {"
-			<< "'gameState': " << ::toString(gameState)
+		ss << seri::event::ToString(eventType) << "/" << ::ToString(userEventType) << ": "
+			<< "{"
+			<< "'gameState': " << ::ToString(gameState)
 			<< "}";
 
 		return ss.str();

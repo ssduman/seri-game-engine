@@ -2,15 +2,12 @@
 #pragma warning(disable: 4100)
 
 #include "seri/window/IWindowManager.h"
-#include "seri/renderer/AuxiliaryStructs.h"
 #include "seri/input/InputManager.h"
 
 #include <string>
 #include <utility>
 #include <stdexcept>
 
-#define SDL_MAIN_HANDLED
-#define SDL_MAIN_USE_CALLBACKS 1
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_opengl.h>
 
@@ -132,7 +129,15 @@ namespace seri
 					case SDL_EVENT_QUIT:
 						{
 							_shouldClose = true;
+
 							LOGGER(info, "[window] sdl event: quit");
+						}
+						break;
+					case SDL_EVENT_WINDOW_CLOSE_REQUESTED:
+						{
+							FireEvent(event::WindowCloseEventData{});
+
+							LOGGER(info, "[window] sdl event: window closing");
 						}
 						break;
 					case SDL_EVENT_WINDOW_SHOWN:
@@ -147,12 +152,10 @@ namespace seri
 						break;
 					case SDL_EVENT_WINDOW_MOVED:
 						{
-							LOGGER(info, "[window] sdl event: window moved");
-						}
-						break;
-					case SDL_EVENT_WINDOW_RESIZED:
-						{
-							LOGGER(info, "[window] sdl event: window resized");
+							int x = event.window.data1;
+							int y = event.window.data2;
+
+							LOGGER(info, "[window] sdl event: window moved: " << x << ", " << y);
 						}
 						break;
 					case SDL_EVENT_WINDOW_MINIMIZED:
@@ -165,44 +168,219 @@ namespace seri
 							LOGGER(info, "[window] sdl event: window maximized");
 						}
 						break;
+					case SDL_EVENT_WINDOW_FOCUS_GAINED:
+						{
+							LOGGER(info, "[window] sdl event: window focused");
+						}
+						break;
+					case SDL_EVENT_WINDOW_FOCUS_LOST:
+						{
+							LOGGER(info, "[window] sdl event: window not focused");
+						}
+						break;
+					case SDL_EVENT_WINDOW_RESIZED:
+						{
+							int w = event.window.data1;
+							int h = event.window.data2;
+
+							SetViewport(0, 0, w, h);
+
+							LOGGER(info, "[window] sdl event: window resized: " << w << ", " << h);
+						}
+						break;
+					case SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED:
+						{
+							int w = event.window.data1;
+							int h = event.window.data2;
+
+							SetViewport(0, 0, w, h);
+
+							LOGGER(info, "[window] sdl event: window pixel size changed: " << w << ", " << h);
+						}
+						break;
 					case SDL_EVENT_WINDOW_MOUSE_ENTER:
 						{
-							LOGGER(info, "[window] sdl event: mouse enter");
+							FireEvent(event::MouseEnterEventData{ true });
+
+							//LOGGER(info, "[window] sdl event: mouse enter");
 						}
 						break;
 					case SDL_EVENT_WINDOW_MOUSE_LEAVE:
 						{
-							LOGGER(info, "[window] sdl event: mouse leave");
-						}
-						break;
-					case SDL_EVENT_KEY_DOWN:
-						{
-							LOGGER(info, "[window] sdl event: key down");
-						}
-						break;
-					case SDL_EVENT_KEY_UP:
-						{
-							LOGGER(info, "[window] sdl event: key up");
+							FireEvent(event::MouseEnterEventData{ false });
+
+							//LOGGER(info, "[window] sdl event: mouse leave");
 						}
 						break;
 					case SDL_EVENT_MOUSE_MOTION:
 						{
+							double xpos = event.motion.x;
+							double ypos = event.motion.y;
+
+							FireEvent(event::MousePositionEventData{ xpos, ypos });
+
+							InputManager::RegisterCursorPosition(xpos, ypos);
+
 							//LOGGER(info, "[window] sdl event: mouse move");
 						}
 						break;
 					case SDL_EVENT_MOUSE_BUTTON_DOWN:
 						{
-							LOGGER(info, "[window] sdl event: mouse button down");
+							MouseButtonCode buttonEnum = MouseButtonCode::noop;
+							InputAction actionEnum = InputAction::press;
+							InputModifier modsEnum = InputModifier::noop;
+
+							switch (event.button.button)
+							{
+								case SDL_BUTTON_LEFT:
+									buttonEnum = MouseButtonCode::button_left;
+									break;
+								case SDL_BUTTON_MIDDLE:
+									buttonEnum = MouseButtonCode::button_middle;
+									break;
+								case SDL_BUTTON_RIGHT:
+									buttonEnum = MouseButtonCode::button_right;
+									break;
+								case SDL_BUTTON_X1:
+									buttonEnum = MouseButtonCode::button_4;
+									break;
+								case SDL_BUTTON_X2:
+									buttonEnum = MouseButtonCode::button_5;
+									break;
+								default:
+									break;
+							}
+
+							if (buttonEnum == MouseButtonCode::noop)
+							{
+								LOGGER(info, "[window] sdl event: mouse button down: unexpected button type");
+								break;
+							}
+
+							FireEvent(event::MouseButtonEventData{ buttonEnum, actionEnum, modsEnum });
+
+							InputManager::RegisterMouse(buttonEnum, actionEnum);
+
+							//LOGGER(info, "[window] sdl event: mouse button down");
 						}
 						break;
 					case SDL_EVENT_MOUSE_BUTTON_UP:
 						{
-							LOGGER(info, "[window] sdl event: mouse button up");
+							MouseButtonCode buttonEnum = MouseButtonCode::noop;
+							InputAction actionEnum = InputAction::release;
+							InputModifier modsEnum = InputModifier::noop;
+
+							switch (event.button.button)
+							{
+								case SDL_BUTTON_LEFT:
+									buttonEnum = MouseButtonCode::button_left;
+									break;
+								case SDL_BUTTON_MIDDLE:
+									buttonEnum = MouseButtonCode::button_middle;
+									break;
+								case SDL_BUTTON_RIGHT:
+									buttonEnum = MouseButtonCode::button_right;
+									break;
+								case SDL_BUTTON_X1:
+									buttonEnum = MouseButtonCode::button_4;
+									break;
+								case SDL_BUTTON_X2:
+									buttonEnum = MouseButtonCode::button_5;
+									break;
+								default:
+									break;
+							}
+
+							if (buttonEnum == MouseButtonCode::noop)
+							{
+								LOGGER(info, "[window] sdl event: mouse button up: unexpected button type");
+								break;
+							}
+
+							FireEvent(event::MouseButtonEventData{ buttonEnum, actionEnum, modsEnum });
+
+							InputManager::RegisterMouse(buttonEnum, actionEnum);
+
+							//LOGGER(info, "[window] sdl event: mouse button up");
 						}
 						break;
 					case SDL_EVENT_MOUSE_WHEEL:
 						{
-							LOGGER(info, "[window] sdl event: mouse wheel");
+							double xoffset = event.wheel.x;
+							double yoffset = event.wheel.y;
+
+							FireEvent(event::MouseScrollEventData{ xoffset, yoffset });
+
+							InputManager::RegisterScrollDelta(xoffset, yoffset);
+
+							//LOGGER(info, "[window] sdl event: mouse wheel");
+						}
+						break;
+					case SDL_EVENT_KEY_DOWN:
+						{
+							int scancode = event.key.scancode;
+							int key = event.key.key;
+							int mods = event.key.mod;
+							bool down = event.key.down;
+							bool repeat = event.key.repeat;
+
+							KeyCode keyEnum = GetKeyEnum(key);
+							InputAction actionEnum = repeat ? InputAction::repeat : InputAction::press;
+							std::vector<InputModifier> modsVector;
+							FillModsVector(mods, modsVector);
+
+							if (keyEnum == KeyCode::unknown)
+							{
+								LOGGER(info, "[window] sdl event: key down: unexpected key type");
+								break;
+							}
+
+							FireEvent(event::KeyEventData{ keyEnum, scancode, actionEnum, std::move(modsVector) });
+
+							InputManager::RegisterKey(keyEnum, actionEnum);
+
+							if (keyEnum == KeyCode::escape && actionEnum == InputAction::press)
+							{
+								SetWindowShouldCloseToTrue();
+							}
+
+							//LOGGER(info, "[window] sdl event: key down: " << seri::ToString(keyEnum) << ", repeat: " << seri::ToString(actionEnum));
+						}
+						break;
+					case SDL_EVENT_KEY_UP:
+						{
+							int scancode = event.key.scancode;
+							int key = event.key.key;
+							int mods = event.key.mod;
+							bool down = event.key.down;
+							bool repeat = event.key.repeat;
+
+							KeyCode keyEnum = GetKeyEnum(key);
+							InputAction actionEnum = InputAction::release;
+							std::vector<InputModifier> modsVector;
+							FillModsVector(mods, modsVector);
+
+							if (keyEnum == KeyCode::unknown)
+							{
+								LOGGER(info, "[window] sdl event: key up: unexpected key type");
+								break;
+							}
+
+							FireEvent(event::KeyEventData{ keyEnum, scancode, actionEnum, std::move(modsVector) });
+
+							InputManager::RegisterKey(keyEnum, actionEnum);
+
+							if (keyEnum == KeyCode::escape)
+							{
+								SetWindowShouldCloseToTrue();
+							}
+
+							//LOGGER(info, "[window] sdl event: key up: " << seri::ToString(keyEnum));
+						}
+						break;
+					case SDL_EVENT_TEXT_INPUT:
+						{
+							LOGGER(info, "[window] sdl event: text input");
 						}
 						break;
 					default:
@@ -314,6 +492,73 @@ namespace seri
 				LOGGER(error, "[window] sdl gl create context error: " + std::string(SDL_GetError()));
 				SDL_DestroyWindow(_window);
 				SDL_Quit();
+			}
+		}
+
+		KeyCode GetKeyEnum(int key)
+		{
+			switch (key)
+			{
+				case SDLK_A: return KeyCode::a;
+				case SDLK_B: return KeyCode::b;
+				case SDLK_C: return KeyCode::c;
+				case SDLK_D: return KeyCode::d;
+				case SDLK_E: return KeyCode::e;
+				case SDLK_F: return KeyCode::f;
+				case SDLK_G: return KeyCode::g;
+				case SDLK_H: return KeyCode::h;
+				case SDLK_I: return KeyCode::i;
+				case SDLK_J: return KeyCode::j;
+				case SDLK_K: return KeyCode::k;
+				case SDLK_L: return KeyCode::l;
+				case SDLK_M: return KeyCode::m;
+				case SDLK_N: return KeyCode::n;
+				case SDLK_O: return KeyCode::o;
+				case SDLK_P: return KeyCode::p;
+				case SDLK_Q: return KeyCode::q;
+				case SDLK_R: return KeyCode::r;
+				case SDLK_S: return KeyCode::s;
+				case SDLK_T: return KeyCode::t;
+				case SDLK_U: return KeyCode::u;
+				case SDLK_V: return KeyCode::v;
+				case SDLK_W: return KeyCode::w;
+				case SDLK_X: return KeyCode::x;
+				case SDLK_Y: return KeyCode::x;
+				case SDLK_Z: return KeyCode::z;
+				case SDLK_ESCAPE: return KeyCode::escape;
+				default: return KeyCode::unknown;
+			}
+		}
+
+		void FillModsVector(int mods, std::vector<InputModifier>& modsVector)
+		{
+			if (mods & SDL_KMOD_ALT)
+			{
+				modsVector.emplace_back(InputModifier::alt);
+			}
+			if (mods & SDL_KMOD_SHIFT)
+			{
+				modsVector.emplace_back(InputModifier::shift);
+			}
+			if (mods & SDL_KMOD_GUI)
+			{
+				modsVector.emplace_back(InputModifier::super);
+			}
+			if (mods & SDL_KMOD_CTRL)
+			{
+				modsVector.emplace_back(InputModifier::control);
+			}
+			if (mods & SDL_KMOD_NUM)
+			{
+				modsVector.emplace_back(InputModifier::num_lock);
+			}
+			if (mods & SDL_KMOD_CAPS)
+			{
+				modsVector.emplace_back(InputModifier::caps_lock);
+			}
+			if (modsVector.empty())
+			{
+				modsVector.emplace_back(InputModifier::noop);
 			}
 		}
 

@@ -8,7 +8,7 @@ enum class GameState
 	game_over,
 };
 
-inline const char* toString(GameState gameState)
+inline const char* ToString(GameState gameState)
 {
 	switch (gameState)
 	{

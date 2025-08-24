@@ -10,9 +10,9 @@
 #include <vector>
 #include <memory>
 
-#define MAX_BONES 200
-#define MAX_NUM_BONES_PER_VERTEX 4
-#define MAX_INSTANCED_COUNT 256
+#define SERI_MAX_BONES 200
+#define SERI_MAX_NUM_BONES_PER_VERTEX 4
+#define SERI_MAX_INSTANCED_COUNT 256
 
 namespace seri
 {
@@ -40,7 +40,7 @@ namespace seri
 
 		void AddBoneData(unsigned int boneId, float weight)
 		{
-			if (_count >= MAX_NUM_BONES_PER_VERTEX)
+			if (_count >= SERI_MAX_NUM_BONES_PER_VERTEX)
 			{
 				return;
 			}
@@ -64,8 +64,8 @@ namespace seri
 			_count += 1;
 		}
 
-		unsigned int boneIds[MAX_NUM_BONES_PER_VERTEX] = { 0 };
-		float weights[MAX_NUM_BONES_PER_VERTEX] = { 0.0f };
+		unsigned int boneIds[SERI_MAX_NUM_BONES_PER_VERTEX] = { 0 };
+		float weights[SERI_MAX_NUM_BONES_PER_VERTEX] = { 0.0f };
 
 	private:
 		int _count = 0;
@@ -439,7 +439,7 @@ namespace seri
 
 		void MakeInstanced(const std::vector<glm::mat4>& modelMatrices)
 		{
-			if (modelMatrices.size() > MAX_INSTANCED_COUNT)
+			if (modelMatrices.size() > SERI_MAX_INSTANCED_COUNT)
 			{
 				LOGGER(error, "model matrices size exceeds max instanced count");
 				return;

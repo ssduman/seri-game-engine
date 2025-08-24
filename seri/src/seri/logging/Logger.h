@@ -55,10 +55,11 @@ namespace seri
 	}
 }
 
-#define LOGGER_IMPL(lvl, msg) std::cout \
+#define SERI_LOGGER_IMPL(lvl, msg) std::cout \
     << seri::GetDateTime() \
     << " [" << seri::ToString(lvl) << "] " \
     << msg \
     << std::endl
 
-#define LOGGER(lvl, msg) LOGGER_IMPL(seri::LogLevel::lvl, msg)
+#define LOGGER(lvl, msg) SERI_LOGGER_IMPL(seri::LogLevel::lvl, msg)
+#define SERI_LOGGER(lvl, msg) SERI_LOGGER_IMPL(seri::LogLevel::lvl, msg)
