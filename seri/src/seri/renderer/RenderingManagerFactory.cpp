@@ -7,14 +7,10 @@
 static_assert(false, "linux platform not supported");
 #elif _WIN32
 
-#if defined (SERI_USE_OPENGL)
+#if defined (SERI_USE_RENDERING_OPENGL)
 
 #include "seri/renderer/OpenGLRenderingManager.h"
 std::unique_ptr<seri::IRenderingManager> seri::RenderingManagerFactory::_renderingManagerInstance = std::make_unique<seri::OpenGLRenderingManager>();
-
-#elif defined (SERI_USE_D3D11)
-
-static_assert(false, "d3d11 not supported");
 
 #else
 

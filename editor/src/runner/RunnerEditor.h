@@ -93,14 +93,12 @@ public:
 		auto gui = std::make_shared<GUI>(cameraPerspective, rootScene);
 		gui->Init();
 
-#ifdef SERI_USE_SDL3
 		windowManager->AddProcessEventDelegate(
 			[&gui](const void* sdlEvent)
 			{
 				gui->ProcessEvent(sdlEvent);
 			}
 		);
-#endif
 
 		SimpleDrawerBehaviour simpleDrawerBehaviour{};
 

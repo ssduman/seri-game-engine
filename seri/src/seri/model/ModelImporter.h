@@ -79,7 +79,6 @@ namespace seri
 
 		std::string _modelDirectory;
 		std::map<std::string, Texture> _texturesLoaded;
-
 		std::map<std::string, int> _boneNameToIndexMap;
 
 	};

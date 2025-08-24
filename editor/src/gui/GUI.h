@@ -11,10 +11,10 @@
 
 #include <memory>
 
-#ifdef SERI_USE_GLFW
+#if defined (SERI_USE_WINDOW_GLFW)
 #include <GLFW/glfw3.h>
 #include <backends/imgui_impl_glfw.h>
-#elif defined (SERI_USE_SDL3)
+#elif defined (SERI_USE_WINDOW_SDL3)
 #include <SDL3/SDL.h>
 #include <backends/imgui_impl_sdl3.h>
 #endif
@@ -31,9 +31,9 @@ public:
 	{
 		ImGui_ImplOpenGL3_Shutdown();
 
-#ifdef SERI_USE_GLFW
+#if defined (SERI_USE_WINDOW_GLFW)
 		ImGui_ImplGlfw_Shutdown();
-#elif defined (SERI_USE_SDL3)
+#elif defined (SERI_USE_WINDOW_SDL3)
 		ImGui_ImplSDL3_Shutdown();
 #endif
 
@@ -50,9 +50,9 @@ public:
 		SetIO();
 		SetStyle();
 
-#ifdef SERI_USE_GLFW
+#if defined (SERI_USE_WINDOW_GLFW)
 		ImGui_ImplGlfw_InitForOpenGL(static_cast<GLFWwindow*>(_windowManager->GetWindowHandle()), true);
-#elif defined (SERI_USE_SDL3)
+#elif defined (SERI_USE_WINDOW_SDL3)
 		ImGui_ImplSDL3_InitForOpenGL(static_cast<SDL_Window*>(_windowManager->GetWindowHandle()), _windowManager->GetContext());
 #endif
 
@@ -63,9 +63,9 @@ public:
 	{
 		ImGui_ImplOpenGL3_NewFrame();
 
-#ifdef SERI_USE_GLFW
+#if defined (SERI_USE_WINDOW_GLFW)
 		ImGui_ImplGlfw_NewFrame();
-#elif defined (SERI_USE_SDL3)
+#elif defined (SERI_USE_WINDOW_SDL3)
 		ImGui_ImplSDL3_NewFrame();
 #endif
 
@@ -86,12 +86,12 @@ public:
 
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-#ifdef SERI_USE_GLFW
+#if defined (SERI_USE_WINDOW_GLFW)
 		GLFWwindow* backup_current_context = glfwGetCurrentContext();
 		ImGui::UpdatePlatformWindows();
 		ImGui::RenderPlatformWindowsDefault();
 		glfwMakeContextCurrent(backup_current_context);
-#elif defined (SERI_USE_SDL3)
+#elif defined (SERI_USE_WINDOW_SDL3)
 		SDL_Window* backup_current_window = SDL_GL_GetCurrentWindow();
 		SDL_GLContext backup_current_context = SDL_GL_GetCurrentContext();
 		ImGui::UpdatePlatformWindows();
@@ -100,12 +100,12 @@ public:
 #endif
 	}
 
-#ifdef SERI_USE_SDL3
 	void ProcessEvent(const void* event)
 	{
+#if defined (SERI_USE_WINDOW_SDL3)
 		ImGui_ImplSDL3_ProcessEvent(static_cast<const SDL_Event*>(event));
-	}
 #endif
+	}
 
 private:
 	void HelpMarker(const char* desc)

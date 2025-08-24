@@ -57,12 +57,12 @@ namespace seri::font
 				switch (draw_mode)
 				{
 					case seri::font::DrawMode::draw_main:
-					{
-						unsigned char val = data;
-						_buffer[base + R] |= val;
-						_buffer[base + A] |= val;
-						break;
-					}
+						{
+							unsigned char val = data;
+							_buffer[base + R] |= val;
+							_buffer[base + A] |= val;
+							break;
+						}
 				}
 			}
 		}

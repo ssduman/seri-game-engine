@@ -7,12 +7,12 @@
 static_assert(false, "linux platform not supported");
 #elif _WIN32
 
-#if defined (SERI_USE_GLFW)
+#if defined (SERI_USE_WINDOW_GLFW)
 
 #include "seri/window/WindowsGLFWWindowManager.h"
 std::unique_ptr<seri::IWindowManager> seri::WindowManagerFactory::_windowManagerInstance = std::make_unique<seri::WindowsGLFWWindowManager>();
 
-#elif defined (SERI_USE_SDL3)
+#elif defined (SERI_USE_WINDOW_SDL3)
 
 #include "seri/window/WindowsSDLWindowManager.h"
 std::unique_ptr<seri::IWindowManager> seri::WindowManagerFactory::_windowManagerInstance = std::make_unique<seri::WindowsSDLWindowManager>();

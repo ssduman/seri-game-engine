@@ -1,12 +1,15 @@
 #pragma once
 
-#define SERI_USE_GLFW
-//#define SERI_USE_SDL3
+#define SERI_USE_WINDOW_GLFW
+//#define SERI_USE_WINDOW_SDL3
 
-#define SERI_USE_OPENGL
-//#define SERI_USE_D3D11
+#define SERI_USE_RENDERING_OPENGL
+//#define SERI_USE_RENDERING_D3D11
+//#define SERI_USE_RENDERING_D3D12
+//#define SERI_USE_RENDERING_VULKAN
+//#define SERI_USE_RENDERING_NULL
 
-#ifdef SERI_USE_SDL3
+#if defined (SERI_USE_WINDOW_SDL3)
 #define SDL_MAIN_HANDLED
 #define SDL_MAIN_USE_CALLBACKS 1
 #endif
@@ -39,7 +42,6 @@
 #include "seri/sound/SoundManager.h"
 
 #include "seri/texture/Color.h"
-#include "seri/texture/Typer.h"
 #include "seri/texture/Skybox.h"
 #include "seri/texture/Texture.h"
 

@@ -4,7 +4,6 @@
 
 #include "seri/graphic/Graphic.h"
 #include "seri/graphic/Mesh.h"
-#include "seri/graphic/Material.h"
 #include "seri/graphic/Model.h"
 #include "seri/camera/ICamera.h"
 
@@ -542,4 +541,5 @@ namespace seri
 			default: return "unknown";
 		}
 	}
+
 }
