@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../event/UserEvent.h"
+#include "event/UserEvent.h"
 
 #include <seri/core/Seri.h>
 

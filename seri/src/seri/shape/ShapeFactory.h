@@ -1,31 +1,28 @@
 #pragma once
 
-#include "camera/Camera.h"
+#include "seri/camera/ICamera.h"
 
-#include <seri/core/Seri.h>
-#include <seri/shape/Cube.h>
-#include <seri/shape/Line.h>
-#include <seri/shape/Point.h>
-#include <seri/shape/Circle.h>
-#include <seri/shape/Polygon.h>
-#include <seri/shape/Triangle.h>
-#include <seri/shape/Rectangle.h>
+#include "seri/core/Seri.h"
+#include "seri/shape/Cube.h"
+#include "seri/shape/Line.h"
+#include "seri/shape/Point.h"
+#include "seri/shape/Circle.h"
+#include "seri/shape/Polygon.h"
+#include "seri/shape/Triangle.h"
+#include "seri/shape/Rectangle.h"
 
 #include <glm/gtc/random.hpp>
 
-#include <ctime>
 #include <memory>
 #include <cstdlib>
 
-class Factory
+class ShapeFactory
 {
 public:
-	~Factory() = default;
+	~ShapeFactory() = default;
 
-	static std::shared_ptr<seri::Entity> CreateEntity(std::shared_ptr<Camera> camera, seri::EntityType entityType)
+	static std::shared_ptr<seri::Entity> CreateShape(const std::shared_ptr<seri::ICamera>& camera, seri::EntityType entityType)
 	{
-		srand(static_cast<unsigned int>(time(0)));
-
 		static auto minColor = glm::vec4{ 0.0f, 0.0f, 0.0f, 1.0f };
 		static auto maxColor = glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f };
 		static auto randomColor = []() -> glm::vec4
@@ -311,6 +308,10 @@ public:
 					return polygon;
 				}
 			case seri::EntityType::unknown:
+				{
+					return nullptr;
+				}
+			default:
 				{
 					return nullptr;
 				}

@@ -3,11 +3,11 @@
 #include <seri/core/Seri.h>
 
 #include "gui/GUI.h"
-#include "app/Factory.h"
 #include "camera/Camera.h"
 #include "event/UserEvent.h"
 #include "behaviour/SimpleDrawerBehaviour.h"
 
+#include <ctime>
 #include <memory>
 #include <thread>
 #include <stdexcept>
@@ -21,6 +21,8 @@ public:
 
 	void operator()()
 	{
+		srand(static_cast<unsigned int>(time(0)));
+
 		seri::WindowProperties windowProperties{ /*title*/ "Seri Game Engine - Editor", /*fullscreen*/ false, /*w*/ 1280, /*h*/ 720 };
 		auto& windowManager = seri::WindowManagerFactory::Instance();
 		windowManager->SetWindowProperties(windowProperties);

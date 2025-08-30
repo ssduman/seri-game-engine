@@ -1,9 +1,8 @@
 #pragma once
 
-#include <seri/core/Seri.h>
-
-#include "app/Factory.h"
 #include "camera/Camera.h"
+
+#include <seri/core/Seri.h>
 
 #include <imgui.h>
 #include <backends/imgui_impl_opengl3.h>
@@ -22,7 +21,7 @@
 class GUI : public seri::Object
 {
 public:
-	GUI(std::shared_ptr<Camera> camera, std::shared_ptr<seri::IScene> scene) : _windowManager(seri::WindowManagerFactory::Instance()), _camera(camera), _scene(scene)
+	GUI(std::shared_ptr<Camera>& camera, std::shared_ptr<seri::IScene> scene) : _windowManager(seri::WindowManagerFactory::Instance()), _camera(camera), _scene(scene)
 	{
 		LOGGER(info, "[gui] init succeeded");
 	}
@@ -269,37 +268,37 @@ private:
 
 						if (ImGui::MenuItem("Point"))
 						{
-							scene->Add(std::move(builder.SetName("Point").SetUnderlyingObject(Factory::CreateEntity(_camera, seri::EntityType::point)).Build()));
+							scene->Add(std::move(builder.SetName("Point").SetUnderlyingObject(ShapeFactory::CreateShape(_camera, seri::EntityType::point)).Build()));
 						}
 
 						if (ImGui::MenuItem("Line"))
 						{
-							scene->Add(std::move(builder.SetName("Line").SetUnderlyingObject(Factory::CreateEntity(_camera, seri::EntityType::line)).Build()));
+							scene->Add(std::move(builder.SetName("Line").SetUnderlyingObject(ShapeFactory::CreateShape(_camera, seri::EntityType::line)).Build()));
 						}
 
 						if (ImGui::MenuItem("Triangle"))
 						{
-							scene->Add(std::move(builder.SetName("Triangle").SetUnderlyingObject(Factory::CreateEntity(_camera, seri::EntityType::triangle)).Build()));
+							scene->Add(std::move(builder.SetName("Triangle").SetUnderlyingObject(ShapeFactory::CreateShape(_camera, seri::EntityType::triangle)).Build()));
 						}
 
 						if (ImGui::MenuItem("Rectangle"))
 						{
-							scene->Add(std::move(builder.SetName("Rectangle").SetUnderlyingObject(Factory::CreateEntity(_camera, seri::EntityType::rectangle)).Build()));
+							scene->Add(std::move(builder.SetName("Rectangle").SetUnderlyingObject(ShapeFactory::CreateShape(_camera, seri::EntityType::rectangle)).Build()));
 						}
 
 						if (ImGui::MenuItem("Circle"))
 						{
-							scene->Add(std::move(builder.SetName("Circle").SetUnderlyingObject(Factory::CreateEntity(_camera, seri::EntityType::circle)).Build()));
+							scene->Add(std::move(builder.SetName("Circle").SetUnderlyingObject(ShapeFactory::CreateShape(_camera, seri::EntityType::circle)).Build()));
 						}
 
 						if (ImGui::MenuItem("Cube"))
 						{
-							scene->Add(std::move(builder.SetName("Cube").SetUnderlyingObject(Factory::CreateEntity(_camera, seri::EntityType::cube)).Build()));
+							scene->Add(std::move(builder.SetName("Cube").SetUnderlyingObject(ShapeFactory::CreateShape(_camera, seri::EntityType::cube)).Build()));
 						}
 
 						if (ImGui::MenuItem("Polygon"))
 						{
-							scene->Add(std::move(builder.SetName("Polygon").SetUnderlyingObject(Factory::CreateEntity(_camera, seri::EntityType::polygon)).Build()));
+							scene->Add(std::move(builder.SetName("Polygon").SetUnderlyingObject(ShapeFactory::CreateShape(_camera, seri::EntityType::polygon)).Build()));
 						}
 
 						ImGui::EndMenu();
@@ -516,7 +515,7 @@ private:
 	}
 
 	std::unique_ptr<seri::WindowManagerBase>& _windowManager;
-	std::shared_ptr<Camera> _camera;
+	std::shared_ptr<Camera>& _camera;
 	std::shared_ptr<seri::IScene> _scene;
 	std::shared_ptr<seri::IScene> _currentScene;
 	std::shared_ptr<seri::Entity> _currentEntity;

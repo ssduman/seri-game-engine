@@ -39,6 +39,8 @@
 
 #include "seri/camera/ICamera.h"
 
+#include "seri/shape/ShapeFactory.h"
+
 #include "seri/sound/SoundManager.h"
 
 #include "seri/texture/Color.h"
