@@ -1,7 +1,7 @@
 #pragma once
 
 #include "seri/util/Util.h"
-#include "seri/window/IWindowManager.h"
+#include "seri/window/WindowManagerBase.h"
 
 namespace seri
 {
@@ -9,14 +9,14 @@ namespace seri
 	{
 	};
 
-	class IRenderingManager
+	class RenderingManagerBase
 	{
 	public:
-		IRenderingManager() = default;
+		RenderingManagerBase() = default;
 
-		virtual ~IRenderingManager() = default;
+		virtual ~RenderingManagerBase() = default;
 
-		virtual void Init(std::unique_ptr<IWindowManager>& windowManager) = 0;
+		virtual void Init(std::unique_ptr<WindowManagerBase>& windowManager) = 0;
 
 		virtual void SetViewport(int x, int y, int width, int height) = 0;
 

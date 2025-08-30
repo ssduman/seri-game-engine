@@ -1,8 +1,8 @@
 #pragma once
 #pragma warning(disable: 4100)
 
-#include "seri/window/IWindowManager.h"
 #include "seri/input/InputManager.h"
+#include "seri/window/WindowManagerBase.h"
 
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_opengl.h>
@@ -13,25 +13,25 @@
 
 namespace seri
 {
-	class WindowsSDLWindowManager : public IWindowManager
+	class WindowManagerSDL : public WindowManagerBase
 	{
 	public:
-		WindowsSDLWindowManager() = default;
+		WindowManagerSDL() = default;
 
-		~WindowsSDLWindowManager() override
+		~WindowManagerSDL() override
 		{
 			SDL_GL_DestroyContext(_context);
 			SDL_DestroyWindow(_window);
 			SDL_Quit();
 
-			LOGGER(info, "[window] windows sdl window manager destroyed and terminated successfully");
+			LOGGER(info, "[window] sdl window manager destroyed and terminated successfully");
 		}
 
 		void Init() override
 		{
 			if (_initialized)
 			{
-				throw std::runtime_error("[window] windows sdl window manager is already initialized");
+				throw std::runtime_error("[window] sdl window manager is already initialized");
 			}
 
 			InitSDL();
@@ -40,7 +40,7 @@ namespace seri
 
 			_initialized = true;
 
-			LOGGER(info, "[window] windows sdl window manager created successfully");
+			LOGGER(info, "[window] sdl window manager created successfully");
 		}
 
 		double GetTime() override

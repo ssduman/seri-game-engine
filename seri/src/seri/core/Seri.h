@@ -53,10 +53,8 @@
 #include "seri/event/IEvent.h"
 #include "seri/event/EventDispatcher.h"
 
-#include "seri/window/IWindowManager.h"
+#include "seri/window/WindowManagerBase.h"
 #include "seri/window/WindowManagerFactory.h"
 
-#include "seri/renderer/IRenderingManager.h"
-#include "seri/renderer/OpenGLRendererBackend.h"
-#include "seri/renderer/AuxiliaryStructsBuilder.h"
-#include "seri/renderer/RenderingManagerFactory.h"
+#include "seri/rendering/RenderingManagerBase.h"
+#include "seri/rendering/RenderingManagerFactory.h"

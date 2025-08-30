@@ -27,12 +27,12 @@ namespace seri
 
 	using ProcessEventDelegate = std::function<void(const void*)>;
 
-	class IWindowManager
+	class WindowManagerBase
 	{
 	public:
-		IWindowManager() = default;
+		WindowManagerBase() = default;
 
-		virtual ~IWindowManager() = default;
+		virtual ~WindowManagerBase() = default;
 
 		virtual void Init() = 0;
 

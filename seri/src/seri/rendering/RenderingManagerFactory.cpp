@@ -1,7 +1,7 @@
 #include "Seripch.h"
 
 #include "seri/core/Seri.h"
-#include "seri/renderer/RenderingManagerFactory.h"
+#include "seri/rendering/RenderingManagerFactory.h"
 
 #ifdef __linux__
 static_assert(false, "linux platform not supported");
@@ -9,8 +9,8 @@ static_assert(false, "linux platform not supported");
 
 #if defined (SERI_USE_RENDERING_OPENGL)
 
-#include "seri/renderer/OpenGLRenderingManager.h"
-std::unique_ptr<seri::IRenderingManager> seri::RenderingManagerFactory::_renderingManagerInstance = std::make_unique<seri::OpenGLRenderingManager>();
+#include "seri/rendering/RenderingManagerOpenGL.h"
+std::unique_ptr<seri::RenderingManagerBase> seri::RenderingManagerFactory::_renderingManagerInstance = std::make_unique<seri::RenderingManagerOpenGL>();
 
 #else
 

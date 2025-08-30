@@ -515,7 +515,7 @@ private:
 		_currentObject = std::dynamic_pointer_cast<seri::Object>(entity);
 	}
 
-	std::unique_ptr<seri::IWindowManager>& _windowManager;
+	std::unique_ptr<seri::WindowManagerBase>& _windowManager;
 	std::shared_ptr<Camera> _camera;
 	std::shared_ptr<seri::IScene> _scene;
 	std::shared_ptr<seri::IScene> _currentScene;

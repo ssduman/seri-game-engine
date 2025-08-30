@@ -9,13 +9,13 @@ static_assert(false, "linux platform not supported");
 
 #if defined (SERI_USE_WINDOW_GLFW)
 
-#include "seri/window/WindowsGLFWWindowManager.h"
-std::unique_ptr<seri::IWindowManager> seri::WindowManagerFactory::_windowManagerInstance = std::make_unique<seri::WindowsGLFWWindowManager>();
+#include "seri/window/WindowManagerGLFW.h"
+std::unique_ptr<seri::WindowManagerBase> seri::WindowManagerFactory::_windowManagerInstance = std::make_unique<seri::WindowManagerGLFW>();
 
 #elif defined (SERI_USE_WINDOW_SDL3)
 
-#include "seri/window/WindowsSDLWindowManager.h"
-std::unique_ptr<seri::IWindowManager> seri::WindowManagerFactory::_windowManagerInstance = std::make_unique<seri::WindowsSDLWindowManager>();
+#include "seri/window/WindowManagerSDL.h"
+std::unique_ptr<seri::WindowManagerBase> seri::WindowManagerFactory::_windowManagerInstance = std::make_unique<seri::WindowManagerSDL>();
 
 #else
 

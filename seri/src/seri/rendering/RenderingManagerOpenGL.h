@@ -1,6 +1,6 @@
 #pragma once
 
-#include "seri/renderer/IRenderingManager.h"
+#include "seri/rendering/RenderingManagerBase.h"
 
 #include <glad/gl.h>
 
@@ -9,17 +9,17 @@
 
 namespace seri
 {
-	class OpenGLRenderingManager : public IRenderingManager
+	class RenderingManagerOpenGL : public RenderingManagerBase
 	{
 	public:
-		OpenGLRenderingManager() = default;
+		RenderingManagerOpenGL() = default;
 
-		~OpenGLRenderingManager() override
+		~RenderingManagerOpenGL() override
 		{
 			LOGGER(info, "[rendering] opengl rendering manager destroyed");
 		}
 
-		void Init(std::unique_ptr<IWindowManager>& windowManager) override
+		void Init(std::unique_ptr<WindowManagerBase>& windowManager) override
 		{
 			if (_initialized)
 			{
@@ -65,7 +65,7 @@ namespace seri
 		}
 
 	protected:
-		void LoadGlad(std::unique_ptr<IWindowManager>& windowManager)
+		void LoadGlad(std::unique_ptr<WindowManagerBase>& windowManager)
 		{
 			int version = gladLoadGL(static_cast<GLADloadfunc>(windowManager->GetOpenGLProcAddress()));
 			if (version == 0)

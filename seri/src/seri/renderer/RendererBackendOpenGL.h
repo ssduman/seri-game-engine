@@ -1,31 +1,31 @@
 #pragma once
 
 #include "seri/logging/Logger.h"
-#include "seri/renderer/RendererBackendBase.h"
 #include "seri/renderer/AuxiliaryStructs.h"
+#include "seri/renderer/RendererBackendBase.h"
 
 #include <vector>
 
 namespace seri
 {
-	class OpenGLRendererBackend : public RendererBackendBase
+	class RendererBackendOpenGL : public RendererBackendBase
 	{
 	public:
-		OpenGLRendererBackend()
+		RendererBackendOpenGL()
 		{
 			generate();
 			bind();
 		}
 
-		OpenGLRendererBackend(OpenGLRendererBackend& other) = default;
+		RendererBackendOpenGL(RendererBackendOpenGL& other) = default;
 
-		OpenGLRendererBackend(OpenGLRendererBackend&& other) = delete;
+		RendererBackendOpenGL(RendererBackendOpenGL&& other) = delete;
 
-		OpenGLRendererBackend& operator=(OpenGLRendererBackend& other) = delete;
+		RendererBackendOpenGL& operator=(RendererBackendOpenGL& other) = delete;
 
-		OpenGLRendererBackend& operator=(OpenGLRendererBackend&& other) = default;
+		RendererBackendOpenGL& operator=(RendererBackendOpenGL&& other) = default;
 
-		~OpenGLRendererBackend() override
+		~RendererBackendOpenGL() override
 		{
 			//release();
 		}

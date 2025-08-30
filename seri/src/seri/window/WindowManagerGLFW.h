@@ -1,8 +1,8 @@
 #pragma once
 #pragma warning(disable: 4100)
 
-#include "seri/window/IWindowManager.h"
 #include "seri/input/InputManager.h"
+#include "seri/window/WindowManagerBase.h"
 
 #include <GLFW/glfw3.h>
 
@@ -11,24 +11,24 @@
 
 namespace seri
 {
-	class WindowsGLFWWindowManager : public IWindowManager
+	class WindowManagerGLFW : public WindowManagerBase
 	{
 	public:
-		WindowsGLFWWindowManager() = default;
+		WindowManagerGLFW() = default;
 
-		~WindowsGLFWWindowManager() override
+		~WindowManagerGLFW() override
 		{
 			glfwDestroyWindow(_window);
 			glfwTerminate();
 
-			LOGGER(info, "[window] windows glfw window manager destroyed and terminated successfully");
+			LOGGER(info, "[window] glfw window manager destroyed and terminated successfully");
 		}
 
 		void Init() override
 		{
 			if (_initialized)
 			{
-				throw std::runtime_error("[window] windows glfw window manager is already initialized");
+				throw std::runtime_error("[window] glfw window manager is already initialized");
 			}
 
 			InitGLFW();
@@ -38,7 +38,7 @@ namespace seri
 
 			_initialized = true;
 
-			LOGGER(info, "[window] windows glfw window manager created successfully");
+			LOGGER(info, "[window] glfw window manager created successfully");
 		}
 
 		double GetTime() override
@@ -205,7 +205,7 @@ namespace seri
 			glfwSetKeyCallback(_window,
 				[](GLFWwindow* window, int key, int scancode, int action, int mods)
 				{
-					if (auto windowManager = static_cast<WindowsGLFWWindowManager*>(glfwGetWindowUserPointer(window)))
+					if (auto windowManager = static_cast<WindowManagerGLFW*>(glfwGetWindowUserPointer(window)))
 					{
 						KeyCode keyEnum = windowManager->GetKeyCodeEnum(key);
 						InputAction actionEnum = windowManager->GetInputActionEnum(action);
@@ -233,7 +233,7 @@ namespace seri
 			glfwSetCharCallback(_window,
 				[](GLFWwindow* window, unsigned int codepoint)
 				{
-					if (auto windowManager = static_cast<WindowsGLFWWindowManager*>(glfwGetWindowUserPointer(window)))
+					if (auto windowManager = static_cast<WindowManagerGLFW*>(glfwGetWindowUserPointer(window)))
 					{
 						windowManager->FireEvent(event::CharacterEventData{ codepoint });
 					}
@@ -243,7 +243,7 @@ namespace seri
 			glfwSetCharModsCallback(_window,
 				[](GLFWwindow* window, unsigned int codepoint, int mods)
 				{
-					if (auto windowManager = static_cast<WindowsGLFWWindowManager*>(glfwGetWindowUserPointer(window)))
+					if (auto windowManager = static_cast<WindowManagerGLFW*>(glfwGetWindowUserPointer(window)))
 					{
 						std::vector<InputModifier> modsVector;
 						windowManager->FillModsVector(mods, modsVector);
@@ -257,7 +257,7 @@ namespace seri
 			glfwSetCursorEnterCallback(_window,
 				[](GLFWwindow* window, int entered)
 				{
-					if (auto windowManager = static_cast<WindowsGLFWWindowManager*>(glfwGetWindowUserPointer(window)))
+					if (auto windowManager = static_cast<WindowManagerGLFW*>(glfwGetWindowUserPointer(window)))
 					{
 						windowManager->FireEvent(event::MouseEnterEventData{ entered ? true : false });
 					}
@@ -267,7 +267,7 @@ namespace seri
 			glfwSetMouseButtonCallback(_window,
 				[](GLFWwindow* window, int button, int action, int mods)
 				{
-					if (auto windowManager = static_cast<WindowsGLFWWindowManager*>(glfwGetWindowUserPointer(window)))
+					if (auto windowManager = static_cast<WindowManagerGLFW*>(glfwGetWindowUserPointer(window)))
 					{
 						MouseButtonCode buttonEnum = windowManager->GetMouseButtonEnum(button);
 						InputAction actionEnum = windowManager->GetInputActionEnum(action);
@@ -283,7 +283,7 @@ namespace seri
 			glfwSetCursorPosCallback(_window,
 				[](GLFWwindow* window, double xpos, double ypos)
 				{
-					if (auto windowManager = static_cast<WindowsGLFWWindowManager*>(glfwGetWindowUserPointer(window)))
+					if (auto windowManager = static_cast<WindowManagerGLFW*>(glfwGetWindowUserPointer(window)))
 					{
 						windowManager->FireEvent(event::MousePositionEventData{ xpos, ypos });
 
@@ -295,7 +295,7 @@ namespace seri
 			glfwSetScrollCallback(_window,
 				[](GLFWwindow* window, double xoffset, double yoffset)
 				{
-					if (auto windowManager = static_cast<WindowsGLFWWindowManager*>(glfwGetWindowUserPointer(window)))
+					if (auto windowManager = static_cast<WindowManagerGLFW*>(glfwGetWindowUserPointer(window)))
 					{
 						windowManager->FireEvent(event::MouseScrollEventData{ xoffset, yoffset });
 
@@ -308,7 +308,7 @@ namespace seri
 			glfwSetDropCallback(_window,
 				[](GLFWwindow* window, int path_count, const char* paths[])
 				{
-					if (auto windowManager = static_cast<WindowsGLFWWindowManager*>(glfwGetWindowUserPointer(window)))
+					if (auto windowManager = static_cast<WindowManagerGLFW*>(glfwGetWindowUserPointer(window)))
 					{
 						std::vector<std::string> pathVector;
 						for (int i = 0; i < path_count; i++)
@@ -324,7 +324,7 @@ namespace seri
 			glfwSetWindowCloseCallback(_window,
 				[](GLFWwindow* window)
 				{
-					if (auto windowManager = static_cast<WindowsGLFWWindowManager*>(glfwGetWindowUserPointer(window)))
+					if (auto windowManager = static_cast<WindowManagerGLFW*>(glfwGetWindowUserPointer(window)))
 					{
 						windowManager->FireEvent(event::WindowCloseEventData{});
 					}
@@ -334,7 +334,7 @@ namespace seri
 			glfwSetFramebufferSizeCallback(_window,
 				[](GLFWwindow* window, int width, int height)
 				{
-					if (auto windowManager = static_cast<WindowsGLFWWindowManager*>(glfwGetWindowUserPointer(window)))
+					if (auto windowManager = static_cast<WindowManagerGLFW*>(glfwGetWindowUserPointer(window)))
 					{
 						windowManager->FireEvent(event::WindowResizeEventData{ width, height });
 
@@ -346,7 +346,7 @@ namespace seri
 			glfwSetWindowPosCallback(_window,
 				[](GLFWwindow* window, int xpos, int ypos)
 				{
-					if (auto windowManager = static_cast<WindowsGLFWWindowManager*>(glfwGetWindowUserPointer(window)))
+					if (auto windowManager = static_cast<WindowManagerGLFW*>(glfwGetWindowUserPointer(window)))
 					{
 						//LOGGER(info, "[window] window new position: " << xpos << ", " << ypos);
 					}
@@ -356,7 +356,7 @@ namespace seri
 			glfwSetWindowSizeCallback(_window,
 				[](GLFWwindow* window, int width, int height)
 				{
-					if (auto windowManager = static_cast<WindowsGLFWWindowManager*>(glfwGetWindowUserPointer(window)))
+					if (auto windowManager = static_cast<WindowManagerGLFW*>(glfwGetWindowUserPointer(window)))
 					{
 						//LOGGER(info, "[window] window new size: " << width << ", " << height);
 					}
@@ -366,7 +366,7 @@ namespace seri
 			glfwSetWindowRefreshCallback(_window,
 				[](GLFWwindow* window)
 				{
-					if (auto windowManager = static_cast<WindowsGLFWWindowManager*>(glfwGetWindowUserPointer(window)))
+					if (auto windowManager = static_cast<WindowManagerGLFW*>(glfwGetWindowUserPointer(window)))
 					{
 						//LOGGER(info, "[window] window refresh");
 					}
@@ -376,7 +376,7 @@ namespace seri
 			glfwSetWindowFocusCallback(_window,
 				[](GLFWwindow* window, int focused)
 				{
-					if (auto windowManager = static_cast<WindowsGLFWWindowManager*>(glfwGetWindowUserPointer(window)))
+					if (auto windowManager = static_cast<WindowManagerGLFW*>(glfwGetWindowUserPointer(window)))
 					{
 						LOGGER(info, "[window] window focus state: " << (focused ? "focused" : "not focused"));
 					}
@@ -386,7 +386,7 @@ namespace seri
 			glfwSetWindowIconifyCallback(_window,
 				[](GLFWwindow* window, int iconified)
 				{
-					if (auto windowManager = static_cast<WindowsGLFWWindowManager*>(glfwGetWindowUserPointer(window)))
+					if (auto windowManager = static_cast<WindowManagerGLFW*>(glfwGetWindowUserPointer(window)))
 					{
 						LOGGER(info, "[window] window iconify state: " << (iconified ? "iconified" : "not iconified"));
 					}
@@ -396,7 +396,7 @@ namespace seri
 			glfwSetWindowMaximizeCallback(_window,
 				[](GLFWwindow* window, int maximized)
 				{
-					if (auto windowManager = static_cast<WindowsGLFWWindowManager*>(glfwGetWindowUserPointer(window)))
+					if (auto windowManager = static_cast<WindowManagerGLFW*>(glfwGetWindowUserPointer(window)))
 					{
 						LOGGER(info, "[window] window maximize state: " << (maximized ? "maximized" : "not maximized"));
 					}
@@ -406,7 +406,7 @@ namespace seri
 			glfwSetWindowContentScaleCallback(_window,
 				[](GLFWwindow* window, float xscale, float yscale)
 				{
-					if (auto windowManager = static_cast<WindowsGLFWWindowManager*>(glfwGetWindowUserPointer(window)))
+					if (auto windowManager = static_cast<WindowManagerGLFW*>(glfwGetWindowUserPointer(window)))
 					{
 						LOGGER(info, "[window] window new scale: " << xscale << ", " << yscale);
 					}

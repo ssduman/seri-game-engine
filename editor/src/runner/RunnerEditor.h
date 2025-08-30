@@ -94,9 +94,9 @@ public:
 		gui->Init();
 
 		windowManager->AddProcessEventDelegate(
-			[&gui](const void* sdlEvent)
+			[&gui](const void* event)
 			{
-				gui->ProcessEvent(sdlEvent);
+				gui->ProcessEvent(event);
 			}
 		);
 
