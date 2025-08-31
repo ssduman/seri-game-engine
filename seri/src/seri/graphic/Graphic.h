@@ -1,7 +1,7 @@
 #pragma once
 
 #include "seri/core/Seri.h"
-#include "seri/camera/ICamera.h"
+#include "seri/camera/CameraBase.h"
 #include "seri/renderer/AuxiliaryStructs.h"
 
 #include <vector>
@@ -31,17 +31,17 @@ namespace seri
 			GetInstance();
 		}
 
-		static void AddCamera(std::shared_ptr<ICamera> camera);
+		static void AddCamera(std::shared_ptr<CameraBase> camera);
 
-		static std::shared_ptr<ICamera> GetCameraOrtho();
+		static std::shared_ptr<CameraBase> GetCameraOrtho();
 
-		static std::shared_ptr<ICamera> GetCameraPerspective();
+		static std::shared_ptr<CameraBase> GetCameraPerspective();
 
-		static void Draw(const std::unique_ptr<Mesh>& mesh, const glm::mat4& trs, std::shared_ptr<Material>& material, std::shared_ptr<ICamera>& camera);
+		static void Draw(const std::unique_ptr<Mesh>& mesh, const glm::mat4& trs, std::shared_ptr<Material>& material, std::shared_ptr<CameraBase>& camera);
 
-		static void DrawModel(const std::unique_ptr<Model>& model, const glm::mat4& trs, std::shared_ptr<Material>& material, std::shared_ptr<ICamera>& camera);
+		static void DrawModel(const std::unique_ptr<Model>& model, const glm::mat4& trs, std::shared_ptr<Material>& material, std::shared_ptr<CameraBase>& camera);
 
-		static void DrawInstanced(const std::unique_ptr<Mesh>& mesh, const std::vector<glm::mat4>& trs, std::shared_ptr<Material>& material, std::shared_ptr<ICamera>& camera);
+		static void DrawInstanced(const std::unique_ptr<Mesh>& mesh, const std::vector<glm::mat4>& trs, std::shared_ptr<Material>& material, std::shared_ptr<CameraBase>& camera);
 
 	private:
 		Graphic() = default;
@@ -80,9 +80,9 @@ namespace seri
 			glDrawArrays(draw.mode, draw.first, draw.count);
 		}
 
-		std::shared_ptr<ICamera> _cameraOrtho;
-		std::shared_ptr<ICamera> _cameraPerspective;
-		std::vector<std::shared_ptr<ICamera>> _cameras;
+		std::shared_ptr<CameraBase> _cameraOrtho;
+		std::shared_ptr<CameraBase> _cameraPerspective;
+		std::vector<std::shared_ptr<CameraBase>> _cameras;
 
 	};
 }

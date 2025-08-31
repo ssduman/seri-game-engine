@@ -403,17 +403,17 @@ private:
 	{
 		if (_currentEntity)
 		{
-			_currentEntity->GetShader().Use();
+			_currentEntity->GetShader()->Bind();
 
 			ImGui::SliderFloat3("position", &_currentEntity->GetTransform()._position[0], -1.0f, 1.0f, "%.4f");
 			ImGui::SliderFloat3("rotation", &_currentEntity->GetTransform()._rotation[0], -180.0f, 180.0f, "%.4f");
 			ImGui::SliderFloat3("scale", &_currentEntity->GetTransform()._scale[0], 0.0f, 100.0f, "%.4f");
-			seri::ShaderManager::GetInstance().SetModel(_currentEntity->GetShader(), _currentEntity->GetTransform().Apply());
+			seri::ShaderLibrary::SetModel(_currentEntity->GetShader(), _currentEntity->GetTransform().Apply());
 
 			ImGui::Separator();
 
 			ImGui::ColorEdit4("color", &_currentEntity->GetColor().r);
-			seri::ShaderManager::GetInstance().SetColor(_currentEntity->GetShader(), _currentEntity->GetColor().GetColorRGBA());
+			seri::ShaderLibrary::SetColor(_currentEntity->GetShader(), _currentEntity->GetColor().GetColorRGBA());
 
 			ImGui::Separator();
 
@@ -422,7 +422,7 @@ private:
 
 			ImGui::Separator();
 
-			_currentEntity->GetShader().Disuse();
+			_currentEntity->GetShader()->Unbind();
 		}
 		else if (_currentObject)
 		{

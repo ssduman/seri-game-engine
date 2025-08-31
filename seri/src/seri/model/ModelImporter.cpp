@@ -5,7 +5,6 @@
 #include "seri/graphic/Graphic.h"
 #include "seri/graphic/Mesh.h"
 #include "seri/graphic/Model.h"
-#include "seri/camera/ICamera.h"
 
 #include <string>
 #include <filesystem>

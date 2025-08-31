@@ -7,7 +7,7 @@ namespace seri
 	class Point : public Entity
 	{
 	public:
-		Point(std::shared_ptr<ICamera> camera) : Entity(camera)
+		Point(std::shared_ptr<CameraBase> camera) : Entity(camera)
 		{
 			_entityType = EntityType::point;
 			_engineBackend.setDrawMode(aux::DrawMode::points);
@@ -17,7 +17,7 @@ namespace seri
 
 		void Render() override
 		{
-			_shader.Use();
+			_shader->Bind();
 			_texture.Bind();
 			_engineBackend.Draw();
 		}

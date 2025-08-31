@@ -1,30 +1,18 @@
 #pragma once
 
-#include "seri/logging/Logger.h"
-#include "seri/renderer/AuxiliaryStructs.h"
+#include "seri/util/Util.h"
+#include "seri/shader/ShaderBase.h"
 
-#include <glm/glm.hpp>
+#include <glad/gl.h>
 
 #include <string>
 
 namespace seri
 {
-	class Shader
+	class ShaderOpenGL : public ShaderBase
 	{
 	public:
-		Shader() = default;
-
-		Shader(Shader& other) = default;
-
-		Shader(Shader&& other) = default;
-
-		Shader& operator=(Shader& other) = default;
-
-		Shader& operator=(Shader&& other) = default;
-
-		~Shader() = default;
-
-		void Init(const char* vsCodePath, const char* fsCodePath, bool readFromFile = true)
+		void Init(const char* vsCodePath, const char* fsCodePath, bool readFromFile = true) override
 		{
 			unsigned int vertexShader = CompileShader(GL_VERTEX_SHADER, vsCodePath, readFromFile);
 			unsigned int fragmentShader = CompileShader(GL_FRAGMENT_SHADER, fsCodePath, readFromFile);
@@ -39,30 +27,75 @@ namespace seri
 			CheckProgramLinkingError();
 		}
 
-		void Use()
+		void Bind() override
 		{
 			if (!IsActiveForUsing())
 			{
-				LOGGER(error, "shader is not active");
+				LOGGER(error, "[shader] not active for bind");
 				return;
 			}
 
 			glUseProgram(_program);
 		}
 
-		void Disuse()
+		void Unbind() override
 		{
 			glUseProgram(0);
 		}
 
-		void Release()
+		void Release() override
 		{
 			if (_program != 0)
 			{
-				LOGGER(verbose, "deleted shader: " << _program);
-				Disuse();
+				Unbind();
 				Del();
+				LOGGER(verbose, "[shader] deleted: " << _program);
 			}
+		}
+
+		bool IsActiveForUsing() override
+		{
+			return _program != 0;
+		}
+
+		void SetInt(const std::string& name, int value) override
+		{
+			glUniform1i(GetUniformLocation(name), value);
+		}
+
+		void SetBool(const std::string& name, bool value) override
+		{
+			glUniform1i(GetUniformLocation(name), value);
+		}
+
+		void SetFloat(const std::string& name, float value) override
+		{
+			glUniform1f(GetUniformLocation(name), value);
+		}
+
+		void SetFloat2(const std::string& name, const glm::vec2& value) override
+		{
+			glUniform2fv(GetUniformLocation(name), 1, &value[0]);
+		}
+
+		void SetFloat3(const std::string& name, const glm::vec3& value) override
+		{
+			glUniform3fv(GetUniformLocation(name), 1, &value[0]);
+		}
+
+		void SetFloat4(const std::string& name, const glm::vec4& value) override
+		{
+			glUniform4fv(GetUniformLocation(name), 1, &value[0]);
+		}
+
+		void SetMat4(const std::string& name, const glm::mat4& value) override
+		{
+			glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, &value[0][0]);
+		}
+
+		int GetUniformLocation(const std::string& name)
+		{
+			return glGetUniformLocation(_program, name.c_str());
 		}
 
 		unsigned int GetProgram()
@@ -79,6 +112,7 @@ namespace seri
 		unsigned int CompileShader(GLenum type, const char* code, bool readFromFile)
 		{
 			unsigned int shader = glCreateShader(type);
+
 			auto codeCStr = code;
 			std::string codeStr;
 			if (readFromFile)
@@ -88,7 +122,9 @@ namespace seri
 			}
 			glShaderSource(shader, 1, &codeCStr, nullptr);
 			glCompileShader(shader);
+
 			CheckShaderCompilationError(shader);
+
 			return shader;
 		}
 
@@ -100,7 +136,7 @@ namespace seri
 			if (!errorStatusSuccess)
 			{
 				glGetShaderInfoLog(shader, 512, nullptr, errorStatusLog);
-				LOGGER(error, "shader compilation failed: " << errorStatusLog);
+				LOGGER(error, "[shader] program compilation failed: " << errorStatusLog);
 				return false;
 			}
 
@@ -115,16 +151,11 @@ namespace seri
 			if (!errorStatusSuccess)
 			{
 				glGetShaderInfoLog(_program, 512, nullptr, errorStatusLog);
-				LOGGER(error, "program linking failed: " << errorStatusLog);
+				LOGGER(error, "[shader] program linking failed: " << errorStatusLog);
 				return false;
 			}
 
 			return true;
-		}
-
-		bool IsActiveForUsing()
-		{
-			return _program != 0;
 		}
 
 		void Del()

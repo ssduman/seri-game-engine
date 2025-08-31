@@ -42,12 +42,12 @@ namespace seri
 		glm::vec3 position{ 0.0f, 0.0f, -3.0f };
 	};
 
-	class ICamera : public Object
+	class CameraBase : public Object
 	{
 	public:
-		ICamera(CameraProperties cameraProperties) : _cameraProperties{ cameraProperties } {}
+		CameraBase(CameraProperties cameraProperties) : _cameraProperties{ cameraProperties } {}
 
-		~ICamera() override = default;
+		~CameraBase() override = default;
 
 		void Render() override {}
 

@@ -5,11 +5,10 @@
 #include "seri/graphic/Mesh.h"
 #include "seri/graphic/Model.h"
 #include "seri/graphic/Material.h"
-#include "seri/camera/ICamera.h"
 
 namespace seri
 {
-	void Graphic::AddCamera(std::shared_ptr<ICamera> camera)
+	void Graphic::AddCamera(std::shared_ptr<CameraBase> camera)
 	{
 		GetInstance()._cameras.push_back(camera);
 
@@ -35,33 +34,33 @@ namespace seri
 		}
 	}
 
-	std::shared_ptr<ICamera> Graphic::GetCameraOrtho()
+	std::shared_ptr<CameraBase> Graphic::GetCameraOrtho()
 	{
 		return GetInstance()._cameraOrtho;
 	}
 
-	std::shared_ptr<ICamera> Graphic::GetCameraPerspective()
+	std::shared_ptr<CameraBase> Graphic::GetCameraPerspective()
 	{
 		return GetInstance()._cameraPerspective;
 	}
 
-	void Graphic::Draw(const std::unique_ptr<Mesh>& mesh, const glm::mat4& trs, std::shared_ptr<Material>& material, std::shared_ptr<ICamera>& camera)
+	void Graphic::Draw(const std::unique_ptr<Mesh>& mesh, const glm::mat4& trs, std::shared_ptr<Material>& material, std::shared_ptr<CameraBase>& camera)
 	{
-		ShaderManager::Use(material->shader);
+		material->shader->Bind();
 		if (material->texture != nullptr)
 		{
 			material->texture->Bind();
 		}
 		mesh->Bind();
 
-		ShaderManager::SetUInt(material->shader, "u_texture", 0);
-		ShaderManager::SetColor(material->shader, "u_color", glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f });
-		ShaderManager::SetVec3(material->shader, "u_view_pos", camera->GetCameraProperties().position);
-		ShaderManager::SetVec3(material->shader, "u_light_dir", glm::vec3{ 0.0f, 0.0f, -1.0f });
-		ShaderManager::SetColor(material->shader, "u_light_color", glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f });
-		ShaderManager::SetMat4(material->shader, "u_model", trs * mesh->transformation);
-		ShaderManager::SetMat4(material->shader, "u_view", camera->GetView());
-		ShaderManager::SetMat4(material->shader, "u_projection", camera->GetProjection());
+		material->shader->SetInt("u_texture", 0);
+		material->shader->SetFloat3("u_view_pos", camera->GetCameraProperties().position);
+		material->shader->SetFloat3("u_light_dir", glm::vec3{ 0.0f, 0.0f, -1.0f });
+		material->shader->SetFloat4("u_color", glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f });
+		material->shader->SetFloat4("u_light_color", glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f });
+		material->shader->SetMat4("u_model", trs * mesh->transformation);
+		material->shader->SetMat4("u_view", camera->GetView());
+		material->shader->SetMat4("u_projection", camera->GetProjection());
 
 		if (mesh->bonesForVertices.size() > 0)
 		{
@@ -78,7 +77,7 @@ namespace seri
 				{
 					transform = mesh->bones[i].transform;
 				}
-				ShaderManager::SetMat4(material->shader, loc.c_str(), transform);
+				material->shader->SetMat4(loc.c_str(), transform);
 			}
 		}
 
@@ -96,10 +95,10 @@ namespace seri
 		{
 			material->texture->Unbind();
 		}
-		ShaderManager::Disuse();
+		material->shader->Unbind();
 	}
 
-	void Graphic::DrawModel(const std::unique_ptr<Model>& model, const glm::mat4& trs, std::shared_ptr<Material>& material, std::shared_ptr<ICamera>& camera)
+	void Graphic::DrawModel(const std::unique_ptr<Model>& model, const glm::mat4& trs, std::shared_ptr<Material>& material, std::shared_ptr<CameraBase>& camera)
 	{
 		for (const auto& mesh : model->meshes)
 		{
@@ -107,9 +106,9 @@ namespace seri
 		}
 	}
 
-	void Graphic::DrawInstanced(const std::unique_ptr<Mesh>& mesh, const std::vector<glm::mat4>& trs, std::shared_ptr<Material>& material, std::shared_ptr<ICamera>& camera)
+	void Graphic::DrawInstanced(const std::unique_ptr<Mesh>& mesh, const std::vector<glm::mat4>& trs, std::shared_ptr<Material>& material, std::shared_ptr<CameraBase>& camera)
 	{
-		ShaderManager::Use(material->shader);
+		material->shader->Bind();
 		if (material->texture != nullptr)
 		{
 			material->texture->Bind();
@@ -118,13 +117,13 @@ namespace seri
 
 		mesh->MakeInstanced(trs);
 
-		ShaderManager::SetUInt(material->shader, "u_texture", 0);
-		ShaderManager::SetColor(material->shader, "u_color", glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f });
-		ShaderManager::SetVec3(material->shader, "u_view_pos", camera->GetCameraProperties().position);
-		ShaderManager::SetVec3(material->shader, "u_light_dir", glm::vec3{ 1.0f, 0.0f, 0.0f });
-		ShaderManager::SetColor(material->shader, "u_light_color", glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f });
-		ShaderManager::SetMat4(material->shader, "u_view", camera->GetView());
-		ShaderManager::SetMat4(material->shader, "u_projection", camera->GetProjection());
+		material->shader->SetInt("u_texture", 0);
+		material->shader->SetFloat3("u_view_pos", camera->GetCameraProperties().position);
+		material->shader->SetFloat3("u_light_dir", glm::vec3{ 1.0f, 0.0f, 0.0f });
+		material->shader->SetFloat4("u_color", glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f });
+		material->shader->SetFloat4("u_light_color", glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f });
+		material->shader->SetMat4("u_view", camera->GetView());
+		material->shader->SetMat4("u_projection", camera->GetProjection());
 
 		if (mesh->bonesForVertices.size() > 0)
 		{
@@ -136,7 +135,7 @@ namespace seri
 				{
 					transform = mesh->bones[i].transform;
 				}
-				ShaderManager::SetMat4(material->shader, loc.c_str(), transform);
+				material->shader->SetMat4(loc.c_str(), transform);
 			}
 		}
 
@@ -147,7 +146,7 @@ namespace seri
 		{
 			material->texture->Unbind();
 		}
-		ShaderManager::Disuse();
+		material->shader->Unbind();
 	}
 
 }

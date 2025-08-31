@@ -1,6 +1,6 @@
 #pragma once
 
-#include "seri/camera/ICamera.h"
+#include "seri/camera/CameraBase.h"
 
 #include "seri/core/Seri.h"
 #include "seri/shape/Cube.h"
@@ -21,7 +21,7 @@ class ShapeFactory
 public:
 	~ShapeFactory() = default;
 
-	static std::shared_ptr<seri::Entity> CreateShape(const std::shared_ptr<seri::ICamera>& camera, seri::EntityType entityType)
+	static std::shared_ptr<seri::Entity> CreateShape(const std::shared_ptr<seri::CameraBase>& camera, seri::EntityType entityType)
 	{
 		static auto minColor = glm::vec4{ 0.0f, 0.0f, 0.0f, 1.0f };
 		static auto maxColor = glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f };
@@ -49,10 +49,10 @@ public:
 					auto positionsSize = seri::aux::size(positions);
 					auto colorsSize = seri::aux::size(colors);
 
-					auto& shaderInfo = seri::ShaderManager::Get("entity");
+					auto& shaderInfo = seri::ShaderLibrary::Get("entity");
 
 					auto point = std::make_shared<seri::Point>(camera);
-					point->GetShader().Init(shaderInfo.vsCode.c_str(), shaderInfo.fsCode.c_str(), /*readFromFile*/ false);
+					point->GetShader()->Init(shaderInfo.vsCode.c_str(), shaderInfo.fsCode.c_str(), /*readFromFile*/ false);
 					point->Init();
 
 					point->GetDrawer().reserveDataBufferSize(positionsSize + colorsSize);
@@ -71,10 +71,10 @@ public:
 					auto positionsSize = seri::aux::size(positions);
 					auto colorsSize = seri::aux::size(colors);
 
-					auto& shaderInfo = seri::ShaderManager::Get("entity");
+					auto& shaderInfo = seri::ShaderLibrary::Get("entity");
 
 					auto line = std::make_shared<seri::Line>(camera);
-					line->GetShader().Init(shaderInfo.vsCode.c_str(), shaderInfo.fsCode.c_str(), /*readFromFile*/ false);
+					line->GetShader()->Init(shaderInfo.vsCode.c_str(), shaderInfo.fsCode.c_str(), /*readFromFile*/ false);
 					line->Init();
 
 					line->GetDrawer().reserveDataBufferSize(positionsSize + colorsSize);
@@ -95,10 +95,10 @@ public:
 					auto colorsSize = seri::aux::size(colors);
 					auto texturePositionsSize = seri::aux::size(texturePositions);
 
-					auto& shaderInfo = seri::ShaderManager::Get("entity");
+					auto& shaderInfo = seri::ShaderLibrary::Get("entity");
 
 					auto triangle = std::make_shared<seri::Triangle>(camera);
-					triangle->GetShader().Init(shaderInfo.vsCode.c_str(), shaderInfo.fsCode.c_str(), /*readFromFile*/ false);
+					triangle->GetShader()->Init(shaderInfo.vsCode.c_str(), shaderInfo.fsCode.c_str(), /*readFromFile*/ false);
 					triangle->GetTexture().Init("assets/textures/passage.png");
 					triangle->Init();
 
@@ -119,10 +119,10 @@ public:
 					auto positionsSize = seri::aux::size(positions);
 					auto texturePositionsSize = seri::aux::size(texturePositions);
 
-					auto& shaderInfo = seri::ShaderManager::Get("entity");
+					auto& shaderInfo = seri::ShaderLibrary::Get("entity");
 
 					auto rectangle = std::make_shared<seri::Rectangle>(camera);
-					rectangle->GetShader().Init(shaderInfo.vsCode.c_str(), shaderInfo.fsCode.c_str(), /*readFromFile*/ false);
+					rectangle->GetShader()->Init(shaderInfo.vsCode.c_str(), shaderInfo.fsCode.c_str(), /*readFromFile*/ false);
 					rectangle->GetTexture().Init("assets/textures/wall1.png");
 					rectangle->Init();
 
@@ -158,14 +158,14 @@ public:
 					auto colorsSize = seri::aux::size(colors);
 					auto texturePositionsSize = seri::aux::size(texturePositions);
 
-					auto& shaderInfo = seri::ShaderManager::Get("entity");
+					auto& shaderInfo = seri::ShaderLibrary::Get("entity");
 
 					auto circle = std::make_shared<seri::Circle>(camera);
-					circle->GetShader().Init(shaderInfo.vsCode.c_str(), shaderInfo.fsCode.c_str(), /*readFromFile*/ false);
+					circle->GetShader()->Init(shaderInfo.vsCode.c_str(), shaderInfo.fsCode.c_str(), /*readFromFile*/ false);
 					circle->GetTexture().Init("assets/textures/passage.png");
 					circle->Init();
 
-					seri::ShaderManager::GetInstance().SetColor(circle->GetShader(), randomColor());
+					seri::ShaderLibrary::SetColor(circle->GetShader(), randomColor());
 
 					circle->GetDrawer().reserveDataBufferSize(positionsSize + colorsSize + texturePositionsSize);
 					circle->GetDrawer().setSubDataBuffer(seri::aux::Index::position, positions, 0);
@@ -268,14 +268,14 @@ public:
 					auto positionsSize = seri::aux::size(positions);
 					auto texturePositionsSize = seri::aux::size(texturePositions);
 
-					auto& shaderInfo = seri::ShaderManager::Get("entity");
+					auto& shaderInfo = seri::ShaderLibrary::Get("entity");
 
 					auto cube = std::make_shared<seri::Cube>(camera);
-					cube->GetShader().Init(shaderInfo.vsCode.c_str(), shaderInfo.fsCode.c_str(), /*readFromFile*/ false);
+					cube->GetShader()->Init(shaderInfo.vsCode.c_str(), shaderInfo.fsCode.c_str(), /*readFromFile*/ false);
 					cube->GetTexture().Init("assets/textures/wall2.png");
 					cube->Init();
 
-					seri::ShaderManager::GetInstance().SetColor(cube->GetShader(), randomColor());
+					seri::ShaderLibrary::SetColor(cube->GetShader(), randomColor());
 
 					cube->GetDrawer().reserveDataBufferSize(positionsSize + texturePositionsSize);
 					cube->GetDrawer().setSubDataBuffer(seri::aux::Index::position, positions, 0);
@@ -295,10 +295,10 @@ public:
 						{ 0.5f, -0.5f, 0.0f },
 					};
 
-					auto& shaderInfo = seri::ShaderManager::Get("entity");
+					auto& shaderInfo = seri::ShaderLibrary::Get("entity");
 
 					auto polygon = std::make_shared<seri::Polygon>(camera);
-					polygon->GetShader().Init(shaderInfo.vsCode.c_str(), shaderInfo.fsCode.c_str(), /*readFromFile*/ false);
+					polygon->GetShader()->Init(shaderInfo.vsCode.c_str(), shaderInfo.fsCode.c_str(), /*readFromFile*/ false);
 					polygon->Init();
 
 					polygon->GetDrawer().setDataBuffer(seri::aux::Index::position, positions);

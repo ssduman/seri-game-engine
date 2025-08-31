@@ -27,12 +27,12 @@ public:
 
 		model_0 = seri::ModelImporter{}.Load("assets/spiderman/source/Thriller Part 4.fbx");
 
-		auto entityShader = seri::ShaderManager::Find("entity");
-		auto entityInstancedShader = seri::ShaderManager::Find("entity_instanced");
-		auto entitySkinnedShader = seri::ShaderManager::Find("entity_skinned");
-		auto lineShader = seri::ShaderManager::Find("line");
-		auto gridShader = seri::ShaderManager::Find("grid");
-		auto typerShader = seri::ShaderManager::Find("typer");
+		auto entityShader = seri::ShaderLibrary::Find("entity");
+		auto entityInstancedShader = seri::ShaderLibrary::Find("entity_instanced");
+		auto entitySkinnedShader = seri::ShaderLibrary::Find("entity_skinned");
+		auto lineShader = seri::ShaderLibrary::Find("line");
+		auto gridShader = seri::ShaderLibrary::Find("grid");
+		auto typerShader = seri::ShaderLibrary::Find("typer");
 
 		auto texture_0 = std::make_shared<seri::Texture>();
 		texture_0->Init("assets/textures/passage.png");

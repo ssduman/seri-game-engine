@@ -4,10 +4,10 @@
 #include "seri/core/EntityType.h"
 #include "seri/texture/Color.h"
 #include "seri/texture/Texture.h"
-#include "seri/shader/Shader.h"
-#include "seri/shader/ShaderManager.h"
+#include "seri/shader/ShaderBase.h"
+#include "seri/shader/ShaderLibrary.h"
 #include "seri/math/Transform.h"
-#include "seri/camera/ICamera.h"
+#include "seri/camera/CameraBase.h"
 #include "seri/logging/Logger.h"
 #include "seri/renderer/RendererBackendOpenGL.h"
 
@@ -22,7 +22,10 @@ namespace seri
 	public:
 		Entity() = delete;
 
-		Entity(std::shared_ptr<ICamera> camera) : _camera(camera) {}
+		Entity(std::shared_ptr<CameraBase>& camera) : _camera(camera)
+		{
+			_shader = ShaderBase::Create();
+		}
 
 		Entity(Entity&& other) = default;
 
@@ -39,13 +42,13 @@ namespace seri
 
 		void Init() override
 		{
-			ShaderManager::GetInstance().InitMVP(_shader, _camera);
+			ShaderLibrary::SetMVP(_shader, _camera);
 		}
 
 		void Update() override
 		{
-			ShaderManager::GetInstance().SetView(_shader, _camera->GetView());
-			ShaderManager::GetInstance().SetProjection(_shader, _camera->GetProjection());
+			ShaderLibrary::SetView(_shader, _camera->GetView());
+			ShaderLibrary::SetProjection(_shader, _camera->GetProjection());
 		}
 
 		Color& GetColor()
@@ -53,7 +56,7 @@ namespace seri
 			return _color;
 		}
 
-		Shader& GetShader()
+		std::shared_ptr<ShaderBase>& GetShader()
 		{
 			return _shader;
 		}
@@ -74,9 +77,9 @@ namespace seri
 		}
 
 	protected:
-		std::shared_ptr<ICamera> _camera;
+		std::shared_ptr<CameraBase> _camera;
+		std::shared_ptr<ShaderBase> _shader;
 		Color _color;
-		Shader _shader;
 		Texture _texture;
 		Transform _transform;
 		RendererBackendOpenGL _engineBackend{};

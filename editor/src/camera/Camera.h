@@ -4,10 +4,10 @@
 
 #include <seri/core/Seri.h>
 
-class Camera : public seri::ICamera
+class Camera : public seri::CameraBase
 {
 public:
-	Camera(seri::CameraProperties cameraProperties) : ICamera(cameraProperties)
+	Camera(seri::CameraProperties cameraProperties) : CameraBase(cameraProperties)
 	{
 		//LOGGER(info, "camera init succeeded");
 	}

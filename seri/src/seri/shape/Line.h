@@ -7,7 +7,7 @@ namespace seri
 	class Line : public Entity
 	{
 	public:
-		Line(std::shared_ptr<ICamera> camera) : Entity(camera)
+		Line(std::shared_ptr<CameraBase> camera) : Entity(camera)
 		{
 			_entityType = EntityType::line;
 			_engineBackend.setDrawMode(aux::DrawMode::line_loop);
@@ -17,7 +17,7 @@ namespace seri
 
 		void Render() override
 		{
-			_shader.Use();
+			_shader->Bind();
 			_texture.Bind();
 			_engineBackend.Draw();
 		}

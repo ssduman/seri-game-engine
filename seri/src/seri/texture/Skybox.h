@@ -1,8 +1,8 @@
 #pragma once
 
-#include "seri/camera/ICamera.h"
 #include "seri/texture/Texture.h"
-#include "seri/shader/ShaderManager.h"
+#include "seri/camera/CameraBase.h"
+#include "seri/shader/ShaderLibrary.h"
 #include "seri/renderer/RendererBackendOpenGL.h"
 #include "seri/renderer/AuxiliaryStructsBuilder.h"
 
@@ -14,7 +14,7 @@ namespace seri
 	class Skybox
 	{
 	public:
-		Skybox(std::shared_ptr<ICamera> camera)
+		Skybox(std::shared_ptr<CameraBase> camera)
 			: _camera(camera)
 		{
 			_faces = {
@@ -29,7 +29,7 @@ namespace seri
 			Init();
 		}
 
-		Skybox(std::shared_ptr<ICamera> camera, std::vector<std::string> faces)
+		Skybox(std::shared_ptr<CameraBase> camera, std::vector<std::string> faces)
 			: _camera(camera), _faces(std::move(faces))
 		{
 			Init();
@@ -42,7 +42,7 @@ namespace seri
 
 		void Init()
 		{
-			_shader = ShaderManager::Find("skybox");
+			_shader = ShaderLibrary::Find("skybox");
 
 			InitMVP();
 			SetDefaultPositions();
@@ -51,7 +51,7 @@ namespace seri
 
 		void Render()
 		{
-			_shader->Use();
+			_shader->Bind();
 
 			Bind();
 
@@ -65,23 +65,23 @@ namespace seri
 
 			Unbind();
 
-			_shader->Disuse();
+			_shader->Unbind();
 		}
 
 		void Update()
 		{
 			if (_camera)
 			{
-				ShaderManager::SetView(_shader, glm::mat4(glm::mat3(_camera->GetView())));
+				ShaderLibrary::SetView(_shader, glm::mat4(glm::mat3(_camera->GetView())));
 			}
 		}
 
 	private:
 		void InitMVP()
 		{
-			ShaderManager::SetModel(_shader, glm::mat4{ 1.0f });
-			ShaderManager::SetView(_shader, glm::mat4(glm::mat3(_camera->GetView())));
-			ShaderManager::SetProjection(_shader, _camera->GetProjection());
+			ShaderLibrary::SetModel(_shader, glm::mat4{ 1.0f });
+			ShaderLibrary::SetView(_shader, glm::mat4(glm::mat3(_camera->GetView())));
+			ShaderLibrary::SetProjection(_shader, _camera->GetProjection());
 		}
 
 		void SetDefaultPositions()
@@ -208,9 +208,9 @@ namespace seri
 			glBindTexture(GL_TEXTURE_2D, 0);
 		}
 
-		std::shared_ptr<ICamera> _camera;
+		std::shared_ptr<CameraBase> _camera;
 
-		std::shared_ptr<Shader> _shader;
+		std::shared_ptr<ShaderBase> _shader;
 		RendererBackendOpenGL _engineBackend{};
 
 		unsigned int _tex{ 0 };

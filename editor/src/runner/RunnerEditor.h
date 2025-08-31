@@ -38,7 +38,7 @@ public:
 		seri::Graphic::Init();
 		seri::InputManager::Init();
 		seri::BehaviourManager::Init();
-		seri::ShaderManager::Init("assets/shaders/");
+		seri::ShaderLibrary::Init("assets/shaders/");
 		seri::font::FontManager::Init("assets/fonts/");
 		seri::sound::SoundManager::Init("assets/sounds/");
 

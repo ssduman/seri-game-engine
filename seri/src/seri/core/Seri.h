@@ -29,7 +29,8 @@
 
 #include "seri/model/ModelImporter.h"
 
-#include "seri/shader/ShaderManager.h"
+#include "seri/shader/ShaderBase.h"
+#include "seri/shader/ShaderLibrary.h"
 
 #include "seri/behaviour/BehaviourManager.h"
 
@@ -37,7 +38,7 @@
 
 #include "seri/logging/Logger.h"
 
-#include "seri/camera/ICamera.h"
+#include "seri/camera/CameraBase.h"
 
 #include "seri/shape/ShapeFactory.h"
 

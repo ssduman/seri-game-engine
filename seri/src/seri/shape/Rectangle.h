@@ -7,7 +7,7 @@ namespace seri
 	class Rectangle : public Entity
 	{
 	public:
-		Rectangle(std::shared_ptr<ICamera> camera) : Entity(camera)
+		Rectangle(std::shared_ptr<CameraBase> camera) : Entity(camera)
 		{
 			_entityType = EntityType::rectangle;
 			_engineBackend.setDrawMode(aux::DrawMode::triangles);
@@ -17,7 +17,7 @@ namespace seri
 
 		void Render() override
 		{
-			_shader.Use();
+			_shader->Bind();
 			_texture.Bind();
 			_engineBackend.Draw();
 		}
