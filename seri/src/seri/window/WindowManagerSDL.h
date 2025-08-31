@@ -106,8 +106,10 @@ namespace seri
 			SDL_Event event;
 			while (SDL_PollEvent(&event))
 			{
-				for (const auto& delegate : processEventDelegateList) {
-					if (delegate) {
+				for (const auto& delegate : processEventDelegateList)
+				{
+					if (delegate)
+					{
 						delegate((const void*)&event);
 					}
 				}
@@ -455,7 +457,8 @@ namespace seri
 	private:
 		void InitSDL()
 		{
-			if (!SDL_Init(SDL_INIT_VIDEO)) {
+			if (!SDL_Init(SDL_INIT_VIDEO))
+			{
 				throw std::runtime_error("[window] sdl init error: " + std::string(SDL_GetError()));
 			}
 

@@ -1,6 +1,5 @@
 #include "Seripch.h"
 
-#include "seri/logging/Logger.h"
 #include "seri/util/Util.h"
 
 #ifndef STB_IMAGE_WRITE_IMPLEMENTATION
@@ -96,11 +95,11 @@ namespace seri::font
 		return calculated_height;
 	}
 
-	std::shared_ptr<Texture> ImageWriter::CreateTexture()
+	std::shared_ptr<TextureBase> ImageWriter::CreateTexture()
 	{
-		std::shared_ptr texture = std::make_unique<Texture>();
-		texture->Build(_buffer, _params.texture_width, _params.texture_height, _params.texture_comp);
-		return std::move(texture);
+		std::shared_ptr<TextureBase> texture = TextureBase::Create();
+		texture->Init(TextureDesc{}, _buffer, _params.texture_width, _params.texture_height, _params.texture_comp);
+		return texture;
 	}
 
 }

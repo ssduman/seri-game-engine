@@ -6,7 +6,7 @@
 #include <iostream>
 #include <algorithm>
 
-#include "seri/texture/Texture.h"
+#include "seri/texture/TextureBase.h"
 
 namespace seri::font
 {
@@ -93,7 +93,7 @@ namespace seri::font
 	struct FontData
 	{
 		FontInfo fontInfo;
-		std::shared_ptr<Texture> texture;
+		std::shared_ptr<TextureBase> texture;
 	};
 
 	std::vector<std::string> split_str(std::string str, std::string delimiter = ",");

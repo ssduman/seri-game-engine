@@ -1,7 +1,7 @@
 #pragma once
 
-#include "seri/texture/Texture.h"
 #include "seri/font/Utils.h"
+#include "seri/texture/TextureBase.h"
 
 #include <memory>
 #include <string>
@@ -33,7 +33,7 @@ namespace seri::font
 		void Draw(unsigned char* buffer, int pitch, int uvW, int uvH, int uvL, int uvB, DrawMode draw_mode);
 		int Write(std::string name, std::string style, int pixel_size);
 
-		std::shared_ptr<Texture> CreateTexture();
+		std::shared_ptr<TextureBase> CreateTexture();
 
 	private:
 		ImageWriterParams _params;

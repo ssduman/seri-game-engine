@@ -1,7 +1,7 @@
 #pragma once
 
 #include "seri/logging/Logger.h"
-#include "seri/texture/Texture.h"
+#include "seri/texture/TextureBase.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
@@ -78,7 +78,7 @@ namespace seri
 		static std::string GetString(const aiTextureType ai_tt);
 
 		std::string _modelDirectory;
-		std::map<std::string, Texture> _texturesLoaded;
+		std::map<std::string, std::shared_ptr<TextureBase>> _texturesLoaded;
 		std::map<std::string, int> _boneNameToIndexMap;
 
 	};

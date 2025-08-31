@@ -99,7 +99,7 @@ public:
 
 					auto triangle = std::make_shared<seri::Triangle>(camera);
 					triangle->GetShader()->Init(shaderInfo.vsCode.c_str(), shaderInfo.fsCode.c_str(), /*readFromFile*/ false);
-					triangle->GetTexture().Init("assets/textures/passage.png");
+					triangle->GetTexture()->Init(seri::TextureDesc{}, "assets/textures/passage.png");
 					triangle->Init();
 
 					triangle->GetDrawer().reserveDataBufferSize(positionsSize + colorsSize + texturePositionsSize);
@@ -123,7 +123,7 @@ public:
 
 					auto rectangle = std::make_shared<seri::Rectangle>(camera);
 					rectangle->GetShader()->Init(shaderInfo.vsCode.c_str(), shaderInfo.fsCode.c_str(), /*readFromFile*/ false);
-					rectangle->GetTexture().Init("assets/textures/wall1.png");
+					rectangle->GetTexture()->Init(seri::TextureDesc{}, "assets/textures/wall1.png");
 					rectangle->Init();
 
 					const std::vector<GLuint> indices{ 0, 1, 3, 1, 2, 3 };
@@ -162,7 +162,7 @@ public:
 
 					auto circle = std::make_shared<seri::Circle>(camera);
 					circle->GetShader()->Init(shaderInfo.vsCode.c_str(), shaderInfo.fsCode.c_str(), /*readFromFile*/ false);
-					circle->GetTexture().Init("assets/textures/passage.png");
+					circle->GetTexture()->Init(seri::TextureDesc{}, "assets/textures/passage.png");
 					circle->Init();
 
 					seri::ShaderLibrary::SetColor(circle->GetShader(), randomColor());
@@ -272,7 +272,7 @@ public:
 
 					auto cube = std::make_shared<seri::Cube>(camera);
 					cube->GetShader()->Init(shaderInfo.vsCode.c_str(), shaderInfo.fsCode.c_str(), /*readFromFile*/ false);
-					cube->GetTexture().Init("assets/textures/wall2.png");
+					cube->GetTexture()->Init(seri::TextureDesc{}, "assets/textures/wall2.png");
 					cube->Init();
 
 					seri::ShaderLibrary::SetColor(cube->GetShader(), randomColor());

@@ -2,7 +2,6 @@
 
 #include "seri/util/Util.h"
 #include "seri/core/Object.h"
-#include "seri/logging/Logger.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>

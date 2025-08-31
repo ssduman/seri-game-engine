@@ -1,7 +1,7 @@
 #pragma once
 
 #include "seri/shader/ShaderBase.h"
-#include "seri/texture/Texture.h"
+#include "seri/texture/TextureBase.h"
 
 namespace seri
 {
@@ -14,7 +14,7 @@ namespace seri
 
 		std::shared_ptr<ShaderBase> shader;
 
-		std::shared_ptr<Texture> texture;
+		std::shared_ptr<TextureBase> texture;
 
 	private:
 

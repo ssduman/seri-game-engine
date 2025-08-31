@@ -233,9 +233,9 @@ namespace seri
 		unsigned int size = (width > height) ? width : height;
 		size = (size > width * height) ? size : width * height;
 
-		std::vector<Texture> textures;
-		Texture texture;
-		texture.Init(aiTexture->pcData, size);
+		std::vector<std::shared_ptr<TextureBase>> textures;
+		auto texture = TextureBase::Create();
+		texture->Init(TextureDesc{}, aiTexture->pcData, size);
 		textures.emplace_back(std::move(texture));
 
 		mesh->AddTextures(std::move(textures));
@@ -243,16 +243,16 @@ namespace seri
 
 	void ModelImporter::LoadFileTexture(const aiTextureType ai_tt, const std::string& texturePath, std::unique_ptr<Mesh>& mesh)
 	{
-		Texture texture;
-		std::vector<Texture> textures;
+		std::vector<std::shared_ptr<TextureBase>> textures;
 
+		auto texture = TextureBase::Create();
 		if (_texturesLoaded.count(texturePath) == 1)
 		{
 			texture = _texturesLoaded[texturePath];
 		}
 		else
 		{
-			texture.Init((_modelDirectory + texturePath).c_str());
+			texture->Init(TextureDesc{}, (_modelDirectory + texturePath).c_str());
 			_texturesLoaded[texturePath] = texture;
 		}
 

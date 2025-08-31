@@ -34,11 +34,11 @@ public:
 		auto gridShader = seri::ShaderLibrary::Find("grid");
 		auto typerShader = seri::ShaderLibrary::Find("typer");
 
-		auto texture_0 = std::make_shared<seri::Texture>();
-		texture_0->Init("assets/textures/passage.png");
+		auto texture_0 = seri::TextureBase::Create();
+		texture_0->Init(seri::TextureDesc{}, "assets/textures/passage.png");
 
-		auto texture_1 = std::make_shared<seri::Texture>();
-		texture_1->Init("assets/spiderman/textures/spiderman.png");
+		auto texture_1 = seri::TextureBase::Create();
+		texture_1->Init(seri::TextureDesc{}, "assets/spiderman/textures/spiderman.png");
 
 		const int fontIndex = 2;
 		const auto& fontInfo = seri::font::FontManager::GetPredefinedFonts()[fontIndex]->fontInfo;

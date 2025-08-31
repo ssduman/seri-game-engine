@@ -3,7 +3,7 @@
 #include "seri/core/Object.h"
 #include "seri/core/EntityType.h"
 #include "seri/texture/Color.h"
-#include "seri/texture/Texture.h"
+#include "seri/texture/TextureBase.h"
 #include "seri/shader/ShaderBase.h"
 #include "seri/shader/ShaderLibrary.h"
 #include "seri/math/Transform.h"
@@ -25,6 +25,7 @@ namespace seri
 		Entity(std::shared_ptr<CameraBase>& camera) : _camera(camera)
 		{
 			_shader = ShaderBase::Create();
+			_texture = TextureBase::Create();
 		}
 
 		Entity(Entity&& other) = default;
@@ -61,7 +62,7 @@ namespace seri
 			return _shader;
 		}
 
-		Texture& GetTexture()
+		std::shared_ptr<TextureBase>& GetTexture()
 		{
 			return _texture;
 		}
@@ -79,8 +80,8 @@ namespace seri
 	protected:
 		std::shared_ptr<CameraBase> _camera;
 		std::shared_ptr<ShaderBase> _shader;
+		std::shared_ptr<TextureBase> _texture;
 		Color _color;
-		Texture _texture;
 		Transform _transform;
 		RendererBackendOpenGL _engineBackend{};
 		EntityType _entityType{ EntityType::unknown };

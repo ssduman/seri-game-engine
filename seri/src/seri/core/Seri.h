@@ -46,7 +46,7 @@
 
 #include "seri/texture/Color.h"
 #include "seri/texture/Skybox.h"
-#include "seri/texture/Texture.h"
+#include "seri/texture/TextureBase.h"
 
 #include "seri/font/FontManager.h"
 
@@ -59,5 +59,6 @@
 #include "seri/window/WindowManagerBase.h"
 #include "seri/window/WindowManagerFactory.h"
 
+#include "seri/rendering/BufferBase.h"
 #include "seri/rendering/RenderingManagerBase.h"
 #include "seri/rendering/RenderingManagerFactory.h"

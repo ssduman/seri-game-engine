@@ -1,8 +1,8 @@
 #pragma once
 
-#include "seri/texture/Texture.h"
 #include "seri/camera/CameraBase.h"
 #include "seri/shader/ShaderLibrary.h"
+#include "seri/texture/TextureBase.h"
 #include "seri/renderer/RendererBackendOpenGL.h"
 #include "seri/renderer/AuxiliaryStructsBuilder.h"
 
@@ -171,7 +171,7 @@ namespace seri
 			int width, height, components;
 			for (size_t i = 0; i < _faces.size(); i++)
 			{
-				if (auto image = Texture::LoadTexture(_faces[i], width, height, components, 0, flip))
+				if (auto image = TextureBase::LoadTexture(_faces[i], width, height, components, flip))
 				{
 					GLenum format = GL_RED;
 					if (components == 3)
@@ -183,11 +183,11 @@ namespace seri
 						format = GL_RGBA;
 					}
 					glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + static_cast<GLenum>(i), 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, image);
-					Texture::UnloadTexture(image);
+					TextureBase::UnloadTexture(image);
 				}
 				else
 				{
-					LOGGER(error, "texture " << _faces[i] << " could not loaded: " << stbi_failure_reason());
+					LOGGER(error, "texture " << _faces[i] << " could not loaded for skybox");
 				}
 			}
 

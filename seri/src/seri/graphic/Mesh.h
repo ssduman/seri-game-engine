@@ -1,6 +1,6 @@
 #pragma once
 
-#include "seri/texture/Texture.h"
+#include "seri/texture/TextureBase.h"
 #include "seri/renderer/AuxiliaryStructs.h"
 
 #include <glm/glm.hpp>
@@ -117,7 +117,7 @@ namespace seri
 
 		~Mesh() = default;
 
-		std::vector<Texture> textures;
+		std::vector<std::shared_ptr<TextureBase>> textures;
 		std::vector<glm::vec3> vertices;
 		std::vector<unsigned int> indices;
 		std::vector<glm::vec2> uv0s;
@@ -169,7 +169,7 @@ namespace seri
 			normals.insert(normals.end(), nor.begin(), nor.end());
 		}
 
-		void AddTextures(std::vector<Texture> texs)
+		void AddTextures(std::vector<std::shared_ptr<TextureBase>> texs)
 		{
 			for (auto& tex : texs)
 			{

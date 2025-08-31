@@ -18,7 +18,7 @@ namespace seri
 		void Render() override
 		{
 			_shader->Bind();
-			_texture.Bind();
+			_texture->Bind();
 			_engineBackend.Draw();
 		}
 

@@ -48,7 +48,7 @@ namespace seri
 		{
 			GetInstance()._frameBegTime = std::chrono::high_resolution_clock::now();
 		}
-		
+
 		static void SetFrameEnd()
 		{
 			GetInstance()._frameEndTime = std::chrono::high_resolution_clock::now();

@@ -5,8 +5,6 @@
 
 #include <glad/gl.h>
 
-#include <string>
-
 namespace seri
 {
 	class ShaderOpenGL : public ShaderBase

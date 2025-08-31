@@ -1,6 +1,5 @@
 #include "Seripch.h"
 
-#include "seri/logging/Logger.h"
 #include "seri/util/Util.h"
 
 #include "FontGenerator.h"
