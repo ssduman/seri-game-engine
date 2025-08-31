@@ -5,6 +5,18 @@
 
 namespace seri
 {
+	enum class DepthFuncType
+	{
+		never,
+		always,
+		less,
+		equal,
+		l_equal,
+		g_equal,
+		greater,
+		not_equal,
+	};
+
 	struct RenderingProperties
 	{
 	};
@@ -27,6 +39,10 @@ namespace seri
 		virtual void SetPointSize(float size) = 0;
 
 		virtual void SetLineWidth(float width) = 0;
+
+		virtual DepthFuncType GetDepthFunc() = 0;
+
+		virtual DepthFuncType SetDepthFunc(DepthFuncType depthFuncType) = 0;
 
 		void SetRenderingProperties(RenderingProperties renderingProperties)
 		{

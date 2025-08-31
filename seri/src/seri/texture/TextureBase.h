@@ -36,6 +36,7 @@ namespace seri
 
 	enum class TextureWrap
 	{
+		none,
 		repeat,
 		clamp_to_edge,
 		clamp_to_border,
@@ -79,7 +80,9 @@ namespace seri
 		TextureSlot slot{ TextureSlot::uv0 };
 		TextureFormat format{ TextureFormat::rgba };
 		TextureTarget target{ TextureTarget::two_d };
-		TextureWrap wrap{ TextureWrap::repeat };
+		TextureWrap wrap_s{ TextureWrap::repeat };
+		TextureWrap wrap_t{ TextureWrap::repeat };
+		TextureWrap wrap_r{ TextureWrap::none };
 		TextureMagFilter magFilter{ TextureMagFilter::linear };
 		TextureMinFilter minFilter{ TextureMinFilter::linear_mipmap_linear };
 		TextureDataType dataType{ TextureDataType::ubyte_type };
@@ -90,6 +93,7 @@ namespace seri
 	public:
 		virtual ~TextureBase() = default;
 
+		virtual void Init(const TextureDesc& desc) = 0;
 		virtual void Init(const TextureDesc& desc, const std::string& texturePath) = 0;
 		virtual void Init(const TextureDesc& desc, const void* data, unsigned int size) = 0;
 		virtual void Init(const TextureDesc& desc, const void* data, unsigned int width, unsigned int height, unsigned int components) = 0;
@@ -97,6 +101,8 @@ namespace seri
 		virtual void Bind() = 0;
 		virtual void Unbind() = 0;
 		virtual void Release() = 0;
+
+		virtual void LoadCubeMap(const std::vector<std::string>& faces) = 0;
 
 		int GetWidth() { return _width; }
 		int GetHeight() { return _height; }

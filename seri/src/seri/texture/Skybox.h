@@ -3,6 +3,7 @@
 #include "seri/camera/CameraBase.h"
 #include "seri/shader/ShaderLibrary.h"
 #include "seri/texture/TextureBase.h"
+#include "seri/rendering/RenderingManagerFactory.h"
 #include "seri/renderer/RendererBackendOpenGL.h"
 #include "seri/renderer/AuxiliaryStructsBuilder.h"
 
@@ -43,6 +44,7 @@ namespace seri
 		void Init()
 		{
 			_shader = ShaderLibrary::Find("skybox");
+			_texture = TextureBase::Create();
 
 			InitMVP();
 			SetDefaultPositions();
@@ -52,19 +54,15 @@ namespace seri
 		void Render()
 		{
 			_shader->Bind();
+			_texture->Bind();
 
-			Bind();
-
-			glDepthFunc(GL_LEQUAL);
-			glBindTexture(GL_TEXTURE_CUBE_MAP, _tex);
+			DepthFuncType oldDepthFuncType = RenderingManagerFactory::Instance()->SetDepthFunc(DepthFuncType::l_equal);
 
 			_engineBackend.Draw();
 
-			glBindVertexArray(0);
-			glDepthFunc(GL_LESS);
+			RenderingManagerFactory::Instance()->SetDepthFunc(oldDepthFuncType);
 
-			Unbind();
-
+			_texture->Unbind();
 			_shader->Unbind();
 		}
 
@@ -160,60 +158,29 @@ namespace seri
 				return;
 			}
 
-			glGenTextures(1, &_tex);
-			glBindTexture(GL_TEXTURE_CUBE_MAP, _tex);
-
 			if (!flip)
 			{
 				std::swap(_faces[2], _faces[3]);
 			}
 
-			int width, height, components;
-			for (size_t i = 0; i < _faces.size(); i++)
-			{
-				if (auto image = TextureBase::LoadTexture(_faces[i], width, height, components, flip))
-				{
-					GLenum format = GL_RED;
-					if (components == 3)
-					{
-						format = GL_RGB;
-					}
-					if (components == 4)
-					{
-						format = GL_RGBA;
-					}
-					glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + static_cast<GLenum>(i), 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, image);
-					TextureBase::UnloadTexture(image);
-				}
-				else
-				{
-					LOGGER(error, "texture " << _faces[i] << " could not loaded for skybox");
-				}
-			}
-
-			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-		}
-
-		void Bind()
-		{
-			glActiveTexture(GL_TEXTURE0);
-		}
-
-		void Unbind()
-		{
-			glBindTexture(GL_TEXTURE_2D, 0);
+			TextureDesc desc{};
+			desc.flip = flip;
+			desc.target = TextureTarget::cube_map;
+			desc.wrap_s = TextureWrap::clamp_to_edge;
+			desc.wrap_t = TextureWrap::clamp_to_edge;
+			desc.wrap_r = TextureWrap::clamp_to_edge;
+			desc.magFilter = TextureMagFilter::linear;
+			desc.minFilter = TextureMinFilter::linear;
+			_texture->Init(desc);
+			_texture->LoadCubeMap(_faces);
 		}
 
 		std::shared_ptr<CameraBase> _camera;
-
 		std::shared_ptr<ShaderBase> _shader;
+		std::shared_ptr<TextureBase> _texture;
+
 		RendererBackendOpenGL _engineBackend{};
 
-		unsigned int _tex{ 0 };
 		std::vector<std::string> _faces;
 
 	};

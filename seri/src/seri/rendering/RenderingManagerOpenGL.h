@@ -64,6 +64,67 @@ namespace seri
 			glLineWidth(width);
 		}
 
+		DepthFuncType GetDepthFunc() override
+		{
+			GLint depthFunc;
+			glGetIntegerv(GL_DEPTH_FUNC, &depthFunc);
+
+			switch (depthFunc)
+			{
+				case GL_NEVER: return DepthFuncType::never;
+				case GL_ALWAYS: return DepthFuncType::always;
+				case GL_LESS: return DepthFuncType::less;
+				case GL_EQUAL: return DepthFuncType::equal;
+				case GL_LEQUAL: return DepthFuncType::l_equal;
+				case GL_GEQUAL: return DepthFuncType::g_equal;
+				case GL_GREATER: return DepthFuncType::greater;
+				case GL_NOTEQUAL: return DepthFuncType::not_equal;
+			}
+
+			return DepthFuncType::less;
+		}
+
+		DepthFuncType SetDepthFunc(DepthFuncType depthFuncType) override
+		{
+			DepthFuncType old = GetDepthFunc();
+
+			GLenum func = GL_LESS;
+			switch (depthFuncType)
+			{
+				case DepthFuncType::never:
+					func = GL_NEVER;
+					break;
+				case DepthFuncType::always:
+					func = GL_ALWAYS;
+					break;
+				case DepthFuncType::less:
+					func = GL_LESS;
+					break;
+				case DepthFuncType::equal:
+					func = GL_EQUAL;
+					break;
+				case DepthFuncType::l_equal:
+					func = GL_LEQUAL;
+					break;
+				case DepthFuncType::g_equal:
+					func = GL_GEQUAL;
+					break;
+				case DepthFuncType::greater:
+					func = GL_GREATER;
+					break;
+				case DepthFuncType::not_equal:
+					func = GL_NOTEQUAL;
+					break;
+				default:
+					func = GL_LESS;
+					break;
+			}
+
+			glDepthFunc(func);
+
+			return old;
+		}
+
 	protected:
 		void LoadGlad(std::unique_ptr<WindowManagerBase>& windowManager)
 		{

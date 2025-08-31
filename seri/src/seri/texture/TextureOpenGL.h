@@ -14,6 +14,15 @@ namespace seri
 			Release();
 		}
 
+		void Init(const TextureDesc& desc) override
+		{
+			_desc = desc;
+			_image = nullptr;
+
+			Init();
+			Build();
+		}
+
 		void Init(const TextureDesc& desc, const std::string& texturePath) override
 		{
 			_desc = desc;
@@ -44,28 +53,6 @@ namespace seri
 			Build();
 		}
 
-		void Build()
-		{
-			if (!_image)
-			{
-				LOGGER(error, "[texture] no image data");
-				return;
-			}
-
-			Generate();
-			Bind();
-
-			glTexImage2D(_target, _desc.mip, _format, _width, _height, _desc.border, _format, _dataType, _image);
-			glTexParameteri(_target, GL_TEXTURE_WRAP_S, _wrap);
-			glTexParameteri(_target, GL_TEXTURE_WRAP_T, _wrap);
-			glTexParameteri(_target, GL_TEXTURE_MAG_FILTER, _magFilter);
-			glTexParameteri(_target, GL_TEXTURE_MIN_FILTER, _minFilter);
-			glGenerateMipmap(_target);
-
-			Unbind();
-			UnloadTexture(_image);
-		}
-
 		void Bind() override
 		{
 			glActiveTexture(_slot);
@@ -86,6 +73,37 @@ namespace seri
 			}
 		}
 
+		void LoadCubeMap(const std::vector<std::string>& faces) override
+		{
+			Bind();
+
+			int width, height, components;
+			for (size_t i = 0; i < faces.size(); i++)
+			{
+				int index = i;
+				if (auto image = TextureBase::LoadTexture(faces[index], width, height, components, _desc.flip))
+				{
+					GLenum format = GL_RED;
+					if (components == 3)
+					{
+						format = GL_RGB;
+					}
+					if (components == 4)
+					{
+						format = GL_RGBA;
+					}
+					glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + static_cast<GLenum>(index), 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, image);
+					TextureBase::UnloadTexture(image);
+				}
+				else
+				{
+					LOGGER(error, "[texture] texture " << faces[i] << " could not loaded for cube map");
+				}
+			}
+
+			Unbind();
+		}
+
 	private:
 		void Init()
 		{
@@ -102,7 +120,9 @@ namespace seri
 			_slot = GetSlotOpenGL(_desc.slot);
 			_format = GetFormatOpenGL(_desc.format);
 			_target = GetTargetOpenGL(_desc.target);
-			_wrap = GetWrapOpenGL(_desc.wrap);
+			_wrap_s = GetWrapOpenGL(_desc.wrap_s);
+			_wrap_t = GetWrapOpenGL(_desc.wrap_t);
+			_wrap_r = GetWrapOpenGL(_desc.wrap_r);
 			_dataType = GetDataTypeOpenGL(_desc.dataType);
 			_magFilter = GetMagFilterOpenGL(_desc.magFilter);
 			_minFilter = GetMinFilterOpenGL(_desc.minFilter);
@@ -120,6 +140,32 @@ namespace seri
 				glDeleteTextures(1, &_handle);
 				_handle = 0;
 			}
+		}
+
+		void Build()
+		{
+			Generate();
+			Bind();
+
+			if (_image)
+			{
+				glTexImage2D(_target, _desc.mip, _format, _width, _height, _desc.border, _format, _dataType, _image);
+			}
+
+			glTexParameteri(_target, GL_TEXTURE_WRAP_S, _wrap_s);
+			glTexParameteri(_target, GL_TEXTURE_WRAP_T, _wrap_t);
+			if (_desc.wrap_r != TextureWrap::none)
+			{
+				glTexParameteri(_target, GL_TEXTURE_WRAP_R, _wrap_r);
+			}
+
+			glTexParameteri(_target, GL_TEXTURE_MAG_FILTER, _magFilter);
+			glTexParameteri(_target, GL_TEXTURE_MIN_FILTER, _minFilter);
+
+			glGenerateMipmap(_target);
+
+			Unbind();
+			UnloadTexture(_image);
 		}
 
 		GLenum GetSlotOpenGL(TextureSlot slot)
@@ -227,10 +273,13 @@ namespace seri
 		GLenum _slot;
 		GLenum _format;
 		GLenum _target;
-		GLenum _wrap;
+		GLenum _wrap_s;
+		GLenum _wrap_t;
+		GLenum _wrap_r;
 		GLenum _dataType;
 		GLenum _magFilter;
 		GLenum _minFilter;
+
 		TextureDesc _desc;
 		unsigned int _handle{ 0 };
 
