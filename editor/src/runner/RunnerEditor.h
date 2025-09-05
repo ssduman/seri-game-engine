@@ -5,7 +5,8 @@
 #include "gui/GUI.h"
 #include "camera/Camera.h"
 #include "event/UserEvent.h"
-#include "behaviour/SimpleDrawerBehaviour.h"
+#include "behaviour/BasicBehaviour.h"
+#include "behaviour/SimpleBehaviour.h"
 
 #include <ctime>
 #include <memory>
@@ -102,7 +103,8 @@ public:
 			}
 		);
 
-		SimpleDrawerBehaviour simpleDrawerBehaviour{};
+		BasicBehaviour basicBehaviour{};
+		SimpleBehaviour simpleBehaviour{};
 
 		seri::BehaviourManager::InitBehaviours();
 

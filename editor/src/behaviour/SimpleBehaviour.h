@@ -11,7 +11,7 @@
 #include <seri/netcode/Socket.h>
 #include <seri/random/Random.h>
 
-class SimpleDrawerBehaviour : public seri::BehaviourBase
+class SimpleBehaviour : public seri::BehaviourBase
 {
 public:
 	void Init() override
@@ -134,7 +134,7 @@ public:
 	}
 
 private:
-	seri::Light light;
+	seri::Light light{};
 
 	std::unique_ptr<seri::Mesh> quad_2d;
 	std::unique_ptr<seri::Mesh> quad_3d;

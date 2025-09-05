@@ -7,22 +7,51 @@
 
 namespace seri
 {
-	class BufferOpenGL : public BufferBase
+	GLenum GetBufferTargetOpenGL(BufferTarget target)
+	{
+		switch (target)
+		{
+			case BufferTarget::vertex: return GL_ARRAY_BUFFER;
+			case BufferTarget::index: return GL_ELEMENT_ARRAY_BUFFER;
+		}
+
+		return GL_ARRAY_BUFFER;
+	}
+
+	GLenum GetBufferUsageOpenGL(BufferUsage usage)
+	{
+		switch (usage)
+		{
+			case BufferUsage::stream_draw: return GL_STREAM_DRAW;
+			case BufferUsage::static_draw: return GL_STATIC_DRAW;
+			case BufferUsage::dynamic_draw: return GL_DYNAMIC_DRAW;
+		}
+
+		return GL_STATIC_DRAW;
+	};
+
+	class IndexBufferOpenGL : public IndexBufferBase
 	{
 	public:
-		BufferOpenGL(const BufferDesc& desc, const void* data) : _desc(desc), _handle(0)
+		IndexBufferOpenGL(const uint32_t* data, uint32_t count)
 		{
-			_usage = GetUsageOpenGL(desc.usage);
-			_target = GetTargetOpenGL(desc.target);
+			_desc.usage = BufferUsage::static_draw;
+			_desc.target = BufferTarget::index;
+
+			_usage = GetBufferUsageOpenGL(_desc.usage);
+			_target = GetBufferTargetOpenGL(_desc.target);
+
+			uint32_t size = count * sizeof(uint32_t);
 
 			glGenBuffers(1, &_handle);
 
-			glBindBuffer(_target, _handle);
-			glBufferData(_target, desc.size, data, _usage);
-			glBindBuffer(_target, 0);
+			glBindBuffer(GetBufferTargetOpenGL(BufferTarget::vertex), _handle);
+			glBufferData(GetBufferTargetOpenGL(BufferTarget::vertex), size, data, _usage);
+
+			Unbind();
 		}
 
-		~BufferOpenGL() override
+		~IndexBufferOpenGL() override
 		{
 			if (_handle > 0)
 			{
@@ -30,51 +59,78 @@ namespace seri
 			}
 		}
 
-		void UpdateBuffer(const void* src, size_t size, size_t offset = 0)
+		void Bind() override
 		{
 			glBindBuffer(_target, _handle);
+		}
 
-			if (_desc.usage == BufferUsage::dynamic_draw)
-			{
-				void* ptr = glMapBufferRange(_target, offset, size, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_RANGE_BIT);
-				if (ptr)
-				{
-					memcpy(ptr, src, size);
-					glUnmapBuffer(_target);
-				}
-			}
-			else
-			{
-				glBufferSubData(_target, offset, size, src);
-			}
-
+		void Unbind() override
+		{
 			glBindBuffer(_target, 0);
 		}
 
 	private:
-		GLenum GetTargetOpenGL(BufferTarget target)
-		{
-			switch (target)
-			{
-				case BufferTarget::vertex: return GL_ARRAY_BUFFER;
-				case BufferTarget::index: return GL_ELEMENT_ARRAY_BUFFER;
-			}
+		GLenum _usage;
+		GLenum _target;
+		BufferDesc _desc;
+		unsigned int _handle;
 
-			return GL_ARRAY_BUFFER;
+	};
+
+	class VertexBufferOpenGL : public VertexBufferBase
+	{
+	public:
+		VertexBufferOpenGL(const void* data, uint32_t size, BufferUsage usage)
+		{
+			_desc.usage = usage;
+			_desc.target = BufferTarget::vertex;
+
+			_usage = GetBufferUsageOpenGL(_desc.usage);
+			_target = GetBufferTargetOpenGL(_desc.target);
+
+			glGenBuffers(1, &_handle);
+
+			Bind();
+			glBufferData(_target, size, data, _usage);
+			Unbind();
 		}
 
-		GLenum GetUsageOpenGL(BufferUsage usage)
+		~VertexBufferOpenGL() override
 		{
-			switch (usage)
+			if (_handle > 0)
 			{
-				case BufferUsage::stream_draw: return GL_STREAM_DRAW;
-				case BufferUsage::static_draw: return GL_STATIC_DRAW;
-				case BufferUsage::dynamic_draw: return GL_DYNAMIC_DRAW;
+				glDeleteBuffers(1, &_handle);
 			}
+		}
 
-			return GL_STATIC_DRAW;
-		};
+		void Bind() override
+		{
+			glBindBuffer(_target, _handle);
+		}
 
+		void Unbind() override
+		{
+			glBindBuffer(_target, 0);
+		}
+
+		void SetData(const void* data, uint32_t size, uint32_t offset) override
+		{
+			Bind();
+			glBufferSubData(_target, offset, size, data);
+			Unbind();
+		}
+
+		const BufferLayoutDesc& VertexBufferBase::GetLayout()
+		{
+			return layoutDesc;
+		}
+
+		void VertexBufferBase::SetLayout(const BufferLayoutDesc& layout)
+		{
+			layoutDesc = layout;
+		}
+
+	private:
 		GLenum _usage;
 		GLenum _target;
 		BufferDesc _desc;

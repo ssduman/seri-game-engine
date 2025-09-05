@@ -1,5 +1,8 @@
 #pragma once
 
+#include "seri/util/Util.h"
+#include "seri/rendering/RenderingUtil.h"
+
 namespace seri
 {
 	enum class BufferTarget
@@ -7,6 +10,7 @@ namespace seri
 		vertex,
 		index,
 	};
+
 	enum class BufferUsage
 	{
 		stream_draw,
@@ -16,15 +20,39 @@ namespace seri
 
 	struct BufferDesc
 	{
-		size_t size;
 		BufferUsage usage;
 		BufferTarget target;
 	};
 
-	class BufferBase
+	class IndexBufferBase
 	{
 	public:
-		virtual ~BufferBase() = default;
+		virtual ~IndexBufferBase() = default;
+
+		virtual void Bind() = 0;
+		virtual void Unbind() = 0;
+
+		static std::shared_ptr<IndexBufferBase> Create(const uint32_t* data, uint32_t count);
+
+	};
+
+	class VertexBufferBase
+	{
+	public:
+		virtual ~VertexBufferBase() = default;
+
+		virtual void Bind() = 0;
+		virtual void Unbind() = 0;
+
+		virtual void SetData(const void* data, uint32_t size, uint32_t offset = 0) = 0;
+
+		virtual const BufferLayoutDesc& GetLayout() = 0;
+		virtual void SetLayout(const BufferLayoutDesc& layout) = 0;
+
+		static std::shared_ptr<VertexBufferBase> Create(const void* data, uint32_t size, BufferUsage usage = BufferUsage::static_draw);
+
+	protected:
+		BufferLayoutDesc layoutDesc;
 
 	};
 }
