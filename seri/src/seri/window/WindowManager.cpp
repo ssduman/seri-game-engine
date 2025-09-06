@@ -1,7 +1,7 @@
 #include "Seripch.h"
 
 #include "seri/core/Seri.h"
-#include "seri/window/WindowManagerFactory.h"
+#include "seri/window/WindowManager.h"
 
 #ifdef __linux__
 static_assert(false, "linux platform not supported");
@@ -10,12 +10,12 @@ static_assert(false, "linux platform not supported");
 #if defined (SERI_USE_WINDOW_GLFW)
 
 #include "seri/window/WindowManagerGLFW.h"
-std::unique_ptr<seri::WindowManagerBase> seri::WindowManagerFactory::_windowManagerInstance = std::make_unique<seri::WindowManagerGLFW>();
+std::unique_ptr<seri::WindowManagerBase> seri::WindowManager::_windowManager = std::make_unique<seri::WindowManagerGLFW>();
 
 #elif defined (SERI_USE_WINDOW_SDL3)
 
 #include "seri/window/WindowManagerSDL.h"
-std::unique_ptr<seri::WindowManagerBase> seri::WindowManagerFactory::_windowManagerInstance = std::make_unique<seri::WindowManagerSDL>();
+std::unique_ptr<seri::WindowManagerBase> seri::WindowManager::_windowManager = std::make_unique<seri::WindowManagerSDL>();
 
 #else
 

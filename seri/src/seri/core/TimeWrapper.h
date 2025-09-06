@@ -24,11 +24,12 @@ namespace seri
 			GetInstance();
 		}
 
-		static void RegisterTime(float currTime, float deltaTime)
+		static void UpdateTime(double time)
 		{
 			GetInstance()._frameCount += 1;
-			GetInstance()._time = currTime;
-			GetInstance()._deltaTime = deltaTime;
+			GetInstance()._time = static_cast<float>(time);
+			GetInstance()._deltaTime = GetInstance()._time - GetInstance()._lastFrame;
+			GetInstance()._lastFrame = GetInstance()._time;
 		}
 
 		static unsigned int GetFrameCount()
@@ -57,6 +58,7 @@ namespace seri
 
 		float _time{ 0.0f };
 		float _deltaTime{ 0.016f };
+		double _lastFrame{ 0.0 };
 
 		float _scale{ 1.0f };
 

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "seri/window/WindowManager.h"
 #include "seri/texture/TextureBase.h"
 #include "seri/renderer/AuxiliaryStructs.h"
 
@@ -184,7 +185,7 @@ namespace seri
 
 		void UpdateAnimation()
 		{
-			auto time = WindowManagerFactory::Instance()->GetTime();
+			auto time = WindowManager::GetTime();
 			auto timeInTicks = time * animation.tickPerSecond;
 
 			animTimeInTick = std::fmod(timeInTicks, animation.durationInTick);
@@ -633,8 +634,8 @@ namespace seri
 
 			mesh->drawMode = aux::DrawMode::lines;
 
-			float screenW = WindowManagerFactory::Instance()->GetWidthF();
-			float screenH = WindowManagerFactory::Instance()->GetHeightF();
+			float screenW = (float)WindowManager::GetWidth();
+			float screenH = (float)WindowManager::GetHeight();
 
 			glm::vec4 beg_ = {
 				Util::Map(beg.x, 0.0f, screenW, -1.0f, 1.0f),

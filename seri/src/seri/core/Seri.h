@@ -56,8 +56,8 @@
 #include "seri/event/IEvent.h"
 #include "seri/event/EventDispatcher.h"
 
+#include "seri/window/WindowManager.h"
 #include "seri/window/WindowManagerBase.h"
-#include "seri/window/WindowManagerFactory.h"
 
 #include "seri/rendering/BufferBase.h"
 #include "seri/rendering/VertexArrayBase.h"

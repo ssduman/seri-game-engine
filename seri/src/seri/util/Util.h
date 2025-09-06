@@ -9,6 +9,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <regex>
+#include <chrono>
 #include <string>
 #include <fstream>
 #include <sstream>

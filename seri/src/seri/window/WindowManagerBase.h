@@ -76,6 +76,11 @@ namespace seri
 
 		virtual void SetOpenGLContext() = 0;
 
+		WindowProperties GetWindowProperties()
+		{
+			return _windowProperties;
+		}
+
 		void SetWindowProperties(WindowProperties windowProperties)
 		{
 			if (_initialized)
@@ -84,20 +89,6 @@ namespace seri
 			}
 
 			_windowProperties = std::move(windowProperties);
-		}
-
-		void UpdateDeltaTime()
-		{
-			auto currentFrame = GetTime();
-			_deltaTime = currentFrame - _lastFrame;
-			_lastFrame = currentFrame;
-
-			TimeWrapper::RegisterTime(static_cast<float>(currentFrame), static_cast<float>(_deltaTime));
-		}
-
-		float GetDeltaTime()
-		{
-			return static_cast<float>(_deltaTime);
 		}
 
 		int GetWidth()
@@ -110,19 +101,9 @@ namespace seri
 			return _windowProperties.windowHeight;
 		}
 
-		float GetWidthF()
-		{
-			return static_cast<float>(_windowProperties.windowWidth);
-		}
-
-		float GetHeightF()
-		{
-			return static_cast<float>(_windowProperties.windowHeight);
-		}
-
 		float GetAspectRatio()
 		{
-			return GetWidthF() / GetHeightF();
+			return (float)GetWidth() / (float)GetHeight();
 		}
 
 		void FireEvent(event::IEventData& data)
@@ -155,8 +136,6 @@ namespace seri
 
 		WindowProperties _windowProperties;
 
-		double _lastFrame{ 0.0 };
-		double _deltaTime{ 0.0 };
 		bool _initialized{ false };
 
 		std::vector<std::shared_ptr<event::IEventCallback>> _eventCallbacks;

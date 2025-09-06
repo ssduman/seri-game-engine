@@ -25,7 +25,7 @@ public:
 		srand(static_cast<unsigned int>(time(0)));
 
 		seri::WindowProperties windowProperties{ /*title*/ "Seri Game Engine - Editor", /*fullscreen*/ false, /*w*/ 1280, /*h*/ 720 };
-		auto& windowManager = seri::WindowManagerFactory::Instance();
+		auto& windowManager = seri::WindowManager::Instance();
 		windowManager->SetWindowProperties(windowProperties);
 		windowManager->Init();
 
@@ -68,7 +68,7 @@ public:
 		cameraPropertiesOrtho.width = windowProperties.windowWidth;
 		cameraPropertiesOrtho.height = windowProperties.windowHeight;
 		cameraPropertiesOrtho.isOrtho = true;
-		cameraPropertiesOrtho.aspect = windowManager->GetAspectRatio();
+		cameraPropertiesOrtho.aspect = seri::WindowManager::GetAspectRatio();
 		auto cameraOrtho = std::make_shared<Camera>(std::move(cameraPropertiesOrtho));
 		cameraOrtho->Init();
 
@@ -76,7 +76,7 @@ public:
 		cameraPropertiesPerspective.width = windowProperties.windowWidth;
 		cameraPropertiesPerspective.height = windowProperties.windowHeight;
 		cameraPropertiesPerspective.isOrtho = false;
-		cameraPropertiesPerspective.aspect = windowManager->GetAspectRatio();
+		cameraPropertiesPerspective.aspect = seri::WindowManager::GetAspectRatio();
 		cameraPropertiesPerspective.position = { 0.0f, 4.0f, 6.0f };
 		cameraPropertiesPerspective.rotation = { -90.0f, -30.0f, 0.0f };
 		auto cameraPerspective = std::make_shared<Camera>(std::move(cameraPropertiesPerspective));
@@ -113,13 +113,14 @@ public:
 
 		LOGGER(info, "[editor] starting seri game engine - editor loop");
 
-		while (!windowManager->GetWindowShouldClose())
+		while (!seri::WindowManager::GetWindowShouldClose())
 		{
 			seri::Application::SetFrameBegin();
 
 			renderingManager->Clear();
 			renderingManager->ClearColor();
-			windowManager->UpdateDeltaTime();
+
+			seri::TimeWrapper::UpdateTime(seri::WindowManager::GetTime());
 
 			seri::Graphic::GetCameraOrtho()->Update();
 			seri::Graphic::GetCameraPerspective()->Update();
@@ -135,8 +136,8 @@ public:
 
 			seri::InputManager::Reset();
 
-			windowManager->PollEvents();
-			windowManager->SwapBuffers();
+			seri::WindowManager::PollEvents();
+			seri::WindowManager::SwapBuffers();
 
 			seri::Application::SetFrameEnd();
 

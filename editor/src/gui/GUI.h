@@ -21,7 +21,7 @@
 class GUI : public seri::Object
 {
 public:
-	GUI(std::shared_ptr<Camera>& camera, std::shared_ptr<seri::IScene> scene) : _windowManager(seri::WindowManagerFactory::Instance()), _camera(camera), _scene(scene)
+	GUI(std::shared_ptr<Camera>& camera, std::shared_ptr<seri::IScene> scene) : _camera(camera), _scene(scene)
 	{
 		LOGGER(info, "[gui] init succeeded");
 	}
@@ -50,9 +50,9 @@ public:
 		SetStyle();
 
 #if defined (SERI_USE_WINDOW_GLFW)
-		ImGui_ImplGlfw_InitForOpenGL(static_cast<GLFWwindow*>(_windowManager->GetWindowHandle()), true);
+		ImGui_ImplGlfw_InitForOpenGL(static_cast<GLFWwindow*>(seri::WindowManager::GetWindowHandle()), true);
 #elif defined (SERI_USE_WINDOW_SDL3)
-		ImGui_ImplSDL3_InitForOpenGL(static_cast<SDL_Window*>(_windowManager->GetWindowHandle()), _windowManager->GetContext());
+		ImGui_ImplSDL3_InitForOpenGL(static_cast<SDL_Window*>(seri::WindowManager::GetWindowHandle()), seri::WindowManager::GetContext());
 #endif
 
 		ImGui_ImplOpenGL3_Init("#version 460");
@@ -348,7 +348,7 @@ private:
 		}
 		if (ImGui::MenuItem("Quit", "Alt+F4"))
 		{
-			_windowManager->SetWindowShouldCloseToTrue();
+			seri::WindowManager::SetWindowShouldCloseToTrue();
 		}
 	}
 
@@ -443,11 +443,11 @@ private:
 	{
 		if (ImGui::Button("Enable cursor"))
 		{
-			_windowManager->SetCursorMode(seri::CursorMode::normal);
+			seri::WindowManager::SetCursorMode(seri::CursorMode::normal);
 		}
 		if (ImGui::Button("Disable cursor"))
 		{
-			_windowManager->SetCursorMode(seri::CursorMode::disabled);
+			seri::WindowManager::SetCursorMode(seri::CursorMode::disabled);
 		}
 
 		ImGui::Separator();
@@ -487,15 +487,15 @@ private:
 			if (text == "Play")
 			{
 				text = "Stop";
-				_windowManager->FireEvent(UserGameStateEventData{ GameState::game });
-				_windowManager->SetCursorMode(seri::CursorMode::disabled);
+				seri::WindowManager::FireEvent(UserGameStateEventData{ GameState::game });
+				seri::WindowManager::SetCursorMode(seri::CursorMode::disabled);
 				//_io->MouseDrawCursor = true;
 			}
 			else
 			{
 				text = "Play";
-				_windowManager->FireEvent(UserGameStateEventData{ GameState::idle });
-				_windowManager->SetCursorMode(seri::CursorMode::disabled);
+				seri::WindowManager::FireEvent(UserGameStateEventData{ GameState::idle });
+				seri::WindowManager::SetCursorMode(seri::CursorMode::disabled);
 				//_io->MouseDrawCursor = false;
 			}
 		}
@@ -514,7 +514,6 @@ private:
 		_currentObject = std::dynamic_pointer_cast<seri::Object>(entity);
 	}
 
-	std::unique_ptr<seri::WindowManagerBase>& _windowManager;
 	std::shared_ptr<Camera>& _camera;
 	std::shared_ptr<seri::IScene> _scene;
 	std::shared_ptr<seri::IScene> _currentScene;
