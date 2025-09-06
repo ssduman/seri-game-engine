@@ -32,7 +32,12 @@ namespace seri
 		virtual void Bind() = 0;
 		virtual void Unbind() = 0;
 
+		virtual uint32_t GetCount() = 0;
+
 		static std::shared_ptr<IndexBufferBase> Create(const uint32_t* data, uint32_t count);
+
+	protected:
+		uint32_t _count;
 
 	};
 
@@ -48,11 +53,12 @@ namespace seri
 
 		virtual const BufferLayoutDesc& GetLayout() = 0;
 		virtual void SetLayout(const BufferLayoutDesc& layout) = 0;
+		virtual VertexBufferBase& AddElement(const BufferElementDesc& element) = 0;
 
 		static std::shared_ptr<VertexBufferBase> Create(const void* data, uint32_t size, BufferUsage usage = BufferUsage::static_draw);
 
 	protected:
-		BufferLayoutDesc layoutDesc;
+		BufferLayoutDesc _layoutDesc{};
 
 	};
 }

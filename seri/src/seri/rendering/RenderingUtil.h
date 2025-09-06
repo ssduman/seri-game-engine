@@ -6,6 +6,7 @@ namespace seri
 {
 	enum class LayoutLocation
 	{
+		none = -1,
 		position = 0,
 		uv0 = 1,
 		color = 2,
@@ -53,15 +54,31 @@ namespace seri
 	{
 		friend struct BufferLayoutDesc;
 
+		std::string name;
 		LayoutLocation loc;
 		ShaderDataType type;
 		bool normalized;
+
+		BufferElementDesc(const std::string& name, ShaderDataType type, bool normalized = false)
+		{
+			this->name = name;
+			this->type = type;
+			this->normalized = normalized;
+
+			loc = LayoutLocation::none;
+
+			offset = 0;
+			size = GetShaderDataTypeSize(type);
+			count = GetShaderDataTypeCount(type);
+		}
 
 		BufferElementDesc(LayoutLocation loc, ShaderDataType type, bool normalized = false)
 		{
 			this->loc = loc;
 			this->type = type;
 			this->normalized = normalized;
+
+			name = "";
 
 			offset = 0;
 			size = GetShaderDataTypeSize(type);
@@ -127,6 +144,14 @@ namespace seri
 	{
 		BufferLayoutDesc() = default;
 
+		BufferLayoutDesc(std::initializer_list<BufferElementDesc> elements)
+		{
+			for (const auto& element : elements)
+			{
+				AddElement(element);
+			}
+		}
+
 		BufferLayoutDesc& AddElement(BufferElementDesc desc)
 		{
 			_elements.emplace_back(desc);
@@ -157,8 +182,8 @@ namespace seri
 			}
 		}
 
-		std::vector<BufferElementDesc> _elements;
 		uint32_t _stride = 0; // [vert0, vert1, vert2, color0, color1, color2] -> stride 6
+		std::vector<BufferElementDesc> _elements;
 
 	};
 

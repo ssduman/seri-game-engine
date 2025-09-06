@@ -143,33 +143,29 @@ public:
 		basicTexture->Init(seri::TextureDesc{}, "assets/textures/passage.png");
 
 		basicVertexBuffer_0 = seri::VertexBufferBase::Create(&positions[0], positions.size() * 3 * sizeof(float));
-		basicVertexBuffer_0->SetLayout(
-			seri::BufferLayoutDesc{}.AddElement(
-				{ seri::LayoutLocation::position, seri::ShaderDataType::float3_type, false }
-			)
+		basicVertexBuffer_0->AddElement(
+			{ seri::LayoutLocation::position, seri::ShaderDataType::float3_type, false }
 		);
 		basicVertexBuffer_1 = seri::VertexBufferBase::Create(&uvs[0], uvs.size() * 2 * sizeof(float));
-		basicVertexBuffer_1->SetLayout(
-			seri::BufferLayoutDesc{}.AddElement(
-				{ seri::LayoutLocation::uv0, seri::ShaderDataType::float2_type }
-			)
+		basicVertexBuffer_1->AddElement(
+			{ seri::LayoutLocation::uv0, seri::ShaderDataType::float2_type }
 		);
 		basicVertexBuffer_2 = seri::VertexBufferBase::Create(&colors[0], colors.size() * 3 * sizeof(float));
-		basicVertexBuffer_2->SetLayout(
-			seri::BufferLayoutDesc{}.AddElement(
-				{ seri::LayoutLocation::color, seri::ShaderDataType::float3_type }
-			)
+		basicVertexBuffer_2->AddElement(
+			{ seri::LayoutLocation::color, seri::ShaderDataType::float3_type }
 		);
 		basicVertexBuffer_all = seri::VertexBufferBase::Create(&vertices[0], sizeof(vertices));
+		basicVertexBuffer_all->
+			AddElement({ seri::LayoutLocation::position, seri::ShaderDataType::float3_type }).
+			AddElement({ seri::LayoutLocation::color, seri::ShaderDataType::float3_type }).
+			AddElement({ seri::LayoutLocation::uv0, seri::ShaderDataType::float2_type }
+			);
 		basicVertexBuffer_all->SetLayout(
-			seri::BufferLayoutDesc{}
-			.AddElement(
-				{ seri::LayoutLocation::position, seri::ShaderDataType::float3_type }
-			).AddElement(
-				{ seri::LayoutLocation::color, seri::ShaderDataType::float3_type }
-			).AddElement(
+			seri::BufferLayoutDesc{
+				{ seri::LayoutLocation::position, seri::ShaderDataType::float3_type },
+				{ seri::LayoutLocation::color, seri::ShaderDataType::float3_type },
 				{ seri::LayoutLocation::uv0, seri::ShaderDataType::float2_type }
-			)
+			}
 		);
 
 		basicIndexBuffer = seri::IndexBufferBase::Create(&indices[0], indices.size());
@@ -188,7 +184,7 @@ public:
 		basicTexture->Bind();
 		basicVertexArray->Bind();
 
-		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, basicIndexBuffer->GetCount(), GL_UNSIGNED_INT, 0);
 	}
 
 	void Destroy() override

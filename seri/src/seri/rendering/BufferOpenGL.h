@@ -35,6 +35,8 @@ namespace seri
 	public:
 		IndexBufferOpenGL(const uint32_t* data, uint32_t count)
 		{
+			_count = count;
+
 			_desc.usage = BufferUsage::static_draw;
 			_desc.target = BufferTarget::index;
 
@@ -67,6 +69,11 @@ namespace seri
 		void Unbind() override
 		{
 			glBindBuffer(_target, 0);
+		}
+
+		uint32_t GetCount() override
+		{
+			return _count;
 		}
 
 	private:
@@ -122,12 +129,18 @@ namespace seri
 
 		const BufferLayoutDesc& VertexBufferBase::GetLayout()
 		{
-			return layoutDesc;
+			return _layoutDesc;
 		}
 
 		void VertexBufferBase::SetLayout(const BufferLayoutDesc& layout)
 		{
-			layoutDesc = layout;
+			_layoutDesc = layout;
+		}
+
+		VertexBufferBase& AddElement(const BufferElementDesc& element) override
+		{
+			_layoutDesc.AddElement(element);
+			return *this;
 		}
 
 	private:
