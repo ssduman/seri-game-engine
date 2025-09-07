@@ -3,7 +3,7 @@
 #include "seri/camera/CameraBase.h"
 #include "seri/shader/ShaderLibrary.h"
 #include "seri/texture/TextureBase.h"
-#include "seri/rendering/RenderingManagerFactory.h"
+#include "seri/rendering/RenderingManager.h"
 #include "seri/renderer/RendererBackendOpenGL.h"
 #include "seri/renderer/AuxiliaryStructsBuilder.h"
 
@@ -56,11 +56,11 @@ namespace seri
 			_shader->Bind();
 			_texture->Bind();
 
-			DepthFuncType oldDepthFuncType = RenderingManagerFactory::Instance()->SetDepthFunc(DepthFuncType::l_equal);
+			DepthFuncType oldDepthFuncType = RenderingManager::SetDepthFunc(DepthFuncType::l_equal);
 
 			_engineBackend.Draw();
 
-			RenderingManagerFactory::Instance()->SetDepthFunc(oldDepthFuncType);
+			RenderingManager::SetDepthFunc(oldDepthFuncType);
 
 			_texture->Unbind();
 			_shader->Unbind();

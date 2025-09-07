@@ -30,7 +30,7 @@ public:
 		windowManager->Init();
 
 		seri::RenderingProperties renderingProperties{};
-		auto& renderingManager = seri::RenderingManagerFactory::Instance();
+		auto& renderingManager = seri::RenderingManager::Instance();
 		renderingManager->SetRenderingProperties(renderingProperties);
 		renderingManager->Init(windowManager);
 
@@ -54,12 +54,12 @@ public:
 		));
 
 		windowManager->AddEventCallback(seri::event::MakeEventCallback(
-			[&renderingManager](seri::event::IEventData& data)
+			[](seri::event::IEventData& data)
 			{
 				if (data.eventType == seri::event::EventType::window_resize)
 				{
 					auto& d = seri::event::EventDispatcher::CastEventData<seri::event::WindowResizeEventData&>(data);
-					renderingManager->SetViewport(0, 0, d.width, d.height);
+					seri::RenderingManager::SetViewport(0, 0, d.width, d.height);
 				}
 			}
 		));
@@ -117,8 +117,8 @@ public:
 		{
 			seri::Application::SetFrameBegin();
 
-			renderingManager->Clear();
-			renderingManager->ClearColor();
+			seri::RenderingManager::ClearColor();
+			seri::RenderingManager::Clear();
 
 			seri::TimeWrapper::UpdateTime(seri::WindowManager::GetTime());
 

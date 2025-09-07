@@ -16,10 +16,10 @@
 
 #include "seri/util/Util.h"
 
-#include "seri/core/TimeWrapper.h"
 #include "seri/core/Object.h"
 #include "seri/core/IRunner.h"
 #include "seri/core/Application.h"
+#include "seri/core/TimeWrapper.h"
 
 #include "seri/scene/Layer.h"
 #include "seri/scene/Scene.h"
@@ -61,5 +61,5 @@
 
 #include "seri/rendering/BufferBase.h"
 #include "seri/rendering/VertexArrayBase.h"
+#include "seri/rendering/RenderingManager.h"
 #include "seri/rendering/RenderingManagerBase.h"
-#include "seri/rendering/RenderingManagerFactory.h"

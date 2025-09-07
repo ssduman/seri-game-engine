@@ -120,7 +120,7 @@ namespace seri
 			glBindBuffer(_target, 0);
 		}
 
-		void SetData(const void* data, uint32_t size, uint32_t offset) override
+		void SetData(const void* data, uint32_t size, uint32_t offset = 0) override
 		{
 			Bind();
 			glBufferSubData(_target, offset, size, data);
