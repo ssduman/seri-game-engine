@@ -64,65 +64,85 @@ namespace seri
 			glLineWidth(width);
 		}
 
-		DepthFuncType GetDepthFunc() override
+		DepthFunc GetDepthFunc() override
 		{
 			GLint depthFunc;
 			glGetIntegerv(GL_DEPTH_FUNC, &depthFunc);
 
 			switch (depthFunc)
 			{
-				case GL_NEVER: return DepthFuncType::never;
-				case GL_ALWAYS: return DepthFuncType::always;
-				case GL_LESS: return DepthFuncType::less;
-				case GL_EQUAL: return DepthFuncType::equal;
-				case GL_LEQUAL: return DepthFuncType::l_equal;
-				case GL_GEQUAL: return DepthFuncType::g_equal;
-				case GL_GREATER: return DepthFuncType::greater;
-				case GL_NOTEQUAL: return DepthFuncType::not_equal;
+				case GL_NEVER: return DepthFunc::never;
+				case GL_ALWAYS: return DepthFunc::always;
+				case GL_LESS: return DepthFunc::less;
+				case GL_EQUAL: return DepthFunc::equal;
+				case GL_LEQUAL: return DepthFunc::l_equal;
+				case GL_GEQUAL: return DepthFunc::g_equal;
+				case GL_GREATER: return DepthFunc::greater;
+				case GL_NOTEQUAL: return DepthFunc::not_equal;
 			}
 
-			return DepthFuncType::less;
+			return DepthFunc::less;
 		}
 
-		DepthFuncType SetDepthFunc(DepthFuncType depthFuncType) override
+		DepthFunc SetDepthFunc(bool enabled, DepthFunc depthFunc) override
 		{
-			DepthFuncType old = GetDepthFunc();
-
-			GLenum func = GL_LESS;
-			switch (depthFuncType)
+			DepthFunc old = GetDepthFunc();
+			if (enabled)
 			{
-				case DepthFuncType::never:
-					func = GL_NEVER;
-					break;
-				case DepthFuncType::always:
-					func = GL_ALWAYS;
-					break;
-				case DepthFuncType::less:
-					func = GL_LESS;
-					break;
-				case DepthFuncType::equal:
-					func = GL_EQUAL;
-					break;
-				case DepthFuncType::l_equal:
-					func = GL_LEQUAL;
-					break;
-				case DepthFuncType::g_equal:
-					func = GL_GEQUAL;
-					break;
-				case DepthFuncType::greater:
-					func = GL_GREATER;
-					break;
-				case DepthFuncType::not_equal:
-					func = GL_NOTEQUAL;
-					break;
-				default:
-					func = GL_LESS;
-					break;
+				glEnable(GL_DEPTH_TEST);
+				glDepthMask(GL_TRUE);
+				glDepthFunc(GetDepthFunc(depthFunc));
+				return old;
 			}
+			else
+			{
+				glDisable(GL_DEPTH_TEST);
+				glDepthMask(GL_FALSE);
+				return old;
+			}
+		}
 
-			glDepthFunc(func);
+		void SetDepthWrite(bool enabled) override
+		{
+			if (enabled)
+			{
+				glEnable(GL_DEPTH_TEST);
+			}
+			else
+			{
+				glDisable(GL_DEPTH_TEST);
+			}
+		}
 
-			return old;
+		void SetBlend(bool enabled, BlendFactor srcFactor, BlendFactor dstFactor) override
+		{
+			if (enabled)
+			{
+				glEnable(GL_BLEND);
+				glBlendFunc(GetBlendFactor(srcFactor), GetBlendFactor(dstFactor));
+			}
+			else
+			{
+				glDisable(GL_BLEND);
+			}
+		}
+
+		void SetCullFace(bool enabled, CullFace cullFace) override
+		{
+			if (enabled)
+			{
+				glEnable(GL_CULL_FACE);
+				glCullFace(GetCullFace(cullFace));
+			}
+			else
+			{
+				glDisable(GL_CULL_FACE);
+			}
+		}
+
+		void SetFrontFace(FrontFace frontFace) override
+		{
+			glFrontFace(GetFrontFace(frontFace));
 		}
 
 	protected:
@@ -282,6 +302,67 @@ namespace seri
 		void DisableOpenGLDebugOutput()
 		{
 			glDisable(GL_DEBUG_OUTPUT);
+		}
+
+		GLenum GetCullFace(CullFace cullFace)
+		{
+			switch (cullFace)
+			{
+				case CullFace::front: return GL_FRONT;
+				case CullFace::back: return GL_BACK;
+				case CullFace::front_and_back: return GL_FRONT_AND_BACK;
+			}
+			return GL_BACK;
+		}
+
+		GLenum GetFrontFace(FrontFace frontFace)
+		{
+			switch (frontFace)
+			{
+				case FrontFace::cw: return GL_CW;
+				case FrontFace::ccw: return GL_CCW;
+			}
+			return GL_CCW;
+		}
+
+		GLenum GetDepthFunc(DepthFunc depthFunc)
+		{
+			switch (depthFunc)
+			{
+				case DepthFunc::never: return GL_NEVER;
+				case DepthFunc::always: return GL_ALWAYS;
+				case DepthFunc::less: return GL_LESS;
+				case DepthFunc::equal: return GL_EQUAL;
+				case DepthFunc::l_equal: return GL_LEQUAL;
+				case DepthFunc::g_equal: return GL_GEQUAL;
+				case DepthFunc::greater: return GL_GREATER;
+				case DepthFunc::not_equal: return GL_NOTEQUAL;
+			}
+			return GL_LESS;
+		}
+
+		GLenum GetBlendFactor(BlendFactor factor)
+		{
+			switch (factor)
+			{
+				case BlendFactor::zero: return GL_ZERO;
+				case BlendFactor::one: return GL_ONE;
+				case BlendFactor::src_color: return GL_SRC_COLOR;
+				case BlendFactor::one_minus_src_color: return GL_ONE_MINUS_SRC_COLOR;
+				case BlendFactor::dst_color: return GL_DST_COLOR;
+				case BlendFactor::one_minus_dst_color: return GL_ONE_MINUS_DST_COLOR;
+				case BlendFactor::src_alpha: return GL_SRC_ALPHA;
+				case BlendFactor::one_minus_src_alpha: return GL_ONE_MINUS_SRC_ALPHA;
+				case BlendFactor::dst_alpha: return GL_DST_ALPHA;
+				case BlendFactor::one_minus_dst_alpha: return GL_ONE_MINUS_DST_ALPHA;
+				case BlendFactor::constant_color: return GL_CONSTANT_COLOR;
+				case BlendFactor::one_minus_constant_color: return GL_ONE_MINUS_CONSTANT_COLOR;
+				case BlendFactor::constant_alpha: return GL_CONSTANT_ALPHA;
+				case BlendFactor::one_minus_constant_alpha: return GL_ONE_MINUS_CONSTANT_ALPHA;
+				case BlendFactor::src_alpha_saturate: return GL_SRC_ALPHA_SATURATE;
+			}
+
+			return GL_ONE;
 		}
 
 	};

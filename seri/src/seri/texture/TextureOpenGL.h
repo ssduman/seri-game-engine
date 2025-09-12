@@ -53,14 +53,37 @@ namespace seri
 			Build();
 		}
 
+		int GetSlot() override
+		{
+			return static_cast<int>(_desc.slot);
+		}
+
+		bool IsActiveForUsing() override
+		{
+			return _handle > 0;
+		}
+
 		void Bind() override
 		{
 			glActiveTexture(_slot);
 			glBindTexture(_target, _handle);
 		}
 
+		void Bind(int slot) override
+		{
+			glActiveTexture(GL_TEXTURE0 + _slot);
+			glBindTexture(_target, _handle);
+		}
+
 		void Unbind() override
 		{
+			glActiveTexture(_slot);
+			glBindTexture(_target, 0);
+		}
+
+		void Unbind(int slot) override
+		{
+			glActiveTexture(GL_TEXTURE0 + _slot);
 			glBindTexture(_target, 0);
 		}
 

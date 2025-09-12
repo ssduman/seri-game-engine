@@ -56,11 +56,11 @@ namespace seri
 			_shader->Bind();
 			_texture->Bind();
 
-			DepthFuncType oldDepthFuncType = RenderingManager::SetDepthFunc(DepthFuncType::l_equal);
+			DepthFunc oldDepthFunc = RenderingManager::SetDepthFunc(true, DepthFunc::l_equal);
 
 			_engineBackend.Draw();
 
-			RenderingManager::SetDepthFunc(oldDepthFuncType);
+			RenderingManager::SetDepthFunc(true, oldDepthFunc);
 
 			_texture->Unbind();
 			_shader->Unbind();

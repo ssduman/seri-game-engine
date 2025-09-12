@@ -52,13 +52,18 @@ namespace seri
 			glBindVertexArray(0);
 		}
 
+		const std::shared_ptr<IndexBufferBase>& GetIndexBuffer() override
+		{
+			return _indexBuffer;
+		}
+
 		void SetIndexBuffer(const std::shared_ptr<IndexBufferBase>& indexBuffer) override
 		{
 			glBindVertexArray(_handle);
 
 			indexBuffer->Bind();
 
-			this->indexBuffer = indexBuffer;
+			this->_indexBuffer = indexBuffer;
 		}
 
 		void AddVertexBuffer(const std::shared_ptr<VertexBufferBase>& vertexBuffer) override
@@ -127,7 +132,7 @@ namespace seri
 				}
 			}
 
-			vertexBuffers.emplace_back(vertexBuffer);
+			_vertexBuffers.emplace_back(vertexBuffer);
 
 			Unbind();
 			vertexBuffer->Unbind();

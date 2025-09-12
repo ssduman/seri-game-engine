@@ -134,6 +134,8 @@ public:
 
 			gui->Display();
 
+			seri::RenderingManager::Execute();
+
 			seri::InputManager::Reset();
 
 			seri::WindowManager::PollEvents();

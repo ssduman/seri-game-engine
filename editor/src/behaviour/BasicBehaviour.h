@@ -137,7 +137,7 @@ public:
 			-0.5f * mult, -0.5f * mult, -0.5f * mult,  0, 1, 1,  1, 0,
 		};
 
-		basicShader = seri::ShaderLibrary::Find("basic_1");
+		basicShader = seri::ShaderLibrary::Find("basic_2");
 
 		basicTexture = seri::TextureBase::Create();
 		basicTexture->Init(seri::TextureDesc{}, "assets/textures/passage.png");
@@ -175,16 +175,35 @@ public:
 		//basicVertexArray->AddVertexBuffer(basicVertexBuffer_1);
 		//basicVertexArray->AddVertexBuffer(basicVertexBuffer_2);
 		basicVertexArray->AddVertexBuffer(basicVertexBuffer_all);
+
+		basicMaterial = std::make_shared<seri::Material>();
+		basicMaterial->shader = basicShader;
+		basicMaterial->SetTexture("u_texture", basicTexture);
 	}
 
 	void Update() override
 	{
-		seri::ShaderLibrary::SetMVP(basicShader, seri::Graphic::GetCameraPerspective());
-		basicShader->Bind();
-		basicTexture->Bind();
-		basicVertexArray->Bind();
+		seri::RenderingManager::Begin(seri::Graphic::GetCameraPerspective());
 
-		glDrawElements(GL_TRIANGLES, basicIndexBuffer->GetCount(), GL_UNSIGNED_INT, 0);
+		seri::RenderCommand renderCommand{};
+		renderCommand.name = "basic_cube";
+		renderCommand.camera = seri::Graphic::GetCameraPerspective();
+		renderCommand.material = basicMaterial;
+		renderCommand.vao = basicVertexArray;
+		renderCommand.trs = seri::Util::GetTRS(
+			{ 0.0f, 0.0f, 0.0f },
+			{ 0.0f, 45.0f, 0.0f },
+			{ 1.0f, 1.0f, 1.0f }
+		);
+
+		seri::RenderingManager::Submit(renderCommand);
+
+		seri::RenderingManager::End();
+		seri::ShaderLibrary::SetMVP(basicShader, seri::Graphic::GetCameraPerspective());
+		//basicShader->Bind();
+		//basicTexture->Bind();
+		//basicVertexArray->Bind();
+		//glDrawElements(GL_TRIANGLES, basicIndexBuffer->GetCount(), GL_UNSIGNED_INT, 0);
 	}
 
 	void Destroy() override
@@ -192,6 +211,7 @@ public:
 	}
 
 private:
+	std::shared_ptr<seri::Material> basicMaterial;
 	std::shared_ptr<seri::ShaderBase> basicShader;
 	std::shared_ptr<seri::TextureBase> basicTexture;
 	std::shared_ptr<seri::IndexBufferBase> basicIndexBuffer;

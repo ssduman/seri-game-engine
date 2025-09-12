@@ -48,12 +48,17 @@ namespace seri
 			return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 		}
 
-		static glm::mat4 GetTRS(glm::vec3 pos, glm::quat rot, glm::vec3 scale)
+		static glm::mat4 GetTRS(const glm::vec3& pos, const glm::quat& rot, const glm::vec3& scale)
 		{
 			glm::mat4 T = glm::translate(glm::mat4{ 1.0f }, pos);
 			glm::mat4 R = glm::mat4_cast(rot);
 			glm::mat4 S = glm::scale(glm::mat4{ 1.0f }, scale);
 			return T * R * S;
+		}
+
+		static glm::mat4 GetTRS(const glm::vec3& pos, const glm::vec3& euler, const glm::vec3& scale)
+		{
+			return GetTRS(pos, glm::quat(glm::radians(euler)), scale);
 		}
 
 		static glm::mat4 GetIdentityMatrix()

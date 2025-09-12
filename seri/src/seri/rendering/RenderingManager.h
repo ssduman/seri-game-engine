@@ -1,6 +1,8 @@
 #pragma once
 
+#include "seri/rendering/PipelineBase.h"
 #include "seri/rendering/RenderingManagerBase.h"
+#include "seri/rendering/RenderCommandBufferBase.h"
 
 #include <memory>
 
@@ -44,18 +46,59 @@ namespace seri
 			_renderingManager->SetLineWidth(width);
 		}
 
-		static DepthFuncType GetDepthFunc()
+		static DepthFunc GetDepthFunc()
 		{
 			return _renderingManager->GetDepthFunc();
 		}
 
-		static DepthFuncType SetDepthFunc(DepthFuncType depthFuncType)
+		static DepthFunc SetDepthFunc(bool enabled, DepthFunc depthFunc)
 		{
-			return _renderingManager->SetDepthFunc(depthFuncType);
+			return _renderingManager->SetDepthFunc(enabled, depthFunc);
+		}
+
+		static void SetDepthWrite(bool enabled)
+		{
+			_renderingManager->SetDepthWrite(enabled);
+		}
+
+		static void SetBlend(bool enabled, BlendFactor srcFactor, BlendFactor dstFactor)
+		{
+			_renderingManager->SetBlend(enabled, srcFactor, dstFactor);
+		}
+
+		static void SetCullFace(bool enabled, CullFace cullFace)
+		{
+			_renderingManager->SetCullFace(enabled, cullFace);
+		}
+
+		static void SetFrontFace(FrontFace frontFace)
+		{
+			_renderingManager->SetFrontFace(frontFace);
+		}
+
+		static void Begin(std::shared_ptr<CameraBase> camera)
+		{
+			_renderCommandBuffer->Begin(camera);
+		}
+
+		static void End()
+		{
+			_renderCommandBuffer->End();
+		}
+
+		static void Submit(RenderCommand renderCommand)
+		{
+			_renderCommandBuffer->Submit(renderCommand);
+		}
+
+		static void Execute()
+		{
+			_renderCommandBuffer->Execute();
 		}
 
 	private:
 		static std::unique_ptr<RenderingManagerBase> _renderingManager;
+		static std::unique_ptr<RenderCommandBufferBase> _renderCommandBuffer;
 
 	};
 }

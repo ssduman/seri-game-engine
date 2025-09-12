@@ -98,8 +98,13 @@ namespace seri
 		virtual void Init(const TextureDesc& desc, const void* data, unsigned int size) = 0;
 		virtual void Init(const TextureDesc& desc, const void* data, unsigned int width, unsigned int height, unsigned int components) = 0;
 
+		virtual int GetSlot() = 0;
+		virtual bool IsActiveForUsing() = 0;
+
 		virtual void Bind() = 0;
+		virtual void Bind(int slot) = 0;
 		virtual void Unbind() = 0;
+		virtual void Unbind(int slot) = 0;
 		virtual void Release() = 0;
 
 		virtual void LoadCubeMap(const std::vector<std::string>& faces) = 0;
