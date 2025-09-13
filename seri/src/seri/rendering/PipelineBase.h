@@ -2,6 +2,7 @@
 
 #include "seri/util/Util.h"
 #include "seri/shader/ShaderBase.h"
+#include "seri/rendering/BufferBase.h"
 #include "seri/rendering/VertexArrayBase.h"
 
 namespace seri

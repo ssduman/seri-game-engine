@@ -38,7 +38,6 @@ namespace seri
 
 		~Entity() override
 		{
-			_engineBackend.Release();
 		}
 
 		void Init() override
@@ -72,18 +71,12 @@ namespace seri
 			return _transform;
 		}
 
-		RendererBackendOpenGL& GetDrawer()
-		{
-			return _engineBackend;
-		}
-
 	protected:
 		std::shared_ptr<CameraBase> _camera;
 		std::shared_ptr<ShaderBase> _shader;
 		std::shared_ptr<TextureBase> _texture;
 		Color _color;
 		Transform _transform;
-		RendererBackendOpenGL _engineBackend{};
 		EntityType _entityType{ EntityType::unknown };
 
 	};

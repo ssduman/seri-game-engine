@@ -74,6 +74,11 @@ namespace seri
 			auto& layout = vertexBuffer->GetLayout();
 			for (auto& element : layout.GetElements())
 			{
+				if (element.loc == LayoutLocation::none)
+				{
+					continue;
+				}
+
 				switch (element.type)
 				{
 					case ShaderDataType::int_type:
@@ -123,7 +128,8 @@ namespace seri
 									GetShaderDataTypeOpenGL(element.type),
 									element.normalized ? GL_TRUE : GL_FALSE,
 									layout.GetStride(),
-									(const void*)(element.GetOffset() + sizeof(float) * count * i));
+									(const void*)(element.GetOffset() + sizeof(float) * count * i)
+								);
 								glVertexAttribDivisor(index, 1);
 								index++;
 							}

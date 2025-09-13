@@ -1,19 +1,11 @@
 #pragma once
 
-#include "seri/logging/Logger.h"
+#include "seri/util/Util.h"
 #include "seri/texture/TextureBase.h"
-
-#include <glm/glm.hpp>
-#include <glm/gtc/quaternion.hpp>
 
 #include <assimp/scene.h>
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
-
-#include <map>
-#include <memory>
-#include <vector>
-#include <string>
 
 namespace seri
 {
@@ -78,8 +70,8 @@ namespace seri
 		static std::string GetString(const aiTextureType ai_tt);
 
 		std::string _modelDirectory;
-		std::map<std::string, std::shared_ptr<TextureBase>> _texturesLoaded;
-		std::map<std::string, int> _boneNameToIndexMap;
+		std::unordered_map<std::string, std::shared_ptr<TextureBase>> _texturesLoaded;
+		std::unordered_map<std::string, int> _boneNameToIndexMap;
 
 	};
 }

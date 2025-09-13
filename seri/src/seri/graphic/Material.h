@@ -17,6 +17,11 @@ namespace seri
 
 		std::shared_ptr<TextureBase> texture;
 
+		void SetInt(const std::string& name, int v)
+		{
+			_ints[name] = v;
+		}
+
 		void SetFloat(const std::string& name, float v)
 		{
 			_floats[name] = v;
@@ -70,6 +75,11 @@ namespace seri
 				shader->SetInt(name, tex->GetSlot());
 			}
 
+			for (auto& kv : _ints)
+			{
+				shader->SetInt(kv.first, kv.second);
+			}
+
 			for (auto& kv : _floats)
 			{
 				shader->SetFloat(kv.first, kv.second);
@@ -112,6 +122,7 @@ namespace seri
 		}
 
 	private:
+		std::unordered_map<std::string, int> _ints;
 		std::unordered_map<std::string, float> _floats;
 		std::unordered_map<std::string, glm::vec2> _float2s;
 		std::unordered_map<std::string, glm::vec3> _float3s;

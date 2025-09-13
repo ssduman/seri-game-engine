@@ -1,19 +1,12 @@
 #pragma once
 
+#include "seri/util/Util.h"
 #include "seri/window/WindowManager.h"
-#include "seri/texture/TextureBase.h"
-#include "seri/renderer/AuxiliaryStructs.h"
-
-#include <glm/glm.hpp>
-#include <glm/gtc/quaternion.hpp>
-
-#include <map>
-#include <vector>
-#include <memory>
+#include "seri/rendering/RenderingManager.h"
 
 #define SERI_MAX_BONES 200
-#define SERI_MAX_NUM_BONES_PER_VERTEX 4
 #define SERI_MAX_INSTANCED_COUNT 256
+#define SERI_MAX_NUM_BONES_PER_VERTEX 4
 
 namespace seri
 {
@@ -105,7 +98,7 @@ namespace seri
 		std::string name;
 		double durationInTick{};
 		double tickPerSecond{};
-		std::map<std::string, NodeAnimation> nodeAnimations;
+		std::unordered_map<std::string, NodeAnimation> nodeAnimations;
 	};
 
 	class Mesh
@@ -116,11 +109,9 @@ namespace seri
 			bones.clear();
 		}
 
-		~Mesh() = default;
-
 		std::vector<std::shared_ptr<TextureBase>> textures;
 		std::vector<glm::vec3> vertices;
-		std::vector<unsigned int> indices;
+		std::vector<uint32_t> indices;
 		std::vector<glm::vec2> uv0s;
 		std::vector<glm::vec2> uv1s;
 		std::vector<glm::vec2> uv2s;
@@ -136,19 +127,15 @@ namespace seri
 		NodeData nodeData{};
 		Animation animation{};
 
-		std::map<int, Bone> bones{};
+		std::unordered_map<int, Bone> bones{};
 		std::vector<VertexBoneData> bonesForVertices{};
 		std::vector<glm::vec3> blendShapes{};
 
 		std::string name{};
 		std::string nodeName{};
-		std::map<std::string, int> boneNameToIndexMap{};
+		std::unordered_map<std::string, int> boneNameToIndexMap{};
 
 		glm::mat4 transformation{ 1.0f };
-
-		aux::DrawMode drawMode = aux::DrawMode::triangles;
-
-		unsigned int count = 6;
 
 		void AddVertices(std::vector<glm::vec3> ver)
 		{
@@ -190,7 +177,7 @@ namespace seri
 
 			animTimeInTick = std::fmod(timeInTicks, animation.durationInTick);
 			animTime = static_cast<float>(animTimeInTick) / static_cast<float>(animation.tickPerSecond);
-			//LOGGER(info, "time: " << time << ", localAnimationTime: " << localAnimationTime);
+			//LOGGER(info, "[mesh] time: " << time << ", localAnimationTime: " << localAnimationTime);
 
 			UpdateAnimation(nodeData, glm::mat4{ 1.0f });
 		}
@@ -210,7 +197,7 @@ namespace seri
 
 					if (nodeAnim.nodeName != nodeName)
 					{
-						LOGGER(error, "bone anim name mismatch: " << nodeAnim.nodeName << ", " << nodeName);
+						LOGGER(error, "[mesh] bone anim name mismatch: " << nodeAnim.nodeName << ", " << nodeName);
 					}
 
 					if (bones.size() > 0)
@@ -248,7 +235,7 @@ namespace seri
 				{
 					if (bones.at(boneIndex).name != nodeName)
 					{
-						LOGGER(error, "bone name mismatch: " << nodeName << ", " << bones.at(boneIndex).name);
+						LOGGER(error, "[mesh] bone name mismatch: " << nodeName << ", " << bones.at(boneIndex).name);
 					}
 					else
 					{
@@ -272,223 +259,127 @@ namespace seri
 
 		void Build()
 		{
-			if (_vao != 0)
+			if (_vao)
 			{
-				LOGGER(warning, "vao already generated");
+				LOGGER(warning, "[mesh] vao already generated");
 				return;
 			}
 
-			Generate();
-
-			Bind_vao();
+			_vao = VertexArrayBase::Create();
 
 			if (vertices.size() > 0)
 			{
-				Bind_vbo_vertex();
+				_vbo_ver = VertexBufferBase::Create(vertices);
+				_vbo_ver->AddElement(
+					{ seri::LayoutLocation::position }
+				);
 
-				unsigned int index = aux::toGLenum(aux::Index::position);
-
-				aux::DataBuffer dataBuffer;
-				dataBuffer.target = aux::toGLenum(aux::Target::vbo);
-				dataBuffer.size = aux::size(vertices);
-				dataBuffer.data = aux::data(vertices);
-				dataBuffer.usage = aux::toGLenum(aux::Usage::static_draw);
-
-				aux::Attribute attr;
-				attr.index = index;
-				attr.size = aux::component(vertices);
-				attr.type = aux::toGLenum(aux::Type::float_type);
-				attr.normalized = false;
-				attr.stride = 0;
-				attr.pointer = nullptr;
-
-				glEnableVertexAttribArray(index);
-				glBufferData(dataBuffer.target, dataBuffer.size, dataBuffer.data, dataBuffer.usage);
-				glVertexAttribPointer(attr.index, attr.size, attr.type, attr.normalized, attr.stride, attr.pointer);
+				_vao->AddVertexBuffer(_vbo_ver);
 			}
 
 			if (uv0s.size() > 0)
 			{
-				Bind_vbo_uv0();
+				_vbo_uv0 = VertexBufferBase::Create(uv0s);
+				_vbo_uv0->AddElement(
+					{ seri::LayoutLocation::uv0 }
+				);
 
-				unsigned int index = aux::toGLenum(aux::Index::texture);
-
-				aux::DataBuffer dataBuffer;
-				dataBuffer.target = aux::toGLenum(aux::Target::vbo);
-				dataBuffer.size = aux::size(uv0s);
-				dataBuffer.data = aux::data(uv0s);
-				dataBuffer.usage = aux::toGLenum(aux::Usage::static_draw);
-
-				aux::Attribute attr;
-				attr.index = index;
-				attr.size = aux::component(uv0s);
-				attr.type = aux::toGLenum(aux::Type::float_type);
-				attr.normalized = false;
-				attr.stride = 0;
-				attr.pointer = nullptr;
-
-				glEnableVertexAttribArray(index);
-				glBufferData(dataBuffer.target, dataBuffer.size, dataBuffer.data, dataBuffer.usage);
-				glVertexAttribPointer(attr.index, attr.size, attr.type, attr.normalized, attr.stride, attr.pointer);
+				_vao->AddVertexBuffer(_vbo_uv0);
 			}
 
 			if (colors.size() > 0)
 			{
-				Bind_vbo_color();
+				_vbo_col = VertexBufferBase::Create(colors);
+				_vbo_col->AddElement(
+					{ seri::LayoutLocation::color }
+				);
 
-				unsigned int index = aux::toGLenum(aux::Index::color);
-
-				aux::DataBuffer dataBuffer;
-				dataBuffer.target = aux::toGLenum(aux::Target::vbo);
-				dataBuffer.size = aux::size(colors);
-				dataBuffer.data = aux::data(colors);
-				dataBuffer.usage = aux::toGLenum(aux::Usage::static_draw);
-
-				aux::Attribute attr;
-				attr.index = index;
-				attr.size = aux::component(colors);
-				attr.type = aux::toGLenum(aux::Type::float_type);
-				attr.normalized = false;
-				attr.stride = 0;
-				attr.pointer = nullptr;
-
-				glEnableVertexAttribArray(index);
-				glBufferData(dataBuffer.target, dataBuffer.size, dataBuffer.data, dataBuffer.usage);
-				glVertexAttribPointer(attr.index, attr.size, attr.type, attr.normalized, attr.stride, attr.pointer);
+				_vao->AddVertexBuffer(_vbo_col);
 			}
 
 			if (normals.size() > 0)
 			{
-				Bind_vbo_normal();
+				_vbo_nor = VertexBufferBase::Create(normals);
+				_vbo_nor->AddElement(
+					{ seri::LayoutLocation::normal }
+				);
 
-				unsigned int index = aux::toGLenum(aux::Index::normal);
-
-				aux::DataBuffer dataBuffer;
-				dataBuffer.target = aux::toGLenum(aux::Target::vbo);
-				dataBuffer.size = aux::size(normals);
-				dataBuffer.data = aux::data(normals);
-				dataBuffer.usage = aux::toGLenum(aux::Usage::static_draw);
-
-				aux::Attribute attr;
-				attr.index = index;
-				attr.size = aux::component(normals);
-				attr.type = aux::toGLenum(aux::Type::float_type);
-				attr.normalized = false;
-				attr.stride = 0;
-				attr.pointer = nullptr;
-
-				glEnableVertexAttribArray(index);
-				glBufferData(dataBuffer.target, dataBuffer.size, dataBuffer.data, dataBuffer.usage);
-				glVertexAttribPointer(attr.index, attr.size, attr.type, attr.normalized, attr.stride, attr.pointer);
+				_vao->AddVertexBuffer(_vbo_nor);
 			}
 
 			if (indices.size() > 0)
 			{
-				Bind_index();
+				_ebo = IndexBufferBase::Create(indices);
 
-				aux::DataBuffer dataBuffer;
-				dataBuffer.target = aux::toGLenum(aux::Target::ebo);
-				dataBuffer.size = aux::size(indices);
-				dataBuffer.data = aux::data(indices);
-				dataBuffer.usage = aux::toGLenum(aux::Usage::static_draw);
-
-				glBufferData(dataBuffer.target, dataBuffer.size, dataBuffer.data, dataBuffer.usage);
+				_vao->SetIndexBuffer(_ebo);
 			}
 
 			if (bonesForVertices.size() > 0)
 			{
-				Bind_vbo_skin();
+				_vbo_skin = VertexBufferBase::Create(&bonesForVertices[0], bonesForVertices.size() * sizeof(VertexBoneData));
+				_vbo_skin->AddElement(
+					{ seri::LayoutLocation::skin_bone_id, ShaderDataType::int4_type }
+				);
+				_vbo_skin->AddElement(
+					{ seri::LayoutLocation::skin_weight, ShaderDataType::float4_type }
+				);
+				_vbo_skin->AddElement(
+					{ seri::LayoutLocation::none, ShaderDataType::int_type }
+				);
 
-				unsigned int index_bone_id = aux::toGLenum(aux::Index::skin_bone_id);
-				unsigned int index_weight = aux::toGLenum(aux::Index::skin_weight);
-
-				aux::DataBuffer dataBuffer;
-				dataBuffer.target = aux::toGLenum(aux::Target::vbo);
-				dataBuffer.size = aux::size(bonesForVertices);
-				dataBuffer.data = aux::data(bonesForVertices);
-				dataBuffer.usage = aux::toGLenum(aux::Usage::static_draw);
-
-				aux::Attribute attr_bone_id;
-				attr_bone_id.index = index_bone_id;
-				attr_bone_id.size = 4;
-				attr_bone_id.type = aux::toGLenum(aux::Type::int_type);
-				attr_bone_id.normalized = false;
-				attr_bone_id.stride = sizeof(VertexBoneData);
-				attr_bone_id.pointer = nullptr;
-
-				aux::Attribute attr_weight;
-				attr_weight.index = index_weight;
-				attr_weight.size = 4;
-				attr_weight.type = aux::toGLenum(aux::Type::float_type);
-				attr_weight.normalized = false;
-				attr_weight.stride = sizeof(VertexBoneData);
-				attr_weight.pointer = (const void*)(16);
-
-				glBufferData(dataBuffer.target, dataBuffer.size, dataBuffer.data, dataBuffer.usage);
-
-				glEnableVertexAttribArray(attr_bone_id.index);
-				glVertexAttribIPointer(attr_bone_id.index, attr_bone_id.size, attr_bone_id.type, attr_bone_id.stride, attr_bone_id.pointer);
-
-				glEnableVertexAttribArray(attr_weight.index);
-				glVertexAttribPointer(attr_weight.index, attr_weight.size, attr_weight.type, attr_weight.normalized, attr_weight.stride, attr_weight.pointer);
+				_vao->AddVertexBuffer(_vbo_skin);
 			}
-
-			count = indices.size() > 0 ? static_cast<unsigned int>(indices.size()) : static_cast<unsigned int>(vertices.size());
-
-			Unbind_all();
 		}
 
 		void MakeInstanced(const std::vector<glm::mat4>& modelMatrices)
 		{
 			if (modelMatrices.size() > SERI_MAX_INSTANCED_COUNT)
 			{
-				LOGGER(error, "model matrices size exceeds max instanced count");
+				LOGGER(error, "[mesh] model matrices size exceeds max instanced count");
 				return;
 			}
 
-			if (_vbo_instanced != 0)
+			if (!_vao)
 			{
-				Bind_vao();
-
-				Bind_vbo_instanced();
-
-				void* ptr = glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
-				memcpy(ptr, modelMatrices.data(), modelMatrices.size() * sizeof(glm::mat4));
-				glUnmapBuffer(GL_ARRAY_BUFFER);
-
+				LOGGER(error, "[mesh] vao for instanced not generated");
 				return;
 			}
 
-			GenerateInstanced();
-
-			Bind_vao();
-
-			Bind_vbo_instanced();
-
-			unsigned int index = aux::toGLenum(aux::Index::instanced_mat4);
-
-			aux::DataBuffer dataBuffer;
-			dataBuffer.target = aux::toGLenum(aux::Target::vbo);
-			dataBuffer.size = aux::size(modelMatrices);
-			dataBuffer.data = aux::data(modelMatrices);
-			dataBuffer.usage = aux::toGLenum(aux::Usage::static_draw);
-
-			aux::Attribute attr;
-			attr.index = index;
-			attr.size = aux::component(modelMatrices);
-			attr.type = aux::toGLenum(aux::Type::float_type);
-			attr.normalized = false;
-			attr.stride = 0;
-			attr.pointer = nullptr;
-
-			glBufferData(dataBuffer.target, dataBuffer.size, dataBuffer.data, dataBuffer.usage);
-
-			for (unsigned int i = 0; i < 4; i++)
+			if (_vbo_instanced)
 			{
-				glEnableVertexAttribArray(attr.index + i);
-				glVertexAttribPointer(attr.index + i, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (const GLvoid*)(sizeof(GLfloat) * i * 4));
-				glVertexAttribDivisor(attr.index + i, 1);
+				LOGGER(error, "[mesh] vbo for instanced already generated");
+				return;
 			}
+
+			_vbo_instanced = VertexBufferBase::Create(modelMatrices);
+			_vbo_instanced->AddElement(
+				{ seri::LayoutLocation::instanced_mat4 }
+			);
+
+			_vao->AddVertexBuffer(_vbo_instanced);
+		}
+
+		void UpdateInstanced(const std::vector<glm::mat4>& modelMatrices)
+		{
+			if (modelMatrices.size() > SERI_MAX_INSTANCED_COUNT)
+			{
+				LOGGER(error, "[mesh] model matrices size exceeds max instanced count");
+				return;
+			}
+
+			if (!_vao)
+			{
+				LOGGER(error, "[mesh] vao for instanced not generated");
+				return;
+			}
+
+			if (!_vbo_instanced)
+			{
+				LOGGER(error, "[mesh] vbo for instanced not generated");
+				return;
+			}
+
+			_vbo_instanced->SetData(modelMatrices.data(), modelMatrices.size() * sizeof(glm::mat4));
 		}
 
 		bool HasIndex()
@@ -498,12 +389,17 @@ namespace seri
 
 		void Bind()
 		{
-			Bind_vao();
+			_vao->Bind();
 		}
 
 		void Unbind()
 		{
-			Unbind_vao();
+			_vao->Unbind();
+		}
+
+		std::shared_ptr<VertexArrayBase> GetVao()
+		{
+			return _vao;
 		}
 
 		static std::unique_ptr<Mesh> tri_2d()
@@ -588,39 +484,81 @@ namespace seri
 			return mesh;
 		}
 
-		static std::unique_ptr<Mesh> cube_3d()
+		static std::unique_ptr<Mesh> cube_3d(float mult = 0.4f)
 		{
 			std::unique_ptr<Mesh> mesh = std::make_unique<Mesh>();
 
 			mesh->vertices = {
-				  {-1.0f, +1.0f, +1.0f},
-				  {-1.0f, -1.0f, +1.0f},
-				  {+1.0f, +1.0f, +1.0f},
-				  {+1.0f, -1.0f, +1.0f},
-				  {-1.0f, +1.0f, -1.0f},
-				  {-1.0f, -1.0f, -1.0f},
-				  {+1.0f, +1.0f, -1.0f},
-				  {+1.0f, -1.0f, -1.0f},
+				{-0.5f * mult, -0.5f * mult, +0.5f * mult },
+				{+0.5f * mult, -0.5f * mult, +0.5f * mult },
+				{+0.5f * mult, +0.5f * mult, +0.5f * mult },
+				{-0.5f * mult, +0.5f * mult, +0.5f * mult },
+
+				{-0.5f * mult, -0.5f * mult, -0.5f * mult },
+				{+0.5f * mult, -0.5f * mult, -0.5f * mult },
+				{+0.5f * mult, +0.5f * mult, -0.5f * mult },
+				{-0.5f * mult, +0.5f * mult, -0.5f * mult },
+
+				{-0.5f * mult, -0.5f * mult, -0.5f * mult },
+				{-0.5f * mult, -0.5f * mult, +0.5f * mult },
+				{-0.5f * mult, +0.5f * mult, +0.5f * mult },
+				{-0.5f * mult, +0.5f * mult, -0.5f * mult },
+
+				{+0.5f * mult, -0.5f * mult, -0.5f * mult },
+				{+0.5f * mult, -0.5f * mult, +0.5f * mult },
+				{+0.5f * mult, +0.5f * mult, +0.5f * mult },
+				{+0.5f * mult, +0.5f * mult, -0.5f * mult },
+
+				{-0.5f * mult, +0.5f * mult, +0.5f * mult },
+				{+0.5f * mult, +0.5f * mult, +0.5f * mult },
+				{+0.5f * mult, +0.5f * mult, -0.5f * mult },
+				{-0.5f * mult, +0.5f * mult, -0.5f * mult },
+
+				{-0.5f * mult, -0.5f * mult, +0.5f * mult },
+				{+0.5f * mult, -0.5f * mult, +0.5f * mult },
+				{+0.5f * mult, -0.5f * mult, -0.5f * mult },
+				{-0.5f * mult, -0.5f * mult, -0.5f * mult },
 			};
 
 			mesh->uv0s = {
-				{0.0f, 0.0f},
-				{1.0f, 1.0f},
-				{1.0f, 0.0f},
-				{0.0f, 1.0f},
-				{0.0f, 0.0f},
-				{1.0f, 1.0f},
-				{1.0f, 0.0f},
-				{0.0f, 1.0f},
+				{ 0.0f, 0.0f },
+				{ 1.0f, 0.0f },
+				{ 1.0f, 1.0f },
+				{ 0.0f, 1.0f },
+
+				{ 1.0f, 0.0f },
+				{ 0.0f, 0.0f },
+				{ 0.0f, 1.0f },
+				{ 1.0f, 1.0f },
+
+				{ 0.0f, 0.0f },
+				{ 1.0f, 0.0f },
+				{ 1.0f, 1.0f },
+				{ 0.0f, 1.0f },
+
+				{ 1.0f, 0.0f },
+				{ 0.0f, 0.0f },
+				{ 0.0f, 1.0f },
+				{ 1.0f, 1.0f },
+
+				{ 0.0f, 0.0f },
+				{ 1.0f, 0.0f },
+				{ 1.0f, 1.0f },
+				{ 0.0f, 1.0f },
+
+				{ 1.0f, 1.0f },
+				{ 0.0f, 1.0f },
+				{ 0.0f, 0.0f },
+				{ 1.0f, 0.0f },
 			};
 
 			mesh->indices = {
-				0, 2, 3, 0, 3, 1,
-				2, 6, 7, 2, 7, 3,
-				6, 4, 5, 6, 5, 7,
-				4, 0, 1, 4, 1, 5,
-				0, 4, 6, 0, 6, 2,
-				1, 5, 7, 1, 7, 3,
+				0,  1,  2,  2,  3,  0,
+				4,  5,  6,  6,  7,  4,
+				8,  9, 10, 10, 11,  8,
+				12, 13,14, 14, 15, 12,
+				16, 17,18, 18, 19, 16,
+				20, 21,22, 22, 23, 20,
 			};
 
 			mesh->Build();
@@ -631,8 +569,6 @@ namespace seri
 		static std::unique_ptr<Mesh> line_2d(glm::vec2 beg, glm::vec2 end)
 		{
 			std::unique_ptr<Mesh> mesh = std::make_unique<Mesh>();
-
-			mesh->drawMode = aux::DrawMode::lines;
 
 			float screenW = (float)WindowManager::GetWidth();
 			float screenH = (float)WindowManager::GetHeight();
@@ -661,96 +597,6 @@ namespace seri
 		}
 
 	private:
-		void Generate()
-		{
-			glGenVertexArrays(1, &_vao);
-			glGenBuffers(1, &_vbo_ver);
-			glGenBuffers(1, &_vbo_uv0);
-			glGenBuffers(1, &_vbo_col);
-			glGenBuffers(1, &_vbo_normal);
-			glGenBuffers(1, &_vbo_skin);
-			glGenBuffers(1, &_ebo);
-		}
-
-		void GenerateInstanced()
-		{
-			glGenBuffers(1, &_vbo_instanced);
-		}
-
-		void Bind_vao()
-		{
-			glBindVertexArray(_vao);
-		}
-
-		void Bind_vbo_vertex()
-		{
-			glBindBuffer(GL_ARRAY_BUFFER, _vbo_ver);
-		}
-
-		void Bind_vbo_uv0()
-		{
-			glBindBuffer(GL_ARRAY_BUFFER, _vbo_uv0);
-		}
-
-		void Bind_vbo_color()
-		{
-			glBindBuffer(GL_ARRAY_BUFFER, _vbo_col);
-		}
-
-		void Bind_vbo_normal()
-		{
-			glBindBuffer(GL_ARRAY_BUFFER, _vbo_normal);
-		}
-
-		void Bind_vbo_skin()
-		{
-			glBindBuffer(GL_ARRAY_BUFFER, _vbo_skin);
-		}
-
-		void Bind_vbo_instanced()
-		{
-			glBindBuffer(GL_ARRAY_BUFFER, _vbo_instanced);
-		}
-
-		void Bind_index()
-		{
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ebo);
-		}
-
-		void Unbind_all()
-		{
-			Unbind_vao();
-			Unbind_vbo();
-			Unbind_index();
-		}
-
-		void Unbind_vao()
-		{
-			glBindVertexArray(0);
-		}
-
-		void Unbind_vbo()
-		{
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
-		}
-
-		void Unbind_index()
-		{
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-		}
-
-		void Delete_vao()
-		{
-			glDeleteVertexArrays(1, &_vao);
-			glDeleteBuffers(1, &_vbo_ver);
-			glDeleteBuffers(1, &_vbo_uv0);
-			glDeleteBuffers(1, &_vbo_col);
-			glDeleteBuffers(1, &_vbo_normal);
-			glDeleteBuffers(1, &_vbo_skin);
-			glDeleteBuffers(1, &_vbo_instanced);
-			glDeleteBuffers(1, &_ebo);
-		}
-
 		glm::vec3 InterpolatePosition(const NodeAnimation& nodeAnim)
 		{
 			if (nodeAnim.positions.empty())
@@ -862,14 +708,14 @@ namespace seri
 			return glm::mix(beg, end, ratio);
 		}
 
-		unsigned int _vao{ 0 };
-		unsigned int _vbo_ver{ 0 };
-		unsigned int _vbo_uv0{ 0 };
-		unsigned int _vbo_col{ 0 };
-		unsigned int _vbo_normal{ 0 };
-		unsigned int _vbo_skin{ 0 };
-		unsigned int _vbo_instanced{ 0 };
-		unsigned int _ebo{ 0 };
+		std::shared_ptr<IndexBufferBase> _ebo{ nullptr };
+		std::shared_ptr<VertexBufferBase> _vbo_ver{ nullptr };
+		std::shared_ptr<VertexBufferBase> _vbo_uv0{ nullptr };
+		std::shared_ptr<VertexBufferBase> _vbo_col{ nullptr };
+		std::shared_ptr<VertexBufferBase> _vbo_nor{ nullptr };
+		std::shared_ptr<VertexBufferBase> _vbo_skin{ nullptr };
+		std::shared_ptr<VertexBufferBase> _vbo_instanced{ nullptr };
+		std::shared_ptr<VertexArrayBase> _vao{ nullptr };
 
 		float animTime{ 0.0f };
 		double animTimeInTick{ 0.0 };

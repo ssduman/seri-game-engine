@@ -1,5 +1,7 @@
 #pragma once
 
+#if false
+
 #include "seri/logging/Logger.h"
 #include "seri/renderer/AuxiliaryStructs.h"
 #include "seri/renderer/RendererBackendBase.h"
@@ -284,3 +286,5 @@ namespace seri
 
 	};
 }
+
+#endif

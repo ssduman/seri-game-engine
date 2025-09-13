@@ -10,7 +10,6 @@ namespace seri
 		Point(std::shared_ptr<CameraBase> camera) : Entity(camera)
 		{
 			_entityType = EntityType::point;
-			_engineBackend.setDrawMode(aux::DrawMode::points);
 		}
 
 		~Point() override = default;
@@ -19,7 +18,6 @@ namespace seri
 		{
 			_shader->Bind();
 			_texture->Bind();
-			_engineBackend.Draw();
 		}
 
 	private:

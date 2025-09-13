@@ -2,10 +2,6 @@
 
 #include "seri/util/Util.h"
 #include "seri/camera/CameraBase.h"
-#include "seri/renderer/AuxiliaryStructs.h"
-
-#include <vector>
-#include <memory>
 
 namespace seri
 {
@@ -37,17 +33,20 @@ namespace seri
 
 		static std::shared_ptr<CameraBase> GetCameraPerspective();
 
+#if false
 		static void Draw(const std::unique_ptr<Mesh>& mesh, const glm::mat4& trs, std::shared_ptr<Material>& material, std::shared_ptr<CameraBase>& camera);
 
 		static void DrawModel(const std::unique_ptr<Model>& model, const glm::mat4& trs, std::shared_ptr<Material>& material, std::shared_ptr<CameraBase>& camera);
 
 		static void DrawInstanced(const std::unique_ptr<Mesh>& mesh, const std::vector<glm::mat4>& trs, std::shared_ptr<Material>& material, std::shared_ptr<CameraBase>& camera);
+#endif
 
 	private:
 		Graphic() = default;
 
 		~Graphic() = default;
 
+#if false
 		static void DrawElements(GLsizei count, aux::DrawMode drawMode = aux::DrawMode::triangles)
 		{
 			aux::DrawElement draw;
@@ -79,6 +78,7 @@ namespace seri
 
 			glDrawArrays(draw.mode, draw.first, draw.count);
 		}
+#endif
 
 		std::shared_ptr<CameraBase> _cameraOrtho;
 		std::shared_ptr<CameraBase> _cameraPerspective;

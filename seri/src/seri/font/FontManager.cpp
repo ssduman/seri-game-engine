@@ -1,8 +1,6 @@
 #include "Seripch.h"
 
-#include "seri/graphic/Graphic.h"
 #include "seri/graphic/Mesh.h"
-#include "seri/graphic/Material.h"
 #include "seri/font/FontManager.h"
 
 void seri::font::FontManager::Init(const char* fontFolderPath)

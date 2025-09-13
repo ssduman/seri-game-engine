@@ -1,5 +1,7 @@
 #pragma once
 
+#if false
+
 namespace seri
 {
 	struct RendererBackendBase
@@ -13,3 +15,5 @@ namespace seri
 
 	};
 }
+
+#endif

@@ -10,7 +10,6 @@ namespace seri
 		Line(std::shared_ptr<CameraBase> camera) : Entity(camera)
 		{
 			_entityType = EntityType::line;
-			_engineBackend.setDrawMode(aux::DrawMode::line_loop);
 		}
 
 		~Line() override = default;
@@ -19,7 +18,6 @@ namespace seri
 		{
 			_shader->Bind();
 			_texture->Bind();
-			_engineBackend.Draw();
 		}
 
 	private:

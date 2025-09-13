@@ -10,7 +10,6 @@ namespace seri
 		Rectangle(std::shared_ptr<CameraBase> camera) : Entity(camera)
 		{
 			_entityType = EntityType::rectangle;
-			_engineBackend.setDrawMode(aux::DrawMode::triangles);
 		}
 
 		~Rectangle() override = default;
@@ -19,7 +18,6 @@ namespace seri
 		{
 			_shader->Bind();
 			_texture->Bind();
-			_engineBackend.Draw();
 		}
 
 	private:

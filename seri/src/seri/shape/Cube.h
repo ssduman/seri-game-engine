@@ -10,7 +10,6 @@ namespace seri
 		Cube(std::shared_ptr<CameraBase> camera) : Entity(camera)
 		{
 			_entityType = EntityType::cube;
-			_engineBackend.setDrawMode(aux::DrawMode::triangles);
 		}
 
 		~Cube() override = default;
@@ -19,7 +18,6 @@ namespace seri
 		{
 			_shader->Bind();
 			_texture->Bind();
-			_engineBackend.Draw();
 		}
 
 	private:

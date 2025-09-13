@@ -1,5 +1,7 @@
 #pragma once
 
+#if false
+
 #include "seri/renderer/AuxiliaryStructs.h"
 
 #include <stdexcept>
@@ -227,3 +229,5 @@ namespace seri::aux
 
 	};
 }
+
+#endif

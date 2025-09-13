@@ -10,7 +10,6 @@ namespace seri
 		Polygon(std::shared_ptr<CameraBase> camera) : Entity(camera)
 		{
 			_entityType = EntityType::polygon;
-			_engineBackend.setDrawMode(aux::DrawMode::triangle_fan);
 		}
 
 		~Polygon() override = default;
@@ -19,7 +18,6 @@ namespace seri
 		{
 			_shader->Bind();
 			_texture->Bind();
-			_engineBackend.Draw();
 		}
 
 	private:

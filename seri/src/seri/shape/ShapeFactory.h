@@ -1,7 +1,5 @@
 #pragma once
 
-#include "seri/camera/CameraBase.h"
-
 #include "seri/core/Seri.h"
 #include "seri/shape/Cube.h"
 #include "seri/shape/Line.h"
@@ -23,6 +21,8 @@ public:
 
 	static std::shared_ptr<seri::Entity> CreateShape(const std::shared_ptr<seri::CameraBase>& camera, seri::EntityType entityType)
 	{
+#if false
+
 		static auto minColor = glm::vec4{ 0.0f, 0.0f, 0.0f, 1.0f };
 		static auto maxColor = glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f };
 		static auto randomColor = []() -> glm::vec4
@@ -316,6 +316,8 @@ public:
 					return nullptr;
 				}
 		}
+
+#endif
 
 		return nullptr;
 	}

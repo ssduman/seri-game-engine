@@ -1,5 +1,7 @@
 #pragma once
 
+#if false
+
 #include <glad/gl.h>
 
 #include <vector>
@@ -364,3 +366,5 @@ namespace seri::aux
 	};
 
 }
+
+#endif

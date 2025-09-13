@@ -1,7 +1,7 @@
 #include "Seripch.h"
 
+#include "seri/util/Util.h"
 #include "seri/graphic/Graphic.h"
-#include "seri/logging/Logger.h"
 #include "seri/graphic/Mesh.h"
 #include "seri/graphic/Model.h"
 #include "seri/graphic/Material.h"
@@ -44,6 +44,7 @@ namespace seri
 		return GetInstance()._cameraPerspective;
 	}
 
+#if false
 	void Graphic::Draw(const std::unique_ptr<Mesh>& mesh, const glm::mat4& trs, std::shared_ptr<Material>& material, std::shared_ptr<CameraBase>& camera)
 	{
 		material->shader->Bind();
@@ -64,11 +65,6 @@ namespace seri
 
 		if (mesh->bonesForVertices.size() > 0)
 		{
-			//for (const auto& bone : mesh->bones)
-			//{
-			//	std::string loc = "u_bones[" + std::to_string(bone.second.index) + "]";
-			//	ShaderManager::SetMat4(material->shader, loc.c_str(), bone.second.transform);
-			//}
 			for (auto i = 0; i < SERI_MAX_BONES; i++)
 			{
 				std::string loc = "u_bones[" + std::to_string(i) + "]";
@@ -148,5 +144,6 @@ namespace seri
 		}
 		material->shader->Unbind();
 	}
+#endif
 
 }

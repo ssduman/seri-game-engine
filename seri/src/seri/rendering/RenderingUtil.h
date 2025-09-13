@@ -59,13 +59,13 @@ namespace seri
 		ShaderDataType type;
 		bool normalized;
 
-		BufferElementDesc(const std::string& name, ShaderDataType type, bool normalized = false)
+		BufferElementDesc(LayoutLocation loc, bool normalized = false)
 		{
-			this->name = name;
-			this->type = type;
+			this->loc = loc;
+			this->type = GetShaderDataTypeFromLoc(loc);
 			this->normalized = normalized;
 
-			loc = LayoutLocation::none;
+			name = "";
 
 			offset = 0;
 			size = GetShaderDataTypeSize(type);
@@ -85,6 +85,19 @@ namespace seri
 			count = GetShaderDataTypeCount(type);
 		}
 
+		BufferElementDesc(const std::string& name, ShaderDataType type, bool normalized = false)
+		{
+			this->name = name;
+			this->type = type;
+			this->normalized = normalized;
+
+			loc = LayoutLocation::none;
+
+			offset = 0;
+			size = GetShaderDataTypeSize(type);
+			count = GetShaderDataTypeCount(type);
+		}
+
 		inline uint32_t GetCount() const
 		{
 			return count;
@@ -96,6 +109,25 @@ namespace seri
 		}
 
 	private:
+		ShaderDataType GetShaderDataTypeFromLoc(LayoutLocation loc)
+		{
+			switch (loc)
+			{
+				case seri::LayoutLocation::position: return ShaderDataType::float3_type;
+				case seri::LayoutLocation::uv0: return ShaderDataType::float2_type;
+				case seri::LayoutLocation::color: return ShaderDataType::float4_type;
+				case seri::LayoutLocation::normal: return ShaderDataType::float3_type;
+				case seri::LayoutLocation::skin_bone_id: return ShaderDataType::int_type;
+				case seri::LayoutLocation::skin_weight: return ShaderDataType::float_type;
+				case seri::LayoutLocation::instanced_mat4: return ShaderDataType::mat4_type;
+				case seri::LayoutLocation::instanced_mat4_reserved_1: return ShaderDataType::mat4_type;
+				case seri::LayoutLocation::instanced_mat4_reserved_2: return ShaderDataType::mat4_type;
+				case seri::LayoutLocation::instanced_mat4_reserved_3: return ShaderDataType::mat4_type;
+			}
+
+			return ShaderDataType::float3_type;
+		}
+
 		uint32_t GetShaderDataTypeSize(ShaderDataType type)
 		{
 			switch (type)
@@ -134,7 +166,7 @@ namespace seri
 			return 0;
 		}
 
-		uint32_t offset; // [vert0, vert1, vert2, color0, color1, color2] -> offset 0 and offset 3 for two elements
+		uint32_t offset; // [vert0, vert1, vert2, color0, color1, color2] -> offset: 0 and offset: 3 * sizeof(float) for two elements
 		uint32_t size; // 3 * sizeof(float) for float3 -> [vert0, vert1, vert2]
 		uint32_t count; // 3 for float3
 
@@ -182,7 +214,7 @@ namespace seri
 			}
 		}
 
-		uint32_t _stride = 0; // [vert0, vert1, vert2, color0, color1, color2] -> stride 6
+		uint32_t _stride = 0; // [vert0, vert1, vert2, color0, color1, color2] -> stride 6 * sizeof(float)
 		std::vector<BufferElementDesc> _elements;
 
 	};

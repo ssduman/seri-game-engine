@@ -10,7 +10,6 @@ namespace seri
 		Circle(std::shared_ptr<CameraBase> camera) : Entity(camera)
 		{
 			_entityType = EntityType::circle;
-			_engineBackend.setDrawMode(aux::DrawMode::triangle_fan);
 		}
 
 		~Circle() override = default;
@@ -19,7 +18,6 @@ namespace seri
 		{
 			_shader->Bind();
 			_texture->Bind();
-			_engineBackend.Draw();
 		}
 
 	private:

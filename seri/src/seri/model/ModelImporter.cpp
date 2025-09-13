@@ -2,7 +2,6 @@
 
 #include "seri/model/ModelImporter.h"
 
-#include "seri/graphic/Graphic.h"
 #include "seri/graphic/Mesh.h"
 #include "seri/graphic/Model.h"
 

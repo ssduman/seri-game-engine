@@ -35,6 +35,7 @@ namespace seri
 		virtual uint32_t GetCount() = 0;
 
 		static std::shared_ptr<IndexBufferBase> Create(const uint32_t* data, uint32_t count);
+		static std::shared_ptr<IndexBufferBase> Create(const std::vector<uint32_t>& indices);
 
 	protected:
 		uint32_t _count;
@@ -56,6 +57,9 @@ namespace seri
 		virtual VertexBufferBase& AddElement(const BufferElementDesc& element) = 0;
 
 		static std::shared_ptr<VertexBufferBase> Create(const void* data, uint32_t size, BufferUsage usage = BufferUsage::static_draw);
+		static std::shared_ptr<VertexBufferBase> Create(const std::vector<glm::vec2>& data, BufferUsage usage = BufferUsage::static_draw);
+		static std::shared_ptr<VertexBufferBase> Create(const std::vector<glm::vec3>& data, BufferUsage usage = BufferUsage::static_draw);
+		static std::shared_ptr<VertexBufferBase> Create(const std::vector<glm::mat4>& data, BufferUsage usage = BufferUsage::static_draw);
 
 	protected:
 		BufferLayoutDesc _layoutDesc{};

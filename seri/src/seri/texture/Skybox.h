@@ -56,7 +56,7 @@ namespace seri
 			renderCommand_skybox.drawMode = DrawMode::arrays;
 			renderCommand_skybox.material = _material;
 			renderCommand_skybox.vao = _vertexArray;
-			renderCommand_skybox.count = _positions.size();
+			renderCommand_skybox.count = static_cast<uint32_t>(_positions.size());
 			seri::RenderingManager::Submit(renderCommand_skybox);
 
 			seri::RenderCommand renderCommand_restore{};
