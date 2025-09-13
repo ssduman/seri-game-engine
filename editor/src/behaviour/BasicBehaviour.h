@@ -187,6 +187,7 @@ public:
 
 		seri::RenderCommand renderCommand{};
 		renderCommand.name = "basic_cube";
+		renderCommand.desc.cullFaceEnabled = false;
 		renderCommand.camera = seri::Graphic::GetCameraPerspective();
 		renderCommand.material = basicMaterial;
 		renderCommand.vao = basicVertexArray;
@@ -199,11 +200,6 @@ public:
 		seri::RenderingManager::Submit(renderCommand);
 
 		seri::RenderingManager::End();
-		seri::ShaderLibrary::SetMVP(basicShader, seri::Graphic::GetCameraPerspective());
-		//basicShader->Bind();
-		//basicTexture->Bind();
-		//basicVertexArray->Bind();
-		//glDrawElements(GL_TRIANGLES, basicIndexBuffer->GetCount(), GL_UNSIGNED_INT, 0);
 	}
 
 	void Destroy() override

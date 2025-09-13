@@ -91,7 +91,7 @@ public:
 		auto cameraPerspectiveScene = builder.SetName("Camera Perspective").SetUnderlyingObject(cameraPerspective).Build();
 		rootScene->Add(cameraPerspectiveScene);
 
-		auto skybox = std::make_shared<seri::Skybox>(cameraPerspective);
+		auto& skybox = std::make_shared<seri::Skybox>();
 
 		auto gui = std::make_shared<GUI>(cameraPerspective, rootScene);
 		gui->Init();
@@ -126,15 +126,14 @@ public:
 			seri::Graphic::GetCameraPerspective()->Update();
 
 			skybox->Update();
-			skybox->Render();
 
 			seri::BehaviourManager::UpdateBehaviours();
 
 			DrawScene(rootScene);
 
-			gui->Display();
-
 			seri::RenderingManager::Execute();
+
+			gui->Display();
 
 			seri::InputManager::Reset();
 

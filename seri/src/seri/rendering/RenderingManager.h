@@ -51,9 +51,9 @@ namespace seri
 			return _renderingManager->GetDepthFunc();
 		}
 
-		static DepthFunc SetDepthFunc(bool enabled, DepthFunc depthFunc)
+		static void SetDepthFunc(bool enabled, DepthFunc depthFunc)
 		{
-			return _renderingManager->SetDepthFunc(enabled, depthFunc);
+			_renderingManager->SetDepthFunc(enabled, depthFunc);
 		}
 
 		static void SetDepthWrite(bool enabled)

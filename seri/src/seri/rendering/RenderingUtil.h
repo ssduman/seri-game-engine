@@ -173,7 +173,7 @@ namespace seri
 		void CalculateStrideAndOffset()
 		{
 			_stride = 0;
-			size_t offset = 0;
+			uint32_t offset = 0;
 			for (auto& element : _elements)
 			{
 				element.offset = offset;

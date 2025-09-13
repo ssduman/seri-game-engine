@@ -1,22 +1,19 @@
 #pragma once
 
+#include "seri/util/Util.h"
 #include "seri/camera/CameraBase.h"
-#include "seri/shader/ShaderLibrary.h"
+#include "seri/graphic/Graphic.h"
+#include "seri/graphic/Material.h"
 #include "seri/texture/TextureBase.h"
+#include "seri/shader/ShaderLibrary.h"
 #include "seri/rendering/RenderingManager.h"
-#include "seri/renderer/RendererBackendOpenGL.h"
-#include "seri/renderer/AuxiliaryStructsBuilder.h"
-
-#include <memory>
-#include <vector>
 
 namespace seri
 {
 	class Skybox
 	{
 	public:
-		Skybox(std::shared_ptr<CameraBase> camera)
-			: _camera(camera)
+		Skybox()
 		{
 			_faces = {
 				"assets/textures/skybox/right.jpg",
@@ -30,61 +27,50 @@ namespace seri
 			Init();
 		}
 
-		Skybox(std::shared_ptr<CameraBase> camera, std::vector<std::string> faces)
-			: _camera(camera), _faces(std::move(faces))
+		Skybox(std::vector<std::string> faces) :  _faces(std::move(faces))
 		{
 			Init();
 		}
 
-		~Skybox()
-		{
-			_engineBackend.Release();
-		}
-
 		void Init()
 		{
-			_shader = ShaderLibrary::Find("skybox");
 			_texture = TextureBase::Create();
+			_material = std::make_shared<Material>();
+			_material->shader = ShaderLibrary::Find("skybox");;
+			_material->SetTexture("u_skybox", _texture);
 
-			InitMVP();
 			SetDefaultPositions();
 			LoadCubemap();
 		}
 
-		void Render()
-		{
-			_shader->Bind();
-			_texture->Bind();
-
-			DepthFunc oldDepthFunc = RenderingManager::SetDepthFunc(true, DepthFunc::l_equal);
-
-			_engineBackend.Draw();
-
-			RenderingManager::SetDepthFunc(true, oldDepthFunc);
-
-			_texture->Unbind();
-			_shader->Unbind();
-		}
-
 		void Update()
 		{
-			if (_camera)
-			{
-				ShaderLibrary::SetView(_shader, glm::mat4(glm::mat3(_camera->GetView())));
-			}
+			seri::RenderingManager::Begin(seri::Graphic::GetCameraPerspective());
+
+			_material->SetMat4("u_view_skybox", glm::mat4(glm::mat3(seri::Graphic::GetCameraPerspective()->GetView())));
+
+			seri::RenderCommand renderCommand_skybox{};
+			renderCommand_skybox.name = "skybox";
+			renderCommand_skybox.desc.depthFunc = DepthFunc::l_equal;
+			renderCommand_skybox.camera = seri::Graphic::GetCameraPerspective();
+			renderCommand_skybox.drawMode = DrawMode::arrays;
+			renderCommand_skybox.material = _material;
+			renderCommand_skybox.vao = _vertexArray;
+			renderCommand_skybox.count = _positions.size();
+			seri::RenderingManager::Submit(renderCommand_skybox);
+
+			seri::RenderCommand renderCommand_restore{};
+			renderCommand_restore.name = "skybox_restore";
+			renderCommand_restore.noop = true;
+			seri::RenderingManager::Submit(renderCommand_restore);
+
+			seri::RenderingManager::End();
 		}
 
 	private:
-		void InitMVP()
-		{
-			ShaderLibrary::SetModel(_shader, glm::mat4{ 1.0f });
-			ShaderLibrary::SetView(_shader, glm::mat4(glm::mat3(_camera->GetView())));
-			ShaderLibrary::SetProjection(_shader, _camera->GetProjection());
-		}
-
 		void SetDefaultPositions()
 		{
-			const std::vector<glm::vec3> positions = {
+			_positions = {
 				{ -1.0f, 1.0f, -1.0f },
 				{ -1.0f, -1.0f, -1.0f },
 				{ 1.0f, -1.0f, -1.0f },
@@ -128,26 +114,13 @@ namespace seri
 				{ 1.0f, -1.0f, 1.0f },
 			};
 
-			aux::DataBufferBuilder dataBufferBuilder;
-			aux::AttributeBuilder attributeBuilder;
+			auto& vertexBuffer = seri::VertexBufferBase::Create(&_positions[0], _positions.size() * 3 * sizeof(float));
+			vertexBuffer->AddElement(
+				{ seri::LayoutLocation::position, seri::ShaderDataType::float3_type, false }
+			);
 
-			auto dataBuffer = dataBufferBuilder
-				.setTarget(aux::Target::vbo)
-				.setSize(aux::count(positions) * 12)
-				.setData(aux::data(positions))
-				.setUsage(aux::Usage::static_draw)
-				.build();
-			_engineBackend.setDataBuffer(dataBuffer);
-
-			auto attribute = attributeBuilder
-				.setIndex(aux::Index::position)
-				.setSize(aux::length(positions))
-				.setPointer(nullptr)
-				.build();
-			_engineBackend.setAttribute(attribute);
-
-			_engineBackend.setEnable(aux::Index::position);
-			_engineBackend.setDrawCount(aux::count(positions));
+			_vertexArray = seri::VertexArrayBase::Create();
+			_vertexArray->AddVertexBuffer(vertexBuffer);
 		}
 
 		void LoadCubemap(bool flip = false)
@@ -175,13 +148,12 @@ namespace seri
 			_texture->LoadCubeMap(_faces);
 		}
 
-		std::shared_ptr<CameraBase> _camera;
-		std::shared_ptr<ShaderBase> _shader;
-		std::shared_ptr<TextureBase> _texture;
-
-		RendererBackendOpenGL _engineBackend{};
-
 		std::vector<std::string> _faces;
+		std::vector<glm::vec3> _positions;
+
+		std::shared_ptr<Material> _material;
+		std::shared_ptr<TextureBase> _texture;
+		std::shared_ptr<seri::VertexArrayBase> _vertexArray;
 
 	};
 }

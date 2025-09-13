@@ -73,6 +73,13 @@ namespace seri
 		src_alpha_saturate,
 	};
 
+	enum class DrawMode
+	{
+		arrays,
+		elements,
+		elements_instanced,
+	};
+
 	struct PipelineDesc
 	{
 		bool depthTestEnabled{ true };

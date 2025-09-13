@@ -1,6 +1,6 @@
 #pragma once
 
-#include "seri/core/Seri.h"
+#include "seri/util/Util.h"
 #include "seri/camera/CameraBase.h"
 #include "seri/renderer/AuxiliaryStructs.h"
 

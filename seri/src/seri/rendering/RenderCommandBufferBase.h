@@ -12,9 +12,13 @@ namespace seri
 	{
 	public:
 		std::string name;
+		bool noop{ false };
 
 		PipelineDesc desc;
 
+		uint32_t count{ 0 };
+		uint32_t instanceCount{ 0 };
+		DrawMode drawMode{ DrawMode::elements };
 		Topology topology{ Topology::triangle };
 		DataType dataType{ DataType::uint_type };
 		const void* indices{ nullptr };

@@ -35,18 +35,50 @@ namespace seri
 				RenderingManager::SetLineWidth(command.desc.lineWidth);
 				RenderingManager::SetPointSize(command.desc.pointSize);
 
+				if (command.noop)
+				{
+					continue;
+				}
+
 				command.material->SetMat4("u_model", command.trs);
 				command.material->SetMat4("u_view", command.camera->GetView());
 				command.material->SetMat4("u_projection", command.camera->GetProjection());
 				command.material->Apply();
 				command.vao->Bind();
 
-				glDrawElements(
-					GetTopology(command.topology),
-					command.vao->GetIndexBuffer()->GetCount(),
-					GetDataType(command.dataType),
-					command.indices
-				);
+				switch (command.drawMode)
+				{
+					case DrawMode::arrays:
+						glDrawArrays(
+							GetTopology(command.topology),
+							0,
+							command.count
+						);
+						break;
+					case DrawMode::elements:
+						{
+							glDrawElements(
+								GetTopology(command.topology),
+								command.vao->GetIndexBuffer()->GetCount(),
+								GetDataType(command.dataType),
+								command.indices
+							);
+						}
+						break;
+					case DrawMode::elements_instanced:
+						{
+							glDrawElementsInstanced(
+								GetTopology(command.topology),
+								command.vao->GetIndexBuffer()->GetCount(),
+								GetDataType(command.dataType),
+								command.indices,
+								command.instanceCount
+							);
+						}
+						break;
+					default:
+						break;
+				}
 			}
 
 			_commands.clear();

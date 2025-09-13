@@ -30,7 +30,7 @@ namespace seri
 
 		virtual DepthFunc GetDepthFunc() = 0;
 
-		virtual DepthFunc SetDepthFunc(bool enabled, DepthFunc depthFunc) = 0;
+		virtual void SetDepthFunc(bool enabled, DepthFunc depthFunc) = 0;
 
 		virtual void SetDepthWrite(bool enabled) = 0;
 

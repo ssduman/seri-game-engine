@@ -84,21 +84,16 @@ namespace seri
 			return DepthFunc::less;
 		}
 
-		DepthFunc SetDepthFunc(bool enabled, DepthFunc depthFunc) override
+		void SetDepthFunc(bool enabled, DepthFunc depthFunc) override
 		{
-			DepthFunc old = GetDepthFunc();
 			if (enabled)
 			{
 				glEnable(GL_DEPTH_TEST);
-				glDepthMask(GL_TRUE);
 				glDepthFunc(GetDepthFunc(depthFunc));
-				return old;
 			}
 			else
 			{
 				glDisable(GL_DEPTH_TEST);
-				glDepthMask(GL_FALSE);
-				return old;
 			}
 		}
 
@@ -106,11 +101,11 @@ namespace seri
 		{
 			if (enabled)
 			{
-				glEnable(GL_DEPTH_TEST);
+				glDepthMask(GL_TRUE);
 			}
 			else
 			{
-				glDisable(GL_DEPTH_TEST);
+				glDepthMask(GL_FALSE);
 			}
 		}
 
@@ -161,6 +156,7 @@ namespace seri
 		{
 			glEnable(GL_BLEND);
 			glEnable(GL_DEPTH_TEST);
+			glDepthMask(GL_TRUE);
 			//glEnable(GL_FRAMEBUFFER_SRGB);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		}
