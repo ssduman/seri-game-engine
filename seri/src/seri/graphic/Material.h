@@ -9,14 +9,6 @@ namespace seri
 	class Material
 	{
 	public:
-		Material() = default;
-
-		~Material() = default;
-
-		std::shared_ptr<ShaderBase> shader;
-
-		std::shared_ptr<TextureBase> texture;
-
 		void SetInt(const std::string& name, int v)
 		{
 			_ints[name] = v;
@@ -120,6 +112,8 @@ namespace seri
 				tex->Unbind();
 			}
 		}
+
+		std::shared_ptr<ShaderBase> shader;
 
 	private:
 		std::unordered_map<std::string, int> _ints;

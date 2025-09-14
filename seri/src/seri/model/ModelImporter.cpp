@@ -190,12 +190,27 @@ namespace seri
 	{
 		aiMaterial* ai_material = ai_scene->mMaterials[ai_mesh->mMaterialIndex];
 
+		LoadTexture(ai_scene, ai_material, aiTextureType_NONE, mesh);
+
 		LoadTexture(ai_scene, ai_material, aiTextureType_DIFFUSE, mesh);
-		//LoadTexture(ai_scene, ai_material, aiTextureType_SPECULAR, mesh);
-		//LoadTexture(ai_scene, ai_material, aiTextureType_AMBIENT, mesh);
-		//LoadTexture(ai_scene, ai_material, aiTextureType_HEIGHT, mesh);
-		//LoadTexture(ai_scene, ai_material, aiTextureType_NORMALS, mesh);
-		//LoadTexture(ai_scene, ai_material, aiTextureType_SHININESS, mesh);
+		LoadTexture(ai_scene, ai_material, aiTextureType_SPECULAR, mesh);
+		LoadTexture(ai_scene, ai_material, aiTextureType_AMBIENT, mesh);
+		LoadTexture(ai_scene, ai_material, aiTextureType_EMISSIVE, mesh);
+		LoadTexture(ai_scene, ai_material, aiTextureType_HEIGHT, mesh);
+		LoadTexture(ai_scene, ai_material, aiTextureType_NORMALS, mesh);
+		LoadTexture(ai_scene, ai_material, aiTextureType_SHININESS, mesh);
+		LoadTexture(ai_scene, ai_material, aiTextureType_OPACITY, mesh);
+		LoadTexture(ai_scene, ai_material, aiTextureType_DISPLACEMENT, mesh);
+		LoadTexture(ai_scene, ai_material, aiTextureType_LIGHTMAP, mesh);
+		LoadTexture(ai_scene, ai_material, aiTextureType_REFLECTION, mesh);
+
+		LoadTexture(ai_scene, ai_material, aiTextureType_BASE_COLOR, mesh);
+		LoadTexture(ai_scene, ai_material, aiTextureType_NORMAL_CAMERA, mesh);
+		LoadTexture(ai_scene, ai_material, aiTextureType_EMISSION_COLOR, mesh);
+		LoadTexture(ai_scene, ai_material, aiTextureType_METALNESS, mesh);
+		LoadTexture(ai_scene, ai_material, aiTextureType_DIFFUSE_ROUGHNESS, mesh);
+		LoadTexture(ai_scene, ai_material, aiTextureType_AMBIENT_OCCLUSION, mesh);
+		LoadTexture(ai_scene, ai_material, aiTextureType_UNKNOWN, mesh);
 
 		LoadColors(ai_material);
 	}

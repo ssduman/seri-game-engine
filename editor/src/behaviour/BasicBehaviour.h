@@ -187,7 +187,6 @@ public:
 
 		seri::RenderCommand renderCommand{};
 		renderCommand.name = "basic_cube";
-		renderCommand.desc.cullFaceEnabled = false;
 		renderCommand.camera = seri::Graphic::GetCameraPerspective();
 		renderCommand.material = basicMaterial;
 		renderCommand.vao = basicVertexArray;

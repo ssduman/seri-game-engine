@@ -87,7 +87,7 @@ namespace seri
 		bool depthWriteEnabled{ true };
 		DepthFunc depthFunc{ DepthFunc::less };
 
-		bool cullFaceEnabled{ true };
+		bool cullFaceEnabled{ false };
 		CullFace cullFace{ CullFace::back };
 		FrontFace frontFace{ FrontFace::ccw };
 
