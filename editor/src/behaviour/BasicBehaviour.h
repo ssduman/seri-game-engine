@@ -74,67 +74,94 @@ public:
 			{ 0.0f, 0.0f },
 			{ 1.0f, 0.0f },
 		};
-		std::vector<glm::vec3> colors{
-			{ 1.0f, 0.0f, 0.0f },
-			{ 1.0f, 0.0f, 0.0f },
-			{ 1.0f, 0.0f, 0.0f },
-			{ 1.0f, 0.0f, 0.0f },
+		std::vector<glm::vec4> colors{
+			{ 1.0f, 0.0f, 0.0f, 1.0f },
+			{ 1.0f, 0.0f, 0.0f, 1.0f },
+			{ 1.0f, 0.0f, 0.0f, 1.0f },
+			{ 1.0f, 0.0f, 0.0f, 1.0f },
 
-			{ 0.0f, 1.0f, 0.0f },
-			{ 0.0f, 1.0f, 0.0f },
-			{ 0.0f, 1.0f, 0.0f },
-			{ 0.0f, 1.0f, 0.0f },
+			{ 0.0f, 1.0f, 0.0f, 1.0f },
+			{ 0.0f, 1.0f, 0.0f, 1.0f },
+			{ 0.0f, 1.0f, 0.0f, 1.0f },
+			{ 0.0f, 1.0f, 0.0f, 1.0f },
 
-			{ 0.0f, 0.0f, 1.0f },
-			{ 0.0f, 0.0f, 1.0f },
-			{ 0.0f, 0.0f, 1.0f },
-			{ 0.0f, 0.0f, 1.0f },
+			{ 0.0f, 0.0f, 1.0f, 1.0f },
+			{ 0.0f, 0.0f, 1.0f, 1.0f },
+			{ 0.0f, 0.0f, 1.0f, 1.0f },
+			{ 0.0f, 0.0f, 1.0f, 1.0f },
 
-			{ 1.0f, 1.0f, 0.0f },
-			{ 1.0f, 1.0f, 0.0f },
-			{ 1.0f, 1.0f, 0.0f },
-			{ 1.0f, 1.0f, 0.0f },
+			{ 1.0f, 1.0f, 0.0f, 1.0f },
+			{ 1.0f, 1.0f, 0.0f, 1.0f },
+			{ 1.0f, 1.0f, 0.0f, 1.0f },
+			{ 1.0f, 1.0f, 0.0f, 1.0f },
 
-			{ 1.0f, 0.0f, 1.0f },
-			{ 1.0f, 0.0f, 1.0f },
-			{ 1.0f, 0.0f, 1.0f },
-			{ 1.0f, 0.0f, 1.0f },
+			{ 1.0f, 0.0f, 1.0f, 1.0f },
+			{ 1.0f, 0.0f, 1.0f, 1.0f },
+			{ 1.0f, 0.0f, 1.0f, 1.0f },
+			{ 1.0f, 0.0f, 1.0f, 1.0f },
 
-			{ 0.0f, 1.0f, 1.0f },
-			{ 0.0f, 1.0f, 1.0f },
-			{ 0.0f, 1.0f, 1.0f },
-			{ 0.0f, 1.0f, 1.0f },
+			{ 0.0f, 1.0f, 1.0f, 1.0f },
+			{ 0.0f, 1.0f, 1.0f, 1.0f },
+			{ 0.0f, 1.0f, 1.0f, 1.0f },
+			{ 0.0f, 1.0f, 1.0f, 1.0f },
 		};
-		float vertices[] = {
-			-0.5f * mult, -0.5f * mult, +0.5f * mult,  1, 0, 0,  0, 0,
-			+0.5f * mult, -0.5f * mult, +0.5f * mult,  1, 0, 0,  1, 0,
-			+0.5f * mult, +0.5f * mult, +0.5f * mult,  1, 0, 0,  1, 1,
-			-0.5f * mult, +0.5f * mult, +0.5f * mult,  1, 0, 0,  0, 1,
+		std::vector<glm::vec3> normals{
+			{  0.0f,  0.0f,  1.0f },
+			{  0.0f,  0.0f,  1.0f },
+			{  0.0f,  0.0f,  1.0f },
+			{  0.0f,  0.0f,  1.0f },
 
-			-0.5f * mult, -0.5f * mult, -0.5f * mult,  0, 1, 0,  1, 0,
-			+0.5f * mult, -0.5f * mult, -0.5f * mult,  0, 1, 0,  0, 0,
-			+0.5f * mult, +0.5f * mult, -0.5f * mult,  0, 1, 0,  0, 1,
-			-0.5f * mult, +0.5f * mult, -0.5f * mult,  0, 1, 0,  1, 1,
+			{  0.0f,  0.0f, -1.0f },
+			{  0.0f,  0.0f, -1.0f },
+			{  0.0f,  0.0f, -1.0f },
+			{  0.0f,  0.0f, -1.0f },
 
-			-0.5f * mult, -0.5f * mult, -0.5f * mult,  0, 0, 1,  0, 0,
-			-0.5f * mult, -0.5f * mult, +0.5f * mult,  0, 0, 1,  1, 0,
-			-0.5f * mult, +0.5f * mult, +0.5f * mult,  0, 0, 1,  1, 1,
-			-0.5f * mult, +0.5f * mult, -0.5f * mult,  0, 0, 1,  0, 1,
+			{ -1.0f,  0.0f,  0.0f },
+			{ -1.0f,  0.0f,  0.0f },
+			{ -1.0f,  0.0f,  0.0f },
+			{ -1.0f,  0.0f,  0.0f },
 
-			+0.5f * mult, -0.5f * mult, -0.5f * mult,  1, 1, 0,  1, 0,
-			+0.5f * mult, -0.5f * mult, +0.5f * mult,  1, 1, 0,  0, 0,
-			+0.5f * mult, +0.5f * mult, +0.5f * mult,  1, 1, 0,  0, 1,
-			+0.5f * mult, +0.5f * mult, -0.5f * mult,  1, 1, 0,  1, 1,
+			{ +1.0f,  0.0f,  0.0f },
+			{ +1.0f,  0.0f,  0.0f },
+			{ +1.0f,  0.0f,  0.0f },
+			{ +1.0f,  0.0f,  0.0f },
 
-			-0.5f * mult, +0.5f * mult, +0.5f * mult,  1, 0, 1,  0, 0,
-			+0.5f * mult, +0.5f * mult, +0.5f * mult,  1, 0, 1,  1, 0,
-			+0.5f * mult, +0.5f * mult, -0.5f * mult,  1, 0, 1,  1, 1,
-			-0.5f * mult, +0.5f * mult, -0.5f * mult,  1, 0, 1,  0, 1,
+			{  0.0f, +1.0f,  0.0f },
+			{  0.0f, +1.0f,  0.0f },
+			{  0.0f, +1.0f,  0.0f },
+			{  0.0f, +1.0f,  0.0f },
 
-			-0.5f * mult, -0.5f * mult, +0.5f * mult,  0, 1, 1,  1, 1,
-			+0.5f * mult, -0.5f * mult, +0.5f * mult,  0, 1, 1,  0, 1,
-			+0.5f * mult, -0.5f * mult, -0.5f * mult,  0, 1, 1,  0, 0,
-			-0.5f * mult, -0.5f * mult, -0.5f * mult,  0, 1, 1,  1, 0,
+			{  0.0f, -1.0f,  0.0f },
+			{  0.0f, -1.0f,  0.0f },
+			{  0.0f, -1.0f,  0.0f },
+			{  0.0f, -1.0f,  0.0f },
+		};
+		float verticesAll[] = {
+			// positions                               // colors                // uvs
+			-0.5f * mult, -0.5f * mult, +0.5f * mult,  1.0f, 0.0f, 0.0f, 1.0f,  0.0f, 0.0f,
+			+0.5f * mult, -0.5f * mult, +0.5f * mult,  1.0f, 0.0f, 0.0f, 1.0f,  1.0f, 0.0f,
+			+0.5f * mult, +0.5f * mult, +0.5f * mult,  1.0f, 0.0f, 0.0f, 1.0f,  1.0f, 1.0f,
+			-0.5f * mult, +0.5f * mult, +0.5f * mult,  1.0f, 0.0f, 0.0f, 1.0f,  0.0f, 1.0f,
+			-0.5f * mult, -0.5f * mult, -0.5f * mult,  0.0f, 1.0f, 0.0f, 1.0f,  1.0f, 0.0f,
+			+0.5f * mult, -0.5f * mult, -0.5f * mult,  0.0f, 1.0f, 0.0f, 1.0f,  0.0f, 0.0f,
+			+0.5f * mult, +0.5f * mult, -0.5f * mult,  0.0f, 1.0f, 0.0f, 1.0f,  0.0f, 1.0f,
+			-0.5f * mult, +0.5f * mult, -0.5f * mult,  0.0f, 1.0f, 0.0f, 1.0f,  1.0f, 1.0f,
+			-0.5f * mult, -0.5f * mult, -0.5f * mult,  0.0f, 0.0f, 1.0f, 1.0f,  0.0f, 0.0f,
+			-0.5f * mult, -0.5f * mult, +0.5f * mult,  0.0f, 0.0f, 1.0f, 1.0f,  1.0f, 0.0f,
+			-0.5f * mult, +0.5f * mult, +0.5f * mult,  0.0f, 0.0f, 1.0f, 1.0f,  1.0f, 1.0f,
+			-0.5f * mult, +0.5f * mult, -0.5f * mult,  0.0f, 0.0f, 1.0f, 1.0f,  0.0f, 1.0f,
+			+0.5f * mult, -0.5f * mult, -0.5f * mult,  1.0f, 1.0f, 0.0f, 1.0f,  1.0f, 0.0f,
+			+0.5f * mult, -0.5f * mult, +0.5f * mult,  1.0f, 1.0f, 0.0f, 1.0f,  0.0f, 0.0f,
+			+0.5f * mult, +0.5f * mult, +0.5f * mult,  1.0f, 1.0f, 0.0f, 1.0f,  0.0f, 1.0f,
+			+0.5f * mult, +0.5f * mult, -0.5f * mult,  1.0f, 1.0f, 0.0f, 1.0f,  1.0f, 1.0f,
+			-0.5f * mult, +0.5f * mult, +0.5f * mult,  1.0f, 0.0f, 1.0f, 1.0f,  0.0f, 0.0f,
+			+0.5f * mult, +0.5f * mult, +0.5f * mult,  1.0f, 0.0f, 1.0f, 1.0f,  1.0f, 0.0f,
+			+0.5f * mult, +0.5f * mult, -0.5f * mult,  1.0f, 0.0f, 1.0f, 1.0f,  1.0f, 1.0f,
+			-0.5f * mult, +0.5f * mult, -0.5f * mult,  1.0f, 0.0f, 1.0f, 1.0f,  0.0f, 1.0f,
+			-0.5f * mult, -0.5f * mult, +0.5f * mult,  0.0f, 1.0f, 1.0f, 1.0f,  1.0f, 1.0f,
+			+0.5f * mult, -0.5f * mult, +0.5f * mult,  0.0f, 1.0f, 1.0f, 1.0f,  0.0f, 1.0f,
+			+0.5f * mult, -0.5f * mult, -0.5f * mult,  0.0f, 1.0f, 1.0f, 1.0f,  0.0f, 0.0f,
+			-0.5f * mult, -0.5f * mult, -0.5f * mult,  0.0f, 1.0f, 1.0f, 1.0f,  1.0f, 0.0f,
 		};
 
 		basicShader = seri::ShaderLibrary::Find("basic_2");
@@ -142,38 +169,43 @@ public:
 		basicTexture = seri::TextureBase::Create();
 		basicTexture->Init(seri::TextureDesc{}, "assets/textures/passage.png");
 
-		basicVertexBuffer_0 = seri::VertexBufferBase::Create(&positions[0], positions.size() * 3 * sizeof(float));
+		basicVertexBuffer_0 = seri::VertexBufferBase::Create(positions);
 		basicVertexBuffer_0->AddElement(
-			{ seri::LayoutLocation::position, seri::ShaderDataType::float3_type, false }
+			{ seri::LayoutLocation::position }
 		);
-		basicVertexBuffer_1 = seri::VertexBufferBase::Create(&uvs[0], uvs.size() * 2 * sizeof(float));
+
+		basicVertexBuffer_1 = seri::VertexBufferBase::Create(uvs);
 		basicVertexBuffer_1->AddElement(
-			{ seri::LayoutLocation::uv0, seri::ShaderDataType::float2_type }
+			{ seri::LayoutLocation::uv0 }
 		);
-		basicVertexBuffer_2 = seri::VertexBufferBase::Create(&colors[0], colors.size() * 3 * sizeof(float));
+
+		basicVertexBuffer_2 = seri::VertexBufferBase::Create(colors);
 		basicVertexBuffer_2->AddElement(
-			{ seri::LayoutLocation::color, seri::ShaderDataType::float3_type }
+			{ seri::LayoutLocation::color }
 		);
-		basicVertexBuffer_all = seri::VertexBufferBase::Create(&vertices[0], sizeof(vertices));
-		basicVertexBuffer_all->
-			AddElement({ seri::LayoutLocation::position, seri::ShaderDataType::float3_type }).
-			AddElement({ seri::LayoutLocation::color, seri::ShaderDataType::float3_type }).
-			AddElement({ seri::LayoutLocation::uv0, seri::ShaderDataType::float2_type }
-			);
+
+
+		basicVertexBuffer_3 = seri::VertexBufferBase::Create(normals);
+		basicVertexBuffer_3->AddElement(
+			{ seri::LayoutLocation::normal }
+		);
+
+		basicVertexBuffer_all = seri::VertexBufferBase::Create(&verticesAll[0], sizeof(verticesAll));
 		basicVertexBuffer_all->SetLayout(
 			seri::BufferLayoutDesc{
-				{ seri::LayoutLocation::position, seri::ShaderDataType::float3_type },
-				{ seri::LayoutLocation::color, seri::ShaderDataType::float3_type },
-				{ seri::LayoutLocation::uv0, seri::ShaderDataType::float2_type }
+				{ seri::LayoutLocation::position },
+				{ seri::LayoutLocation::color },
+				{ seri::LayoutLocation::uv0 }
 			}
 		);
 
-		basicIndexBuffer = seri::IndexBufferBase::Create(&indices[0], indices.size());
+		basicIndexBuffer = seri::IndexBufferBase::Create(indices);
 		basicVertexArray = seri::VertexArrayBase::Create();
 		basicVertexArray->SetIndexBuffer(basicIndexBuffer);
 		//basicVertexArray->AddVertexBuffer(basicVertexBuffer_0);
 		//basicVertexArray->AddVertexBuffer(basicVertexBuffer_1);
 		//basicVertexArray->AddVertexBuffer(basicVertexBuffer_2);
+		//basicVertexArray->AddVertexBuffer(basicVertexBuffer_3);
 		basicVertexArray->AddVertexBuffer(basicVertexBuffer_all);
 
 		basicMaterial = std::make_shared<seri::Material>();
@@ -213,6 +245,7 @@ private:
 	std::shared_ptr<seri::VertexBufferBase> basicVertexBuffer_0;
 	std::shared_ptr<seri::VertexBufferBase> basicVertexBuffer_1;
 	std::shared_ptr<seri::VertexBufferBase> basicVertexBuffer_2;
+	std::shared_ptr<seri::VertexBufferBase> basicVertexBuffer_3;
 	std::shared_ptr<seri::VertexBufferBase> basicVertexBuffer_all;
 	std::shared_ptr<seri::VertexArrayBase> basicVertexArray;
 

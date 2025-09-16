@@ -59,6 +59,7 @@ namespace seri
 		static std::shared_ptr<VertexBufferBase> Create(const void* data, uint32_t size, BufferUsage usage = BufferUsage::static_draw);
 		static std::shared_ptr<VertexBufferBase> Create(const std::vector<glm::vec2>& data, BufferUsage usage = BufferUsage::static_draw);
 		static std::shared_ptr<VertexBufferBase> Create(const std::vector<glm::vec3>& data, BufferUsage usage = BufferUsage::static_draw);
+		static std::shared_ptr<VertexBufferBase> Create(const std::vector<glm::vec4>& data, BufferUsage usage = BufferUsage::static_draw);
 		static std::shared_ptr<VertexBufferBase> Create(const std::vector<glm::mat4>& data, BufferUsage usage = BufferUsage::static_draw);
 
 	protected:

@@ -489,35 +489,67 @@ namespace seri
 			std::unique_ptr<Mesh> mesh = std::make_unique<Mesh>();
 
 			mesh->vertices = {
-				{-0.5f * mult, -0.5f * mult, +0.5f * mult },
-				{+0.5f * mult, -0.5f * mult, +0.5f * mult },
-				{+0.5f * mult, +0.5f * mult, +0.5f * mult },
-				{-0.5f * mult, +0.5f * mult, +0.5f * mult },
+				{ -0.5f * mult, -0.5f * mult, +0.5f * mult },
+				{ +0.5f * mult, -0.5f * mult, +0.5f * mult },
+				{ +0.5f * mult, +0.5f * mult, +0.5f * mult },
+				{ -0.5f * mult, +0.5f * mult, +0.5f * mult },
 
-				{-0.5f * mult, -0.5f * mult, -0.5f * mult },
-				{+0.5f * mult, -0.5f * mult, -0.5f * mult },
-				{+0.5f * mult, +0.5f * mult, -0.5f * mult },
-				{-0.5f * mult, +0.5f * mult, -0.5f * mult },
+				{ -0.5f * mult, -0.5f * mult, -0.5f * mult },
+				{ +0.5f * mult, -0.5f * mult, -0.5f * mult },
+				{ +0.5f * mult, +0.5f * mult, -0.5f * mult },
+				{ -0.5f * mult, +0.5f * mult, -0.5f * mult },
 
-				{-0.5f * mult, -0.5f * mult, -0.5f * mult },
-				{-0.5f * mult, -0.5f * mult, +0.5f * mult },
-				{-0.5f * mult, +0.5f * mult, +0.5f * mult },
-				{-0.5f * mult, +0.5f * mult, -0.5f * mult },
+				{ -0.5f * mult, -0.5f * mult, -0.5f * mult },
+				{ -0.5f * mult, -0.5f * mult, +0.5f * mult },
+				{ -0.5f * mult, +0.5f * mult, +0.5f * mult },
+				{ -0.5f * mult, +0.5f * mult, -0.5f * mult },
 
-				{+0.5f * mult, -0.5f * mult, -0.5f * mult },
-				{+0.5f * mult, -0.5f * mult, +0.5f * mult },
-				{+0.5f * mult, +0.5f * mult, +0.5f * mult },
-				{+0.5f * mult, +0.5f * mult, -0.5f * mult },
+				{ +0.5f * mult, -0.5f * mult, -0.5f * mult },
+				{ +0.5f * mult, -0.5f * mult, +0.5f * mult },
+				{ +0.5f * mult, +0.5f * mult, +0.5f * mult },
+				{ +0.5f * mult, +0.5f * mult, -0.5f * mult },
 
-				{-0.5f * mult, +0.5f * mult, +0.5f * mult },
-				{+0.5f * mult, +0.5f * mult, +0.5f * mult },
-				{+0.5f * mult, +0.5f * mult, -0.5f * mult },
-				{-0.5f * mult, +0.5f * mult, -0.5f * mult },
+				{ -0.5f * mult, +0.5f * mult, +0.5f * mult },
+				{ +0.5f * mult, +0.5f * mult, +0.5f * mult },
+				{ +0.5f * mult, +0.5f * mult, -0.5f * mult },
+				{ -0.5f * mult, +0.5f * mult, -0.5f * mult },
 
-				{-0.5f * mult, -0.5f * mult, +0.5f * mult },
-				{+0.5f * mult, -0.5f * mult, +0.5f * mult },
-				{+0.5f * mult, -0.5f * mult, -0.5f * mult },
-				{-0.5f * mult, -0.5f * mult, -0.5f * mult },
+				{ -0.5f * mult, -0.5f * mult, +0.5f * mult },
+				{ +0.5f * mult, -0.5f * mult, +0.5f * mult },
+				{ +0.5f * mult, -0.5f * mult, -0.5f * mult },
+				{ -0.5f * mult, -0.5f * mult, -0.5f * mult },
+			};
+
+			mesh->normals = {
+				{  0.0f,  0.0f,  1.0f },
+				{  0.0f,  0.0f,  1.0f },
+				{  0.0f,  0.0f,  1.0f },
+				{  0.0f,  0.0f,  1.0f },
+
+				{  0.0f,  0.0f, -1.0f },
+				{  0.0f,  0.0f, -1.0f },
+				{  0.0f,  0.0f, -1.0f },
+				{  0.0f,  0.0f, -1.0f },
+
+				{ -1.0f,  0.0f,  0.0f },
+				{ -1.0f,  0.0f,  0.0f },
+				{ -1.0f,  0.0f,  0.0f },
+				{ -1.0f,  0.0f,  0.0f },
+
+				{ +1.0f,  0.0f,  0.0f },
+				{ +1.0f,  0.0f,  0.0f },
+				{ +1.0f,  0.0f,  0.0f },
+				{ +1.0f,  0.0f,  0.0f },
+
+				{  0.0f, +1.0f,  0.0f },
+				{  0.0f, +1.0f,  0.0f },
+				{  0.0f, +1.0f,  0.0f },
+				{  0.0f, +1.0f,  0.0f },
+
+				{  0.0f, -1.0f,  0.0f },
+				{  0.0f, -1.0f,  0.0f },
+				{  0.0f, -1.0f,  0.0f },
+				{  0.0f, -1.0f,  0.0f },
 			};
 
 			mesh->uv0s = {

@@ -53,6 +53,7 @@ in vec3 sent_normal;
 uniform vec3 u_view_pos;
 uniform vec3 u_light_dir;
 uniform vec4 u_light_color;
+
 uniform vec4 u_color = vec4(1.0, 1.0, 1.0, 1.0);
 uniform sampler2D u_texture;
 
