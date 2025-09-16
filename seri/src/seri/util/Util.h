@@ -9,6 +9,7 @@
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include <cmath>
 #include <regex>
 #include <chrono>
 #include <string>
@@ -47,6 +48,11 @@ namespace seri
 		static float Map(float x, float in_min, float in_max, float out_min, float out_max)
 		{
 			return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+		}
+
+		static int RountToInt(float value)
+		{
+			return static_cast<int>(std::round(value));
 		}
 
 		static glm::mat4 GetTRS(const glm::vec3& pos, const glm::quat& rot, const glm::vec3& scale)

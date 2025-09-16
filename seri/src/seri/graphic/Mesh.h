@@ -109,9 +109,8 @@ namespace seri
 			bones.clear();
 		}
 
-		std::vector<std::shared_ptr<TextureBase>> textures;
-		std::vector<glm::vec3> vertices;
 		std::vector<uint32_t> indices;
+		std::vector<glm::vec3> vertices;
 		std::vector<glm::vec2> uv0s;
 		std::vector<glm::vec2> uv1s;
 		std::vector<glm::vec2> uv2s;
@@ -123,6 +122,7 @@ namespace seri
 		std::vector<glm::vec3> colors;
 		std::vector<glm::vec3> normals;
 		std::vector<glm::vec3> tangents;
+		std::vector<std::shared_ptr<TextureBase>> textures;
 
 		NodeData nodeData{};
 		Animation animation{};
@@ -136,6 +136,11 @@ namespace seri
 		std::unordered_map<std::string, int> boneNameToIndexMap{};
 
 		glm::mat4 transformation{ 1.0f };
+
+		void AddIndices(std::vector<unsigned int> ind)
+		{
+			indices.insert(indices.end(), ind.begin(), ind.end());
+		}
 
 		void AddVertices(std::vector<glm::vec3> ver)
 		{
@@ -163,11 +168,6 @@ namespace seri
 			{
 				textures.emplace_back(std::move(tex));
 			}
-		}
-
-		void AddIndices(std::vector<unsigned int> ind)
-		{
-			indices.insert(indices.end(), ind.begin(), ind.end());
 		}
 
 		void UpdateAnimation()
@@ -261,11 +261,18 @@ namespace seri
 		{
 			if (_vao)
 			{
-				LOGGER(warning, "[mesh] vao already generated");
+				//LOGGER(warning, "[mesh] vao already generated for build");
 				return;
 			}
 
 			_vao = VertexArrayBase::Create();
+
+			if (indices.size() > 0)
+			{
+				_ebo = IndexBufferBase::Create(indices);
+
+				_vao->SetIndexBuffer(_ebo);
+			}
 
 			if (vertices.size() > 0)
 			{
@@ -307,13 +314,6 @@ namespace seri
 				_vao->AddVertexBuffer(_vbo_nor);
 			}
 
-			if (indices.size() > 0)
-			{
-				_ebo = IndexBufferBase::Create(indices);
-
-				_vao->SetIndexBuffer(_ebo);
-			}
-
 			if (bonesForVertices.size() > 0)
 			{
 				_vbo_skin = VertexBufferBase::Create(&bonesForVertices[0], bonesForVertices.size() * sizeof(VertexBoneData));
@@ -329,6 +329,73 @@ namespace seri
 
 				_vao->AddVertexBuffer(_vbo_skin);
 			}
+		}
+
+		void Update()
+		{
+			if (!_vao)
+			{
+				Build();
+				//LOGGER(error, "[mesh] vao for update not generated");
+				return;
+			}
+
+			if (_ebo)
+			{
+				_ebo->SetData(indices);
+			}
+
+			if (_vbo_ver)
+			{
+				_vbo_ver->SetData(vertices);
+			}
+
+			if (_vbo_uv0)
+			{
+				_vbo_uv0->SetData(uv0s);
+			}
+
+			if (_vbo_col)
+			{
+				_vbo_col->SetData(colors);
+			}
+
+			if (_vbo_nor)
+			{
+				_vbo_nor->SetData(normals);
+			}
+
+			if (_vbo_skin)
+			{
+				_vbo_skin->SetData(&bonesForVertices[0], bonesForVertices.size() * sizeof(VertexBoneData));
+			}
+		}
+
+		void Clear()
+		{
+			indices.clear();
+			vertices.clear();
+			uv0s.clear();
+			uv1s.clear();
+			uv2s.clear();
+			uv3s.clear();
+			uv4s.clear();
+			uv5s.clear();
+			uv6s.clear();
+			uv7s.clear();
+			colors.clear();
+			normals.clear();
+			tangents.clear();
+			textures.clear();
+
+			//_vao = nullptr;
+			//_ebo = nullptr;
+			//_vbo_ver = nullptr;
+			//_vbo_uv0 = nullptr;
+			//_vbo_col = nullptr;
+			//_vbo_nor = nullptr;
+			//_vbo_skin = nullptr;
+			//_vbo_instanced = nullptr;
 		}
 
 		void MakeInstanced(const std::vector<glm::mat4>& modelMatrices)
@@ -379,7 +446,7 @@ namespace seri
 				return;
 			}
 
-			_vbo_instanced->SetData(modelMatrices.data(), modelMatrices.size() * sizeof(glm::mat4));
+			_vbo_instanced->UpdateData(modelMatrices.data(), modelMatrices.size() * sizeof(glm::mat4));
 		}
 
 		bool HasIndex()
@@ -609,7 +676,7 @@ namespace seri
 			return mesh;
 		}
 
-		static std::unique_ptr<Mesh> line_2d(glm::vec2 beg, glm::vec2 end)
+		static std::unique_ptr<Mesh> line_2d(const glm::vec2& beg, const glm::vec2& end)
 		{
 			std::unique_ptr<Mesh> mesh = std::make_unique<Mesh>();
 
@@ -751,6 +818,7 @@ namespace seri
 			return glm::mix(beg, end, ratio);
 		}
 
+		std::shared_ptr<VertexArrayBase> _vao{ nullptr };
 		std::shared_ptr<IndexBufferBase> _ebo{ nullptr };
 		std::shared_ptr<VertexBufferBase> _vbo_ver{ nullptr };
 		std::shared_ptr<VertexBufferBase> _vbo_uv0{ nullptr };
@@ -758,7 +826,6 @@ namespace seri
 		std::shared_ptr<VertexBufferBase> _vbo_nor{ nullptr };
 		std::shared_ptr<VertexBufferBase> _vbo_skin{ nullptr };
 		std::shared_ptr<VertexBufferBase> _vbo_instanced{ nullptr };
-		std::shared_ptr<VertexArrayBase> _vao{ nullptr };
 
 		float animTime{ 0.0f };
 		double animTimeInTick{ 0.0 };

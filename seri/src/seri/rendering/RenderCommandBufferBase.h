@@ -4,6 +4,7 @@
 #include "seri/graphic/Material.h"
 #include "seri/camera/CameraBase.h"
 #include "seri/rendering/PipelineBase.h"
+#include "seri/rendering/RenderingStats.h"
 #include "seri/rendering/RenderingManagerBase.h"
 
 namespace seri
@@ -41,8 +42,16 @@ namespace seri
 
 		virtual void Execute() = 0;
 
+		RenderingStats GetStats()
+		{
+			return _statsPrev;
+		}
+
 	protected:
 		std::vector<RenderCommand> _commands;
+
+		RenderingStats _stats;
+		RenderingStats _statsPrev;
 
 	};
 }

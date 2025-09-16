@@ -2,14 +2,13 @@
 
 #include <seri/core/Seri.h>
 
-#include <seri/light/Light.h>
 #include <seri/graphic/Mesh.h>
 #include <seri/graphic/Model.h>
 #include <seri/graphic/Material.h>
-#include <seri/behaviour/BehaviourBase.h>
-#include <seri/model/ModelImporter.h>
-#include <seri/netcode/Socket.h>
 #include <seri/random/Random.h>
+#include <seri/netcode/Socket.h>
+#include <seri/model/ModelImporter.h>
+#include <seri/behaviour/BehaviourBase.h>
 
 class SimpleBehaviour : public seri::BehaviourBase
 {
@@ -29,7 +28,6 @@ public:
 		auto texture_1 = seri::TextureBase::Create();
 		texture_1->Init(seri::TextureDesc{}, "assets/spiderman/textures/spiderman.png");
 
-		const int fontIndex = 2;
 		const auto& fontInfo = seri::font::FontManager::GetPredefinedFonts()[fontIndex]->fontInfo;
 		const auto& fontTexture = seri::font::FontManager::GetPredefinedFonts()[fontIndex]->texture;
 
@@ -58,8 +56,6 @@ public:
 		udpSocketClient = std::make_unique<seri::netcode::Socket>(seri::netcode::SocketType::udp);
 		udpSocketClient->Connect({ "127.0.0.1", 5200 });
 
-		seri::font::FontManager::MakeText(font_mesh, fontInfo, "hello world", 200, 200);
-
 		for (unsigned int i = 0; i < 100; i++)
 		{
 			instancedTRSs.push_back(seri::Util::GetTRS({ 4.0f + i % 20, i / 20, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f }));
@@ -69,6 +65,14 @@ public:
 
 	void Update() override
 	{
+		seri::RenderingStats renderingStats = seri::RenderingManager::GetRenderingStats();
+		std::string statsStr =
+			"draw calls: " + std::to_string(renderingStats.drawCalls) +
+			", tri: " + std::to_string(renderingStats.triangles) +
+			", frame: " + std::to_string(seri::TimeWrapper::GetFrameCount()) +
+			", fps: " + std::to_string(seri::Util::RountToInt(1.0f / seri::TimeWrapper::GetDeltaTime()));
+		seri::font::FontManager::MakeText(font_mesh, fontIndex, statsStr, 0, 60);
+
 		glm::vec3 pos_3d{ 0.0f, 0.0f, 0.0f };
 		glm::quat rot_3d = glm::quat(glm::vec3{ glm::radians(0.0f), glm::radians(0.0f), glm::radians(0.0f) });
 		glm::vec3 scale_3d{ 1.0f, 1.0f, 1.0f };
@@ -107,6 +111,8 @@ public:
 	}
 
 private:
+	int fontIndex = 2;
+
 	std::unique_ptr<seri::Mesh> quad_2d;
 	std::unique_ptr<seri::Mesh> quad_3d;
 	std::unique_ptr<seri::Mesh> cube_3d;

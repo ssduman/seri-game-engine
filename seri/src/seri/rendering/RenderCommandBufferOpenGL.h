@@ -46,20 +46,30 @@ namespace seri
 				command.material->Apply();
 				command.vao->Bind();
 
+				_stats.drawCalls += 1;
+
 				switch (command.drawMode)
 				{
 					case DrawMode::arrays:
-						glDrawArrays(
-							GetTopology(command.topology),
-							0,
-							command.count
-						);
+						{
+							_stats.triangles += command.count / 3;
+
+							glDrawArrays(
+								GetTopology(command.topology),
+								0,
+								command.count
+							);
+						}
 						break;
 					case DrawMode::elements:
 						{
+							uint32_t indexCount = command.vao->GetIndexBuffer()->GetCount();
+
+							_stats.triangles += indexCount / 3;
+
 							glDrawElements(
 								GetTopology(command.topology),
-								command.vao->GetIndexBuffer()->GetCount(),
+								indexCount,
 								GetDataType(command.dataType),
 								command.indices
 							);
@@ -67,9 +77,13 @@ namespace seri
 						break;
 					case DrawMode::elements_instanced:
 						{
+							uint32_t indexCount = command.vao->GetIndexBuffer()->GetCount();
+
+							_stats.triangles += (indexCount / 3) * command.instanceCount;
+
 							glDrawElementsInstanced(
 								GetTopology(command.topology),
-								command.vao->GetIndexBuffer()->GetCount(),
+								indexCount,
 								GetDataType(command.dataType),
 								command.indices,
 								command.instanceCount
@@ -82,6 +96,8 @@ namespace seri
 			}
 
 			_commands.clear();
+			_statsPrev = _stats;
+			_stats.Reset();
 		}
 
 	private:

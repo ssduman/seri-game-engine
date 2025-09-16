@@ -65,10 +65,32 @@ namespace seri
 		{
 			glBindBuffer(_target, _handle);
 		}
-
 		void Unbind() override
 		{
 			glBindBuffer(_target, 0);
+		}
+
+		void SetData(const void* data, uint32_t count, uint32_t size) override
+		{
+			_count = count;
+			glBindBuffer(GetBufferTargetOpenGL(BufferTarget::vertex), _handle);
+			glBufferData(GetBufferTargetOpenGL(BufferTarget::vertex), size, data, _usage);
+			glBindBuffer(GetBufferTargetOpenGL(BufferTarget::vertex), 0);
+		}
+		void SetData(const std::vector<uint32_t>& data) override
+		{
+			SetData(data.data(), static_cast<uint32_t>(data.size()), data.size() * sizeof(uint32_t));
+		}
+
+		void UpdateData(const void* data, uint32_t size, uint32_t offset = 0) override
+		{
+			Bind();
+			glBufferSubData(_target, offset, size, data);
+			Unbind();
+		}
+		void UpdateData(const std::vector<uint32_t>& data) override
+		{
+			UpdateData(data.data(), data.size() * sizeof(uint32_t));
 		}
 
 		uint32_t GetCount() override
@@ -114,17 +136,55 @@ namespace seri
 		{
 			glBindBuffer(_target, _handle);
 		}
-
 		void Unbind() override
 		{
 			glBindBuffer(_target, 0);
 		}
 
-		void SetData(const void* data, uint32_t size, uint32_t offset = 0) override
+		void SetData(const void* data, uint32_t size) override
+		{
+			Bind();
+			glBufferData(_target, size, data, _usage);
+			Unbind();
+		}
+		void SetData(const std::vector<glm::vec2>& data) override
+		{
+			SetData(data.data(), data.size() * sizeof(glm::vec2));
+		}
+		void SetData(const std::vector<glm::vec3>& data) override
+		{
+			SetData(data.data(), data.size() * sizeof(glm::vec3));
+		}
+		void SetData(const std::vector<glm::vec4>& data) override
+		{
+			SetData(data.data(), data.size() * sizeof(glm::vec4));
+		}
+		void SetData(const std::vector<glm::mat4>& data) override
+		{
+			SetData(data.data(), data.size() * sizeof(glm::mat4));
+		}
+
+		void UpdateData(const void* data, uint32_t size, uint32_t offset = 0) override
 		{
 			Bind();
 			glBufferSubData(_target, offset, size, data);
 			Unbind();
+		}
+		void UpdateData(const std::vector<glm::vec2>& data) override
+		{
+			UpdateData(data.data(), data.size() * sizeof(glm::vec2));
+		}
+		void UpdateData(const std::vector<glm::vec3>& data) override
+		{
+			UpdateData(data.data(), data.size() * sizeof(glm::vec3));
+		}
+		void UpdateData(const std::vector<glm::vec4>& data) override
+		{
+			UpdateData(data.data(), data.size() * sizeof(glm::vec4));
+		}
+		void UpdateData(const std::vector<glm::mat4>& data) override
+		{
+			UpdateData(data.data(), data.size() * sizeof(glm::mat4));
 		}
 
 		const BufferLayoutDesc& VertexBufferBase::GetLayout()

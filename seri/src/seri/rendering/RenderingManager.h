@@ -1,6 +1,7 @@
 #pragma once
 
 #include "seri/rendering/PipelineBase.h"
+#include "seri/rendering/RenderingStats.h"
 #include "seri/rendering/RenderingManagerBase.h"
 #include "seri/rendering/RenderCommandBufferBase.h"
 
@@ -94,6 +95,11 @@ namespace seri
 		static void Execute()
 		{
 			_renderCommandBuffer->Execute();
+		}
+
+		static RenderingStats GetRenderingStats()
+		{
+			return _renderCommandBuffer->GetStats();
 		}
 
 	private:

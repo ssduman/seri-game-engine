@@ -32,6 +32,12 @@ namespace seri
 		virtual void Bind() = 0;
 		virtual void Unbind() = 0;
 
+		virtual void SetData(const void* data, uint32_t count, uint32_t size) = 0;
+		virtual void SetData(const std::vector<uint32_t>& data) = 0;
+
+		virtual void UpdateData(const void* data, uint32_t size, uint32_t offset = 0) = 0;
+		virtual void UpdateData(const std::vector<uint32_t>& data) = 0;
+
 		virtual uint32_t GetCount() = 0;
 
 		static std::shared_ptr<IndexBufferBase> Create(const uint32_t* data, uint32_t count);
@@ -50,7 +56,17 @@ namespace seri
 		virtual void Bind() = 0;
 		virtual void Unbind() = 0;
 
-		virtual void SetData(const void* data, uint32_t size, uint32_t offset = 0) = 0;
+		virtual void SetData(const void* data, uint32_t size) = 0;
+		virtual void SetData(const std::vector<glm::vec2>& data) = 0;
+		virtual void SetData(const std::vector<glm::vec3>& data) = 0;
+		virtual void SetData(const std::vector<glm::vec4>& data) = 0;
+		virtual void SetData(const std::vector<glm::mat4>& data) = 0;
+
+		virtual void UpdateData(const void* data, uint32_t size, uint32_t offset = 0) = 0;
+		virtual void UpdateData(const std::vector<glm::vec2>& data) = 0;
+		virtual void UpdateData(const std::vector<glm::vec3>& data) = 0;
+		virtual void UpdateData(const std::vector<glm::vec4>& data) = 0;
+		virtual void UpdateData(const std::vector<glm::mat4>& data) = 0;
 
 		virtual const BufferLayoutDesc& GetLayout() = 0;
 		virtual void SetLayout(const BufferLayoutDesc& layout) = 0;

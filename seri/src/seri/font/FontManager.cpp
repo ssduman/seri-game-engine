@@ -34,10 +34,12 @@ void seri::font::FontManager::Init(const char* fontFolderPath)
 
 void seri::font::FontManager::MakeText(std::unique_ptr<seri::Mesh>& mesh, const FontInfo& fontInfo, std::string text, float posX, float posY)
 {
-	unsigned int currOffset = 0;
+	mesh->Clear();
+
+	uint32_t currOffset = 0;
 	for (auto& c : text)
 	{
-		unsigned int unicode = static_cast<unsigned int>(c);
+		uint32_t unicode = static_cast<uint32_t>(c);
 
 		for (const seri::font::GlyphData& glyph : fontInfo.glyph_data_list)
 		{
@@ -117,5 +119,14 @@ void seri::font::FontManager::MakeText(std::unique_ptr<seri::Mesh>& mesh, const 
 		}
 	}
 
-	mesh->Build();
+	//mesh->Build();
+	mesh->Update();
+}
+
+void seri::font::FontManager::MakeText(std::unique_ptr<seri::Mesh>& mesh, int fontIndex, std::string text, float posX, float posY)
+{
+	const auto& fontInfo = seri::font::FontManager::GetPredefinedFonts()[fontIndex]->fontInfo;
+	const auto& fontTexture = seri::font::FontManager::GetPredefinedFonts()[fontIndex]->texture;
+
+	MakeText(mesh, fontInfo, text, posX, posY);
 }

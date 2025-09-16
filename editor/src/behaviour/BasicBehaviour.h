@@ -10,12 +10,12 @@ public:
 	{
 		float mult = 0.4f;
 		std::vector<uint32_t> indices{
-			0,  1,  2,  2,  3,  0,
-			4,  5,  6,  6,  7,  4,
-			8,  9, 10, 10, 11,  8,
-			12, 13,14, 14, 15, 12,
-			16, 17,18, 18, 19, 16,
-			20, 21,22, 22, 23, 20,
+			0,  1,   2,  2,  3,  0,
+			4,  5,   6,  6,  7,  4,
+			8,  9,  10, 10, 11,  8,
+			12, 13, 14, 14, 15, 12,
+			16, 17, 18, 18, 19, 16,
+			20, 21, 22, 22, 23, 20,
 		};
 		std::vector<glm::vec3> positions{
 			{-0.5f * mult, -0.5f * mult, +0.5f * mult },
@@ -142,22 +142,27 @@ public:
 			+0.5f * mult, -0.5f * mult, +0.5f * mult,  1.0f, 0.0f, 0.0f, 1.0f,  1.0f, 0.0f,
 			+0.5f * mult, +0.5f * mult, +0.5f * mult,  1.0f, 0.0f, 0.0f, 1.0f,  1.0f, 1.0f,
 			-0.5f * mult, +0.5f * mult, +0.5f * mult,  1.0f, 0.0f, 0.0f, 1.0f,  0.0f, 1.0f,
+
 			-0.5f * mult, -0.5f * mult, -0.5f * mult,  0.0f, 1.0f, 0.0f, 1.0f,  1.0f, 0.0f,
 			+0.5f * mult, -0.5f * mult, -0.5f * mult,  0.0f, 1.0f, 0.0f, 1.0f,  0.0f, 0.0f,
 			+0.5f * mult, +0.5f * mult, -0.5f * mult,  0.0f, 1.0f, 0.0f, 1.0f,  0.0f, 1.0f,
 			-0.5f * mult, +0.5f * mult, -0.5f * mult,  0.0f, 1.0f, 0.0f, 1.0f,  1.0f, 1.0f,
+
 			-0.5f * mult, -0.5f * mult, -0.5f * mult,  0.0f, 0.0f, 1.0f, 1.0f,  0.0f, 0.0f,
 			-0.5f * mult, -0.5f * mult, +0.5f * mult,  0.0f, 0.0f, 1.0f, 1.0f,  1.0f, 0.0f,
 			-0.5f * mult, +0.5f * mult, +0.5f * mult,  0.0f, 0.0f, 1.0f, 1.0f,  1.0f, 1.0f,
 			-0.5f * mult, +0.5f * mult, -0.5f * mult,  0.0f, 0.0f, 1.0f, 1.0f,  0.0f, 1.0f,
+
 			+0.5f * mult, -0.5f * mult, -0.5f * mult,  1.0f, 1.0f, 0.0f, 1.0f,  1.0f, 0.0f,
 			+0.5f * mult, -0.5f * mult, +0.5f * mult,  1.0f, 1.0f, 0.0f, 1.0f,  0.0f, 0.0f,
 			+0.5f * mult, +0.5f * mult, +0.5f * mult,  1.0f, 1.0f, 0.0f, 1.0f,  0.0f, 1.0f,
 			+0.5f * mult, +0.5f * mult, -0.5f * mult,  1.0f, 1.0f, 0.0f, 1.0f,  1.0f, 1.0f,
+
 			-0.5f * mult, +0.5f * mult, +0.5f * mult,  1.0f, 0.0f, 1.0f, 1.0f,  0.0f, 0.0f,
 			+0.5f * mult, +0.5f * mult, +0.5f * mult,  1.0f, 0.0f, 1.0f, 1.0f,  1.0f, 0.0f,
 			+0.5f * mult, +0.5f * mult, -0.5f * mult,  1.0f, 0.0f, 1.0f, 1.0f,  1.0f, 1.0f,
 			-0.5f * mult, +0.5f * mult, -0.5f * mult,  1.0f, 0.0f, 1.0f, 1.0f,  0.0f, 1.0f,
+
 			-0.5f * mult, -0.5f * mult, +0.5f * mult,  0.0f, 1.0f, 1.0f, 1.0f,  1.0f, 1.0f,
 			+0.5f * mult, -0.5f * mult, +0.5f * mult,  0.0f, 1.0f, 1.0f, 1.0f,  0.0f, 1.0f,
 			+0.5f * mult, -0.5f * mult, -0.5f * mult,  0.0f, 1.0f, 1.0f, 1.0f,  0.0f, 0.0f,
