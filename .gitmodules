@@ -25,3 +25,4 @@
 [submodule "seri/vendor/sdl"]
 	path = seri/vendor/sdl
 	url = https://github.com/libsdl-org/SDL.git
+	ignore = dirty
