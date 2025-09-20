@@ -4,7 +4,6 @@
 
 layout(location = 0) in vec3 in_vertex;
 layout(location = 1) in vec2 in_uv;
-layout(location = 2) in vec4 in_color;
 layout(location = 3) in vec3 in_normal;
 layout(location = 4) in ivec4 in_bone_ids;
 layout(location = 5) in vec4 in_weights;
@@ -19,7 +18,6 @@ uniform mat4 u_bones[MAX_BONES];
 
 out vec4 sent_pos;
 out vec2 sent_uv;
-out vec4 sent_color;
 out vec3 sent_normal;
 
 void main()
@@ -31,12 +29,13 @@ void main()
         u_bones[in_bone_ids[3]] * in_weights[3]
     ;
     
-    sent_uv = in_uv;
-    sent_color = in_color;
-    sent_pos = bone_transform * vec4(in_vertex, 1.0);
-    sent_normal = normalize(mat3(transpose(inverse(u_model * bone_transform))) * in_normal);
+    mat4 model = u_model * bone_transform;
 
-    gl_Position =  u_projection * u_view * u_model * sent_pos;
+    sent_uv = in_uv;
+    sent_pos = model * vec4(in_vertex, 1.0);
+    sent_normal = normalize(mat3(transpose(inverse(model))) * in_normal);
+
+    gl_Position =  u_projection * u_view * sent_pos;
 }
 
 #end_vs
@@ -47,7 +46,6 @@ void main()
 
 in vec4 sent_pos;
 in vec2 sent_uv;
-in vec4 sent_color;
 in vec3 sent_normal;
 
 uniform vec3 u_view_pos;

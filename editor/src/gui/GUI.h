@@ -412,11 +412,6 @@ private:
 
 			ImGui::Separator();
 
-			ImGui::ColorEdit4("color", &_currentEntity->GetColor().r);
-			seri::ShaderLibrary::SetColor(_currentEntity->GetShader(), _currentEntity->GetColor().GetColorRGBA());
-
-			ImGui::Separator();
-
 			auto& sceneName = _currentScene->GetName();
 			ImGui::InputText("name", (char*)sceneName.c_str(), sceneName.size() + 1);
 

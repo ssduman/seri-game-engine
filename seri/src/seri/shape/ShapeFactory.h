@@ -9,8 +9,6 @@
 #include "seri/shape/Triangle.h"
 #include "seri/shape/Rectangle.h"
 
-#include <glm/gtc/random.hpp>
-
 #include <memory>
 #include <cstdlib>
 
@@ -23,12 +21,7 @@ public:
 	{
 #if false
 
-		static auto minColor = glm::vec4{ 0.0f, 0.0f, 0.0f, 1.0f };
-		static auto maxColor = glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f };
-		static auto randomColor = []() -> glm::vec4
-			{
-				return glm::linearRand(minColor, maxColor);
-			};
+		static auto randomColor = []() -> glm::vec4 { return glm::linearRand(glm::vec4{ 0.0f, 0.0f, 0.0f, 1.0f }, glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f }); };
 
 		switch (entityType)
 		{
@@ -306,10 +299,6 @@ public:
 					LOGGER(info, "polygon created");
 
 					return polygon;
-				}
-			case seri::EntityType::unknown:
-				{
-					return nullptr;
 				}
 			default:
 				{

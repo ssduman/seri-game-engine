@@ -42,6 +42,30 @@ namespace seri
 		not_equal,
 	};
 
+	enum class StencilFunc
+	{
+		never,
+		always,
+		less,
+		equal,
+		l_equal,
+		g_equal,
+		greater,
+		not_equal,
+	};
+
+	enum class StencilOp
+	{
+		keep,
+		zero,
+		replace,
+		incr,
+		incr_wrap,
+		decr,
+		decr_wrap,
+		invert,
+	};
+
 	enum class CullFace
 	{
 		front,
@@ -86,6 +110,15 @@ namespace seri
 		bool depthTestEnabled{ true };
 		bool depthWriteEnabled{ true };
 		DepthFunc depthFunc{ DepthFunc::less };
+
+		bool stencilTestEnabled{ false };
+		StencilFunc stencilFunc{ StencilFunc::always };
+		int32_t stencilRef{ 0 };
+		uint32_t stencilMask{ 0xFF };
+		uint32_t stencilMaskAND{ 0xFF };
+		StencilOp stencilSfail{ StencilOp::keep };
+		StencilOp stencilDPfail{ StencilOp::keep };
+		StencilOp stencilDPpass{ StencilOp::keep };
 
 		bool cullFaceEnabled{ false };
 		CullFace cullFace{ CullFace::back };

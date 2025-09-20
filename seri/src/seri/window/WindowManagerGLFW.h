@@ -174,6 +174,9 @@ namespace seri
 
 		void CreateWindowGLFW()
 		{
+			glfwWindowHint(GLFW_DEPTH_BITS, 24);
+			glfwWindowHint(GLFW_STENCIL_BITS, 8);
+
 			if (_windowProperties.isFullscreen)
 			{
 				GLFWmonitor* glfwMonitor = glfwGetPrimaryMonitor();

@@ -467,6 +467,9 @@ namespace seri
 
 		void CreateWindowSDL()
 		{
+			SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+			SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+
 			SDL_WindowFlags flags =
 				SDL_WINDOW_OPENGL |
 				SDL_WINDOW_RESIZABLE

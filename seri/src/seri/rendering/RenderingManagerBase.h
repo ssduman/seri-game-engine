@@ -28,13 +28,17 @@ namespace seri
 
 		virtual void SetLineWidth(float width) = 0;
 
-		virtual DepthFunc GetDepthFunc() = 0;
+		virtual void SetBlend(bool enabled, BlendFactor srcFactor, BlendFactor dstFactor) = 0;
 
 		virtual void SetDepthFunc(bool enabled, DepthFunc depthFunc) = 0;
 
 		virtual void SetDepthWrite(bool enabled) = 0;
 
-		virtual void SetBlend(bool enabled, BlendFactor srcFactor, BlendFactor dstFactor) = 0;
+		virtual void SetStencilFunc(bool enabled, StencilFunc stencilFunc, int32_t ref, uint32_t mask) = 0;
+
+		virtual void SetStencilOp(StencilOp sfail, StencilOp dpfail, StencilOp dppass) = 0;
+
+		virtual void SetStencilMask(uint32_t mask) = 0;
 
 		virtual void SetCullFace(bool enabled, CullFace cullFace) = 0;
 

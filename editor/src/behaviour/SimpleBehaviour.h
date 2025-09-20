@@ -21,12 +21,16 @@ public:
 		font_mesh = std::make_unique<seri::Mesh>();
 
 		model_0 = seri::ModelImporter{}.Load("assets/spiderman/source/spiderman.fbx");
+		model_1 = seri::ModelImporter{}.Load("assets/cannon/cannon_01_1k.fbx");
 
 		auto texture_0 = seri::TextureBase::Create();
 		texture_0->Init(seri::TextureDesc{}, "assets/textures/passage.png");
 
 		auto texture_1 = seri::TextureBase::Create();
 		texture_1->Init(seri::TextureDesc{}, "assets/spiderman/textures/spiderman.png");
+
+		auto texture_2 = seri::TextureBase::Create();
+		texture_2->Init(seri::TextureDesc{}, "assets/cannon/textures/cannon_01_diff_1k.jpg");
 
 		const auto& fontInfo = seri::font::FontManager::GetPredefinedFonts()[fontIndex]->fontInfo;
 		const auto& fontTexture = seri::font::FontManager::GetPredefinedFonts()[fontIndex]->texture;
@@ -37,6 +41,10 @@ public:
 
 		materialGrid = std::make_shared<seri::Material>();
 		materialGrid->shader = seri::ShaderLibrary::Find("grid");
+
+		materialCannon = std::make_shared<seri::Material>();
+		materialCannon->shader = seri::ShaderLibrary::Find("entity");
+		materialCannon->SetTexture("u_texture", texture_2);
 
 		materialInstanced = std::make_shared<seri::Material>();
 		materialInstanced->shader = seri::ShaderLibrary::Find("entity_instanced");
@@ -76,6 +84,7 @@ public:
 		glm::vec3 pos_3d{ 0.0f, 0.0f, 0.0f };
 		glm::quat rot_3d = glm::quat(glm::vec3{ glm::radians(0.0f), glm::radians(0.0f), glm::radians(0.0f) });
 		glm::vec3 scale_3d{ 1.0f, 1.0f, 1.0f };
+		glm::vec3 scale_l{ 0.01f, 0.01f, 0.01f };
 
 		for (size_t i = 0; i < instancedTRSs.size(); i++)
 		{
@@ -96,6 +105,11 @@ public:
 				const auto& materialSkinned = materialsSkinned[m];
 				seri::Graphic::Draw(mesh, materialSkinned, seri::Util::GetTRS(pos_3d, rot_3d, scale_3d), seri::Graphic::GetCameraPerspective());
 			}
+		}
+
+		if (model_1)
+		{
+			seri::Graphic::DrawModel(model_1, materialCannon, seri::Util::GetTRS({ -4.0f, 0.0f, 0.0f }, rot_3d, scale_l), seri::Graphic::GetCameraPerspective());
 		}
 
 		seri::Graphic::Draw(font_mesh, materialFont, seri::Util::GetIdentityMatrix(), seri::Graphic::GetCameraOrtho());
@@ -119,9 +133,11 @@ private:
 	std::unique_ptr<seri::Mesh> font_mesh;
 
 	std::unique_ptr<seri::Model> model_0;
+	std::unique_ptr<seri::Model> model_1;
 
 	std::shared_ptr<seri::Material> materialFont;
 	std::shared_ptr<seri::Material> materialGrid;
+	std::shared_ptr<seri::Material> materialCannon;
 	std::shared_ptr<seri::Material> materialInstanced;
 	std::vector<std::shared_ptr<seri::Material>> materialsSkinned;
 

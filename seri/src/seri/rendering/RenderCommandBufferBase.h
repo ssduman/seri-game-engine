@@ -3,6 +3,8 @@
 #include "seri/util/Util.h"
 #include "seri/graphic/Material.h"
 #include "seri/camera/CameraBase.h"
+#include "seri/rendering/BufferBase.h"
+#include "seri/rendering/VertexArrayBase.h"
 #include "seri/rendering/PipelineBase.h"
 #include "seri/rendering/RenderingStats.h"
 #include "seri/rendering/RenderingManagerBase.h"

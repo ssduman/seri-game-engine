@@ -1,15 +1,14 @@
 #pragma once
 
+#include "seri/util/Util.h"
 #include "seri/core/Object.h"
 #include "seri/core/EntityType.h"
 #include "seri/texture/Color.h"
 #include "seri/texture/TextureBase.h"
-#include "seri/shader/ShaderBase.h"
 #include "seri/shader/ShaderLibrary.h"
 #include "seri/math/Transform.h"
 #include "seri/camera/CameraBase.h"
-#include "seri/logging/Logger.h"
-#include "seri/renderer/RendererBackendOpenGL.h"
+#include "seri/rendering/RenderingManager.h"
 
 #include <memory>
 #include <string>
@@ -51,11 +50,6 @@ namespace seri
 			ShaderLibrary::SetProjection(_shader, _camera->GetProjection());
 		}
 
-		Color& GetColor()
-		{
-			return _color;
-		}
-
 		std::shared_ptr<ShaderBase>& GetShader()
 		{
 			return _shader;
@@ -75,7 +69,7 @@ namespace seri
 		std::shared_ptr<CameraBase> _camera;
 		std::shared_ptr<ShaderBase> _shader;
 		std::shared_ptr<TextureBase> _texture;
-		Color _color;
+		
 		Transform _transform;
 		EntityType _entityType{ EntityType::unknown };
 

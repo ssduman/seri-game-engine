@@ -47,9 +47,9 @@ namespace seri
 			_renderingManager->SetLineWidth(width);
 		}
 
-		static DepthFunc GetDepthFunc()
+		static void SetBlend(bool enabled, BlendFactor srcFactor, BlendFactor dstFactor)
 		{
-			return _renderingManager->GetDepthFunc();
+			_renderingManager->SetBlend(enabled, srcFactor, dstFactor);
 		}
 
 		static void SetDepthFunc(bool enabled, DepthFunc depthFunc)
@@ -62,9 +62,19 @@ namespace seri
 			_renderingManager->SetDepthWrite(enabled);
 		}
 
-		static void SetBlend(bool enabled, BlendFactor srcFactor, BlendFactor dstFactor)
+		static void SetStencilFunc(bool enabled, StencilFunc stencilFunc, int32_t ref, uint32_t mask)
 		{
-			_renderingManager->SetBlend(enabled, srcFactor, dstFactor);
+			_renderingManager->SetStencilFunc(enabled, stencilFunc, ref, mask);
+		}
+
+		static void SetStencilOp(StencilOp sfail, StencilOp dpfail, StencilOp dppass)
+		{
+			_renderingManager->SetStencilOp(sfail, dpfail, dppass);
+		}
+
+		static void SetStencilMask(uint32_t mask)
+		{
+			_renderingManager->SetStencilMask(mask);
 		}
 
 		static void SetCullFace(bool enabled, CullFace cullFace)

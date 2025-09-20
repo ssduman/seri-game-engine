@@ -32,9 +32,10 @@
 #include "seri/shader/ShaderBase.h"
 #include "seri/shader/ShaderLibrary.h"
 
-#include "seri/behaviour/BehaviourManager.h"
-
 #include "seri/graphic/Graphic.h"
+#include "seri/graphic/Material.h"
+
+#include "seri/behaviour/BehaviourManager.h"
 
 #include "seri/logging/Logger.h"
 

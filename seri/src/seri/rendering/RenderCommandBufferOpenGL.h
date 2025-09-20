@@ -32,6 +32,9 @@ namespace seri
 				RenderingManager::SetCullFace(command.desc.cullFaceEnabled, command.desc.cullFace);
 				RenderingManager::SetDepthFunc(command.desc.depthTestEnabled, command.desc.depthFunc);
 				RenderingManager::SetDepthWrite(command.desc.depthWriteEnabled);
+				RenderingManager::SetStencilFunc(command.desc.stencilTestEnabled, command.desc.stencilFunc, command.desc.stencilRef, command.desc.stencilMaskAND);
+				RenderingManager::SetStencilOp(command.desc.stencilSfail, command.desc.stencilDPfail, command.desc.stencilDPpass);
+				RenderingManager::SetStencilMask(command.desc.stencilMask);
 				RenderingManager::SetLineWidth(command.desc.lineWidth);
 				RenderingManager::SetPointSize(command.desc.pointSize);
 

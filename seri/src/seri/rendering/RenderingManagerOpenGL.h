@@ -45,8 +45,9 @@ namespace seri
 
 		void Clear() override
 		{
-			const unsigned int mask = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT;
-			glClear(mask);
+			glClearStencil(0);
+			glClearDepth(1.0f);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 		}
 
 		void ClearColor(float red = 0.2f, float green = 0.2f, float blue = 0.2f, float alpha = 1.0f) override
@@ -64,24 +65,17 @@ namespace seri
 			glLineWidth(width);
 		}
 
-		DepthFunc GetDepthFunc() override
+		void SetBlend(bool enabled, BlendFactor srcFactor, BlendFactor dstFactor) override
 		{
-			GLint depthFunc;
-			glGetIntegerv(GL_DEPTH_FUNC, &depthFunc);
-
-			switch (depthFunc)
+			if (enabled)
 			{
-				case GL_NEVER: return DepthFunc::never;
-				case GL_ALWAYS: return DepthFunc::always;
-				case GL_LESS: return DepthFunc::less;
-				case GL_EQUAL: return DepthFunc::equal;
-				case GL_LEQUAL: return DepthFunc::l_equal;
-				case GL_GEQUAL: return DepthFunc::g_equal;
-				case GL_GREATER: return DepthFunc::greater;
-				case GL_NOTEQUAL: return DepthFunc::not_equal;
+				glEnable(GL_BLEND);
+				glBlendFunc(GetBlendFactor(srcFactor), GetBlendFactor(dstFactor));
 			}
-
-			return DepthFunc::less;
+			else
+			{
+				glDisable(GL_BLEND);
+			}
 		}
 
 		void SetDepthFunc(bool enabled, DepthFunc depthFunc) override
@@ -109,17 +103,27 @@ namespace seri
 			}
 		}
 
-		void SetBlend(bool enabled, BlendFactor srcFactor, BlendFactor dstFactor) override
+		void SetStencilFunc(bool enabled, StencilFunc stencilFunc, int32_t ref, uint32_t mask) override
 		{
 			if (enabled)
 			{
-				glEnable(GL_BLEND);
-				glBlendFunc(GetBlendFactor(srcFactor), GetBlendFactor(dstFactor));
+				glEnable(GL_STENCIL_TEST);
+				glStencilFunc(GetStencilFunc(stencilFunc), ref, mask);
 			}
 			else
 			{
-				glDisable(GL_BLEND);
+				glDisable(GL_STENCIL_TEST);
 			}
+		}
+
+		void SetStencilOp(StencilOp sfail, StencilOp dpfail, StencilOp dppass) override
+		{
+			glStencilOp(GetStencilOp(sfail), GetStencilOp(dpfail), GetStencilOp(dppass));
+		}
+
+		void SetStencilMask(uint32_t mask) override
+		{
+			glStencilMask(mask);
 		}
 
 		void SetCullFace(bool enabled, CullFace cullFace) override
@@ -159,6 +163,8 @@ namespace seri
 
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+			glEnable(GL_STENCIL_TEST);
 
 			//glEnable(GL_FRAMEBUFFER_SRGB);
 		}
@@ -337,6 +343,38 @@ namespace seri
 				case DepthFunc::not_equal: return GL_NOTEQUAL;
 			}
 			return GL_LESS;
+		}
+
+		GLenum GetStencilFunc(StencilFunc stencilFunc)
+		{
+			switch (stencilFunc)
+			{
+				case StencilFunc::never: return GL_NEVER;
+				case StencilFunc::always: return GL_ALWAYS;
+				case StencilFunc::less: return GL_LESS;
+				case StencilFunc::equal: return GL_EQUAL;
+				case StencilFunc::l_equal: return GL_LEQUAL;
+				case StencilFunc::g_equal: return GL_GEQUAL;
+				case StencilFunc::greater: return GL_GREATER;
+				case StencilFunc::not_equal: return GL_NOTEQUAL;
+			}
+			return GL_ALWAYS;
+		}
+
+		GLenum GetStencilOp(StencilOp stencilOp)
+		{
+			switch (stencilOp)
+			{
+				case StencilOp::keep: return GL_KEEP;
+				case StencilOp::zero: return GL_ZERO;
+				case StencilOp::replace: return GL_REPLACE;
+				case StencilOp::incr: return GL_INCR;
+				case StencilOp::incr_wrap: return GL_INCR_WRAP;
+				case StencilOp::decr: return GL_DECR;
+				case StencilOp::decr_wrap: return GL_DECR_WRAP;
+				case StencilOp::invert: return GL_INVERT;
+			}
+			return GL_KEEP;
 		}
 
 		GLenum GetBlendFactor(BlendFactor factor)
