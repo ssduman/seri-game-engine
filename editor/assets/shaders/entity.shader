@@ -3,8 +3,8 @@
 #version 460 core
 
 layout(location = 0) in vec3 in_vertex;
-layout(location = 1) in vec2 in_uv;
-layout(location = 3) in vec3 in_normal;
+layout(location = 1) in vec2 in_uv0;
+layout(location = 2) in vec3 in_normal;
 
 uniform mat4 u_model;
 uniform mat4 u_view;
@@ -16,7 +16,7 @@ out vec3 sent_normal;
 
 void main()
 {
-    sent_uv = in_uv;
+    sent_uv = in_uv0;
     sent_pos = u_model * vec4(in_vertex, 1.0);
     sent_normal = normalize(mat3(transpose(inverse(u_model))) * in_normal);
 

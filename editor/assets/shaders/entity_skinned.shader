@@ -3,10 +3,10 @@
 #version 460 core
 
 layout(location = 0) in vec3 in_vertex;
-layout(location = 1) in vec2 in_uv;
-layout(location = 3) in vec3 in_normal;
-layout(location = 4) in ivec4 in_bone_ids;
-layout(location = 5) in vec4 in_weights;
+layout(location = 1) in vec2 in_uv0;
+layout(location = 2) in vec3 in_normal;
+layout(location = 5) in ivec4 in_bone_ids;
+layout(location = 6) in vec4 in_weights;
 
 const int MAX_BONES = 200;
 
@@ -31,7 +31,7 @@ void main()
     
     mat4 model = u_model * bone_transform;
 
-    sent_uv = in_uv;
+    sent_uv = in_uv0;
     sent_pos = model * vec4(in_vertex, 1.0);
     sent_normal = normalize(mat3(transpose(inverse(model))) * in_normal);
 

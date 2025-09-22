@@ -19,6 +19,7 @@ namespace seri
 
 		return nullptr;
 	}
+
 	std::shared_ptr<IndexBufferBase> IndexBufferBase::Create(const std::vector<uint32_t>& indices)
 	{
 		return IndexBufferBase::Create(indices.data(), indices.size());
@@ -54,5 +55,4 @@ namespace seri
 	{
 		return VertexBufferBase::Create(data.data(), data.size() * sizeof(glm::mat4), usage);
 	}
-
 }

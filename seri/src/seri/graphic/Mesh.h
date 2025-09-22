@@ -10,6 +10,12 @@
 
 namespace seri
 {
+	struct TangentData
+	{
+		glm::vec3 tangent;
+		glm::vec3 bitangent;
+	};
+
 	struct Bone
 	{
 		unsigned int index{};
@@ -121,8 +127,7 @@ namespace seri
 		std::vector<glm::vec2> uv7s;
 		std::vector<glm::vec3> colors;
 		std::vector<glm::vec3> normals;
-		std::vector<glm::vec3> tangents;
-		std::vector<std::shared_ptr<TextureBase>> textures;
+		std::vector<TangentData> tangentData;
 
 		NodeData nodeData{};
 		Animation animation{};
@@ -162,12 +167,9 @@ namespace seri
 			normals.insert(normals.end(), nor.begin(), nor.end());
 		}
 
-		void AddTextures(std::vector<std::shared_ptr<TextureBase>> texs)
+		void AddTangentsAndBitangents(std::vector<TangentData> data)
 		{
-			for (auto& tex : texs)
-			{
-				textures.emplace_back(std::move(tex));
-			}
+			tangentData.insert(tangentData.end(), data.begin(), data.end());
 		}
 
 		void UpdateAnimation()
@@ -278,7 +280,7 @@ namespace seri
 			{
 				_vbo_ver = VertexBufferBase::Create(vertices);
 				_vbo_ver->AddElement(
-					{ seri::LayoutLocation::position }
+					{ seri::LayoutLocation::vertex }
 				);
 
 				_vao->AddVertexBuffer(_vbo_ver);
@@ -314,9 +316,22 @@ namespace seri
 				_vao->AddVertexBuffer(_vbo_nor);
 			}
 
+			if (tangentData.size() > 0)
+			{
+				_vbo_tan = VertexBufferBase::Create(tangentData.data(), tangentData.size() * sizeof(TangentData));
+				_vbo_tan->AddElements(
+					{
+						{ seri::LayoutLocation::tangent },
+						{ seri::LayoutLocation::bitangent }
+					}
+				);
+
+				_vao->AddVertexBuffer(_vbo_tan);
+			}
+
 			if (bonesForVertices.size() > 0)
 			{
-				_vbo_skin = VertexBufferBase::Create(&bonesForVertices[0], bonesForVertices.size() * sizeof(VertexBoneData));
+				_vbo_skin = VertexBufferBase::Create(bonesForVertices.data(), bonesForVertices.size() * sizeof(VertexBoneData));
 				_vbo_skin->AddElement(
 					{ seri::LayoutLocation::skin_bone_id, ShaderDataType::int4_type }
 				);
@@ -385,17 +400,7 @@ namespace seri
 			uv7s.clear();
 			colors.clear();
 			normals.clear();
-			tangents.clear();
-			textures.clear();
-
-			//_vao = nullptr;
-			//_ebo = nullptr;
-			//_vbo_ver = nullptr;
-			//_vbo_uv0 = nullptr;
-			//_vbo_col = nullptr;
-			//_vbo_nor = nullptr;
-			//_vbo_skin = nullptr;
-			//_vbo_instanced = nullptr;
+			tangentData.clear();
 		}
 
 		void MakeInstanced(const std::vector<glm::mat4>& modelMatrices)
@@ -447,11 +452,6 @@ namespace seri
 			}
 
 			_vbo_instanced->UpdateData(modelMatrices.data(), modelMatrices.size() * sizeof(glm::mat4));
-		}
-
-		bool HasIndex()
-		{
-			return !indices.empty();
 		}
 
 		void Bind()
@@ -824,6 +824,7 @@ namespace seri
 		std::shared_ptr<VertexBufferBase> _vbo_uv0{ nullptr };
 		std::shared_ptr<VertexBufferBase> _vbo_col{ nullptr };
 		std::shared_ptr<VertexBufferBase> _vbo_nor{ nullptr };
+		std::shared_ptr<VertexBufferBase> _vbo_tan{ nullptr };
 		std::shared_ptr<VertexBufferBase> _vbo_skin{ nullptr };
 		std::shared_ptr<VertexBufferBase> _vbo_instanced{ nullptr };
 

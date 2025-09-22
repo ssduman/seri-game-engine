@@ -176,7 +176,7 @@ public:
 
 		basicVertexBuffer_0 = seri::VertexBufferBase::Create(positions);
 		basicVertexBuffer_0->AddElement(
-			{ seri::LayoutLocation::position }
+			{ seri::LayoutLocation::vertex }
 		);
 
 		basicVertexBuffer_1 = seri::VertexBufferBase::Create(uvs);
@@ -198,7 +198,7 @@ public:
 		basicVertexBuffer_all = seri::VertexBufferBase::Create(&verticesAll[0], sizeof(verticesAll));
 		basicVertexBuffer_all->SetLayout(
 			seri::BufferLayoutDesc{
-				{ seri::LayoutLocation::position },
+				{ seri::LayoutLocation::vertex },
 				{ seri::LayoutLocation::color },
 				{ seri::LayoutLocation::uv0 }
 			}

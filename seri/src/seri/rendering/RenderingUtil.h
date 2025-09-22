@@ -7,16 +7,19 @@ namespace seri
 	enum class LayoutLocation
 	{
 		none = -1,
-		position = 0,
+
+		vertex = 0,
 		uv0 = 1,
-		color = 2,
-		normal = 3,
-		skin_bone_id = 4,
-		skin_weight = 5,
-		instanced_mat4 = 6,
-		instanced_mat4_reserved_1 = 7,
-		instanced_mat4_reserved_2 = 8,
-		instanced_mat4_reserved_3 = 9,
+		normal = 2,
+		tangent = 3,
+		bitangent = 4,
+		skin_bone_id = 5,
+		skin_weight = 6,
+		instanced_mat4 = 7,
+		instanced_mat4_reserved_1 = 8,
+		instanced_mat4_reserved_2 = 9,
+		instanced_mat4_reserved_3 = 10,
+		color = 11,
 
 		loc_0 = 0,
 		loc_1 = 1,
@@ -113,16 +116,18 @@ namespace seri
 		{
 			switch (loc)
 			{
-				case seri::LayoutLocation::position: return ShaderDataType::float3_type;
+				case seri::LayoutLocation::vertex: return ShaderDataType::float3_type;
 				case seri::LayoutLocation::uv0: return ShaderDataType::float2_type;
-				case seri::LayoutLocation::color: return ShaderDataType::float4_type;
 				case seri::LayoutLocation::normal: return ShaderDataType::float3_type;
+				case seri::LayoutLocation::tangent: return ShaderDataType::float3_type;
+				case seri::LayoutLocation::bitangent: return ShaderDataType::float3_type;
 				case seri::LayoutLocation::skin_bone_id: return ShaderDataType::int_type;
 				case seri::LayoutLocation::skin_weight: return ShaderDataType::float_type;
 				case seri::LayoutLocation::instanced_mat4: return ShaderDataType::mat4_type;
 				case seri::LayoutLocation::instanced_mat4_reserved_1: return ShaderDataType::mat4_type;
 				case seri::LayoutLocation::instanced_mat4_reserved_2: return ShaderDataType::mat4_type;
 				case seri::LayoutLocation::instanced_mat4_reserved_3: return ShaderDataType::mat4_type;
+				case seri::LayoutLocation::color: return ShaderDataType::float4_type;
 			}
 
 			return ShaderDataType::float3_type;

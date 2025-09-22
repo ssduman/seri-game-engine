@@ -3,9 +3,9 @@
 #version 460 core
 
 layout(location = 0) in vec3 in_vertex;
-layout(location = 1) in vec2 in_uv;
-layout(location = 3) in vec3 in_normal;
-layout(location = 6) in mat4 in_model_instanced;
+layout(location = 1) in vec2 in_uv0;
+layout(location = 2) in vec3 in_normal;
+layout(location = 7) in mat4 in_model_instanced;
 
 uniform mat4 u_view;
 uniform mat4 u_projection;
@@ -16,7 +16,7 @@ out vec3 sent_normal;
 
 void main()
 {
-    sent_uv = in_uv;
+    sent_uv = in_uv0;
     sent_pos = in_model_instanced * vec4(in_vertex, 1.0);
     sent_normal = normalize(mat3(transpose(inverse(in_model_instanced))) * in_normal);
 

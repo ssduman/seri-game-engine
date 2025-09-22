@@ -4,6 +4,7 @@
 #include "seri/graphic/Material.h"
 #include "seri/camera/CameraBase.h"
 #include "seri/rendering/BufferBase.h"
+#include "seri/rendering/FramebufferBase.h"
 #include "seri/rendering/VertexArrayBase.h"
 #include "seri/rendering/PipelineBase.h"
 #include "seri/rendering/RenderingStats.h"
@@ -29,6 +30,7 @@ namespace seri
 		std::shared_ptr<CameraBase> camera{ nullptr };
 		std::shared_ptr<Material> material{ nullptr };
 		std::shared_ptr<VertexArrayBase> vao{ nullptr };
+		std::shared_ptr<FramebufferBase> rt{ nullptr };
 
 		glm::mat4 trs{ 1.0f };
 	};

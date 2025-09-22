@@ -203,6 +203,14 @@ namespace seri
 			return *this;
 		}
 
+		void AddElements(std::initializer_list<BufferElementDesc> elements) override
+		{
+			for (const auto& element : elements)
+			{
+				_layoutDesc.AddElement(element);
+			}
+		}
+
 	private:
 		GLenum _usage;
 		GLenum _target;

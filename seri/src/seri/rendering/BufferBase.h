@@ -71,6 +71,7 @@ namespace seri
 		virtual const BufferLayoutDesc& GetLayout() = 0;
 		virtual void SetLayout(const BufferLayoutDesc& layout) = 0;
 		virtual VertexBufferBase& AddElement(const BufferElementDesc& element) = 0;
+		virtual void AddElements(std::initializer_list<BufferElementDesc> elements) = 0;
 
 		static std::shared_ptr<VertexBufferBase> Create(const void* data, uint32_t size, BufferUsage usage = BufferUsage::static_draw);
 		static std::shared_ptr<VertexBufferBase> Create(const std::vector<glm::vec2>& data, BufferUsage usage = BufferUsage::static_draw);

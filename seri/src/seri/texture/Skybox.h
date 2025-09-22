@@ -116,7 +116,7 @@ namespace seri
 
 			auto& vertexBuffer = seri::VertexBufferBase::Create(&_positions[0], _positions.size() * 3 * sizeof(float));
 			vertexBuffer->AddElement(
-				{ seri::LayoutLocation::position, seri::ShaderDataType::float3_type, false }
+				{ seri::LayoutLocation::vertex, seri::ShaderDataType::float3_type, false }
 			);
 
 			_vertexArray = seri::VertexArrayBase::Create();

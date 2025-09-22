@@ -143,6 +143,7 @@ namespace seri
 		std::vector<glm::vec4> colors;
 		std::vector<glm::vec2> uvs0;
 		std::vector<glm::vec3> normals;
+		std::vector<TangentData> tangentData;
 
 		for (unsigned int i = 0; i < ai_mesh->mNumVertices; i++)
 		{
@@ -166,17 +167,11 @@ namespace seri
 				glm::vec3 normal = ConvertVector(ai_mesh->mNormals[i]);
 				normals.emplace_back(std::move(normal));
 			}
-			if (ai_mesh->HasBones())
-			{
-			}
-			if (ai_mesh->HasFaces())
-			{
-			}
 			if (ai_mesh->HasTangentsAndBitangents())
 			{
-			}
-			if (ai_mesh->HasTextureCoordsName(0))
-			{
+				glm::vec3 t = ConvertVector(ai_mesh->mTangents[i]);
+				glm::vec3 b = ConvertVector(ai_mesh->mBitangents[i]);
+				tangentData.emplace_back(TangentData{ std::move(t), std::move(b) });
 			}
 		}
 
@@ -184,6 +179,7 @@ namespace seri
 		mesh->AddUV(std::move(uvs0));
 		mesh->AddColors(std::move(colors));
 		mesh->AddNormals(std::move(normals));
+		mesh->AddTangentsAndBitangents(std::move(tangentData));
 	}
 
 	void ModelImporter::LoadMaterial(const aiScene* ai_scene, const aiMesh* ai_mesh, std::unique_ptr<Mesh>& mesh)
@@ -251,8 +247,6 @@ namespace seri
 		auto texture = TextureBase::Create();
 		texture->Init(TextureDesc{}, aiTexture->pcData, size);
 		textures.emplace_back(std::move(texture));
-
-		mesh->AddTextures(std::move(textures));
 	}
 
 	void ModelImporter::LoadFileTexture(const aiTextureType ai_tt, const std::string& texturePath, std::unique_ptr<Mesh>& mesh)
@@ -271,8 +265,6 @@ namespace seri
 		}
 
 		textures.emplace_back(std::move(texture));
-
-		mesh->AddTextures(std::move(textures));
 	}
 
 	void ModelImporter::LoadColors(const aiMaterial* ai_material)
