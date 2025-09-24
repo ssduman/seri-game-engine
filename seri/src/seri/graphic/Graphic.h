@@ -2,6 +2,7 @@
 
 #include "seri/util/Util.h"
 #include "seri/camera/CameraBase.h"
+#include "seri/rendering/FramebufferBase.h"
 
 namespace seri
 {
@@ -33,9 +34,9 @@ namespace seri
 
 		static std::shared_ptr<CameraBase> GetCameraPerspective();
 
-		static void DrawModel(const std::unique_ptr<Model>& model, const std::shared_ptr<Material>& material, const glm::mat4& trs, const std::shared_ptr<CameraBase>& camera);
+		static void DrawModel(const std::unique_ptr<Model>& model, const std::shared_ptr<Material>& material, const glm::mat4& trs, const std::shared_ptr<CameraBase>& camera, const std::shared_ptr<FramebufferBase>& rt = nullptr);
 
-		static void Draw(const std::unique_ptr<Mesh>& mesh, const std::shared_ptr<Material>& material, const glm::mat4& trs, const std::shared_ptr<CameraBase>& camera);
+		static void Draw(const std::unique_ptr<Mesh>& mesh, const std::shared_ptr<Material>& material, const glm::mat4& trs, const std::shared_ptr<CameraBase>& camera, const std::shared_ptr<FramebufferBase>& rt = nullptr);
 
 		static void DrawInstanced(const std::unique_ptr<Mesh>& mesh, const std::shared_ptr<Material>& material, const std::vector<glm::mat4>& trs, const std::shared_ptr<CameraBase>& camera);
 

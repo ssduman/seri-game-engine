@@ -139,9 +139,9 @@ namespace seri
 			TextureDesc desc{};
 			desc.flip = flip;
 			desc.target = TextureTarget::cube_map;
-			desc.wrap_s = TextureWrap::clamp_to_edge;
-			desc.wrap_t = TextureWrap::clamp_to_edge;
-			desc.wrap_r = TextureWrap::clamp_to_edge;
+			desc.wrapS = TextureWrap::clamp_to_edge;
+			desc.wrapT = TextureWrap::clamp_to_edge;
+			desc.wrapR = TextureWrap::clamp_to_edge;
 			desc.magFilter = TextureMagFilter::linear;
 			desc.minFilter = TextureMinFilter::linear;
 			_texture->Init(desc);

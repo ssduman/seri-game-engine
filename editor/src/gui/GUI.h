@@ -74,6 +74,8 @@ public:
 
 		ShowMainMenuBar();
 
+		ShowImage();
+
 		ShowSceneWindow();
 
 		ShowEntityWindow();
@@ -208,6 +210,22 @@ private:
 
 			ImGui::End();
 		}
+	}
+
+	void ShowImage()
+	{
+		ImGui::Begin("Image Test");
+
+		auto tex = (ImTextureID)(intptr_t)seri::RenderingManager::GetEditorRT()->GetFirstColorTextureHandle();
+
+		ImGui::Image(
+			tex,
+			ImVec2(256, 256),
+			ImVec2(0, 1),
+			ImVec2(1, 0)
+		);
+
+		ImGui::End();
 	}
 
 	void ShowSceneWindow()

@@ -61,6 +61,7 @@
 #include "seri/window/WindowManagerBase.h"
 
 #include "seri/rendering/BufferBase.h"
+#include "seri/rendering/FramebufferBase.h"
 #include "seri/rendering/VertexArrayBase.h"
 #include "seri/rendering/RenderingManager.h"
 #include "seri/rendering/RenderingManagerBase.h"

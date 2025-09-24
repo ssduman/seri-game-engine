@@ -99,6 +99,11 @@ namespace seri
 
 		static void Submit(RenderCommand renderCommand)
 		{
+			if (renderCommand.rt == nullptr)
+			{
+				renderCommand.rt = _renderingManager->mainRT;
+			}
+
 			_renderCommandBuffer->Submit(renderCommand);
 		}
 
@@ -110,6 +115,16 @@ namespace seri
 		static RenderingStats GetRenderingStats()
 		{
 			return _renderCommandBuffer->GetStats();
+		}
+
+		static std::shared_ptr<FramebufferBase> GetMainRT()
+		{
+			return _renderingManager->mainRT;
+		}
+
+		static std::shared_ptr<FramebufferBase> GetEditorRT()
+		{
+			return _renderingManager->editorRT;
 		}
 
 	private:

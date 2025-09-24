@@ -27,6 +27,8 @@ namespace seri
 		{
 			for (const auto& command : _commands)
 			{
+				command.rt->Bind();
+
 				RenderingManager::SetBlend(command.desc.blendEnabled, command.desc.blendFactorSrc, command.desc.blendFactorDst);
 				RenderingManager::SetFrontFace(command.desc.frontFace);
 				RenderingManager::SetCullFace(command.desc.cullFaceEnabled, command.desc.cullFace);

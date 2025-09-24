@@ -2,6 +2,7 @@
 
 #include "seri/util/Util.h"
 #include "seri/window/WindowManagerBase.h"
+#include "seri/rendering/FramebufferBase.h"
 
 namespace seri
 {
@@ -53,6 +54,9 @@ namespace seri
 
 			_renderingProperties = std::move(renderingProperties);
 		}
+
+		std::shared_ptr<FramebufferBase> mainRT{ nullptr };
+		std::shared_ptr<FramebufferBase> editorRT{ nullptr };
 
 	protected:
 		RenderingProperties _renderingProperties;

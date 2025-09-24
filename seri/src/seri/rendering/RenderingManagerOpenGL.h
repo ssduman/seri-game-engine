@@ -33,6 +33,23 @@ namespace seri
 			LogOpenGLInfo();
 			EnableOpenGLDebugOutput();
 
+			mainRT = FramebufferBase::Create();
+
+			seri::FramebufferDesc framebufferDesc{};
+			framebufferDesc.width = 800;
+			framebufferDesc.height = 600;
+			seri::TextureDesc textureDesc{};
+			textureDesc.format = seri::TextureFormat::rgba__rgba8ubyte;
+			textureDesc.wrapS = seri::TextureWrap::clamp_to_edge;
+			textureDesc.wrapR = seri::TextureWrap::clamp_to_edge;
+			textureDesc.wrapT = seri::TextureWrap::clamp_to_edge;
+			textureDesc.magFilter = seri::TextureMagFilter::linear;
+			textureDesc.minFilter = seri::TextureMinFilter::linear;
+			framebufferDesc.AddAttachments(
+				{ textureDesc }
+			);
+			editorRT = seri::FramebufferBase::Create(framebufferDesc);
+
 			_initialized = true;
 
 			LOGGER(info, "[rendering] opengl rendering manager successfully");

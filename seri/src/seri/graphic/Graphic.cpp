@@ -45,7 +45,7 @@ namespace seri
 		return GetInstance()._cameraPerspective;
 	}
 
-	void Graphic::DrawModel(const std::unique_ptr<Model>& model, const std::shared_ptr<Material>& material, const glm::mat4& trs, const std::shared_ptr<CameraBase>& camera)
+	void Graphic::DrawModel(const std::unique_ptr<Model>& model, const std::shared_ptr<Material>& material, const glm::mat4& trs, const std::shared_ptr<CameraBase>& camera, const std::shared_ptr<FramebufferBase>& rt)
 	{
 		for (const auto& mesh : model->meshes)
 		{
@@ -53,7 +53,7 @@ namespace seri
 		}
 	}
 
-	void Graphic::Draw(const std::unique_ptr<Mesh>& mesh, const std::shared_ptr<Material>& material, const glm::mat4& trs, const std::shared_ptr<CameraBase>& camera)
+	void Graphic::Draw(const std::unique_ptr<Mesh>& mesh, const std::shared_ptr<Material>& material, const glm::mat4& trs, const std::shared_ptr<CameraBase>& camera, const std::shared_ptr<FramebufferBase>& rt)
 	{
 		RenderingManager::Begin(camera);
 
@@ -81,6 +81,7 @@ namespace seri
 		renderCommand.camera = camera;
 		renderCommand.material = material;
 		renderCommand.vao = mesh->GetVao();
+		renderCommand.rt = rt;
 		renderCommand.trs = trs * mesh->transformation;
 		seri::RenderingManager::Submit(renderCommand);
 

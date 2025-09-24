@@ -14,11 +14,19 @@ namespace seri
 
 	enum class TextureFormat
 	{
-		red,
-		rgb,
-		rgba,
-		srgb,
-		srgba,
+		none,
+
+		red__red8ubyte,
+		red__red32uint,
+
+		rgb__rgb8ubyte,
+		rgb__rgb16float,
+		rgb__rgb32float,
+
+		rgba__rgba8ubyte,
+
+		depth__depth24,
+		depth_stencil__depth24_stencil8,
 	};
 
 	enum class TextureTarget
@@ -68,24 +76,23 @@ namespace seri
 		ushort_type,
 		int_type,
 		uint_type,
-		float_type,
+		half_float_type,
+		full_float_type,
 		double_type,
 	};
 
 	struct TextureDesc
 	{
 		int mip{ 0 };
-		int border{ 0 };
 		bool flip{ true };
 		TextureSlot slot{ TextureSlot::uv0 };
-		TextureFormat format{ TextureFormat::rgba };
+		TextureFormat format{ TextureFormat::none };
 		TextureTarget target{ TextureTarget::two_d };
-		TextureWrap wrap_s{ TextureWrap::repeat };
-		TextureWrap wrap_t{ TextureWrap::repeat };
-		TextureWrap wrap_r{ TextureWrap::none };
+		TextureWrap wrapS{ TextureWrap::clamp_to_edge };
+		TextureWrap wrapT{ TextureWrap::clamp_to_edge };
+		TextureWrap wrapR{ TextureWrap::clamp_to_edge };
 		TextureMagFilter magFilter{ TextureMagFilter::linear };
-		TextureMinFilter minFilter{ TextureMinFilter::linear_mipmap_linear };
-		TextureDataType dataType{ TextureDataType::ubyte_type };
+		TextureMinFilter minFilter{ TextureMinFilter::linear };
 	};
 
 	class TextureBase
@@ -96,9 +103,11 @@ namespace seri
 		virtual void Init(const TextureDesc& desc) = 0;
 		virtual void Init(const TextureDesc& desc, const std::string& texturePath) = 0;
 		virtual void Init(const TextureDesc& desc, const void* data, unsigned int size) = 0;
+		virtual void Init(const TextureDesc& desc, unsigned int width, unsigned int height) = 0;
 		virtual void Init(const TextureDesc& desc, const void* data, unsigned int width, unsigned int height, unsigned int components) = 0;
 
 		virtual int GetSlot() = 0;
+		virtual uint32_t GetHandle() = 0;
 		virtual bool IsActiveForUsing() = 0;
 
 		virtual void Bind() = 0;

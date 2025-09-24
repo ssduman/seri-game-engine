@@ -41,6 +41,18 @@ namespace seri
 			Build();
 		}
 
+		void Init(const TextureDesc& desc, unsigned int width, unsigned int height) override
+		{
+			_desc = desc;
+			_width = width;
+			_height = height;
+			_components = 0;
+			_image = nullptr;
+
+			Init();
+			Build();
+		}
+
 		void Init(const TextureDesc& desc, const void* data, unsigned int width, unsigned int height, unsigned int components) override
 		{
 			_desc = desc;
@@ -56,6 +68,11 @@ namespace seri
 		int GetSlot() override
 		{
 			return static_cast<int>(_desc.slot);
+		}
+
+		uint32_t GetHandle() override
+		{
+			return _handle;
 		}
 
 		bool IsActiveForUsing() override
@@ -130,23 +147,28 @@ namespace seri
 	private:
 		void Init()
 		{
-			_desc.format = TextureFormat::red;
-			if (_components == 3)
+			if (_desc.format == TextureFormat::none)
 			{
-				_desc.format = TextureFormat::rgb;
-			}
-			else if (_components == 4)
-			{
-				_desc.format = TextureFormat::rgba;
+				if (_components == 3)
+				{
+					_desc.format = TextureFormat::rgb__rgb8ubyte;
+					_internalformat = GetInternalFormatOpenGL(_desc.format);
+				}
+				else if (_components == 4)
+				{
+					_desc.format = TextureFormat::rgba__rgba8ubyte;
+					_internalformat = GetInternalFormatOpenGL(_desc.format);
+				}
 			}
 
 			_slot = GetSlotOpenGL(_desc.slot);
 			_format = GetFormatOpenGL(_desc.format);
+			_internalformat = GetInternalFormatOpenGL(_desc.format);
+			_dataType = GetDataTypeFromFormatOpenGL(_desc.format);
 			_target = GetTargetOpenGL(_desc.target);
-			_wrap_s = GetWrapOpenGL(_desc.wrap_s);
-			_wrap_t = GetWrapOpenGL(_desc.wrap_t);
-			_wrap_r = GetWrapOpenGL(_desc.wrap_r);
-			_dataType = GetDataTypeOpenGL(_desc.dataType);
+			_wrapS = GetWrapOpenGL(_desc.wrapS);
+			_wrapT = GetWrapOpenGL(_desc.wrapT);
+			_wrapR = GetWrapOpenGL(_desc.wrapR);
 			_magFilter = GetMagFilterOpenGL(_desc.magFilter);
 			_minFilter = GetMinFilterOpenGL(_desc.minFilter);
 		}
@@ -170,17 +192,15 @@ namespace seri
 			Generate();
 			Bind();
 
-			if (_image)
+			if (_desc.target != TextureTarget::cube_map)
 			{
-				glTexImage2D(_target, _desc.mip, _format, _width, _height, _desc.border, _format, _dataType, _image);
+				const GLint border = 0;
+				glTexImage2D(_target, _desc.mip, _internalformat, _width, _height, border, _format, _dataType, _image);
 			}
 
-			glTexParameteri(_target, GL_TEXTURE_WRAP_S, _wrap_s);
-			glTexParameteri(_target, GL_TEXTURE_WRAP_T, _wrap_t);
-			if (_desc.wrap_r != TextureWrap::none)
-			{
-				glTexParameteri(_target, GL_TEXTURE_WRAP_R, _wrap_r);
-			}
+			glTexParameteri(_target, GL_TEXTURE_WRAP_S, _wrapS);
+			glTexParameteri(_target, GL_TEXTURE_WRAP_T, _wrapT);
+			glTexParameteri(_target, GL_TEXTURE_WRAP_R, _wrapR);
 
 			glTexParameteri(_target, GL_TEXTURE_MAG_FILTER, _magFilter);
 			glTexParameteri(_target, GL_TEXTURE_MIN_FILTER, _minFilter);
@@ -202,20 +222,6 @@ namespace seri
 			}
 
 			return GL_TEXTURE0;
-		};
-
-		GLenum GetFormatOpenGL(TextureFormat format)
-		{
-			switch (format)
-			{
-				case seri::TextureFormat::red: return GL_RED;
-				case seri::TextureFormat::rgb: return GL_RGB;
-				case seri::TextureFormat::rgba: return GL_RGBA;
-				case seri::TextureFormat::srgb: return GL_SRGB;
-				case seri::TextureFormat::srgba: return GL_SRGB_ALPHA;
-			}
-
-			return GL_RED;
 		};
 
 		GLenum GetTargetOpenGL(TextureTarget target)
@@ -286,19 +292,81 @@ namespace seri
 				case seri::TextureDataType::ushort_type: return GL_UNSIGNED_SHORT;
 				case seri::TextureDataType::int_type: return GL_INT;
 				case seri::TextureDataType::uint_type: return GL_UNSIGNED_INT;
-				case seri::TextureDataType::float_type: return GL_FLOAT;
+				case seri::TextureDataType::half_float_type: return GL_HALF_FLOAT;
+				case seri::TextureDataType::full_float_type: return GL_FLOAT;
 				case seri::TextureDataType::double_type: return GL_DOUBLE;
 			}
 
 			return GL_BYTE;
 		};
 
+		GLenum GetFormatOpenGL(TextureFormat format)
+		{
+			switch (format)
+			{
+				case seri::TextureFormat::red__red8ubyte: return GL_RED;
+				case seri::TextureFormat::red__red32uint: return GL_RED;
+
+				case seri::TextureFormat::rgb__rgb8ubyte: return GL_RGB;
+				case seri::TextureFormat::rgb__rgb16float: return GL_RGB;
+				case seri::TextureFormat::rgb__rgb32float: return GL_RGB;
+
+				case seri::TextureFormat::rgba__rgba8ubyte: return GL_RGBA;
+
+				case seri::TextureFormat::depth__depth24: return GL_DEPTH_COMPONENT;
+				case seri::TextureFormat::depth_stencil__depth24_stencil8: return GL_DEPTH_STENCIL;
+			}
+
+			return 0;
+		};
+
+		GLenum GetInternalFormatOpenGL(TextureFormat format)
+		{
+			switch (format)
+			{
+				case seri::TextureFormat::red__red8ubyte: return GL_R8;
+				case seri::TextureFormat::red__red32uint: return GL_R32UI;
+
+				case seri::TextureFormat::rgb__rgb8ubyte: return GL_RGB8;
+				case seri::TextureFormat::rgb__rgb16float: return GL_RGB16F;
+				case seri::TextureFormat::rgb__rgb32float: return GL_RGB32F;
+
+				case seri::TextureFormat::rgba__rgba8ubyte: return GL_RGBA8;
+
+				case seri::TextureFormat::depth__depth24: return GL_DEPTH_COMPONENT24;
+				case seri::TextureFormat::depth_stencil__depth24_stencil8: return GL_DEPTH24_STENCIL8;
+			}
+
+			return 0;
+		}
+
+		GLenum GetDataTypeFromFormatOpenGL(TextureFormat format)
+		{
+			switch (format)
+			{
+				case seri::TextureFormat::red__red8ubyte: return GL_UNSIGNED_BYTE;
+				case seri::TextureFormat::red__red32uint: return GL_UNSIGNED_INT;
+
+				case seri::TextureFormat::rgb__rgb8ubyte: return GL_UNSIGNED_BYTE;
+				case seri::TextureFormat::rgb__rgb16float: return GL_HALF_FLOAT;
+				case seri::TextureFormat::rgb__rgb32float: return GL_FLOAT;
+
+				case seri::TextureFormat::rgba__rgba8ubyte: return GL_UNSIGNED_BYTE;
+
+				case seri::TextureFormat::depth__depth24: return GL_UNSIGNED_INT;
+				case seri::TextureFormat::depth_stencil__depth24_stencil8: return GL_UNSIGNED_INT_24_8;
+			}
+
+			return 0;
+		}
+
 		GLenum _slot;
 		GLenum _format;
+		GLenum _internalformat;
 		GLenum _target;
-		GLenum _wrap_s;
-		GLenum _wrap_t;
-		GLenum _wrap_r;
+		GLenum _wrapS;
+		GLenum _wrapT;
+		GLenum _wrapR;
 		GLenum _dataType;
 		GLenum _magFilter;
 		GLenum _minFilter;

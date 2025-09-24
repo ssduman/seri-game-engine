@@ -103,7 +103,7 @@ public:
 			{
 				const auto& mesh = model_0->meshes[m];
 				const auto& materialSkinned = materialsSkinned[m];
-				seri::Graphic::Draw(mesh, materialSkinned, seri::Util::GetTRS(pos_3d, rot_3d, scale_3d), seri::Graphic::GetCameraPerspective());
+				seri::Graphic::Draw(mesh, materialSkinned, seri::Util::GetTRS(pos_3d, rot_3d, scale_3d), seri::Graphic::GetCameraPerspective(), seri::RenderingManager::GetEditorRT());
 			}
 		}
 
