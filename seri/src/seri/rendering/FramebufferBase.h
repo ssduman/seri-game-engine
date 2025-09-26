@@ -44,7 +44,18 @@ namespace seri
 		virtual void Bind() = 0;
 		virtual void Unbind() = 0;
 
+		virtual void ClearFirstColorAttachment(const glm::vec4& color) = 0;
+
 		virtual uint32_t GetFirstColorTextureHandle() = 0;
+
+		uint32_t GetWidth()
+		{
+			return _desc.width;
+		}
+		uint32_t GetHeight()
+		{
+			return _desc.height;
+		}
 
 		static std::shared_ptr<FramebufferBase> Create();
 		static std::shared_ptr<FramebufferBase> Create(FramebufferDesc desc);

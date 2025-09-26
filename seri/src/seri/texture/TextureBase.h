@@ -17,7 +17,7 @@ namespace seri
 		none,
 
 		red__red8ubyte,
-		red__red32uint,
+		red__red32int,
 
 		rgb__rgb8ubyte,
 		rgb__rgb16float,
@@ -114,6 +114,8 @@ namespace seri
 		virtual void Bind(int slot) = 0;
 		virtual void Unbind() = 0;
 		virtual void Unbind(int slot) = 0;
+		virtual void Clear(int val) = 0;
+		virtual void Clear(const glm::vec4& color) = 0;
 		virtual void Release() = 0;
 
 		virtual void LoadCubeMap(const std::vector<std::string>& faces) = 0;

@@ -38,15 +38,33 @@ namespace seri
 			seri::FramebufferDesc framebufferDesc{};
 			framebufferDesc.width = 800;
 			framebufferDesc.height = 600;
-			seri::TextureDesc textureDesc{};
-			textureDesc.format = seri::TextureFormat::rgba__rgba8ubyte;
-			textureDesc.wrapS = seri::TextureWrap::clamp_to_edge;
-			textureDesc.wrapR = seri::TextureWrap::clamp_to_edge;
-			textureDesc.wrapT = seri::TextureWrap::clamp_to_edge;
-			textureDesc.magFilter = seri::TextureMagFilter::linear;
-			textureDesc.minFilter = seri::TextureMinFilter::linear;
+			
+			seri::TextureDesc textureDesc0{};
+			textureDesc0.format = seri::TextureFormat::rgba__rgba8ubyte;
+			textureDesc0.wrapS = seri::TextureWrap::clamp_to_edge;
+			textureDesc0.wrapR = seri::TextureWrap::clamp_to_edge;
+			textureDesc0.wrapT = seri::TextureWrap::clamp_to_edge;
+			textureDesc0.magFilter = seri::TextureMagFilter::linear;
+			textureDesc0.minFilter = seri::TextureMinFilter::linear;
+
+			seri::TextureDesc textureDesc1{};
+			textureDesc1.format = seri::TextureFormat::red__red32int;
+			textureDesc1.wrapS = seri::TextureWrap::clamp_to_edge;
+			textureDesc1.wrapR = seri::TextureWrap::clamp_to_edge;
+			textureDesc1.wrapT = seri::TextureWrap::clamp_to_edge;
+			textureDesc1.magFilter = seri::TextureMagFilter::linear;
+			textureDesc1.minFilter = seri::TextureMinFilter::linear;
+
+			seri::TextureDesc textureDesc2{};
+			textureDesc2.format = seri::TextureFormat::depth_stencil__depth24_stencil8;
+			textureDesc2.wrapS = seri::TextureWrap::clamp_to_edge;
+			textureDesc2.wrapR = seri::TextureWrap::clamp_to_edge;
+			textureDesc2.wrapT = seri::TextureWrap::clamp_to_edge;
+			textureDesc2.magFilter = seri::TextureMagFilter::linear;
+			textureDesc2.minFilter = seri::TextureMinFilter::linear;
+
 			framebufferDesc.AddAttachments(
-				{ textureDesc }
+				{ textureDesc0 }
 			);
 			editorRT = seri::FramebufferBase::Create(framebufferDesc);
 

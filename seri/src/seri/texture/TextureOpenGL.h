@@ -104,6 +104,20 @@ namespace seri
 			glBindTexture(_target, 0);
 		}
 
+		void Clear(int val) override
+		{
+			Bind();
+			glClearTexImage(_handle, 0, GL_RED_INTEGER, GL_INT, &val);
+			Unbind();
+		}
+
+		void Clear(const glm::vec4& color) override
+		{
+			Bind();
+			glClearTexImage(_handle, 0, GL_RGBA, GL_FLOAT, &color[0]);
+			Unbind();
+		}
+
 		void Release() override
 		{
 			if (_handle > 0)
@@ -196,6 +210,29 @@ namespace seri
 			{
 				const GLint border = 0;
 				glTexImage2D(_target, _desc.mip, _internalformat, _width, _height, border, _format, _dataType, _image);
+
+				GLenum err = glGetError();
+				if (err != GL_NO_ERROR)
+				{
+					switch (err)
+					{
+						case GL_INVALID_ENUM:
+							LOGGER(error, "[texture] error: GL_INVALID_ENUM");
+							break;
+						case GL_INVALID_VALUE:
+							LOGGER(error, "[texture] error: GL_INVALID_VALUE");
+							break;
+						case GL_INVALID_OPERATION:
+							LOGGER(error, "[texture] error: GL_INVALID_OPERATION");
+							break;
+						case GL_OUT_OF_MEMORY:
+							LOGGER(error, "[texture] error: GL_OUT_OF_MEMORY");
+							break;
+						default:
+							LOGGER(error, "[texture] error: unknown: " << err);
+							break;
+					}
+				}
 			}
 
 			glTexParameteri(_target, GL_TEXTURE_WRAP_S, _wrapS);
@@ -305,7 +342,7 @@ namespace seri
 			switch (format)
 			{
 				case seri::TextureFormat::red__red8ubyte: return GL_RED;
-				case seri::TextureFormat::red__red32uint: return GL_RED;
+				case seri::TextureFormat::red__red32int: return GL_RED_INTEGER;
 
 				case seri::TextureFormat::rgb__rgb8ubyte: return GL_RGB;
 				case seri::TextureFormat::rgb__rgb16float: return GL_RGB;
@@ -325,7 +362,7 @@ namespace seri
 			switch (format)
 			{
 				case seri::TextureFormat::red__red8ubyte: return GL_R8;
-				case seri::TextureFormat::red__red32uint: return GL_R32UI;
+				case seri::TextureFormat::red__red32int: return GL_R32I;
 
 				case seri::TextureFormat::rgb__rgb8ubyte: return GL_RGB8;
 				case seri::TextureFormat::rgb__rgb16float: return GL_RGB16F;
@@ -345,7 +382,7 @@ namespace seri
 			switch (format)
 			{
 				case seri::TextureFormat::red__red8ubyte: return GL_UNSIGNED_BYTE;
-				case seri::TextureFormat::red__red32uint: return GL_UNSIGNED_INT;
+				case seri::TextureFormat::red__red32int: return GL_INT;
 
 				case seri::TextureFormat::rgb__rgb8ubyte: return GL_UNSIGNED_BYTE;
 				case seri::TextureFormat::rgb__rgb16float: return GL_HALF_FLOAT;

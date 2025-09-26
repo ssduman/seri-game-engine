@@ -109,6 +109,9 @@ namespace seri
 
 		static void Execute()
 		{
+			GetEditorRT()->ClearFirstColorAttachment(glm::vec4{0.1f, 0.1f, 0.1f, 1.0f});
+
+			GetMainRT()->Bind();
 			_renderCommandBuffer->Execute();
 		}
 

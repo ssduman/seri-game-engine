@@ -218,9 +218,12 @@ private:
 
 		auto tex = (ImTextureID)(intptr_t)seri::RenderingManager::GetEditorRT()->GetFirstColorTextureHandle();
 
+		auto w = seri::RenderingManager::GetEditorRT()->GetWidth();
+		auto h = seri::RenderingManager::GetEditorRT()->GetHeight();
+
 		ImGui::Image(
 			tex,
-			ImVec2(256, 256),
+			ImVec2(w, h),
 			ImVec2(0, 1),
 			ImVec2(1, 0)
 		);

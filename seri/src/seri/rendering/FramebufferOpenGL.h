@@ -54,6 +54,14 @@ namespace seri
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		}
 
+		void ClearFirstColorAttachment(const glm::vec4& color) override
+		{
+			if (_colorTextures.size() > 0 && _colorTextures[0] != nullptr)
+			{
+				_colorTextures[0]->Clear(color);
+			}
+		}
+
 		uint32_t GetFirstColorTextureHandle() override
 		{
 			if (_colorTextures.size() > 0 && _colorTextures[0] != nullptr)
@@ -86,6 +94,9 @@ namespace seri
 			{
 				_depthTexture = TextureBase::Create();
 				_depthTexture->Init(_depthAttachment.textureDesc, _desc.width, _desc.height);
+
+				GLenum attachmentType = _depthAttachment.textureDesc.format == TextureFormat::depth__depth24 ? GL_DEPTH_ATTACHMENT : GL_DEPTH_STENCIL_ATTACHMENT;
+				glFramebufferTexture2D(GL_FRAMEBUFFER, attachmentType, GL_TEXTURE_2D, _depthTexture->GetHandle(), _depthAttachment.textureDesc.mip);
 			}
 
 			for (size_t i = 0; i < _colorAttachments.size(); i++)
@@ -109,9 +120,38 @@ namespace seri
 				glDrawBuffer(GL_NONE);
 			}
 
-			if (glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE)
+			GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+			if (status != GL_FRAMEBUFFER_COMPLETE)
 			{
-				LOGGER(error, "framebuffer is not completed");
+				switch (status)
+				{
+					case GL_FRAMEBUFFER_UNDEFINED:
+						LOGGER(error, "[framebuffer] error: GL_FRAMEBUFFER_UNDEFINED");
+						break;
+					case GL_FRAMEBUFFER_UNSUPPORTED:
+						LOGGER(error, "[framebuffer] error: GL_FRAMEBUFFER_UNSUPPORTED");
+						break;
+					case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
+						LOGGER(error, "[framebuffer] error: GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT");
+						break;
+					case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
+						LOGGER(error, "[framebuffer] error: GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT");
+						break;
+					case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER:
+						LOGGER(error, "[framebuffer] error: GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER");
+						break;
+					case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER:
+						LOGGER(error, "[framebuffer] error: GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER");
+						break;
+					case GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE:
+						LOGGER(error, "[framebuffer] error: GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE");
+						break;
+					case GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS:
+						LOGGER(error, "[framebuffer] error: GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS");
+						break;
+					default:
+						LOGGER(error, "[framebuffer] error: unknown: " << status);
+				}
 			}
 
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);

@@ -307,7 +307,7 @@ namespace seri
 			return;
 		}
 
-		LOGGER(info, "[model] mesh '" << ai_mesh->mName.C_Str() << "' has " << ai_mesh->mNumBones << " bones");
+		//LOGGER(info, "[model] mesh '" << ai_mesh->mName.C_Str() << "' has " << ai_mesh->mNumBones << " bones");
 
 		mesh->bonesForVertices.resize(mesh->vertices.size());
 
