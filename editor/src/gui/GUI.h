@@ -214,7 +214,7 @@ private:
 
 	void ShowImage()
 	{
-		ImGui::Begin("Image Test");
+		ImGui::Begin("Editor");
 
 		auto tex = (ImTextureID)(intptr_t)seri::RenderingManager::GetEditorRT()->GetFirstColorTextureHandle();
 

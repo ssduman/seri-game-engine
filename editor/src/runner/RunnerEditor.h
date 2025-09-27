@@ -117,6 +117,11 @@ public:
 		{
 			seri::Application::SetFrameBegin();
 
+			seri::RenderingManager::GetEditorRT()->Bind();
+			seri::RenderingManager::ClearColor();
+			seri::RenderingManager::Clear();
+
+			seri::RenderingManager::GetMainRT()->Bind();
 			seri::RenderingManager::ClearColor();
 			seri::RenderingManager::Clear();
 
@@ -137,6 +142,7 @@ public:
 
 			seri::InputManager::Reset();
 
+			seri::RenderingManager::GetEditorRT()->Bind();
 			seri::WindowManager::PollEvents();
 			seri::WindowManager::SwapBuffers();
 

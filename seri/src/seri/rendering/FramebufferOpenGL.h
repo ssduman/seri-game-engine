@@ -54,14 +54,6 @@ namespace seri
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		}
 
-		void ClearFirstColorAttachment(const glm::vec4& color) override
-		{
-			if (_colorTextures.size() > 0 && _colorTextures[0] != nullptr)
-			{
-				_colorTextures[0]->Clear(color);
-			}
-		}
-
 		uint32_t GetFirstColorTextureHandle() override
 		{
 			if (_colorTextures.size() > 0 && _colorTextures[0] != nullptr)
