@@ -138,7 +138,8 @@ namespace seri
 
 		void Visit(std::shared_ptr<ISceneVisitor>& visitor) override
 		{
-			visitor->Visit(shared_from_this());
+			auto self = shared_from_this();
+			visitor->Visit(self);
 
 			for (auto& child : _children)
 			{
@@ -148,7 +149,8 @@ namespace seri
 
 		void Add(std::shared_ptr<IScene> child) override
 		{
-			child->SetParent(shared_from_this());
+			auto self = shared_from_this();
+			child->SetParent(self);
 			_children.emplace_back(std::move(child));
 		}
 

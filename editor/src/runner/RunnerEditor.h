@@ -47,14 +47,14 @@ public:
 		auto rootScene = builder.SetName("Main").Build();
 
 		windowManager->AddEventCallback(seri::event::MakeEventCallback(
-			[&rootScene](seri::event::IEventData& data)
+			[&rootScene](const seri::event::IEventData& data)
 			{
 				seri::event::EventDispatcher{}(rootScene, data);
 			}
 		));
 
 		windowManager->AddEventCallback(seri::event::MakeEventCallback(
-			[](seri::event::IEventData& data)
+			[](const seri::event::IEventData& data)
 			{
 				if (data.eventType == seri::event::EventType::window_resize)
 				{
@@ -91,7 +91,7 @@ public:
 		auto cameraPerspectiveScene = builder.SetName("Camera Perspective").SetUnderlyingObject(cameraPerspective).Build();
 		rootScene->Add(cameraPerspectiveScene);
 
-		auto& skybox = std::make_shared<seri::Skybox>();
+		auto skybox = std::make_shared<seri::Skybox>();
 
 		auto gui = std::make_shared<GUI>(cameraPerspective, rootScene);
 		gui->Init();

@@ -106,7 +106,7 @@ namespace seri
 			return (float)GetWidth() / (float)GetHeight();
 		}
 
-		void FireEvent(event::IEventData& data)
+		void FireEvent(const event::IEventData& data)
 		{
 			for (const auto& _eventCallback : _eventCallbacks)
 			{

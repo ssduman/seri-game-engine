@@ -93,12 +93,12 @@ public:
 		}
 	}
 
-	void OnUserEvent(seri::event::IEventData& data) override
+	void OnUserEvent(const seri::event::IEventData& data) override
 	{
-		auto& d = dynamic_cast<IUserEventData&>(data);
+		auto d = dynamic_cast<const IUserEventData&>(data);
 		if (d.userEventType == UserEventType::game_state)
 		{
-			auto& userData = dynamic_cast<UserGameStateEventData&>(d);
+			auto& userData = dynamic_cast<const UserGameStateEventData&>(data);
 			_gameState = userData.gameState;
 		}
 	}

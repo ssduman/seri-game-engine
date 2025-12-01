@@ -13,7 +13,7 @@ namespace seri::event
 
 		virtual ~IEventCallback() = default;
 
-		virtual void FireEvent(IEventData& data) = 0;
+		virtual void FireEvent(const IEventData& data) = 0;
 
 	};
 
@@ -25,7 +25,7 @@ namespace seri::event
 
 		~EventCallback() override = default;
 
-		void FireEvent(IEventData& data) override
+		void FireEvent(const IEventData& data) override
 		{
 			_f(data);
 		}

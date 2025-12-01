@@ -52,7 +52,7 @@ public:
 
 		for (size_t i = 0; model_0 && i < model_0->meshes.size(); i++)
 		{
-			auto& materialSkinned = std::make_shared<seri::Material>();
+			auto materialSkinned = std::make_shared<seri::Material>();
 			materialSkinned->shader = seri::ShaderLibrary::Find("entity_skinned");
 			materialSkinned->SetTexture("u_texture", texture_1);
 			materialsSkinned.emplace_back(materialSkinned);

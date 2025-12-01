@@ -44,6 +44,11 @@ struct IUserEventData : public seri::event::IEventData
 
 	~IUserEventData() override = default;
 
+	std::string ToString() override
+	{
+		return "IUserEventData";
+	}
+
 	UserEventType userEventType{ UserEventType::unknown };
 };
 

@@ -10,7 +10,7 @@ namespace seri::event
 {
 	struct EventDispatcher
 	{
-		void operator()(const std::shared_ptr<IScene>& rootScene, IEventData& data)
+		void operator()(const std::shared_ptr<IScene>& rootScene, const IEventData& data)
 		{
 			//LOGGER(info, "event: " << data.ToString());
 
@@ -19,156 +19,156 @@ namespace seri::event
 				case EventType::key:
 					{
 						auto& d = CastEventData<KeyEventData&>(data);
-						rootScene->Visit(MakeSceneVisitor(
+						auto visitor = MakeSceneVisitor(
 							[&d](std::shared_ptr<IScene>& scene)
 							{
 								if (auto& object = scene->GetUnderlyingObject())
 								{
 									object->OnKeyEvent(d);
 								}
-							})
-						);
+							});
+						rootScene->Visit(visitor);
 						break;
 					}
 				case EventType::character:
 					{
 						auto d = CastEventData<CharacterEventData&>(data);
-						rootScene->Visit(MakeSceneVisitor(
+						auto visitor = MakeSceneVisitor(
 							[&d](std::shared_ptr<IScene>& scene)
 							{
 								if (auto& object = scene->GetUnderlyingObject())
 								{
 									object->OnCharacterEvent(d);
 								}
-							})
-						);
+							});
+						rootScene->Visit(visitor);
 						break;
 					}
 				case EventType::character_mods:
 					{
 						auto& d = CastEventData<CharacterModsEventData&>(data);
-						rootScene->Visit(MakeSceneVisitor(
+						auto visitor = MakeSceneVisitor(
 							[&d](std::shared_ptr<IScene>& scene)
 							{
 								if (auto& object = scene->GetUnderlyingObject())
 								{
 									object->OnCharacterModsEvent(d);
 								}
-							})
-						);
+							});
+						rootScene->Visit(visitor);
 						break;
 					}
 				case EventType::mouse_enter:
 					{
 						auto& d = CastEventData<MouseEnterEventData&>(data);
-						rootScene->Visit(MakeSceneVisitor(
+						auto visitor = MakeSceneVisitor(
 							[&d](std::shared_ptr<IScene>& scene)
 							{
 								if (auto& object = scene->GetUnderlyingObject())
 								{
 									object->OnMouseEnterEvent(d);
 								}
-							})
-						);
+							});
+						rootScene->Visit(visitor);
 						break;
 					}
 				case EventType::mouse_button:
 					{
 						auto& d = CastEventData<MouseButtonEventData&>(data);
-						rootScene->Visit(MakeSceneVisitor(
+						auto visitor = MakeSceneVisitor(
 							[&d](std::shared_ptr<IScene>& scene)
 							{
 								if (auto& object = scene->GetUnderlyingObject())
 								{
 									object->OnMouseButtonEvent(d);
 								}
-							})
-						);
+							});
+						rootScene->Visit(visitor);
 						break;
 					}
 				case EventType::mouse_scroll:
 					{
 						auto& d = CastEventData<MouseScrollEventData&>(data);
-						rootScene->Visit(MakeSceneVisitor(
+						auto visitor = MakeSceneVisitor(
 							[&d](std::shared_ptr<IScene>& scene)
 							{
 								if (auto& object = scene->GetUnderlyingObject())
 								{
 									object->OnMouseScrollEvent(d);
 								}
-							})
-						);
+							});
+						rootScene->Visit(visitor);
 						break;
 					}
 				case EventType::mouse_position:
 					{
 						auto& d = CastEventData<MousePositionEventData&>(data);
-						rootScene->Visit(MakeSceneVisitor(
+						auto visitor = MakeSceneVisitor(
 							[&d](std::shared_ptr<IScene>& scene)
 							{
 								if (auto& object = scene->GetUnderlyingObject())
 								{
 									object->OnMousePositionEvent(d);
 								}
-							})
-						);
+							});
+						rootScene->Visit(visitor);
 						break;
 					}
 				case EventType::window_drop:
 					{
 						auto& d = CastEventData<WindowDropEventData&>(data);
-						rootScene->Visit(MakeSceneVisitor(
+						auto visitor = MakeSceneVisitor(
 							[&d](std::shared_ptr<IScene>& scene)
 							{
 								if (auto& object = scene->GetUnderlyingObject())
 								{
 									object->OnWindowDropEvent(d);
 								}
-							})
-						);
+							});
+						rootScene->Visit(visitor);
 						break;
 					}
 				case EventType::window_close:
 					{
 						auto& d = CastEventData<WindowCloseEventData&>(data);
-						rootScene->Visit(MakeSceneVisitor(
+						auto visitor = MakeSceneVisitor(
 							[&d](std::shared_ptr<IScene>& scene)
 							{
 								if (auto& object = scene->GetUnderlyingObject())
 								{
 									object->OnWindowCloseEvent(d);
 								}
-							})
-						);
+							});
+						rootScene->Visit(visitor);
 						break;
 					}
 				case EventType::window_resize:
 					{
 						auto& d = CastEventData<WindowResizeEventData&>(data);
-						rootScene->Visit(MakeSceneVisitor(
+						auto visitor = MakeSceneVisitor(
 							[&d](std::shared_ptr<IScene>& scene)
 							{
 								if (auto& object = scene->GetUnderlyingObject())
 								{
 									object->OnWindowResizeEvent(d);
 								}
-							})
-						);
+							});
+						rootScene->Visit(visitor);
 						break;
 					}
 				case EventType::tick:
 					break;
 				case EventType::user:
 					{
-						rootScene->Visit(MakeSceneVisitor(
+						auto visitor = MakeSceneVisitor(
 							[&data](std::shared_ptr<IScene>& scene)
 							{
 								if (auto& object = scene->GetUnderlyingObject())
 								{
 									object->OnUserEvent(data);
 								}
-							})
-						);
+							});
+						rootScene->Visit(visitor);
 						break;
 					}
 				case EventType::unknown:
@@ -179,9 +179,9 @@ namespace seri::event
 		}
 
 		template<typename T>
-		static T& CastEventData(IEventData& data)
+		static T& CastEventData(const IEventData& data)
 		{
-			return dynamic_cast<T&>(data);
+			return dynamic_cast<T&>(const_cast<IEventData&>(data));
 		}
 
 	private:

@@ -29,7 +29,7 @@ namespace seri::event
 
 		virtual void OnWindowResizeEvent(const WindowResizeEventData& data) {}
 
-		virtual void OnUserEvent(IEventData& data) {}
+		virtual void OnUserEvent(const IEventData& data) {}
 
 	private:
 

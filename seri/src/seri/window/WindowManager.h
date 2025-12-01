@@ -74,7 +74,7 @@ namespace seri
 			_windowManager->SetCursorMode(cursorMode);
 		}
 
-		static void FireEvent(event::IEventData& data)
+		static void FireEvent(const event::IEventData& data)
 		{
 			_windowManager->FireEvent(data);
 		}
