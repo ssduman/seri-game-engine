@@ -34,7 +34,7 @@ namespace seri
 
 		virtual ~WindowManagerBase() = default;
 
-		virtual void Init() = 0;
+		virtual void Init(WindowProperties windowProperties) = 0;
 
 		virtual double GetTime() = 0;
 
@@ -79,16 +79,6 @@ namespace seri
 		WindowProperties GetWindowProperties()
 		{
 			return _windowProperties;
-		}
-
-		void SetWindowProperties(WindowProperties windowProperties)
-		{
-			if (_initialized)
-			{
-				throw std::runtime_error("[window] already initialized");
-			}
-
-			_windowProperties = std::move(windowProperties);
 		}
 
 		int GetWidth()

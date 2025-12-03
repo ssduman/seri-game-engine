@@ -1,6 +1,7 @@
 #include "Seripch.h"
 
 #include "seri/util/Util.h"
+#include "seri/camera/CameraBase.h"
 #include "seri/graphic/Graphic.h"
 #include "seri/graphic/Mesh.h"
 #include "seri/graphic/Model.h"

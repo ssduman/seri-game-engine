@@ -2,6 +2,7 @@
 
 #include "seri/util/Util.h"
 #include "seri/window/WindowManagerBase.h"
+#include "seri/rendering/PipelineBase.h"
 #include "seri/rendering/FramebufferBase.h"
 
 namespace seri

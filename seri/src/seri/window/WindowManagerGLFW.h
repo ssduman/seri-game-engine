@@ -24,12 +24,14 @@ namespace seri
 			LOGGER(info, "[window] glfw window manager destroyed and terminated successfully");
 		}
 
-		void Init() override
+		void Init(WindowProperties windowProperties) override
 		{
 			if (_initialized)
 			{
 				throw std::runtime_error("[window] glfw window manager is already initialized");
 			}
+
+			_windowProperties = windowProperties;
 
 			InitGLFW();
 			CreateWindowGLFW();

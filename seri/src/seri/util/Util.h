@@ -11,12 +11,16 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <cmath>
+#include <ctime>
 #include <regex>
 #include <chrono>
+#include <memory>
 #include <string>
+#include <thread>
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <stdexcept>
 #include <unordered_map>
 
 namespace seri

@@ -21,12 +21,10 @@
 #include "seri/core/Application.h"
 #include "seri/core/TimeWrapper.h"
 
-#include "seri/scene/Layer.h"
-#include "seri/scene/Scene.h"
+#include "seri/layer/Layer.h"
+#include "seri/layer/CoreLayer.h"
+
 #include "seri/scene/SceneManager.h"
-#include "seri/scene/SceneBuilder.h"
-#include "seri/scene/SceneVisitor.h"
-#include "seri/scene/SceneIterator.h"
 
 #include "seri/model/ModelImporter.h"
 
@@ -41,6 +39,7 @@
 #include "seri/logging/Logger.h"
 
 #include "seri/camera/CameraBase.h"
+#include "seri/camera/EditorCamera.h"
 
 #include "seri/shape/ShapeFactory.h"
 

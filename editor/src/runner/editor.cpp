@@ -4,7 +4,7 @@ int main(int argc, char* argv[])
 {
 	try
 	{
-		RunnerEditor{}();
+		seri::editor::RunnerEditor{}(argc, argv);
 	}
 	catch (const std::exception& ex)
 	{

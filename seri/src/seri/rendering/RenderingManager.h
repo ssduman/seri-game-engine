@@ -1,5 +1,7 @@
 #pragma once
 
+#include "seri/util/Util.h"
+#include "seri/camera/CameraBase.h"
 #include "seri/rendering/PipelineBase.h"
 #include "seri/rendering/RenderingStats.h"
 #include "seri/rendering/RenderingManagerBase.h"
