@@ -41,6 +41,8 @@ project "Editor"
     "%{IncludeDir.nlohmann}",
     "%{IncludeDir.miniaudio}",
     "%{IncludeDir.sdl}",
+    "%{IncludeDir.entt}",
+    "%{IncludeDir.yamlcpp}",
   }
 
   libdirs {

@@ -26,3 +26,11 @@
 	path = seri/vendor/sdl
 	url = https://github.com/libsdl-org/SDL.git
 	ignore = dirty
+[submodule "seri/vendor/entt"]
+	path = seri/vendor/entt
+	url = https://github.com/skypjack/entt
+	ignore = dirty
+[submodule "seri/vendor/yaml-cpp"]
+	path = seri/vendor/yaml-cpp
+	url = https://github.com/jbeder/yaml-cpp.git
+	ignore = dirty

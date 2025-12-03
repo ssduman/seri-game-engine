@@ -23,6 +23,7 @@
 
 #include "seri/scene/Layer.h"
 #include "seri/scene/Scene.h"
+#include "seri/scene/SceneManager.h"
 #include "seri/scene/SceneBuilder.h"
 #include "seri/scene/SceneVisitor.h"
 #include "seri/scene/SceneIterator.h"

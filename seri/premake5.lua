@@ -21,6 +21,7 @@ project "Seri"
     "vendor/glm/glm/**.inl",
     "vendor/stb/stb_image.h",
     "vendor/stb/stb_image.cpp",
+    "vendor/entt/single_include/entt/entt.hpp",
   }
 
   defines {
@@ -51,6 +52,8 @@ project "Seri"
     "%{IncludeDir.nlohmann}",
     "%{IncludeDir.miniaudio}",
     "%{IncludeDir.sdl}",
+    "%{IncludeDir.entt}",
+    "%{IncludeDir.yamlcpp}",
   }
 
   libdirs {
