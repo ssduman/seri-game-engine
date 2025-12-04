@@ -1,13 +1,14 @@
 #pragma once
 
-#include "seri/core/Seri.h"
 #include "seri/util/Util.h"
 #include "seri/texture/Skybox.h"
 #include "seri/component/Components.h"
 
-#include <yaml-cpp/yaml.h>
+#include <entt/entt.hpp>
 
 #include <string>
+#include <memory>
+#include <unordered_map>
 
 namespace seri
 {
@@ -16,6 +17,8 @@ namespace seri
 		class Scene
 		{
 		public:
+			class SceneManager;
+
 			Scene() = default;
 
 			~Scene() = default;
@@ -30,60 +33,15 @@ namespace seri
 				_skybox->Update();
 			}
 
-			void Deserialize(const std::string& file)
-			{
-				Scene scene;
-
-				YAML::Node root = YAML::LoadFile(file);
-
-				if (!root["Scene"] || !root["Scene"].IsMap())
-				{
-					LOGGER(error, fmt::format("[scene] failed to deserialize scene from file: {}", file));
-					return;
-				}
-
-				YAML::Node sceneNode = root["Scene"];
-
-				_idComponent = IDComponent::Deserialize(sceneNode["IDComponent"]);
-				_sceneComponent = SceneComponent::Deserialize(sceneNode["SceneComponent"]);
-
-				if (YAML::Node entities = sceneNode["Entities"])
-				{
-					for (auto entityItem : entities)
-					{
-						YAML::Node entityData = entityItem["Entity"];
-
-						for (auto componentNode : entityData)
-						{
-							std::string componentName = componentNode.first.as<std::string>();
-							YAML::Node componentData = componentNode.second;
-
-							if (componentName == "IDComponent")
-							{
-								IDComponent idComp = IDComponent::Deserialize(componentData);
-							}
-							else if (componentName == "TransformComponent")
-							{
-								TransformComponent transformComp = TransformComponent::Deserialize(componentData);
-							}
-							else if (componentName == "SceneComponent")
-							{
-								SceneComponent sceneComp = SceneComponent::Deserialize(componentData);
-							}
-							else
-							{
-								LOGGER(error, fmt::format("[scene] unknown component type: {}", componentName));
-							}
-						}
-					}
-				}
-			}
+			void Deserialize(const std::string& file);
 
 		private:
 			std::shared_ptr<seri::Skybox> _skybox;
 
-			IDComponent _idComponent;
-			SceneComponent _sceneComponent;
+			seri::IDComponent _idComponent;
+			seri::SceneComponent _sceneComponent;
+
+			std::unordered_map<uint32_t, entt::entity> _entityMap{};
 
 		};
 	}

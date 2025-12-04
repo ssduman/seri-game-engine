@@ -28,7 +28,6 @@
 
 #include "seri/component/Components.h"
 
-#include "seri/scene/Scene.h"
 #include "seri/scene/SceneManager.h"
 
 #include "seri/model/ModelImporter.h"

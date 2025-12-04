@@ -78,11 +78,13 @@ namespace seri
 
 	struct SceneComponent
 	{
+		std::string version{ "0.0" };
 		bool isActive{ true };
 
 		static SceneComponent Deserialize(const YAML::Node& node)
 		{
 			SceneComponent component{};
+			component.version = node["Version"].as<std::string>();
 			component.isActive = node["IsActive"].as<bool>();
 			return component;
 		}
@@ -90,6 +92,7 @@ namespace seri
 		static YAML::Node Serialize(SceneComponent component)
 		{
 			YAML::Node node;
+			node["Version"] = component.version;
 			node["IsActive"] = component.isActive;
 			return node;
 		}

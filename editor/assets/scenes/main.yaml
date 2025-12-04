@@ -4,6 +4,7 @@ Scene:
     ParentID: 0
     Name: "main"
   SceneComponent:
+    Version: "0.1"
     IsActive: true
   Entities:
     - Entity:
