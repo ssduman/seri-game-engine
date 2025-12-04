@@ -2,7 +2,7 @@
 
 #include <seri/core/Seri.h>
 
-#include "layer/GUILayer.h"
+#include "layer/EditorLayer.h"
 #include "behaviour/BasicBehaviour.h"
 #include "behaviour/SimpleBehaviour.h"
 
@@ -19,14 +19,14 @@ namespace seri::editor
 		{
 			seri::LayerManager layerManager{};
 			layerManager.AddLayer(std::make_shared<seri::CoreLayer>());
-			layerManager.AddLayer(std::make_shared<seri::editor::GUILayer>());
+			layerManager.AddLayer(std::make_shared<seri::editor::EditorLayer>());
 
 			BasicBehaviour basicBehaviour{};
 			SimpleBehaviour simpleBehaviour{};
 
 			seri::BehaviourManager::InitBehaviours();
 
-			LOGGER(info, "[editor] starting seri game engine - editor loop");
+			LOGGER(info, fmt::format("[editor] seri game engine - editor loop starting"));
 
 			while (!seri::WindowManager::GetWindowShouldClose())
 			{
@@ -37,7 +37,7 @@ namespace seri::editor
 
 			seri::BehaviourManager::DestroyBehaviours();
 
-			LOGGER(info, "[editor] seri game engine - editor loop stopped");
+			LOGGER(info, fmt::format("[editor] seri game engine - editor loop stopped"));
 		}
 
 	};

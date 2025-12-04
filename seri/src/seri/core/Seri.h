@@ -24,6 +24,11 @@
 #include "seri/layer/Layer.h"
 #include "seri/layer/CoreLayer.h"
 
+#include "seri/asset/AssetManager.h"
+
+#include "seri/component/Components.h"
+
+#include "seri/scene/Scene.h"
 #include "seri/scene/SceneManager.h"
 
 #include "seri/model/ModelImporter.h"

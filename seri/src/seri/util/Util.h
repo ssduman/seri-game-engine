@@ -4,6 +4,8 @@
 
 #include "seri/logging/Logger.h"
 
+#include <fmt/core.h>
+
 #include <glm/glm.hpp>
 #include <glm/gtc/random.hpp>
 #include <glm/gtx/transform.hpp>

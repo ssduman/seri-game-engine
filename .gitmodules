@@ -34,3 +34,7 @@
 	path = seri/vendor/yaml-cpp
 	url = https://github.com/jbeder/yaml-cpp.git
 	ignore = dirty
+[submodule "seri/vendor/fmt"]
+	path = seri/vendor/fmt
+	url = https://github.com/fmtlib/fmt
+	ignore = dirty

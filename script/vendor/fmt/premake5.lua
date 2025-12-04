@@ -1,13 +1,15 @@
-project "yaml-cpp"
+project "fmt"
   kind "StaticLib"
   language "C++"
   staticruntime "Off"
+  cppdialect "C++20"
 
   targetdir("bin/" .. outputdir .. "/%{prj.name}")
   objdir("bin/int/" .. outputdir .. "/%{prj.name}")
 
   files {
-    "src/**.cpp",
+    "src/os.cc",
+    "src/format.cc",
     "include/**.h",
   }
 
@@ -16,7 +18,7 @@ project "yaml-cpp"
   }
 
   defines {
-    "YAML_CPP_STATIC_DEFINE"
+    "FMT_UNICODE=0",
   }
 
   disablewarnings {

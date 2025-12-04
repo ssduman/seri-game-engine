@@ -15,6 +15,7 @@ project "Editor"
   defines {
     "GLFW_INCLUDE_NONE",
     "GLM_ENABLE_EXPERIMENTAL",
+    "FMT_UNICODE=0",
   }
 
   linkoptions {
@@ -24,7 +25,7 @@ project "Editor"
   }
 
   disablewarnings {
-    "4244"
+    "4244",
   }
 
   includedirs {
@@ -43,6 +44,7 @@ project "Editor"
     "%{IncludeDir.sdl}",
     "%{IncludeDir.entt}",
     "%{IncludeDir.yamlcpp}",
+    "%{IncludeDir.fmt}",
   }
 
   libdirs {

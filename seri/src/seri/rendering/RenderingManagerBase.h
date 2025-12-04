@@ -18,7 +18,7 @@ namespace seri
 
 		virtual ~RenderingManagerBase() = default;
 
-		virtual void Init(std::unique_ptr<WindowManagerBase>& windowManager) = 0;
+		virtual void Init(std::unique_ptr<WindowManagerBase>& windowManager, RenderingProperties renderingProperties) = 0;
 
 		virtual void SetViewport(int x, int y, int width, int height) = 0;
 
@@ -45,16 +45,6 @@ namespace seri
 		virtual void SetCullFace(bool enabled, CullFace cullFace) = 0;
 
 		virtual void SetFrontFace(FrontFace frontFace) = 0;
-
-		void SetRenderingProperties(RenderingProperties renderingProperties)
-		{
-			if (_initialized)
-			{
-				throw std::runtime_error("[rendering] already initialized");
-			}
-
-			_renderingProperties = std::move(renderingProperties);
-		}
 
 		std::shared_ptr<FramebufferBase> mainRT{ nullptr };
 		std::shared_ptr<FramebufferBase> editorRT{ nullptr };

@@ -6,10 +6,10 @@
 
 namespace seri::editor
 {
-	class GUILayer : public seri::LayerBase
+	class EditorLayer : public seri::LayerBase
 	{
 	public:
-		GUILayer() : LayerBase("GUILayer")
+		EditorLayer() : LayerBase("GUILayer")
 		{
 			gui = std::make_shared<GUI>();
 			gui->Init();
@@ -22,7 +22,7 @@ namespace seri::editor
 			);
 		}
 
-		~GUILayer() override = default;
+		~EditorLayer() override = default;
 
 		void PreUpdate() override
 		{

@@ -27,6 +27,7 @@ project "Seri"
   defines {
     "GLFW_INCLUDE_NONE",
     "GLM_ENABLE_EXPERIMENTAL",
+    "FMT_UNICODE=0",
   }
 
   linkoptions {
@@ -36,7 +37,7 @@ project "Seri"
   }
 
   disablewarnings {
-    "4244"
+    "4244",
   }
 
   includedirs {
@@ -54,6 +55,7 @@ project "Seri"
     "%{IncludeDir.sdl}",
     "%{IncludeDir.entt}",
     "%{IncludeDir.yamlcpp}",
+    "%{IncludeDir.fmt}",
   }
 
   libdirs {
@@ -61,6 +63,7 @@ project "Seri"
   }
 
   links {
+    "fmt",
     "glad",
     "GLFW",
     "SDL3",

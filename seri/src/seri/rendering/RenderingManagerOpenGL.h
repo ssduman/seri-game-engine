@@ -19,12 +19,14 @@ namespace seri
 			LOGGER(info, "[rendering] opengl rendering manager destroyed");
 		}
 
-		void Init(std::unique_ptr<WindowManagerBase>& windowManager) override
+		void Init(std::unique_ptr<WindowManagerBase>& windowManager, RenderingProperties renderingProperties) override
 		{
 			if (_initialized)
 			{
 				throw std::runtime_error("[rendering] opengl rendering manager is already initialized");
 			}
+
+			_renderingProperties = renderingProperties;
 
 			windowManager->SetOpenGLHints();
 			windowManager->SetOpenGLContext();

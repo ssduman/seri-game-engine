@@ -13,6 +13,7 @@ IncludeDir["miniaudio"] = "%{wks.location}/seri/vendor/miniaudio"
 IncludeDir["sdl"] = "%{wks.location}/seri/vendor/sdl/include"
 IncludeDir["entt"] = "%{wks.location}/seri/vendor/entt/single_include"
 IncludeDir["yamlcpp"] = "%{wks.location}/seri/vendor/yaml-cpp/include"
+IncludeDir["fmt"] = "%{wks.location}/seri/vendor/fmt/include"
 
 LibDir = {}
 LibDir["sdl"] = "%{wks.location}/seri/vendor/sdl/build/%{cfg.buildcfg}"
@@ -46,4 +47,5 @@ workspace "Seri Game Engine"
     include "seri/vendor/freetype"
     include "seri/vendor/sdl"
     include "seri/vendor/yaml-cpp"
+    include "seri/vendor/fmt"
   group ""

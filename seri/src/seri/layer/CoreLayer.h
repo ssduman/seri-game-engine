@@ -5,8 +5,10 @@
 #include "seri/core/Application.h"
 #include "seri/graphic/Graphic.h"
 #include "seri/font/FontManager.h"
+#include "seri/asset/AssetManager.h"
 #include "seri/input/InputManager.h"
 #include "seri/sound/SoundManager.h"
+#include "seri/scene/SceneManager.h"
 #include "seri/shader/ShaderLibrary.h"
 #include "seri/rendering/RenderingManager.h"
 #include "seri/behaviour/BehaviourManager.h"
@@ -25,12 +27,9 @@ namespace seri
 			srand(static_cast<unsigned int>(time(0)));
 
 			seri::WindowManager::Instance()->Init({ /*title*/ "Seri Game Engine - Editor", /*fullscreen*/ false, /*w*/ 1280, /*h*/ 720 });
+			seri::RenderingManager::Instance()->Init(seri::WindowManager::Instance(), RenderingProperties{});
 
-			seri::RenderingProperties renderingProperties{};
-			auto& renderingManager = seri::RenderingManager::Instance();
-			renderingManager->SetRenderingProperties(renderingProperties);
-			renderingManager->Init(seri::WindowManager::Instance());
-
+			seri::AssetManager::Init();
 			seri::TimeWrapper::Init();
 			seri::Application::Init();
 			seri::Graphic::Init();
@@ -39,6 +38,9 @@ namespace seri
 			seri::ShaderLibrary::Init("assets/shaders/");
 			seri::font::FontManager::Init("assets/fonts/");
 			seri::sound::SoundManager::Init("assets/sounds/");
+			seri::scene::SceneManager::Init();
+
+			seri::AssetManager::GetWorkingDirectory();
 
 			seri::WindowManager::Instance()->AddEventCallback(seri::event::MakeEventCallback(
 				[](const seri::event::IEventData& data)
@@ -79,8 +81,6 @@ namespace seri
 			seri::Graphic::AddCamera(cameraOrtho);
 			seri::Graphic::AddCamera(cameraPerspective);
 
-			skybox = std::make_shared<seri::Skybox>();
-
 			seri::Application::SetVSyncCount(1);
 			seri::Application::SetTargetFrameRate(60);
 		}
@@ -107,7 +107,7 @@ namespace seri
 			seri::Graphic::GetCameraOrtho()->Update();
 			seri::Graphic::GetCameraPerspective()->Update();
 
-			skybox->Update();
+			seri::scene::SceneManager::Update();
 
 			seri::BehaviourManager::UpdateBehaviours();
 
@@ -130,9 +130,6 @@ namespace seri
 				//std::this_thread::sleep_for(std::chrono::duration<double, std::milli>(waitTime));
 			}
 		}
-
-	private:
-		std::shared_ptr<seri::Skybox> skybox;
 
 	};
 }
