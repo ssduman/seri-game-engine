@@ -4,7 +4,7 @@ project "sdl"
   staticruntime "Off"
 
   buildcommands {
-    "cmake -S . -B build -A x64",
+    "if not exist build (cmake -S . -B build -A x64)",
     "cmake --build build --config %{cfg.buildcfg}"
   }
 
@@ -17,7 +17,6 @@ project "sdl"
 
   cleancommands {
     "if exist build rmdir /S /Q build",
-    "if not exist build mkdir build"
   }
 
   buildoutputs {

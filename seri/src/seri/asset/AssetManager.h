@@ -46,6 +46,12 @@ namespace seri
 			LOGGER(info, fmt::format("[asset] working directory: {}", workingDir.string()));
 		}
 
+		const char* kAssetFontFolder = "fonts";
+		const char* kAssetShaderFolder = "shaders";
+		const char* kAssetSceneFolder = "scenes";
+
+		const char* kAssetSceneExtension = "yaml";
+
 	private:
 
 	};

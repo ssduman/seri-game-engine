@@ -19,7 +19,6 @@ echo f | xcopy /f /y "script/vendor/imgui/premake5.lua" "seri/vendor/imgui/prema
 echo f | xcopy /f /y "script/vendor/assimp/premake5.lua" "seri/vendor/assimp/premake5.lua"
 echo f | xcopy /f /y "script/vendor/freetype/premake5.lua" "seri/vendor/freetype/premake5.lua"
 echo f | xcopy /f /y "script/vendor/sdl/premake5.lua" "seri/vendor/sdl/premake5.lua"
-echo f | xcopy /f /y "script/vendor/yaml-cpp/premake5.lua" "seri/vendor/yaml-cpp/premake5.lua"
 echo f | xcopy /f /y "script/vendor/fmt/premake5.lua" "seri/vendor/fmt/premake5.lua"
 
 :: copy aux files

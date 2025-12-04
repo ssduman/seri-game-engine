@@ -35,6 +35,8 @@ namespace seri
 			{
 				GetInstance()._activeScene = std::make_shared<seri::scene::Scene>();
 				GetInstance()._activeScene->Init();
+
+				GetInstance()._activeScene->Deserialize("assets/scenes/main.yaml");
 			}
 
 			static void Update()
@@ -42,7 +44,19 @@ namespace seri
 				GetInstance()._activeScene->Update();
 			}
 
+			static void CreateEntity()
+			{
+				entt::entity e = GetInstance().registry.create();
+			}
+
+			static void DestroyEntity(entt::entity e)
+			{
+				GetInstance().registry.destroy(e);
+			}
+
 		private:
+			entt::registry registry;
+
 			std::shared_ptr<seri::scene::Scene> _activeScene;
 			std::vector<std::shared_ptr<seri::scene::Scene>> _scenes;
 

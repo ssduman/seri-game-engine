@@ -11,7 +11,7 @@ project "Seri"
   objdir("%{wks.location}/bin/int/" .. outputdir .. "/%{prj.name}")
 
   dependson {
-    "sdl"
+    "sdl",
   }
 
   files {
@@ -21,13 +21,18 @@ project "Seri"
     "vendor/glm/glm/**.inl",
     "vendor/stb/stb_image.h",
     "vendor/stb/stb_image.cpp",
+    "vendor/stb/stb_image.cpp",
     "vendor/entt/single_include/entt/entt.hpp",
+    "vendor/yaml-cpp/src/**.h",
+    "vendor/yaml-cpp/src/**.cpp",
+    "vendor/yaml-cpp/include/**.h",
   }
 
   defines {
     "GLFW_INCLUDE_NONE",
     "GLM_ENABLE_EXPERIMENTAL",
     "FMT_UNICODE=0",
+    "YAML_CPP_STATIC_DEFINE",
   }
 
   linkoptions {
@@ -59,7 +64,7 @@ project "Seri"
   }
 
   libdirs {
-    "%{LibDir.sdl}"
+    "%{LibDir.sdl}",
   }
 
   links {
@@ -72,6 +77,9 @@ project "Seri"
     "freetype",
     "opengl32.lib",
   }
+
+  filter "files:vendor/yaml-cpp/src/**.cpp"
+	  flags { "NoPCH" }
 
   filter "system:windows"
     systemversion "latest"

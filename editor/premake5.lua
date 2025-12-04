@@ -16,6 +16,7 @@ project "Editor"
     "GLFW_INCLUDE_NONE",
     "GLM_ENABLE_EXPERIMENTAL",
     "FMT_UNICODE=0",
+    "YAML_CPP_STATIC_DEFINE",
   }
 
   linkoptions {
@@ -48,7 +49,7 @@ project "Editor"
   }
 
   libdirs {
-    "%{LibDir.sdl}"
+    "%{LibDir.sdl}",
   }
 
   links {

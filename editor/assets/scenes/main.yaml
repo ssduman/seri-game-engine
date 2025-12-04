@@ -1,0 +1,26 @@
+Scene:
+  IDComponent:
+    ID: 123
+    ParentID: 0
+    Name: "main"
+  SceneComponent:
+    IsActive: true
+  Entities:
+    - Entity:
+        IDComponent:
+          ID: 124
+          ParentID: 0
+          Name: "entity_0"
+        TransformComponent:
+          Position: [0, 0, 0]
+          Rotation: [0, 0, 0]
+          Scale: [1, 1, 1]
+    - Entity:
+        IDComponent:
+          ID: 125
+          ParentID: 124
+          Name: "entity_1"
+        TransformComponent:
+          Position: [0, 0, 0]
+          Rotation: [0, 0, 0]
+          Scale: [1, 1, 1]
