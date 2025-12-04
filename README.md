@@ -30,6 +30,7 @@
 * [SDL](https://github.com/libsdl-org/SDL)
 * [EnTT](https://github.com/skypjack/entt)
 * [yaml-cpp](https://github.com/jbeder/yaml-cpp)
+* [fmt](https://github.com/fmtlib/fmt)
 ## Images: ##
 <table>
     <tr>
