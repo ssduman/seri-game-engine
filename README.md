@@ -12,7 +12,11 @@
 * [ ] Physics
 * [ ] NetCode
 * [ ] DirectX Support
-* [ ] C# Scripting
+* [ ] Scripting
+## Build: ##
+* Run `git clone --recursive https://github.com/ssduman/seri-game-engine`
+* Double click to `generate.bat`
+* Open `Seri Game Engine.sln`, build and run in Visual Studio 2022
 ## Dependencies: ##
 * [GLFW](https://www.glfw.org)
 * [glad](https://github.com/Dav1dde/glad)
@@ -24,10 +28,8 @@
 * [Premake](https://github.com/premake/premake-core)
 * [miniaudio](https://github.com/mackron/miniaudio)
 * [SDL](https://github.com/libsdl-org/SDL)
-## Build: ##
-* Run `git clone --recursive https://github.com/ssduman/seri-game-engine`
-* Double click to `generate.bat`
-* Open `Seri Game Engine.sln`, build and run in Visual Studio 2022
+* [EnTT](https://github.com/skypjack/entt)
+* [yaml-cpp](https://github.com/jbeder/yaml-cpp)
 ## Images: ##
 <table>
     <tr>
