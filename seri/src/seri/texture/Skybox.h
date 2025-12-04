@@ -27,7 +27,7 @@ namespace seri
 			Init();
 		}
 
-		Skybox(std::vector<std::string> faces) :  _faces(std::move(faces))
+		Skybox(std::vector<std::string> faces) : _faces(std::move(faces))
 		{
 			Init();
 		}
@@ -56,6 +56,7 @@ namespace seri
 			renderCommand_skybox.drawMode = DrawMode::arrays;
 			renderCommand_skybox.material = _material;
 			renderCommand_skybox.vao = _vertexArray;
+			renderCommand_skybox.rt = seri::RenderingManager::GetEditorRT();
 			renderCommand_skybox.count = static_cast<uint32_t>(_positions.size());
 			seri::RenderingManager::Submit(renderCommand_skybox);
 

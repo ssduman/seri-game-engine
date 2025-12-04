@@ -229,6 +229,7 @@ namespace seri::editor
 			renderCommand.camera = seri::Graphic::GetCameraPerspective();
 			renderCommand.material = basicMaterial;
 			renderCommand.vao = basicVertexArray;
+			renderCommand.rt = seri::RenderingManager::GetEditorRT();
 			renderCommand.trs = seri::Util::GetTRS(
 				{ 0.0f, 0.0f, 0.0f },
 				{ 0.0f, 45.0f, 0.0f },

@@ -111,6 +111,11 @@ namespace seri
 
 		static void Execute()
 		{
+			RenderCommand renderCommand;
+			renderCommand.name = "noop";
+			renderCommand.noop = true;
+			Submit(renderCommand);
+
 			_renderCommandBuffer->Execute();
 		}
 

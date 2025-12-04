@@ -68,7 +68,7 @@ namespace seri::editor
 
 			for (unsigned int i = 0; i < 100; i++)
 			{
-				instancedTRSs.push_back(seri::Util::GetTRS({ 4.0f + i % 20, i / 20, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f }));
+				instancedTRSs.push_back(seri::Util::GetTRS({ 1.0f + i % 20, i / 20, -1.0f }, { 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f }));
 			}
 			cube_3d->MakeInstanced(instancedTRSs);
 		}
@@ -95,7 +95,7 @@ namespace seri::editor
 				instancedTRSs[i] *= glm::mat4_cast(glm::quat(glm::vec3{ glm::radians(seri::Random::Range(0.5f, 2.0f)), glm::radians(seri::Random::Range(0.5f, 2.0f)), glm::radians(0.0f) }));
 			}
 			cube_3d->UpdateInstanced(instancedTRSs);
-			seri::Graphic::DrawInstanced(cube_3d, materialInstanced, instancedTRSs, seri::Graphic::GetCameraPerspective());
+			seri::Graphic::DrawInstanced(cube_3d, materialInstanced, instancedTRSs, seri::Graphic::GetCameraPerspective(), seri::RenderingManager::GetEditorRT());
 
 			if (model_0)
 			{
@@ -111,15 +111,12 @@ namespace seri::editor
 
 			if (model_1)
 			{
-				seri::Graphic::DrawModel(model_1, materialCannon, seri::Util::GetTRS({ -4.0f, 0.0f, 0.0f }, rot_3d, scale_l), seri::Graphic::GetCameraPerspective());
+				seri::Graphic::DrawModel(model_1, materialCannon, seri::Util::GetTRS({ -4.0f, 0.0f, 0.0f }, rot_3d, scale_l), seri::Graphic::GetCameraPerspective(), seri::RenderingManager::GetEditorRT());
 			}
 
-			seri::Graphic::Draw(font_mesh, materialFont, seri::Util::GetIdentityMatrix(), seri::Graphic::GetCameraOrtho());
+			seri::Graphic::Draw(font_mesh, materialFont, seri::Util::GetIdentityMatrix(), seri::Graphic::GetCameraOrtho(), seri::RenderingManager::GetEditorRT());
 
-			//seri::Graphic::Draw(quad_2d, materialGrid, seri::Util::GetIdentityMatrix(), seri::Graphic::GetCameraPerspective());
-
-			//udpSocketServer->Listen(1);
-			//udpSocketClient->SendToServer();
+			//seri::Graphic::Draw(quad_2d, materialGrid, seri::Util::GetIdentityMatrix(), seri::Graphic::GetCameraPerspective(), seri::RenderingManager::GetEditorRT());
 		}
 
 		void Destroy() override
