@@ -27,12 +27,6 @@ echo f | xcopy /f /y "script/vendor/assimp/zconf.h" "seri/vendor/assimp/contrib/
 echo f | xcopy /f /y "script/vendor/assimp/config.h" "seri/vendor/assimp/include/assimp/config.h"
 echo f | xcopy /f /y "script/vendor/assimp/revision.h" "seri/vendor/assimp/code/assimp/revision.h"
 
-:: create folders
-set "sdl_build_folder=seri/vendor/sdl/build"
-if not exist "%sdl_build_folder%" (
-    mkdir "%sdl_build_folder%"
-)
-
 :: premake
 call script\premake5\premake5.exe vs2022
 
