@@ -2,6 +2,7 @@
 
 #include "seri/util/Util.h"
 
+#include <entt/entt.hpp>
 #include <yaml-cpp/yaml.h>
 
 namespace seri
@@ -28,15 +29,15 @@ namespace seri
 
 	struct IDComponent
 	{
-		uint32_t id{ 0 };
-		uint32_t parentId{ 0 };
+		uint64_t id{ 0 };
+		uint64_t parentId{ 0 };
 		std::string name{ "" };
 
 		static IDComponent Deserialize(const YAML::Node& node)
 		{
 			IDComponent component{};
-			component.id = node["ID"].as<uint32_t>();
-			component.parentId = node["ParentID"].as<uint32_t>();
+			component.id = node["ID"].as<uint64_t>();
+			component.parentId = node["ParentID"].as<uint64_t>();
 			component.name = node["Name"].as<std::string>();
 			return component;
 		}

@@ -28,9 +28,13 @@ namespace seri
 
 			static void Update();
 
+			static entt::registry& GetRegistry();
+
 			static entt::entity CreateEntity();
 
 			static void DestroyEntity(entt::entity e);
+
+			static std::shared_ptr<Scene> GetActiveScene();
 
 		private:
 			entt::registry registry;

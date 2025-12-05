@@ -9,6 +9,7 @@
 #include "event/UserEvent.h"
 
 #include <memory>
+#include <unordered_map>
 
 #if defined (SERI_USE_WINDOW_GLFW)
 #include <GLFW/glfw3.h>
@@ -121,18 +122,9 @@ namespace seri::editor
 			style.PopupRounding = 6.0f;
 			style.WindowRounding = 6.0f;
 			style.ScrollbarRounding = 6.0f;
-
-			style.FrameBorderSize = 1.0f;
-			style.WindowTitleAlign = ImVec2(0.5f, 0.50f);
-			style.WindowMenuButtonPosition = ImGuiDir_Right;
-
-			style.Colors[ImGuiCol_WindowBg].w = 1.0f;
-			style.Colors[ImGuiCol_TitleBg] = ImVec4(0.1f, 0.1f, 0.1f, 1.0f);
-			style.Colors[ImGuiCol_TitleBgActive] = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
-			style.Colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
 		}
-		
-		void ShowEditorFrambufferImage()
+
+		void ShowEditorSceneImage()
 		{
 			auto tex = (ImTextureID)(intptr_t)seri::RenderingManager::GetEditorRT()->GetFirstColorTextureHandle();
 
@@ -145,6 +137,103 @@ namespace seri::editor
 				ImVec2(0, 1),
 				ImVec2(1, 0)
 			);
+		}
+
+		void ShowEditorHierarchy()
+		{
+			auto activeScene = seri::scene::SceneManager::GetActiveScene();
+			std::string sceneName = activeScene->GetName();
+			seri::scene::GraphNode& sceneGraphRoot = activeScene->GetSceneGraphRoot();
+
+			ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+			if (ImGui::TreeNode(sceneName.c_str()))
+			{
+				ShowEditorHierarchyImpl(sceneGraphRoot);
+				ImGui::TreePop();
+			}
+		}
+
+		void ShowEditorHierarchyImpl(seri::scene::GraphNode& node)
+		{
+			static ImGuiTreeNodeFlags treeBaseFlags =
+				ImGuiTreeNodeFlags_OpenOnArrow |
+				ImGuiTreeNodeFlags_SpanAvailWidth |
+				ImGuiTreeNodeFlags_OpenOnDoubleClick;
+
+			for (auto& child : node.children)
+			{
+				ImGuiTreeNodeFlags treeNodeFlags = treeBaseFlags;
+				if (child.children.size() == 0)
+				{
+					treeNodeFlags |= ImGuiTreeNodeFlags_Leaf;
+				}
+				if (_selectedEntityId == child.idComponent.id)
+				{
+					treeNodeFlags |= ImGuiTreeNodeFlags_Selected;
+				}
+
+				if (ImGui::TreeNodeEx((void*)(intptr_t)child.idComponent.id, treeNodeFlags, child.idComponent.name.c_str()))
+				{
+					if (ImGui::BeginPopupContextItem())
+					{
+						if (ImGui::BeginMenu("Add..."))
+						{
+							if (ImGui::MenuItem("Empty"))
+							{
+							}
+
+							ImGui::EndMenu();
+						}
+
+						if (ImGui::Button("Delete"))
+						{
+						}
+
+						ImGui::EndPopup();
+					}
+
+					if (ImGui::IsItemClicked())
+					{
+						_selectedEntityId = child.idComponent.id;
+					}
+
+					ShowEditorHierarchyImpl(child);
+
+					ImGui::TreePop();
+				}
+			}
+		}
+
+		void ShowEditorInspector()
+		{
+			if (_selectedEntityId == 0)
+			{
+				ImGui::Text("No entity selected");
+				return;
+			}
+
+			auto scene = seri::scene::SceneManager::GetActiveScene();
+			auto& registry = seri::scene::SceneManager::GetRegistry();
+
+			auto entity = scene->GetEntityById(_selectedEntityId);
+
+			if (auto* idComponent = registry.try_get<seri::IDComponent>(entity))
+			{
+				ImGui::Text(fmt::format("id: {}", idComponent->id).c_str());
+				ImGui::Text(fmt::format("parent id: {}", idComponent->parentId).c_str());
+				ImGui::Text(fmt::format("name: {}", idComponent->name).c_str());
+
+				ImGui::Separator();
+			}
+
+			if (auto* transformComponent = registry.try_get<seri::TransformComponent>(entity))
+			{
+				ImGui::Text(fmt::format("position: {} {} {}", transformComponent->position.x, transformComponent->position.y, transformComponent->position.z).c_str());
+				ImGui::Text(fmt::format("rotation: {} {} {}", transformComponent->rotation.x, transformComponent->rotation.y, transformComponent->rotation.z).c_str());
+				ImGui::Text(fmt::format("scale: {} {} {}", transformComponent->scale.x, transformComponent->scale.y, transformComponent->scale.z).c_str());
+
+				ImGui::Separator();
+			}
 		}
 
 		void DrawEditorLayout()
@@ -200,14 +289,14 @@ namespace seri::editor
 			if (showHierarchy)
 			{
 				ImGui::Begin("Hierarchy", &showHierarchy);
-				ImGui::Text("todo");
+				ShowEditorHierarchy();
 				ImGui::End();
 			}
 
 			if (showScene)
 			{
 				ImGui::Begin("Scene", &showScene);
-				ShowEditorFrambufferImage();
+				ShowEditorSceneImage();
 				ImGui::End();
 			}
 
@@ -228,7 +317,7 @@ namespace seri::editor
 			if (showInspector)
 			{
 				ImGui::Begin("Inspector", &showInspector);
-				ImGui::Text("todo");
+				ShowEditorInspector();
 				ImGui::End();
 			}
 
@@ -239,6 +328,8 @@ namespace seri::editor
 				ImGui::End();
 			}
 		}
+
+		uint64_t _selectedEntityId{ 0 };
 
 	};
 }

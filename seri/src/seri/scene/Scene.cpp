@@ -30,7 +30,9 @@ namespace seri::scene
 		_idComponent = seri::IDComponent::Deserialize(sceneNode["IDComponent"]);
 		_sceneComponent = seri::SceneComponent::Deserialize(sceneNode["SceneComponent"]);
 
+		_sceneGraphRoot = GraphNode{};
 		_entityMap.clear();
+		auto& registry = seri::scene::SceneManager::GetRegistry();
 
 		if (YAML::Node entities = sceneNode["Entities"])
 		{
@@ -38,24 +40,27 @@ namespace seri::scene
 			{
 				YAML::Node entityData = entityItem["Entity"];
 
+				entt::entity entity = seri::scene::SceneManager::CreateEntity();
+
+				seri::IDComponent idComp = seri::IDComponent::Deserialize(entityData["IDComponent"]);
+				registry.emplace<seri::IDComponent>(entity, idComp);
+
+				FindAndAddAsChild(_sceneGraphRoot, idComp.parentId, idComp);
+
+				_entityMap[idComp.id] = entity;
+
 				for (auto componentNode : entityData)
 				{
 					std::string componentName = componentNode.first.as<std::string>();
 					YAML::Node componentData = componentNode.second;
 
-					entt::entity entity = seri::scene::SceneManager::CreateEntity();
-
 					if (componentName == "IDComponent")
 					{
-						seri::IDComponent idComp = seri::IDComponent::Deserialize(componentData);
 					}
 					else if (componentName == "TransformComponent")
 					{
 						seri::TransformComponent transformComp = seri::TransformComponent::Deserialize(componentData);
-					}
-					else if (componentName == "SceneComponent")
-					{
-						seri::SceneComponent sceneComp = seri::SceneComponent::Deserialize(componentData);
+						registry.emplace<seri::TransformComponent>(entity, transformComp);
 					}
 					else
 					{
@@ -64,5 +69,24 @@ namespace seri::scene
 				}
 			}
 		}
+
+		LOGGER(info, fmt::format("[scene] parsed: {}", file));
 	}
+
+	void Scene::FindAndAddAsChild(GraphNode& node, uint64_t parentId, seri::IDComponent childIdComponent)
+	{
+		if (parentId == 0 || node.idComponent.id == parentId)
+		{
+			GraphNode childNode{};
+			childNode.idComponent = childIdComponent;
+			node.children.push_back(childNode);
+			return;
+		}
+
+		for (auto& childNode : node.children)
+		{
+			FindAndAddAsChild(childNode, parentId, childIdComponent);
+		}
+	}
+
 }

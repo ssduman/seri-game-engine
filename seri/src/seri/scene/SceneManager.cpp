@@ -29,13 +29,24 @@ namespace seri::scene
 		SceneManager::GetInstance()._activeScene->Update();
 	}
 
+	entt::registry& SceneManager::GetRegistry()
+	{
+		return SceneManager::GetInstance().registry;
+	}
+
 	entt::entity SceneManager::CreateEntity()
 	{
-		return SceneManager::GetInstance().registry.create();
+		return GetRegistry().create();
 	}
 
 	void SceneManager::DestroyEntity(entt::entity e)
 	{
-		GetInstance().registry.destroy(e);
+		GetRegistry().destroy(e);
 	}
+
+	std::shared_ptr<Scene> SceneManager::GetActiveScene()
+	{
+		return GetInstance()._activeScene;
+	}
+
 }

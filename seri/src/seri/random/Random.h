@@ -8,6 +8,7 @@ namespace seri
 	{
 	public:
 		static float Range(float min, float max);
+		static uint64_t UUID();
 
 	private:
 
