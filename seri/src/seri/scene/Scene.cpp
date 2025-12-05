@@ -20,7 +20,7 @@ namespace seri::scene
 		auto& registry = seri::scene::SceneManager::GetRegistry();
 
 		std::vector<uint64_t> ids{};
-		GetAllIDs(_sceneGraphRoot, ids);
+		GetAllEntityIDs(ids);
 
 		YAML::Node root;
 
@@ -86,14 +86,11 @@ namespace seri::scene
 			{
 				YAML::Node entityData = entityItem["Entity"];
 
-				entt::entity entity = seri::scene::SceneManager::CreateEntity();
-
 				seri::IDComponent idComp = seri::IDComponent::Deserialize(entityData["IDComponent"]);
-				registry.emplace<seri::IDComponent>(entity, idComp);
 
-				FindAndAddAsChild(idComp.parentId, idComp);
+				AddEntityAsChild(idComp.id, idComp.parentId, idComp.name);
 
-				_entityMap[idComp.id] = entity;
+				entt::entity entity = GetEntityById(idComp.id);
 
 				for (auto componentNode : entityData)
 				{
@@ -119,62 +116,82 @@ namespace seri::scene
 		LOGGER(info, fmt::format("[scene] parsed: {}", file));
 	}
 
-	void Scene::GetAllIDs(GraphNode& node, std::vector<uint64_t>& ids)
+	void Scene::GetAllEntityIDs(std::vector<uint64_t>& ids)
 	{
-		if (node.idComponent.id != 0)
+		GetAllEntityIDs(_sceneGraphRoot, ids);
+	}
+
+	void Scene::GetAllEntityIDs(GraphNode& node, std::vector<uint64_t>& ids)
+	{
+		if (node.id != 0)
 		{
-			ids.push_back(node.idComponent.id);
+			ids.push_back(node.id);
 		}
 
 		for (auto& childNode : node.children)
 		{
-			GetAllIDs(childNode, ids);
+			GetAllEntityIDs(childNode, ids);
 		}
 	}
 
-	void Scene::FindAndDelete(uint64_t id)
+	void Scene::DeleteEntity(uint64_t id)
 	{
-		FindAndDelete(_sceneGraphRoot, id);
+		DeleteEntity(_sceneGraphRoot, id);
 	}
 
-	void Scene::FindAndDelete(GraphNode& node, uint64_t id)
+	void Scene::DeleteEntity(GraphNode& node, uint64_t id)
 	{
-		int deleteIndex = -1;
+		size_t deleteIndex = -1;
 		for (size_t i = 0; i < node.children.size(); i++)
 		{
-			if (node.children[i].idComponent.id == id)
+			if (node.children[i].id == id)
 			{
 				deleteIndex = i;
 				break;
 			}
 
-			FindAndDelete(node.children[i], id);
+			DeleteEntity(node.children[i], id);
 		}
 
 		if (deleteIndex != -1)
 		{
+			entt::entity entity = GetEntityById(id);
+			seri::scene::SceneManager::DestroyEntity(entity);
+
+			_entityMap.erase(id);
+
 			node.children.erase(node.children.begin() + deleteIndex);
 		}
 	}
 
-	void Scene::FindAndAddAsChild(uint64_t parentId, seri::IDComponent childIdComponent)
+	void Scene::AddEntityAsChild(uint64_t id, uint64_t parentId, std::string& name)
 	{
-		FindAndAddAsChild(_sceneGraphRoot, parentId, childIdComponent);
+		AddEntityAsChild(_sceneGraphRoot, id, parentId, name);
 	}
 
-	void Scene::FindAndAddAsChild(GraphNode& node, uint64_t parentId, seri::IDComponent childIdComponent)
+	void Scene::AddEntityAsChild(GraphNode& node, uint64_t id, uint64_t parentId, std::string& name)
 	{
-		if (parentId == 0 || node.idComponent.id == parentId)
+		if (parentId == 0 || node.id == parentId)
 		{
 			GraphNode childNode{};
-			childNode.idComponent = childIdComponent;
+			childNode.id = id;
+			childNode.parentId = parentId;
+			childNode.name = std::string{ name.c_str() };
 			node.children.push_back(childNode);
+
+			entt::entity entity = seri::scene::SceneManager::CreateEntity();
+
+			seri::IDComponent idComp = { id, parentId, name };
+			seri::scene::SceneManager::GetRegistry().emplace<seri::IDComponent>(entity, idComp);
+
+			_entityMap[idComp.id] = entity;
+
 			return;
 		}
 
 		for (auto& childNode : node.children)
 		{
-			FindAndAddAsChild(childNode, parentId, childIdComponent);
+			AddEntityAsChild(childNode, id, parentId, name);
 		}
 	}
 

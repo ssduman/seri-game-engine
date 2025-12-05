@@ -17,7 +17,9 @@ namespace seri
 	{
 		struct GraphNode
 		{
-			seri::IDComponent idComponent{};
+			uint64_t id{ 0 };
+			uint64_t parentId{ 0 };
+			std::string name{ "" };
 			std::vector<GraphNode> children{};
 		};
 
@@ -64,14 +66,16 @@ namespace seri
 			void Serialize(const std::string& file);
 			void Deserialize(const std::string& file);
 
-			void GetAllIDs(GraphNode& node, std::vector<uint64_t>& ids);
+			void GetAllEntityIDs(std::vector<uint64_t>& ids);
 
-			void FindAndDelete(uint64_t id);
-			void FindAndAddAsChild(uint64_t parentId, seri::IDComponent childIdComponent);
+			void DeleteEntity(uint64_t id);
+			void AddEntityAsChild(uint64_t id, uint64_t parentId, std::string& name);
 
 		private:
-			void FindAndDelete(GraphNode& node, uint64_t id);
-			void FindAndAddAsChild(GraphNode& node, uint64_t parentId, seri::IDComponent childIdComponent);
+			void GetAllEntityIDs(GraphNode& node, std::vector<uint64_t>& ids);
+
+			void DeleteEntity(GraphNode& node, uint64_t id);
+			void AddEntityAsChild(GraphNode& node, uint64_t id, uint64_t parentId, std::string& name);
 
 			std::shared_ptr<seri::Skybox> _skybox;
 

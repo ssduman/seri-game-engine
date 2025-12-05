@@ -167,12 +167,12 @@ namespace seri::editor
 				{
 					treeNodeFlags |= ImGuiTreeNodeFlags_Leaf;
 				}
-				if (_selectedEntityId == child.idComponent.id)
+				if (_selectedEntityId == child.id)
 				{
 					treeNodeFlags |= ImGuiTreeNodeFlags_Selected;
 				}
 
-				if (ImGui::TreeNodeEx((void*)(intptr_t)child.idComponent.id, treeNodeFlags, child.idComponent.name.c_str()))
+				if (ImGui::TreeNodeEx((void*)(intptr_t)child.id, treeNodeFlags, child.name.c_str()))
 				{
 					if (ImGui::BeginPopupContextItem())
 					{
@@ -194,7 +194,7 @@ namespace seri::editor
 
 					if (ImGui::IsItemClicked())
 					{
-						_selectedEntityId = child.idComponent.id;
+						_selectedEntityId = child.id;
 					}
 
 					ShowEditorHierarchyImpl(child);
