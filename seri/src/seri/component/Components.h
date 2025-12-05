@@ -22,6 +22,7 @@ namespace seri
 				node.push_back(vec.x);
 				node.push_back(vec.y);
 				node.push_back(vec.z);
+				node.SetStyle(YAML::EmitterStyle::Flow);
 				return node;
 			}
 		};
