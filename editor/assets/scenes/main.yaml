@@ -2,25 +2,70 @@ Scene:
   IDComponent:
     ID: 123
     ParentID: 0
-    Name: "main"
+    Name: main
   SceneComponent:
-    Version: "0.1"
+    Version: 0.1
     IsActive: true
   Entities:
     - Entity:
         IDComponent:
           ID: 124
           ParentID: 0
-          Name: "entity_0"
+          Name: entity_parent
         TransformComponent:
-          Position: [0, 0, 0]
+          Position: [1, 0, 0]
           Rotation: [0, 0, 0]
           Scale: [1, 1, 1]
     - Entity:
         IDComponent:
           ID: 125
           ParentID: 124
-          Name: "entity_1"
+          Name: entity_2
+        TransformComponent:
+          Position: [-0.666700006, 0, 0]
+          Rotation: [0, 92.9031982, 0]
+          Scale: [41.0001984, 1, 1]
+    - Entity:
+        IDComponent:
+          ID: 15087948878615887923
+          ParentID: 125
+          Name: GO
+        TransformComponent:
+          Position: [0, 0, 0]
+          Rotation: [0, 45, 0]
+          Scale: [1, 1, 1]
+    - Entity:
+        IDComponent:
+          ID: 5134564393171502025
+          ParentID: 124
+          Name: Entity_test
+        TransformComponent:
+          Position: [0, 0, 0]
+          Rotation: [0, 0, 0]
+          Scale: [1, 1, 1]
+    - Entity:
+        IDComponent:
+          ID: 14183215496632272173
+          ParentID: 5134564393171502025
+          Name: Entity323
+        TransformComponent:
+          Position: [0, 0, 0]
+          Rotation: [0, 0, 0]
+          Scale: [1, 1, 1]
+    - Entity:
+        IDComponent:
+          ID: 13269587195292794505
+          ParentID: 124
+          Name: Entity_new
+        TransformComponent:
+          Position: [0, 0, 0]
+          Rotation: [0, 0, 0]
+          Scale: [1, 1, 1]
+    - Entity:
+        IDComponent:
+          ID: 6108922855132924924
+          ParentID: 13269587195292794505
+          Name: Entity_child
         TransformComponent:
           Position: [0, 0, 0]
           Rotation: [0, 0, 0]

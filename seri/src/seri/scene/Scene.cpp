@@ -15,6 +15,11 @@
 
 namespace seri::scene
 {
+	void Scene::Save()
+	{
+		Serialize(_filePath);
+	}
+
 	void Scene::Serialize(const std::string& file)
 	{
 		auto& registry = seri::scene::SceneManager::GetRegistry();
@@ -57,11 +62,15 @@ namespace seri::scene
 		std::ofstream fout(file);
 		fout << root;
 
+		_isDirty = false;
+
 		LOGGER(info, fmt::format("[scene] serialized to {}", file));
 	}
 
 	void Scene::Deserialize(const std::string& file)
 	{
+		_filePath = std::string{ file.c_str() };
+
 		YAML::Node root = YAML::LoadFile(file);
 
 		if (!root["Scene"] || !root["Scene"].IsMap())
@@ -103,7 +112,7 @@ namespace seri::scene
 					else if (componentName == "TransformComponent")
 					{
 						seri::TransformComponent transformComp = seri::TransformComponent::Deserialize(componentData);
-						registry.emplace<seri::TransformComponent>(entity, transformComp);
+						registry.emplace_or_replace<seri::TransformComponent>(entity, transformComp);
 					}
 					else
 					{
@@ -112,6 +121,8 @@ namespace seri::scene
 				}
 			}
 		}
+
+		_isDirty = false;
 
 		LOGGER(info, fmt::format("[scene] parsed: {}", file));
 	}
@@ -155,6 +166,8 @@ namespace seri::scene
 
 		if (deleteIndex != -1)
 		{
+			SetAsDirty();
+
 			entt::entity entity = GetEntityById(id);
 			seri::scene::SceneManager::DestroyEntity(entity);
 
@@ -164,27 +177,30 @@ namespace seri::scene
 		}
 	}
 
-	void Scene::AddEntityAsChild(uint64_t id, uint64_t parentId, std::string& name)
+	void Scene::AddEntityAsChild(uint64_t id, uint64_t parentId, const std::string& name)
 	{
 		AddEntityAsChild(_sceneGraphRoot, id, parentId, name);
 	}
 
-	void Scene::AddEntityAsChild(GraphNode& node, uint64_t id, uint64_t parentId, std::string& name)
+	void Scene::AddEntityAsChild(GraphNode& node, uint64_t id, uint64_t parentId, const std::string& name)
 	{
 		if (parentId == 0 || node.id == parentId)
 		{
 			GraphNode childNode{};
 			childNode.id = id;
 			childNode.parentId = parentId;
-			childNode.name = std::string{ name.c_str() };
 			node.children.push_back(childNode);
 
 			entt::entity entity = seri::scene::SceneManager::CreateEntity();
 
-			seri::IDComponent idComp = { id, parentId, name };
-			seri::scene::SceneManager::GetRegistry().emplace<seri::IDComponent>(entity, idComp);
+			seri::scene::SceneManager::GetRegistry().emplace_or_replace<seri::IDComponent>(entity, childNode.id, childNode.parentId, std::string{ name });
 
-			_entityMap[idComp.id] = entity;
+			seri::TransformComponent transformComp = {};
+			seri::scene::SceneManager::GetRegistry().emplace_or_replace<seri::TransformComponent>(entity, transformComp);
+
+			_entityMap[childNode.id] = entity;
+
+			SetAsDirty();
 
 			return;
 		}

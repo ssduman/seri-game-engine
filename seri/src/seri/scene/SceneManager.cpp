@@ -22,7 +22,6 @@ namespace seri::scene
 		SceneManager::GetInstance()._activeScene->Init();
 
 		SceneManager::GetInstance()._activeScene->Deserialize("assets/scenes/main.yaml");
-		SceneManager::GetInstance()._activeScene->Serialize("assets/scenes/main_0.yaml");
 	}
 
 	void SceneManager::Update()

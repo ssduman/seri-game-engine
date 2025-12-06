@@ -25,6 +25,12 @@ namespace seri
 				node.SetStyle(YAML::EmitterStyle::Flow);
 				return node;
 			}
+
+			static std::string DeepCopyYAMLString(const YAML::Node& n)
+			{
+				auto s = n.as<std::string>();
+				return std::string(s.data(), s.size());
+			}
 		};
 	}
 
@@ -39,7 +45,7 @@ namespace seri
 			IDComponent component{};
 			component.id = node["ID"].as<uint64_t>();
 			component.parentId = node["ParentID"].as<uint64_t>();
-			component.name = node["Name"].as<std::string>();
+			component.name = component::Util::DeepCopyYAMLString(node["Name"]);
 			return component;
 		}
 

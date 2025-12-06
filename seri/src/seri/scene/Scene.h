@@ -19,7 +19,6 @@ namespace seri
 		{
 			uint64_t id{ 0 };
 			uint64_t parentId{ 0 };
-			std::string name{ "" };
 			std::vector<GraphNode> children{};
 		};
 
@@ -60,8 +59,20 @@ namespace seri
 					return _entityMap[id];
 				}
 				LOGGER(error, fmt::format("[scene] entity with id {} not found", id));
-				return {};
+				return entt::null;
 			}
+
+			bool IsDirty()
+			{
+				return _isDirty;
+			}
+
+			void SetAsDirty()
+			{
+				_isDirty = true;
+			}
+
+			void Save();
 
 			void Serialize(const std::string& file);
 			void Deserialize(const std::string& file);
@@ -69,13 +80,16 @@ namespace seri
 			void GetAllEntityIDs(std::vector<uint64_t>& ids);
 
 			void DeleteEntity(uint64_t id);
-			void AddEntityAsChild(uint64_t id, uint64_t parentId, std::string& name);
+			void AddEntityAsChild(uint64_t id, uint64_t parentId, const std::string& name);
 
 		private:
 			void GetAllEntityIDs(GraphNode& node, std::vector<uint64_t>& ids);
 
 			void DeleteEntity(GraphNode& node, uint64_t id);
-			void AddEntityAsChild(GraphNode& node, uint64_t id, uint64_t parentId, std::string& name);
+			void AddEntityAsChild(GraphNode& node, uint64_t id, uint64_t parentId, const std::string& name);
+
+			std::string _filePath{ "" };
+			bool _isDirty{ false };
 
 			std::shared_ptr<seri::Skybox> _skybox;
 

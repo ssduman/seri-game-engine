@@ -219,7 +219,7 @@ namespace seri
 
 						if (keyEnum == KeyCode::unknown)
 						{
-							LOGGER(info, "[window] glfw event: key: unexpected key type");
+							//LOGGER(info, "[window] glfw event: key: unexpected key type");
 							return;
 						}
 
