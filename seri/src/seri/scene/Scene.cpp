@@ -15,6 +15,16 @@
 
 namespace seri::scene
 {
+	void Scene::Init()
+	{
+		_skybox = std::make_shared<seri::Skybox>();
+	}
+
+	void Scene::Update()
+	{
+		_skybox->Update();
+	}
+
 	void Scene::Save()
 	{
 		Serialize(_filePath);
@@ -38,7 +48,7 @@ namespace seri::scene
 		YAML::Node entitiesNode;
 		for (uint64_t id : ids)
 		{
-			entt::entity entity = GetEntityById(id);
+			entt::entity entity = GetEntityByID(id);
 
 			YAML::Node entityDataNode;
 
@@ -99,7 +109,7 @@ namespace seri::scene
 
 				AddEntityAsChild(idComp.id, idComp.parentId, idComp.name);
 
-				entt::entity entity = GetEntityById(idComp.id);
+				entt::entity entity = GetEntityByID(idComp.id);
 
 				for (auto componentNode : entityData)
 				{
@@ -168,7 +178,7 @@ namespace seri::scene
 		{
 			SetAsDirty();
 
-			entt::entity entity = GetEntityById(id);
+			entt::entity entity = GetEntityByID(id);
 			seri::scene::SceneManager::DestroyEntity(entity);
 
 			_entityMap.erase(id);
@@ -186,21 +196,22 @@ namespace seri::scene
 	{
 		if (parentId == 0 || node.id == parentId)
 		{
+			SetAsDirty();
+
+			entt::entity entity = seri::scene::SceneManager::CreateEntity();
+
+			seri::IDComponent idComp = { id, parentId, std::string{ name } };
+			seri::scene::SceneManager::GetRegistry().emplace_or_replace<seri::IDComponent>(entity, idComp);
+
+			seri::TransformComponent transformComp = {};
+			seri::scene::SceneManager::GetRegistry().emplace_or_replace<seri::TransformComponent>(entity, transformComp);
+
 			GraphNode childNode{};
 			childNode.id = id;
 			childNode.parentId = parentId;
 			node.children.push_back(childNode);
 
-			entt::entity entity = seri::scene::SceneManager::CreateEntity();
-
-			seri::scene::SceneManager::GetRegistry().emplace_or_replace<seri::IDComponent>(entity, childNode.id, childNode.parentId, std::string{ name });
-
-			seri::TransformComponent transformComp = {};
-			seri::scene::SceneManager::GetRegistry().emplace_or_replace<seri::TransformComponent>(entity, transformComp);
-
 			_entityMap[childNode.id] = entity;
-
-			SetAsDirty();
 
 			return;
 		}

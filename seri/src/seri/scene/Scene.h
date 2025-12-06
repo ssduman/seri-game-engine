@@ -32,19 +32,28 @@ namespace seri
 
 			~Scene() = default;
 
-			void Init()
+			void Init();
+
+			void Update();
+
+			seri::IDComponent GetIDComponent()
 			{
-				_skybox = std::make_shared<seri::Skybox>();
+				return _idComponent;
 			}
 
-			void Update()
+			seri::SceneComponent GetSceneComponent()
 			{
-				_skybox->Update();
+				return _sceneComponent;
 			}
 
-			std::string GetName() const
+			uint64_t GetID()
 			{
-				return _idComponent.name;
+				return GetIDComponent().id;
+			}
+
+			std::string GetName()
+			{
+				return GetIDComponent().name;
 			}
 
 			GraphNode& GetSceneGraphRoot()
@@ -52,7 +61,7 @@ namespace seri
 				return _sceneGraphRoot;
 			}
 
-			entt::entity GetEntityById(uint64_t id)
+			entt::entity GetEntityByID(uint64_t id)
 			{
 				if (_entityMap.contains(id))
 				{

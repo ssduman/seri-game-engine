@@ -2,7 +2,7 @@
 
 #include <seri/core/Seri.h>
 
-#include "gui/GUI.h"
+#include "gui/EditorGUI.h"
 
 namespace seri::editor
 {
@@ -11,13 +11,13 @@ namespace seri::editor
 	public:
 		EditorLayer() : LayerBase("GUILayer")
 		{
-			gui = std::make_shared<GUI>();
-			gui->Init();
+			editorGUI = std::make_shared<EditorGUI>();
+			editorGUI->Init();
 
 			seri::WindowManager::Instance()->AddProcessEventDelegate(
 				[&](const void* event)
 				{
-					gui->ProcessEvent(event);
+					editorGUI->ProcessEvent(event);
 				}
 			);
 		}
@@ -30,8 +30,8 @@ namespace seri::editor
 
 		void Update() override
 		{
-			gui->Update();
-			gui->Render();
+			editorGUI->Update();
+			editorGUI->Render();
 		}
 
 		void PostUpdate() override
@@ -39,7 +39,7 @@ namespace seri::editor
 		}
 
 	private:
-		std::shared_ptr<GUI> gui;
+		std::shared_ptr<EditorGUI> editorGUI;
 
 	};
 }
