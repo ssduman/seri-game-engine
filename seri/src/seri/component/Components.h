@@ -1,39 +1,13 @@
 #pragma once
 
 #include "seri/util/Util.h"
+#include "seri/util/YAMLUtil.h"
 
 #include <entt/entt.hpp>
 #include <yaml-cpp/yaml.h>
 
-namespace seri
+namespace seri::component
 {
-	namespace component
-	{
-		struct Util
-		{
-			static glm::vec3 Vec3FromYAML(const YAML::Node& node)
-			{
-				return { node[0].as<float>(), node[1].as<float>(), node[2].as<float>() };
-			}
-
-			static YAML::Node Vec3ToYAML(const glm::vec3& vec)
-			{
-				YAML::Node node;
-				node.push_back(vec.x);
-				node.push_back(vec.y);
-				node.push_back(vec.z);
-				node.SetStyle(YAML::EmitterStyle::Flow);
-				return node;
-			}
-
-			static std::string DeepCopyYAMLString(const YAML::Node& n)
-			{
-				auto s = n.as<std::string>();
-				return std::string(s.data(), s.size());
-			}
-		};
-	}
-
 	struct IDComponent
 	{
 		uint64_t id{ 0 };
@@ -45,7 +19,7 @@ namespace seri
 			IDComponent component{};
 			component.id = node["ID"].as<uint64_t>();
 			component.parentId = node["ParentID"].as<uint64_t>();
-			component.name = component::Util::DeepCopyYAMLString(node["Name"]);
+			component.name = YAMLUtil::DeepCopyYAMLString(node["Name"]);
 			return component;
 		}
 
@@ -68,18 +42,18 @@ namespace seri
 		static TransformComponent Deserialize(const YAML::Node& node)
 		{
 			TransformComponent component{};
-			component.position = component::Util::Vec3FromYAML(node["Position"]);
-			component.rotation = component::Util::Vec3FromYAML(node["Rotation"]);
-			component.scale = component::Util::Vec3FromYAML(node["Scale"]);
+			component.position = YAMLUtil::Vec3FromYAML(node["Position"]);
+			component.rotation = YAMLUtil::Vec3FromYAML(node["Rotation"]);
+			component.scale = YAMLUtil::Vec3FromYAML(node["Scale"]);
 			return component;
 		}
 
 		static YAML::Node Serialize(TransformComponent component)
 		{
 			YAML::Node node;
-			node["Position"] = component::Util::Vec3ToYAML(component.position);
-			node["Rotation"] = component::Util::Vec3ToYAML(component.rotation);
-			node["Scale"] = component::Util::Vec3ToYAML(component.scale);
+			node["Position"] = YAMLUtil::Vec3ToYAML(component.position);
+			node["Rotation"] = YAMLUtil::Vec3ToYAML(component.rotation);
+			node["Scale"] = YAMLUtil::Vec3ToYAML(component.scale);
 			return node;
 		}
 	};

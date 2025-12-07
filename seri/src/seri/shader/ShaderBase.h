@@ -25,5 +25,7 @@ namespace seri
 
 		static std::shared_ptr<ShaderBase> Create();
 
+		uint64_t id{ 0 };
+
 	};
 }

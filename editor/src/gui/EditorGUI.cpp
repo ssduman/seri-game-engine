@@ -218,7 +218,7 @@ namespace seri::editor
 				continue;
 			}
 
-			auto* idComponent = seri::scene::SceneManager::GetRegistry().try_get<seri::IDComponent>(entity);
+			auto* idComponent = seri::scene::SceneManager::GetRegistry().try_get<seri::component::IDComponent>(entity);
 			if (!idComponent)
 			{
 				continue;
@@ -325,7 +325,7 @@ namespace seri::editor
 
 		auto entity = scene->GetEntityByID(_selectedEntityId);
 
-		if (auto* idComponent = registry.try_get<seri::IDComponent>(entity))
+		if (auto* idComponent = registry.try_get<seri::component::IDComponent>(entity))
 		{
 			ImGui::Text(fmt::format("id: {}", idComponent->id).c_str());
 			ImGui::Text(fmt::format("parent id: {}", idComponent->parentId).c_str());
@@ -343,7 +343,7 @@ namespace seri::editor
 			ImGui::Separator();
 		}
 
-		if (auto* transformComponent = registry.try_get<seri::TransformComponent>(entity))
+		if (auto* transformComponent = registry.try_get<seri::component::TransformComponent>(entity))
 		{
 			ImGui::InputFloat3("position", &transformComponent->position[0]);
 			ImGui::InputFloat3("rotation", &transformComponent->rotation[0]);

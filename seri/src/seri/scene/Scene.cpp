@@ -40,8 +40,8 @@ namespace seri::scene
 		YAML::Node root;
 
 		YAML::Node sceneNode;
-		sceneNode["IDComponent"] = seri::IDComponent::Serialize(_idComponent);
-		sceneNode["SceneComponent"] = seri::SceneComponent::Serialize(_sceneComponent);
+		sceneNode["IDComponent"] = seri::component::IDComponent::Serialize(_idComponent);
+		sceneNode["SceneComponent"] = seri::component::SceneComponent::Serialize(_sceneComponent);
 
 		root["Scene"] = sceneNode;
 
@@ -52,14 +52,14 @@ namespace seri::scene
 
 			YAML::Node entityDataNode;
 
-			if (auto* idComponent = registry.try_get<seri::IDComponent>(entity))
+			if (auto* idComponent = registry.try_get<seri::component::IDComponent>(entity))
 			{
-				entityDataNode["IDComponent"] = seri::IDComponent::Serialize(*idComponent);
+				entityDataNode["IDComponent"] = seri::component::IDComponent::Serialize(*idComponent);
 			}
 
-			if (auto* transformComponent = registry.try_get<seri::TransformComponent>(entity))
+			if (auto* transformComponent = registry.try_get<seri::component::TransformComponent>(entity))
 			{
-				entityDataNode["TransformComponent"] = seri::TransformComponent::Serialize(*transformComponent);
+				entityDataNode["TransformComponent"] = seri::component::TransformComponent::Serialize(*transformComponent);
 			}
 
 			YAML::Node entityNode;
@@ -91,8 +91,8 @@ namespace seri::scene
 
 		YAML::Node sceneNode = root["Scene"];
 
-		_idComponent = seri::IDComponent::Deserialize(sceneNode["IDComponent"]);
-		_sceneComponent = seri::SceneComponent::Deserialize(sceneNode["SceneComponent"]);
+		_idComponent = seri::component::IDComponent::Deserialize(sceneNode["IDComponent"]);
+		_sceneComponent = seri::component::SceneComponent::Deserialize(sceneNode["SceneComponent"]);
 
 		_entityMap.clear();
 		_sceneTreeRoot = SceneTreeNode{};
@@ -105,7 +105,7 @@ namespace seri::scene
 			{
 				YAML::Node entityData = entityItem["Entity"];
 
-				seri::IDComponent idComp = seri::IDComponent::Deserialize(entityData["IDComponent"]);
+				seri::component::IDComponent idComp = seri::component::IDComponent::Deserialize(entityData["IDComponent"]);
 
 				AddEntityAsChild(idComp.id, idComp.parentId, idComp.name);
 
@@ -121,8 +121,8 @@ namespace seri::scene
 					}
 					else if (componentName == "TransformComponent")
 					{
-						seri::TransformComponent transformComp = seri::TransformComponent::Deserialize(componentData);
-						registry.emplace_or_replace<seri::TransformComponent>(entity, transformComp);
+						seri::component::TransformComponent transformComp = seri::component::TransformComponent::Deserialize(componentData);
+						registry.emplace_or_replace<seri::component::TransformComponent>(entity, transformComp);
 					}
 					else
 					{
@@ -200,11 +200,11 @@ namespace seri::scene
 
 			entt::entity entity = seri::scene::SceneManager::CreateEntity();
 
-			seri::IDComponent idComp = { id, parentId, std::string{ name } };
-			seri::scene::SceneManager::GetRegistry().emplace_or_replace<seri::IDComponent>(entity, idComp);
+			seri::component::IDComponent idComp = { id, parentId, std::string{ name } };
+			seri::scene::SceneManager::GetRegistry().emplace_or_replace<seri::component::IDComponent>(entity, idComp);
 
-			seri::TransformComponent transformComp = {};
-			seri::scene::SceneManager::GetRegistry().emplace_or_replace<seri::TransformComponent>(entity, transformComp);
+			seri::component::TransformComponent transformComp = {};
+			seri::scene::SceneManager::GetRegistry().emplace_or_replace<seri::component::TransformComponent>(entity, transformComp);
 
 			SceneTreeNode childNode{};
 			childNode.id = id;

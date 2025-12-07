@@ -14,6 +14,11 @@ void seri::font::FontManager::Init(const char* fontFolderPath)
 			continue;
 		}
 
+		if (entry.path().extension() != ".ttf" && entry.path().extension() != ".otf")
+		{
+			continue;
+		}
+
 		std::string fontName = entry.path().stem().string();
 		LOGGER(info, "[font] font found: " << fontName);
 

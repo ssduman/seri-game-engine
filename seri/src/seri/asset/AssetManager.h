@@ -3,6 +3,7 @@
 #include "seri/util/Util.h"
 #include "seri/scene/Scene.h"
 #include "seri/texture/Skybox.h"
+#include "seri/asset/Assets.h"
 #include "seri/asset/AssetWatcher.h"
 #include "seri/component/Components.h"
 
@@ -22,6 +23,7 @@ namespace seri::asset
 		uint64_t parentId{ 0 };
 		bool isFolder{ false };
 		std::filesystem::path path{};
+		std::filesystem::path meta{};
 		std::string name{ "" };
 		std::vector<AssetTreeNode> children{};
 	};

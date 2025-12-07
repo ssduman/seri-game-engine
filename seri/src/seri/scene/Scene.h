@@ -34,12 +34,12 @@ namespace seri::scene
 
 		void Update();
 
-		seri::IDComponent GetIDComponent()
+		seri::component::IDComponent GetIDComponent()
 		{
 			return _idComponent;
 		}
 
-		seri::SceneComponent GetSceneComponent()
+		seri::component::SceneComponent GetSceneComponent()
 		{
 			return _sceneComponent;
 		}
@@ -100,8 +100,8 @@ namespace seri::scene
 
 		std::shared_ptr<seri::Skybox> _skybox;
 
-		seri::IDComponent _idComponent;
-		seri::SceneComponent _sceneComponent;
+		seri::component::IDComponent _idComponent;
+		seri::component::SceneComponent _sceneComponent;
 
 		std::unordered_map<uint64_t, entt::entity> _entityMap{};
 

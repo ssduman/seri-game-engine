@@ -24,6 +24,7 @@
 #include "seri/layer/Layer.h"
 #include "seri/layer/CoreLayer.h"
 
+#include "seri/asset/Assets.h"
 #include "seri/asset/AssetManager.h"
 
 #include "seri/component/Components.h"

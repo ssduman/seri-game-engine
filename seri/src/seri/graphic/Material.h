@@ -9,111 +9,38 @@ namespace seri
 	class Material
 	{
 	public:
-		void SetInt(const std::string& name, int v)
-		{
-			_ints[name] = v;
-		}
+		friend struct MaterialAsset;
 
-		void SetFloat(const std::string& name, float v)
-		{
-			_floats[name] = v;
-		}
+		void SetInt(const std::string& name, int v);
 
-		void SetFloat2(const std::string& name, const glm::vec2& v)
-		{
-			_float2s[name] = v;
-		}
+		void SetFloat(const std::string& name, float v);
 
-		void SetFloat3(const std::string& name, const glm::vec3& v)
-		{
-			_float3s[name] = v;
-		}
+		void SetFloat2(const std::string& name, const glm::vec2& v);
 
-		void SetFloat4(const std::string& name, const glm::vec4& v)
-		{
-			_float4s[name] = v;
-		}
+		void SetFloat3(const std::string& name, const glm::vec3& v);
 
-		void SetMat4(const std::string& name, const glm::mat4& m)
-		{
-			_mats[name] = m;
-		}
+		void SetFloat4(const std::string& name, const glm::vec4& v);
 
-		void SetTexture(const std::string& name, std::shared_ptr<TextureBase> tex)
-		{
-			_textures[name] = tex;
-		}
+		void SetMat4(const std::string& name, const glm::mat4& m);
 
-		void Apply()
-		{
-			if (!shader || !shader->IsActiveForUsing())
-			{
-				return;
-			}
+		void SetTexture(const std::string& name, std::shared_ptr<TextureBase> tex);
 
-			shader->Bind();
+		void Apply();
 
-			for (auto& kv : _textures)
-			{
-				const std::string& name = kv.first;
-				const std::shared_ptr<TextureBase>& tex = kv.second;
+		void UnbindTextures();
 
-				if (!tex || !tex->IsActiveForUsing())
-				{
-					continue;
-				}
-
-				tex->Bind();
-				shader->SetInt(name, tex->GetSlot());
-			}
-
-			for (auto& kv : _ints)
-			{
-				shader->SetInt(kv.first, kv.second);
-			}
-
-			for (auto& kv : _floats)
-			{
-				shader->SetFloat(kv.first, kv.second);
-			}
-
-			for (auto& kv : _float2s)
-			{
-				shader->SetFloat2(kv.first, kv.second);
-			}
-
-			for (auto& kv : _float3s)
-			{
-				shader->SetFloat3(kv.first, kv.second);
-			}
-
-			for (auto& kv : _float4s)
-			{
-				shader->SetFloat4(kv.first, kv.second);
-			}
-
-			for (auto& kv : _mats)
-			{
-				shader->SetMat4(kv.first, kv.second);
-			}
-		}
-
-		void UnbindTextures()
-		{
-			for (auto& kv : _textures)
-			{
-				const std::shared_ptr<TextureBase>& tex = kv.second;
-
-				if (!tex || !tex->IsActiveForUsing())
-				{
-					continue;
-				}
-
-				tex->Unbind();
-			}
-		}
+		uint64_t id{ 0 };
+		uint64_t shaderID{ 0 };
 
 		std::shared_ptr<ShaderBase> shader;
+
+		std::unordered_map<std::string, int>& GetInts() { return _ints; }
+		std::unordered_map<std::string, float>& GetFloats() { return _floats; }
+		std::unordered_map<std::string, glm::vec2>& GetFloat2s() { return _float2s; }
+		std::unordered_map<std::string, glm::vec3>& GetFloat3s() { return _float3s; }
+		std::unordered_map<std::string, glm::vec4>& GetFloat4s() { return _float4s; }
+		std::unordered_map<std::string, glm::mat4>& GetMats() { return _mats; }
+		std::unordered_map<std::string, std::shared_ptr<TextureBase>>& GetTextures() { return _textures; }
 
 	private:
 		std::unordered_map<std::string, int> _ints;
