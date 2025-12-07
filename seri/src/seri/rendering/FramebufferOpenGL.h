@@ -17,6 +17,9 @@ namespace seri
 
 		FramebufferOpenGL(FramebufferDesc desc)
 		{
+			_desc = desc;
+			_ascpectRatio = GetAspectRatio();
+
 			for (auto& attachment : desc.attachments)
 			{
 				if (attachment.textureDesc.format == TextureFormat::none)
@@ -64,7 +67,7 @@ namespace seri
 			return 0;
 		}
 
-		void Invalidate()
+		void Invalidate() override
 		{
 			if (_handle > 0)
 			{
@@ -149,8 +152,23 @@ namespace seri
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		}
 
+		void Resize(uint32_t width, uint32_t height) override
+		{
+			if (_desc.fixedAspectRatio)
+			{
+				//height = static_cast<uint32_t>(width * (1.0f / _ascpectRatio));
+			}
+
+			_desc.width = width;
+			_desc.height = height;
+
+			Invalidate();
+		}
+
 	private:
 		uint32_t _handle;
+
+		float _ascpectRatio{ 0.0f };
 
 		FramebufferTextureDesc _depthAttachment;
 		std::vector<FramebufferTextureDesc> _colorAttachments;

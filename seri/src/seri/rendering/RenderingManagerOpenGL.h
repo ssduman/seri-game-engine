@@ -38,7 +38,7 @@ namespace seri
 			mainRT = FramebufferBase::Create();
 
 			seri::FramebufferDesc framebufferDesc{};
-			framebufferDesc.width = 1080;
+			framebufferDesc.width = 1280;
 			framebufferDesc.height = 720;
 
 			seri::TextureDesc textureDescColor{};

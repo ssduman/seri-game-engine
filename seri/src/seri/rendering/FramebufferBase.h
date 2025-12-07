@@ -33,6 +33,7 @@ namespace seri
 
 		uint32_t width{ 1280 };
 		uint32_t height{ 720 };
+		bool fixedAspectRatio{ true };
 		std::vector<FramebufferTextureDesc> attachments{};
 	};
 
@@ -44,6 +45,9 @@ namespace seri
 		virtual void Bind() = 0;
 		virtual void Unbind() = 0;
 
+		virtual void Invalidate() = 0;
+		virtual void Resize(uint32_t width, uint32_t height) = 0;
+
 		virtual uint32_t GetFirstColorTextureHandle() = 0;
 
 		uint32_t GetWidth()
@@ -53,6 +57,10 @@ namespace seri
 		uint32_t GetHeight()
 		{
 			return _desc.height;
+		}
+		float GetAspectRatio()
+		{
+			return static_cast<float>(_desc.width) / static_cast<float>(_desc.height);
 		}
 
 		static std::shared_ptr<FramebufferBase> Create();

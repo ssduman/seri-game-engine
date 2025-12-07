@@ -119,14 +119,35 @@ namespace seri::editor
 
 	void EditorGUI::ShowEditorSceneImage()
 	{
+		ImVec2 panelSize = ImGui::GetContentRegionAvail();
+
+		float fbAspect = seri::RenderingManager::GetEditorRT()->GetAspectRatio();
+		float panelAspect = panelSize.x / panelSize.y;
+
+		ImVec2 finalSize;
+		if (panelAspect > fbAspect)
+		{
+			finalSize.y = panelSize.y;
+			finalSize.x = panelSize.y * fbAspect;
+		}
+		else
+		{
+			finalSize.x = panelSize.x;
+			finalSize.y = panelSize.x / fbAspect;
+		}
+
+		ImVec2 cursorPos = ImGui::GetCursorScreenPos();
+
+		float offsetX = (panelSize.x - finalSize.x) * 0.5f;
+		float offsetY = (panelSize.y - finalSize.y) * 0.5f;
+
+		ImVec2 drawPos = ImVec2(cursorPos.x + offsetX, cursorPos.y + offsetY);
+
 		auto tex = (ImTextureID)(intptr_t)seri::RenderingManager::GetEditorRT()->GetFirstColorTextureHandle();
-
-		auto w = seri::RenderingManager::GetEditorRT()->GetWidth();
-		auto h = seri::RenderingManager::GetEditorRT()->GetHeight();
-
-		ImGui::Image(
+		ImGui::GetWindowDrawList()->AddImage(
 			tex,
-			ImVec2(w, h),
+			drawPos,
+			ImVec2(drawPos.x + finalSize.x, drawPos.y + finalSize.y),
 			ImVec2(0, 1),
 			ImVec2(1, 0)
 		);

@@ -53,7 +53,15 @@ namespace seri
 					if (data.eventType == seri::event::EventType::window_resize)
 					{
 						auto& d = seri::event::EventDispatcher::CastEventData<seri::event::WindowResizeEventData&>(data);
+
 						seri::RenderingManager::SetViewport(0, 0, d.width, d.height);
+
+						seri::RenderingManager::GetEditorRT()->Bind();
+						seri::RenderingManager::GetEditorRT()->Resize(d.width, d.height);
+						seri::RenderingManager::GetEditorRT()->Unbind();
+
+						seri::Graphic::GetCameraOrtho()->OnWindowResizeEvent(d);
+						seri::Graphic::GetCameraPerspective()->OnWindowResizeEvent(d);
 					}
 				}
 			));
