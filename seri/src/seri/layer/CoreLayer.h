@@ -40,8 +40,6 @@ namespace seri
 			seri::sound::SoundManager::Init("assets/sounds/");
 			seri::scene::SceneManager::Init();
 
-			seri::AssetManager::GetWorkingDirectory();
-
 			seri::WindowManager::Instance()->AddEventCallback(seri::event::MakeEventCallback(
 				[](const seri::event::IEventData& data)
 				{

@@ -14,6 +14,7 @@ IncludeDir["sdl"] = "%{wks.location}/seri/vendor/sdl/include"
 IncludeDir["entt"] = "%{wks.location}/seri/vendor/entt/single_include"
 IncludeDir["yamlcpp"] = "%{wks.location}/seri/vendor/yaml-cpp/include"
 IncludeDir["fmt"] = "%{wks.location}/seri/vendor/fmt/include"
+IncludeDir["filewatch"] = "%{wks.location}/seri/vendor/filewatch"
 
 LibDir = {}
 LibDir["sdl"] = "%{wks.location}/seri/vendor/sdl/build/%{cfg.buildcfg}"

@@ -61,6 +61,7 @@ project "Seri"
     "%{IncludeDir.entt}",
     "%{IncludeDir.yamlcpp}",
     "%{IncludeDir.fmt}",
+    "%{IncludeDir.filewatch}",
   }
 
   libdirs {

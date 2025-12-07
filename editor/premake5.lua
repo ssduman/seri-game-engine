@@ -46,6 +46,7 @@ project "Editor"
     "%{IncludeDir.entt}",
     "%{IncludeDir.yamlcpp}",
     "%{IncludeDir.fmt}",
+    "%{IncludeDir.filewatch}",
   }
 
   libdirs {

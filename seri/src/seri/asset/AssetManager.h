@@ -4,6 +4,7 @@
 #include "seri/util/Util.h"
 #include "seri/scene/Scene.h"
 #include "seri/texture/Skybox.h"
+#include "seri/asset/AssetWatcher.h"
 #include "seri/component/Components.h"
 
 #include <entt/entt.hpp>
@@ -34,18 +35,27 @@ namespace seri
 		static void Init()
 		{
 			GetInstance();
+
+			GetInstance()._assetWatcher = std::make_shared<AssetWatcher>(GetAssetDirectory());
+
+			LOGGER(info, fmt::format("[asset] asset directory: {}", GetAssetDirectory().string()));
 		}
 
 		static void Update()
 		{
 		}
 
-		static void GetWorkingDirectory()
+		static std::filesystem::path GetWorkingDirectory()
 		{
-			auto workingDir = std::filesystem::current_path();
-			LOGGER(info, fmt::format("[asset] working directory: {}", workingDir.string()));
+			return std::filesystem::current_path();
 		}
 
+		static std::filesystem::path GetAssetDirectory()
+		{
+			return GetWorkingDirectory() / GetInstance().kAssetFolder;
+		}
+
+		const char* kAssetFolder = "assets";
 		const char* kAssetFontFolder = "fonts";
 		const char* kAssetShaderFolder = "shaders";
 		const char* kAssetSceneFolder = "scenes";
@@ -53,6 +63,7 @@ namespace seri
 		const char* kAssetSceneExtension = "yaml";
 
 	private:
+		std::shared_ptr<AssetWatcher> _assetWatcher;
 
 	};
 }
