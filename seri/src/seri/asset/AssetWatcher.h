@@ -1,39 +1,21 @@
 #pragma once
 
-#include "seri/core/Seri.h"
+#include "seri/util/Util.h"
 
 #include <FileWatch.hpp>
 
+#include <memory>
+#include <string>
 #include <filesystem>
 
-namespace seri
+namespace seri::asset
 {
 	class AssetWatcher
 	{
 	public:
-		AssetWatcher(const std::filesystem::path& watchPath)
-		{
-			_watcher = std::make_shared<filewatch::FileWatch<std::string>>(
-				watchPath.string(), [](const std::filesystem::path& path, const filewatch::Event event)
-				{
-					LOGGER(info, fmt::format("[asset_watcher] path: {}, change: {}", path.string(), filewatch::event_to_string(event)));
+		class AssetManager;
 
-					switch (event)
-					{
-						case filewatch::Event::added:
-							break;
-						case filewatch::Event::removed:
-							break;
-						case filewatch::Event::modified:
-							break;
-						case filewatch::Event::renamed_old:
-							break;
-						case filewatch::Event::renamed_new:
-							break;
-					};
-				}
-			);
-		}
+		AssetWatcher(const std::filesystem::path& watchPath);
 
 	private:
 		std::shared_ptr<filewatch::FileWatch<std::string>> _watcher;

@@ -29,7 +29,7 @@ namespace seri
 			seri::WindowManager::Instance()->Init({ /*title*/ "Seri Game Engine - Editor", /*fullscreen*/ false, /*w*/ 1280, /*h*/ 720 });
 			seri::RenderingManager::Instance()->Init(seri::WindowManager::Instance(), RenderingProperties{});
 
-			seri::AssetManager::Init();
+			seri::asset::AssetManager::Init();
 			seri::TimeWrapper::Init();
 			seri::Application::Init();
 			seri::Graphic::Init();

@@ -9,39 +9,36 @@
 #include <memory>
 #include <vector>
 
-namespace seri
+namespace seri::scene
 {
-	namespace scene
+	class SceneManager
 	{
-		class SceneManager
-		{
-		public:
-			SceneManager(SceneManager const&) = delete;
+	public:
+		SceneManager(SceneManager const&) = delete;
 
-			void operator=(SceneManager const&) = delete;
+		void operator=(SceneManager const&) = delete;
 
-			SceneManager() = default;
+		SceneManager() = default;
 
-			static SceneManager& GetInstance();
+		static SceneManager& GetInstance();
 
-			static void Init();
+		static void Init();
 
-			static void Update();
+		static void Update();
 
-			static entt::registry& GetRegistry();
+		static entt::registry& GetRegistry();
 
-			static entt::entity CreateEntity();
+		static entt::entity CreateEntity();
 
-			static void DestroyEntity(entt::entity e);
+		static void DestroyEntity(entt::entity e);
 
-			static std::shared_ptr<Scene> GetActiveScene();
+		static std::shared_ptr<Scene> GetActiveScene();
 
-		private:
-			entt::registry registry;
+	private:
+		entt::registry registry;
 
-			std::shared_ptr<Scene> _activeScene;
-			std::vector<std::shared_ptr<Scene>> _scenes;
+		std::shared_ptr<Scene> _activeScene;
+		std::vector<std::shared_ptr<Scene>> _scenes;
 
-		};
-	}
+	};
 }

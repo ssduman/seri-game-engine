@@ -11,104 +11,101 @@
 #include <memory>
 #include <unordered_map>
 
-namespace seri
+namespace seri::scene
 {
-	namespace scene
+	struct SceneTreeNode
 	{
-		struct GraphNode
+		uint64_t id{ 0 };
+		uint64_t parentId{ 0 };
+		std::vector<SceneTreeNode> children{};
+	};
+
+	class Scene
+	{
+	public:
+
+		class SceneManager;
+
+		Scene() = default;
+
+		~Scene() = default;
+
+		void Init();
+
+		void Update();
+
+		seri::IDComponent GetIDComponent()
 		{
-			uint64_t id{ 0 };
-			uint64_t parentId{ 0 };
-			std::vector<GraphNode> children{};
-		};
+			return _idComponent;
+		}
 
-		class Scene
+		seri::SceneComponent GetSceneComponent()
 		{
-		public:
+			return _sceneComponent;
+		}
 
-			class SceneManager;
+		uint64_t GetID()
+		{
+			return GetIDComponent().id;
+		}
 
-			Scene() = default;
+		std::string GetName()
+		{
+			return GetIDComponent().name;
+		}
 
-			~Scene() = default;
+		SceneTreeNode& GetSceneTreeRoot()
+		{
+			return _sceneTreeRoot;
+		}
 
-			void Init();
-
-			void Update();
-
-			seri::IDComponent GetIDComponent()
+		entt::entity GetEntityByID(uint64_t id)
+		{
+			if (_entityMap.contains(id))
 			{
-				return _idComponent;
+				return _entityMap[id];
 			}
+			LOGGER(error, fmt::format("[scene] entity with id {} not found", id));
+			return entt::null;
+		}
 
-			seri::SceneComponent GetSceneComponent()
-			{
-				return _sceneComponent;
-			}
+		bool IsDirty()
+		{
+			return _isDirty;
+		}
 
-			uint64_t GetID()
-			{
-				return GetIDComponent().id;
-			}
+		void SetAsDirty()
+		{
+			_isDirty = true;
+		}
 
-			std::string GetName()
-			{
-				return GetIDComponent().name;
-			}
+		void Save();
 
-			GraphNode& GetSceneGraphRoot()
-			{
-				return _sceneGraphRoot;
-			}
+		void Serialize(const std::string& file);
+		void Deserialize(const std::string& file);
 
-			entt::entity GetEntityByID(uint64_t id)
-			{
-				if (_entityMap.contains(id))
-				{
-					return _entityMap[id];
-				}
-				LOGGER(error, fmt::format("[scene] entity with id {} not found", id));
-				return entt::null;
-			}
+		void GetAllEntityIDs(std::vector<uint64_t>& ids);
 
-			bool IsDirty()
-			{
-				return _isDirty;
-			}
+		void DeleteEntity(uint64_t id);
+		void AddEntityAsChild(uint64_t id, uint64_t parentId, const std::string& name);
 
-			void SetAsDirty()
-			{
-				_isDirty = true;
-			}
+	private:
+		void GetAllEntityIDs(SceneTreeNode& node, std::vector<uint64_t>& ids);
 
-			void Save();
+		void DeleteEntity(SceneTreeNode& node, uint64_t id);
+		void AddEntityAsChild(SceneTreeNode& node, uint64_t id, uint64_t parentId, const std::string& name);
 
-			void Serialize(const std::string& file);
-			void Deserialize(const std::string& file);
+		std::string _filePath{ "" };
+		bool _isDirty{ false };
 
-			void GetAllEntityIDs(std::vector<uint64_t>& ids);
+		std::shared_ptr<seri::Skybox> _skybox;
 
-			void DeleteEntity(uint64_t id);
-			void AddEntityAsChild(uint64_t id, uint64_t parentId, const std::string& name);
+		seri::IDComponent _idComponent;
+		seri::SceneComponent _sceneComponent;
 
-		private:
-			void GetAllEntityIDs(GraphNode& node, std::vector<uint64_t>& ids);
+		std::unordered_map<uint64_t, entt::entity> _entityMap{};
 
-			void DeleteEntity(GraphNode& node, uint64_t id);
-			void AddEntityAsChild(GraphNode& node, uint64_t id, uint64_t parentId, const std::string& name);
+		SceneTreeNode _sceneTreeRoot{};
 
-			std::string _filePath{ "" };
-			bool _isDirty{ false };
-
-			std::shared_ptr<seri::Skybox> _skybox;
-
-			seri::IDComponent _idComponent;
-			seri::SceneComponent _sceneComponent;
-
-			std::unordered_map<uint64_t, entt::entity> _entityMap{};
-
-			GraphNode _sceneGraphRoot{};
-
-		};
-	}
+	};
 }

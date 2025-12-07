@@ -73,17 +73,22 @@ namespace seri::editor
 		void ShowEditorSceneImage();
 
 		void ShowEditorHierarchy();
-
-		void ShowEditorHierarchyImpl(const std::shared_ptr<seri::scene::Scene>& activeScene, seri::scene::GraphNode& node, uint64_t& selectedId);
+		void ShowEditorHierarchyImpl(const std::shared_ptr<seri::scene::Scene>& activeScene, seri::scene::SceneTreeNode& node, uint64_t& selectedId);
 
 		void ShowEditorInspector();
 		void ShowEditorInspectorScene();
 		void ShowEditorInspectorEntity();
 
+		void ShowEditorProject();
+		void ShowEditorProjectFolderTree(seri::asset::AssetTreeNode& node);
+		void ShowEditorProjectAssetGrid();
+
 		void DrawEditorLayout();
 
 		uint64_t _selectedEntityId{ 0 };
 		InspectorType _inspectorType{ InspectorType::none };
+
+		seri::asset::AssetTreeNode* _selectedFolder{ nullptr };
 
 	};
 }

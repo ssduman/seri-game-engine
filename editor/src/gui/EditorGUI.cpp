@@ -136,7 +136,7 @@ namespace seri::editor
 	{
 		auto activeScene = seri::scene::SceneManager::GetActiveScene();
 		std::string sceneName = fmt::format("{}{}", activeScene->GetName(), (activeScene->IsDirty() ? "*" : ""));
-		seri::scene::GraphNode& sceneGraphRoot = activeScene->GetSceneGraphRoot();
+		seri::scene::SceneTreeNode& sceneTreeRoot = activeScene->GetSceneTreeRoot();
 
 		static ImGuiTreeNodeFlags baseFlags =
 			ImGuiTreeNodeFlags_OpenOnArrow |
@@ -160,7 +160,7 @@ namespace seri::editor
 			}
 
 			uint64_t selectedId = 0;
-			ShowEditorHierarchyImpl(activeScene, sceneGraphRoot, selectedId);
+			ShowEditorHierarchyImpl(activeScene, sceneTreeRoot, selectedId);
 			if (!clicked && selectedId != 0)
 			{
 				_selectedEntityId = selectedId;
@@ -171,7 +171,7 @@ namespace seri::editor
 		}
 	}
 
-	void EditorGUI::ShowEditorHierarchyImpl(const std::shared_ptr<seri::scene::Scene>& activeScene, seri::scene::GraphNode& node, uint64_t& selectedId)
+	void EditorGUI::ShowEditorHierarchyImpl(const std::shared_ptr<seri::scene::Scene>& activeScene, seri::scene::SceneTreeNode& node, uint64_t& selectedId)
 	{
 		static ImGuiTreeNodeFlags baseFlags =
 			ImGuiTreeNodeFlags_OpenOnArrow |
@@ -332,6 +332,98 @@ namespace seri::editor
 		}
 	}
 
+	void EditorGUI::ShowEditorProject()
+	{
+		seri::asset::AssetTreeNode& assetTreeRoot = seri::asset::AssetManager::GetAssetTreeRoot();
+
+		ImGui::Columns(2);
+
+		ImGui::BeginChild("Folders", ImVec2(0, 0), true);
+		ShowEditorProjectFolderTree(assetTreeRoot);
+		ImGui::EndChild();
+
+		ImGui::NextColumn();
+
+		ImGui::BeginChild("Assets", ImVec2(0, 0), true);
+		ShowEditorProjectAssetGrid();
+		ImGui::EndChild();
+
+		ImGui::Columns(1);
+	}
+
+	void EditorGUI::ShowEditorProjectFolderTree(seri::asset::AssetTreeNode& node)
+	{
+		ImGuiTreeNodeFlags flags =
+			ImGuiTreeNodeFlags_OpenOnArrow |
+			ImGuiTreeNodeFlags_SpanAvailWidth;
+
+		if (node.children.empty())
+		{
+			flags |= ImGuiTreeNodeFlags_Leaf;
+		}
+		if (_selectedFolder == &node)
+		{
+			flags |= ImGuiTreeNodeFlags_Selected;
+		}
+
+		std::string label = node.name;
+		if (label.empty())
+		{
+			label = "/assets";
+			ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+		}
+
+		if (ImGui::TreeNodeEx((void*)(intptr_t)node.id, flags, "%s", label.c_str()))
+		{
+			if (ImGui::IsItemClicked())
+			{
+				_selectedFolder = &node;
+			}
+
+			for (auto& child : node.children)
+			{
+				if (child.isFolder)
+				{
+					ShowEditorProjectFolderTree(child);
+				}
+			}
+
+			ImGui::TreePop();
+		}
+	}
+
+	void EditorGUI::ShowEditorProjectAssetGrid()
+	{
+		if (!_selectedFolder)
+		{
+			return;
+		}
+
+		const float itemSize = 100.0f;
+		const float padding = 10.0f;
+
+		int columns = (int)(ImGui::GetContentRegionAvail().x / (itemSize + padding));
+		if (columns < 1)
+		{
+			columns = 1;
+		}
+
+		ImGui::Columns(columns, nullptr, false);
+
+		for (const auto& child : _selectedFolder->children)
+		{
+			ImGui::BeginGroup();
+
+			ImGui::Button(child.name.c_str(), ImVec2(itemSize, itemSize));
+
+			//if (ImGui::Selectable(child.name.c_str(), _selectedFolder->path == child.path)) {}
+
+			ImGui::EndGroup();
+			ImGui::NextColumn();
+		}
+		ImGui::Columns(1);
+	}
+
 	void EditorGUI::DrawEditorLayout()
 	{
 		static bool showMainMenu = true;
@@ -419,7 +511,7 @@ namespace seri::editor
 		if (showProject)
 		{
 			ImGui::Begin("Project", &showProject);
-			ImGui::Text("todo");
+			ShowEditorProject();
 			ImGui::End();
 		}
 

@@ -95,7 +95,7 @@ namespace seri::scene
 		_sceneComponent = seri::SceneComponent::Deserialize(sceneNode["SceneComponent"]);
 
 		_entityMap.clear();
-		_sceneGraphRoot = GraphNode{};
+		_sceneTreeRoot = SceneTreeNode{};
 
 		auto& registry = seri::scene::SceneManager::GetRegistry();
 
@@ -139,10 +139,10 @@ namespace seri::scene
 
 	void Scene::GetAllEntityIDs(std::vector<uint64_t>& ids)
 	{
-		GetAllEntityIDs(_sceneGraphRoot, ids);
+		GetAllEntityIDs(_sceneTreeRoot, ids);
 	}
 
-	void Scene::GetAllEntityIDs(GraphNode& node, std::vector<uint64_t>& ids)
+	void Scene::GetAllEntityIDs(SceneTreeNode& node, std::vector<uint64_t>& ids)
 	{
 		if (node.id != 0)
 		{
@@ -157,10 +157,10 @@ namespace seri::scene
 
 	void Scene::DeleteEntity(uint64_t id)
 	{
-		DeleteEntity(_sceneGraphRoot, id);
+		DeleteEntity(_sceneTreeRoot, id);
 	}
 
-	void Scene::DeleteEntity(GraphNode& node, uint64_t id)
+	void Scene::DeleteEntity(SceneTreeNode& node, uint64_t id)
 	{
 		size_t deleteIndex = -1;
 		for (size_t i = 0; i < node.children.size(); i++)
@@ -189,10 +189,10 @@ namespace seri::scene
 
 	void Scene::AddEntityAsChild(uint64_t id, uint64_t parentId, const std::string& name)
 	{
-		AddEntityAsChild(_sceneGraphRoot, id, parentId, name);
+		AddEntityAsChild(_sceneTreeRoot, id, parentId, name);
 	}
 
-	void Scene::AddEntityAsChild(GraphNode& node, uint64_t id, uint64_t parentId, const std::string& name)
+	void Scene::AddEntityAsChild(SceneTreeNode& node, uint64_t id, uint64_t parentId, const std::string& name)
 	{
 		if (parentId == 0 || node.id == parentId)
 		{
@@ -206,7 +206,7 @@ namespace seri::scene
 			seri::TransformComponent transformComp = {};
 			seri::scene::SceneManager::GetRegistry().emplace_or_replace<seri::TransformComponent>(entity, transformComp);
 
-			GraphNode childNode{};
+			SceneTreeNode childNode{};
 			childNode.id = id;
 			childNode.parentId = parentId;
 			node.children.push_back(childNode);

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "seri/core/Seri.h"
 #include "seri/util/Util.h"
 #include "seri/scene/Scene.h"
 #include "seri/texture/Skybox.h"
@@ -15,8 +14,18 @@
 #include <filesystem>
 #include <fmt/core.h>
 
-namespace seri
+namespace seri::asset
 {
+	struct AssetTreeNode
+	{
+		uint64_t id{ 0 };
+		uint64_t parentId{ 0 };
+		bool isFolder{ false };
+		std::filesystem::path path{};
+		std::string name{ "" };
+		std::vector<AssetTreeNode> children{};
+	};
+
 	class AssetManager
 	{
 	public:
@@ -55,6 +64,14 @@ namespace seri
 			return GetWorkingDirectory() / GetInstance().kAssetFolder;
 		}
 
+		static AssetTreeNode& GetAssetTreeRoot()
+		{
+			return GetInstance()._assetTreeRoot;
+		}
+
+		void UpdateAssetTree();
+		void BuildAssetTree(AssetTreeNode& node, const std::filesystem::path& path);
+
 		const char* kAssetFolder = "assets";
 		const char* kAssetFontFolder = "fonts";
 		const char* kAssetShaderFolder = "shaders";
@@ -63,6 +80,8 @@ namespace seri
 		const char* kAssetSceneExtension = "yaml";
 
 	private:
+		AssetTreeNode _assetTreeRoot{};
+
 		std::shared_ptr<AssetWatcher> _assetWatcher;
 
 	};
