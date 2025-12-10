@@ -39,6 +39,7 @@ namespace seri
 			seri::font::FontManager::Init("assets/fonts/");
 			seri::sound::SoundManager::Init("assets/sounds/");
 			seri::scene::SceneManager::Init();
+			seri::asset::AssetManager::StartAssetWatcher();
 
 			seri::WindowManager::Instance()->AddEventCallback(seri::event::MakeEventCallback(
 				[](const seri::event::IEventData& data)

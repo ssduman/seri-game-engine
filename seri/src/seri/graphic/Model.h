@@ -13,11 +13,11 @@ namespace seri
 	public:
 		std::vector<std::unique_ptr<Mesh>> meshes{};
 
-		void UpdateAnimations()
+		void UpdateAnimations(double time)
 		{
 			for (const auto& mesh : meshes)
 			{
-				mesh->UpdateAnimation();
+				mesh->UpdateAnimation(time);
 			}
 		}
 

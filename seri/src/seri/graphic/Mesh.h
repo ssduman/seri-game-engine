@@ -1,7 +1,6 @@
 #pragma once
 
 #include "seri/util/Util.h"
-#include "seri/window/WindowManager.h"
 #include "seri/rendering/RenderingManager.h"
 
 #define SERI_MAX_BONES 200
@@ -110,11 +109,6 @@ namespace seri
 	class Mesh
 	{
 	public:
-		Mesh()
-		{
-			bones.clear();
-		}
-
 		std::vector<uint32_t> indices;
 		std::vector<glm::vec3> vertices;
 		std::vector<glm::vec2> uv0s;
@@ -172,9 +166,8 @@ namespace seri
 			tangentData.insert(tangentData.end(), data.begin(), data.end());
 		}
 
-		void UpdateAnimation()
+		void UpdateAnimation(double time)
 		{
-			auto time = WindowManager::GetTime();
 			auto timeInTicks = time * animation.tickPerSecond;
 
 			animTimeInTick = std::fmod(timeInTicks, animation.durationInTick);
@@ -669,36 +662,6 @@ namespace seri
 
 				20, 23, 22,
 				20, 22, 21,
-			};
-
-			mesh->Build();
-
-			return mesh;
-		}
-
-		static std::unique_ptr<Mesh> line_2d(const glm::vec2& beg, const glm::vec2& end)
-		{
-			std::unique_ptr<Mesh> mesh = std::make_unique<Mesh>();
-
-			float screenW = (float)WindowManager::GetWidth();
-			float screenH = (float)WindowManager::GetHeight();
-
-			glm::vec4 beg_ = {
-				Util::Map(beg.x, 0.0f, screenW, -1.0f, 1.0f),
-				Util::Map(beg.y, 0.0f, screenH, -1.0f, 1.0f),
-				0.0f,
-				0.0f
-			};
-			glm::vec4 end_ = {
-				Util::Map(end.x, 0.0f, screenW, -1.0f, 1.0f),
-				Util::Map(end.y, 0.0f, screenH, -1.0f, 1.0f),
-				0.0f,
-				0.0f
-			};
-
-			mesh->vertices = {
-				{beg_.x, beg_.y, 0.0f},
-				{end_.x, end_.y, 0.0f},
 			};
 
 			mesh->Build();

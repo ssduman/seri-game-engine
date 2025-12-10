@@ -47,6 +47,7 @@ project "Editor"
     "%{IncludeDir.yamlcpp}",
     "%{IncludeDir.fmt}",
     "%{IncludeDir.filewatch}",
+    "%{IncludeDir.efsw}",
   }
 
   libdirs {
@@ -56,6 +57,7 @@ project "Editor"
   links {
     "Seri",
     "SDL3",
+    "efsw-static-lib",
   }
 
   postbuildcommands {

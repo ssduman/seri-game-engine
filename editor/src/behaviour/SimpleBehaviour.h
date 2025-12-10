@@ -99,7 +99,7 @@ namespace seri::editor
 
 			if (model_0)
 			{
-				model_0->UpdateAnimations();
+				model_0->UpdateAnimations(seri::WindowManager::GetTime());
 
 				for (size_t m = 0; m < model_0->meshes.size(); m++)
 				{

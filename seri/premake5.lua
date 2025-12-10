@@ -62,6 +62,7 @@ project "Seri"
     "%{IncludeDir.yamlcpp}",
     "%{IncludeDir.fmt}",
     "%{IncludeDir.filewatch}",
+    "%{IncludeDir.efsw}",
   }
 
   libdirs {
@@ -77,6 +78,7 @@ project "Seri"
     "assimp",
     "freetype",
     "opengl32.lib",
+    "efsw-static-lib",
   }
 
   filter "files:vendor/yaml-cpp/src/**.cpp"

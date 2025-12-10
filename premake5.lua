@@ -15,6 +15,7 @@ IncludeDir["entt"] = "%{wks.location}/seri/vendor/entt/single_include"
 IncludeDir["yamlcpp"] = "%{wks.location}/seri/vendor/yaml-cpp/include"
 IncludeDir["fmt"] = "%{wks.location}/seri/vendor/fmt/include"
 IncludeDir["filewatch"] = "%{wks.location}/seri/vendor/filewatch"
+IncludeDir["efsw"] = "%{wks.location}/seri/vendor/efsw/include"
 
 LibDir = {}
 LibDir["sdl"] = "%{wks.location}/seri/vendor/sdl/build/%{cfg.buildcfg}"
@@ -48,4 +49,5 @@ workspace "Seri Game Engine"
     include "seri/vendor/freetype"
     include "seri/vendor/sdl"
     include "seri/vendor/fmt"
+    include "seri/vendor/efsw/premake5_project.lua"
   group ""

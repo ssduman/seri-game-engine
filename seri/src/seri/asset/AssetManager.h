@@ -3,11 +3,13 @@
 #include "seri/util/Util.h"
 #include "seri/scene/Scene.h"
 #include "seri/texture/Skybox.h"
+#include "seri/graphic/Material.h"
 #include "seri/asset/Assets.h"
 #include "seri/asset/AssetWatcher.h"
 #include "seri/component/Components.h"
 
 #include <entt/entt.hpp>
+#include <efsw/efsw.hpp>
 #include <yaml-cpp/yaml.h>
 
 #include <memory>
@@ -20,11 +22,12 @@ namespace seri::asset
 	struct AssetTreeNode
 	{
 		uint64_t id{ 0 };
-		uint64_t parentId{ 0 };
 		bool isFolder{ false };
+		bool isMeta{ false };
 		std::filesystem::path path{};
 		std::filesystem::path meta{};
 		std::string name{ "" };
+		std::string extension{ "" };
 		std::vector<AssetTreeNode> children{};
 	};
 
@@ -47,13 +50,32 @@ namespace seri::asset
 		{
 			GetInstance();
 
+			GetInstance().UpdateAssetTree();
+
+			GetInstance()._fileWatcher = std::make_shared<efsw::FileWatcher>();
 			GetInstance()._assetWatcher = std::make_shared<AssetWatcher>(GetAssetDirectory());
+			GetInstance()._fileWatcher->watch();
 
 			LOGGER(info, fmt::format("[asset] asset directory: {}", GetAssetDirectory().string()));
 		}
 
 		static void Update()
 		{
+		}
+
+		static void StartAssetWatcher()
+		{
+			GetInstance()._watchID = GetInstance()._fileWatcher->addWatch(GetAssetDirectory().string(), GetInstance()._assetWatcher.get(), /*recursive*/ true);
+		}
+
+		static void StopAssetWatcher()
+		{
+			if (GetInstance()._watchID == 0)
+			{
+				return;
+			}
+
+			GetInstance()._fileWatcher->removeWatch(GetInstance()._watchID);
 		}
 
 		static std::filesystem::path GetWorkingDirectory()
@@ -71,8 +93,9 @@ namespace seri::asset
 			return GetInstance()._assetTreeRoot;
 		}
 
+		void InitDefaultAssets();
 		void UpdateAssetTree();
-		void BuildAssetTree(AssetTreeNode& node, const std::filesystem::path& path);
+		void BuildAssetTree(AssetTreeNode& node);
 
 		const char* kAssetFolder = "assets";
 		const char* kAssetFontFolder = "fonts";
@@ -84,7 +107,12 @@ namespace seri::asset
 	private:
 		AssetTreeNode _assetTreeRoot{};
 
+		std::unordered_map<uint64_t, std::filesystem::path> _pathCache{};
+		std::unordered_map<uint64_t, std::shared_ptr<Material>> _materialCache{};
+
+		std::shared_ptr<efsw::FileWatcher> _fileWatcher;
 		std::shared_ptr<AssetWatcher> _assetWatcher;
+		efsw::WatchID _watchID{ 0 };
 
 	};
 }

@@ -6,72 +6,110 @@
 
 namespace seri::asset
 {
+	void asset::AssetManager::InitDefaultAssets()
+	{
+	}
+
 	void asset::AssetManager::UpdateAssetTree()
 	{
 		_assetTreeRoot = {};
+		_assetTreeRoot.path = GetAssetDirectory();
 
-		BuildAssetTree(_assetTreeRoot, GetAssetDirectory());
+		BuildAssetTree(_assetTreeRoot);
 
 		LOGGER(info, "[asset] asset tree updated");
 	}
 
-	void asset::AssetManager::BuildAssetTree(AssetTreeNode& node, const std::filesystem::path& path)
+	void asset::AssetManager::BuildAssetTree(AssetTreeNode& parent)
 	{
-		static bool deleteAllMeta = false;
+		static bool supportMeta = false;
+		static bool deleteAllMeta = true;
 
-		for (auto& entry : std::filesystem::directory_iterator(path))
+		for (auto& entry : std::filesystem::directory_iterator(parent.path))
 		{
-			AssetTreeNode child;
-			child.id = seri::Random::UUID();
-			child.parentId = 0;
-			child.isFolder = entry.is_directory();
-			child.path = entry.path();
-			child.name = entry.path().filename().string();
-			child.meta = fmt::format("{}.smeta", child.path.string());
+			AssetTreeNode node;
+			node.id = seri::Random::UUID();
+			node.isFolder = entry.is_directory();
+			node.path = entry.path();
+			node.name = entry.path().filename().string();
+			node.extension = node.path.extension().string();
+			node.meta = fmt::format("{}.smeta", node.path.string());
+			node.isMeta = node.extension == ".smeta";
 
-			bool isMeta = child.path.extension().string() == ".smeta";
-			if (isMeta)
+			if (node.isFolder)
 			{
-				if (deleteAllMeta)
+				BuildAssetTree(node);
+			}
+			else
+			{
+				uint64_t existingId = 0;
+				if (supportMeta)
 				{
-					LOGGER(info, fmt::format("[asset] deleting meta '{}'", child.path.string()));
-					std::filesystem::remove(child.path);
-				}
-				else
-				{
-					std::filesystem::path assetOfMeta = child.path;
-					assetOfMeta = assetOfMeta.replace_extension("");
-					if (!std::filesystem::exists(assetOfMeta))
+					if (node.isMeta)
 					{
-						LOGGER(info, fmt::format("[asset] deleting meta '{}' because not has its asset", child.path.string()));
-						std::filesystem::remove(child.path);
+						std::filesystem::path assetOfMeta = node.path;
+						assetOfMeta = assetOfMeta.replace_extension("");
+						if (deleteAllMeta || !std::filesystem::exists(assetOfMeta))
+						{
+							LOGGER(info, fmt::format("[asset] deleting meta '{}' because not has its asset", node.path.string()));
+							std::filesystem::remove(node.path);
+						}
+					}
+					else
+					{
+						if (std::filesystem::exists(node.meta))
+						{
+							YAML::Node root = YAML::LoadFile(node.meta.string());
+							YAML::Node idInfoNode = root["Asset"]["IDInfo"];
+							IDInfo idInfo = IDInfo::Deserialize(idInfoNode);
+
+							existingId = idInfo.id;
+						}
+						else
+						{
+							existingId = seri::Random::UUID();
+
+							YAML::Node idInfoNode;
+							IDInfo idInfo;
+							idInfo.id = existingId;
+							idInfo.version = "0.1";
+							std::ofstream outfile(node.meta);
+							idInfoNode["IDInfo"] = IDInfo::Serialize(idInfo);
+
+							YAML::Node root;
+							root["Asset"] = idInfoNode;
+
+							outfile << root;
+						}
 					}
 				}
 
-				continue;
+				if (node.extension == ".smeta")
+				{
+					continue;
+				}
+				else if (node.extension == ".smat")
+				{
+					if (_materialCache.find(existingId) == _materialCache.end())
+					{
+						YAML::Node root = YAML::LoadFile(node.path.string());
+
+						seri::asset::IDInfo idInfoD = seri::asset::IDInfo::Deserialize(root["IDInfo"]);
+						std::shared_ptr<Material> material = seri::asset::MaterialAsset::Deserialize(root["Material"]);
+
+						_materialCache[existingId] = material;
+					}
+				}
+				else if (node.extension == ".smesh")
+				{
+				}
+				else if (node.extension == ".sscene")
+				{
+				}
 			}
 
-			if (!std::filesystem::exists(child.meta))
-			{
-				YAML::Node idInfoNode;
-				IDInfo idinfo;
-				idinfo.id = seri::Random::UUID();
-				idinfo.version = "0.1";
-				std::ofstream outfile(child.meta);
-				idInfoNode["IDInfo"] = IDInfo::Serialize(idinfo);
-
-				YAML::Node root;
-				root["Asset"] = idInfoNode;
-
-				outfile << root;
-			}
-
-			if (child.isFolder)
-			{
-				BuildAssetTree(child, child.path);
-			}
-
-			node.children.push_back(std::move(child));
+			parent.children.push_back(std::move(node));
 		}
 	}
+
 }
