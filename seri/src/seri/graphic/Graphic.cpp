@@ -46,7 +46,7 @@ namespace seri
 		return GetInstance()._cameraPerspective;
 	}
 
-	void Graphic::DrawModel(const std::unique_ptr<Model>& model, const std::shared_ptr<Material>& material, const glm::mat4& trs, const std::shared_ptr<CameraBase>& camera, const std::shared_ptr<FramebufferBase>& rt)
+	void Graphic::DrawModel(const std::shared_ptr<Model>& model, const std::shared_ptr<Material>& material, const glm::mat4& trs, const std::shared_ptr<CameraBase>& camera, const std::shared_ptr<FramebufferBase>& rt)
 	{
 		for (const auto& mesh : model->meshes)
 		{
@@ -54,7 +54,7 @@ namespace seri
 		}
 	}
 
-	void Graphic::Draw(const std::unique_ptr<Mesh>& mesh, const std::shared_ptr<Material>& material, const glm::mat4& trs, const std::shared_ptr<CameraBase>& camera, const std::shared_ptr<FramebufferBase>& rt)
+	void Graphic::Draw(const std::shared_ptr<Mesh>& mesh, const std::shared_ptr<Material>& material, const glm::mat4& trs, const std::shared_ptr<CameraBase>& camera, const std::shared_ptr<FramebufferBase>& rt)
 	{
 		seri::RenderingManager::Begin(camera);
 
@@ -89,7 +89,7 @@ namespace seri
 		seri::RenderingManager::End();
 	}
 
-	void Graphic::DrawInstanced(const std::unique_ptr<Mesh>& mesh, const std::shared_ptr<Material>& material, const std::vector<glm::mat4>& trs, const std::shared_ptr<CameraBase>& camera, const std::shared_ptr<FramebufferBase>& rt)
+	void Graphic::DrawInstanced(const std::shared_ptr<Mesh>& mesh, const std::shared_ptr<Material>& material, const std::vector<glm::mat4>& trs, const std::shared_ptr<CameraBase>& camera, const std::shared_ptr<FramebufferBase>& rt)
 	{
 		seri::RenderingManager::Begin(camera);
 

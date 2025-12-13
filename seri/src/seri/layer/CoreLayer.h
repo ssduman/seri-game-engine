@@ -114,6 +114,7 @@ namespace seri
 			seri::Graphic::GetCameraOrtho()->Update();
 			seri::Graphic::GetCameraPerspective()->Update();
 
+			seri::asset::AssetManager::Update();
 			seri::scene::SceneManager::Update();
 
 			seri::BehaviourManager::UpdateBehaviours();

@@ -5,8 +5,11 @@
 #include "seri/texture/Skybox.h"
 #include "seri/graphic/Material.h"
 #include "seri/asset/Assets.h"
+#include "seri/asset/AssetBase.h"
 #include "seri/asset/AssetWatcher.h"
 #include "seri/component/Components.h"
+#include "seri/graphic/Model.h"
+#include "seri/model/ModelImporter.h"
 
 #include <entt/entt.hpp>
 #include <efsw/efsw.hpp>
@@ -52,8 +55,10 @@ namespace seri::asset
 
 			GetInstance().UpdateAssetTree();
 
-			GetInstance()._fileWatcher = std::make_shared<efsw::FileWatcher>();
+			//GetInstance()._assetWatcher2 = std::make_shared<AssetWatcher2>(GetAssetDirectory());
+
 			GetInstance()._assetWatcher = std::make_shared<AssetWatcher>(GetAssetDirectory());
+			GetInstance()._fileWatcher = std::make_shared<efsw::FileWatcher>();
 			GetInstance()._fileWatcher->watch();
 
 			LOGGER(info, fmt::format("[asset] asset directory: {}", GetAssetDirectory().string()));
@@ -65,6 +70,8 @@ namespace seri::asset
 
 		static void StartAssetWatcher()
 		{
+			//GetInstance()._assetWatcher2->Start();
+
 			GetInstance()._watchID = GetInstance()._fileWatcher->addWatch(GetAssetDirectory().string(), GetInstance()._assetWatcher.get(), /*recursive*/ true);
 		}
 
@@ -93,25 +100,43 @@ namespace seri::asset
 			return GetInstance()._assetTreeRoot;
 		}
 
+		template<typename T>
+		static std::shared_ptr<T> GetAssetByID(uint64_t id)
+		{
+			if (GetInstance()._assetCache.find(id) != GetInstance()._assetCache.end())
+			{
+				return std::dynamic_pointer_cast<T>(GetInstance()._assetCache[id]);
+			}
+			return nullptr;
+		}
+
 		void InitDefaultAssets();
 		void UpdateAssetTree();
+		void LoadAfterUpdate();
 		void BuildAssetTree(AssetTreeNode& node);
 
 		const char* kAssetFolder = "assets";
-		const char* kAssetFontFolder = "fonts";
-		const char* kAssetShaderFolder = "shaders";
-		const char* kAssetSceneFolder = "scenes";
 
-		const char* kAssetSceneExtension = "yaml";
+		const char* kAssetMetaExtension = "smeta";
+		const char* kAssetSceneExtension = "sscene";
+		const char* kAssetMaterialExtension = "smat";
+		const char* kAssetShaderExtension = "sshader";
+		const char* kAssetMeshExtension = "fbx";
+		const char* kAssetTexturePNGExtension = "png";
+		const char* kAssetTextureJPGExtension = "jpg";
+		const char* kAssetTextureJPEGExtension = "jpeg";
 
 	private:
 		AssetTreeNode _assetTreeRoot{};
 
-		std::unordered_map<uint64_t, std::filesystem::path> _pathCache{};
+		std::unordered_map<uint64_t, seri::asset::AssetMetadata> _assetMetadataCache{};
+		std::unordered_map<uint64_t, std::shared_ptr<AssetBase>> _assetCache{};
 		std::unordered_map<uint64_t, std::shared_ptr<Material>> _materialCache{};
 
-		std::shared_ptr<efsw::FileWatcher> _fileWatcher;
+		std::shared_ptr<AssetWatcher2> _assetWatcher2;
+
 		std::shared_ptr<AssetWatcher> _assetWatcher;
+		std::shared_ptr<efsw::FileWatcher> _fileWatcher;
 		efsw::WatchID _watchID{ 0 };
 
 	};

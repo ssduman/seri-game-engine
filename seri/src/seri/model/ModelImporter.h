@@ -26,36 +26,36 @@ namespace seri
 
 		~ModelImporter() = default;
 
-		std::unique_ptr<Model> Load(const std::string& modelPath);
+		std::shared_ptr<Model> Load(const std::string& modelPath);
 
 	private:
 		unsigned int FlagBuilder();
 
-		NodeData ProcessNode(const aiScene* ai_scene, const aiNode* ai_node, std::unique_ptr<Model>& model);
+		NodeData ProcessNode(const aiScene* ai_scene, const aiNode* ai_node, std::shared_ptr<Model>& model);
 
-		void ProcessMesh(const aiScene* ai_scene, const aiMesh* ai_mesh, std::unique_ptr<Mesh>& mesh);
+		void ProcessMesh(const aiScene* ai_scene, const aiMesh* ai_mesh, std::shared_ptr<Mesh>& mesh);
 
-		void LoadIndices(const aiMesh* ai_mesh, std::unique_ptr<Mesh>& mesh);
+		void LoadIndices(const aiMesh* ai_mesh, std::shared_ptr<Mesh>& mesh);
 
-		void LoadVertices(const aiMesh* ai_mesh, std::unique_ptr<Mesh>& mesh);
+		void LoadVertices(const aiMesh* ai_mesh, std::shared_ptr<Mesh>& mesh);
 
-		void LoadMaterial(const aiScene* ai_scene, const aiMesh* ai_mesh, std::unique_ptr<Mesh>& mesh);
+		void LoadMaterial(const aiScene* ai_scene, const aiMesh* ai_mesh, std::shared_ptr<Mesh>& mesh);
 
-		void LoadTexture(const aiScene* ai_scene, const aiMaterial* ai_material, const aiTextureType ai_tt, std::unique_ptr<Mesh>& mesh);
+		void LoadTexture(const aiScene* ai_scene, const aiMaterial* ai_material, const aiTextureType ai_tt, std::shared_ptr<Mesh>& mesh);
 
-		void LoadEmbeddedTexture(const aiTexture* ai_texture, const aiTextureType ai_tt, std::unique_ptr<Mesh>& mesh);
+		void LoadEmbeddedTexture(const aiTexture* ai_texture, const aiTextureType ai_tt, std::shared_ptr<Mesh>& mesh);
 
-		void LoadFileTexture(const aiTextureType ai_tt, const std::string& texturePath, std::unique_ptr<Mesh>& mesh);
+		void LoadFileTexture(const aiTextureType ai_tt, const std::string& texturePath, std::shared_ptr<Mesh>& mesh);
 
 		void LoadColors(const aiMaterial* ai_material);
 
-		void LoadBones(const aiMesh* ai_mesh, std::unique_ptr<Mesh>& mesh);
+		void LoadBones(const aiMesh* ai_mesh, std::shared_ptr<Mesh>& mesh);
 
 		Animation LoadAnimations(const aiScene* ai_scene);
 
 		NodeAnimation LoadNodeAnimation(const aiNodeAnim* ai_node_anim);
 
-		void LoadBlendShapes(const aiMesh* ai_mesh, std::unique_ptr<Mesh>& mesh);
+		void LoadBlendShapes(const aiMesh* ai_mesh, std::shared_ptr<Mesh>& mesh);
 
 		static glm::vec2 ConvertVector(const aiVector2D& ai_vec);
 

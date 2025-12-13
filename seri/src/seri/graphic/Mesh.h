@@ -462,9 +462,9 @@ namespace seri
 			return _vao;
 		}
 
-		static std::unique_ptr<Mesh> tri_2d()
+		static std::shared_ptr<Mesh> tri_2d()
 		{
-			std::unique_ptr<Mesh> mesh = std::make_unique<Mesh>();
+			std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
 
 			mesh->vertices = {
 				{0.0f, 0.0f, 0.0f},
@@ -488,9 +488,9 @@ namespace seri
 			return mesh;
 		}
 
-		static std::unique_ptr<Mesh> quad_2d()
+		static std::shared_ptr<Mesh> quad_2d()
 		{
-			std::unique_ptr<Mesh> mesh = std::make_unique<Mesh>();
+			std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
 
 			mesh->vertices = {
 				{-1.0f, -1.0f, 0.0f},
@@ -516,9 +516,9 @@ namespace seri
 			return mesh;
 		}
 
-		static std::unique_ptr<Mesh> quad_3d()
+		static std::shared_ptr<Mesh> quad_3d()
 		{
-			std::unique_ptr<Mesh> mesh = std::make_unique<Mesh>();
+			std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
 
 			mesh->vertices = {
 				{0.0f, 0.0f, 0.0f},
@@ -544,9 +544,9 @@ namespace seri
 			return mesh;
 		}
 
-		static std::unique_ptr<Mesh> cube_3d(float mult = 0.4f)
+		static std::shared_ptr<Mesh> cube_3d(float mult = 0.4f)
 		{
-			std::unique_ptr<Mesh> mesh = std::make_unique<Mesh>();
+			std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
 
 			mesh->vertices = {
 				{ -0.5f * mult, -0.5f * mult, +0.5f * mult },

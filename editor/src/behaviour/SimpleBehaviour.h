@@ -20,7 +20,7 @@ namespace seri::editor
 			quad_2d = seri::Mesh::quad_2d();
 			quad_3d = seri::Mesh::quad_3d();
 			cube_3d = seri::Mesh::cube_3d();
-			font_mesh = std::make_unique<seri::Mesh>();
+			font_mesh = std::make_shared<seri::Mesh>();
 
 			model_0 = seri::ModelImporter{}.Load("assets/spiderman/source/spiderman.fbx");
 			model_1 = seri::ModelImporter{}.Load("assets/cannon/cannon_01_1k.fbx");
@@ -126,13 +126,13 @@ namespace seri::editor
 	private:
 		int fontIndex = 2;
 
-		std::unique_ptr<seri::Mesh> quad_2d;
-		std::unique_ptr<seri::Mesh> quad_3d;
-		std::unique_ptr<seri::Mesh> cube_3d;
-		std::unique_ptr<seri::Mesh> font_mesh;
+		std::shared_ptr<seri::Mesh> quad_2d;
+		std::shared_ptr<seri::Mesh> quad_3d;
+		std::shared_ptr<seri::Mesh> cube_3d;
+		std::shared_ptr<seri::Mesh> font_mesh;
 
-		std::unique_ptr<seri::Model> model_0;
-		std::unique_ptr<seri::Model> model_1;
+		std::shared_ptr<seri::Model> model_0;
+		std::shared_ptr<seri::Model> model_1;
 
 		std::shared_ptr<seri::Material> materialFont;
 		std::shared_ptr<seri::Material> materialGrid;

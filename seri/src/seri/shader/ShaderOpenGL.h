@@ -5,11 +5,22 @@
 
 #include <glad/gl.h>
 
+#include <string>
+
 namespace seri
 {
 	class ShaderOpenGL : public ShaderBase
 	{
 	public:
+		void Init(const std::string& shaderPath) override
+		{
+			std::string shaderText = Util::ReadFileAtPath(shaderPath.c_str());
+			std::string vsCode = Util::GetContentOfToken(shaderText, "#beg_vs", "#end_vs");
+			std::string fsCode = Util::GetContentOfToken(shaderText, "#beg_fs", "#end_fs");
+
+			Init(vsCode.c_str(), fsCode.c_str(), /*readFromFile*/ false);
+		}
+
 		void Init(const char* vsCodePath, const char* fsCodePath, bool readFromFile = true) override
 		{
 			unsigned int vertexShader = CompileShader(GL_VERTEX_SHADER, vsCodePath, readFromFile);

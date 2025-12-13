@@ -21,7 +21,7 @@ namespace seri::scene
 		SceneManager::GetInstance()._activeScene = std::make_shared<Scene>();
 		SceneManager::GetInstance()._activeScene->Init();
 
-		SceneManager::GetInstance()._activeScene->Deserialize("assets/scenes/main.yaml");
+		SceneManager::GetInstance()._activeScene->Deserialize("assets/scenes/main.sscene");
 	}
 
 	void SceneManager::Update()

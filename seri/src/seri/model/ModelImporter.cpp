@@ -27,7 +27,7 @@ namespace seri
 			;
 	}
 
-	std::unique_ptr<Model> ModelImporter::Load(const std::string& modelPath)
+	std::shared_ptr<Model> ModelImporter::Load(const std::string& modelPath)
 	{
 		Assimp::Importer ai_importer;
 
@@ -43,7 +43,7 @@ namespace seri
 
 		std::string modelName = std::filesystem::path(modelPath).filename().string();
 
-		std::unique_ptr<Model> model = std::make_unique<Model>();
+		std::shared_ptr<Model> model = std::make_shared<Model>();
 		model->meshes.reserve(ai_scene->mNumMeshes);
 
 		glm::mat4 globalTransformation = ConvertMatrix(ai_scene->mRootNode->mTransformation);
@@ -79,7 +79,7 @@ namespace seri
 		return model;
 	}
 
-	NodeData ModelImporter::ProcessNode(const aiScene* ai_scene, const aiNode* ai_node, std::unique_ptr<Model>& model)
+	NodeData ModelImporter::ProcessNode(const aiScene* ai_scene, const aiNode* ai_node, std::shared_ptr<Model>& model)
 	{
 		NodeData nodeData;
 		nodeData.name = ai_node->mName.C_Str();
@@ -90,7 +90,7 @@ namespace seri
 		{
 			aiMesh* ai_mesh = ai_scene->mMeshes[ai_node->mMeshes[i]];
 
-			std::unique_ptr<Mesh> mesh = std::make_unique<Mesh>();
+			std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
 
 			mesh->name = ai_mesh->mName.C_Str();
 			mesh->nodeName = nodeData.name;
@@ -111,7 +111,7 @@ namespace seri
 		return nodeData;
 	}
 
-	void ModelImporter::ProcessMesh(const aiScene* ai_scene, const aiMesh* ai_mesh, std::unique_ptr<Mesh>& mesh)
+	void ModelImporter::ProcessMesh(const aiScene* ai_scene, const aiMesh* ai_mesh, std::shared_ptr<Mesh>& mesh)
 	{
 		LoadIndices(ai_mesh, mesh);
 		LoadVertices(ai_mesh, mesh);
@@ -120,7 +120,7 @@ namespace seri
 		LoadBlendShapes(ai_mesh, mesh);
 	}
 
-	void ModelImporter::LoadIndices(const aiMesh* ai_mesh, std::unique_ptr<Mesh>& mesh)
+	void ModelImporter::LoadIndices(const aiMesh* ai_mesh, std::shared_ptr<Mesh>& mesh)
 	{
 		unsigned int offset = static_cast<unsigned int>(mesh->indices.size());
 
@@ -137,7 +137,7 @@ namespace seri
 		mesh->AddIndices(std::move(indices));
 	}
 
-	void ModelImporter::LoadVertices(const aiMesh* ai_mesh, std::unique_ptr<Mesh>& mesh)
+	void ModelImporter::LoadVertices(const aiMesh* ai_mesh, std::shared_ptr<Mesh>& mesh)
 	{
 		std::vector<glm::vec3> vertices;
 		std::vector<glm::vec4> colors;
@@ -182,7 +182,7 @@ namespace seri
 		mesh->AddTangentsAndBitangents(std::move(tangentData));
 	}
 
-	void ModelImporter::LoadMaterial(const aiScene* ai_scene, const aiMesh* ai_mesh, std::unique_ptr<Mesh>& mesh)
+	void ModelImporter::LoadMaterial(const aiScene* ai_scene, const aiMesh* ai_mesh, std::shared_ptr<Mesh>& mesh)
 	{
 		aiMaterial* ai_material = ai_scene->mMaterials[ai_mesh->mMaterialIndex];
 
@@ -211,7 +211,7 @@ namespace seri
 		LoadColors(ai_material);
 	}
 
-	void ModelImporter::LoadTexture(const aiScene* ai_scene, const aiMaterial* ai_material, const aiTextureType ai_tt, std::unique_ptr<Mesh>& mesh)
+	void ModelImporter::LoadTexture(const aiScene* ai_scene, const aiMaterial* ai_material, const aiTextureType ai_tt, std::shared_ptr<Mesh>& mesh)
 	{
 		for (unsigned int i = 0; i < ai_material->GetTextureCount(ai_tt); i++)
 		{
@@ -236,7 +236,7 @@ namespace seri
 		}
 	}
 
-	void ModelImporter::LoadEmbeddedTexture(const aiTexture* aiTexture, const aiTextureType ai_tt, std::unique_ptr<Mesh>& mesh)
+	void ModelImporter::LoadEmbeddedTexture(const aiTexture* aiTexture, const aiTextureType ai_tt, std::shared_ptr<Mesh>& mesh)
 	{
 		unsigned int width = aiTexture->mWidth;
 		unsigned int height = aiTexture->mHeight;
@@ -249,7 +249,7 @@ namespace seri
 		textures.emplace_back(std::move(texture));
 	}
 
-	void ModelImporter::LoadFileTexture(const aiTextureType ai_tt, const std::string& texturePath, std::unique_ptr<Mesh>& mesh)
+	void ModelImporter::LoadFileTexture(const aiTextureType ai_tt, const std::string& texturePath, std::shared_ptr<Mesh>& mesh)
 	{
 		std::vector<std::shared_ptr<TextureBase>> textures;
 
@@ -300,7 +300,7 @@ namespace seri
 		}
 	}
 
-	void ModelImporter::LoadBones(const aiMesh* ai_mesh, std::unique_ptr<Mesh>& mesh)
+	void ModelImporter::LoadBones(const aiMesh* ai_mesh, std::shared_ptr<Mesh>& mesh)
 	{
 		if (!ai_mesh->HasBones())
 		{
@@ -454,7 +454,7 @@ namespace seri
 		return anim;
 	}
 
-	void ModelImporter::LoadBlendShapes(const aiMesh* ai_mesh, std::unique_ptr<Mesh>& mesh)
+	void ModelImporter::LoadBlendShapes(const aiMesh* ai_mesh, std::shared_ptr<Mesh>& mesh)
 	{
 		assert(ai_mesh->mNumAnimMeshes <= 1);
 

@@ -15,6 +15,12 @@ namespace seri
 {
 	struct YAMLUtil
 	{
+		template<typename T>
+		static T GetType(const YAML::Node& node)
+		{
+			return node.as<T>();
+		}
+
 		static glm::vec2 Vec2FromYAML(const YAML::Node& node)
 		{
 			return { node[0].as<float>(), node[1].as<float>() };

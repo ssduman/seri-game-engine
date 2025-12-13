@@ -76,7 +76,14 @@ namespace seri::asset
 			}
 			node["Mat4s"] = mat4sNode;
 
-			node["ShaderID"] = material->shaderID;
+			YAML::Node texturesNode;
+			for (const auto& kv : material->GetTextures())
+			{
+				mat4sNode[kv.first] = kv.second->id;
+			}
+			node["Textures"] = mat4sNode;
+
+			node["ShaderID"] = material->shader != nullptr ? material->shader->id : 0;
 
 			return node;
 		}
@@ -131,6 +138,14 @@ namespace seri::asset
 				std::string name = YAMLUtil::DeepCopyYAMLString(kv.first);
 				glm::mat4 value = YAMLUtil::Mat4FromYAML(kv.second);
 				material->SetMat4(name, value);
+			}
+
+			const YAML::Node& texturesNode = node["Textures"];
+			for (const auto& kv : texturesNode)
+			{
+				std::string name = YAMLUtil::DeepCopyYAMLString(kv.first);
+				uint64_t value = YAMLUtil::GetType<uint64_t>(kv.second);
+				material->textureIDs.push_back({ value, name });
 			}
 
 			material->shaderID = node["ShaderID"].as<uint64_t>();

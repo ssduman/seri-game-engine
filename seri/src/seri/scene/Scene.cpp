@@ -17,12 +17,12 @@ namespace seri::scene
 {
 	void Scene::Init()
 	{
-		_skybox = std::make_shared<seri::Skybox>();
+		//_skybox = std::make_shared<seri::Skybox>();
 	}
 
 	void Scene::Update()
 	{
-		_skybox->Update();
+		//_skybox->Update();
 	}
 
 	void Scene::Save()

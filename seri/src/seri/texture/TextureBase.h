@@ -1,6 +1,8 @@
 #pragma once
 
 #include "seri/util/Util.h"
+#include "seri/random/Random.h"
+#include "seri/asset/AssetBase.h"
 
 namespace seri
 {
@@ -95,9 +97,21 @@ namespace seri
 		TextureMinFilter minFilter{ TextureMinFilter::linear };
 	};
 
-	class TextureBase
+	class TextureBase : public seri::asset::AssetBase
 	{
 	public:
+		TextureBase()
+		{
+			id = seri::Random::UUID();
+			type = seri::asset::AssetType::texture;
+		}
+
+		TextureBase(uint64_t id_)
+		{
+			id = id_;
+			type = seri::asset::AssetType::texture;
+		}
+
 		virtual ~TextureBase() = default;
 
 		virtual void Init(const TextureDesc& desc) = 0;

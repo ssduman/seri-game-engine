@@ -1,15 +1,26 @@
 #pragma once
 
 #include "seri/util/Util.h"
+#include "seri/random/Random.h"
+#include "seri/asset/AssetBase.h"
 #include "seri/shader/ShaderBase.h"
 #include "seri/texture/TextureBase.h"
 
 namespace seri
 {
-	class Material
+	class Material : public seri::asset::AssetBase
 	{
 	public:
-		friend struct MaterialAsset;
+		Material()
+		{
+			id = seri::Random::UUID();
+			type = seri::asset::AssetType::material;
+		}
+
+		Material(uint64_t id_)
+		{
+			type = seri::asset::AssetType::material;
+		}
 
 		void SetInt(const std::string& name, int v);
 
@@ -29,8 +40,14 @@ namespace seri
 
 		void UnbindTextures();
 
-		uint64_t id{ 0 };
+		struct TextureSlotInfo
+		{
+			uint64_t id;
+			std::string name;
+		};
+
 		uint64_t shaderID{ 0 };
+		std::vector<TextureSlotInfo> textureIDs{};
 
 		std::shared_ptr<ShaderBase> shader;
 

@@ -1,12 +1,27 @@
 #pragma once
 
 #include "seri/util/Util.h"
+#include "seri/random/Random.h"
+#include "seri/asset/AssetBase.h"
 
 namespace seri
 {
-	class ShaderBase
+	class ShaderBase : public seri::asset::AssetBase
 	{
 	public:
+		ShaderBase()
+		{
+			id = seri::Random::UUID();
+			type = seri::asset::AssetType::shader;
+		}
+
+		ShaderBase(uint64_t id_)
+		{
+			id = id_;
+			type = seri::asset::AssetType::shader;
+		}
+
+		virtual void Init(const std::string& shaderPath) = 0;
 		virtual void Init(const char* vsCodePath, const char* fsCodePath, bool readFromFile = true) = 0;
 
 		virtual void Bind() = 0;
@@ -24,8 +39,6 @@ namespace seri
 		virtual void SetMat4(const std::string& name, const glm::mat4& value) = 0;
 
 		static std::shared_ptr<ShaderBase> Create();
-
-		uint64_t id{ 0 };
 
 	};
 }

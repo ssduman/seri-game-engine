@@ -1,0 +1,32 @@
+IDInfo:
+  ID: 5128232576114054222
+  Version: 0.1
+Material:
+  Ints:
+    SetInt1: 42
+    SetInt2: 43
+    SetInt3: 44
+  Floats:
+    SetFloat1: 1
+    SetFloat2: 3
+  Float2s:
+    SetFloat22: [22, 22]
+    SetFloat2: [2, 2]
+  Float3s:
+    SetFloat3: [3, 3, 3]
+  Float4s:
+    SetFloat4: [4, 4, 4, 4]
+  Mat4s:
+    SetMat55:
+      - [55, 0, 0, 0]
+      - [0, 55, 0, 0]
+      - [0, 0, 55, 0]
+      - [0, 0, 0, 55]
+    SetMat4:
+      - [5, 0, 0, 0]
+      - [0, 5, 0, 0]
+      - [0, 0, 5, 0]
+      - [0, 0, 0, 5]
+  Textures:
+    u_texture: 7353807435475845965
+  ShaderID: 3566850448792701980

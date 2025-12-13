@@ -37,7 +37,7 @@ void seri::font::FontManager::Init(const char* fontFolderPath)
 	auto& instance = GetInstance();
 }
 
-void seri::font::FontManager::MakeText(std::unique_ptr<seri::Mesh>& mesh, const FontInfo& fontInfo, std::string text, float posX, float posY)
+void seri::font::FontManager::MakeText(std::shared_ptr<seri::Mesh>& mesh, const FontInfo& fontInfo, std::string text, float posX, float posY)
 {
 	mesh->Clear();
 
@@ -128,7 +128,7 @@ void seri::font::FontManager::MakeText(std::unique_ptr<seri::Mesh>& mesh, const 
 	mesh->Update();
 }
 
-void seri::font::FontManager::MakeText(std::unique_ptr<seri::Mesh>& mesh, int fontIndex, std::string text, float posX, float posY)
+void seri::font::FontManager::MakeText(std::shared_ptr<seri::Mesh>& mesh, int fontIndex, std::string text, float posX, float posY)
 {
 	const auto& fontInfo = seri::font::FontManager::GetPredefinedFonts()[fontIndex]->fontInfo;
 	const auto& fontTexture = seri::font::FontManager::GetPredefinedFonts()[fontIndex]->texture;

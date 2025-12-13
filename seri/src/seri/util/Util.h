@@ -15,6 +15,7 @@
 #include <cmath>
 #include <ctime>
 #include <regex>
+#include <cctype>
 #include <chrono>
 #include <memory>
 #include <string>
@@ -22,6 +23,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <algorithm>
 #include <stdexcept>
 #include <unordered_map>
 
@@ -60,6 +62,11 @@ namespace seri
 		static int RountToInt(float value)
 		{
 			return static_cast<int>(std::round(value));
+		}
+
+		static void ToLower(std::string& s)
+		{
+			std::transform(s.begin(), s.end(), s.begin(), [](unsigned char c) { return std::tolower(c); });
 		}
 
 		static glm::mat4 GetTRS(const glm::vec3& pos, const glm::quat& rot, const glm::vec3& scale)
