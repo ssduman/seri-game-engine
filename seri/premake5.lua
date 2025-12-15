@@ -63,6 +63,8 @@ project "Seri"
     "%{IncludeDir.fmt}",
     "%{IncludeDir.filewatch}",
     "%{IncludeDir.efsw}",
+    "%{IncludeDir.lua}",
+    "%{IncludeDir.sol2}",
   }
 
   libdirs {
@@ -71,6 +73,7 @@ project "Seri"
 
   links {
     "fmt",
+    "lua",
     "glad",
     "GLFW",
     "SDL3",

@@ -48,6 +48,8 @@ project "Editor"
     "%{IncludeDir.fmt}",
     "%{IncludeDir.filewatch}",
     "%{IncludeDir.efsw}",
+    "%{IncludeDir.lua}",
+    "%{IncludeDir.sol2}",
   }
 
   libdirs {

@@ -16,6 +16,7 @@
 #include "seri/camera/EditorCamera.h"
 #include "seri/event/EventCallback.h"
 #include "seri/event/EventDispatcher.h"
+#include "seri/scripting/ScriptingManager.h"
 
 namespace seri
 {
@@ -40,6 +41,7 @@ namespace seri
 			seri::sound::SoundManager::Init("assets/sounds/");
 			seri::scene::SceneManager::Init();
 			seri::asset::AssetManager::StartAssetWatcher();
+			seri::scripting::ScriptingManager::Init();
 
 			seri::WindowManager::Instance()->AddEventCallback(seri::event::MakeEventCallback(
 				[](const seri::event::IEventData& data)
@@ -116,6 +118,7 @@ namespace seri
 
 			seri::asset::AssetManager::Update();
 			seri::scene::SceneManager::Update();
+			seri::scripting::ScriptingManager::Update();
 
 			seri::BehaviourManager::UpdateBehaviours();
 

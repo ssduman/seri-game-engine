@@ -46,3 +46,11 @@
 	path = seri/vendor/efsw
 	url = https://github.com/SpartanJ/efsw
 	ignore = dirty
+[submodule "seri/vendor/lua"]
+	path = seri/vendor/lua
+	url = https://github.com/lua/lua.git
+	ignore = dirty
+[submodule "seri/vendor/sol2"]
+	path = seri/vendor/sol2
+	url = https://github.com/ThePhD/sol2.git
+	ignore = dirty
