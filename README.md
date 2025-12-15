@@ -31,6 +31,9 @@
 * [EnTT](https://github.com/skypjack/entt)
 * [yaml-cpp](https://github.com/jbeder/yaml-cpp)
 * [fmt](https://github.com/fmtlib/fmt)
+* [efsw](https://github.com/SpartanJ/efsw)
+* [Lua](https://github.com/lua/lua)
+* [sol2](https://github.com/ThePhD/sol2)
 * [CMake](https://cmake.org/)
 ## Images: ##
 <table>
