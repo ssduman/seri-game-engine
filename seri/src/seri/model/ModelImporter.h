@@ -39,7 +39,7 @@ namespace seri
 
 		void LoadVertices(const aiMesh* ai_mesh, std::shared_ptr<Mesh>& mesh);
 
-		void LoadMaterial(const aiScene* ai_scene, const aiMesh* ai_mesh, std::shared_ptr<Mesh>& mesh);
+		void LoadMaterial(const aiScene* ai_scene, const aiMesh* ai_mesh, bool load, std::shared_ptr<Mesh>& mesh);
 
 		void LoadTexture(const aiScene* ai_scene, const aiMaterial* ai_material, const aiTextureType ai_tt, std::shared_ptr<Mesh>& mesh);
 

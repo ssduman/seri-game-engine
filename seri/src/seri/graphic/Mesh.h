@@ -136,6 +136,8 @@ namespace seri
 
 		glm::mat4 transformation{ 1.0f };
 
+		int materialIndex{ 0 };
+
 		void AddIndices(std::vector<unsigned int> ind)
 		{
 			indices.insert(indices.end(), ind.begin(), ind.end());

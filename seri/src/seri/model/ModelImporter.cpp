@@ -17,14 +17,13 @@ namespace seri
 	{
 		return
 			aiProcess_Triangulate |
-			//aiProcess_GenNormals |
 			aiProcess_GenSmoothNormals |
-			//aiProcess_FlipUVs |
 			aiProcess_CalcTangentSpace |
-			aiProcess_OptimizeMeshes |
 			aiProcess_ValidateDataStructure |
-			0
-			;
+			//aiProcess_FlipUVs |
+			//aiProcess_GenNormals |
+			//aiProcess_OptimizeMeshes |
+			0;
 	}
 
 	std::shared_ptr<Model> ModelImporter::Load(const std::string& modelPath)
@@ -34,16 +33,24 @@ namespace seri
 		const aiScene* ai_scene = ai_importer.ReadFile(modelPath, FlagBuilder());
 		if (!ai_scene || ai_scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !ai_scene->mRootNode)
 		{
-			LOGGER(error, "[model] read model path '" << modelPath << "' failed: " << ai_importer.GetErrorString());
+			LOGGER(error, fmt::format("[model] read model path '{}' failed: {}", modelPath, ai_importer.GetErrorString()));
 			return nullptr;
 		}
 
-		_modelDirectory = modelPath.substr(0, modelPath.find_last_of("/")) + "/";
+		std::filesystem::path modelPathP(modelPath);
+		_modelDirectory = modelPathP.parent_path().string();
+		if (!_modelDirectory.empty() && _modelDirectory.back() != '/' && _modelDirectory.back() != '\\')
+		{
+			_modelDirectory += "/";
+		}
+
 		_texturesLoaded.clear();
+		_boneNameToIndexMap.clear();
 
 		std::string modelName = std::filesystem::path(modelPath).filename().string();
 
 		std::shared_ptr<Model> model = std::make_shared<Model>();
+		model->materialCount = ai_scene->mNumMaterials;
 		model->meshes.reserve(ai_scene->mNumMeshes);
 
 		glm::mat4 globalTransformation = ConvertMatrix(ai_scene->mRootNode->mTransformation);
@@ -67,14 +74,13 @@ namespace seri
 			mesh->Build();
 		}
 
-		std::string hasMat = ai_scene->HasMaterials() ? "y" : "n";
 		std::string hasSkel = ai_scene->hasSkeletons() ? "y" : "n";
 		std::string hasAnim = ai_scene->HasAnimations() ? "y" : "n";
 
-		LOGGER(info,
-			"[model] loaded '" << modelName << "', mesh: " << model->meshes.size() << ", tri: " << triCount <<
-			", mat: " << hasMat << ", anim: " << hasAnim << ", skeleton: " << hasSkel
-		);
+		LOGGER(info, fmt::format(
+			"[model] loaded '{}', mesh: {}, mat: {}, tri: {}, anim: {}, skeleton: {}",
+			modelName, model->meshes.size(), model->materialCount, triCount, hasAnim, hasSkel
+		));
 
 		return model;
 	}
@@ -115,7 +121,7 @@ namespace seri
 	{
 		LoadIndices(ai_mesh, mesh);
 		LoadVertices(ai_mesh, mesh);
-		//LoadMaterial(ai_scene, ai_mesh, mesh);
+		LoadMaterial(ai_scene, ai_mesh, /*load*/ false, mesh);
 
 		LoadBlendShapes(ai_mesh, mesh);
 	}
@@ -182,33 +188,37 @@ namespace seri
 		mesh->AddTangentsAndBitangents(std::move(tangentData));
 	}
 
-	void ModelImporter::LoadMaterial(const aiScene* ai_scene, const aiMesh* ai_mesh, std::shared_ptr<Mesh>& mesh)
+	void ModelImporter::LoadMaterial(const aiScene* ai_scene, const aiMesh* ai_mesh, bool load, std::shared_ptr<Mesh>& mesh)
 	{
 		aiMaterial* ai_material = ai_scene->mMaterials[ai_mesh->mMaterialIndex];
+		mesh->materialIndex = ai_mesh->mMaterialIndex;
 
-		LoadTexture(ai_scene, ai_material, aiTextureType_NONE, mesh);
+		if (load)
+		{
+			LoadTexture(ai_scene, ai_material, aiTextureType_NONE, mesh);
 
-		LoadTexture(ai_scene, ai_material, aiTextureType_DIFFUSE, mesh);
-		LoadTexture(ai_scene, ai_material, aiTextureType_SPECULAR, mesh);
-		LoadTexture(ai_scene, ai_material, aiTextureType_AMBIENT, mesh);
-		LoadTexture(ai_scene, ai_material, aiTextureType_EMISSIVE, mesh);
-		LoadTexture(ai_scene, ai_material, aiTextureType_HEIGHT, mesh);
-		LoadTexture(ai_scene, ai_material, aiTextureType_NORMALS, mesh);
-		LoadTexture(ai_scene, ai_material, aiTextureType_SHININESS, mesh);
-		LoadTexture(ai_scene, ai_material, aiTextureType_OPACITY, mesh);
-		LoadTexture(ai_scene, ai_material, aiTextureType_DISPLACEMENT, mesh);
-		LoadTexture(ai_scene, ai_material, aiTextureType_LIGHTMAP, mesh);
-		LoadTexture(ai_scene, ai_material, aiTextureType_REFLECTION, mesh);
+			LoadTexture(ai_scene, ai_material, aiTextureType_DIFFUSE, mesh);
+			LoadTexture(ai_scene, ai_material, aiTextureType_SPECULAR, mesh);
+			LoadTexture(ai_scene, ai_material, aiTextureType_AMBIENT, mesh);
+			LoadTexture(ai_scene, ai_material, aiTextureType_EMISSIVE, mesh);
+			LoadTexture(ai_scene, ai_material, aiTextureType_HEIGHT, mesh);
+			LoadTexture(ai_scene, ai_material, aiTextureType_NORMALS, mesh);
+			LoadTexture(ai_scene, ai_material, aiTextureType_SHININESS, mesh);
+			LoadTexture(ai_scene, ai_material, aiTextureType_OPACITY, mesh);
+			LoadTexture(ai_scene, ai_material, aiTextureType_DISPLACEMENT, mesh);
+			LoadTexture(ai_scene, ai_material, aiTextureType_LIGHTMAP, mesh);
+			LoadTexture(ai_scene, ai_material, aiTextureType_REFLECTION, mesh);
 
-		LoadTexture(ai_scene, ai_material, aiTextureType_BASE_COLOR, mesh);
-		LoadTexture(ai_scene, ai_material, aiTextureType_NORMAL_CAMERA, mesh);
-		LoadTexture(ai_scene, ai_material, aiTextureType_EMISSION_COLOR, mesh);
-		LoadTexture(ai_scene, ai_material, aiTextureType_METALNESS, mesh);
-		LoadTexture(ai_scene, ai_material, aiTextureType_DIFFUSE_ROUGHNESS, mesh);
-		LoadTexture(ai_scene, ai_material, aiTextureType_AMBIENT_OCCLUSION, mesh);
-		LoadTexture(ai_scene, ai_material, aiTextureType_UNKNOWN, mesh);
+			LoadTexture(ai_scene, ai_material, aiTextureType_BASE_COLOR, mesh);
+			LoadTexture(ai_scene, ai_material, aiTextureType_NORMAL_CAMERA, mesh);
+			LoadTexture(ai_scene, ai_material, aiTextureType_EMISSION_COLOR, mesh);
+			LoadTexture(ai_scene, ai_material, aiTextureType_METALNESS, mesh);
+			LoadTexture(ai_scene, ai_material, aiTextureType_DIFFUSE_ROUGHNESS, mesh);
+			LoadTexture(ai_scene, ai_material, aiTextureType_AMBIENT_OCCLUSION, mesh);
+			LoadTexture(ai_scene, ai_material, aiTextureType_UNKNOWN, mesh);
 
-		LoadColors(ai_material);
+			LoadColors(ai_material);
+		}
 	}
 
 	void ModelImporter::LoadTexture(const aiScene* ai_scene, const aiMaterial* ai_material, const aiTextureType ai_tt, std::shared_ptr<Mesh>& mesh)

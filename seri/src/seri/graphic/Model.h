@@ -25,6 +25,7 @@ namespace seri
 			type = seri::asset::AssetType::mesh;
 		}
 
+		int materialCount{ 0 };
 		std::vector<std::shared_ptr<Mesh>> meshes{};
 
 		void Build()
