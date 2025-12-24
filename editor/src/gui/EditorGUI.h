@@ -42,6 +42,7 @@ namespace seri::editor
 			none,
 			scene,
 			entity,
+			asset,
 		};
 
 		void SetIO()
@@ -78,6 +79,7 @@ namespace seri::editor
 		void ShowEditorInspector();
 		void ShowEditorInspectorScene();
 		void ShowEditorInspectorEntity();
+		void ShowEditorInspectorAsset();
 
 		void ShowEditorProject();
 		void ShowEditorProjectFolderTree(seri::asset::AssetTreeNode& node);
@@ -89,6 +91,7 @@ namespace seri::editor
 		InspectorType _inspectorType{ InspectorType::none };
 
 		seri::asset::AssetTreeNode* _selectedFolder{ nullptr };
+		seri::asset::AssetTreeNode _selectedAsset{};
 
 	};
 }

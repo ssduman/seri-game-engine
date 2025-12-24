@@ -288,6 +288,11 @@ namespace seri::editor
 					ShowEditorInspectorEntity();
 				}
 				break;
+			case seri::editor::EditorGUI::InspectorType::asset:
+				{
+					ShowEditorInspectorAsset();
+				}
+				break;
 			default:
 				{
 					LOGGER(error, "[gui] editor unknown inspector type");
@@ -350,6 +355,42 @@ namespace seri::editor
 			ImGui::InputFloat3("scale", &transformComponent->scale[0]);
 
 			ImGui::Separator();
+		}
+	}
+
+	void EditorGUI::ShowEditorInspectorAsset()
+	{
+		switch (_selectedAsset.type)
+		{
+			case seri::asset::AssetType::material:
+				{
+					auto asset = seri::asset::AssetManager::GetAssetByID<seri::Material>(_selectedAsset.id);
+					ImGui::Text(fmt::format("material: {}", asset->id).c_str());
+				}
+				break;
+			case seri::asset::AssetType::shader:
+				{
+					auto asset = seri::asset::AssetManager::GetAssetByID<seri::ShaderBase>(_selectedAsset.id);
+					ImGui::Text(fmt::format("shader: {}", asset->id).c_str());
+				}
+				break;
+			case seri::asset::AssetType::texture:
+				{
+					auto asset = seri::asset::AssetManager::GetAssetByID<seri::TextureBase>(_selectedAsset.id);
+					ImGui::Text(fmt::format("texture: {}", asset->id).c_str());
+				}
+				break;
+			case seri::asset::AssetType::mesh:
+				{
+					auto asset = seri::asset::AssetManager::GetAssetByID<seri::Model>(_selectedAsset.id);
+					ImGui::Text(fmt::format("mesh: {}", asset->id).c_str());
+				}
+				break;
+			default:
+				{
+					ImGui::Text("other asset");
+				}
+				break;
 		}
 	}
 
@@ -433,15 +474,26 @@ namespace seri::editor
 
 		for (const auto& child : _selectedFolder->children)
 		{
+			if (child.isMeta)
+			{
+				continue;
+			}
+
 			ImGui::BeginGroup();
 
 			ImGui::Button(child.name.c_str(), ImVec2(itemSize, itemSize));
 
-			//if (ImGui::Selectable(child.name.c_str(), _selectedFolder->path == child.path)) {}
+			if (ImGui::IsItemClicked())
+			{
+				_selectedAsset = child;
+				_selectedEntityId = child.id;
+				_inspectorType = InspectorType::asset;
+			}
 
 			ImGui::EndGroup();
 			ImGui::NextColumn();
 		}
+
 		ImGui::Columns(1);
 	}
 

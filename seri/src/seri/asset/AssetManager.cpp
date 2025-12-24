@@ -102,6 +102,7 @@ namespace seri::asset
 					.source = node.path,
 					.meta = node.meta,
 				};
+				node.id = existingId;
 
 				if (node.extension == kAssetMetaExtension)
 				{
@@ -135,6 +136,7 @@ namespace seri::asset
 					assetMetadata.type = seri::asset::AssetType::texture;
 				}
 
+				node.type = assetMetadata.type;
 				_assetMetadataCache[existingId] = assetMetadata;
 			}
 

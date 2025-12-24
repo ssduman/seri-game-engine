@@ -31,6 +31,7 @@ namespace seri::asset
 		std::filesystem::path meta{};
 		std::string name{ "" };
 		std::string extension{ "" };
+		AssetType type{ AssetType::none };
 		std::vector<AssetTreeNode> children{};
 	};
 
@@ -55,8 +56,6 @@ namespace seri::asset
 
 			GetInstance().UpdateAssetTree();
 
-			//GetInstance()._assetWatcher2 = std::make_shared<AssetWatcher2>(GetAssetDirectory());
-
 			GetInstance()._assetWatcher = std::make_shared<AssetWatcher>(GetAssetDirectory());
 			GetInstance()._fileWatcher = std::make_shared<efsw::FileWatcher>();
 			GetInstance()._fileWatcher->watch();
@@ -70,8 +69,6 @@ namespace seri::asset
 
 		static void StartAssetWatcher()
 		{
-			//GetInstance()._assetWatcher2->Start();
-
 			GetInstance()._watchID = GetInstance()._fileWatcher->addWatch(GetAssetDirectory().string(), GetInstance()._assetWatcher.get(), /*recursive*/ true);
 		}
 
@@ -129,11 +126,8 @@ namespace seri::asset
 	private:
 		AssetTreeNode _assetTreeRoot{};
 
-		std::unordered_map<uint64_t, seri::asset::AssetMetadata> _assetMetadataCache{};
 		std::unordered_map<uint64_t, std::shared_ptr<AssetBase>> _assetCache{};
-		std::unordered_map<uint64_t, std::shared_ptr<Material>> _materialCache{};
-
-		std::shared_ptr<AssetWatcher2> _assetWatcher2;
+		std::unordered_map<uint64_t, seri::asset::AssetMetadata> _assetMetadataCache{};
 
 		std::shared_ptr<AssetWatcher> _assetWatcher;
 		std::shared_ptr<efsw::FileWatcher> _fileWatcher;
