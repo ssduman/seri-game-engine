@@ -2,6 +2,7 @@
 
 #include "seri/util/Util.h"
 
+#include <string>
 #include <filesystem>
 
 namespace seri::asset
@@ -22,6 +23,7 @@ namespace seri::asset
 	{
 		uint64_t id{ 0 };
 		AssetType type{ AssetType::none };
+		std::string name{ "" };
 		std::filesystem::path source{};
 		std::filesystem::path meta{};
 	};

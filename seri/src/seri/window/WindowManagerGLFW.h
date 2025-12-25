@@ -383,7 +383,7 @@ namespace seri
 				{
 					if (auto windowManager = static_cast<WindowManagerGLFW*>(glfwGetWindowUserPointer(window)))
 					{
-						LOGGER(info, "[window] window focus state: " << (focused ? "focused" : "not focused"));
+						//LOGGER(info, "[window] window focus state: " << (focused ? "focused" : "not focused"));
 					}
 				}
 			);

@@ -61,57 +61,6 @@ namespace seri
 			UpdateProjection();
 		}
 
-		void OnMousePositionEvent(const event::MousePositionEventData& data) override
-		{
-			if (!IsPlayable())
-			{
-				return;
-			}
-
-			auto xpos = static_cast<float>(data.xpos);
-			auto ypos = static_cast<float>(data.ypos);
-
-			if (!_init)
-			{
-				_init = true;
-				_xPosLast = xpos;
-				_yPosLast = ypos;
-			}
-
-			const auto deltaX = xpos - _xPosLast;
-			const auto deltaY = _yPosLast - ypos;
-
-			_xPosLast = xpos;
-			_yPosLast = ypos;
-
-			float& _yaw = _cameraProperties.rotation.x;
-			float& _pitch = _cameraProperties.rotation.y;
-
-			_yaw += deltaX * _cameraProperties.sensitivity;
-			_pitch += deltaY * _cameraProperties.sensitivity;
-
-			if (_pitch > 89.0f)
-			{
-				_pitch = 89.0f;
-			}
-			if (_pitch < -89.0f)
-			{
-				_pitch = -89.0f;
-			}
-
-			while (_yaw < -180.0f)
-			{
-				_yaw += 360.0f;
-			}
-			while (_yaw > 180.0f)
-			{
-				_yaw -= 360.0f;
-			}
-
-			UpdateEulerAngles();
-			UpdateView();
-		}
-
 		glm::vec3 GetPosition() override
 		{
 			return _cameraProperties.position;
@@ -121,8 +70,6 @@ namespace seri
 		{
 			_cameraProperties.position = position;
 		}
-
-		virtual bool IsPlayable() = 0;
 
 		const glm::mat4& GetModel()
 		{
@@ -144,7 +91,7 @@ namespace seri
 			return _cameraProperties.isOrtho;
 		}
 
-		const CameraProperties& GetCameraProperties()
+		CameraProperties& GetCameraProperties()
 		{
 			return _cameraProperties;
 		}

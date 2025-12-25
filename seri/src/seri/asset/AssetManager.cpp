@@ -99,6 +99,7 @@ namespace seri::asset
 				seri::asset::AssetMetadata assetMetadata = seri::asset::AssetMetadata{
 					.id = existingId,
 					.type = seri::asset::AssetType::none,
+					.name = node.name,
 					.source = node.path,
 					.meta = node.meta,
 				};
@@ -119,7 +120,11 @@ namespace seri::asset
 				{
 					assetMetadata.type = seri::asset::AssetType::scene;
 				}
-				else if (node.extension == kAssetMeshExtension)
+				else if (node.extension == kAssetFBXExtension)
+				{
+					assetMetadata.type = seri::asset::AssetType::mesh;
+				}
+				else if (node.extension == kAssetOBJExtension)
 				{
 					assetMetadata.type = seri::asset::AssetType::mesh;
 				}

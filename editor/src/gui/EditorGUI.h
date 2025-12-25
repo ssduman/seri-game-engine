@@ -72,6 +72,7 @@ namespace seri::editor
 		void ShowEditorMainMenuBar();
 
 		void ShowEditorSceneImage();
+		void ControlEditorSceneMove(ImVec2& imageMin, ImVec2& imageMax);
 
 		void ShowEditorHierarchy();
 		void ShowEditorHierarchyImpl(const std::shared_ptr<seri::scene::Scene>& activeScene, seri::scene::SceneTreeNode& node, uint64_t& selectedId);
@@ -84,6 +85,11 @@ namespace seri::editor
 		void ShowEditorProject();
 		void ShowEditorProjectFolderTree(seri::asset::AssetTreeNode& node);
 		void ShowEditorProjectAssetGrid();
+		
+		bool ShowEditorAssetPickerPopup(seri::asset::AssetType type, uint64_t& match);
+
+		void ShowEditorImage(std::shared_ptr<seri::TextureBase>& texture, float size);
+		bool ShowEditorImageButton(std::shared_ptr<seri::TextureBase>& texture, float size);
 
 		void DrawEditorLayout();
 

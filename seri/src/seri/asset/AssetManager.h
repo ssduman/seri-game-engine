@@ -97,6 +97,19 @@ namespace seri::asset
 			return GetInstance()._assetTreeRoot;
 		}
 
+		static std::vector<seri::asset::AssetMetadata> GetAssetsByType(AssetType type)
+		{
+			std::vector<seri::asset::AssetMetadata> assets{};
+			for (auto& [id, metadata] : GetInstance()._assetMetadataCache)
+			{
+				if (metadata.type == type)
+				{
+					assets.push_back(metadata);
+				}
+			}
+			return assets;
+		}
+
 		template<typename T>
 		static std::shared_ptr<T> GetAssetByID(uint64_t id)
 		{
@@ -118,7 +131,8 @@ namespace seri::asset
 		const char* kAssetSceneExtension = "sscene";
 		const char* kAssetMaterialExtension = "smat";
 		const char* kAssetShaderExtension = "sshader";
-		const char* kAssetMeshExtension = "fbx";
+		const char* kAssetFBXExtension = "fbx";
+		const char* kAssetOBJExtension = "obj";
 		const char* kAssetTexturePNGExtension = "png";
 		const char* kAssetTextureJPGExtension = "jpg";
 		const char* kAssetTextureJPEGExtension = "jpeg";

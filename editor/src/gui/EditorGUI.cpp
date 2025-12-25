@@ -142,15 +142,85 @@ namespace seri::editor
 		float offsetY = (panelSize.y - finalSize.y) * 0.5f;
 
 		ImVec2 drawPos = ImVec2(cursorPos.x + offsetX, cursorPos.y + offsetY);
+		ImVec2 imageMin = drawPos;
+		ImVec2 imageMax = ImVec2(drawPos.x + finalSize.x, drawPos.y + finalSize.y);
 
 		auto tex = (ImTextureID)(intptr_t)seri::RenderingManager::GetEditorRT()->GetFirstColorTextureHandle();
+
 		ImGui::GetWindowDrawList()->AddImage(
 			tex,
-			drawPos,
-			ImVec2(drawPos.x + finalSize.x, drawPos.y + finalSize.y),
+			imageMin,
+			imageMax,
 			ImVec2(0, 1),
 			ImVec2(1, 0)
 		);
+
+		ControlEditorSceneMove(imageMin, imageMax);
+	}
+
+	void EditorGUI::ControlEditorSceneMove(ImVec2& imageMin, ImVec2& imageMax)
+	{
+		static bool moveActive = false;
+		static ImVec2 lastMouse = ImVec2(0, 0);
+
+		ImVec2 mouse = ImGui::GetMousePos();
+
+		if (ImGui::IsMouseClicked(ImGuiMouseButton_Right))
+		{
+			bool panelActive =
+				ImGui::IsWindowHovered(ImGuiHoveredFlags_AllowWhenBlockedByActiveItem) ||
+				ImGui::IsWindowFocused();
+			bool mouseInside =
+				mouse.x >= imageMin.x && mouse.x <= imageMax.x &&
+				mouse.y >= imageMin.y && mouse.y <= imageMax.y;
+
+			if (panelActive && mouseInside)
+			{
+				moveActive = true;
+				lastMouse = mouse;
+			}
+		}
+		if (ImGui::IsMouseReleased(ImGuiMouseButton_Right))
+		{
+			moveActive = false;
+		}
+
+		if (moveActive)
+		{
+			ImGui::SetMouseCursor(ImGuiMouseCursor_None);
+
+			ImVec2 delta = { mouse.x - lastMouse.x, mouse.y - lastMouse.y };
+			lastMouse = mouse;
+
+			auto deltaTime = seri::TimeWrapper::GetDeltaTime();
+
+			auto& camProps = seri::Graphic::GetCameraPerspective()->GetCameraProperties();
+
+			glm::vec3 forward = camProps.front;
+			glm::vec3 right = glm::normalize(glm::cross(forward, glm::vec3(0, 1, 0)));
+			float speed = ImGui::GetIO().KeyShift ? camProps.speed * 2.0f : camProps.speed;
+
+			camProps.rotation.x += delta.x * camProps.sensitivity;
+			camProps.rotation.y -= delta.y * camProps.sensitivity;
+			camProps.rotation.y = glm::clamp(camProps.rotation.y, -89.0f, 89.0f);
+
+			if (ImGui::IsKeyDown(ImGuiKey_W))
+			{
+				camProps.position += forward * speed * deltaTime;
+			}
+			if (ImGui::IsKeyDown(ImGuiKey_S))
+			{
+				camProps.position -= forward * speed * deltaTime;
+			}
+			if (ImGui::IsKeyDown(ImGuiKey_A))
+			{
+				camProps.position -= right * speed * deltaTime;
+			}
+			if (ImGui::IsKeyDown(ImGuiKey_D))
+			{
+				camProps.position += right * speed * deltaTime;
+			}
+		}
 	}
 
 	void EditorGUI::ShowEditorHierarchy()
@@ -366,6 +436,24 @@ namespace seri::editor
 				{
 					auto asset = seri::asset::AssetManager::GetAssetByID<seri::Material>(_selectedAsset.id);
 					ImGui::Text(fmt::format("material: {}", asset->id).c_str());
+					ImGui::Text(fmt::format("shader: {}", asset->shader->id).c_str());
+					for (auto& tex : asset->GetTextures())
+					{
+						ImGui::Text(fmt::format(" tex: {} -> {}", tex.first, tex.second->id).c_str());
+						if (ShowEditorImageButton(tex.second, 64.0f))
+						{
+							ImGui::OpenPopup("AssetPicker");
+						}
+						uint64_t match = 0;
+						if (ShowEditorAssetPickerPopup(seri::asset::AssetType::texture, match))
+						{
+							if (match != 0)
+							{
+								auto newTexture = seri::asset::AssetManager::GetAssetByID<seri::TextureBase>(match);
+								asset->SetTexture(tex.first, newTexture);
+							}
+						}
+					}
 				}
 				break;
 			case seri::asset::AssetType::shader:
@@ -384,6 +472,11 @@ namespace seri::editor
 				{
 					auto asset = seri::asset::AssetManager::GetAssetByID<seri::Model>(_selectedAsset.id);
 					ImGui::Text(fmt::format("mesh: {}", asset->id).c_str());
+					ImGui::Text(fmt::format("material count: {}", asset->materialCount).c_str());
+					for (auto& mesh : asset->meshes)
+					{
+						ImGui::Text(fmt::format(" mesh: {}, mat: {}", mesh->name, mesh->materialIndex).c_str());
+					}
 				}
 				break;
 			default:
@@ -392,6 +485,88 @@ namespace seri::editor
 				}
 				break;
 		}
+	}
+
+	bool EditorGUI::ShowEditorAssetPickerPopup(seri::asset::AssetType type, uint64_t& match)
+	{
+		match = 0;
+
+		if (!ImGui::BeginPopup("AssetPicker"))
+		{
+			return false;
+		}
+
+		static char search[64]{};
+
+		ImGui::InputText("Search", search, sizeof(search));
+		ImGui::Separator();
+
+		const float size = 64.0f;
+		int columnCount = int(ImGui::GetContentRegionAvail().x / size);
+		ImGui::Columns(columnCount > 0 ? columnCount : 1);
+
+		const auto MatchesSearch = [](std::string_view name, std::string_view search) -> bool
+			{
+				if (search.empty())
+				{
+					return true;
+				}
+				auto it = std::search(name.begin(), name.end(), search.begin(), search.end(),
+					[](char a, char b)
+					{
+						return std::tolower(a) == std::tolower(b);
+					}
+				);
+				return it != name.end();
+			};
+
+		for (auto assetMetadata : seri::asset::AssetManager::GetAssetsByType(type))
+		{
+			if (!MatchesSearch(assetMetadata.name, search))
+			{
+				continue;
+			}
+
+			ImGui::PushID(assetMetadata.id);
+
+			switch (assetMetadata.type)
+			{
+				case seri::asset::AssetType::texture:
+					{
+						auto asset = seri::asset::AssetManager::GetAssetByID<seri::TextureBase>(assetMetadata.id);
+
+						if (ShowEditorImageButton(asset, size))
+						{
+							match = assetMetadata.id;
+							ImGui::CloseCurrentPopup();
+							ImGui::PopID();
+							ImGui::EndPopup();
+							return true;
+						}
+					}
+					break;
+			}
+
+			ImGui::TextWrapped("%s", assetMetadata.name.c_str());
+			ImGui::NextColumn();
+			ImGui::PopID();
+		}
+
+		ImGui::Columns(1);
+		ImGui::EndPopup();
+		return false;
+	}
+
+	void EditorGUI::ShowEditorImage(std::shared_ptr<seri::TextureBase>& texture, float size)
+	{
+		auto tex = (ImTextureID)(intptr_t)texture->GetHandle();
+		ImGui::Image(tex, { size, size }, { 0, 1 }, { 1, 0 });
+	}
+
+	bool EditorGUI::ShowEditorImageButton(std::shared_ptr<seri::TextureBase>& texture, float size)
+	{
+		auto tex = (ImTextureID)(intptr_t)texture->GetHandle();
+		return ImGui::ImageButton(fmt::format("tex##{}", texture->id).c_str(), tex, { size, size }, { 0, 1 }, { 1, 0 });
 	}
 
 	void EditorGUI::ShowEditorProject()
