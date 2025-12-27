@@ -65,7 +65,7 @@ namespace seri
 		{
 			auto& predef = GetInstance().Get(name);
 			auto shader = ShaderBase::Create();
-			shader->Init(predef.vsCode.c_str(), predef.fsCode.c_str(), /*readFromFile*/ false);
+			shader->Init(predef.vsCode.c_str(), predef.fsCode.c_str());
 			return shader;
 		}
 

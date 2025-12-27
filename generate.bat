@@ -11,7 +11,6 @@ call git --git-dir seri/vendor/sdl/.git switch --detach release-3.2.20
 call git --git-dir seri/vendor/entt/.git switch --detach v3.16.0
 call git --git-dir seri/vendor/yaml-cpp/.git switch --detach 0.8.0
 call git --git-dir seri/vendor/fmt/.git switch --detach 12.1.0
-call git --git-dir seri/vendor/filewatch/.git switch --detach master
 call git --git-dir seri/vendor/efsw/.git switch --detach master
 call git --git-dir seri/vendor/lua/.git switch --detach v5.4.8
 call git --git-dir seri/vendor/sol2/.git switch --detach master

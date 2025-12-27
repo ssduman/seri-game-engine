@@ -5,8 +5,6 @@
 
 #include <glad/gl.h>
 
-#include <string>
-
 namespace seri
 {
 	class ShaderOpenGL : public ShaderBase
@@ -18,13 +16,21 @@ namespace seri
 			std::string vsCode = Util::GetContentOfToken(shaderText, "#beg_vs", "#end_vs");
 			std::string fsCode = Util::GetContentOfToken(shaderText, "#beg_fs", "#end_fs");
 
-			Init(vsCode.c_str(), fsCode.c_str(), /*readFromFile*/ false);
+			Build(vsCode, fsCode);
 		}
 
-		void Init(const char* vsCodePath, const char* fsCodePath, bool readFromFile = true) override
+		void Init(const std::string& vsCode, const std::string& fsCode) override
 		{
-			unsigned int vertexShader = CompileShader(GL_VERTEX_SHADER, vsCodePath, readFromFile);
-			unsigned int fragmentShader = CompileShader(GL_FRAGMENT_SHADER, fsCodePath, readFromFile);
+			Build(vsCode, fsCode);
+		}
+
+		void Build(const std::string& vsCode, const std::string& fsCode) override
+		{
+			_vsCode = vsCode;
+			_fsCode = fsCode;
+
+			unsigned int vertexShader = CompileShader(GL_VERTEX_SHADER, _vsCode.c_str());
+			unsigned int fragmentShader = CompileShader(GL_FRAGMENT_SHADER, _fsCode.c_str());
 
 			_program = glCreateProgram();
 			glAttachShader(_program, vertexShader);
@@ -102,34 +108,20 @@ namespace seri
 			glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, &value[0][0]);
 		}
 
-		int GetUniformLocation(const std::string& name)
+		std::shared_ptr<ShaderBase> Clone() override
 		{
-			return glGetUniformLocation(_program, name.c_str());
-		}
-
-		unsigned int GetProgram()
-		{
-			return _program;
-		}
-
-		const unsigned int GetProgram() const
-		{
-			return _program;
+			auto shader = ShaderBase::Create();
+			shader->Init(_vsCode.c_str(), _fsCode.c_str());
+			shader->id = id;
+			return shader;
 		}
 
 	private:
-		unsigned int CompileShader(GLenum type, const char* code, bool readFromFile)
+		unsigned int CompileShader(GLenum type, const char* code)
 		{
 			unsigned int shader = glCreateShader(type);
 
-			auto codeCStr = code;
-			std::string codeStr;
-			if (readFromFile)
-			{
-				codeStr = Util::ReadFileAtPath(code);
-				codeCStr = codeStr.c_str();
-			}
-			glShaderSource(shader, 1, &codeCStr, nullptr);
+			glShaderSource(shader, 1, &code, nullptr);
 			glCompileShader(shader);
 
 			CheckShaderCompilationError(shader);
@@ -171,6 +163,11 @@ namespace seri
 		{
 			glDeleteProgram(_program);
 			_program = 0;
+		}
+
+		int GetUniformLocation(const std::string& name)
+		{
+			return glGetUniformLocation(_program, name.c_str());
 		}
 
 		unsigned int _program{ 0 };

@@ -26,37 +26,4 @@ namespace seri::asset
 				break;
 		}
 	}
-
-	AssetWatcher2::AssetWatcher2(const std::filesystem::path& watchPath) : _watchPath(watchPath)
-	{
-	}
-
-	void AssetWatcher2::Start()
-	{
-		LOGGER(info, fmt::format("[asset_watcher] starting watch for path: '{}'", _watchPath.string()));
-
-		_watcher = std::make_shared<filewatch::FileWatch<std::string>>(
-			_watchPath.string(), [&](const std::filesystem::path& path, const filewatch::Event event)
-			{
-				LOGGER(info, fmt::format("[asset_watcher] path: '{}', change: '{}'", path.string(), filewatch::event_to_string(event)));
-
-				switch (event)
-				{
-					case filewatch::Event::added:
-						break;
-					case filewatch::Event::removed:
-						break;
-					case filewatch::Event::modified:
-						break;
-					case filewatch::Event::renamed_old:
-						break;
-					case filewatch::Event::renamed_new:
-						break;
-				};
-
-				//seri::asset::AssetManager::GetInstance().UpdateAssetTree();
-			}
-		);
-	}
-
 }

@@ -8,6 +8,45 @@
 
 namespace seri::asset
 {
+	void asset::AssetManager::Save()
+	{
+		for (const auto& kv : _assetMetadataCache)
+		{
+			uint64_t id = kv.first;
+			seri::asset::AssetMetadata metadata = kv.second;
+
+			switch (metadata.type)
+			{
+				case seri::asset::AssetType::material:
+					{
+						std::shared_ptr<Material> material;
+						if (_assetCache.find(id) != _assetCache.end())
+						{
+							material = std::dynamic_pointer_cast<Material>(_assetCache[id]);
+						}
+						else
+						{
+							LOGGER(error, fmt::format("[asset] could not found material {} to save", id));
+							break;
+						}
+
+						seri::asset::IDInfo idInfo{
+							.id = id,
+							.version = "0.1"
+						};
+
+						YAML::Node root;
+						root["IDInfo"] = seri::asset::IDInfo::Serialize(idInfo);
+						root["Material"] = seri::asset::MaterialAsset::Serialize(material);
+
+						std::ofstream fout(metadata.source);
+						fout << root;
+					}
+					break;
+			}
+		}
+	}
+
 	void asset::AssetManager::InitDefaultAssets()
 	{
 	}
@@ -94,6 +133,11 @@ namespace seri::asset
 							outfile << root;
 						}
 					}
+				}
+
+				if (node.isMeta)
+				{
+					continue;
 				}
 
 				seri::asset::AssetMetadata assetMetadata = seri::asset::AssetMetadata{
@@ -229,6 +273,7 @@ namespace seri::asset
 						if (material->shaderID != 0)
 						{
 							material->shader = std::dynamic_pointer_cast<ShaderBase>(GetShader(_assetMetadataCache[material->shaderID]));
+							material->shader = material->shader->Clone();
 							material->shaderID = 0;
 						}
 

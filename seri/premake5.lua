@@ -61,7 +61,6 @@ project "Seri"
     "%{IncludeDir.entt}",
     "%{IncludeDir.yamlcpp}",
     "%{IncludeDir.fmt}",
-    "%{IncludeDir.filewatch}",
     "%{IncludeDir.efsw}",
     "%{IncludeDir.lua}",
     "%{IncludeDir.sol2}",

@@ -72,6 +72,10 @@ namespace seri::asset
 			YAML::Node mat4sNode;
 			for (const auto& kv : material->GetMats())
 			{
+				if (kv.first.starts_with("u_bones"))
+				{
+					continue;
+				}
 				mat4sNode[kv.first] = YAMLUtil::Mat4ToYAML(kv.second);
 			}
 			node["Mat4s"] = mat4sNode;
@@ -79,9 +83,9 @@ namespace seri::asset
 			YAML::Node texturesNode;
 			for (const auto& kv : material->GetTextures())
 			{
-				mat4sNode[kv.first] = kv.second->id;
+				texturesNode[kv.first] = kv.second->id;
 			}
-			node["Textures"] = mat4sNode;
+			node["Textures"] = texturesNode;
 
 			node["ShaderID"] = material->shader != nullptr ? material->shader->id : 0;
 

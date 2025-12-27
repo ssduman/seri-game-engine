@@ -38,10 +38,6 @@
 	path = seri/vendor/fmt
 	url = https://github.com/fmtlib/fmt
 	ignore = dirty
-[submodule "seri/vendor/filewatch"]
-	path = seri/vendor/filewatch
-	url = https://github.com/ThomasMonkman/filewatch.git
-	ignore = dirty
 [submodule "seri/vendor/efsw"]
 	path = seri/vendor/efsw
 	url = https://github.com/SpartanJ/efsw

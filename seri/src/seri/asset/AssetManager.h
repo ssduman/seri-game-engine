@@ -120,6 +120,7 @@ namespace seri::asset
 			return nullptr;
 		}
 
+		void Save();
 		void InitDefaultAssets();
 		void UpdateAssetTree();
 		void LoadAfterUpdate();

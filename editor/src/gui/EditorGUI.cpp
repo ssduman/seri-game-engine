@@ -88,6 +88,7 @@ namespace seri::editor
 		if (io.KeyCtrl && ImGui::IsKeyPressed(ImGuiKey_S))
 		{
 			seri::scene::SceneManager::GetActiveScene()->Save();
+			seri::asset::AssetManager::GetInstance().Save();
 		}
 	}
 

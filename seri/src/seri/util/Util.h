@@ -25,6 +25,7 @@
 #include <iostream>
 #include <algorithm>
 #include <stdexcept>
+#include <string_view>
 #include <unordered_map>
 
 namespace seri
