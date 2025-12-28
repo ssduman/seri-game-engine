@@ -10,8 +10,8 @@ Material:
     SetFloat1: 1
     SetFloat2: 3
   Float2s:
-    SetFloat22: [22, 22]
     SetFloat2: [2, 2]
+    SetFloat22: [22, 22]
   Float3s:
     SetFloat3: [3, 3, 3]
     u_light_dir: [0, 0, -1]
@@ -31,5 +31,5 @@ Material:
       - [0, 0, 5, 0]
       - [0, 0, 0, 5]
   Textures:
-    u_texture: 7353807435475845965
+    u_texture: 15745590776061413606
   ShaderID: 3566850448792701980

@@ -111,6 +111,15 @@ namespace seri::asset
 			return assets;
 		}
 
+		static std::string GetAssetName(uint64_t id)
+		{
+			if (GetInstance()._assetMetadataCache.find(id) != GetInstance()._assetMetadataCache.end())
+			{
+				return GetInstance()._assetMetadataCache[id].name;
+			}
+			return "<not_found>";
+		}
+
 		template<typename T>
 		static std::shared_ptr<T> GetAssetByID(uint64_t id)
 		{

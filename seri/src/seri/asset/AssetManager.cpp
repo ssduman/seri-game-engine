@@ -320,11 +320,12 @@ namespace seri::asset
 
 						for (auto& textureData : material->textureIDs)
 						{
+							std::shared_ptr<TextureBase> texture = nullptr;
 							if (textureData.id != 0)
 							{
-								std::shared_ptr<TextureBase> texture = std::dynamic_pointer_cast<TextureBase>(GetTexture(_assetMetadataCache[textureData.id]));
-								material->SetTexture(textureData.name, texture);
+								texture = std::dynamic_pointer_cast<TextureBase>(GetTexture(_assetMetadataCache[textureData.id]));
 							}
+							material->SetTexture(textureData.name, texture);
 						}
 						material->textureIDs = {};
 					}

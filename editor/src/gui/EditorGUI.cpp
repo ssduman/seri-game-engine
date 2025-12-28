@@ -447,15 +447,60 @@ namespace seri::editor
 
 		if (auto* meshComp = registry.try_get<seri::component::MeshComponent>(entity))
 		{
+			ImGui::PushID("mesh");
+
 			ImGui::Text(fmt::format("mesh id: {}", meshComp->meshAssetId).c_str());
+			ImGui::SameLine();
+
+			std::string name = meshComp->meshAssetId != 0 ? seri::asset::AssetManager::GetAssetName(meshComp->meshAssetId) : "<none>";
+			if (ImGui::Button(name.c_str()))
+			{
+				ImGui::OpenPopup("AssetPickerPopup");
+			}
+
+			bool selected = false;
+			uint64_t selection = 0;
+			if (ShowEditorAssetPickerPopup(seri::asset::AssetType::mesh, selected, selection))
+			{
+				if (selected)
+				{
+					scene->SetAsDirty();
+					meshComp->meshAssetId = selection;
+				}
+			}
+
+			ImGui::PopID();
 
 			ImGui::Separator();
 		}
 
 		if (auto* meshRendererComp = registry.try_get<seri::component::MeshRendererComponent>(entity))
 		{
-			ImGui::Text(fmt::format("material id: {}", meshRendererComp->materialAssetId).c_str());
+			ImGui::PushID("meshrenderer");
+
 			ImGui::Checkbox(fmt::format("cast shadow: {}", meshRendererComp->castShadow).c_str(), &meshRendererComp->castShadow);
+
+			ImGui::Text(fmt::format("material id: {}", meshRendererComp->materialAssetId).c_str());
+			ImGui::SameLine();
+
+			std::string name = meshRendererComp->materialAssetId != 0 ? seri::asset::AssetManager::GetAssetName(meshRendererComp->materialAssetId) : "<none>";
+			if (ImGui::Button(name.c_str()))
+			{
+				ImGui::OpenPopup("AssetPickerPopup");
+			}
+
+			bool selected = false;
+			uint64_t selection = 0;
+			if (ShowEditorAssetPickerPopup(seri::asset::AssetType::material, selected, selection))
+			{
+				if (selected)
+				{
+					scene->SetAsDirty();
+					meshRendererComp->materialAssetId = selection;
+				}
+			}
+
+			ImGui::PopID();
 
 			ImGui::Separator();
 		}
@@ -478,17 +523,25 @@ namespace seri::editor
 					ImGui::Text(fmt::format("shader: {}", asset->shader->id).c_str());
 					for (auto& tex : asset->GetTextures())
 					{
-						ImGui::Text(fmt::format(" tex: {} -> {}", tex.first, tex.second->id).c_str());
-						if (ShowEditorImageButton(tex.second, 64.0f))
+						ImGui::Text(fmt::format(" tex: {} -> {}", tex.first, tex.second ? tex.second->id : 0).c_str());
+						if (tex.second == nullptr)
+						{
+							if (ImGui::Button("<none>"))
+							{
+								ImGui::OpenPopup("AssetPickerPopup");
+							}
+						}
+						else if (ShowEditorImageButton(tex.second, 64.0f))
 						{
 							ImGui::OpenPopup("AssetPickerPopup");
 						}
-						uint64_t match = 0;
-						if (ShowEditorAssetPickerPopup(seri::asset::AssetType::texture, match))
+						bool selected = false;
+						uint64_t selection = 0;
+						if (ShowEditorAssetPickerPopup(seri::asset::AssetType::texture, selected, selection))
 						{
-							if (match != 0)
+							if (selected)
 							{
-								auto newTexture = seri::asset::AssetManager::GetAssetByID<seri::TextureBase>(match);
+								auto newTexture = seri::asset::AssetManager::GetAssetByID<seri::TextureBase>(selection);
 								asset->SetTexture(tex.first, newTexture);
 							}
 						}
@@ -560,9 +613,10 @@ namespace seri::editor
 		}
 	}
 
-	bool EditorGUI::ShowEditorAssetPickerPopup(seri::asset::AssetType type, uint64_t& match)
+	bool EditorGUI::ShowEditorAssetPickerPopup(seri::asset::AssetType type, bool& selected, uint64_t& selection)
 	{
-		match = 0;
+		selected = false;
+		selection = 0;
 
 		if (!ImGui::BeginPopup("AssetPickerPopup"))
 		{
@@ -570,13 +624,20 @@ namespace seri::editor
 		}
 
 		static char search[64]{};
+		const float size = 64.0f;
 
 		ImGui::InputText("Search", search, sizeof(search));
 		ImGui::Separator();
 
-		const float size = 64.0f;
-		int columnCount = int(ImGui::GetContentRegionAvail().x / size);
-		ImGui::Columns(columnCount > 0 ? columnCount : 1);
+		switch (type)
+		{
+			case seri::asset::AssetType::texture:
+				{
+					int columnCount = int(ImGui::GetContentRegionAvail().x / size);
+					ImGui::Columns(columnCount > 0 ? columnCount : 1);
+				}
+				break;
+		}
 
 		const auto MatchesSearch = [](std::string_view name, std::string_view search) -> bool
 			{
@@ -593,7 +654,14 @@ namespace seri::editor
 				return it != name.end();
 			};
 
-		for (auto assetMetadata : seri::asset::AssetManager::GetAssetsByType(type))
+		seri::asset::AssetMetadata noneAsset{
+			.id = 0,
+			.name = "<none>"
+		};
+		auto assetMedataList = seri::asset::AssetManager::GetAssetsByType(type);
+		assetMedataList.emplace_back(noneAsset);
+
+		for (auto assetMetadata : assetMedataList)
 		{
 			if (!MatchesSearch(assetMetadata.name, search))
 			{
@@ -601,6 +669,11 @@ namespace seri::editor
 			}
 
 			ImGui::PushID(assetMetadata.id);
+
+			if (assetMetadata.id == 0)
+			{
+				assetMetadata.type = seri::asset::AssetType::none;
+			}
 
 			switch (assetMetadata.type)
 			{
@@ -610,22 +683,47 @@ namespace seri::editor
 
 						if (ShowEditorImageButton(asset, size))
 						{
-							match = assetMetadata.id;
+							selected = true;
+							selection = assetMetadata.id;
 							ImGui::CloseCurrentPopup();
 							ImGui::PopID();
 							ImGui::EndPopup();
+							search[0] = '\0';
+							return true;
+						}
+
+						ImGui::TextWrapped("%s", assetMetadata.name.c_str());
+						ImGui::NextColumn();
+					}
+					break;
+				default:
+					{
+						if (ImGui::Selectable(assetMetadata.name.c_str()))
+						{
+							selected = true;
+							selection = assetMetadata.id;
+							ImGui::CloseCurrentPopup();
+							ImGui::PopID();
+							ImGui::EndPopup();
+							search[0] = '\0';
 							return true;
 						}
 					}
 					break;
 			}
 
-			ImGui::TextWrapped("%s", assetMetadata.name.c_str());
-			ImGui::NextColumn();
 			ImGui::PopID();
 		}
 
-		ImGui::Columns(1);
+		switch (type)
+		{
+			case seri::asset::AssetType::texture:
+				{
+					ImGui::Columns(1);
+				}
+				break;
+		}
+
 		ImGui::EndPopup();
 		return false;
 	}

@@ -16,9 +16,9 @@ Entities:
         Rotation: [0, 0, 0]
         Scale: [2, 2, 2]
       MeshComponent:
-        MeshAssetID: 0
+        MeshAssetID: 9345235014830943464
       MeshRendererComponent:
-        MaterialAssetID: 0
+        MaterialAssetID: 5128232576114054222
         CastShadow: false
   - Entity:
       IDComponent:

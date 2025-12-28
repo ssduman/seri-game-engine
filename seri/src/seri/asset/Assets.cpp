@@ -88,7 +88,7 @@ namespace seri::asset
 		YAML::Node texturesNode;
 		for (const auto& kv : asset->GetTextures())
 		{
-			texturesNode[kv.first] = kv.second->id;
+			texturesNode[kv.first] = kv.second ? kv.second->id : 0;
 		}
 		root["Textures"] = texturesNode;
 
