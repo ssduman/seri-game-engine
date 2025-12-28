@@ -70,6 +70,11 @@ namespace seri
 			std::transform(s.begin(), s.end(), s.begin(), [](unsigned char c) { return std::tolower(c); });
 		}
 
+		static glm::quat ToQuaternion(const glm::vec3& euler)
+		{
+			return glm::quat(glm::radians(euler));
+		}
+
 		static glm::mat4 GetTRS(const glm::vec3& pos, const glm::quat& rot, const glm::vec3& scale)
 		{
 			glm::mat4 T = glm::translate(glm::mat4{ 1.0f }, pos);
@@ -80,7 +85,7 @@ namespace seri
 
 		static glm::mat4 GetTRS(const glm::vec3& pos, const glm::vec3& euler, const glm::vec3& scale)
 		{
-			return GetTRS(pos, glm::quat(glm::radians(euler)), scale);
+			return GetTRS(pos, ToQuaternion(euler), scale);
 		}
 
 		static glm::mat4 GetIdentityMatrix()

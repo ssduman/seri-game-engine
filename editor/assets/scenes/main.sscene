@@ -14,9 +14,9 @@ Entities:
       TransformComponent:
         Position: [1, 0, 0]
         Rotation: [0, 0, 0]
-        Scale: [2, 2, 2]
+        Scale: [1, 1, 1]
       MeshComponent:
-        MeshAssetID: 9345235014830943464
+        MeshAssetID: 17928092336128327075
       MeshRendererComponent:
         MaterialAssetID: 5128232576114054222
         CastShadow: false

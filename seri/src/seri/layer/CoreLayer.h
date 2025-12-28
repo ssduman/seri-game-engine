@@ -17,6 +17,8 @@
 #include "seri/event/EventCallback.h"
 #include "seri/event/EventDispatcher.h"
 #include "seri/scripting/ScriptingManager.h"
+#include "seri/system/TransformSystem.h"
+#include "seri/system/MeshRendererSystem.h"
 
 namespace seri
 {
@@ -118,6 +120,9 @@ namespace seri
 
 			seri::asset::AssetManager::Update();
 			seri::scene::SceneManager::Update();
+
+			seri::system::TransformSystem::Update();
+			seri::system::MeshRendererSystem::Update();
 			seri::scripting::ScriptingManager::Update();
 
 			seri::BehaviourManager::UpdateBehaviours();
