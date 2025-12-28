@@ -13,16 +13,16 @@ namespace seri::asset
 		switch (action)
 		{
 			case efsw::Actions::Add:
-				LOGGER(info, fmt::format("[asset_watcher] dir: '{}', file: '{}' added", dir, filename));
+				//LOGGER(info, fmt::format("[asset_watcher] dir: '{}', file: '{}' added", dir, filename));
 				break;
 			case efsw::Actions::Delete:
-				LOGGER(info, fmt::format("[asset_watcher] dir: '{}', file: '{}' deleted", dir, filename));
+				//LOGGER(info, fmt::format("[asset_watcher] dir: '{}', file: '{}' deleted", dir, filename));
 				break;
 			case efsw::Actions::Modified:
-				LOGGER(info, fmt::format("[asset_watcher] dir: '{}', file: '{}' modified", dir, filename));
+				//LOGGER(info, fmt::format("[asset_watcher] dir: '{}', file: '{}' modified", dir, filename));
 				break;
 			case efsw::Actions::Moved:
-				LOGGER(info, fmt::format("[asset_watcher] dir: '{}', file: '{}' moved to: '{}'", dir, oldFilename, filename));
+				//LOGGER(info, fmt::format("[asset_watcher] dir: '{}', file: '{}' moved to: '{}'", dir, oldFilename, filename));
 				break;
 		}
 	}

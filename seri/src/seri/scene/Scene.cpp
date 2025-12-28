@@ -37,14 +37,6 @@ namespace seri::scene
 		std::vector<uint64_t> ids{};
 		GetAllEntityIDs(ids);
 
-		YAML::Node root;
-
-		YAML::Node sceneNode;
-		sceneNode["IDComponent"] = seri::component::IDComponent::Serialize(_idComponent);
-		sceneNode["SceneComponent"] = seri::component::SceneComponent::Serialize(_sceneComponent);
-
-		root["Scene"] = sceneNode;
-
 		YAML::Node entitiesNode;
 		for (uint64_t id : ids)
 		{
@@ -67,10 +59,15 @@ namespace seri::scene
 
 			entitiesNode.push_back(entityNode);
 		}
-		sceneNode["Entities"] = entitiesNode;
+
+		YAML::Node root;
+		root["IDComponent"] = seri::component::IDComponent::Serialize(_idComponent);
+		root["SceneComponent"] = seri::component::SceneComponent::Serialize(_sceneComponent);
+		root["Entities"] = entitiesNode;
 
 		std::ofstream fout(file);
 		fout << root;
+		fout.flush();
 
 		_isDirty = false;
 
@@ -83,23 +80,21 @@ namespace seri::scene
 
 		YAML::Node root = YAML::LoadFile(file);
 
-		if (!root["Scene"] || !root["Scene"].IsMap())
+		if (!root["SceneComponent"] || !root["SceneComponent"].IsMap())
 		{
 			LOGGER(error, fmt::format("[scene] failed to deserialize scene from file: {}", file));
 			return;
 		}
 
-		YAML::Node sceneNode = root["Scene"];
-
-		_idComponent = seri::component::IDComponent::Deserialize(sceneNode["IDComponent"]);
-		_sceneComponent = seri::component::SceneComponent::Deserialize(sceneNode["SceneComponent"]);
+		_idComponent = seri::component::IDComponent::Deserialize(root["IDComponent"]);
+		_sceneComponent = seri::component::SceneComponent::Deserialize(root["SceneComponent"]);
 
 		_entityMap.clear();
 		_sceneTreeRoot = SceneTreeNode{};
 
 		auto& registry = seri::scene::SceneManager::GetRegistry();
 
-		if (YAML::Node entities = sceneNode["Entities"])
+		if (YAML::Node entities = root["Entities"])
 		{
 			for (auto entityItem : entities)
 			{

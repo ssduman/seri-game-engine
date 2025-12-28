@@ -10,6 +10,7 @@
 #include "seri/component/Components.h"
 #include "seri/graphic/Model.h"
 #include "seri/model/ModelImporter.h"
+#include "seri/shader/ShaderBase.h"
 
 #include <entt/entt.hpp>
 #include <efsw/efsw.hpp>

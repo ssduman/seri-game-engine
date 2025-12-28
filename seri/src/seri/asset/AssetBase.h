@@ -31,11 +31,7 @@ namespace seri::asset
 	class AssetBase
 	{
 	public:
-		~AssetBase() = default;
-
-		virtual void Copy()
-		{
-		}
+		virtual ~AssetBase() = default;
 
 		uint64_t id{ 0 };
 		AssetType type{ AssetType::none };

@@ -10,8 +10,8 @@ Material:
     SetFloat1: 1
     SetFloat2: 3
   Float2s:
-    SetFloat2: [2, 2]
     SetFloat22: [22, 22]
+    SetFloat2: [2, 2]
   Float3s:
     SetFloat3: [3, 3, 3]
     u_light_dir: [0, 0, -1]
