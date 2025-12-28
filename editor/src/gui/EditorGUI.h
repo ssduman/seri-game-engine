@@ -45,6 +45,12 @@ namespace seri::editor
 			asset,
 		};
 
+		struct ComponentInfo
+		{
+			std::string name;
+			std::function<void(uint64_t id)> AddComponent;
+		};
+
 		void SetIO()
 		{
 			auto& io = ImGui::GetIO();
@@ -85,7 +91,8 @@ namespace seri::editor
 		void ShowEditorProject();
 		void ShowEditorProjectFolderTree(seri::asset::AssetTreeNode& node);
 		void ShowEditorProjectAssetGrid();
-		
+
+		void ShowEditorComponentPickerPopup();
 		bool ShowEditorAssetPickerPopup(seri::asset::AssetType type, uint64_t& match);
 
 		void ShowEditorImage(std::shared_ptr<seri::TextureBase>& texture, float size);
@@ -98,6 +105,8 @@ namespace seri::editor
 
 		seri::asset::AssetTreeNode* _selectedFolder{ nullptr };
 		seri::asset::AssetTreeNode _selectedAsset{};
+
+		std::vector<ComponentInfo> _componentInfos{};
 
 	};
 }

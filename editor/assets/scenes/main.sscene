@@ -15,6 +15,11 @@ Entities:
         Position: [1, 0, 0]
         Rotation: [0, 0, 0]
         Scale: [2, 2, 2]
+      MeshComponent:
+        MeshAssetID: 0
+      MeshRendererComponent:
+        MaterialAssetID: 0
+        CastShadow: false
   - Entity:
       IDComponent:
         ID: 125

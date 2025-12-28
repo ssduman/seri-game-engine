@@ -37,6 +37,23 @@ namespace seri::editor
 #endif
 
 		ImGui_ImplOpenGL3_Init("#version 460");
+
+		_componentInfos = {
+			{
+				"MeshComponent",
+				[](uint64_t id)
+				{
+					seri::scene::SceneManager::GetActiveScene()->AddComponentToEntity(id, seri::component::MeshComponent{});
+				}
+			},
+			{
+				"MeshRendererComponent",
+				[](uint64_t id)
+				{
+					seri::scene::SceneManager::GetActiveScene()->AddComponentToEntity(id, seri::component::MeshRendererComponent{});
+				}
+			},
+		};
 	}
 
 	void EditorGUI::Update()
@@ -401,32 +418,53 @@ namespace seri::editor
 
 		auto entity = scene->GetEntityByID(_selectedEntityId);
 
-		if (auto* idComponent = registry.try_get<seri::component::IDComponent>(entity))
+		if (auto* idComp = registry.try_get<seri::component::IDComponent>(entity))
 		{
-			ImGui::Text(fmt::format("id: {}", idComponent->id).c_str());
-			ImGui::Text(fmt::format("parent id: {}", idComponent->parentId).c_str());
-			ImGui::Text(fmt::format("name: {}", idComponent->name.c_str()).c_str());
+			ImGui::Text(fmt::format("id: {}", idComp->id).c_str());
+			ImGui::Text(fmt::format("parent id: {}", idComp->parentId).c_str());
+			ImGui::Text(fmt::format("name: {}", idComp->name.c_str()).c_str());
 
 			char buffer[256];
 			memset(buffer, 0, sizeof(buffer));
-			strncpy_s(buffer, idComponent->name.c_str(), sizeof(buffer) - 1);
+			strncpy_s(buffer, idComp->name.c_str(), sizeof(buffer) - 1);
 			if (ImGui::InputText("name", buffer, sizeof(buffer)))
 			{
-				idComponent->name = std::string{ buffer };
+				idComp->name = std::string{ buffer };
 				scene->SetAsDirty();
 			}
 
 			ImGui::Separator();
 		}
 
-		if (auto* transformComponent = registry.try_get<seri::component::TransformComponent>(entity))
+		if (auto* transformComp = registry.try_get<seri::component::TransformComponent>(entity))
 		{
-			ImGui::InputFloat3("position", &transformComponent->position[0]);
-			ImGui::InputFloat3("rotation", &transformComponent->rotation[0]);
-			ImGui::InputFloat3("scale", &transformComponent->scale[0]);
+			ImGui::InputFloat3("position", &transformComp->position[0]);
+			ImGui::InputFloat3("rotation", &transformComp->rotation[0]);
+			ImGui::InputFloat3("scale", &transformComp->scale[0]);
 
 			ImGui::Separator();
 		}
+
+		if (auto* meshComp = registry.try_get<seri::component::MeshComponent>(entity))
+		{
+			ImGui::Text(fmt::format("mesh id: {}", meshComp->meshAssetId).c_str());
+
+			ImGui::Separator();
+		}
+
+		if (auto* meshRendererComp = registry.try_get<seri::component::MeshRendererComponent>(entity))
+		{
+			ImGui::Text(fmt::format("material id: {}", meshRendererComp->materialAssetId).c_str());
+			ImGui::Checkbox(fmt::format("cast shadow: {}", meshRendererComp->castShadow).c_str(), &meshRendererComp->castShadow);
+
+			ImGui::Separator();
+		}
+
+		if (ImGui::Button("Add Component", ImVec2(-1, 0)))
+		{
+			ImGui::OpenPopup("AddComponentPopup");
+		}
+		ShowEditorComponentPickerPopup();
 	}
 
 	void EditorGUI::ShowEditorInspectorAsset()
@@ -443,7 +481,7 @@ namespace seri::editor
 						ImGui::Text(fmt::format(" tex: {} -> {}", tex.first, tex.second->id).c_str());
 						if (ShowEditorImageButton(tex.second, 64.0f))
 						{
-							ImGui::OpenPopup("AssetPicker");
+							ImGui::OpenPopup("AssetPickerPopup");
 						}
 						uint64_t match = 0;
 						if (ShowEditorAssetPickerPopup(seri::asset::AssetType::texture, match))
@@ -488,11 +526,45 @@ namespace seri::editor
 		}
 	}
 
+	void EditorGUI::ShowEditorComponentPickerPopup()
+	{
+		static char search[128] = "";
+
+		if (ImGui::BeginPopup("AddComponentPopup"))
+		{
+			ImGui::TextUnformatted("Add Component");
+			ImGui::Separator();
+
+			ImGui::InputTextWithHint("##Search", "Search components...", search, IM_ARRAYSIZE(search));
+
+			ImGui::Spacing();
+
+			for (const auto& info : _componentInfos)
+			{
+				if (search[0] != '\0' && info.name.find(search) == std::string::npos)
+				{
+					continue;
+				}
+
+				ImGui::PushID(info.name.c_str());
+				if (ImGui::Selectable(info.name.c_str()))
+				{
+					info.AddComponent(_selectedEntityId);
+					ImGui::CloseCurrentPopup();
+					search[0] = '\0';
+				}
+				ImGui::PopID();
+			}
+
+			ImGui::EndPopup();
+		}
+	}
+
 	bool EditorGUI::ShowEditorAssetPickerPopup(seri::asset::AssetType type, uint64_t& match)
 	{
 		match = 0;
 
-		if (!ImGui::BeginPopup("AssetPicker"))
+		if (!ImGui::BeginPopup("AssetPickerPopup"))
 		{
 			return false;
 		}

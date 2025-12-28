@@ -44,14 +44,24 @@ namespace seri::scene
 
 			YAML::Node entityDataNode;
 
-			if (auto* idComponent = registry.try_get<seri::component::IDComponent>(entity))
+			if (auto* idComp = registry.try_get<seri::component::IDComponent>(entity))
 			{
-				entityDataNode["IDComponent"] = seri::component::IDComponent::Serialize(*idComponent);
+				entityDataNode["IDComponent"] = seri::component::IDComponent::Serialize(*idComp);
 			}
 
-			if (auto* transformComponent = registry.try_get<seri::component::TransformComponent>(entity))
+			if (auto* transformComp = registry.try_get<seri::component::TransformComponent>(entity))
 			{
-				entityDataNode["TransformComponent"] = seri::component::TransformComponent::Serialize(*transformComponent);
+				entityDataNode["TransformComponent"] = seri::component::TransformComponent::Serialize(*transformComp);
+			}
+
+			if (auto* meshComp = registry.try_get<seri::component::MeshComponent>(entity))
+			{
+				entityDataNode["MeshComponent"] = seri::component::MeshComponent::Serialize(*meshComp);
+			}
+
+			if (auto* meshRendererComp = registry.try_get<seri::component::MeshRendererComponent>(entity))
+			{
+				entityDataNode["MeshRendererComponent"] = seri::component::MeshRendererComponent::Serialize(*meshRendererComp);
 			}
 
 			YAML::Node entityNode;
@@ -116,8 +126,18 @@ namespace seri::scene
 					}
 					else if (componentName == "TransformComponent")
 					{
-						seri::component::TransformComponent transformComp = seri::component::TransformComponent::Deserialize(componentData);
+						auto transformComp = seri::component::TransformComponent::Deserialize(componentData);
 						registry.emplace_or_replace<seri::component::TransformComponent>(entity, transformComp);
+					}
+					else if (componentName == "MeshComponent")
+					{
+						auto meshComp = seri::component::MeshComponent::Deserialize(componentData);
+						registry.emplace_or_replace<seri::component::MeshComponent>(entity, meshComp);
+					}
+					else if (componentName == "MeshRendererComponent")
+					{
+						auto meshRendererComp = seri::component::MeshRendererComponent::Deserialize(componentData);
+						registry.emplace_or_replace<seri::component::MeshRendererComponent>(entity, meshRendererComp);
 					}
 					else
 					{
@@ -193,13 +213,15 @@ namespace seri::scene
 		{
 			SetAsDirty();
 
+			entt::registry& registry = seri::scene::SceneManager::GetRegistry();
+
 			entt::entity entity = seri::scene::SceneManager::CreateEntity();
 
 			seri::component::IDComponent idComp = { id, parentId, std::string{ name } };
-			seri::scene::SceneManager::GetRegistry().emplace_or_replace<seri::component::IDComponent>(entity, idComp);
+			registry.emplace_or_replace<seri::component::IDComponent>(entity, idComp);
 
 			seri::component::TransformComponent transformComp = {};
-			seri::scene::SceneManager::GetRegistry().emplace_or_replace<seri::component::TransformComponent>(entity, transformComp);
+			registry.emplace_or_replace<seri::component::TransformComponent>(entity, transformComp);
 
 			SceneTreeNode childNode{};
 			childNode.id = id;
@@ -215,6 +237,28 @@ namespace seri::scene
 		{
 			AddEntityAsChild(childNode, id, parentId, name);
 		}
+	}
+
+	void Scene::AddComponentToEntity(uint64_t id, seri::component::MeshComponent comp)
+	{
+		SetAsDirty();
+
+		entt::registry& registry = seri::scene::SceneManager::GetRegistry();
+
+		entt::entity entity = GetEntityByID(id);
+
+		registry.emplace_or_replace<seri::component::MeshComponent>(entity, comp);
+	}
+
+	void Scene::AddComponentToEntity(uint64_t id, seri::component::MeshRendererComponent comp)
+	{
+		SetAsDirty();
+
+		entt::registry& registry = seri::scene::SceneManager::GetRegistry();
+
+		entt::entity entity = GetEntityByID(id);
+
+		registry.emplace_or_replace<seri::component::MeshRendererComponent>(entity, comp);
 	}
 
 }

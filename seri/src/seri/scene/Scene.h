@@ -23,7 +23,6 @@ namespace seri::scene
 	class Scene
 	{
 	public:
-
 		class SceneManager;
 
 		Scene() = default;
@@ -88,6 +87,9 @@ namespace seri::scene
 
 		void DeleteEntity(uint64_t id);
 		void AddEntityAsChild(uint64_t id, uint64_t parentId, const std::string& name);
+
+		void AddComponentToEntity(uint64_t id, seri::component::MeshComponent comp);
+		void AddComponentToEntity(uint64_t id, seri::component::MeshRendererComponent comp);
 
 	private:
 		void GetAllEntityIDs(SceneTreeNode& node, std::vector<uint64_t>& ids);
