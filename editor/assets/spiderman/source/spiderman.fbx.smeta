@@ -1,4 +1,8 @@
-Asset:
-  IDInfo:
-    ID: 17928092336128327075
-    Version: 0.1
+IDInfo:
+  ID: 17928092336128327075
+  Version: 0.1
+Model:
+  MaterialCount: 1
+  Meshes:
+    - Name: unamedmesh
+      MaterialIndex: 0

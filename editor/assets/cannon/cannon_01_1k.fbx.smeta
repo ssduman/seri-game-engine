@@ -1,4 +1,26 @@
-Asset:
-  IDInfo:
-    ID: 8933691566797930938
-    Version: 0.1
+IDInfo:
+  ID: 8933691566797930938
+  Version: 0.1
+Model:
+  MaterialCount: 1
+  Meshes:
+    - Name: Cube.001
+      MaterialIndex: 0
+    - Name: Cube.002
+      MaterialIndex: 0
+    - Name: Cylinder.004
+      MaterialIndex: 0
+    - Name: Cylinder.005
+      MaterialIndex: 0
+    - Name: Cube.004
+      MaterialIndex: 0
+    - Name: Cube.005
+      MaterialIndex: 0
+    - Name: Cube.006
+      MaterialIndex: 0
+    - Name: Cylinder.006
+      MaterialIndex: 0
+    - Name: Cylinder.007
+      MaterialIndex: 0
+    - Name: Cylinder.008
+      MaterialIndex: 0

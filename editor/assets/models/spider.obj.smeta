@@ -1,4 +1,44 @@
-Asset:
-  IDInfo:
-    ID: 9345235014830943464
-    Version: 0.1
+IDInfo:
+  ID: 9345235014830943464
+  Version: 0.1
+Model:
+  MaterialCount: 5
+  Meshes:
+    - Name: HLeib01
+      MaterialIndex: 1
+    - Name: OK
+      MaterialIndex: 2
+    - Name: Bein1Li
+      MaterialIndex: 3
+    - Name: Bein1Re
+      MaterialIndex: 3
+    - Name: Bein2Li
+      MaterialIndex: 3
+    - Name: Bein2Re
+      MaterialIndex: 3
+    - Name: Bein3Re
+      MaterialIndex: 3
+    - Name: Bein3Li
+      MaterialIndex: 3
+    - Name: Bein4Re
+      MaterialIndex: 3
+    - Name: Bein4Li
+      MaterialIndex: 3
+    - Name: Zahn
+      MaterialIndex: 3
+    - Name: klZahn
+      MaterialIndex: 3
+    - Name: Kopf
+      MaterialIndex: 2
+    - Name: Brust
+      MaterialIndex: 2
+    - Name: Kopf2
+      MaterialIndex: 2
+    - Name: Zahn2
+      MaterialIndex: 3
+    - Name: klZahn2
+      MaterialIndex: 3
+    - Name: Auge
+      MaterialIndex: 4
+    - Name: Duplicate05
+      MaterialIndex: 4

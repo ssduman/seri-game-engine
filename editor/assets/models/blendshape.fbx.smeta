@@ -1,4 +1,8 @@
-Asset:
-  IDInfo:
-    ID: 9323182162070620571
-    Version: 0.1
+IDInfo:
+  ID: 9323182162070620571
+  Version: 0.1
+Model:
+  MaterialCount: 1
+  Meshes:
+    - Name: Cylinder
+      MaterialIndex: 0

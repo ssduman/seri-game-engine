@@ -43,6 +43,45 @@ namespace seri::asset
 						fout << root;
 					}
 					break;
+				case seri::asset::AssetType::shader:
+					{
+					}
+					break;
+				case seri::asset::AssetType::texture:
+					{
+					}
+					break;
+				case seri::asset::AssetType::mesh:
+					{
+						std::shared_ptr<Model> model;
+						if (_assetCache.find(id) != _assetCache.end())
+						{
+							model = std::dynamic_pointer_cast<Model>(_assetCache[id]);
+						}
+						else
+						{
+							LOGGER(error, fmt::format("[asset] could not found model {} to save", id));
+							break;
+						}
+
+						seri::asset::IDInfo idInfo{
+							.id = id,
+							.version = "0.1"
+						};
+
+						YAML::Node root;
+						root["IDInfo"] = seri::asset::IDInfo::Serialize(idInfo);
+						root["Model"] = seri::asset::MeshAsset::Serialize(model);
+
+						std::ofstream fout(metadata.meta);
+						fout << root;
+					}
+					break;
+				default:
+					{
+						//LOGGER(info, fmt::format("[asset] unexpected asset type for saving: {}", static_cast<int>(metadata.type)));
+					}
+					break;
 			}
 		}
 	}
@@ -111,7 +150,7 @@ namespace seri::asset
 						if (std::filesystem::exists(node.meta))
 						{
 							YAML::Node root = YAML::LoadFile(node.meta.string());
-							YAML::Node idInfoNode = root["Asset"]["IDInfo"];
+							YAML::Node idInfoNode = root["IDInfo"];
 							IDInfo idInfo = IDInfo::Deserialize(idInfoNode);
 
 							existingId = idInfo.id;
@@ -120,16 +159,14 @@ namespace seri::asset
 						{
 							existingId = seri::Random::UUID();
 
-							YAML::Node idInfoNode;
 							IDInfo idInfo;
 							idInfo.id = existingId;
 							idInfo.version = "0.1";
-							std::ofstream outfile(node.meta);
-							idInfoNode["IDInfo"] = IDInfo::Serialize(idInfo);
 
 							YAML::Node root;
-							root["Asset"] = idInfoNode;
+							root["IDInfo"] = IDInfo::Serialize(idInfo);;
 
+							std::ofstream outfile(node.meta);
 							outfile << root;
 						}
 					}
@@ -235,10 +272,14 @@ namespace seri::asset
 				}
 				if (_assetCache.find(metadata.id) == _assetCache.end())
 				{
-					std::shared_ptr<seri::Model> model = seri::ModelImporter{}.Load(metadata.source.string());
+					YAML::Node root = YAML::LoadFile(metadata.meta.string());
+
+					std::shared_ptr<seri::Model> model = seri::asset::MeshAsset::Deserialize(root["Model"], metadata);
 					model->Build();
 					model->id = metadata.id;
 					_assetCache[metadata.id] = model;
+
+					//std::shared_ptr<seri::Model> model = seri::ModelImporter{}.Load(metadata.source.string());
 				}
 				return _assetCache[metadata.id];
 			};
@@ -255,7 +296,7 @@ namespace seri::asset
 						YAML::Node rootMeta = YAML::LoadFile(metadata.meta.string());
 						YAML::Node rootSource = YAML::LoadFile(metadata.source.string());
 
-						seri::asset::IDInfo idInfo = seri::asset::IDInfo::Deserialize(rootMeta["Asset"]["IDInfo"]);
+						seri::asset::IDInfo idInfo = seri::asset::IDInfo::Deserialize(rootMeta["IDInfo"]);
 
 						std::shared_ptr<Material> material;
 						if (_assetCache.find(idInfo.id) != _assetCache.end())
@@ -304,6 +345,9 @@ namespace seri::asset
 					}
 					break;
 				default:
+					{
+						//LOGGER(info, fmt::format("[asset] unexpected asset type for loading: {}", static_cast<int>(metadata.type)));
+					}
 					break;
 			}
 		}
