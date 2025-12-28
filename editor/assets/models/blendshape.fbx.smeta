@@ -4,5 +4,6 @@ IDInfo:
 Model:
   MaterialCount: 1
   Meshes:
-    - Name: Cylinder
+    - MeshName: Cylinder
+      MaterialName: DefaultMaterial
       MaterialIndex: 0

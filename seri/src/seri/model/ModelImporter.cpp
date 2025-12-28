@@ -191,6 +191,7 @@ namespace seri
 	void ModelImporter::LoadMaterial(const aiScene* ai_scene, const aiMesh* ai_mesh, bool load, std::shared_ptr<Mesh>& mesh)
 	{
 		aiMaterial* ai_material = ai_scene->mMaterials[ai_mesh->mMaterialIndex];
+		mesh->materialName = ai_material->GetName().C_Str();
 		mesh->materialIndex = ai_mesh->mMaterialIndex;
 
 		if (load)

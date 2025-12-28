@@ -4,5 +4,6 @@ IDInfo:
 Model:
   MaterialCount: 1
   Meshes:
-    - Name: unamedmesh
+    - MeshName: unamedmesh
+      MaterialName: DefaultMaterial
       MaterialIndex: 0

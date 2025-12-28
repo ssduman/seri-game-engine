@@ -4,41 +4,60 @@ IDInfo:
 Model:
   MaterialCount: 5
   Meshes:
-    - Name: HLeib01
+    - MeshName: HLeib01
+      MaterialName: HLeibTex
       MaterialIndex: 1
-    - Name: OK
+    - MeshName: OK
+      MaterialName: Skin
       MaterialIndex: 2
-    - Name: Bein1Li
+    - MeshName: Bein1Li
+      MaterialName: BeinTex
       MaterialIndex: 3
-    - Name: Bein1Re
+    - MeshName: Bein1Re
+      MaterialName: BeinTex
       MaterialIndex: 3
-    - Name: Bein2Li
+    - MeshName: Bein2Li
+      MaterialName: BeinTex
       MaterialIndex: 3
-    - Name: Bein2Re
+    - MeshName: Bein2Re
+      MaterialName: BeinTex
       MaterialIndex: 3
-    - Name: Bein3Re
+    - MeshName: Bein3Re
+      MaterialName: BeinTex
       MaterialIndex: 3
-    - Name: Bein3Li
+    - MeshName: Bein3Li
+      MaterialName: BeinTex
       MaterialIndex: 3
-    - Name: Bein4Re
+    - MeshName: Bein4Re
+      MaterialName: BeinTex
       MaterialIndex: 3
-    - Name: Bein4Li
+    - MeshName: Bein4Li
+      MaterialName: BeinTex
       MaterialIndex: 3
-    - Name: Zahn
+    - MeshName: Zahn
+      MaterialName: BeinTex
       MaterialIndex: 3
-    - Name: klZahn
+    - MeshName: klZahn
+      MaterialName: BeinTex
       MaterialIndex: 3
-    - Name: Kopf
+    - MeshName: Kopf
+      MaterialName: Skin
       MaterialIndex: 2
-    - Name: Brust
+    - MeshName: Brust
+      MaterialName: Skin
       MaterialIndex: 2
-    - Name: Kopf2
+    - MeshName: Kopf2
+      MaterialName: Skin
       MaterialIndex: 2
-    - Name: Zahn2
+    - MeshName: Zahn2
+      MaterialName: BeinTex
       MaterialIndex: 3
-    - Name: klZahn2
+    - MeshName: klZahn2
+      MaterialName: BeinTex
       MaterialIndex: 3
-    - Name: Auge
+    - MeshName: Auge
+      MaterialName: Augentex
       MaterialIndex: 4
-    - Name: Duplicate05
+    - MeshName: Duplicate05
+      MaterialName: Augentex
       MaterialIndex: 4

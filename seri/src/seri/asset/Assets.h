@@ -60,6 +60,10 @@ namespace seri::asset
 			YAML::Node float3sNode;
 			for (const auto& kv : asset->GetFloat3s())
 			{
+				if (kv.first.starts_with("u_view_pos"))
+				{
+					continue;
+				}
 				float3sNode[kv.first] = YAMLUtil::Vec3ToYAML(kv.second);
 			}
 			root["Float3s"] = float3sNode;
@@ -74,7 +78,7 @@ namespace seri::asset
 			YAML::Node mat4sNode;
 			for (const auto& kv : asset->GetMats())
 			{
-				if (kv.first.starts_with("u_bones"))
+				if (kv.first.starts_with("u_bones") || kv.first.starts_with("u_model") || kv.first.starts_with("u_projection") || kv.first.starts_with("u_view"))
 				{
 					continue;
 				}
@@ -172,7 +176,8 @@ namespace seri::asset
 			for (const auto& mesh : model->meshes)
 			{
 				YAML::Node meshNode;
-				meshNode["Name"] = mesh->name;
+				meshNode["MeshName"] = mesh->name;
+				meshNode["MaterialName"] = mesh->materialName;
 				meshNode["MaterialIndex"] = mesh->materialIndex;
 				meshesNode.push_back(meshNode);
 			}
@@ -190,12 +195,14 @@ namespace seri::asset
 			const YAML::Node& meshesNode = root["Meshes"];
 			for (const auto& meshNode : meshesNode)
 			{
-				std::string name = YAMLUtil::DeepCopyYAMLString(meshNode["Name"]);
+				std::string meshName = YAMLUtil::DeepCopyYAMLString(meshNode["MeshName"]);
+				std::string materialName = YAMLUtil::DeepCopyYAMLString(meshNode["MaterialName"]);
 				int materialIndex = YAMLUtil::GetType<int>(meshNode["MaterialIndex"]);
 				for (const auto& mesh : asset->meshes)
 				{
-					if (mesh->name == name)
+					if (mesh->name == meshName)
 					{
+						mesh->materialName = materialName;
 						mesh->materialIndex = materialIndex;
 						break;
 					}

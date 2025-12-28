@@ -4,23 +4,33 @@ IDInfo:
 Model:
   MaterialCount: 1
   Meshes:
-    - Name: Cube.001
+    - MeshName: Cube.001
+      MaterialName: cannon_01
       MaterialIndex: 0
-    - Name: Cube.002
+    - MeshName: Cube.002
+      MaterialName: cannon_01
       MaterialIndex: 0
-    - Name: Cylinder.004
+    - MeshName: Cylinder.004
+      MaterialName: cannon_01
       MaterialIndex: 0
-    - Name: Cylinder.005
+    - MeshName: Cylinder.005
+      MaterialName: cannon_01
       MaterialIndex: 0
-    - Name: Cube.004
+    - MeshName: Cube.004
+      MaterialName: cannon_01
       MaterialIndex: 0
-    - Name: Cube.005
+    - MeshName: Cube.005
+      MaterialName: cannon_01
       MaterialIndex: 0
-    - Name: Cube.006
+    - MeshName: Cube.006
+      MaterialName: cannon_01
       MaterialIndex: 0
-    - Name: Cylinder.006
+    - MeshName: Cylinder.006
+      MaterialName: cannon_01
       MaterialIndex: 0
-    - Name: Cylinder.007
+    - MeshName: Cylinder.007
+      MaterialName: cannon_01
       MaterialIndex: 0
-    - Name: Cylinder.008
+    - MeshName: Cylinder.008
+      MaterialName: cannon_01
       MaterialIndex: 0
