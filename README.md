@@ -39,7 +39,7 @@
 <table>
     <tr>
         <td align="center">
-            <img src="https://github.com/ssduman/seri-game-engine/blob/master/misc/images/editor.png" alt="editor" width="384" height="216">
+            <img src="https://github.com/ssduman/seri-game-engine/blob/master/misc/images/editor.png" alt="editor">
             <br />
             <i> editor <i>
         </td>
