@@ -418,91 +418,194 @@ namespace seri::editor
 
 		auto entity = scene->GetEntityByID(_selectedEntityId);
 
+		ImGuiChildFlags childFlags =
+			ImGuiChildFlags_Borders |
+			ImGuiChildFlags_AutoResizeY;
+
+		auto DrawVec3 = [](const char* label, glm::vec3& v, float speed)
+			{
+				ImGui::PushID(label);
+
+				ImGui::Columns(2, nullptr, false);
+				ImGui::SetColumnWidth(0, 90.0f);
+
+				ImGui::AlignTextToFramePadding();
+				ImGui::TextUnformatted(label);
+				ImGui::NextColumn();
+
+				float width = ImGui::CalcItemWidth();
+				float spacing = ImGui::GetStyle().ItemSpacing.x;
+				float itemWidth = (width - spacing * 2) / 3.0f;
+
+				for (int i = 0; i < 3; ++i)
+				{
+					ImGui::PushID(i);
+					ImGui::SetNextItemWidth(itemWidth);
+					ImGui::DragFloat("##v", &v[i], speed);
+					ImGui::PopID();
+
+					if (i < 2)
+					{
+						ImGui::SameLine();
+					}
+				}
+
+				ImGui::Columns(1);
+				ImGui::PopID();
+			};
+
 		if (auto* idComp = registry.try_get<seri::component::IDComponent>(entity))
 		{
-			ImGui::Text(fmt::format("id: {}", idComp->id).c_str());
-			ImGui::Text(fmt::format("parent id: {}", idComp->parentId).c_str());
-			ImGui::Text(fmt::format("name: {}", idComp->name.c_str()).c_str());
-
-			char buffer[256];
-			memset(buffer, 0, sizeof(buffer));
-			strncpy_s(buffer, idComp->name.c_str(), sizeof(buffer) - 1);
-			if (ImGui::InputText("name", buffer, sizeof(buffer)))
+			if (ImGui::BeginChild("##IDComponent", ImVec2(0, 0), childFlags))
 			{
-				idComp->name = std::string{ buffer };
-				scene->SetAsDirty();
-			}
+				ImGui::TextUnformatted("Entity");
+				ImGui::Separator();
 
-			ImGui::Separator();
+				ImGui::Columns(2, nullptr, false);
+				ImGui::SetColumnWidth(0, 90.0f);
+
+				ImGui::AlignTextToFramePadding();
+				ImGui::TextUnformatted("Name");
+				ImGui::NextColumn();
+
+				char buffer[256]{};
+				strncpy_s(buffer, idComp->name.c_str(), sizeof(buffer) - 1);
+				ImGui::SetNextItemWidth(-1);
+				if (ImGui::InputText("##EntityName", buffer, sizeof(buffer)))
+				{
+					idComp->name = buffer;
+					scene->SetAsDirty();
+				}
+
+				ImGui::NextColumn();
+
+				ImGui::AlignTextToFramePadding();
+				ImGui::TextUnformatted("ID");
+				ImGui::NextColumn();
+
+				ImGui::TextDisabled("%llu", idComp->id);
+
+				ImGui::NextColumn();
+
+				ImGui::AlignTextToFramePadding();
+				ImGui::TextUnformatted("Parent");
+				ImGui::NextColumn();
+
+				if (idComp->parentId != 0)
+				{
+					ImGui::TextDisabled("%llu", idComp->parentId);
+				}
+				else
+				{
+					ImGui::TextDisabled("<None>");
+				}
+
+				ImGui::Columns(1);
+
+				ImGui::EndChild();
+			}
 		}
 
 		if (auto* transformComp = registry.try_get<seri::component::TransformComponent>(entity))
 		{
-			ImGui::InputFloat3("position", &transformComp->position[0]);
-			ImGui::InputFloat3("rotation", &transformComp->rotation[0]);
-			ImGui::InputFloat3("scale", &transformComp->scale[0]);
+			if (ImGui::BeginChild("##TransformComponent", ImVec2(0, 0), childFlags))
+			{
+				ImGui::TextUnformatted("Transform Component");
+				ImGui::Separator();
 
-			ImGui::Separator();
+				DrawVec3("Position", transformComp->position, 0.1f);
+				DrawVec3("Rotation", transformComp->rotation, 0.5f);
+				DrawVec3("Scale", transformComp->scale, 0.1f);
+
+				ImGui::EndChild();
+			}
 		}
 
 		if (auto* meshComp = registry.try_get<seri::component::MeshComponent>(entity))
 		{
-			ImGui::PushID("mesh");
-
-			ImGui::Text(fmt::format("mesh id: {}", meshComp->meshAssetId).c_str());
-			ImGui::SameLine();
-
-			std::string name = meshComp->meshAssetId != 0 ? seri::asset::AssetManager::GetAssetName(meshComp->meshAssetId) : "<none>";
-			if (ImGui::Button(name.c_str()))
+			if (ImGui::BeginChild("##MeshComponent", ImVec2(0, 0), ImGuiChildFlags_Borders | ImGuiChildFlags_AutoResizeY))
 			{
-				ImGui::OpenPopup("AssetPickerPopup");
-			}
+				ImGui::TextUnformatted("Mesh Component");
+				ImGui::Separator();
 
-			bool selected = false;
-			uint64_t selection = 0;
-			if (ShowEditorAssetPickerPopup(seri::asset::AssetType::mesh, selected, selection))
-			{
-				if (selected)
+				ImGui::Columns(2, nullptr, false);
+				ImGui::SetColumnWidth(0, 90.0f);
+
+				ImGui::AlignTextToFramePadding();
+				ImGui::TextUnformatted("Mesh");
+				ImGui::NextColumn();
+
+				std::string assetName = meshComp->meshAssetId != 0 ? seri::asset::AssetManager::GetAssetName(meshComp->meshAssetId) : "<None>";
+
+				ImGui::SetNextItemWidth(-1);
+
+				if (ImGui::Button(assetName.c_str(), ImVec2(-1, 0)))
 				{
-					scene->SetAsDirty();
-					meshComp->meshAssetId = selection;
+					ImGui::OpenPopup("AssetPickerPopup");
 				}
+
+				bool selected = false;
+				uint64_t selection = 0;
+				if (ShowEditorAssetPickerPopup(seri::asset::AssetType::mesh, selected, selection))
+				{
+					if (selected)
+					{
+						scene->SetAsDirty();
+						meshComp->meshAssetId = selection;
+					}
+				}
+
+				ImGui::Columns(1);
+
+				ImGui::EndChild();
 			}
-
-			ImGui::PopID();
-
-			ImGui::Separator();
 		}
 
 		if (auto* meshRendererComp = registry.try_get<seri::component::MeshRendererComponent>(entity))
 		{
-			ImGui::PushID("meshrenderer");
-
-			ImGui::Checkbox(fmt::format("cast shadow: {}", meshRendererComp->castShadow).c_str(), &meshRendererComp->castShadow);
-
-			ImGui::Text(fmt::format("material id: {}", meshRendererComp->materialAssetId).c_str());
-			ImGui::SameLine();
-
-			std::string name = meshRendererComp->materialAssetId != 0 ? seri::asset::AssetManager::GetAssetName(meshRendererComp->materialAssetId) : "<none>";
-			if (ImGui::Button(name.c_str()))
+			if (ImGui::BeginChild("##MeshRendererComponent", ImVec2(0, 0), childFlags))
 			{
-				ImGui::OpenPopup("AssetPickerPopup");
-			}
+				ImGui::TextUnformatted("Mesh Renderer Component");
+				ImGui::Separator();
 
-			bool selected = false;
-			uint64_t selection = 0;
-			if (ShowEditorAssetPickerPopup(seri::asset::AssetType::material, selected, selection))
-			{
-				if (selected)
+				ImGui::Columns(2, nullptr, false);
+				ImGui::SetColumnWidth(0, 90.0f);
+
+				ImGui::AlignTextToFramePadding();
+				ImGui::TextUnformatted("Cast Shadow");
+				ImGui::NextColumn();
+				if (ImGui::Checkbox("##CastShadow", &meshRendererComp->castShadow))
 				{
 					scene->SetAsDirty();
-					meshRendererComp->materialAssetId = selection;
 				}
+
+				ImGui::NextColumn();
+
+				ImGui::AlignTextToFramePadding();
+				ImGui::TextUnformatted("Material");
+				ImGui::NextColumn();
+
+				std::string materialName = meshRendererComp->materialAssetId != 0 ? seri::asset::AssetManager::GetAssetName(meshRendererComp->materialAssetId) : "<None>";
+				if (ImGui::Button(materialName.c_str(), ImVec2(-1, 0)))
+				{
+					ImGui::OpenPopup("AssetPickerPopup");
+				}
+
+				bool selected = false;
+				uint64_t selection = 0;
+				if (ShowEditorAssetPickerPopup(seri::asset::AssetType::material, selected, selection))
+				{
+					if (selected)
+					{
+						scene->SetAsDirty();
+						meshRendererComp->materialAssetId = selection;
+					}
+				}
+
+				ImGui::Columns(1);
+
+				ImGui::EndChild();
 			}
-
-			ImGui::PopID();
-
-			ImGui::Separator();
 		}
 
 		if (ImGui::Button("Add Component", ImVec2(-1, 0)))
