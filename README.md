@@ -14,18 +14,19 @@
 * [ ] DirectX Support
 * [ ] Scripting
 ## Build: ##
+* Download and install Visual Studio 2022 and CMake
 * Run `git clone --recursive https://github.com/ssduman/seri-game-engine`
 * Double click to `generate.bat`
 * Open `Seri Game Engine.sln`, build and run in Visual Studio 2022
+* Uses Premake to generate Visual Studio 2022 project files, and CMake to build some projects
 ## Dependencies: ##
-* [GLFW](https://www.glfw.org)
+* [GLFW](https://github.com/glfw/glfw)
 * [glad](https://github.com/Dav1dde/glad)
 * [stb](https://github.com/nothings/stb)
-* [glm](https://github.com/g-truc/glm)
-* [freetype](https://www.freetype.org)
+* [GLM](https://github.com/g-truc/glm)
+* [FreeType](https://github.com/freetype/freetype)
 * [assimp](https://github.com/assimp/assimp)
-* [ImGui](https://github.com/ocornut/imgui)
-* [Premake](https://github.com/premake/premake-core)
+* [Dear ImGui](https://github.com/ocornut/imgui)
 * [miniaudio](https://github.com/mackron/miniaudio)
 * [SDL](https://github.com/libsdl-org/SDL)
 * [EnTT](https://github.com/skypjack/entt)
@@ -34,43 +35,13 @@
 * [efsw](https://github.com/SpartanJ/efsw)
 * [Lua](https://github.com/lua/lua)
 * [sol2](https://github.com/ThePhD/sol2)
-* [CMake](https://cmake.org/)
 ## Images: ##
 <table>
     <tr>
         <td align="center">
-            <img src="https://github.com/ssduman/seri-game-engine/blob/master/misc/images/user-input.png" alt="user-input" width="384" height="216">
-            <br />
-            <i> giving dimension for the maze <i>
-        </td>
-        <td align="center">
-            <img src="https://github.com/ssduman/seri-game-engine/blob/master/misc/images/passage-solution.png" alt="sol-path" width="384" height="216">
-            <br />
-            <i> exit way of the maze <i>
-        </td>
-    </tr>
-    <tr>
-        <td align="center">
-            <img src="https://github.com/ssduman/seri-game-engine/blob/master/misc/images/editor.png" alt="sol-path" width="384" height="216">
+            <img src="https://github.com/ssduman/seri-game-engine/blob/master/misc/images/editor.png" alt="editor" width="384" height="216">
             <br />
             <i> editor <i>
-        </td>
-        <td align="center">
-            <img src="https://github.com/ssduman/seri-game-engine/blob/master/misc/images/snake.png" alt="solved" width="384" height="216">
-            <br />
-            <i> snake <i>
-        </td>
-    </tr>
-    <tr>
-        <td align="center">
-            <img src="https://github.com/ssduman/seri-game-engine/blob/master/misc/images/tetris.png" alt="new-font" width="284" height="384">
-            <br />
-            <i> tetris <i>
-        </td>
-        <td align="center">
-            <img src="https://github.com/ssduman/seri-game-engine/blob/master/misc/images/misc.png" alt="solved-new-font" width="284" height="384">
-            <br />
-            <i> miscellaneous <i>
         </td>
     </tr>
 </table>

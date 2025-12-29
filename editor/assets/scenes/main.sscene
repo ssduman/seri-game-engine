@@ -10,7 +10,7 @@ Entities:
       IDComponent:
         ID: 124
         ParentID: 0
-        Name: entity_parent
+        Name: Entity_spiderman
       TransformComponent:
         Position: [1, 0, 0]
         Rotation: [0, 0, 0]
@@ -24,11 +24,11 @@ Entities:
       IDComponent:
         ID: 125
         ParentID: 124
-        Name: entity_2
+        Name: entity_1
       TransformComponent:
-        Position: [-0.666700006, 0, 0]
-        Rotation: [0, 92.9031982, 0]
-        Scale: [41.0001984, 1, 1]
+        Position: [-1, 0, 0]
+        Rotation: [0, 0, 0]
+        Scale: [1, 1, 1]
   - Entity:
       IDComponent:
         ID: 15087948878615887923
@@ -42,11 +42,16 @@ Entities:
       IDComponent:
         ID: 5134564393171502025
         ParentID: 124
-        Name: Entity_test
+        Name: Entity_spider
       TransformComponent:
-        Position: [0, 0, 0]
-        Rotation: [0, 0, 0]
-        Scale: [1, 1, 1]
+        Position: [-2, 0, 0]
+        Rotation: [0, 120, 0]
+        Scale: [0.00999999978, 0.00999999978, 0.00999999978]
+      MeshComponent:
+        MeshAssetID: 9345235014830943464
+      MeshRendererComponent:
+        MaterialAssetID: 16756991584035094998
+        CastShadow: true
   - Entity:
       IDComponent:
         ID: 14183215496632272173

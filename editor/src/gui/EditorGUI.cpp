@@ -571,15 +571,14 @@ namespace seri::editor
 				ImGui::Columns(2, nullptr, false);
 				ImGui::SetColumnWidth(0, 90.0f);
 
-				ImGui::AlignTextToFramePadding();
-				ImGui::TextUnformatted("Cast Shadow");
-				ImGui::NextColumn();
-				if (ImGui::Checkbox("##CastShadow", &meshRendererComp->castShadow))
-				{
-					scene->SetAsDirty();
-				}
-
-				ImGui::NextColumn();
+				//ImGui::AlignTextToFramePadding();
+				//ImGui::TextUnformatted("Cast Shadow");
+				//ImGui::NextColumn();
+				//if (ImGui::Checkbox("##CastShadow", &meshRendererComp->castShadow))
+				//{
+				//	scene->SetAsDirty();
+				//}
+				//ImGui::NextColumn();
 
 				ImGui::AlignTextToFramePadding();
 				ImGui::TextUnformatted("Material");
@@ -607,6 +606,8 @@ namespace seri::editor
 				ImGui::EndChild();
 			}
 		}
+
+		ImGui::NewLine();
 
 		if (ImGui::Button("Add Component", ImVec2(-1, 0)))
 		{
