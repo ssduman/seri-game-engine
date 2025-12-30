@@ -72,6 +72,11 @@ namespace seri
 			std::transform(s.begin(), s.end(), s.begin(), [](unsigned char c) { return std::tolower(c); });
 		}
 
+		static bool Contains(std::string_view str, std::string_view substr)
+		{
+			return str.find(substr) != std::string::npos;
+		}
+
 		static glm::quat ToQuaternion(const glm::vec3& euler)
 		{
 			return glm::quat(glm::radians(euler));

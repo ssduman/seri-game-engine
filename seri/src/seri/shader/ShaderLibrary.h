@@ -1,5 +1,6 @@
 #pragma once
 
+#include "seri/util/Util.h"
 #include "seri/camera/CameraBase.h"
 #include "seri/shader/ShaderBase.h"
 
@@ -35,20 +36,25 @@ namespace seri
 		{
 			GetInstance()._predefinedShaders = {};
 
-			//for (const auto& entry : std::filesystem::directory_iterator(shaderFolderPath))
-			//{
-			//	std::string name = entry.path().stem().string();
-			//	std::string text = Util::ReadFileAtPath(entry.path().string().c_str());
+			for (const auto& entry : std::filesystem::directory_iterator(shaderFolderPath))
+			{
+				if (Util::Contains(entry.path().string(), ".smeta"))
+				{
+					continue;
+				}
 
-			//	ShaderInfo info;
-			//	info.valid = true;
-			//	info.name = name;
-			//	info.vsCode = Util::GetContentOfToken(text, "#beg_vs", "#end_vs");
-			//	info.fsCode = Util::GetContentOfToken(text, "#beg_fs", "#end_fs");
-			//	GetInstance()._predefinedShaders[name] = info;
-			//}
+				std::string name = entry.path().stem().string();
+				std::string text = Util::ReadFileAtPath(entry.path().string().c_str());
 
-			LOGGER(info, "[shader library] init done");
+				ShaderInfo info;
+				info.valid = true;
+				info.name = name;
+				info.vsCode = Util::GetContentOfToken(text, "#beg_vs", "#end_vs");
+				info.fsCode = Util::GetContentOfToken(text, "#beg_fs", "#end_fs");
+				GetInstance()._predefinedShaders[name] = info;
+			}
+
+			LOGGER(info, fmt::format("[shader library] init done, count: {}", GetInstance()._predefinedShaders.size()));
 		}
 
 		static ShaderInfo& Get(const std::string& name)
