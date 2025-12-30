@@ -31,11 +31,7 @@ namespace seri::system
 
 			auto& transformComp = registry.get<seri::component::TransformComponent>(entity);
 
-			transformComp.localMatrix =
-				glm::translate(glm::mat4{ 1.0f }, transformComp.position) *
-				glm::mat4_cast(seri::Util::ToQuaternion(transformComp.rotation)) *
-				glm::scale(glm::mat4{ 1.0f }, transformComp.scale);
-
+			transformComp.localMatrix = Util::GetTRS(transformComp.position, transformComp.rotation, transformComp.scale);
 			transformComp.worldMatrix = parentWorld * transformComp.localMatrix;
 
 			for (const auto& child : node.children)

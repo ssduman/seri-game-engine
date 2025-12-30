@@ -17,6 +17,7 @@ IncludeDir["fmt"] = "%{wks.location}/seri/vendor/fmt/include"
 IncludeDir["efsw"] = "%{wks.location}/seri/vendor/efsw/include"
 IncludeDir["lua"] = "%{wks.location}/seri/vendor/lua"
 IncludeDir["sol2"] = "%{wks.location}/seri/vendor/sol2/include"
+IncludeDir["ImGuizmo"] = "%{wks.location}/seri/vendor/imguizmo"
 
 LibDir = {}
 LibDir["sdl"] = "%{wks.location}/seri/vendor/sdl/build/%{cfg.buildcfg}"
@@ -52,4 +53,5 @@ workspace "Seri Game Engine"
     include "seri/vendor/fmt"
     include "seri/vendor/efsw/premake5_project.lua"
     include "seri/vendor/lua"
+    include "seri/vendor/imguizmo"
   group ""

@@ -8,8 +8,10 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/random.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <cmath>
@@ -91,6 +93,15 @@ namespace seri
 		static glm::mat4 GetIdentityMatrix()
 		{
 			return glm::mat4{ 1.0f };
+		}
+
+		static void Decompose(const glm::mat4& matrix, glm::vec3& pos, glm::vec3& euler, glm::vec3& scale)
+		{
+			glm::vec3 skew;
+			glm::vec4 perspective;
+			glm::quat rot;
+			glm::decompose(matrix, scale, rot, pos, skew, perspective);
+			euler = glm::degrees(glm::eulerAngles(rot));
 		}
 
 		static std::string ReadFileAtPath(const char* path)

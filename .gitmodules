@@ -50,3 +50,7 @@
 	path = seri/vendor/sol2
 	url = https://github.com/ThePhD/sol2.git
 	ignore = dirty
+[submodule "seri/vendor/imguizmo"]
+	path = seri/vendor/imguizmo
+	url = https://github.com/CedricGuillemet/ImGuizmo.git
+	ignore = dirty

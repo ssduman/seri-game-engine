@@ -2,21 +2,21 @@
 
 #include <seri/core/Seri.h>
 
-#include <imgui.h>
-#include <backends/imgui_impl_opengl3.h>
-#include <misc/freetype/imgui_freetype.h>
+#include <ImGui/imgui.h>
+#include <ImGui/backends/imgui_impl_opengl3.h>
+#include <ImGui/misc/freetype/imgui_freetype.h>
 
-#include "event/UserEvent.h"
+#include <ImGuizmo/ImGuizmo.h>
 
 #include <memory>
 #include <unordered_map>
 
 #if defined (SERI_USE_WINDOW_GLFW)
 #include <GLFW/glfw3.h>
-#include <backends/imgui_impl_glfw.h>
+#include <ImGui/backends/imgui_impl_glfw.h>
 #elif defined (SERI_USE_WINDOW_SDL3)
 #include <SDL3/SDL.h>
-#include <backends/imgui_impl_sdl3.h>
+#include <ImGui/backends/imgui_impl_sdl3.h>
 #endif
 
 namespace seri::editor
@@ -43,6 +43,19 @@ namespace seri::editor
 			scene,
 			entity,
 			asset,
+		};
+
+		enum class GizmoSpace
+		{
+			local,
+			world,
+		};
+
+		enum class GizmoOperation
+		{
+			translate,
+			rotate,
+			scale,
 		};
 
 		struct ComponentInfo
@@ -78,7 +91,9 @@ namespace seri::editor
 		void ShowEditorMainMenuBar();
 
 		void ShowEditorSceneImage();
-		void ControlEditorSceneMove(ImVec2& imageMin, ImVec2& imageMax);
+		void ControlEditorSceneMove(const ImVec2& imageMin, const ImVec2& imageMax);
+		void ShowEditorSceneGizmoToolbar(const ImVec2& imageMin);
+		void ShowEditorSceneGizmo(const ImVec2& imageMin, const ImVec2& finalSize);
 
 		void ShowEditorHierarchy();
 		void ShowEditorHierarchyImpl(const std::shared_ptr<seri::scene::Scene>& activeScene, seri::scene::SceneTreeNode& node, uint64_t& selectedId);
@@ -102,6 +117,9 @@ namespace seri::editor
 
 		uint64_t _selectedEntityId{ 0 };
 		InspectorType _inspectorType{ InspectorType::none };
+
+		GizmoSpace _gizmoSpace{ GizmoSpace::local };
+		GizmoOperation _gizmoOperation{ GizmoOperation::translate };
 
 		seri::asset::AssetTreeNode* _selectedFolder{ nullptr };
 		seri::asset::AssetTreeNode _selectedAsset{};

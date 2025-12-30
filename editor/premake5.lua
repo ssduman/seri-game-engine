@@ -49,6 +49,7 @@ project "Editor"
     "%{IncludeDir.efsw}",
     "%{IncludeDir.lua}",
     "%{IncludeDir.sol2}",
+    "%{IncludeDir.ImGuizmo}",
   }
 
   libdirs {

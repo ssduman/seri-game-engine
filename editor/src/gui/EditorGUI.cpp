@@ -64,7 +64,11 @@ namespace seri::editor
 #elif defined (SERI_USE_WINDOW_SDL3)
 		ImGui_ImplSDL3_NewFrame();
 #endif
+
 		ImGui::NewFrame();
+		ImGuizmo::BeginFrame();
+
+		ImGuizmo::Enable(true);
 
 		DrawEditorLayout();
 
@@ -142,26 +146,26 @@ namespace seri::editor
 		float fbAspect = seri::RenderingManager::GetEditorRT()->GetAspectRatio();
 		float panelAspect = panelSize.x / panelSize.y;
 
-		ImVec2 finalSize;
+		ImVec2 imageSize;
 		if (panelAspect > fbAspect)
 		{
-			finalSize.y = panelSize.y;
-			finalSize.x = panelSize.y * fbAspect;
+			imageSize.y = panelSize.y;
+			imageSize.x = panelSize.y * fbAspect;
 		}
 		else
 		{
-			finalSize.x = panelSize.x;
-			finalSize.y = panelSize.x / fbAspect;
+			imageSize.x = panelSize.x;
+			imageSize.y = panelSize.x / fbAspect;
 		}
 
 		ImVec2 cursorPos = ImGui::GetCursorScreenPos();
 
-		float offsetX = (panelSize.x - finalSize.x) * 0.5f;
-		float offsetY = (panelSize.y - finalSize.y) * 0.5f;
+		float offsetX = (panelSize.x - imageSize.x) * 0.5f;
+		float offsetY = (panelSize.y - imageSize.y) * 0.5f;
 
 		ImVec2 drawPos = ImVec2(cursorPos.x + offsetX, cursorPos.y + offsetY);
 		ImVec2 imageMin = drawPos;
-		ImVec2 imageMax = ImVec2(drawPos.x + finalSize.x, drawPos.y + finalSize.y);
+		ImVec2 imageMax = ImVec2(drawPos.x + imageSize.x, drawPos.y + imageSize.y);
 
 		auto tex = (ImTextureID)(intptr_t)seri::RenderingManager::GetEditorRT()->GetFirstColorTextureHandle();
 
@@ -174,9 +178,11 @@ namespace seri::editor
 		);
 
 		ControlEditorSceneMove(imageMin, imageMax);
+		ShowEditorSceneGizmoToolbar(imageMin);
+		ShowEditorSceneGizmo(imageMin, imageSize);
 	}
 
-	void EditorGUI::ControlEditorSceneMove(ImVec2& imageMin, ImVec2& imageMax)
+	void EditorGUI::ControlEditorSceneMove(const ImVec2& imageMin, const ImVec2& imageMax)
 	{
 		static bool moveActive = false;
 		static ImVec2 lastMouse = ImVec2(0, 0);
@@ -238,6 +244,137 @@ namespace seri::editor
 			{
 				camProps.position += right * speed * deltaTime;
 			}
+		}
+	}
+
+	void EditorGUI::ShowEditorSceneGizmoToolbar(const ImVec2& imageMin)
+	{
+		ImGui::SetNextWindowPos(ImVec2(imageMin.x + 5.0f, imageMin.y + 5.0f));
+		ImGui::SetNextWindowBgAlpha(0.85f);
+
+		ImGuiWindowFlags flags =
+			ImGuiWindowFlags_NoDecoration |
+			ImGuiWindowFlags_NoDocking |
+			ImGuiWindowFlags_AlwaysAutoResize |
+			ImGuiWindowFlags_NoMove |
+			ImGuiWindowFlags_NoSavedSettings |
+			ImGuiWindowFlags_NoFocusOnAppearing |
+			ImGuiWindowFlags_NoNav;
+
+		ImGui::Begin("##SceneGizmoToolbar", nullptr, flags);
+
+		ImGui::TextUnformatted("Gizmo");
+		ImGui::Separator();
+
+		int space = static_cast<int>(_gizmoSpace);
+		ImGui::RadioButton("Local", &space, static_cast<int>(GizmoSpace::local));
+		ImGui::RadioButton("World", &space, static_cast<int>(GizmoSpace::world));
+		_gizmoSpace = static_cast<GizmoSpace>(space);
+
+		ImGui::Separator();
+
+		int op = static_cast<int>(_gizmoOperation);
+		ImGui::RadioButton("Translate", &op, static_cast<int>(GizmoOperation::translate));
+		ImGui::RadioButton("Rotate", &op, static_cast<int>(GizmoOperation::rotate));
+		ImGui::RadioButton("Scale", &op, static_cast<int>(GizmoOperation::scale));
+		_gizmoOperation = static_cast<GizmoOperation>(op);
+
+		ImGui::End();
+	}
+
+	void EditorGUI::ShowEditorSceneGizmo(const ImVec2& imageMin, const ImVec2& imageSize)
+	{
+		if (_inspectorType != InspectorType::entity || _selectedEntityId == 0)
+		{
+			return;
+		}
+
+		ImGuizmo::SetOrthographic(false);
+		ImGuizmo::SetDrawlist();
+		ImGuizmo::SetRect(
+			imageMin.x,
+			imageMin.y,
+			imageSize.x,
+			imageSize.y
+		);
+
+		ImGuizmo::MODE mode = ImGuizmo::WORLD;
+		switch (_gizmoSpace)
+		{
+			case seri::editor::EditorGUI::GizmoSpace::local:
+				mode = ImGuizmo::LOCAL;
+				break;
+			case seri::editor::EditorGUI::GizmoSpace::world:
+				mode = ImGuizmo::WORLD;
+				break;
+		}
+
+		ImGuizmo::OPERATION operation = ImGuizmo::TRANSLATE;
+		switch (_gizmoOperation)
+		{
+			case seri::editor::EditorGUI::GizmoOperation::translate:
+				operation = ImGuizmo::TRANSLATE;
+				break;
+			case seri::editor::EditorGUI::GizmoOperation::rotate:
+				operation = ImGuizmo::ROTATE;
+				break;
+			case seri::editor::EditorGUI::GizmoOperation::scale:
+				operation = ImGuizmo::SCALE;
+				break;
+		}
+
+		if (_gizmoOperation == GizmoOperation::rotate)
+		{
+			mode = ImGuizmo::LOCAL;
+			_gizmoSpace = GizmoSpace::local;
+		}
+
+		auto scene = seri::scene::SceneManager::GetActiveScene();
+		auto& registry = seri::scene::SceneManager::GetRegistry();
+		auto entity = scene->GetEntityByID(_selectedEntityId);
+
+		auto* idComp = registry.try_get<seri::component::IDComponent>(entity);
+		auto* transformComp = registry.try_get<seri::component::TransformComponent>(entity);
+		if (idComp == nullptr || transformComp == nullptr)
+		{
+			return;
+		}
+
+		glm::mat4 parentWorld{ 1.0f };
+		if (idComp->parentId != 0)
+		{
+			auto parentEntity = scene->GetEntityByID(idComp->parentId);
+			auto* parentTransformComp = registry.try_get<seri::component::TransformComponent>(parentEntity);
+			parentWorld = parentTransformComp->worldMatrix;
+		}
+
+		glm::mat4 worldMatrix = parentWorld * transformComp->localMatrix;
+		glm::vec3 lockedWorldPos = glm::vec3(worldMatrix[3]);
+
+		ImGuizmo::Manipulate(
+			glm::value_ptr(Graphic::GetCameraPerspective()->GetView()),
+			glm::value_ptr(Graphic::GetCameraPerspective()->GetProjection()),
+			operation,
+			mode,
+			glm::value_ptr(worldMatrix),
+			nullptr
+		);
+
+		if (ImGuizmo::IsUsing())
+		{
+			if (_gizmoOperation == GizmoOperation::rotate)
+			{
+				worldMatrix[3] = glm::vec4(lockedWorldPos, 1.0f);
+			}
+
+			Util::Decompose(
+				glm::inverse(parentWorld) * worldMatrix,
+				transformComp->position,
+				transformComp->rotation,
+				transformComp->scale
+			);
+
+			scene->SetAsDirty();
 		}
 	}
 

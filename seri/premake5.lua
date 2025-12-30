@@ -64,6 +64,7 @@ project "Seri"
     "%{IncludeDir.efsw}",
     "%{IncludeDir.lua}",
     "%{IncludeDir.sol2}",
+    "%{IncludeDir.ImGuizmo}",
   }
 
   libdirs {
@@ -77,6 +78,7 @@ project "Seri"
     "GLFW",
     "SDL3",
     "ImGui",
+    "ImGuizmo",
     "assimp",
     "freetype",
     "opengl32.lib",

@@ -14,6 +14,7 @@ call git --git-dir seri/vendor/fmt/.git switch --detach 12.1.0
 call git --git-dir seri/vendor/efsw/.git switch --detach master
 call git --git-dir seri/vendor/lua/.git switch --detach v5.4.8
 call git --git-dir seri/vendor/sol2/.git switch --detach master
+call git --git-dir seri/vendor/imguizmo/.git switch --detach master
 
 :: copy premake5.lua
 echo f | xcopy /f /y "script/vendor/glad/premake5.lua" "seri/vendor/glad/premake5.lua"
@@ -25,6 +26,7 @@ echo f | xcopy /f /y "script/vendor/sdl/premake5.lua" "seri/vendor/sdl/premake5.
 echo f | xcopy /f /y "script/vendor/fmt/premake5.lua" "seri/vendor/fmt/premake5.lua"
 echo f | xcopy /f /y "script/vendor/efsw/premake5_project.lua" "seri/vendor/efsw/premake5_project.lua"
 echo f | xcopy /f /y "script/vendor/lua/premake5.lua" "seri/vendor/lua/premake5.lua"
+echo f | xcopy /f /y "script/vendor/imguizmo/premake5.lua" "seri/vendor/imguizmo/premake5.lua"
 
 :: copy aux files
 echo f | xcopy /f /y "script/vendor/stb/stb_image.cpp" "seri/vendor/stb/stb_image.cpp"
