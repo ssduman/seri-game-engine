@@ -27,6 +27,7 @@
 * [FreeType](https://github.com/freetype/freetype)
 * [assimp](https://github.com/assimp/assimp)
 * [Dear ImGui](https://github.com/ocornut/imgui)
+* [ImGuizmo](https://github.com/CedricGuillemet/ImGuizmo)
 * [miniaudio](https://github.com/mackron/miniaudio)
 * [SDL](https://github.com/libsdl-org/SDL)
 * [EnTT](https://github.com/skypjack/entt)
