@@ -66,8 +66,8 @@ namespace seri::editor
 #endif
 
 		ImGui::NewFrame();
-		ImGuizmo::BeginFrame();
 
+		ImGuizmo::BeginFrame();
 		ImGuizmo::Enable(true);
 
 		DrawEditorLayout();
@@ -177,9 +177,10 @@ namespace seri::editor
 			ImVec2(1, 0)
 		);
 
-		ControlEditorSceneMove(imageMin, imageMax);
-		ShowEditorSceneGizmoToolbar(imageMin);
 		ShowEditorSceneGizmo(imageMin, imageSize);
+		ShowEditorSceneEntityGizmo(imageMin, imageSize);
+		ShowEditorSceneGizmoToolbar(imageMin);
+		ControlEditorSceneMove(imageMin, imageMax);
 	}
 
 	void EditorGUI::ControlEditorSceneMove(const ImVec2& imageMin, const ImVec2& imageMax)
@@ -218,23 +219,33 @@ namespace seri::editor
 
 			auto deltaTime = seri::TimeWrapper::GetDeltaTime();
 
-			auto& camProps = seri::Graphic::GetCameraPerspective()->GetCameraProperties();
+			auto camera = seri::Graphic::GetCameraPerspective();
+			auto& camProps = camera->GetCameraProperties();
 
-			glm::vec3 forward = camProps.front;
-			glm::vec3 right = glm::normalize(glm::cross(forward, glm::vec3(0, 1, 0)));
+			float sensitivity = camProps.sensitivity;
+
+			float yawDeltaDeg = -delta.x * sensitivity;
+			float pitchDeltaDeg = -delta.y * sensitivity;
+
+			glm::vec3 front = camera->GetFront();
+			glm::vec3 right = camera->GetRight();
+			glm::vec3 worldUp{ 0.0f, 1.0f, 0.0f };
+
+			glm::quat qYaw = glm::angleAxis(glm::radians(yawDeltaDeg), worldUp);
+			glm::quat orientAfterYaw = glm::normalize(qYaw * camProps.rotation);
+			glm::vec3 rightAfterYaw = glm::normalize(orientAfterYaw * glm::vec3(1.0f, 0.0f, 0.0f));
+			glm::quat qPitch = glm::angleAxis(glm::radians(pitchDeltaDeg), rightAfterYaw);
+			camProps.rotation = glm::normalize(qPitch * orientAfterYaw);
+
 			float speed = ImGui::GetIO().KeyShift ? camProps.speed * 2.0f : camProps.speed;
-
-			camProps.rotation.x += delta.x * camProps.sensitivity;
-			camProps.rotation.y -= delta.y * camProps.sensitivity;
-			camProps.rotation.y = glm::clamp(camProps.rotation.y, -89.0f, 89.0f);
 
 			if (ImGui::IsKeyDown(ImGuiKey_W))
 			{
-				camProps.position += forward * speed * deltaTime;
+				camProps.position += front * speed * deltaTime;
 			}
 			if (ImGui::IsKeyDown(ImGuiKey_S))
 			{
-				camProps.position -= forward * speed * deltaTime;
+				camProps.position -= front * speed * deltaTime;
 			}
 			if (ImGui::IsKeyDown(ImGuiKey_A))
 			{
@@ -284,11 +295,6 @@ namespace seri::editor
 
 	void EditorGUI::ShowEditorSceneGizmo(const ImVec2& imageMin, const ImVec2& imageSize)
 	{
-		if (_inspectorType != InspectorType::entity || _selectedEntityId == 0)
-		{
-			return;
-		}
-
 		ImGuizmo::SetOrthographic(false);
 		ImGuizmo::SetDrawlist();
 		ImGuizmo::SetRect(
@@ -297,6 +303,42 @@ namespace seri::editor
 			imageSize.x,
 			imageSize.y
 		);
+
+		float gizmoSize = 64.0f;
+		float padding = 5.0f;
+		bool alwaysRun = true;
+
+		float x = imageMin.x + imageSize.x - gizmoSize - padding;
+		float y = imageMin.y + padding;
+
+		auto camera = seri::Graphic::GetCameraPerspective();
+
+		glm::mat4 view = camera->GetView();
+
+		ImGuizmo::PushID("scene_gizmo");
+
+		ImGuizmo::ViewManipulate(
+			glm::value_ptr(view),
+			8.0f,
+			ImVec2(x, y),
+			ImVec2(gizmoSize, gizmoSize),
+			0x10101010
+		);
+
+		if (ImGuizmo::IsUsing() || alwaysRun)
+		{
+			camera->SetFromViewMatrix(view);
+		}
+
+		ImGuizmo::PopID();
+	}
+
+	void EditorGUI::ShowEditorSceneEntityGizmo(const ImVec2& imageMin, const ImVec2& imageSize)
+	{
+		if (_inspectorType != InspectorType::entity || _selectedEntityId == 0)
+		{
+			return;
+		}
 
 		ImGuizmo::MODE mode = ImGuizmo::WORLD;
 		switch (_gizmoSpace)
@@ -351,6 +393,8 @@ namespace seri::editor
 		glm::mat4 worldMatrix = parentWorld * transformComp->localMatrix;
 		glm::vec3 lockedWorldPos = glm::vec3(worldMatrix[3]);
 
+		ImGuizmo::PushID("scene_entity_gizmo");
+
 		ImGuizmo::Manipulate(
 			glm::value_ptr(Graphic::GetCameraPerspective()->GetView()),
 			glm::value_ptr(Graphic::GetCameraPerspective()->GetProjection()),
@@ -376,6 +420,8 @@ namespace seri::editor
 
 			scene->SetAsDirty();
 		}
+
+		ImGuizmo::PopID();
 	}
 
 	void EditorGUI::ShowEditorHierarchy()

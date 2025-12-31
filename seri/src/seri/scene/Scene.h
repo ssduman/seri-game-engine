@@ -3,6 +3,7 @@
 #include "seri/util/Util.h"
 #include "seri/random/Random.h"
 #include "seri/texture/Skybox.h"
+#include "seri/texture/InfiniteGrid.h"
 #include "seri/component/Components.h"
 
 #include <entt/entt.hpp>
@@ -101,6 +102,7 @@ namespace seri::scene
 		bool _isDirty{ false };
 
 		std::shared_ptr<seri::Skybox> _skybox;
+		std::shared_ptr<seri::InfiniteGrid> _infiniteGrid;
 
 		seri::component::IDComponent _idComponent;
 		seri::component::SceneComponent _sceneComponent;

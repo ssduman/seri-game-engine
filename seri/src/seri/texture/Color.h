@@ -7,102 +7,35 @@ namespace seri
 	class Color
 	{
 	public:
-		Color() = default;
+		Color();
+		explicit Color(float c);
+		Color(float r, float g, float b, float a = 1.0f);
+		Color(const glm::vec3& v);
+		Color(const glm::vec4& v);
 
-		Color(float c)
-		{
-			r = c;
-			g = c;
-			b = c;
-			Normalize();
-		}
+		glm::vec3 GetColor() const;
+		glm::vec4 GetColorRGBA() const;
 
-		Color(float _r, float _g, float _b)
-		{
-			r = _r;
-			g = _g;
-			b = _b;
-			Normalize();
-		}
+		static Color Lerp(const Color& a, const Color& b, float t);
+		static Color LerpUnclamped(const Color& a, const Color& b, float t);
 
-		Color(float _r, float _g, float _b, float _a)
-		{
-			r = _r;
-			g = _g;
-			b = _b;
-			a = _a;
-			Normalize();
-		}
+		float& operator[](size_t index);
+		const float& operator[](size_t index) const;
 
-		Color(glm::vec3& vec)
-		{
-			r = vec.r;
-			g = vec.g;
-			b = vec.b;
-			Normalize();
-		}
+		static const Color White;
+		static const Color Black;
+		static const Color Red;
+		static const Color Green;
+		static const Color Blue;
+		static const Color Yellow;
+		static const Color Cyan;
+		static const Color Magenta;
+		static const Color Gray;
 
-		Color(const glm::vec3& vec)
-		{
-			r = vec.r;
-			g = vec.g;
-			b = vec.b;
-			Normalize();
-		}
-
-		Color(glm::vec4& vec)
-		{
-			r = vec.r;
-			g = vec.g;
-			b = vec.b;
-			a = vec.a;
-			Normalize();
-		}
-
-		Color(const glm::vec4& vec)
-		{
-			r = vec.r;
-			g = vec.g;
-			b = vec.b;
-			a = vec.a;
-			Normalize();
-		}
-
-		glm::vec3 GetColor()
-		{
-			return { r, g, b };
-		}
-
-		glm::vec4 GetColorRGBA()
-		{
-			return { r, g, b, a };
-		}
-
-		float r = 1.0f;
-		float g = 1.0f;
-		float b = 1.0f;
-		float a = 1.0f;
-
-	private:
-		void Normalize()
-		{
-			if (r > 1.0f)
-			{
-				r /= 255.0f;
-			}
-			if (g > 1.0f)
-			{
-				g /= 255.0f;
-			}
-			if (b > 1.0f)
-			{
-				b /= 255.0f;
-			}
-			if (a > 1.0f)
-			{
-				a /= 255.0f;
-			}
-		}
+		float r;
+		float g;
+		float b;
+		float a;
 
 	};
 }

@@ -7,169 +7,65 @@ namespace seri
 {
 	enum class CameraMovement
 	{
-		forward,
-		backward,
-		left,
-		right,
+		Forward,
+		Backward,
+		Left,
+		Right
 	};
 
 	struct CameraProperties
 	{
-		bool isOrtho{ false };
-
 		float fov{ 45.0f };
 		float aspect{ 16.0f / 9.0f };
-		float near{ 0.1f };
-		float far{ 1000.0f };
+		float nearPlane{ 0.1f };
+		float farPlane{ 1000.0f };
 
-		float speed{ 2.5f };
-		float sensitivity{ 0.1f };
-
+		bool isOrtho{ false };
 		float width{ 1920.0f };
 		float height{ 1080.0f };
 
-		glm::vec3 up{ 0.0f, 1.0f, 0.0f };
-		glm::vec3 right{ 1.0f, 0.0f, 0.0f };
-		glm::vec3 front{ 0.0f, 0.0f, -1.0f };
-		glm::vec3 rotation{ 0.0f, 0.0f, 0.0f };
-		glm::vec3 position{ 0.0f, 0.0f, -3.0f };
+		float speed{ 5.0f };
+		float sensitivity{ 0.1f };
+
+		glm::vec3 position{ 0.0f, 0.0f, 0.0f };
+		glm::quat rotation{ 1.0f, 0.0f, 0.0f, 0.0f };
 	};
 
-	class CameraBase : public Object
+	class CameraBase
 	{
 	public:
-		CameraBase(CameraProperties cameraProperties) : _cameraProperties{ cameraProperties } {}
+		CameraBase(const CameraProperties& cameraProperties);
+		virtual ~CameraBase() = default;
 
-		~CameraBase() override = default;
+		virtual void Init() = 0;
+		virtual void Update() = 0;
 
-		void Render() override {}
+		void OnWindowResizeEvent(const event::WindowResizeEventData& data);
 
-		void OnWindowResizeEvent(const event::WindowResizeEventData& data) override
-		{
-			auto width = static_cast<float>(data.width);
-			auto height = static_cast<float>(data.height);
+		const bool IsOrtho() const;
 
-			if (width <= 0.1f || height <= 0.1f)
-			{
-				return;
-			}
+		glm::vec3 GetUp();
+		glm::vec3 GetFront();
+		glm::vec3 GetRight();
 
-			_cameraProperties.width = width;
-			_cameraProperties.height = height;
-			_cameraProperties.aspect = width / height;
+		glm::mat4 BuildViewMatrix();
+		void SetFromViewMatrix(const glm::mat4& view);
 
-			UpdateProjection();
-		}
+		const glm::mat4& GetView();
+		const glm::mat4& GetProjection();
+		const glm::mat4& GetViewProjection();
 
-		glm::vec3 GetPosition() override
-		{
-			return _cameraProperties.position;
-		}
-
-		void SetPosition(glm::vec3 position) override
-		{
-			_cameraProperties.position = position;
-		}
-
-		const glm::mat4& GetModel()
-		{
-			return _model;
-		}
-
-		const glm::mat4& GetView()
-		{
-			return _view;
-		}
-
-		const glm::mat4& GetProjection()
-		{
-			return _projection;
-		}
-
-		const bool IsOrtho() const
-		{
-			return _cameraProperties.isOrtho;
-		}
-
-		CameraProperties& GetCameraProperties()
-		{
-			return _cameraProperties;
-		}
-
-		void SetCameraProperties(CameraProperties cameraProperties)
-		{
-			_cameraProperties = std::move(cameraProperties);
-		}
+		CameraProperties& GetCameraProperties();
 
 	protected:
-		virtual void UpdateView()
-		{
-			if (_cameraProperties.isOrtho)
-			{
-				_view = glm::translate(glm::mat4{ 1.0f }, glm::vec3(0.0f, 0.0f, -1.0f));
-			}
-			else
-			{
-				auto quat = glm::quat(
-					glm::vec3{
-						glm::radians(_cameraProperties.rotation.x),
-						glm::radians(_cameraProperties.rotation.y),
-						glm::radians(_cameraProperties.rotation.z)
-					}
-				);
-
-				_view = glm::lookAt(
-					_cameraProperties.position,
-					_cameraProperties.position + _cameraProperties.front,
-					_cameraProperties.up
-				);
-			}
-		}
-
-		virtual void UpdateProjection()
-		{
-			if (_cameraProperties.isOrtho)
-			{
-				_projection = glm::ortho(
-					0.0f,
-					_cameraProperties.width,
-					_cameraProperties.height,
-					0.0f,
-					_cameraProperties.near,
-					_cameraProperties.far
-				);
-			}
-			else
-			{
-				_projection = glm::perspective(
-					glm::radians(_cameraProperties.fov),
-					_cameraProperties.aspect,
-					_cameraProperties.near,
-					_cameraProperties.far
-				);
-			}
-		}
-
-		virtual void UpdateEulerAngles()
-		{
-			glm::vec3 eulerAngle{};
-			eulerAngle.x = cos(glm::radians(_cameraProperties.rotation.y)) * cos(glm::radians(_cameraProperties.rotation.x));
-			eulerAngle.y = sin(glm::radians(_cameraProperties.rotation.y));
-			eulerAngle.z = cos(glm::radians(_cameraProperties.rotation.y)) * sin(glm::radians(_cameraProperties.rotation.x));
-
-			_cameraProperties.front = glm::normalize(eulerAngle);
-			_cameraProperties.right = glm::normalize(glm::cross(_cameraProperties.front, _cameraProperties.up));
-		}
+		void UpdateEulerAngles();
+		void UpdateView();
+		void UpdateProjection();
 
 		CameraProperties _cameraProperties;
 
-		glm::mat4 _model{ 1.0f };
-		glm::mat4 _view{};
-		glm::mat4 _projection{};
-
-		bool _init{ false };
-		float _xPosLast{ -1.0f };
-		float _yPosLast{ -1.0f };
+		glm::mat4 _view{ 1.0f };
+		glm::mat4 _projection{ 1.0f };
 
 	};
 }

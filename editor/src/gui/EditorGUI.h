@@ -94,6 +94,7 @@ namespace seri::editor
 		void ControlEditorSceneMove(const ImVec2& imageMin, const ImVec2& imageMax);
 		void ShowEditorSceneGizmoToolbar(const ImVec2& imageMin);
 		void ShowEditorSceneGizmo(const ImVec2& imageMin, const ImVec2& finalSize);
+		void ShowEditorSceneEntityGizmo(const ImVec2& imageMin, const ImVec2& finalSize);
 
 		void ShowEditorHierarchy();
 		void ShowEditorHierarchyImpl(const std::shared_ptr<seri::scene::Scene>& activeScene, seri::scene::SceneTreeNode& node, uint64_t& selectedId);

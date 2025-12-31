@@ -19,6 +19,7 @@
 #include "seri/scripting/ScriptingManager.h"
 #include "seri/system/TransformSystem.h"
 #include "seri/system/MeshRendererSystem.h"
+#include "seri/debug/DebugDraw.h"
 
 namespace seri
 {
@@ -44,6 +45,7 @@ namespace seri
 			seri::scene::SceneManager::Init();
 			seri::asset::AssetManager::StartAssetWatcher();
 			seri::scripting::ScriptingManager::Init();
+			seri::debug::DebugDraw::Init();
 
 			seri::WindowManager::Instance()->AddEventCallback(seri::event::MakeEventCallback(
 				[](const seri::event::IEventData& data)
@@ -85,7 +87,7 @@ namespace seri
 			cameraPropertiesPerspective.isOrtho = false;
 			cameraPropertiesPerspective.aspect = seri::WindowManager::GetAspectRatio();
 			cameraPropertiesPerspective.position = { 0.0f, 4.0f, 6.0f };
-			cameraPropertiesPerspective.rotation = { -90.0f, -30.0f, 0.0f };
+			cameraPropertiesPerspective.rotation = Util::ToQuaternion({ -30.0f, 0.0f, 0.0f });
 			auto cameraPerspective = std::make_shared<seri::EditorCamera>(std::move(cameraPropertiesPerspective));
 			cameraPerspective->Init();
 
@@ -105,6 +107,7 @@ namespace seri
 
 		void Update() override
 		{
+
 			seri::RenderingManager::GetEditorRT()->Bind();
 			seri::RenderingManager::ClearColor();
 			seri::RenderingManager::Clear();
@@ -126,6 +129,10 @@ namespace seri
 			seri::scripting::ScriptingManager::Update();
 
 			seri::BehaviourManager::UpdateBehaviours();
+
+			seri::debug::DebugDraw::Render(seri::Graphic::GetCameraPerspective());
+
+			seri::debug::DebugDraw::EndFrame();
 
 			seri::RenderingManager::Execute();
 		}
