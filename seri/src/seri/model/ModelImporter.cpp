@@ -360,7 +360,7 @@ namespace seri
 	{
 		if (!ai_scene->HasAnimations())
 		{
-			LOGGER(info, "[model] no animations found");
+			//LOGGER(info, "[model] no animations found");
 			return {};
 		}
 
@@ -476,8 +476,6 @@ namespace seri
 			std::string blendShapeName = ai_anim_mesh->mName.C_Str();
 			float weight = ai_anim_mesh->mWeight;
 
-			LOGGER(info, "[model] blend shape name: '" << blendShapeName << "', weight: " << weight);
-
 			if (ai_anim_mesh->HasPositions())
 			{
 				for (unsigned int v = 0; v < ai_anim_mesh->mNumVertices; v++)
@@ -487,7 +485,7 @@ namespace seri
 				}
 			}
 
-			LOGGER(info, "[model] loaded " << ai_mesh->mNumAnimMeshes << " blend shape");
+			LOGGER(info, fmt::format("[model] blend shape '{}', count: {}, weight: {} loaded", blendShapeName, ai_mesh->mNumAnimMeshes, weight));
 		}
 	}
 

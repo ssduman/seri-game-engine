@@ -20,7 +20,12 @@ namespace seri::debug
 		static void EndFrame();
 		static void Render(const std::shared_ptr<seri::CameraBase>& camera);
 
-		static void Line3D(const glm::vec3& beg, const glm::vec3& end, const Color& color, float duration = -1.0f);
+		static void Line(const glm::vec3& beg, const glm::vec3& end, const Color& color, float duration = -1.0f);
+		static void DrawOBB(const glm::mat4& transform, const glm::vec3& halfExtents, const glm::vec4& color, float duration = -1.0f);
+		static void DrawAABB(const glm::vec3& min, const glm::vec3& max, const glm::vec4& color, float duration = -1.0f);
+		static void DrawSphere(const glm::vec3& center, float radius, const glm::vec4& color, int segments = 24, float duration = -1.0f);
+		static void DrawRay(const glm::vec3& origin, const glm::vec3& dir, float length, const glm::vec4& color, float duration = -1.0f);
+		static void DrawFrustum(const glm::mat4& viewProj, const glm::vec4& color, float duration = -1.0f);
 
 	private:
 		struct DebugVertex

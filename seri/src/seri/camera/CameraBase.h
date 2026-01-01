@@ -5,14 +5,6 @@
 
 namespace seri
 {
-	enum class CameraMovement
-	{
-		Forward,
-		Backward,
-		Left,
-		Right
-	};
-
 	struct CameraProperties
 	{
 		float fov{ 45.0f };

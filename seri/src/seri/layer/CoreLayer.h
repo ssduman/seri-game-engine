@@ -78,7 +78,7 @@ namespace seri
 			cameraPropertiesOrtho.height = seri::WindowManager::Instance()->GetWindowProperties().windowHeight;
 			cameraPropertiesOrtho.isOrtho = true;
 			cameraPropertiesOrtho.aspect = seri::WindowManager::GetAspectRatio();
-			auto cameraOrtho = std::make_shared<seri::EditorCamera>(std::move(cameraPropertiesOrtho));
+			auto cameraOrtho = std::make_shared<seri::EditorCamera>(cameraPropertiesOrtho);
 			cameraOrtho->Init();
 
 			seri::CameraProperties cameraPropertiesPerspective;
@@ -88,7 +88,7 @@ namespace seri
 			cameraPropertiesPerspective.aspect = seri::WindowManager::GetAspectRatio();
 			cameraPropertiesPerspective.position = { 0.0f, 4.0f, 6.0f };
 			cameraPropertiesPerspective.rotation = Util::ToQuaternion({ -30.0f, 0.0f, 0.0f });
-			auto cameraPerspective = std::make_shared<seri::EditorCamera>(std::move(cameraPropertiesPerspective));
+			auto cameraPerspective = std::make_shared<seri::EditorCamera>(cameraPropertiesPerspective);
 			cameraPerspective->Init();
 
 			seri::Graphic::AddCamera(cameraOrtho);
@@ -107,7 +107,6 @@ namespace seri
 
 		void Update() override
 		{
-
 			seri::RenderingManager::GetEditorRT()->Bind();
 			seri::RenderingManager::ClearColor();
 			seri::RenderingManager::Clear();
