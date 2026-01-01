@@ -27,6 +27,8 @@ project "Editor"
 
   disablewarnings {
     "4244",
+    "4267",
+    "4312",
   }
 
   includedirs {

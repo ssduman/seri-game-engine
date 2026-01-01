@@ -43,6 +43,8 @@ project "Seri"
 
   disablewarnings {
     "4244",
+    "4267",
+    "4312",
   }
 
   includedirs {
@@ -86,7 +88,7 @@ project "Seri"
   }
 
   filter "files:vendor/yaml-cpp/src/**.cpp"
-	  flags { "NoPCH" }
+    flags { "NoPCH" }
 
   filter "system:windows"
     systemversion "latest"

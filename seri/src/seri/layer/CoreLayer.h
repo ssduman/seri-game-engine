@@ -19,7 +19,7 @@
 #include "seri/scripting/ScriptingManager.h"
 #include "seri/system/TransformSystem.h"
 #include "seri/system/MeshRendererSystem.h"
-#include "seri/debug/DebugDraw.h"
+#include "seri/draw/DebugDraw.h"
 
 namespace seri
 {

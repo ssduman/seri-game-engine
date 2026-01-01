@@ -53,7 +53,7 @@ namespace seri
 
 		const glm::mat4& GetView();
 		const glm::mat4& GetProjection();
-		const glm::mat4& GetViewProjection();
+		glm::mat4 GetViewProjection();
 
 		CameraProperties& GetCameraProperties();
 

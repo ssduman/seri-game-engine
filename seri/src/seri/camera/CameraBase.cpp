@@ -128,7 +128,7 @@ namespace seri
 		return _projection;
 	}
 
-	const glm::mat4& CameraBase::GetViewProjection()
+	glm::mat4 CameraBase::GetViewProjection()
 	{
 		return _projection * _view;
 	}
