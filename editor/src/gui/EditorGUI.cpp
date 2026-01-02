@@ -451,6 +451,20 @@ namespace seri::editor
 				_inspectorType = InspectorType::scene;
 			}
 
+			if (ImGui::BeginPopupContextItem())
+			{
+				if (ImGui::BeginMenu("Add"))
+				{
+					if (ImGui::MenuItem("Empty Object"))
+					{
+						seri::scene::SceneManager::GetActiveScene()->AddEntityAsChild(seri::Random::UUID(), 0, "Entity");
+					}
+					ImGui::EndMenu();
+				}
+
+				ImGui::EndPopup();
+			}
+
 			uint64_t selectedId = 0;
 			ShowEditorHierarchyImpl(activeScene, sceneTreeRoot, selectedId);
 			if (!clicked && selectedId != 0)
