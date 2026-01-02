@@ -217,7 +217,7 @@ namespace seri::editor
 			basicVertexArray->AddVertexBuffer(basicVertexBuffer_all);
 
 			basicMaterial = std::make_shared<seri::Material>();
-			basicMaterial->shader = basicShader;
+			basicMaterial->SetShader(basicShader);
 			basicMaterial->SetTexture("u_texture", basicTexture);
 
 			basicMaterial->SetInt("SetInt1", 42);

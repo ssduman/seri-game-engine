@@ -40,6 +40,64 @@ namespace seri
 			glDeleteShader(fragmentShader);
 
 			CheckProgramLinkingError();
+			ParseUniforms();
+		}
+
+		void ParseUniforms() override
+		{
+			if (_program == 0)
+			{
+				return;
+			}
+
+			int32_t currSlot = 0;
+
+			_uniforms.clear();
+
+			GLint uniformCount = 0;
+			glGetProgramiv(_program, GL_ACTIVE_UNIFORMS, &uniformCount);
+
+			GLint maxNameLength = 0;
+			glGetProgramiv(_program, GL_ACTIVE_UNIFORM_MAX_LENGTH, &maxNameLength);
+
+			std::vector<char> nameBuffer(maxNameLength);
+
+			for (GLint i = 0; i < uniformCount; i++)
+			{
+				GLsizei length = 0;
+				GLint size = 0;
+				GLenum type = 0;
+				GLint blockIndex = -1;
+
+				glGetActiveUniform(_program, i, maxNameLength, &length, &size, &type, nameBuffer.data());
+				glGetActiveUniformsiv(_program, 1, (GLuint*)&i, GL_UNIFORM_BLOCK_INDEX, &blockIndex);
+
+				if (blockIndex != -1)
+				{
+					continue;
+				}
+
+				std::string name(nameBuffer.data(), length);
+
+				uint32_t location = glGetUniformLocation(_program, name.c_str());
+
+				UniformType uniformType = GetUniformType(type);
+				if (uniformType == UniformType::unknown_type)
+				{
+					continue;
+				}
+
+				int32_t slot = IsSamplerType(uniformType) ? currSlot++ : -1;
+
+				_uniforms.push_back(
+					{
+						.name = name,
+						.type = uniformType,
+						.slot = slot,
+						.location = location,
+					}
+					);
+			}
 		}
 
 		void Bind() override
@@ -73,14 +131,29 @@ namespace seri
 			return _program != 0;
 		}
 
+		void SetBool(const std::string& name, bool value) override
+		{
+			glUniform1i(GetUniformLocation(name), value);
+		}
+
 		void SetInt(const std::string& name, int value) override
 		{
 			glUniform1i(GetUniformLocation(name), value);
 		}
 
-		void SetBool(const std::string& name, bool value) override
+		void SetInt2(const std::string& name, const glm::ivec2& value) override
 		{
-			glUniform1i(GetUniformLocation(name), value);
+			glUniform2iv(GetUniformLocation(name), 1, &value[0]);
+		}
+
+		void SetInt3(const std::string& name, const glm::ivec3& value) override
+		{
+			glUniform3iv(GetUniformLocation(name), 1, &value[0]);
+		}
+
+		void SetInt4(const std::string& name, const glm::ivec4& value) override
+		{
+			glUniform4iv(GetUniformLocation(name), 1, &value[0]);
 		}
 
 		void SetFloat(const std::string& name, float value) override
@@ -168,6 +241,41 @@ namespace seri
 		int GetUniformLocation(const std::string& name)
 		{
 			return glGetUniformLocation(_program, name.c_str());
+		}
+
+		UniformType GetUniformType(GLint type)
+		{
+			switch (type)
+			{
+				case GL_BOOL: return UniformType::bool_type;
+
+				case GL_FLOAT: return UniformType::float_type;
+				case GL_FLOAT_VEC2: return UniformType::vec2_type;
+				case GL_FLOAT_VEC3: return UniformType::vec3_type;
+				case GL_FLOAT_VEC4: return UniformType::vec4_type;
+
+				case GL_INT: return UniformType::int_type;
+				case GL_INT_VEC2: return UniformType::ivec2_type;
+				case GL_INT_VEC3: return UniformType::ivec3_type;
+				case GL_INT_VEC4: return UniformType::ivec4_type;
+
+				case GL_SAMPLER_CUBE: return UniformType::cubemap_type;
+				case GL_SAMPLER_2D: return UniformType::sampler2d_type;
+
+				default: return UniformType::unknown_type;
+			}
+		}
+
+		bool IsSamplerType(UniformType type)
+		{
+			switch (type)
+			{
+				case seri::UniformType::cubemap_type:
+				case seri::UniformType::sampler2d_type:
+					return true;
+				default:
+					return false;
+			}
 		}
 
 		unsigned int _program{ 0 };

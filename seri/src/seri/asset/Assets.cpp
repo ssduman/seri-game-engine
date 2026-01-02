@@ -12,6 +12,7 @@
 #include <yaml-cpp/yaml.h>
 
 #include <memory>
+#include <algorithm>
 
 namespace seri::asset
 {
@@ -35,12 +36,40 @@ namespace seri::asset
 	{
 		YAML::Node root;
 
+		YAML::Node boolsNode;
+		for (const auto& kv : asset->GetBools())
+		{
+			boolsNode[kv.first] = kv.second;
+		}
+		root["Bools"] = boolsNode;
+
 		YAML::Node intsNode;
 		for (const auto& kv : asset->GetInts())
 		{
 			intsNode[kv.first] = kv.second;
 		}
 		root["Ints"] = intsNode;
+
+		YAML::Node int2sNode;
+		for (const auto& kv : asset->GetInt2s())
+		{
+			int2sNode[kv.first] = YAMLUtil::IVec2ToYAML(kv.second);
+		}
+		root["Int2s"] = int2sNode;
+
+		YAML::Node int3sNode;
+		for (const auto& kv : asset->GetInt3s())
+		{
+			int3sNode[kv.first] = YAMLUtil::IVec3ToYAML(kv.second);
+		}
+		root["Int3s"] = int3sNode;
+
+		YAML::Node int4sNode;
+		for (const auto& kv : asset->GetInt4s())
+		{
+			int4sNode[kv.first] = YAMLUtil::IVec4ToYAML(kv.second);
+		}
+		root["Int4s"] = int4sNode;
 
 		YAML::Node floatsNode;
 		for (const auto& kv : asset->GetFloats())
@@ -92,7 +121,7 @@ namespace seri::asset
 		}
 		root["Textures"] = texturesNode;
 
-		root["ShaderID"] = asset->shader != nullptr ? asset->shader->id : 0;
+		root["ShaderID"] = asset->GetShader() != nullptr ? asset->GetShader()->id : 0;
 
 		return root;
 	}
@@ -101,19 +130,51 @@ namespace seri::asset
 	{
 		std::shared_ptr<Material> asset = std::make_shared<Material>();
 
+		const YAML::Node& boolsNode = root["Bools"];
+		for (const auto& kv : boolsNode)
+		{
+			std::string name = YAMLUtil::DeepCopyYAMLString(kv.first);
+			bool value = YAMLUtil::GetType<bool>(kv.second);
+			asset->SetBool(name, value);
+		}
+
 		const YAML::Node& intsNode = root["Ints"];
 		for (const auto& kv : intsNode)
 		{
 			std::string name = YAMLUtil::DeepCopyYAMLString(kv.first);
-			int value = kv.second.as<int>();
+			int value = YAMLUtil::GetType<int>(kv.second);
 			asset->SetInt(name, value);
+		}
+
+		const YAML::Node& int2sNode = root["Int2s"];
+		for (const auto& kv : int2sNode)
+		{
+			std::string name = YAMLUtil::DeepCopyYAMLString(kv.first);
+			glm::ivec2 value = YAMLUtil::IVec2FromYAML(kv.second);
+			asset->SetInt2(name, value);
+		}
+
+		const YAML::Node& int3sNode = root["Int3s"];
+		for (const auto& kv : int3sNode)
+		{
+			std::string name = YAMLUtil::DeepCopyYAMLString(kv.first);
+			glm::ivec3 value = YAMLUtil::IVec3FromYAML(kv.second);
+			asset->SetInt3(name, value);
+		}
+
+		const YAML::Node& int4sNode = root["Int4s"];
+		for (const auto& kv : int4sNode)
+		{
+			std::string name = YAMLUtil::DeepCopyYAMLString(kv.first);
+			glm::ivec4 value = YAMLUtil::IVec4FromYAML(kv.second);
+			asset->SetInt4(name, value);
 		}
 
 		const YAML::Node& floatsNode = root["Floats"];
 		for (const auto& kv : floatsNode)
 		{
 			std::string name = YAMLUtil::DeepCopyYAMLString(kv.first);
-			float value = kv.second.as<float>();
+			float value = YAMLUtil::GetType<float>(kv.second);
 			asset->SetFloat(name, value);
 		}
 

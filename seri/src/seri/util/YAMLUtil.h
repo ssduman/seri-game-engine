@@ -21,19 +21,34 @@ namespace seri
 			return node.as<T>();
 		}
 
+		static glm::ivec2 IVec2FromYAML(const YAML::Node& node)
+		{
+			return { GetType<int>(node[0]), GetType<int>(node[1]) };
+		}
+
+		static glm::ivec3 IVec3FromYAML(const YAML::Node& node)
+		{
+			return { GetType<int>(node[0]), GetType<int>(node[1]), GetType<int>(node[2]) };
+		}
+
+		static glm::ivec4 IVec4FromYAML(const YAML::Node& node)
+		{
+			return { GetType<int>(node[0]), GetType<int>(node[1]), GetType<int>(node[2]), GetType<int>(node[3]) };
+		}
+
 		static glm::vec2 Vec2FromYAML(const YAML::Node& node)
 		{
-			return { node[0].as<float>(), node[1].as<float>() };
+			return { GetType<float>(node[0]), GetType<float>(node[1]) };
 		}
 
 		static glm::vec3 Vec3FromYAML(const YAML::Node& node)
 		{
-			return { node[0].as<float>(), node[1].as<float>(), node[2].as<float>() };
+			return { GetType<float>(node[0]), GetType<float>(node[1]), GetType<float>(node[2]) };
 		}
 
 		static glm::vec4 Vec4FromYAML(const YAML::Node& node)
 		{
-			return { node[0].as<float>(), node[1].as<float>(), node[2].as<float>(), node[3].as<float>() };
+			return { GetType<float>(node[0]), GetType<float>(node[1]), GetType<float>(node[2]), GetType<float>(node[3]) };
 		}
 
 		static glm::mat4 Mat4FromYAML(const YAML::Node& node)
@@ -60,6 +75,36 @@ namespace seri
 			}
 
 			return mat;
+		}
+
+		static YAML::Node IVec2ToYAML(const glm::ivec2& vec)
+		{
+			YAML::Node node;
+			node.push_back(vec.x);
+			node.push_back(vec.y);
+			node.SetStyle(YAML::EmitterStyle::Flow);
+			return node;
+		}
+
+		static YAML::Node IVec3ToYAML(const glm::ivec3& vec)
+		{
+			YAML::Node node;
+			node.push_back(vec.x);
+			node.push_back(vec.y);
+			node.push_back(vec.z);
+			node.SetStyle(YAML::EmitterStyle::Flow);
+			return node;
+		}
+
+		static YAML::Node IVec4ToYAML(const glm::ivec4& vec)
+		{
+			YAML::Node node;
+			node.push_back(vec.x);
+			node.push_back(vec.y);
+			node.push_back(vec.z);
+			node.push_back(vec.w);
+			node.SetStyle(YAML::EmitterStyle::Flow);
+			return node;
 		}
 
 		static YAML::Node Vec2ToYAML(const glm::vec2& vec)

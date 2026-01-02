@@ -53,6 +53,25 @@ namespace seri
 		mat4_type,
 	};
 
+	enum class UniformType
+	{
+		unknown_type,
+
+		bool_type,
+		int_type,
+		float_type,
+
+		vec2_type,
+		vec3_type,
+		vec4_type,
+		ivec2_type,
+		ivec3_type,
+		ivec4_type,
+
+		cubemap_type,
+		sampler2d_type,
+	};
+
 	struct BufferElementDesc
 	{
 		friend struct BufferLayoutDesc;

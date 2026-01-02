@@ -38,24 +38,24 @@ namespace seri::editor
 			const auto& fontTexture = seri::font::FontManager::GetPredefinedFonts()[fontIndex]->texture;
 
 			materialFont = std::make_shared<seri::Material>();
-			materialFont->shader = seri::ShaderLibrary::Find("typer");
+			materialFont->SetShader(seri::ShaderLibrary::Find("typer"));
 			materialFont->SetTexture("u_texture", fontTexture);
 
 			materialGrid = std::make_shared<seri::Material>();
-			materialGrid->shader = seri::ShaderLibrary::Find("grid");
+			materialGrid->SetShader(seri::ShaderLibrary::Find("grid"));
 
 			materialCannon = std::make_shared<seri::Material>();
-			materialCannon->shader = seri::ShaderLibrary::Find("entity");
+			materialCannon->SetShader(seri::ShaderLibrary::Find("entity"));
 			materialCannon->SetTexture("u_texture", texture_2);
 
 			materialInstanced = std::make_shared<seri::Material>();
-			materialInstanced->shader = seri::ShaderLibrary::Find("entity_instanced");
+			materialInstanced->SetShader(seri::ShaderLibrary::Find("entity_instanced"));
 			materialInstanced->SetTexture("u_texture", texture_0);
 
 			for (size_t i = 0; model_0 && i < model_0->meshes.size(); i++)
 			{
 				auto materialSkinned = std::make_shared<seri::Material>();
-				materialSkinned->shader = seri::ShaderLibrary::Find("entity_skinned");
+				materialSkinned->SetShader(seri::ShaderLibrary::Find("entity_skinned"));
 				materialSkinned->SetTexture("u_texture", texture_1);
 				materialsSkinned.emplace_back(materialSkinned);
 			}

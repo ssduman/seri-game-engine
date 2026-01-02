@@ -807,9 +807,11 @@ namespace seri::editor
 				{
 					auto asset = seri::asset::AssetManager::GetAssetByID<seri::Material>(_selectedAsset.id);
 					ImGui::Text(fmt::format("material: {}", asset->id).c_str());
-					ImGui::Text(fmt::format("shader: {}", asset->shader->id).c_str());
+					ImGui::Text(fmt::format("shader: {}", asset->GetShader()->id).c_str());
 					for (auto& tex : asset->GetTextures())
 					{
+						ImGui::PushID(tex.first.c_str());
+
 						ImGui::Text(fmt::format(" tex: {} -> {}", tex.first, tex.second ? tex.second->id : 0).c_str());
 						if (tex.second == nullptr)
 						{
@@ -832,6 +834,8 @@ namespace seri::editor
 								asset->SetTexture(tex.first, newTexture);
 							}
 						}
+
+						ImGui::PopID();
 					}
 				}
 				break;

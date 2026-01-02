@@ -82,25 +82,23 @@ namespace seri
 
 		void Bind() override
 		{
-			glActiveTexture(_slot);
-			glBindTexture(_target, _handle);
+			Bind(_slot);
 		}
 
 		void Bind(int slot) override
 		{
-			glActiveTexture(GL_TEXTURE0 + _slot);
+			glActiveTexture(GL_TEXTURE0 + slot);
 			glBindTexture(_target, _handle);
 		}
 
 		void Unbind() override
 		{
-			glActiveTexture(_slot);
-			glBindTexture(_target, 0);
+			Unbind(_slot);
 		}
 
 		void Unbind(int slot) override
 		{
-			glActiveTexture(GL_TEXTURE0 + _slot);
+			glActiveTexture(GL_TEXTURE0 + slot);
 			glBindTexture(_target, 0);
 		}
 
@@ -252,10 +250,10 @@ namespace seri
 		{
 			switch (slot)
 			{
-				case seri::TextureSlot::uv0: return GL_TEXTURE0;
-				case seri::TextureSlot::uv1: return GL_TEXTURE1;
-				case seri::TextureSlot::uv2: return GL_TEXTURE2;
-				case seri::TextureSlot::uv3: return GL_TEXTURE3;
+				case seri::TextureSlot::uv0: return 0; // GL_TEXTURE0;
+				case seri::TextureSlot::uv1: return 1; // GL_TEXTURE1;
+				case seri::TextureSlot::uv2: return 2; // GL_TEXTURE2;
+				case seri::TextureSlot::uv3: return 3; // GL_TEXTURE3;
 			}
 
 			return GL_TEXTURE0;

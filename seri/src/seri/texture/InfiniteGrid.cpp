@@ -12,7 +12,7 @@ namespace seri
 	void InfiniteGrid::Init()
 	{
 		_material = std::make_shared<Material>();
-		_material->shader = ShaderLibrary::Find("grid");;
+		_material->SetShader(ShaderLibrary::Find("grid"));
 
 		SetDefaultPositions();
 	}

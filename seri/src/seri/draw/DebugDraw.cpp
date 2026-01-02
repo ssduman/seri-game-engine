@@ -9,7 +9,7 @@ namespace seri::debug
 		_shader = ShaderLibrary::Find("debug_0");
 
 		_material = std::make_shared<seri::Material>();
-		_material->shader = _shader;
+		_material->SetShader(_shader);
 		_material->SetMat4("u_view_proj", glm::mat4{ 1.0f });
 
 		_vertexBuffer = seri::VertexBufferBase::Create(nullptr, kMaxDrawCount * sizeof(DebugVertex), BufferUsage::dynamic_draw);

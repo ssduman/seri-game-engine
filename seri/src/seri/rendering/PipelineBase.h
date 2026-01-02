@@ -4,6 +4,7 @@
 #include "seri/shader/ShaderBase.h"
 #include "seri/rendering/BufferBase.h"
 #include "seri/rendering/VertexArrayBase.h"
+#include "seri/rendering/RenderingUtil.h"
 
 namespace seri
 {

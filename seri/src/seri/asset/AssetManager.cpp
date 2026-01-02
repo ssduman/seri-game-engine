@@ -278,8 +278,6 @@ namespace seri::asset
 					model->Build();
 					model->id = metadata.id;
 					_assetCache[metadata.id] = model;
-
-					//std::shared_ptr<seri::Model> model = seri::ModelImporter{}.Load(metadata.source.string());
 				}
 				return _assetCache[metadata.id];
 			};
@@ -313,8 +311,8 @@ namespace seri::asset
 
 						if (material->shaderID != 0)
 						{
-							material->shader = std::dynamic_pointer_cast<ShaderBase>(GetShader(_assetMetadataCache[material->shaderID]));
-							material->shader = material->shader->Clone();
+							auto shader = std::dynamic_pointer_cast<ShaderBase>(GetShader(_assetMetadataCache[material->shaderID]));
+							material->SetShader(shader->Clone());
 							material->shaderID = 0;
 						}
 

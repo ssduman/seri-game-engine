@@ -2,34 +2,20 @@ IDInfo:
   ID: 5128232576114054222
   Version: 0.1
 Material:
-  Ints:
-    SetInt1: 42
-    SetInt2: 43
-    SetInt3: 44
-  Floats:
-    SetFloat1: 1
-    SetFloat2: 3
-  Float2s:
-    SetFloat22: [22, 22]
-    SetFloat2: [2, 2]
+  Bools: ~
+  Ints: ~
+  Int2s: ~
+  Int3s: ~
+  Int4s: ~
+  Floats: ~
+  Float2s: ~
   Float3s:
-    SetFloat3: [3, 3, 3]
     u_light_dir: [0, 0, -1]
   Float4s:
-    SetFloat4: [4, 4, 4, 4]
-    u_color: [1, 1, 1, 1]
     u_light_color: [1, 1, 1, 1]
-  Mat4s:
-    SetMat55:
-      - [55, 0, 0, 0]
-      - [0, 55, 0, 0]
-      - [0, 0, 55, 0]
-      - [0, 0, 0, 55]
-    SetMat4:
-      - [5, 0, 0, 0]
-      - [0, 5, 0, 0]
-      - [0, 0, 5, 0]
-      - [0, 0, 0, 5]
+    u_color: [1, 1, 1, 1]
+  Mat4s: ~
   Textures:
     u_texture: 15745590776061413606
+    u_texture_0: 0
   ShaderID: 3566850448792701980

@@ -45,7 +45,7 @@ namespace seri
 	{
 		_texture = TextureBase::Create();
 		_material = std::make_shared<Material>();
-		_material->shader = ShaderLibrary::Find("skybox");;
+		_material->SetShader(ShaderLibrary::Find("skybox"));
 		_material->SetTexture("u_skybox", _texture);
 
 		SetDefaultPositions();
