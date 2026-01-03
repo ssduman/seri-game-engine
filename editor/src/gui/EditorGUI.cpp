@@ -457,7 +457,7 @@ namespace seri::editor
 				{
 					if (ImGui::MenuItem("Empty Object"))
 					{
-						seri::scene::SceneManager::GetActiveScene()->AddEntityAsChild(seri::Random::UUID(), 0, "Entity");
+						activeScene->AddEntityAsChild(seri::Random::UUID(), 0, "Entity");
 					}
 					ImGui::EndMenu();
 				}
@@ -819,38 +819,7 @@ namespace seri::editor
 		{
 			case seri::asset::AssetType::material:
 				{
-					auto asset = seri::asset::AssetManager::GetAssetByID<seri::Material>(_selectedAsset.id);
-					ImGui::Text(fmt::format("material: {}", asset->id).c_str());
-					ImGui::Text(fmt::format("shader: {}", asset->GetShader()->id).c_str());
-					for (auto& tex : asset->GetTextures())
-					{
-						ImGui::PushID(tex.first.c_str());
-
-						ImGui::Text(fmt::format(" tex: {} -> {}", tex.first, tex.second ? tex.second->id : 0).c_str());
-						if (tex.second == nullptr)
-						{
-							if (ImGui::Button("<none>"))
-							{
-								ImGui::OpenPopup("AssetPickerPopup");
-							}
-						}
-						else if (ShowEditorImageButton(tex.second, 64.0f))
-						{
-							ImGui::OpenPopup("AssetPickerPopup");
-						}
-						bool selected = false;
-						uint64_t selection = 0;
-						if (ShowEditorAssetPickerPopup(seri::asset::AssetType::texture, selected, selection))
-						{
-							if (selected)
-							{
-								auto newTexture = seri::asset::AssetManager::GetAssetByID<seri::TextureBase>(selection);
-								asset->SetTexture(tex.first, newTexture);
-							}
-						}
-
-						ImGui::PopID();
-					}
+					ShowEditorInspectorAssetMaterial();
 				}
 				break;
 			case seri::asset::AssetType::shader:
@@ -882,6 +851,192 @@ namespace seri::editor
 				}
 				break;
 		}
+	}
+
+	void EditorGUI::ShowEditorInspectorAssetMaterial()
+	{
+		constexpr float previewSize = 64.0f;
+		constexpr float labelWidth = 150.0f;
+
+		auto asset = seri::asset::AssetManager::GetAssetByID<seri::Material>(_selectedAsset.id);
+		if (!asset)
+		{
+			return;
+		}
+
+		ImGui::PushID("material_inspector");
+
+		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 6.0f);
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(10, 8));
+		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(6, 4));
+
+		auto Section = [](const char* title)
+			{
+				ImGui::Spacing();
+				ImGui::Separator();
+				ImGui::TextUnformatted(title);
+				ImGui::Spacing();
+			};
+
+		auto PropertyRow = [&](std::string_view label)
+			{
+				ImGui::PushID(label.data());
+				ImGui::Columns(2, nullptr, false);
+				ImGui::SetColumnWidth(0, labelWidth);
+				ImGui::AlignTextToFramePadding();
+				ImGui::TextUnformatted(label.data());
+				ImGui::NextColumn();
+				ImGui::SetNextItemWidth(-1);
+			};
+
+		auto EndPropertyRow = []()
+			{
+				ImGui::Columns(1);
+				ImGui::PopID();
+			};
+
+		ImGui::TextUnformatted("Material");
+		ImGui::Separator();
+
+		ImGui::TextDisabled("ID: %llu", asset->id);
+		ImGui::TextDisabled("Shader: %llu", asset->GetShader()->id);
+
+		if (!asset->GetTextures().empty())
+		{
+			Section("Textures");
+
+			for (auto& tex : asset->GetTextures())
+			{
+				ImGui::PushID(tex.first.c_str());
+
+				ImGui::Columns(2, nullptr, false);
+				ImGui::SetColumnWidth(0, labelWidth);
+				ImGui::AlignTextToFramePadding();
+				ImGui::TextUnformatted(tex.first.c_str());
+				ImGui::NextColumn();
+
+				bool clicked = false;
+				if (tex.second)
+				{
+					ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4, 4));
+					clicked = ShowEditorImageButton(tex.second, previewSize - 8.0f);
+					ImGui::PopStyleVar();
+				}
+				else
+				{
+					ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetStyleColorVec4(ImGuiCol_FrameBg));
+					ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImGui::GetStyleColorVec4(ImGuiCol_FrameBgHovered));
+					ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImGui::GetStyleColorVec4(ImGuiCol_FrameBgActive));
+
+					clicked = ImGui::Button("None", ImVec2(previewSize, previewSize));
+
+					ImGui::PopStyleColor(3);
+				}
+				if (clicked)
+				{
+					ImGui::OpenPopup("AssetPickerPopup");
+				}
+
+				bool selected = false;
+				uint64_t selection = 0;
+				if (ShowEditorAssetPickerPopup(seri::asset::AssetType::texture, selected, selection))
+				{
+					if (selected)
+					{
+						auto newTex = seri::asset::AssetManager::GetAssetByID<seri::TextureBase>(selection);
+						asset->SetTexture(tex.first, newTex);
+					}
+				}
+
+				if (tex.second)
+				{
+					ImGui::SameLine();
+					if (ImGui::SmallButton("X"))
+					{
+						asset->SetTexture(tex.first, nullptr);
+					}
+				}
+
+				ImGui::Columns(1);
+				ImGui::Spacing();
+				ImGui::PopID();
+			}
+		}
+
+		if (!asset->GetBools().empty())
+		{
+			Section("Booleans");
+
+			for (auto& kv : asset->GetBools())
+			{
+				PropertyRow(kv.first);
+				ImGui::Checkbox("##bool", &kv.second);
+				EndPropertyRow();
+			}
+		}
+
+		if (!asset->GetInts().empty() || !asset->GetInt2s().empty() || !asset->GetInt3s().empty() || !asset->GetInt4s().empty())
+		{
+			Section("Integers");
+
+			for (auto& kv : asset->GetInts())
+			{
+				PropertyRow(kv.first);
+				ImGui::DragInt("##int", &kv.second);
+				EndPropertyRow();
+			}
+			for (auto& kv : asset->GetInt2s())
+			{
+				PropertyRow(kv.first);
+				ImGui::DragInt2("##int2", glm::value_ptr(kv.second));
+				EndPropertyRow();
+			}
+			for (auto& kv : asset->GetInt3s())
+			{
+				PropertyRow(kv.first);
+				ImGui::DragInt3("##int3", glm::value_ptr(kv.second));
+				EndPropertyRow();
+			}
+			for (auto& kv : asset->GetInt4s())
+			{
+				PropertyRow(kv.first);
+				ImGui::DragInt4("##int4", glm::value_ptr(kv.second));
+				EndPropertyRow();
+			}
+		}
+
+		if (!asset->GetFloats().empty() || !asset->GetFloat2s().empty() || !asset->GetFloat3s().empty() || !asset->GetFloat4s().empty())
+		{
+			Section("Floats");
+
+			for (auto& kv : asset->GetFloats())
+			{
+				PropertyRow(kv.first);
+				ImGui::DragFloat("##float", &kv.second, 0.01f);
+				EndPropertyRow();
+			}
+			for (auto& kv : asset->GetFloat2s())
+			{
+				PropertyRow(kv.first);
+				ImGui::DragFloat2("##float2", glm::value_ptr(kv.second), 0.01f);
+				EndPropertyRow();
+			}
+			for (auto& kv : asset->GetFloat3s())
+			{
+				PropertyRow(kv.first);
+				ImGui::DragFloat3("##float3", glm::value_ptr(kv.second), 0.01f);
+				EndPropertyRow();
+			}
+			for (auto& kv : asset->GetFloat4s())
+			{
+				PropertyRow(kv.first);
+				ImGui::DragFloat4("##float4", glm::value_ptr(kv.second), 0.01f);
+				EndPropertyRow();
+			}
+		}
+
+		ImGui::PopStyleVar(3);
+		ImGui::PopID();
 	}
 
 	void EditorGUI::ShowEditorComponentPickerPopup()

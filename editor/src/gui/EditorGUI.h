@@ -103,6 +103,7 @@ namespace seri::editor
 		void ShowEditorInspectorScene();
 		void ShowEditorInspectorEntity();
 		void ShowEditorInspectorAsset();
+		void ShowEditorInspectorAssetMaterial();
 
 		void ShowEditorProject();
 		void ShowEditorProjectFolderTree(seri::asset::AssetTreeNode& node);
