@@ -45,9 +45,9 @@ namespace seri
 					continue;
 				}
 
-				command.material->SetMat4("u_model", command.trs);
-				command.material->SetMat4("u_view", command.camera->GetView());
-				command.material->SetMat4("u_projection", command.camera->GetProjection());
+				command.material->SetMat4(literals::kUniformModel, command.trs);
+				command.material->SetMat4(literals::kUniformView, command.camera->GetView());
+				command.material->SetMat4(literals::kUniformProjection, command.camera->GetProjection());
 				command.material->Apply();
 				command.vao->Bind();
 

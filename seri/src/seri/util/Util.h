@@ -2,6 +2,7 @@
 
 #define PI 3.14159265359f
 
+#include "seri/core/Literals.h"
 #include "seri/logging/Logger.h"
 
 #include <fmt/core.h>
@@ -47,101 +48,33 @@ namespace seri
 			}
 		}
 
-		static float ToDegree(float radian)
-		{
-			return radian * (180.0f / PI);
-		}
+		static float ToDegree(float radian);
 
-		static float ToRadian(float degree)
-		{
-			return degree * (PI / 180.0f);
-		}
+		static float ToRadian(float degree);
 
-		static float Map(float x, float in_min, float in_max, float out_min, float out_max)
-		{
-			return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-		}
+		static float Map(float x, float in_min, float in_max, float out_min, float out_max);
 
-		static int RountToInt(float value)
-		{
-			return static_cast<int>(std::round(value));
-		}
+		static int RountToInt(float value);
 
-		static void ToLower(std::string& s)
-		{
-			std::transform(s.begin(), s.end(), s.begin(), [](unsigned char c) { return std::tolower(c); });
-		}
+		static void ToLower(std::string& s);
 
-		static bool Contains(std::string_view str, std::string_view substr)
-		{
-			return str.find(substr) != std::string::npos;
-		}
+		static bool Contains(std::string_view str, std::string_view substr);
 
-		static glm::quat ToQuaternion(const glm::vec3& euler)
-		{
-			return glm::quat(glm::radians(euler));
-		}
+		static glm::quat ToQuaternion(const glm::vec3& euler);
 
-		static glm::mat4 GetTRS(const glm::vec3& pos, const glm::quat& rot, const glm::vec3& scale)
-		{
-			glm::mat4 T = glm::translate(glm::mat4{ 1.0f }, pos);
-			glm::mat4 R = glm::mat4_cast(rot);
-			glm::mat4 S = glm::scale(glm::mat4{ 1.0f }, scale);
-			return T * R * S;
-		}
+		static glm::mat4 GetTRS(const glm::vec3& pos, const glm::quat& rot, const glm::vec3& scale);
 
-		static glm::mat4 GetTRS(const glm::vec3& pos, const glm::vec3& euler, const glm::vec3& scale)
-		{
-			return GetTRS(pos, ToQuaternion(euler), scale);
-		}
+		static glm::mat4 GetTRS(const glm::vec3& pos, const glm::vec3& euler, const glm::vec3& scale);
 
-		static glm::mat4 GetIdentityMatrix()
-		{
-			return glm::mat4{ 1.0f };
-		}
+		static glm::mat4 GetIdentityMatrix();
 
-		static void Decompose(const glm::mat4& matrix, glm::vec3& pos, glm::vec3& euler, glm::vec3& scale)
-		{
-			glm::vec3 skew;
-			glm::vec4 perspective;
-			glm::quat rot;
-			glm::decompose(matrix, scale, rot, pos, skew, perspective);
-			euler = glm::degrees(glm::eulerAngles(rot));
-		}
+		static void Decompose(const glm::mat4& matrix, glm::vec3& pos, glm::vec3& euler, glm::vec3& scale);
 
-		static std::string ReadFileAtPath(const char* path)
-		{
-			try
-			{
-				std::stringstream ss;
-				std::ifstream stream(path);
-				if (stream.is_open())
-				{
-					ss << stream.rdbuf();
-					stream.close();
-				}
-				return ss.str();
-			}
-			catch (const std::exception& ex)
-			{
-				LOGGER(error, "exception occurred while reading path: " << path << ", exception: " << ex.what());
-				return std::string{};
-			}
-		}
+		static std::string ReadFileAtPath(const char* path);
 
-		static std::string GetContentOfToken(const std::string& text, const std::string& token_beg, const std::string& token_end)
-		{
-			size_t beg = text.find(token_beg);
-			size_t end = text.find(token_end);
+		static std::string GetContentOfToken(const std::string& text, const std::string& token_beg, const std::string& token_end);
 
-			if (beg != std::string::npos && end != std::string::npos && end > beg)
-			{
-				beg += token_beg.length();
-				return text.substr(beg, end - beg);
-			}
-
-			return "";
-		}
+		static bool IsIgnoredUniform(std::string_view uniformName);
 
 	};
 }

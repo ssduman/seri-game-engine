@@ -88,7 +88,7 @@ namespace seri::asset
 		YAML::Node float3sNode;
 		for (const auto& kv : asset->GetFloat3s())
 		{
-			if (kv.first.starts_with("u_view_pos"))
+			if (Util::IsIgnoredUniform(kv.first))
 			{
 				continue;
 			}
@@ -99,6 +99,10 @@ namespace seri::asset
 		YAML::Node float4sNode;
 		for (const auto& kv : asset->GetFloat4s())
 		{
+			if (Util::IsIgnoredUniform(kv.first))
+			{
+				continue;
+			}
 			float4sNode[kv.first] = YAMLUtil::Vec4ToYAML(kv.second);
 		}
 		root["Float4s"] = float4sNode;
@@ -106,7 +110,7 @@ namespace seri::asset
 		YAML::Node mat4sNode;
 		for (const auto& kv : asset->GetMats())
 		{
-			if (kv.first.starts_with("u_bones") || kv.first.starts_with("u_model") || kv.first.starts_with("u_projection") || kv.first.starts_with("u_view"))
+			if (Util::IsIgnoredUniform(kv.first))
 			{
 				continue;
 			}

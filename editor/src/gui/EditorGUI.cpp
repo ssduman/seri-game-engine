@@ -903,7 +903,7 @@ namespace seri::editor
 
 		if (!asset->GetTextures().empty())
 		{
-			Section("Textures");
+			ImGui::Separator();
 
 			for (auto& tex : asset->GetTextures())
 			{
@@ -965,8 +965,6 @@ namespace seri::editor
 
 		if (!asset->GetBools().empty())
 		{
-			Section("Booleans");
-
 			for (auto& kv : asset->GetBools())
 			{
 				PropertyRow(kv.first);
@@ -977,8 +975,6 @@ namespace seri::editor
 
 		if (!asset->GetInts().empty() || !asset->GetInt2s().empty() || !asset->GetInt3s().empty() || !asset->GetInt4s().empty())
 		{
-			Section("Integers");
-
 			for (auto& kv : asset->GetInts())
 			{
 				PropertyRow(kv.first);
@@ -1007,8 +1003,6 @@ namespace seri::editor
 
 		if (!asset->GetFloats().empty() || !asset->GetFloat2s().empty() || !asset->GetFloat3s().empty() || !asset->GetFloat4s().empty())
 		{
-			Section("Floats");
-
 			for (auto& kv : asset->GetFloats())
 			{
 				PropertyRow(kv.first);
@@ -1023,12 +1017,20 @@ namespace seri::editor
 			}
 			for (auto& kv : asset->GetFloat3s())
 			{
+				if (Util::IsIgnoredUniform(kv.first))
+				{
+					continue;
+				}
 				PropertyRow(kv.first);
 				ImGui::DragFloat3("##float3", glm::value_ptr(kv.second), 0.01f);
 				EndPropertyRow();
 			}
 			for (auto& kv : asset->GetFloat4s())
 			{
+				if (Util::IsIgnoredUniform(kv.first))
+				{
+					continue;
+				}
 				PropertyRow(kv.first);
 				ImGui::DragFloat4("##float4", glm::value_ptr(kv.second), 0.01f);
 				EndPropertyRow();

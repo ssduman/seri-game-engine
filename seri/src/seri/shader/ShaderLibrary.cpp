@@ -56,23 +56,23 @@ namespace seri
 	void ShaderLibrary::SetView(std::shared_ptr<ShaderBase>& shader, const glm::mat4& view)
 	{
 		shader->Bind();
-		shader->SetMat4("u_view", view);
+		shader->SetMat4(literals::kUniformView, view);
 		shader->Unbind();
 	}
 
 	void ShaderLibrary::SetProjection(std::shared_ptr<ShaderBase>& shader, const glm::mat4& projection)
 	{
 		shader->Bind();
-		shader->SetMat4("u_projection", projection);
+		shader->SetMat4(literals::kUniformProjection, projection);
 		shader->Unbind();
 	}
 
 	void ShaderLibrary::SetMVP(std::shared_ptr<ShaderBase>& shader, const std::shared_ptr<CameraBase>& camera)
 	{
 		shader->Bind();
-		shader->SetMat4("u_model", glm::mat4{ 1.0f });
-		shader->SetMat4("u_view", camera->GetView());
-		shader->SetMat4("u_projection", camera->GetProjection());
+		shader->SetMat4(literals::kUniformModel, glm::mat4{ 1.0f });
+		shader->SetMat4(literals::kUniformView, camera->GetView());
+		shader->SetMat4(literals::kUniformProjection, camera->GetProjection());
 		shader->Unbind();
 	}
 

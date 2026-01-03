@@ -10,7 +10,6 @@ namespace seri::debug
 
 		_material = std::make_shared<seri::Material>();
 		_material->SetShader(_shader);
-		_material->SetMat4("u_view_proj", glm::mat4{ 1.0f });
 
 		_vertexBuffer = seri::VertexBufferBase::Create(nullptr, kMaxDrawCount * sizeof(DebugVertex), BufferUsage::dynamic_draw);
 		_vertexBuffer->AddElements({
@@ -58,7 +57,7 @@ namespace seri::debug
 
 		_vertexBuffer->SetData(vertices.data(), vertices.size() * sizeof(DebugVertex));
 
-		_material->SetMat4("u_view_proj", camera->GetViewProjection());
+		_material->SetMat4(literals::kUniformViewProjection, camera->GetViewProjection());
 
 		seri::RenderCommand renderCommand{};
 		renderCommand.name = "debug_line";

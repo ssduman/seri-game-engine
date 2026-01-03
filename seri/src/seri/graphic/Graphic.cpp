@@ -58,16 +58,16 @@ namespace seri
 	{
 		seri::RenderingManager::Begin(camera);
 
-		material->SetFloat4("u_color", glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f });
-		material->SetFloat3("u_view_pos", camera->GetCameraProperties().position);
-		material->SetFloat3("u_light_dir", glm::vec3{ 0.0f, 0.0f, -1.0f });
-		material->SetFloat4("u_light_color", glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f });
+		material->SetFloat4(literals::kUniformColor, glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f });
+		material->SetFloat3(literals::kUniformViewPos, camera->GetCameraProperties().position);
+		material->SetFloat3(literals::kUniformLightDir, glm::vec3{ 0.0f, 0.0f, -1.0f });
+		material->SetFloat4(literals::kUniformLightColor, glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f });
 
 		if (mesh->bonesForVertices.size() > 0)
 		{
 			for (auto i = 0; i < SERI_MAX_BONES; i++)
 			{
-				std::string loc = "u_bones[" + std::to_string(i) + "]";
+				std::string loc = fmt::format("{}[{}]", literals::kUniformBones, std::to_string(i));
 				glm::mat4 transform = glm::mat4{ 1.0f };
 				if (mesh->bones.find(i) != mesh->bones.end())
 				{
@@ -93,10 +93,10 @@ namespace seri
 	{
 		seri::RenderingManager::Begin(camera);
 
-		material->SetFloat4("u_color", glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f });
-		material->SetFloat3("u_view_pos", camera->GetCameraProperties().position);
-		material->SetFloat3("u_light_dir", glm::vec3{ 0.0f, 0.0f, -1.0f });
-		material->SetFloat4("u_light_color", glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f });
+		material->SetFloat4(literals::kUniformColor, glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f });
+		material->SetFloat3(literals::kUniformViewPos, camera->GetCameraProperties().position);
+		material->SetFloat3(literals::kUniformLightDir, glm::vec3{ 0.0f, 0.0f, -1.0f });
+		material->SetFloat4(literals::kUniformLightColor, glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f });
 
 		seri::RenderCommand renderCommand{};
 		renderCommand.name = "draw_instanced";

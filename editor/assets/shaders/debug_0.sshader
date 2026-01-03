@@ -5,14 +5,14 @@
 layout(location = 0) in vec3 in_vertex;
 layout(location = 1) in vec4 in_color;
 
-uniform mat4 u_view_proj;
+uniform mat4 u_view_projection;
 
 out vec4 sent_color;
 
 void main()
 {
     sent_color = in_color;
-    gl_Position = u_view_proj * vec4(in_vertex, 1.0);
+    gl_Position = u_view_projection * vec4(in_vertex, 1.0);
 }
 
 #end_vs

@@ -9,11 +9,8 @@ Material:
   Int4s: ~
   Floats: ~
   Float2s: ~
-  Float3s:
-    u_light_dir: [0, 0, -1]
-  Float4s:
-    u_light_color: [1, 1, 1, 1]
-    u_color: [1, 1, 1, 1]
+  Float3s: ~
+  Float4s: ~
   Mat4s: ~
   Textures:
     u_texture: 15745590776061413606

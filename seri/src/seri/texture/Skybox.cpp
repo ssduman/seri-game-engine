@@ -56,7 +56,7 @@ namespace seri
 	{
 		seri::RenderingManager::Begin(seri::Graphic::GetCameraPerspective());
 
-		_material->SetMat4("u_view_skybox", glm::mat4(glm::mat3(seri::Graphic::GetCameraPerspective()->GetView())));
+		_material->SetMat4(literals::kUniformViewSkybox, glm::mat4(glm::mat3(seri::Graphic::GetCameraPerspective()->GetView())));
 
 		seri::RenderCommand renderCommand_skybox{};
 		renderCommand_skybox.name = "skybox";
