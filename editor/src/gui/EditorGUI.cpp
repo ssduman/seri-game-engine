@@ -901,6 +901,31 @@ namespace seri::editor
 		ImGui::TextDisabled("ID: %llu", asset->id);
 		ImGui::TextDisabled("Shader: %llu", asset->GetShader()->id);
 
+		{
+			ImGui::Separator();
+
+			PropertyRow("Shader");
+
+			std::string shaderName = asset->GetShader()->id == 0 ? "<None>" : seri::asset::AssetManager::GetAssetName(asset->GetShader()->id);
+			if (ImGui::Button(shaderName.c_str()))
+			{
+				ImGui::OpenPopup("AssetPickerPopup");
+			}
+
+			bool selected = false;
+			uint64_t selection = 0;
+			if (ShowEditorAssetPickerPopup(seri::asset::AssetType::shader, selected, selection))
+			{
+				if (selected)
+				{
+					auto newShader = seri::asset::AssetManager::GetAssetByID<seri::ShaderBase>(selection);
+					asset->SetShader(newShader);
+				}
+			}
+
+			EndPropertyRow();
+		}
+
 		if (!asset->GetTextures().empty())
 		{
 			ImGui::Separator();
