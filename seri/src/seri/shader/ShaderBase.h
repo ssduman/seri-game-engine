@@ -18,6 +18,8 @@ namespace seri
 	class ShaderBase : public seri::asset::AssetBase
 	{
 	public:
+		class ShaderLibrary;
+
 		ShaderBase()
 		{
 			id = seri::Random::UUID();

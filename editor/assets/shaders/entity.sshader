@@ -29,6 +29,8 @@ void main()
 
 #version 460 core
 
+#include "common.glsl"
+
 in vec4 sent_pos;
 in vec2 sent_uv;
 in vec3 sent_normal;

@@ -12,27 +12,59 @@ namespace seri
 
 	void ShaderLibrary::Init(const char* shaderFolderPath)
 	{
+		GetInstance()._predefinedGLSLs = {};
 		GetInstance()._predefinedShaders = {};
 
 		for (const auto& entry : std::filesystem::directory_iterator(shaderFolderPath))
 		{
-			if (Util::Contains(entry.path().string(), ".smeta"))
+			std::string path = entry.path().string();
+			std::string name = entry.path().stem().string();
+
+			if (Util::Contains(path, ".smeta"))
 			{
 				continue;
 			}
 
-			std::string name = entry.path().stem().string();
-			std::string text = Util::ReadFileAtPath(entry.path().string().c_str());
+			if (Util::Contains(path, ".sshader"))
+			{
+				std::string text = Util::ReadFileAtPath(path.c_str());
 
-			ShaderInfo info;
-			info.valid = true;
-			info.name = name;
-			info.vsCode = Util::GetContentOfToken(text, "#beg_vs", "#end_vs");
-			info.fsCode = Util::GetContentOfToken(text, "#beg_fs", "#end_fs");
-			GetInstance()._predefinedShaders[name] = info;
+				ShaderInfo info;
+				info.valid = true;
+				info.name = name;
+				info.vsCode = Util::GetContentOfToken(text, "#beg_vs", "#end_vs");
+				info.fsCode = Util::GetContentOfToken(text, "#beg_fs", "#end_fs");
+				GetInstance()._predefinedShaders[name] = info;
+			}
+			else if (Util::Contains(path, ".glsl"))
+			{
+				std::string text = Util::ReadFileAtPath(path.c_str());
+
+				if (Util::Contains(path, "#include"))
+				{
+					LOGGER(error, fmt::format("[shader library] glsl include not supported in glsl: {}", name));
+					continue;
+				}
+
+				GLSLInfo info;
+				info.valid = true;
+				info.name = name;
+				info.code = text;
+				GetInstance()._predefinedGLSLs[fmt::format("{}.glsl", name)] = info;
+			}
 		}
 
-		LOGGER(info, fmt::format("[shader library] init done, count: {}", GetInstance()._predefinedShaders.size()));
+		LOGGER(info, fmt::format("[shader library] init done, glsl count: {}, shader count: {}", GetInstance()._predefinedGLSLs.size(), GetInstance()._predefinedShaders.size()));
+	}
+
+	ShaderLibrary::GLSLInfo& ShaderLibrary::GetGLSL(const std::string& name)
+	{
+		if (GetInstance()._predefinedGLSLs.find(name) != GetInstance()._predefinedGLSLs.end())
+		{
+			return GetInstance()._predefinedGLSLs[name];
+		}
+
+		throw std::runtime_error("[shader library] not found: " + name);
 	}
 
 	ShaderLibrary::ShaderInfo& ShaderLibrary::Get(const std::string& name)

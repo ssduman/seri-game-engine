@@ -33,13 +33,13 @@ namespace seri
 			seri::WindowManager::Instance()->Init({ /*title*/ "Seri Game Engine - Editor", /*fullscreen*/ false, /*w*/ 1280, /*h*/ 720 });
 			seri::RenderingManager::Instance()->Init(seri::WindowManager::Instance(), RenderingProperties{});
 
+			seri::ShaderLibrary::Init("assets/shaders/");
 			seri::asset::AssetManager::Init();
 			seri::TimeWrapper::Init();
 			seri::Application::Init();
 			seri::Graphic::Init();
 			seri::InputManager::Init();
 			seri::BehaviourManager::Init();
-			seri::ShaderLibrary::Init("assets/shaders/");
 			seri::font::FontManager::Init("assets/fonts/");
 			seri::sound::SoundManager::Init("assets/sounds/");
 			seri::scene::SceneManager::Init();

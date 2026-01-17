@@ -13,13 +13,19 @@ namespace seri
 	class ShaderLibrary
 	{
 	public:
+		struct GLSLInfo
+		{
+			bool valid{ false };
+			std::string name{ "" };
+			std::string code{ "" };
+		};
 
 		struct ShaderInfo
 		{
-			bool valid;
-			std::string name;
-			std::string vsCode;
-			std::string fsCode;
+			bool valid{ false };
+			std::string name{ "" };
+			std::string vsCode{ "" };
+			std::string fsCode{ "" };
 		};
 
 		ShaderLibrary(ShaderLibrary const&) = delete;
@@ -28,6 +34,7 @@ namespace seri
 		static ShaderLibrary& GetInstance();
 		static void Init(const char* shaderFolderPath);
 
+		static GLSLInfo& GetGLSL(const std::string& name);
 		static ShaderInfo& Get(const std::string& name);
 		static std::shared_ptr<ShaderBase> Find(const std::string& name);
 
@@ -39,7 +46,8 @@ namespace seri
 		ShaderLibrary() = default;
 		~ShaderLibrary() = default;
 
-		std::unordered_map<std::string, ShaderInfo> _predefinedShaders;
+		std::unordered_map<std::string, GLSLInfo> _predefinedGLSLs{};
+		std::unordered_map<std::string, ShaderInfo> _predefinedShaders{};
 
 	};
 }

@@ -72,7 +72,7 @@ namespace seri
 
 		static std::string ReadFileAtPath(const char* path);
 
-		static std::string GetContentOfToken(const std::string& text, const std::string& token_beg, const std::string& token_end);
+		static std::string GetContentOfToken(const std::string& text, const std::string& tokenBeg, const std::string& tokenEnd);
 
 		static bool IsIgnoredUniform(std::string_view uniformName);
 

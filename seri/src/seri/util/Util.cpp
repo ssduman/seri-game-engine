@@ -1,5 +1,6 @@
 #include "Seripch.h"
-#include "Util.h"
+
+#include "seri/util/Util.h"
 
 namespace seri
 {
@@ -85,14 +86,14 @@ namespace seri
 		}
 	}
 
-	std::string Util::GetContentOfToken(const std::string& text, const std::string& token_beg, const std::string& token_end)
+	std::string Util::GetContentOfToken(const std::string& text, const std::string& tokenBeg, const std::string& tokenEnd)
 	{
-		size_t beg = text.find(token_beg);
-		size_t end = text.find(token_end);
+		size_t beg = text.find(tokenBeg);
+		size_t end = text.find(tokenEnd);
 
 		if (beg != std::string::npos && end != std::string::npos && end > beg)
 		{
-			beg += token_beg.length();
+			beg += tokenBeg.length();
 			return text.substr(beg, end - beg);
 		}
 

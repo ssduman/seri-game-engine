@@ -2,6 +2,7 @@
 
 #include "seri/util/Util.h"
 #include "seri/shader/ShaderBase.h"
+#include "seri/shader/ShaderLibrary.h"
 
 #include <glad/gl.h>
 
@@ -26,8 +27,8 @@ namespace seri
 
 		void Build(const std::string& vsCode, const std::string& fsCode) override
 		{
-			_vsCode = vsCode;
-			_fsCode = fsCode;
+			_vsCode = ParseIncludes(vsCode);
+			_fsCode = ParseIncludes(fsCode);
 
 			unsigned int vertexShader = CompileShader(GL_VERTEX_SHADER, _vsCode.c_str());
 			unsigned int fragmentShader = CompileShader(GL_FRAGMENT_SHADER, _fsCode.c_str());
@@ -241,6 +242,40 @@ namespace seri
 		int GetUniformLocation(const std::string& name)
 		{
 			return glGetUniformLocation(_program, name.c_str());
+		}
+
+		std::string ParseIncludes(const std::string& code)
+		{
+			int lineNumber = 0;
+			std::string line;
+			std::stringstream result;
+			std::stringstream contentStream(code);
+			while (std::getline(contentStream, line))
+			{
+				if (line.find("#include") != std::string::npos)
+				{
+					size_t beg = line.find('"');
+					size_t end = line.find('"', beg + 1);
+
+					if (beg != std::string::npos && end != std::string::npos)
+					{
+						std::string includeFile = line.substr(beg + 1, end - beg - 1);
+
+						result << "// BEGIN INCLUDE: " << includeFile << "\n";
+						result << seri::ShaderLibrary::GetGLSL(includeFile).code;
+						result << "// END INCLUDE: " << includeFile << "\n";
+						result << "#line " << lineNumber << "\n";
+					}
+				}
+				else
+				{
+					result << line << "\n";
+				}
+
+				lineNumber += 1;
+			}
+
+			return result.str();
 		}
 
 		UniformType GetUniformType(GLint type)
