@@ -602,6 +602,30 @@ namespace seri::editor
 			ImGuiChildFlags_Borders |
 			ImGuiChildFlags_AutoResizeY;
 
+		auto DrawFloat = [](const char* label, float& value, float speed = 0.1f, float min = 0.0f, float max = 0.0f, const char* format = "%.3f") -> bool
+			{
+				bool changed = false;
+
+				ImGui::PushID(label);
+
+				ImGui::Columns(2, nullptr, false);
+				ImGui::SetColumnWidth(0, 90.0f);
+
+				ImGui::AlignTextToFramePadding();
+				ImGui::TextUnformatted(label);
+				ImGui::NextColumn();
+
+				if (ImGui::DragFloat("##value", &value, speed, min, max, format))
+				{
+					changed = true;
+				}
+
+				ImGui::Columns(1);
+				ImGui::PopID();
+
+				return changed;
+			};
+
 		auto DrawVec3 = [](const char* label, glm::vec3& v, float speed)
 			{
 				ImGui::PushID(label);
@@ -628,6 +652,103 @@ namespace seri::editor
 					{
 						ImGui::SameLine();
 					}
+				}
+
+				ImGui::Columns(1);
+				ImGui::PopID();
+			};
+
+		auto DrawColorVec3 = [](const char* label, glm::vec3& color, float speed)
+			{
+				ImGui::PushID(label);
+
+				ImGui::Columns(2, nullptr, false);
+				ImGui::SetColumnWidth(0, 90.0f);
+
+				ImGui::AlignTextToFramePadding();
+				ImGui::TextUnformatted(label);
+				ImGui::NextColumn();
+
+				float width = ImGui::CalcItemWidth();
+				float spacing = ImGui::GetStyle().ItemSpacing.x;
+
+				const float buttonSize = ImGui::GetFrameHeight();
+				float fieldsWidth = width - buttonSize - spacing;
+				float itemWidth = (fieldsWidth - spacing * 2.0f) / 3.0f;
+
+				for (int i = 0; i < 3; ++i)
+				{
+					ImGui::PushID(i);
+					ImGui::SetNextItemWidth(itemWidth);
+					ImGui::DragFloat("##v", &color[i], speed, 0.0f, 1.0f, "%.3f");
+					ImGui::PopID();
+
+					if (i < 2)
+					{
+						ImGui::SameLine();
+					}
+				}
+
+				ImGui::SameLine();
+
+				ImVec4 col = { color.r, color.g, color.b, 1.0f };
+				if (ImGui::ColorButton("##preview", col, ImGuiColorEditFlags_NoTooltip | ImGuiColorEditFlags_NoDragDrop, ImVec2(buttonSize, buttonSize)))
+				{
+					ImGui::OpenPopup("ColorPickerPopup");
+				}
+
+				if (ImGui::BeginPopup("ColorPickerPopup"))
+				{
+					ImGui::ColorPicker3("##picker", &color.x, ImGuiColorEditFlags_NoSidePreview | ImGuiColorEditFlags_NoSmallPreview | ImGuiColorEditFlags_Float);
+					ImGui::EndPopup();
+				}
+
+				ImGui::Columns(1);
+				ImGui::PopID();
+			};
+
+		auto DrawColorVec4 = [](const char* label, glm::vec4& color, float speed)
+			{
+				ImGui::PushID(label);
+
+				ImGui::Columns(2, nullptr, false);
+				ImGui::SetColumnWidth(0, 90.0f);
+
+				ImGui::AlignTextToFramePadding();
+				ImGui::TextUnformatted(label);
+				ImGui::NextColumn();
+
+				float width = ImGui::CalcItemWidth();
+				float spacing = ImGui::GetStyle().ItemSpacing.x;
+
+				const float buttonSize = ImGui::GetFrameHeight();
+				float fieldsWidth = width - buttonSize - spacing;
+				float itemWidth = (fieldsWidth - spacing * 3.0f) / 4.0f;
+
+				for (int i = 0; i < 4; ++i)
+				{
+					ImGui::PushID(i);
+					ImGui::SetNextItemWidth(itemWidth);
+					ImGui::DragFloat("##v", &color[i], speed, 0.0f, 1.0f, "%.3f");
+					ImGui::PopID();
+
+					if (i < 3)
+					{
+						ImGui::SameLine();
+					}
+				}
+
+				ImGui::SameLine();
+
+				if (ImGui::ColorButton("##preview", ImVec4(color.r, color.g, color.b, color.a), ImGuiColorEditFlags_AlphaPreview | ImGuiColorEditFlags_NoTooltip, ImVec2(buttonSize, buttonSize)))
+				{
+					ImGui::OpenPopup("ColorPickerPopup");
+				}
+
+				if (ImGui::BeginPopup("ColorPickerPopup"))
+				{
+					ImGui::ColorPicker4("##picker", &color.x, ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoSidePreview | ImGuiColorEditFlags_NoSmallPreview);
+					ImGui::EndPopup();
 				}
 
 				ImGui::Columns(1);
@@ -780,6 +901,66 @@ namespace seri::editor
 						meshRendererComp->materialAssetId = selection;
 					}
 				}
+
+				ImGui::Columns(1);
+
+				ImGui::EndChild();
+			}
+		}
+
+		if (auto* dirLightComp = registry.try_get<seri::component::DirectionalLightComponent>(entity))
+		{
+			if (ImGui::BeginChild("##DirectionalLightComponent", ImVec2(0, 0), ImGuiChildFlags_Borders | ImGuiChildFlags_AutoResizeY))
+			{
+				ImGui::TextUnformatted("Directional Light Component");
+				ImGui::Separator();
+
+				DrawFloat("Intensity", dirLightComp->intensity, 0.1f, 0.0f, 200.0f);
+
+				DrawColorVec3("Color", dirLightComp->color, 0.05f);
+
+				ImGui::SetNextItemWidth(-1);
+
+				ImGui::Columns(1);
+
+				ImGui::EndChild();
+			}
+		}
+
+		if (auto* spotLightComp = registry.try_get<seri::component::SpotLightComponent>(entity))
+		{
+			if (ImGui::BeginChild("##SpotLightComponent", ImVec2(0, 0), ImGuiChildFlags_Borders | ImGuiChildFlags_AutoResizeY))
+			{
+				ImGui::TextUnformatted("Spot Light Component");
+				ImGui::Separator();
+
+				DrawFloat("Intensity", spotLightComp->intensity, 0.1f, 0.0f, 200.0f);
+				DrawFloat("Inner Angle", spotLightComp->innerAngle, 0.1f, 0.0f, 360.0f);
+				DrawFloat("Outer Angle", spotLightComp->outerAngle, 0.1f, 0.0f, 360.0f);
+
+				DrawColorVec3("Color", spotLightComp->color, 0.05f);
+
+				ImGui::SetNextItemWidth(-1);
+
+				ImGui::Columns(1);
+
+				ImGui::EndChild();
+			}
+		}
+
+		if (auto* pointLightComp = registry.try_get<seri::component::PointLightComponent>(entity))
+		{
+			if (ImGui::BeginChild("##PointLightComponent", ImVec2(0, 0), ImGuiChildFlags_Borders | ImGuiChildFlags_AutoResizeY))
+			{
+				ImGui::TextUnformatted("Point Light Component");
+				ImGui::Separator();
+
+				DrawFloat("Intensity", pointLightComp->intensity, 0.1f, 0.0f, 200.0f);
+				DrawFloat("Range", pointLightComp->range, 0.1f, 0.0f, 1000.0f);
+
+				DrawColorVec3("Color", pointLightComp->color, 0.05f);
+
+				ImGui::SetNextItemWidth(-1);
 
 				ImGui::Columns(1);
 
@@ -1071,18 +1252,18 @@ namespace seri::editor
 				{
 					continue;
 				}
-				
+
 				std::string compName = std::string(info.name);
 
 				ImGui::PushID(compName.c_str());
-				
+
 				if (ImGui::Selectable(compName.c_str()))
 				{
 					seri::scene::SceneManager::AddComponent(entity, info.name);
 					ImGui::CloseCurrentPopup();
 					search[0] = '\0';
 				}
-				
+
 				ImGui::PopID();
 			}
 
