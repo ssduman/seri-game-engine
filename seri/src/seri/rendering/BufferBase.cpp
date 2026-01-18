@@ -55,4 +55,16 @@ namespace seri
 	{
 		return VertexBufferBase::Create(data.data(), data.size() * sizeof(glm::mat4), usage);
 	}
+
+	std::shared_ptr<UniformBufferBase> seri::UniformBufferBase::Create(uint32_t size, UniformBinding binding)
+	{
+#if defined (SERI_USE_RENDERING_OPENGL)
+		return std::make_shared<seri::UniformBufferOpenGL>(size, binding);
+#else
+		static_assert(false, "unknown rendering type for creating uniform buffer");
+#endif
+
+		return nullptr;
+	}
+
 }

@@ -13,6 +13,7 @@ namespace seri
 		{
 			case BufferTarget::vertex: return GL_ARRAY_BUFFER;
 			case BufferTarget::index: return GL_ELEMENT_ARRAY_BUFFER;
+			case BufferTarget::uniform: return GL_UNIFORM_BUFFER;
 		}
 
 		return GL_ARRAY_BUFFER;
@@ -215,6 +216,31 @@ namespace seri
 		GLenum _usage;
 		GLenum _target;
 		BufferDesc _desc;
+		unsigned int _handle;
+
+	};
+
+	class UniformBufferOpenGL : public UniformBufferBase
+	{
+	public:
+		UniformBufferOpenGL(uint32_t size, UniformBinding binding)
+		{
+			glCreateBuffers(1, &_handle);
+			glNamedBufferData(_handle, size, nullptr, GL_DYNAMIC_DRAW);
+			glBindBufferBase(GL_UNIFORM_BUFFER, static_cast<uint32_t>(binding), _handle);
+		}
+
+		~UniformBufferOpenGL() override
+		{
+			glDeleteBuffers(1, &_handle);
+		}
+
+		virtual void SetData(const void* data, uint32_t size, uint32_t offset = 0) override
+		{
+			glNamedBufferSubData(_handle, offset, size, data);
+		}
+
+	private:
 		unsigned int _handle;
 
 	};

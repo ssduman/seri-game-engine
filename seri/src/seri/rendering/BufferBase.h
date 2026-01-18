@@ -9,6 +9,7 @@ namespace seri
 	{
 		vertex,
 		index,
+		uniform,
 	};
 
 	enum class BufferUsage
@@ -16,6 +17,12 @@ namespace seri
 		stream_draw,
 		static_draw,
 		dynamic_draw,
+	};
+
+	enum class UniformBinding
+	{
+		camera,
+		light,
 	};
 
 	struct BufferDesc
@@ -81,6 +88,17 @@ namespace seri
 
 	protected:
 		BufferLayoutDesc _layoutDesc{};
+
+	};
+
+	class UniformBufferBase
+	{
+	public:
+		virtual ~UniformBufferBase() = default;
+
+		virtual void SetData(const void* data, uint32_t size, uint32_t offset = 0) = 0;
+
+		static std::shared_ptr<UniformBufferBase> Create(uint32_t size, UniformBinding binding);
 
 	};
 }

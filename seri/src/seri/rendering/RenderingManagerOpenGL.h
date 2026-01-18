@@ -201,10 +201,10 @@ namespace seri
 
 		void LogOpenGLInfo()
 		{
-			LOGGER(info, "[rendering] vendor: " << glGetString(GL_VENDOR));
-			LOGGER(info, "[rendering] version: " << glGetString(GL_VERSION));
-			LOGGER(info, "[rendering] renderer: " << glGetString(GL_RENDERER));
-			LOGGER(info, "[rendering] shading language version: " << glGetString(GL_SHADING_LANGUAGE_VERSION));
+			LOGGER_S(info) << "[rendering] vendor: " << GetGLString(GL_VENDOR);
+			LOGGER_S(info) << "[rendering] version: " << GetGLString(GL_VERSION);
+			LOGGER_S(info) << "[rendering] renderer: " << GetGLString(GL_RENDERER);
+			LOGGER_S(info) << "[rendering] shading language version: " << GetGLString(GL_SHADING_LANGUAGE_VERSION);
 		}
 
 		void CheckOpenGLError()
@@ -430,6 +430,12 @@ namespace seri
 
 			return GL_ONE;
 		}
+
+		std::string GetGLString(GLenum name)
+		{
+			const GLubyte* str = glGetString(name);
+			return str ? reinterpret_cast<const char*>(str) : "<null>";
+		};
 
 	};
 }
