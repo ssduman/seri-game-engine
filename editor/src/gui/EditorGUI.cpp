@@ -37,23 +37,6 @@ namespace seri::editor
 #endif
 
 		ImGui_ImplOpenGL3_Init("#version 460");
-
-		_componentInfos = {
-			{
-				"MeshComponent",
-				[](uint64_t id)
-				{
-					seri::scene::SceneManager::GetActiveScene()->AddComponentToEntity(id, seri::component::MeshComponent{});
-				}
-			},
-			{
-				"MeshRendererComponent",
-				[](uint64_t id)
-				{
-					seri::scene::SceneManager::GetActiveScene()->AddComponentToEntity(id, seri::component::MeshRendererComponent{});
-				}
-			},
-		};
 	}
 
 	void EditorGUI::Update()
@@ -1070,6 +1053,9 @@ namespace seri::editor
 	{
 		static char search[128] = "";
 
+		auto scene = seri::scene::SceneManager::GetActiveScene();
+		auto entity = scene->GetEntityByID(_selectedEntityId);
+
 		if (ImGui::BeginPopup("AddComponentPopup"))
 		{
 			ImGui::TextUnformatted("Add Component");
@@ -1079,20 +1065,24 @@ namespace seri::editor
 
 			ImGui::Spacing();
 
-			for (const auto& info : _componentInfos)
+			for (const auto& info : seri::scene::SceneManager::GetCompIO())
 			{
 				if (search[0] != '\0' && info.name.find(search) == std::string::npos)
 				{
 					continue;
 				}
+				
+				std::string compName = std::string(info.name);
 
-				ImGui::PushID(info.name.c_str());
-				if (ImGui::Selectable(info.name.c_str()))
+				ImGui::PushID(compName.c_str());
+				
+				if (ImGui::Selectable(compName.c_str()))
 				{
-					info.AddComponent(_selectedEntityId);
+					seri::scene::SceneManager::AddComponent(entity, info.name);
 					ImGui::CloseCurrentPopup();
 					search[0] = '\0';
 				}
+				
 				ImGui::PopID();
 			}
 

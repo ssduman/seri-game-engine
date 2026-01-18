@@ -1,20 +1,54 @@
 #ifndef SERI_COMMON_GLSL
 #define SERI_COMMON_GLSL
 
-#define MAX_POINT_LIGHTS 16
+#define MAX_SPOT_LIGHTS 8
+#define MAX_POINT_LIGHTS 8
 
 const float PI = 3.14159265359;
 
-struct PointLight
-{
-    vec3 position;
-    vec3 color;
-};
-
 struct DirectionalLight
 {
-    vec3 direction;
-    vec3 color;
+    vec4 direction;
+    vec4 color;
+};
+
+struct SpotLight
+{
+    vec4 position;
+    vec4 direction;
+    vec4 color;
+    vec4 params; // x = innerCos, y = outerCos
+};
+
+struct PointLight
+{
+    vec4 position;
+    vec4 color;
+};
+
+// layout(std140, binding = 0) uniform CameraBuffer
+// {
+//     mat4 u_view;
+//     mat4 u_proj;
+//     mat4 u_view_proj;
+
+//     vec4 u_camera_pos;
+//     vec4 u_time; // x = time, y = deltaTime, z and w unused
+// };
+
+layout(std140, binding = 1) uniform LightBuffer
+{
+    DirectionalLight u_dir_light;
+    int u_dir_light_exists;
+    vec3 _pad0;
+
+    SpotLight u_spot_lights[MAX_SPOT_LIGHTS];
+    int u_spot_light_count;
+    vec3 _pad1;
+
+    PointLight u_point_lights[MAX_POINT_LIGHTS];
+    int u_point_light_count;
+    vec3 _pad2;
 };
 
 float Saturate(float x) 
@@ -123,20 +157,38 @@ vec3 BRDF_PBR(vec3 N, vec3 V, vec3 L, vec3 radiance, vec3 albedo, float roughnes
 
 vec3 PBR_Dir_Light(DirectionalLight dirLight, vec3 N, vec3 V, vec3 albedo, float roughness, float metallic)
 {
-    vec3 L = normalize(-dirLight.direction);
-    vec3 radiance = dirLight.color;
+    vec3 L = normalize(-dirLight.direction.xyz);
+    vec3 radiance = dirLight.color.rgb;
+
+    return BRDF_PBR(N, V, L, radiance, albedo, roughness, metallic);
+}
+
+vec3 PBR_Spot_Light(vec3 pos, SpotLight spotLight, vec3 N, vec3 V, vec3 albedo, float roughness, float metallic)
+{
+    vec3 lightDiff = spotLight.position.xyz - pos;
+    float lightDist = length(lightDiff);
+    vec3 L = lightDiff / max(lightDist, 0.001);
+
+    vec3 lightDir = normalize(spotLight.direction.xyz);
+    float theta = dot(L, -lightDir);
+
+    float epsilon = max(spotLight.params.x - spotLight.params.y, 0.001);
+    float spot = clamp((theta - spotLight.params.y) / epsilon, 0.0, 1.0);
+
+    float attenuation = 1.0 / max(lightDist * lightDist, 0.01);
+    vec3 radiance = spotLight.color.rgb * attenuation * spot;
 
     return BRDF_PBR(N, V, L, radiance, albedo, roughness, metallic);
 }
 
 vec3 PBR_Point_Light(vec3 pos, PointLight pointLight, vec3 N, vec3 V, vec3 albedo, float roughness, float metallic)
 {
-    vec3 lightDiff = pointLight.position - pos;
+    vec3 lightDiff = pointLight.position.xyz - pos;
     float lightDist = length(lightDiff);
     vec3 L = lightDiff / max(lightDist, 0.001);
 
     float attenuation = 1.0 / max(lightDist * lightDist, 0.01);
-    vec3 radiance = pointLight.color * attenuation;
+    vec3 radiance = pointLight.color.rgb * attenuation;
 
     return BRDF_PBR(N, V, L, radiance, albedo, roughness, metallic);
 }

@@ -58,12 +58,6 @@ namespace seri::editor
 			scale,
 		};
 
-		struct ComponentInfo
-		{
-			std::string name;
-			std::function<void(uint64_t id)> AddComponent;
-		};
-
 		void SetIO()
 		{
 			auto& io = ImGui::GetIO();
@@ -125,8 +119,6 @@ namespace seri::editor
 
 		seri::asset::AssetTreeNode* _selectedFolder{ nullptr };
 		seri::asset::AssetTreeNode _selectedAsset{};
-
-		std::vector<ComponentInfo> _componentInfos{};
 
 	};
 }

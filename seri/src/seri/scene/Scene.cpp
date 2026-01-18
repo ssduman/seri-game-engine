@@ -241,26 +241,4 @@ namespace seri::scene
 		}
 	}
 
-	void Scene::AddComponentToEntity(uint64_t id, seri::component::MeshComponent comp)
-	{
-		SetAsDirty();
-
-		entt::registry& registry = seri::scene::SceneManager::GetRegistry();
-
-		entt::entity entity = GetEntityByID(id);
-
-		registry.emplace_or_replace<seri::component::MeshComponent>(entity, comp);
-	}
-
-	void Scene::AddComponentToEntity(uint64_t id, seri::component::MeshRendererComponent comp)
-	{
-		SetAsDirty();
-
-		entt::registry& registry = seri::scene::SceneManager::GetRegistry();
-
-		entt::entity entity = GetEntityByID(id);
-
-		registry.emplace_or_replace<seri::component::MeshRendererComponent>(entity, comp);
-	}
-
 }

@@ -12,7 +12,6 @@ namespace seri::component
 		component.name = YAMLUtil::DeepCopyYAMLString(node["Name"]);
 		return component;
 	}
-
 	YAML::Node IDComponent::Serialize(IDComponent component)
 	{
 		YAML::Node node;
@@ -30,7 +29,6 @@ namespace seri::component
 		component.scale = YAMLUtil::Vec3FromYAML(node["Scale"]);
 		return component;
 	}
-
 	YAML::Node TransformComponent::Serialize(TransformComponent component)
 	{
 		YAML::Node node;
@@ -47,7 +45,6 @@ namespace seri::component
 		component.isActive = YAMLUtil::GetType<bool>(node["IsActive"]);
 		return component;
 	}
-
 	YAML::Node SceneComponent::Serialize(SceneComponent component)
 	{
 		YAML::Node node;
@@ -62,7 +59,6 @@ namespace seri::component
 		component.meshAssetId = YAMLUtil::GetType<uint64_t>(node["MeshAssetID"]);
 		return component;
 	}
-
 	YAML::Node MeshComponent::Serialize(MeshComponent component)
 	{
 		YAML::Node node;
@@ -77,7 +73,6 @@ namespace seri::component
 		component.castShadow = YAMLUtil::GetType<bool>(node["CastShadow"]);
 		return component;
 	}
-
 	YAML::Node MeshRendererComponent::Serialize(MeshRendererComponent component)
 	{
 		YAML::Node node;
@@ -85,4 +80,56 @@ namespace seri::component
 		node["CastShadow"] = component.castShadow;
 		return node;
 	}
+
+	DirectionalLightComponent DirectionalLightComponent::Deserialize(const YAML::Node& node)
+	{
+		DirectionalLightComponent component{};
+		component.intensity = YAMLUtil::GetType<float>(node["Intensity"]);
+		component.color = YAMLUtil::Vec3FromYAML(node["Color"]);
+		return component;
+	}
+	YAML::Node DirectionalLightComponent::Serialize(DirectionalLightComponent component)
+	{
+		YAML::Node node;
+		node["Intensity"] = component.intensity;
+		node["Color"] = YAMLUtil::Vec3ToYAML(component.color);
+		return node;
+	}
+
+	SpotLightComponent SpotLightComponent::Deserialize(const YAML::Node& node)
+	{
+		SpotLightComponent component{};
+		component.intensity = YAMLUtil::GetType<float>(node["Intensity"]);
+		component.innerAngle = YAMLUtil::GetType<float>(node["InnerAngle"]);
+		component.outerAngle = YAMLUtil::GetType<float>(node["OuterAngle"]);
+		component.color = YAMLUtil::Vec3FromYAML(node["Color"]);
+		return component;
+	}
+	YAML::Node SpotLightComponent::Serialize(SpotLightComponent component)
+	{
+		YAML::Node node;
+		node["Intensity"] = component.intensity;
+		node["InnerAngle"] = component.innerAngle;
+		node["OuterAngle"] = component.outerAngle;
+		node["Color"] = YAMLUtil::Vec3ToYAML(component.color);
+		return node;
+	}
+
+	PointLightComponent PointLightComponent::Deserialize(const YAML::Node& node)
+	{
+		PointLightComponent component{};
+		component.range = YAMLUtil::GetType<float>(node["Range"]);
+		component.intensity = YAMLUtil::GetType<float>(node["Intensity"]);
+		component.color = YAMLUtil::Vec3FromYAML(node["Color"]);
+		return component;
+	}
+	YAML::Node PointLightComponent::Serialize(PointLightComponent component)
+	{
+		YAML::Node node;
+		node["Range"] = component.range;
+		node["Intensity"] = component.intensity;
+		node["Color"] = YAMLUtil::Vec3ToYAML(component.color);
+		return node;
+	}
+
 }
