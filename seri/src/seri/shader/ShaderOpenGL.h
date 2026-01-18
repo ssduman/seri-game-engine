@@ -220,13 +220,24 @@ namespace seri
 
 		bool CheckProgramLinkingError()
 		{
-			int errorStatusSuccess;
-			char errorStatusLog[512];
-			glGetProgramiv(_program, GL_LINK_STATUS, &errorStatusSuccess);
-			if (!errorStatusSuccess)
+			GLint linkStatus = GL_FALSE;
+			glGetProgramiv(_program, GL_LINK_STATUS, &linkStatus);
+
+			if (linkStatus == GL_FALSE)
 			{
-				glGetShaderInfoLog(_program, 512, nullptr, errorStatusLog);
-				LOGGER(error, "[shader] program linking failed: " << errorStatusLog);
+				GLint logLength = 0;
+				glGetProgramiv(_program, GL_INFO_LOG_LENGTH, &logLength);
+
+				std::string log;
+				log.resize(logLength > 1 ? logLength - 1 : 0);
+
+				if (logLength > 1)
+				{
+					glGetProgramInfoLog(_program, logLength, nullptr, log.data());
+				}
+
+				LOGGER(error, fmt::format("[shader] program linking failed:\n{}", log));
+
 				return false;
 			}
 
