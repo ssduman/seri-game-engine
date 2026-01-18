@@ -1,5 +1,8 @@
 #pragma once
 
+#include "seri/core/Core.h"
+
+#include <mutex>
 #include <string>
 #include <chrono>
 #include <iomanip>
@@ -18,47 +21,38 @@ namespace seri
 		verbose,
 	};
 
-	struct LoggerProperties
+	class StreamLogger
 	{
-		LogLevel level = LogLevel::info;
-	};
+	public:
+		StreamLogger(LogLevel level, unsigned line, const char* file);
+		~StreamLogger();
 
-	inline std::string GetDateTime()
-	{
-		std::time_t t = std::time(nullptr);
-		std::tm tm{};
-		localtime_s(&tm, &t);
-		std::stringstream ss;
-		ss << std::put_time(&tm, "%d.%m.%Y %H:%M:%S");
-		return ss.str();
-	}
-
-	inline std::string ToString(LogLevel lvl)
-	{
-		switch (lvl)
+		template<typename T>
+		StreamLogger& operator<<(const T& v)
 		{
-			case LogLevel::none:
-				return "none";
-			case LogLevel::error:
-				return "error";
-			case LogLevel::warning:
-				return "warning";
-			case LogLevel::info:
-				return "info";
-			case LogLevel::debug:
-				return "debug";
-			case LogLevel::verbose:
-				return "verbose";
-			default:
-				return "unknown";
+			_ss << v;
+			return *this;
 		}
-	}
+
+		StreamLogger& operator<<(std::ostream& (*f)(std::ostream&))
+		{
+			_ss << f;
+			return *this;
+		}
+
+	private:
+		std::string GetDateTime();
+		std::string ToStringLevel(LogLevel lvl);
+
+		LogLevel _level;
+		unsigned _line;
+		const char* _file;
+		std::ostringstream _ss;
+
+		static std::mutex _mutex;
+
+	};
 }
 
-#define SERI_LOGGER_IMPL(lvl, msg) std::cout \
-    << seri::GetDateTime() \
-    << " [" << seri::ToString(lvl) << "] " \
-    << msg \
-    << std::endl
-
-#define LOGGER(lvl, msg) SERI_LOGGER_IMPL(seri::LogLevel::lvl, msg)
+#define LOGGER(lvl, msg) seri::StreamLogger(seri::LogLevel::lvl, __LINE__, __FILE__) << msg
+#define LOGGER_S(lvl) seri::StreamLogger(seri::LogLevel::lvl, __LINE__, __FILE__)
