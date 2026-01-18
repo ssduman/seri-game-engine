@@ -18,11 +18,6 @@ namespace seri::scene
 
 	void SceneManager::Init()
 	{
-		SceneManager::GetInstance()._activeScene = std::make_shared<Scene>();
-		SceneManager::GetInstance()._activeScene->Init();
-
-		SceneManager::GetInstance()._activeScene->Deserialize("assets/scenes/main.sscene");
-
 		RegisterComponent<seri::component::IDComponent>();
 		RegisterComponent<seri::component::TransformComponent>();
 		RegisterComponent<seri::component::SceneComponent>();
@@ -31,6 +26,11 @@ namespace seri::scene
 		RegisterComponent<seri::component::DirectionalLightComponent>();
 		RegisterComponent<seri::component::SpotLightComponent>();
 		RegisterComponent<seri::component::PointLightComponent>();
+
+		SceneManager::GetInstance()._activeScene = std::make_shared<Scene>();
+		SceneManager::GetInstance()._activeScene->Init();
+
+		SceneManager::GetInstance()._activeScene->Deserialize("assets/scenes/main.sscene");
 	}
 
 	void SceneManager::Update()

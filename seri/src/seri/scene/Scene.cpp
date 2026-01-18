@@ -46,24 +46,9 @@ namespace seri::scene
 
 			YAML::Node entityDataNode;
 
-			if (auto* idComp = registry.try_get<seri::component::IDComponent>(entity))
+			for (const auto& compIO : seri::scene::SceneManager::GetCompIO())
 			{
-				entityDataNode["IDComponent"] = seri::component::IDComponent::Serialize(*idComp);
-			}
-
-			if (auto* transformComp = registry.try_get<seri::component::TransformComponent>(entity))
-			{
-				entityDataNode["TransformComponent"] = seri::component::TransformComponent::Serialize(*transformComp);
-			}
-
-			if (auto* meshComp = registry.try_get<seri::component::MeshComponent>(entity))
-			{
-				entityDataNode["MeshComponent"] = seri::component::MeshComponent::Serialize(*meshComp);
-			}
-
-			if (auto* meshRendererComp = registry.try_get<seri::component::MeshRendererComponent>(entity))
-			{
-				entityDataNode["MeshRendererComponent"] = seri::component::MeshRendererComponent::Serialize(*meshRendererComp);
+				seri::scene::SceneManager::SerializeComponent(entity, entityDataNode, compIO.name);
 			}
 
 			YAML::Node entityNode;
@@ -123,28 +108,7 @@ namespace seri::scene
 					std::string componentName = componentNode.first.as<std::string>();
 					YAML::Node componentData = componentNode.second;
 
-					if (componentName == "IDComponent")
-					{
-					}
-					else if (componentName == "TransformComponent")
-					{
-						auto transformComp = seri::component::TransformComponent::Deserialize(componentData);
-						registry.emplace_or_replace<seri::component::TransformComponent>(entity, transformComp);
-					}
-					else if (componentName == "MeshComponent")
-					{
-						auto meshComp = seri::component::MeshComponent::Deserialize(componentData);
-						registry.emplace_or_replace<seri::component::MeshComponent>(entity, meshComp);
-					}
-					else if (componentName == "MeshRendererComponent")
-					{
-						auto meshRendererComp = seri::component::MeshRendererComponent::Deserialize(componentData);
-						registry.emplace_or_replace<seri::component::MeshRendererComponent>(entity, meshRendererComp);
-					}
-					else
-					{
-						LOGGER(error, fmt::format("[scene] unknown component type: {}", componentName));
-					}
+					seri::scene::SceneManager::DeserializeComponent(entity, componentData, componentName);
 				}
 			}
 		}

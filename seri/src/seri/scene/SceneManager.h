@@ -69,14 +69,16 @@ namespace seri::scene
 				.Remove = [](entt::registry& registry, entt::entity entity)
 				{
 					if (registry.any_of<T>(entity))
+					{
 						registry.remove<T>(entity);
+					}
 				},
 
-				.Serialize = [](entt::registry& registry, entt::entity entity, YAML::Node& out)
+				.Serialize = [](entt::registry& registry, entt::entity entity, YAML::Node& node)
 				{
 					if (auto* comp = registry.try_get<T>(entity))
 					{
-						out[std::string(T::compName)] = T::Serialize(*comp);
+						node[std::string(T::compName)] = T::Serialize(*comp);
 					}
 				},
 
