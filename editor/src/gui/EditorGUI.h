@@ -3,6 +3,7 @@
 #include <seri/core/Seri.h>
 
 #include <ImGui/imgui.h>
+#include <ImGui/misc/cpp/imgui_stdlib.h>
 #include <ImGui/backends/imgui_impl_opengl3.h>
 #include <ImGui/misc/freetype/imgui_freetype.h>
 
@@ -56,6 +57,19 @@ namespace seri::editor
 			translate,
 			rotate,
 			scale,
+		};
+
+		struct ScopedChild
+		{
+			ScopedChild(const char* id, ImVec2 size, ImGuiChildFlags flags)
+			{
+				ImGui::BeginChild(id, size, flags);
+			}
+
+			~ScopedChild()
+			{
+				ImGui::EndChild();
+			}
 		};
 
 		void SetIO()

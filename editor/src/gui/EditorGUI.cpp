@@ -598,9 +598,49 @@ namespace seri::editor
 
 		auto entity = scene->GetEntityByID(_selectedEntityId);
 
-		ImGuiChildFlags childFlags =
-			ImGuiChildFlags_Borders |
-			ImGuiChildFlags_AutoResizeY;
+		ImGuiChildFlags childFlags = ImGuiChildFlags_Borders | ImGuiChildFlags_AutoResizeY;
+
+		auto DrawBool = [](const char* label, bool& value) -> bool
+			{
+				bool changed = false;
+
+				ImGui::PushID(label);
+
+				ImGui::Columns(2, nullptr, false);
+				ImGui::SetColumnWidth(0, 90.0f);
+
+				ImGui::AlignTextToFramePadding();
+				ImGui::TextUnformatted(label);
+				ImGui::NextColumn();
+
+				changed |= ImGui::Checkbox("##value", &value);
+
+				ImGui::Columns(1);
+				ImGui::PopID();
+
+				return changed;
+			};
+
+		auto DrawInt = [](const char* label, int& value, float speed = 1.0f, int min = 0, int max = 0) -> bool
+			{
+				bool changed = false;
+
+				ImGui::PushID(label);
+
+				ImGui::Columns(2, nullptr, false);
+				ImGui::SetColumnWidth(0, 90.0f);
+
+				ImGui::AlignTextToFramePadding();
+				ImGui::TextUnformatted(label);
+				ImGui::NextColumn();
+
+				changed |= ImGui::DragInt("##value", &value, speed, min, max);
+
+				ImGui::Columns(1);
+				ImGui::PopID();
+
+				return changed;
+			};
 
 		auto DrawFloat = [](const char* label, float& value, float speed = 0.1f, float min = 0.0f, float max = 0.0f, const char* format = "%.3f") -> bool
 			{
@@ -615,10 +655,7 @@ namespace seri::editor
 				ImGui::TextUnformatted(label);
 				ImGui::NextColumn();
 
-				if (ImGui::DragFloat("##value", &value, speed, min, max, format))
-				{
-					changed = true;
-				}
+				changed |= ImGui::DragFloat("##value", &value, speed, min, max, format);
 
 				ImGui::Columns(1);
 				ImGui::PopID();
@@ -626,8 +663,10 @@ namespace seri::editor
 				return changed;
 			};
 
-		auto DrawVec3 = [](const char* label, glm::vec3& v, float speed)
+		auto DrawVec3 = [](const char* label, glm::vec3& v, float speed) -> bool
 			{
+				bool changed = false;
+
 				ImGui::PushID(label);
 
 				ImGui::Columns(2, nullptr, false);
@@ -645,7 +684,7 @@ namespace seri::editor
 				{
 					ImGui::PushID(i);
 					ImGui::SetNextItemWidth(itemWidth);
-					ImGui::DragFloat("##v", &v[i], speed);
+					changed |= ImGui::DragFloat("##v", &v[i], speed);
 					ImGui::PopID();
 
 					if (i < 2)
@@ -656,10 +695,14 @@ namespace seri::editor
 
 				ImGui::Columns(1);
 				ImGui::PopID();
+
+				return changed;
 			};
 
-		auto DrawColorVec3 = [](const char* label, glm::vec3& color, float speed)
+		auto DrawColorVec3 = [](const char* label, glm::vec3& color, float speed) -> bool
 			{
+				bool changed = false;
+
 				ImGui::PushID(label);
 
 				ImGui::Columns(2, nullptr, false);
@@ -680,7 +723,7 @@ namespace seri::editor
 				{
 					ImGui::PushID(i);
 					ImGui::SetNextItemWidth(itemWidth);
-					ImGui::DragFloat("##v", &color[i], speed, 0.0f, 1.0f, "%.3f");
+					changed |= ImGui::DragFloat("##v", &color[i], speed, 0.0f, 1.0f, "%.3f");
 					ImGui::PopID();
 
 					if (i < 2)
@@ -699,16 +742,20 @@ namespace seri::editor
 
 				if (ImGui::BeginPopup("ColorPickerPopup"))
 				{
-					ImGui::ColorPicker3("##picker", &color.x, ImGuiColorEditFlags_NoSidePreview | ImGuiColorEditFlags_NoSmallPreview | ImGuiColorEditFlags_Float);
+					changed |= ImGui::ColorPicker3("##picker", &color.x, ImGuiColorEditFlags_NoSidePreview | ImGuiColorEditFlags_NoSmallPreview | ImGuiColorEditFlags_Float);
 					ImGui::EndPopup();
 				}
 
 				ImGui::Columns(1);
 				ImGui::PopID();
+
+				return changed;
 			};
 
-		auto DrawColorVec4 = [](const char* label, glm::vec4& color, float speed)
+		auto DrawColorVec4 = [](const char* label, glm::vec4& color, float speed) -> bool
 			{
+				bool changed = false;
+
 				ImGui::PushID(label);
 
 				ImGui::Columns(2, nullptr, false);
@@ -729,7 +776,7 @@ namespace seri::editor
 				{
 					ImGui::PushID(i);
 					ImGui::SetNextItemWidth(itemWidth);
-					ImGui::DragFloat("##v", &color[i], speed, 0.0f, 1.0f, "%.3f");
+					changed |= ImGui::DragFloat("##v", &color[i], speed, 0.0f, 1.0f, "%.3f");
 					ImGui::PopID();
 
 					if (i < 3)
@@ -747,224 +794,222 @@ namespace seri::editor
 
 				if (ImGui::BeginPopup("ColorPickerPopup"))
 				{
-					ImGui::ColorPicker4("##picker", &color.x, ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoSidePreview | ImGuiColorEditFlags_NoSmallPreview);
+					changed |= ImGui::ColorPicker4("##picker", &color.x, ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoSidePreview | ImGuiColorEditFlags_NoSmallPreview);
 					ImGui::EndPopup();
 				}
 
 				ImGui::Columns(1);
 				ImGui::PopID();
+
+				return changed;
 			};
 
-		if (auto* idComp = registry.try_get<seri::component::IDComponent>(entity))
-		{
-			if (ImGui::BeginChild("##IDComponent", ImVec2(0, 0), childFlags))
+		auto DrawLabel = [](const char* label, const char* value, bool isDisabled) -> bool
 			{
-				ImGui::TextUnformatted("Entity");
-				ImGui::Separator();
+				ImGui::PushID(label);
 
 				ImGui::Columns(2, nullptr, false);
 				ImGui::SetColumnWidth(0, 90.0f);
 
 				ImGui::AlignTextToFramePadding();
-				ImGui::TextUnformatted("Name");
+				ImGui::TextUnformatted(label);
 				ImGui::NextColumn();
 
-				char buffer[256]{};
-				strncpy_s(buffer, idComp->name.c_str(), sizeof(buffer) - 1);
-				ImGui::SetNextItemWidth(-1);
-				if (ImGui::InputText("##EntityName", buffer, sizeof(buffer)))
+				if (isDisabled)
 				{
-					idComp->name = buffer;
-					scene->SetAsDirty();
-				}
-
-				ImGui::NextColumn();
-
-				ImGui::AlignTextToFramePadding();
-				ImGui::TextUnformatted("ID");
-				ImGui::NextColumn();
-
-				ImGui::TextDisabled("%llu", idComp->id);
-
-				ImGui::NextColumn();
-
-				ImGui::AlignTextToFramePadding();
-				ImGui::TextUnformatted("Parent");
-				ImGui::NextColumn();
-
-				if (idComp->parentId != 0)
-				{
-					ImGui::TextDisabled("%llu", idComp->parentId);
+					ImGui::TextDisabled("%s", value ? value : "<None>");
 				}
 				else
 				{
-					ImGui::TextDisabled("<None>");
+					ImGui::Text("%s", value ? value : "<None>");
 				}
 
 				ImGui::Columns(1);
+				ImGui::PopID();
 
-				ImGui::EndChild();
-			}
-		}
+				return false;
+			};
 
-		if (auto* transformComp = registry.try_get<seri::component::TransformComponent>(entity))
-		{
-			if (ImGui::BeginChild("##TransformComponent", ImVec2(0, 0), childFlags))
+		auto DrawTextInput = [](const char* label, std::string& value, size_t bufferSize = 512) -> bool
 			{
-				ImGui::TextUnformatted("Transform Component");
-				ImGui::Separator();
+				bool changed = false;
 
-				DrawVec3("Position", transformComp->position, 0.1f);
-				DrawVec3("Rotation", transformComp->rotation, 0.5f);
-				DrawVec3("Scale", transformComp->scale, 0.1f);
-
-				ImGui::EndChild();
-			}
-		}
-
-		if (auto* meshComp = registry.try_get<seri::component::MeshComponent>(entity))
-		{
-			if (ImGui::BeginChild("##MeshComponent", ImVec2(0, 0), ImGuiChildFlags_Borders | ImGuiChildFlags_AutoResizeY))
-			{
-				ImGui::TextUnformatted("Mesh Component");
-				ImGui::Separator();
+				ImGui::PushID(label);
 
 				ImGui::Columns(2, nullptr, false);
 				ImGui::SetColumnWidth(0, 90.0f);
 
 				ImGui::AlignTextToFramePadding();
-				ImGui::TextUnformatted("Mesh");
+				ImGui::TextUnformatted(label);
 				ImGui::NextColumn();
-
-				std::string assetName = meshComp->meshAssetId != 0 ? seri::asset::AssetManager::GetAssetName(meshComp->meshAssetId) : "<None>";
 
 				ImGui::SetNextItemWidth(-1);
 
+				changed |= ImGui::InputText("##value", &value);
+
+				ImGui::Columns(1);
+				ImGui::PopID();
+
+				return changed;
+			};
+
+		auto DrawAssetPicker = [this](const char* label, uint64_t assetId, seri::asset::AssetType assetType, uint64_t& selection) -> bool
+			{
+				bool changed = false;
+
+				ImGui::PushID(label);
+
+				ImGui::Columns(2, nullptr, false);
+				ImGui::SetColumnWidth(0, 90.0f);
+
+				ImGui::AlignTextToFramePadding();
+				ImGui::TextUnformatted(label);
+				ImGui::NextColumn();
+
+				std::string assetName = assetId != 0 ? seri::asset::AssetManager::GetAssetName(assetId) : "<none>";
 				if (ImGui::Button(assetName.c_str(), ImVec2(-1, 0)))
 				{
 					ImGui::OpenPopup("AssetPickerPopup");
 				}
 
-				bool selected = false;
-				uint64_t selection = 0;
-				if (ShowEditorAssetPickerPopup(seri::asset::AssetType::mesh, selected, selection))
-				{
-					if (selected)
-					{
-						scene->SetAsDirty();
-						meshComp->meshAssetId = selection;
-					}
-				}
+				changed |= ShowEditorAssetPickerPopup(assetType, changed, selection);
 
 				ImGui::Columns(1);
+				ImGui::PopID();
 
-				ImGui::EndChild();
+				return changed;
+			};
+
+		if (auto* idComp = registry.try_get<seri::component::IDComponent>(entity))
+		{
+			ScopedChild scopedChild("##IDComponent", ImVec2(0, 0), childFlags);
+
+			ImGui::TextUnformatted("Entity");
+			ImGui::Separator();
+
+			bool changed = false;
+
+			changed |= DrawTextInput("Name", idComp->name);
+			changed |= DrawLabel("ID", std::to_string(idComp->id).c_str(), true);
+			changed |= DrawLabel("Parent ID", idComp->parentId != 0 ? std::to_string(idComp->parentId).c_str() : "<none>", true);
+
+			if (changed)
+			{
+				scene->SetAsDirty();
+			}
+		}
+
+		if (auto* transformComp = registry.try_get<seri::component::TransformComponent>(entity))
+		{
+			ScopedChild scopedChild("##TransformComponent", ImVec2(0, 0), childFlags);
+
+			ImGui::TextUnformatted("Transform Component");
+			ImGui::Separator();
+
+			bool changed = false;
+
+			changed |= DrawVec3("Position", transformComp->position, 0.1f);
+			changed |= DrawVec3("Rotation", transformComp->rotation, 0.5f);
+			changed |= DrawVec3("Scale", transformComp->scale, 0.1f);
+
+			if (changed)
+			{
+				scene->SetAsDirty();
+			}
+		}
+
+		if (auto* meshComp = registry.try_get<seri::component::MeshComponent>(entity))
+		{
+			ScopedChild scopedChild("##MeshComponent", ImVec2(0, 0), childFlags);
+
+			ImGui::TextUnformatted("Mesh Component");
+			ImGui::Separator();
+
+			bool changed = false;
+			uint64_t selection = 0;
+
+			changed |= DrawAssetPicker("Mesh", meshComp->meshAssetId, seri::asset::AssetType::mesh, selection);
+
+			if (changed)
+			{
+				scene->SetAsDirty();
+				meshComp->meshAssetId = selection;
 			}
 		}
 
 		if (auto* meshRendererComp = registry.try_get<seri::component::MeshRendererComponent>(entity))
 		{
-			if (ImGui::BeginChild("##MeshRendererComponent", ImVec2(0, 0), childFlags))
+			ScopedChild scopedChild("##MeshRendererComponent", ImVec2(0, 0), childFlags);
+
+			ImGui::TextUnformatted("Mesh Renderer Component");
+			ImGui::Separator();
+
+			bool changed = false;
+			uint64_t selection = 0;
+
+			changed |= DrawAssetPicker("Material", meshRendererComp->materialAssetId, seri::asset::AssetType::material, selection);
+
+			if (changed)
 			{
-				ImGui::TextUnformatted("Mesh Renderer Component");
-				ImGui::Separator();
-
-				ImGui::Columns(2, nullptr, false);
-				ImGui::SetColumnWidth(0, 90.0f);
-
-				//ImGui::AlignTextToFramePadding();
-				//ImGui::TextUnformatted("Cast Shadow");
-				//ImGui::NextColumn();
-				//if (ImGui::Checkbox("##CastShadow", &meshRendererComp->castShadow))
-				//{
-				//	scene->SetAsDirty();
-				//}
-				//ImGui::NextColumn();
-
-				ImGui::AlignTextToFramePadding();
-				ImGui::TextUnformatted("Material");
-				ImGui::NextColumn();
-
-				std::string materialName = meshRendererComp->materialAssetId != 0 ? seri::asset::AssetManager::GetAssetName(meshRendererComp->materialAssetId) : "<None>";
-				if (ImGui::Button(materialName.c_str(), ImVec2(-1, 0)))
-				{
-					ImGui::OpenPopup("AssetPickerPopup");
-				}
-
-				bool selected = false;
-				uint64_t selection = 0;
-				if (ShowEditorAssetPickerPopup(seri::asset::AssetType::material, selected, selection))
-				{
-					if (selected)
-					{
-						scene->SetAsDirty();
-						meshRendererComp->materialAssetId = selection;
-					}
-				}
-
-				ImGui::Columns(1);
-
-				ImGui::EndChild();
+				scene->SetAsDirty();
+				meshRendererComp->materialAssetId = selection;
 			}
 		}
 
 		if (auto* dirLightComp = registry.try_get<seri::component::DirectionalLightComponent>(entity))
 		{
-			if (ImGui::BeginChild("##DirectionalLightComponent", ImVec2(0, 0), ImGuiChildFlags_Borders | ImGuiChildFlags_AutoResizeY))
+			ScopedChild scopedChild("##DirectionalLightComponent", ImVec2(0, 0), childFlags);
+
+			ImGui::TextUnformatted("Directional Light Component");
+			ImGui::Separator();
+
+			bool changed = false;
+
+			changed |= DrawFloat("Intensity", dirLightComp->intensity, 0.1f, 0.0f, 200.0f);
+			changed |= DrawColorVec3("Color", dirLightComp->color, 0.05f);
+
+			if (changed)
 			{
-				ImGui::TextUnformatted("Directional Light Component");
-				ImGui::Separator();
-
-				DrawFloat("Intensity", dirLightComp->intensity, 0.1f, 0.0f, 200.0f);
-
-				DrawColorVec3("Color", dirLightComp->color, 0.05f);
-
-				ImGui::SetNextItemWidth(-1);
-
-				ImGui::Columns(1);
-
-				ImGui::EndChild();
+				scene->SetAsDirty();
 			}
 		}
 
 		if (auto* spotLightComp = registry.try_get<seri::component::SpotLightComponent>(entity))
 		{
-			if (ImGui::BeginChild("##SpotLightComponent", ImVec2(0, 0), ImGuiChildFlags_Borders | ImGuiChildFlags_AutoResizeY))
+			ScopedChild scopedChild("##SpotLightComponent", ImVec2(0, 0), childFlags);
+
+			ImGui::TextUnformatted("Spot Light Component");
+			ImGui::Separator();
+
+			bool changed = false;
+
+			changed |= DrawFloat("Intensity", spotLightComp->intensity, 0.1f, 0.0f, 200.0f);
+			changed |= DrawFloat("Inner Angle", spotLightComp->innerAngle, 0.1f, 0.0f, 360.0f);
+			changed |= DrawFloat("Outer Angle", spotLightComp->outerAngle, 0.1f, 0.0f, 360.0f);
+			changed |= DrawColorVec3("Color", spotLightComp->color, 0.05f);
+
+			if (changed)
 			{
-				ImGui::TextUnformatted("Spot Light Component");
-				ImGui::Separator();
-
-				DrawFloat("Intensity", spotLightComp->intensity, 0.1f, 0.0f, 200.0f);
-				DrawFloat("Inner Angle", spotLightComp->innerAngle, 0.1f, 0.0f, 360.0f);
-				DrawFloat("Outer Angle", spotLightComp->outerAngle, 0.1f, 0.0f, 360.0f);
-
-				DrawColorVec3("Color", spotLightComp->color, 0.05f);
-
-				ImGui::SetNextItemWidth(-1);
-
-				ImGui::Columns(1);
-
-				ImGui::EndChild();
+				scene->SetAsDirty();
 			}
 		}
 
 		if (auto* pointLightComp = registry.try_get<seri::component::PointLightComponent>(entity))
 		{
-			if (ImGui::BeginChild("##PointLightComponent", ImVec2(0, 0), ImGuiChildFlags_Borders | ImGuiChildFlags_AutoResizeY))
+			ScopedChild scopedChild("##PointLightComponent", ImVec2(0, 0), childFlags);
+
+			ImGui::TextUnformatted("Point Light Component");
+			ImGui::Separator();
+
+			bool changed = false;
+
+			changed |= DrawFloat("Intensity", pointLightComp->intensity, 0.1f, 0.0f, 200.0f);
+			changed |= DrawFloat("Range", pointLightComp->range, 0.1f, 0.0f, 1000.0f);
+			changed |= DrawColorVec3("Color", pointLightComp->color, 0.05f);
+
+			if (changed)
 			{
-				ImGui::TextUnformatted("Point Light Component");
-				ImGui::Separator();
-
-				DrawFloat("Intensity", pointLightComp->intensity, 0.1f, 0.0f, 200.0f);
-				DrawFloat("Range", pointLightComp->range, 0.1f, 0.0f, 1000.0f);
-
-				DrawColorVec3("Color", pointLightComp->color, 0.05f);
-
-				ImGui::SetNextItemWidth(-1);
-
-				ImGui::Columns(1);
-
-				ImGui::EndChild();
+				scene->SetAsDirty();
 			}
 		}
 

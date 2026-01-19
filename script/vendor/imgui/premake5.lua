@@ -10,6 +10,7 @@ project "ImGui"
   files {
     "./*.h",
     "./*.cpp",
+    "misc/cpp/imgui_stdlib.cpp",
     "backends/imgui_impl_glfw.h",
     "backends/imgui_impl_glfw.cpp",
     "backends/imgui_impl_sdl3.h",
