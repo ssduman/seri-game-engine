@@ -600,286 +600,6 @@ namespace seri::editor
 
 		ImGuiChildFlags childFlags = ImGuiChildFlags_Borders | ImGuiChildFlags_AutoResizeY;
 
-		auto DrawBool = [](const char* label, bool& value) -> bool
-			{
-				bool changed = false;
-
-				ImGui::PushID(label);
-
-				ImGui::Columns(2, nullptr, false);
-				ImGui::SetColumnWidth(0, 90.0f);
-
-				ImGui::AlignTextToFramePadding();
-				ImGui::TextUnformatted(label);
-				ImGui::NextColumn();
-
-				changed |= ImGui::Checkbox("##value", &value);
-
-				ImGui::Columns(1);
-				ImGui::PopID();
-
-				return changed;
-			};
-
-		auto DrawInt = [](const char* label, int& value, float speed = 1.0f, int min = 0, int max = 0) -> bool
-			{
-				bool changed = false;
-
-				ImGui::PushID(label);
-
-				ImGui::Columns(2, nullptr, false);
-				ImGui::SetColumnWidth(0, 90.0f);
-
-				ImGui::AlignTextToFramePadding();
-				ImGui::TextUnformatted(label);
-				ImGui::NextColumn();
-
-				changed |= ImGui::DragInt("##value", &value, speed, min, max);
-
-				ImGui::Columns(1);
-				ImGui::PopID();
-
-				return changed;
-			};
-
-		auto DrawFloat = [](const char* label, float& value, float speed = 0.1f, float min = 0.0f, float max = 0.0f, const char* format = "%.3f") -> bool
-			{
-				bool changed = false;
-
-				ImGui::PushID(label);
-
-				ImGui::Columns(2, nullptr, false);
-				ImGui::SetColumnWidth(0, 90.0f);
-
-				ImGui::AlignTextToFramePadding();
-				ImGui::TextUnformatted(label);
-				ImGui::NextColumn();
-
-				changed |= ImGui::DragFloat("##value", &value, speed, min, max, format);
-
-				ImGui::Columns(1);
-				ImGui::PopID();
-
-				return changed;
-			};
-
-		auto DrawVec3 = [](const char* label, glm::vec3& v, float speed) -> bool
-			{
-				bool changed = false;
-
-				ImGui::PushID(label);
-
-				ImGui::Columns(2, nullptr, false);
-				ImGui::SetColumnWidth(0, 90.0f);
-
-				ImGui::AlignTextToFramePadding();
-				ImGui::TextUnformatted(label);
-				ImGui::NextColumn();
-
-				float width = ImGui::CalcItemWidth();
-				float spacing = ImGui::GetStyle().ItemSpacing.x;
-				float itemWidth = (width - spacing * 2) / 3.0f;
-
-				for (int i = 0; i < 3; ++i)
-				{
-					ImGui::PushID(i);
-					ImGui::SetNextItemWidth(itemWidth);
-					changed |= ImGui::DragFloat("##v", &v[i], speed);
-					ImGui::PopID();
-
-					if (i < 2)
-					{
-						ImGui::SameLine();
-					}
-				}
-
-				ImGui::Columns(1);
-				ImGui::PopID();
-
-				return changed;
-			};
-
-		auto DrawColorVec3 = [](const char* label, glm::vec3& color, float speed) -> bool
-			{
-				bool changed = false;
-
-				ImGui::PushID(label);
-
-				ImGui::Columns(2, nullptr, false);
-				ImGui::SetColumnWidth(0, 90.0f);
-
-				ImGui::AlignTextToFramePadding();
-				ImGui::TextUnformatted(label);
-				ImGui::NextColumn();
-
-				float width = ImGui::CalcItemWidth();
-				float spacing = ImGui::GetStyle().ItemSpacing.x;
-
-				const float buttonSize = ImGui::GetFrameHeight();
-				float fieldsWidth = width - buttonSize - spacing;
-				float itemWidth = (fieldsWidth - spacing * 2.0f) / 3.0f;
-
-				for (int i = 0; i < 3; ++i)
-				{
-					ImGui::PushID(i);
-					ImGui::SetNextItemWidth(itemWidth);
-					changed |= ImGui::DragFloat("##v", &color[i], speed, 0.0f, 1.0f, "%.3f");
-					ImGui::PopID();
-
-					if (i < 2)
-					{
-						ImGui::SameLine();
-					}
-				}
-
-				ImGui::SameLine();
-
-				ImVec4 col = { color.r, color.g, color.b, 1.0f };
-				if (ImGui::ColorButton("##preview", col, ImGuiColorEditFlags_NoTooltip | ImGuiColorEditFlags_NoDragDrop, ImVec2(buttonSize, buttonSize)))
-				{
-					ImGui::OpenPopup("ColorPickerPopup");
-				}
-
-				if (ImGui::BeginPopup("ColorPickerPopup"))
-				{
-					changed |= ImGui::ColorPicker3("##picker", &color.x, ImGuiColorEditFlags_NoSidePreview | ImGuiColorEditFlags_NoSmallPreview | ImGuiColorEditFlags_Float);
-					ImGui::EndPopup();
-				}
-
-				ImGui::Columns(1);
-				ImGui::PopID();
-
-				return changed;
-			};
-
-		auto DrawColorVec4 = [](const char* label, glm::vec4& color, float speed) -> bool
-			{
-				bool changed = false;
-
-				ImGui::PushID(label);
-
-				ImGui::Columns(2, nullptr, false);
-				ImGui::SetColumnWidth(0, 90.0f);
-
-				ImGui::AlignTextToFramePadding();
-				ImGui::TextUnformatted(label);
-				ImGui::NextColumn();
-
-				float width = ImGui::CalcItemWidth();
-				float spacing = ImGui::GetStyle().ItemSpacing.x;
-
-				const float buttonSize = ImGui::GetFrameHeight();
-				float fieldsWidth = width - buttonSize - spacing;
-				float itemWidth = (fieldsWidth - spacing * 3.0f) / 4.0f;
-
-				for (int i = 0; i < 4; ++i)
-				{
-					ImGui::PushID(i);
-					ImGui::SetNextItemWidth(itemWidth);
-					changed |= ImGui::DragFloat("##v", &color[i], speed, 0.0f, 1.0f, "%.3f");
-					ImGui::PopID();
-
-					if (i < 3)
-					{
-						ImGui::SameLine();
-					}
-				}
-
-				ImGui::SameLine();
-
-				if (ImGui::ColorButton("##preview", ImVec4(color.r, color.g, color.b, color.a), ImGuiColorEditFlags_AlphaPreview | ImGuiColorEditFlags_NoTooltip, ImVec2(buttonSize, buttonSize)))
-				{
-					ImGui::OpenPopup("ColorPickerPopup");
-				}
-
-				if (ImGui::BeginPopup("ColorPickerPopup"))
-				{
-					changed |= ImGui::ColorPicker4("##picker", &color.x, ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoSidePreview | ImGuiColorEditFlags_NoSmallPreview);
-					ImGui::EndPopup();
-				}
-
-				ImGui::Columns(1);
-				ImGui::PopID();
-
-				return changed;
-			};
-
-		auto DrawLabel = [](const char* label, const char* value, bool isDisabled) -> bool
-			{
-				ImGui::PushID(label);
-
-				ImGui::Columns(2, nullptr, false);
-				ImGui::SetColumnWidth(0, 90.0f);
-
-				ImGui::AlignTextToFramePadding();
-				ImGui::TextUnformatted(label);
-				ImGui::NextColumn();
-
-				if (isDisabled)
-				{
-					ImGui::TextDisabled("%s", value ? value : "<None>");
-				}
-				else
-				{
-					ImGui::Text("%s", value ? value : "<None>");
-				}
-
-				ImGui::Columns(1);
-				ImGui::PopID();
-
-				return false;
-			};
-
-		auto DrawTextInput = [](const char* label, std::string& value, size_t bufferSize = 512) -> bool
-			{
-				bool changed = false;
-
-				ImGui::PushID(label);
-
-				ImGui::Columns(2, nullptr, false);
-				ImGui::SetColumnWidth(0, 90.0f);
-
-				ImGui::AlignTextToFramePadding();
-				ImGui::TextUnformatted(label);
-				ImGui::NextColumn();
-
-				ImGui::SetNextItemWidth(-1);
-
-				changed |= ImGui::InputText("##value", &value);
-
-				ImGui::Columns(1);
-				ImGui::PopID();
-
-				return changed;
-			};
-
-		auto DrawAssetPicker = [this](const char* label, uint64_t assetId, seri::asset::AssetType assetType, uint64_t& selection) -> bool
-			{
-				bool changed = false;
-
-				ImGui::PushID(label);
-
-				ImGui::Columns(2, nullptr, false);
-				ImGui::SetColumnWidth(0, 90.0f);
-
-				ImGui::AlignTextToFramePadding();
-				ImGui::TextUnformatted(label);
-				ImGui::NextColumn();
-
-				std::string assetName = assetId != 0 ? seri::asset::AssetManager::GetAssetName(assetId) : "<none>";
-				if (ImGui::Button(assetName.c_str(), ImVec2(-1, 0)))
-				{
-					ImGui::OpenPopup("AssetPickerPopup");
-				}
-
-				changed |= ShowEditorAssetPickerPopup(assetType, changed, selection);
-
-				ImGui::Columns(1);
-				ImGui::PopID();
-
-				return changed;
-			};
-
 		if (auto* idComp = registry.try_get<seri::component::IDComponent>(entity))
 		{
 			ScopedChild scopedChild("##IDComponent", ImVec2(0, 0), childFlags);
@@ -1643,6 +1363,286 @@ namespace seri::editor
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 			ImGui::End();
 		}
+	}
+
+	bool EditorGUI::DrawBool(const char* label, bool& value)
+	{
+		bool changed = false;
+
+		ImGui::PushID(label);
+
+		ImGui::Columns(2, nullptr, false);
+		ImGui::SetColumnWidth(0, 90.0f);
+
+		ImGui::AlignTextToFramePadding();
+		ImGui::TextUnformatted(label);
+		ImGui::NextColumn();
+
+		changed |= ImGui::Checkbox("##value", &value);
+
+		ImGui::Columns(1);
+		ImGui::PopID();
+
+		return changed;
+	}
+
+	bool EditorGUI::DrawInt(const char* label, int& value, float speed, int min, int max)
+	{
+		bool changed = false;
+
+		ImGui::PushID(label);
+
+		ImGui::Columns(2, nullptr, false);
+		ImGui::SetColumnWidth(0, 90.0f);
+
+		ImGui::AlignTextToFramePadding();
+		ImGui::TextUnformatted(label);
+		ImGui::NextColumn();
+
+		changed |= ImGui::DragInt("##value", &value, speed, min, max);
+
+		ImGui::Columns(1);
+		ImGui::PopID();
+
+		return changed;
+	}
+
+	bool EditorGUI::DrawFloat(const char* label, float& value, float speed, float min, float max, const char* format)
+	{
+		bool changed = false;
+
+		ImGui::PushID(label);
+
+		ImGui::Columns(2, nullptr, false);
+		ImGui::SetColumnWidth(0, 90.0f);
+
+		ImGui::AlignTextToFramePadding();
+		ImGui::TextUnformatted(label);
+		ImGui::NextColumn();
+
+		changed |= ImGui::DragFloat("##value", &value, speed, min, max, format);
+
+		ImGui::Columns(1);
+		ImGui::PopID();
+
+		return changed;
+	}
+
+	bool EditorGUI::DrawVec3(const char* label, glm::vec3& v, float speed)
+	{
+		bool changed = false;
+
+		ImGui::PushID(label);
+
+		ImGui::Columns(2, nullptr, false);
+		ImGui::SetColumnWidth(0, 90.0f);
+
+		ImGui::AlignTextToFramePadding();
+		ImGui::TextUnformatted(label);
+		ImGui::NextColumn();
+
+		float width = ImGui::CalcItemWidth();
+		float spacing = ImGui::GetStyle().ItemSpacing.x;
+		float itemWidth = (width - spacing * 2) / 3.0f;
+
+		for (int i = 0; i < 3; ++i)
+		{
+			ImGui::PushID(i);
+			ImGui::SetNextItemWidth(itemWidth);
+			changed |= ImGui::DragFloat("##v", &v[i], speed);
+			ImGui::PopID();
+
+			if (i < 2)
+			{
+				ImGui::SameLine();
+			}
+		}
+
+		ImGui::Columns(1);
+		ImGui::PopID();
+
+		return changed;
+	}
+
+	bool EditorGUI::DrawColorVec3(const char* label, glm::vec3& color, float speed)
+	{
+		bool changed = false;
+
+		ImGui::PushID(label);
+
+		ImGui::Columns(2, nullptr, false);
+		ImGui::SetColumnWidth(0, 90.0f);
+
+		ImGui::AlignTextToFramePadding();
+		ImGui::TextUnformatted(label);
+		ImGui::NextColumn();
+
+		float width = ImGui::CalcItemWidth();
+		float spacing = ImGui::GetStyle().ItemSpacing.x;
+
+		const float buttonSize = ImGui::GetFrameHeight();
+		float fieldsWidth = width - buttonSize - spacing;
+		float itemWidth = (fieldsWidth - spacing * 2.0f) / 3.0f;
+
+		for (int i = 0; i < 3; ++i)
+		{
+			ImGui::PushID(i);
+			ImGui::SetNextItemWidth(itemWidth);
+			changed |= ImGui::DragFloat("##v", &color[i], speed, 0.0f, 1.0f, "%.3f");
+			ImGui::PopID();
+
+			if (i < 2)
+			{
+				ImGui::SameLine();
+			}
+		}
+
+		ImGui::SameLine();
+
+		ImVec4 col = { color.r, color.g, color.b, 1.0f };
+		if (ImGui::ColorButton("##preview", col, ImGuiColorEditFlags_NoTooltip | ImGuiColorEditFlags_NoDragDrop, ImVec2(buttonSize, buttonSize)))
+		{
+			ImGui::OpenPopup("ColorPickerPopup");
+		}
+
+		if (ImGui::BeginPopup("ColorPickerPopup"))
+		{
+			changed |= ImGui::ColorPicker3("##picker", &color.x, ImGuiColorEditFlags_NoSidePreview | ImGuiColorEditFlags_NoSmallPreview | ImGuiColorEditFlags_Float);
+			ImGui::EndPopup();
+		}
+
+		ImGui::Columns(1);
+		ImGui::PopID();
+
+		return changed;
+	}
+
+	bool EditorGUI::DrawColorVec4(const char* label, glm::vec4& color, float speed)
+	{
+		bool changed = false;
+
+		ImGui::PushID(label);
+
+		ImGui::Columns(2, nullptr, false);
+		ImGui::SetColumnWidth(0, 90.0f);
+
+		ImGui::AlignTextToFramePadding();
+		ImGui::TextUnformatted(label);
+		ImGui::NextColumn();
+
+		float width = ImGui::CalcItemWidth();
+		float spacing = ImGui::GetStyle().ItemSpacing.x;
+
+		const float buttonSize = ImGui::GetFrameHeight();
+		float fieldsWidth = width - buttonSize - spacing;
+		float itemWidth = (fieldsWidth - spacing * 3.0f) / 4.0f;
+
+		for (int i = 0; i < 4; ++i)
+		{
+			ImGui::PushID(i);
+			ImGui::SetNextItemWidth(itemWidth);
+			changed |= ImGui::DragFloat("##v", &color[i], speed, 0.0f, 1.0f, "%.3f");
+			ImGui::PopID();
+
+			if (i < 3)
+			{
+				ImGui::SameLine();
+			}
+		}
+
+		ImGui::SameLine();
+
+		if (ImGui::ColorButton("##preview", ImVec4(color.r, color.g, color.b, color.a), ImGuiColorEditFlags_AlphaPreview | ImGuiColorEditFlags_NoTooltip, ImVec2(buttonSize, buttonSize)))
+		{
+			ImGui::OpenPopup("ColorPickerPopup");
+		}
+
+		if (ImGui::BeginPopup("ColorPickerPopup"))
+		{
+			changed |= ImGui::ColorPicker4("##picker", &color.x, ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_Float | ImGuiColorEditFlags_NoSidePreview | ImGuiColorEditFlags_NoSmallPreview);
+			ImGui::EndPopup();
+		}
+
+		ImGui::Columns(1);
+		ImGui::PopID();
+
+		return changed;
+	}
+
+	bool EditorGUI::DrawLabel(const char* label, const char* value, bool isDisabled)
+	{
+		ImGui::PushID(label);
+
+		ImGui::Columns(2, nullptr, false);
+		ImGui::SetColumnWidth(0, 90.0f);
+
+		ImGui::AlignTextToFramePadding();
+		ImGui::TextUnformatted(label);
+		ImGui::NextColumn();
+
+		if (isDisabled)
+		{
+			ImGui::TextDisabled("%s", value ? value : "<None>");
+		}
+		else
+		{
+			ImGui::Text("%s", value ? value : "<None>");
+		}
+
+		ImGui::Columns(1);
+		ImGui::PopID();
+
+		return false;
+	}
+
+	bool EditorGUI::DrawTextInput(const char* label, std::string& value, size_t bufferSize)
+	{
+		bool changed = false;
+
+		ImGui::PushID(label);
+
+		ImGui::Columns(2, nullptr, false);
+		ImGui::SetColumnWidth(0, 90.0f);
+
+		ImGui::AlignTextToFramePadding();
+		ImGui::TextUnformatted(label);
+		ImGui::NextColumn();
+
+		ImGui::SetNextItemWidth(-1);
+
+		changed |= ImGui::InputText("##value", &value);
+
+		ImGui::Columns(1);
+		ImGui::PopID();
+
+		return changed;
+	}
+
+	bool EditorGUI::DrawAssetPicker(const char* label, uint64_t assetId, seri::asset::AssetType assetType, uint64_t& selection)
+	{
+		bool changed = false;
+
+		ImGui::PushID(label);
+
+		ImGui::Columns(2, nullptr, false);
+		ImGui::SetColumnWidth(0, 90.0f);
+
+		ImGui::AlignTextToFramePadding();
+		ImGui::TextUnformatted(label);
+		ImGui::NextColumn();
+
+		std::string assetName = assetId != 0 ? seri::asset::AssetManager::GetAssetName(assetId) : "<none>";
+		if (ImGui::Button(assetName.c_str(), ImVec2(-1, 0)))
+		{
+			ImGui::OpenPopup("AssetPickerPopup");
+		}
+
+		changed |= ShowEditorAssetPickerPopup(assetType, changed, selection);
+
+		ImGui::Columns(1);
+		ImGui::PopID();
+
+		return changed;
 	}
 
 }
