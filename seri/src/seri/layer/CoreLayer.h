@@ -17,6 +17,7 @@
 #include "seri/event/EventCallback.h"
 #include "seri/event/EventDispatcher.h"
 #include "seri/scripting/ScriptingManager.h"
+#include "seri/system/LightSystem.h"
 #include "seri/system/TransformSystem.h"
 #include "seri/system/MeshRendererSystem.h"
 #include "seri/draw/DebugDraw.h"
@@ -125,6 +126,7 @@ namespace seri
 
 			seri::system::TransformSystem::Update();
 			seri::system::MeshRendererSystem::Update();
+			seri::system::LightSystem::Update();
 			seri::scripting::ScriptingManager::Update();
 
 			seri::BehaviourManager::UpdateBehaviours();

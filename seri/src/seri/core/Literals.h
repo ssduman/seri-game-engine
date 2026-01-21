@@ -26,6 +26,7 @@ namespace seri::literals
 	constexpr const char* kUniformDirPointLights = "u_point_lights";
 	constexpr const char* kUniformPointLightCount = "u_point_light_count";
 
+	constexpr const int kMaxDirLightCount = 1;
 	constexpr const int kMaxSpotLightCount = 8;
 	constexpr const int kMaxPointLightCount = 8;
 }

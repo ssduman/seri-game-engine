@@ -43,6 +43,7 @@ namespace seri
 		glm::mat4 BuildViewMatrix();
 		void SetFromViewMatrix(const glm::mat4& view);
 
+		const glm::vec4& GetPosition();
 		const glm::mat4& GetView();
 		const glm::mat4& GetProjection();
 		glm::mat4 GetViewProjection();

@@ -118,6 +118,16 @@ namespace seri
 		_cameraProperties.rotation = glm::normalize(glm::quat_cast(glm::mat3(world)));
 	}
 
+	const glm::vec4& CameraBase::GetPosition()
+	{
+		return glm::vec4{
+			_cameraProperties.position.x,
+			_cameraProperties.position.y,
+			_cameraProperties.position.z,
+			0.0f
+		};
+	}
+
 	const glm::mat4& CameraBase::GetView()
 	{
 		return _view;

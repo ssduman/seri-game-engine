@@ -4,6 +4,7 @@
 #include "seri/window/WindowManagerBase.h"
 #include "seri/rendering/PipelineBase.h"
 #include "seri/rendering/FramebufferBase.h"
+#include "seri/rendering/RenderingData.h"
 
 namespace seri
 {
@@ -48,6 +49,8 @@ namespace seri
 
 		std::shared_ptr<FramebufferBase> mainRT{ nullptr };
 		std::shared_ptr<FramebufferBase> editorRT{ nullptr };
+		std::shared_ptr<UniformBufferBase> lightUBO{ nullptr };
+		std::shared_ptr<UniformBufferBase> cameraUBO{ nullptr };
 
 	protected:
 		RenderingProperties _renderingProperties;

@@ -17,13 +17,15 @@ struct SpotLight
     vec4 position;
     vec4 direction;
     vec4 color;
-    vec4 params; // x = innerCos, y = outerCos
+    vec4 params;  // x = innerCos, y = outerCos, z = constant, w = linear
+    vec4 params2; // x = quadratic, y/z/w = unused
 };
 
 struct PointLight
 {
     vec4 position;
     vec4 color;
+    vec4 attenuation; // x = constant, y = linear, z = quadratic, w = unused
 };
 
 // layout(std140, binding = 0) uniform CameraBuffer
@@ -31,7 +33,6 @@ struct PointLight
 //     mat4 u_view;
 //     mat4 u_proj;
 //     mat4 u_view_proj;
-
 //     vec4 u_camera_pos;
 //     vec4 u_time; // x = time, y = deltaTime, z and w unused
 // };
@@ -64,6 +65,21 @@ vec3 SRGBToLinear(vec3 c)
 vec3 LinearToSRGB(vec3 c)
 {
     return pow(c, vec3(1.0 / 2.2));
+}
+
+vec3 Reinhard(vec3 c)
+{
+    return c / (c + vec3(1.0));
+}
+
+vec3 ACESFilm(vec3 x)
+{
+    float a = 2.51;
+    float b = 0.03;
+    float c = 2.43;
+    float d = 0.59;
+    float e = 0.14;
+    return clamp((x * (a * x + b)) / (x * (c * x + d) + e), 0.0, 1.0);
 }
 
 float DistributionGGX(vec3 N, vec3 H, float roughness)
@@ -175,6 +191,10 @@ vec3 PBR_Spot_Light(vec3 pos, SpotLight spotLight, vec3 N, vec3 V, vec3 albedo, 
     float epsilon = max(spotLight.params.x - spotLight.params.y, 0.001);
     float spot = clamp((theta - spotLight.params.y) / epsilon, 0.0, 1.0);
 
+    // float constant = spotLight.params.z;
+    // float linear = spotLight.params.w;
+    // float quadratic = spotLight.params2.x;
+    // float attenuation = 1.0 / max(constant + linear * lightDist + quadratic * lightDist * lightDist, 0.01);
     float attenuation = 1.0 / max(lightDist * lightDist, 0.01);
     vec3 radiance = spotLight.color.rgb * attenuation * spot;
 
@@ -187,7 +207,11 @@ vec3 PBR_Point_Light(vec3 pos, PointLight pointLight, vec3 N, vec3 V, vec3 albed
     float lightDist = length(lightDiff);
     vec3 L = lightDiff / max(lightDist, 0.001);
 
-    float attenuation = 1.0 / max(lightDist * lightDist, 0.01);
+    float constant = pointLight.attenuation.x;
+    float linear = pointLight.attenuation.y;
+    float quadratic = pointLight.attenuation.z;
+    float attenuation = 1.0 / max(constant + linear * lightDist + quadratic * lightDist * lightDist, 0.01);
+    
     vec3 radiance = pointLight.color.rgb * attenuation;
 
     return BRDF_PBR(N, V, L, radiance, albedo, roughness, metallic);

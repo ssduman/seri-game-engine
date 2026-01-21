@@ -10,9 +10,11 @@ Material:
   Floats: ~
   Float2s: ~
   Float3s: ~
-  Float4s: ~
+  Float4s:
+    u_camera_pos: [0.429416806, 1.14206123, 1.36916089, 0]
   Mat4s: ~
   Textures:
-    u_texture: 7353807435475845965
-    u_texture_0: 0
-  ShaderID: 3566850448792701980
+    u_arm_texture: 9730896772609739247
+    u_normal_texture: 15810939709178354859
+    u_diff_texture: 7353807435475845965
+  ShaderID: 6444769152004986813

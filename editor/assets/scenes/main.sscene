@@ -8,74 +8,29 @@ SceneComponent:
 Entities:
   - Entity:
       IDComponent:
-        ID: 124
+        ID: 13788229143220833807
         ParentID: 0
-        Name: Entity_spiderman
-      TransformComponent:
-        Position: [1, 0, 0]
-        Rotation: [0, 0, 0]
-        Scale: [1, 1, 1]
-      MeshComponent:
-        MeshAssetID: 17928092336128327075
-      MeshRendererComponent:
-        MaterialAssetID: 5128232576114054222
-        CastShadow: false
-  - Entity:
-      IDComponent:
-        ID: 125
-        ParentID: 124
-        Name: entity_1
-      TransformComponent:
-        Position: [-1, 0, 0]
-        Rotation: [0, 0, 0]
-        Scale: [1, 1, 1]
-  - Entity:
-      IDComponent:
-        ID: 15087948878615887923
-        ParentID: 125
-        Name: GO
+        Name: Cannon
       TransformComponent:
         Position: [0, 0, 0]
-        Rotation: [0, 45, 0]
-        Scale: [1, 1, 1]
-  - Entity:
-      IDComponent:
-        ID: 5134564393171502025
-        ParentID: 124
-        Name: Entity_spider
-      TransformComponent:
-        Position: [-2, 0, 0]
-        Rotation: [0, 120, 0]
+        Rotation: [0, 0, 0]
         Scale: [0.00999999978, 0.00999999978, 0.00999999978]
       MeshComponent:
-        MeshAssetID: 9345235014830943464
+        MeshAssetID: 8933691566797930938
       MeshRendererComponent:
         MaterialAssetID: 16756991584035094998
         CastShadow: true
   - Entity:
       IDComponent:
-        ID: 14183215496632272173
-        ParentID: 5134564393171502025
-        Name: Entity323
+        ID: 5443721493636187564
+        ParentID: 0
+        Name: Spot
       TransformComponent:
-        Position: [0, 0, 0]
-        Rotation: [0, 0, 0]
+        Position: [0, 1.89999998, 0]
+        Rotation: [-90, 0, 0]
         Scale: [1, 1, 1]
-  - Entity:
-      IDComponent:
-        ID: 13269587195292794505
-        ParentID: 124
-        Name: Entity_new
-      TransformComponent:
-        Position: [0, 0, 0]
-        Rotation: [0, 0, 0]
-        Scale: [1, 1, 1]
-  - Entity:
-      IDComponent:
-        ID: 6108922855132924924
-        ParentID: 13269587195292794505
-        Name: Entity_child
-      TransformComponent:
-        Position: [0, 0, 0]
-        Rotation: [0, 0, 0]
-        Scale: [1, 1, 1]
+      SpotLightComponent:
+        Intensity: 200
+        InnerAngle: 30
+        OuterAngle: 70
+        Color: [1, 1, 1]

@@ -87,6 +87,10 @@ namespace seri::component
 		float outerAngle = 30.0f;
 		glm::vec3 color{ 1.0f, 1.0f, 1.0f };
 
+		float constant = 1.0f;
+		float linear = 0.09f;
+		float quadratic = 0.032f;
+
 		static SpotLightComponent Deserialize(const YAML::Node& node);
 		static YAML::Node Serialize(SpotLightComponent component);
 	};
@@ -98,6 +102,10 @@ namespace seri::component
 		float range = 10.0f;
 		float intensity = 10.0f;
 		glm::vec3 color{ 1.0f, 1.0f, 1.0f };
+		
+		float constant = 1.0f;
+		float linear = 0.09f;
+		float quadratic = 0.032f;
 
 		static PointLightComponent Deserialize(const YAML::Node& node);
 		static YAML::Node Serialize(PointLightComponent component);

@@ -134,6 +134,16 @@ namespace seri
 			return _renderingManager->editorRT;
 		}
 
+		static std::shared_ptr<UniformBufferBase> GetLightUBO()
+		{
+			return _renderingManager->lightUBO;
+		}
+
+		static std::shared_ptr<UniformBufferBase> GetCameraUBO()
+		{
+			return _renderingManager->cameraUBO;
+		}
+
 	private:
 		static std::unique_ptr<RenderingManagerBase> _renderingManager;
 		static std::unique_ptr<RenderCommandBufferBase> _renderCommandBuffer;

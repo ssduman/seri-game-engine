@@ -45,9 +45,14 @@ namespace seri
 					continue;
 				}
 
+				glm::vec4 camPos = command.camera->GetPosition();
+				glm::mat4 view = command.camera->GetView();
+				glm::mat4 projection = command.camera->GetProjection();
+
 				command.material->SetMat4(literals::kUniformModel, command.trs);
-				command.material->SetMat4(literals::kUniformView, command.camera->GetView());
-				command.material->SetMat4(literals::kUniformProjection, command.camera->GetProjection());
+				command.material->SetMat4(literals::kUniformView, view);
+				command.material->SetMat4(literals::kUniformProjection, projection);
+				command.material->SetFloat4(literals::kUniformCameraPos, camPos);
 				command.material->Apply();
 				command.vao->Bind();
 
