@@ -57,15 +57,15 @@ void main()
     vec3 V = normalize(u_camera_pos.xyz - sent_pos.xyz);
 
     vec3 color = vec3(0.0);
-    if (u_dir_light_exists == 1)
+    if (u_dir_light_exist.x == 1)
     {
         color += PBR_Dir_Light(u_dir_light, N, V, albedo, roughness, metallic);
     }
-    for (int i = 0; i < min(u_spot_light_count, MAX_SPOT_LIGHTS); i++)
+    for (int i = 0; i < min(u_spot_light_count.x, MAX_SPOT_LIGHTS); i++)
     {
         color += PBR_Spot_Light(sent_pos.xyz, u_spot_lights[i], N, V, albedo, roughness, metallic);
     }
-    for (int i = 0; i < min(u_point_light_count, MAX_POINT_LIGHTS); i++)
+    for (int i = 0; i < min(u_point_light_count.x, MAX_POINT_LIGHTS); i++)
     {
         color += PBR_Point_Light(sent_pos.xyz, u_point_lights[i], N, V, albedo, roughness, metallic);
     }

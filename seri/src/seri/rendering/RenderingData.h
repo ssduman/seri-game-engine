@@ -33,21 +33,18 @@ namespace seri
 	{
 		glm::vec4 position;
 		glm::vec4 color;
-		glm::vec4 attenuation; // x=constant, y=linear, z=quadratic, w=unused
+		glm::vec4 params; // x=constant, y=linear, z=quadratic, w=unused
 	};
 
 	struct UniformBufferLight
 	{
 		UniformBufferDirectionalLight dirLight;
-		alignas(16) int dirLightExists{ 0 };
-		alignas(16) glm::vec3 pad0;
+		glm::ivec4 dirLightExist{ 0 };
 
 		UniformBufferSpotLight spotLights[literals::kMaxSpotLightCount];
-		alignas(16) int spotLightCount{ 0 };
-		alignas(16) glm::vec3 pad1;
+		glm::ivec4 spotLightCount{ 0 };
 
 		UniformBufferPointLight pointLights[literals::kMaxPointLightCount];
-		alignas(16) int pointLightCount{ 0 };
-		alignas(16) glm::vec3 pad2;
+		glm::ivec4 pointLightCount{ 0 };
 	};
 }

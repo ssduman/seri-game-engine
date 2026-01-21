@@ -110,6 +110,7 @@ namespace seri
 			uniformName.starts_with(seri::literals::kUniformView) ||
 			uniformName.starts_with(seri::literals::kUniformModel) ||
 			uniformName.starts_with(seri::literals::kUniformProjection) ||
+			uniformName.starts_with(seri::literals::kUniformCameraPos) ||
 			false
 			)
 		{

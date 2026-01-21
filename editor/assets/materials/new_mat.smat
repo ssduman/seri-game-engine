@@ -10,8 +10,7 @@ Material:
   Floats: ~
   Float2s: ~
   Float3s: ~
-  Float4s:
-    u_camera_pos: [0.429416806, 1.14206123, 1.36916089, 0]
+  Float4s: ~
   Mat4s: ~
   Textures:
     u_arm_texture: 9730896772609739247
