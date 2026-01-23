@@ -5,10 +5,10 @@
 * [X] Skeletal Animation
 * [X] Font Loading and Text Rendering
 * [X] Instancing
-* [X] Basic Lighting
+* [X] Lighting
 * [X] Basic Sound
 * [X] Basic Editor GUI
-* [ ] PBR
+* [X] PBR
 * [ ] Physics
 * [ ] NetCode
 * [ ] DirectX Support
