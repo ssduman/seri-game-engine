@@ -2,19 +2,20 @@
 
 :: git
 call git --git-dir seri/vendor/imgui/.git switch docking
+call git --git-dir seri/vendor/imgui/.git switch --detach 08c777a
 call git --git-dir seri/vendor/glfw/.git switch --detach 3.4
 call git --git-dir seri/vendor/glm/.git switch --detach 1.0.1
-call git --git-dir seri/vendor/stb/.git switch --detach master
+call git --git-dir seri/vendor/stb/.git switch --detach f1c79c0
 call git --git-dir seri/vendor/assimp/.git switch --detach v5.4.3
 call git --git-dir seri/vendor/freetype/.git switch --detach VER-2-13-3
 call git --git-dir seri/vendor/sdl/.git switch --detach release-3.2.20
 call git --git-dir seri/vendor/entt/.git switch --detach v3.16.0
 call git --git-dir seri/vendor/yaml-cpp/.git switch --detach 0.8.0
 call git --git-dir seri/vendor/fmt/.git switch --detach 12.1.0
-call git --git-dir seri/vendor/efsw/.git switch --detach master
+call git --git-dir seri/vendor/efsw/.git switch --detach 22f17a0
 call git --git-dir seri/vendor/lua/.git switch --detach v5.4.8
-call git --git-dir seri/vendor/sol2/.git switch --detach master
-call git --git-dir seri/vendor/imguizmo/.git switch --detach master
+call git --git-dir seri/vendor/sol2/.git switch --detach c1f95a7
+call git --git-dir seri/vendor/imguizmo/.git switch --detach a15acd8
 
 :: copy premake5.lua
 echo f | xcopy /f /y "script/vendor/glad/premake5.lua" "seri/vendor/glad/premake5.lua"
