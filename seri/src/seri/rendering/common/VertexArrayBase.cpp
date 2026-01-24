@@ -1,10 +1,10 @@
 #include "Seripch.h"
 
 #include "seri/core/Seri.h"
-#include "seri/rendering/VertexArrayBase.h"
+#include "seri/rendering/common/VertexArrayBase.h"
 
 #if defined (SERI_USE_RENDERING_OPENGL)
-#include "seri/rendering/VertexArrayOpenGL.h"
+#include "seri/rendering/opengl/VertexArrayOpenGL.h"
 #endif
 
 namespace seri

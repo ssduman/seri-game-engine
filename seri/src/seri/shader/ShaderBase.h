@@ -3,7 +3,7 @@
 #include "seri/util/Util.h"
 #include "seri/random/Random.h"
 #include "seri/asset/AssetBase.h"
-#include "seri/rendering/RenderingUtil.h"
+#include "seri/rendering/render/RenderingUtil.h"
 
 namespace seri
 {

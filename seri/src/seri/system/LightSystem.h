@@ -3,8 +3,8 @@
 #include "seri/util/Util.h"
 #include "seri/scene/SceneManager.h"
 #include "seri/component/Components.h"
-#include "seri/rendering/RenderingData.h"
-#include "seri/rendering/RenderingManager.h"
+#include "seri/rendering/render/RenderingData.h"
+#include "seri/rendering/render/RenderingManager.h"
 
 namespace seri::system
 {

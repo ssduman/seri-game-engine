@@ -6,7 +6,7 @@
 #include "seri/graphic/Mesh.h"
 #include "seri/graphic/Model.h"
 #include "seri/graphic/Material.h"
-#include "seri/rendering/RenderingManager.h"
+#include "seri/rendering/render/RenderingManager.h"
 
 namespace seri
 {

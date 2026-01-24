@@ -52,8 +52,8 @@
 #include "seri/window/WindowManager.h"
 #include "seri/window/WindowManagerBase.h"
 
-#include "seri/rendering/BufferBase.h"
-#include "seri/rendering/FramebufferBase.h"
-#include "seri/rendering/VertexArrayBase.h"
-#include "seri/rendering/RenderingManager.h"
-#include "seri/rendering/RenderingManagerBase.h"
+#include "seri/rendering/common/BufferBase.h"
+#include "seri/rendering/common/FramebufferBase.h"
+#include "seri/rendering/common/VertexArrayBase.h"
+#include "seri/rendering/common/RenderingManagerBase.h"
+#include "seri/rendering/render/RenderingManager.h"

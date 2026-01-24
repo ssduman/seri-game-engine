@@ -2,8 +2,8 @@
 
 #include "seri/util/Util.h"
 #include "seri/texture/TextureBase.h"
-#include "seri/rendering/BufferBase.h"
-#include "seri/rendering/RenderingUtil.h"
+#include "seri/rendering/common/BufferBase.h"
+#include "seri/rendering/render/RenderingUtil.h"
 
 namespace seri
 {

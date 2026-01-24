@@ -2,9 +2,10 @@
 
 #include "seri/util/Util.h"
 #include "seri/shader/ShaderBase.h"
-#include "seri/rendering/BufferBase.h"
-#include "seri/rendering/VertexArrayBase.h"
-#include "seri/rendering/RenderingUtil.h"
+#include "seri/rendering/render/RenderingUtil.h"
+#include "seri/rendering/common/BufferBase.h"
+#include "seri/rendering/common/VertexArrayBase.h"
+#include "seri/rendering/common/FramebufferBase.h"
 
 namespace seri
 {
@@ -106,6 +107,12 @@ namespace seri
 		elements_instanced,
 	};
 
+	enum class PassType
+	{
+		opaque,
+		transparent,
+	};
+
 	struct PipelineDesc
 	{
 		bool depthTestEnabled{ true };
@@ -131,5 +138,29 @@ namespace seri
 
 		float lineWidth{ 1.0f };
 		float pointSize{ 1.0f };
+	};
+
+	struct PassDesc
+	{
+		PassType passType{ PassType::opaque };
+
+		bool clearDepth{ false };
+		float clearDepthValue{ 1.0f };
+
+		bool clearStencil{ false };
+		int clearStencilValue{ 0 };
+
+		bool clearColor{ false };
+		glm::vec4 clearColorValue{ 0.2f, 0.2f, 0.2f, 1.0f };
+
+		bool useViewport{ false };
+		int vx{ 0 };
+		int vy{ 0 };
+		int vw{ 0 };
+		int vh{ 0 };
+
+		std::shared_ptr<CameraBase> camera{ nullptr };
+
+		std::shared_ptr<FramebufferBase> rt{ nullptr };
 	};
 }

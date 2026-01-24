@@ -1,7 +1,7 @@
 #pragma once
 
 #include "seri/util/Util.h"
-#include "seri/rendering/RenderingManager.h"
+#include "seri/rendering/render/RenderingManager.h"
 
 #define SERI_MAX_BONES 200
 #define SERI_MAX_INSTANCED_COUNT 256

@@ -10,7 +10,7 @@
 #include "seri/sound/SoundManager.h"
 #include "seri/scene/SceneManager.h"
 #include "seri/shader/ShaderLibrary.h"
-#include "seri/rendering/RenderingManager.h"
+#include "seri/rendering/render/RenderingManager.h"
 #include "seri/behaviour/BehaviourManager.h"
 #include "seri/texture/Skybox.h"
 #include "seri/camera/EditorCamera.h"

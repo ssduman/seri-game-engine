@@ -1,7 +1,7 @@
 #pragma once
 
-#include "seri/rendering/RenderingManager.h"
-#include "seri/rendering/RenderCommandBufferBase.h"
+#include "seri/rendering/render/RenderingManager.h"
+#include "seri/rendering/common/RenderCommandBufferBase.h"
 
 #include <glad/gl.h>
 

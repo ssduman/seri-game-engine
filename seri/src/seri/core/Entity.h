@@ -8,7 +8,7 @@
 #include "seri/shader/ShaderLibrary.h"
 #include "seri/math/Transform.h"
 #include "seri/camera/CameraBase.h"
-#include "seri/rendering/RenderingManager.h"
+#include "seri/rendering/render/RenderingManager.h"
 
 #include <memory>
 #include <string>

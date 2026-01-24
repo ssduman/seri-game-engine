@@ -1,10 +1,10 @@
 #include "Seripch.h"
 
 #include "seri/core/Seri.h"
-#include "seri/rendering/FramebufferBase.h"
+#include "seri/rendering/common/FramebufferBase.h"
 
 #if defined (SERI_USE_RENDERING_OPENGL)
-#include "seri/rendering/FramebufferOpenGL.h"
+#include "seri/rendering/opengl/FramebufferOpenGL.h"
 #endif
 
 namespace seri

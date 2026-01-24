@@ -3,12 +3,12 @@
 #include "seri/util/Util.h"
 #include "seri/graphic/Material.h"
 #include "seri/camera/CameraBase.h"
-#include "seri/rendering/BufferBase.h"
-#include "seri/rendering/FramebufferBase.h"
-#include "seri/rendering/VertexArrayBase.h"
-#include "seri/rendering/PipelineBase.h"
-#include "seri/rendering/RenderingStats.h"
-#include "seri/rendering/RenderingManagerBase.h"
+#include "seri/rendering/common/BufferBase.h"
+#include "seri/rendering/common/FramebufferBase.h"
+#include "seri/rendering/common/VertexArrayBase.h"
+#include "seri/rendering/render/PipelineBase.h"
+#include "seri/rendering/common/RenderingManagerBase.h"
+#include "seri/rendering/render/RenderingStats.h"
 
 namespace seri
 {

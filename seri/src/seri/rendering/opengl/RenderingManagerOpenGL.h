@@ -1,6 +1,6 @@
 #pragma once
 
-#include "seri/rendering/RenderingManagerBase.h"
+#include "seri/rendering/common/RenderingManagerBase.h"
 
 #include <glad/gl.h>
 

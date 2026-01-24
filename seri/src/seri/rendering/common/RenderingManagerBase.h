@@ -2,9 +2,9 @@
 
 #include "seri/util/Util.h"
 #include "seri/window/WindowManagerBase.h"
-#include "seri/rendering/PipelineBase.h"
-#include "seri/rendering/FramebufferBase.h"
-#include "seri/rendering/RenderingData.h"
+#include "seri/rendering/render/PipelineBase.h"
+#include "seri/rendering/render/RenderingData.h"
+#include "seri/rendering/common/FramebufferBase.h"
 
 namespace seri
 {

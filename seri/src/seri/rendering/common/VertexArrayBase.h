@@ -1,7 +1,7 @@
 #pragma once
 
 #include "seri/util/Util.h"
-#include "seri/rendering/BufferBase.h"
+#include "seri/rendering/common/BufferBase.h"
 
 namespace seri
 {

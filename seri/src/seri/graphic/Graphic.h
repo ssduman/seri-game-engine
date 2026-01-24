@@ -2,7 +2,7 @@
 
 #include "seri/util/Util.h"
 #include "seri/camera/CameraBase.h"
-#include "seri/rendering/FramebufferBase.h"
+#include "seri/rendering/common/FramebufferBase.h"
 
 namespace seri
 {

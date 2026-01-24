@@ -1,7 +1,7 @@
 #pragma once
 
 #include "seri/util/Util.h"
-#include "seri/rendering/RenderingUtil.h"
+#include "seri/rendering/render/RenderingUtil.h"
 
 namespace seri
 {
@@ -75,8 +75,9 @@ namespace seri
 		virtual void UpdateData(const std::vector<glm::vec4>& data) = 0;
 		virtual void UpdateData(const std::vector<glm::mat4>& data) = 0;
 
-		virtual const BufferLayoutDesc& GetLayout() = 0;
-		virtual void SetLayout(const BufferLayoutDesc& layout) = 0;
+		virtual const BufferLayoutDesc& GetLayout() { return _layoutDesc; }
+		virtual void SetLayout(const BufferLayoutDesc& layout) { _layoutDesc = layout; }
+
 		virtual VertexBufferBase& AddElement(const BufferElementDesc& element) = 0;
 		virtual void AddElements(std::initializer_list<BufferElementDesc> elements) = 0;
 

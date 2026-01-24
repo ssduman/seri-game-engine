@@ -5,7 +5,7 @@
 #include "seri/graphic/Graphic.h"
 #include "seri/graphic/Material.h"
 #include "seri/shader/ShaderLibrary.h"
-#include "seri/rendering/RenderingManager.h"
+#include "seri/rendering/render/RenderingManager.h"
 
 namespace seri
 {

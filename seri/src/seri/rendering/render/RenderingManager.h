@@ -2,10 +2,10 @@
 
 #include "seri/util/Util.h"
 #include "seri/camera/CameraBase.h"
-#include "seri/rendering/PipelineBase.h"
-#include "seri/rendering/RenderingStats.h"
-#include "seri/rendering/RenderingManagerBase.h"
-#include "seri/rendering/RenderCommandBufferBase.h"
+#include "seri/rendering/render/PipelineBase.h"
+#include "seri/rendering/render/RenderingStats.h"
+#include "seri/rendering/common/RenderingManagerBase.h"
+#include "seri/rendering/common/RenderCommandBufferBase.h"
 
 #include <memory>
 
