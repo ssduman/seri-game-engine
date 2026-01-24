@@ -54,27 +54,23 @@ namespace seri
 
 	void Skybox::Update()
 	{
-		seri::RenderingManager::Begin(seri::Graphic::GetCameraPerspective());
-
 		_material->SetMat4(literals::kUniformViewSkybox, glm::mat4(glm::mat3(seri::Graphic::GetCameraPerspective()->GetView())));
 
 		seri::RenderCommand renderCommand_skybox{};
 		renderCommand_skybox.name = "skybox";
-		renderCommand_skybox.desc.depthFunc = DepthFunc::l_equal;
+		renderCommand_skybox.state.depthFunc = DepthFunc::l_equal;
 		renderCommand_skybox.camera = seri::Graphic::GetCameraPerspective();
-		renderCommand_skybox.drawMode = DrawMode::arrays;
+		renderCommand_skybox.draw.mode = DrawMode::arrays;
+		renderCommand_skybox.draw.count = static_cast<uint32_t>(_positions.size());
 		renderCommand_skybox.material = _material;
 		renderCommand_skybox.vao = _vertexArray;
 		renderCommand_skybox.rt = seri::RenderingManager::GetEditorRT();
-		renderCommand_skybox.count = static_cast<uint32_t>(_positions.size());
 		seri::RenderingManager::Submit(renderCommand_skybox);
 
 		seri::RenderCommand renderCommand_restore{};
 		renderCommand_restore.name = "skybox_restore";
 		renderCommand_restore.noop = true;
 		seri::RenderingManager::Submit(renderCommand_restore);
-
-		seri::RenderingManager::End();
 	}
 
 	void Skybox::SetDefaultPositions()

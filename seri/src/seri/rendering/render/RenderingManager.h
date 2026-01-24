@@ -89,16 +89,6 @@ namespace seri
 			_renderingManager->SetFrontFace(frontFace);
 		}
 
-		static void Begin(std::shared_ptr<CameraBase> camera)
-		{
-			_renderCommandBuffer->Begin(camera);
-		}
-
-		static void End()
-		{
-			_renderCommandBuffer->End();
-		}
-
 		static void Submit(RenderCommand renderCommand)
 		{
 			if (renderCommand.rt == nullptr)

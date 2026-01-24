@@ -56,8 +56,6 @@ namespace seri
 
 	void Graphic::Draw(const std::shared_ptr<Mesh>& mesh, const std::shared_ptr<Material>& material, const glm::mat4& trs, const std::shared_ptr<CameraBase>& camera, const std::shared_ptr<FramebufferBase>& rt)
 	{
-		seri::RenderingManager::Begin(camera);
-
 		material->SetFloat4(literals::kUniformColor, glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f });
 		material->SetFloat3(literals::kUniformViewPos, camera->GetCameraProperties().position);
 		material->SetFloat3(literals::kUniformLightDir, glm::vec3{ 0.0f, 0.0f, -1.0f });
@@ -83,16 +81,12 @@ namespace seri
 		renderCommand.material = material;
 		renderCommand.vao = mesh->GetVao();
 		renderCommand.rt = rt;
-		renderCommand.trs = trs * mesh->transformation;
+		renderCommand.model = trs * mesh->transformation;
 		seri::RenderingManager::Submit(renderCommand);
-
-		seri::RenderingManager::End();
 	}
 
 	void Graphic::DrawInstanced(const std::shared_ptr<Mesh>& mesh, const std::shared_ptr<Material>& material, const std::vector<glm::mat4>& trs, const std::shared_ptr<CameraBase>& camera, const std::shared_ptr<FramebufferBase>& rt)
 	{
-		seri::RenderingManager::Begin(camera);
-
 		material->SetFloat4(literals::kUniformColor, glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f });
 		material->SetFloat3(literals::kUniformViewPos, camera->GetCameraProperties().position);
 		material->SetFloat3(literals::kUniformLightDir, glm::vec3{ 0.0f, 0.0f, -1.0f });
@@ -104,11 +98,9 @@ namespace seri
 		renderCommand.material = material;
 		renderCommand.vao = mesh->GetVao();
 		renderCommand.rt = rt;
-		renderCommand.drawMode = seri::DrawMode::elements_instanced;
-		renderCommand.instanceCount = static_cast<uint32_t>(trs.size());
+		renderCommand.draw.mode = seri::DrawMode::elements_instanced;
+		renderCommand.draw.instanceCount = static_cast<uint32_t>(trs.size());
 		seri::RenderingManager::Submit(renderCommand);
-
-		seri::RenderingManager::End();
 	}
 
 }

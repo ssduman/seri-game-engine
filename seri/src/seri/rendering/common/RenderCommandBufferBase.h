@@ -6,44 +6,19 @@
 #include "seri/rendering/common/BufferBase.h"
 #include "seri/rendering/common/FramebufferBase.h"
 #include "seri/rendering/common/VertexArrayBase.h"
-#include "seri/rendering/render/PipelineBase.h"
 #include "seri/rendering/common/RenderingManagerBase.h"
+#include "seri/rendering/render/PipelineBase.h"
 #include "seri/rendering/render/RenderingStats.h"
 
 namespace seri
 {
-	struct RenderCommand
-	{
-	public:
-		std::string name;
-		bool noop{ false };
-
-		PipelineDesc desc;
-
-		uint32_t count{ 0 };
-		uint32_t instanceCount{ 0 };
-		DrawMode drawMode{ DrawMode::elements };
-		Topology topology{ Topology::triangle };
-		DataType dataType{ DataType::uint_type };
-		const void* indices{ nullptr };
-
-		std::shared_ptr<CameraBase> camera{ nullptr };
-		std::shared_ptr<Material> material{ nullptr };
-		std::shared_ptr<VertexArrayBase> vao{ nullptr };
-		std::shared_ptr<FramebufferBase> rt{ nullptr };
-
-		glm::mat4 trs{ 1.0f };
-	};
-
 	class RenderCommandBufferBase
 	{
 	public:
-		virtual void Begin(std::shared_ptr<CameraBase> camera) = 0;
-
+		virtual void Init() = 0;
+		virtual void Begin() = 0;
 		virtual void End() = 0;
-
 		virtual void Submit(RenderCommand renderCommand) = 0;
-
 		virtual void Execute() = 0;
 
 		RenderingStats GetStats()
@@ -52,10 +27,11 @@ namespace seri
 		}
 
 	protected:
-		std::vector<RenderCommand> _commands;
+		std::vector<RenderCommand> _commands{};
 
-		RenderingStats _stats;
-		RenderingStats _statsPrev;
+		RenderingStats _stats{};
+		RenderingStats _statsPrev{};
+		FrameGraph _frameGraph{};
 
 	};
 }

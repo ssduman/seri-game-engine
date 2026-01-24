@@ -2,6 +2,7 @@
 
 #include "seri/util/Util.h"
 #include "seri/shader/ShaderBase.h"
+#include "seri/graphic/Material.h"
 #include "seri/rendering/render/RenderingUtil.h"
 #include "seri/rendering/common/BufferBase.h"
 #include "seri/rendering/common/VertexArrayBase.h"
@@ -109,11 +110,15 @@ namespace seri
 
 	enum class PassType
 	{
+		shadow,
+		skybox,
 		opaque,
 		transparent,
+		debug,
+		ui,
 	};
 
-	struct PipelineDesc
+	struct RenderState
 	{
 		bool depthTestEnabled{ true };
 		bool depthWriteEnabled{ true };
@@ -142,15 +147,15 @@ namespace seri
 
 	struct PassDesc
 	{
-		PassType passType{ PassType::opaque };
+		PassType type{ PassType::opaque };
 
-		bool clearDepth{ false };
+		bool clearDepth{ true };
 		float clearDepthValue{ 1.0f };
 
-		bool clearStencil{ false };
+		bool clearStencil{ true };
 		int clearStencilValue{ 0 };
 
-		bool clearColor{ false };
+		bool clearColor{ true };
 		glm::vec4 clearColorValue{ 0.2f, 0.2f, 0.2f, 1.0f };
 
 		bool useViewport{ false };
@@ -162,5 +167,80 @@ namespace seri
 		std::shared_ptr<CameraBase> camera{ nullptr };
 
 		std::shared_ptr<FramebufferBase> rt{ nullptr };
+	};
+
+	struct DrawParams
+	{
+		uint32_t count{ 0 };
+		uint32_t instanceCount{ 0 };
+		DrawMode mode{ DrawMode::elements };
+		Topology topology{ Topology::triangle };
+		DataType dataType{ DataType::uint_type };
+		const void* indices{ nullptr };
+	};
+
+	struct RenderCommand
+	{
+		std::string name;
+		bool noop{ false };
+
+		RenderState state;
+		DrawParams draw;
+
+		std::shared_ptr<CameraBase> camera{ nullptr };
+		std::shared_ptr<Material> material{ nullptr };
+		std::shared_ptr<VertexArrayBase> vao{ nullptr };
+		std::shared_ptr<FramebufferBase> rt{ nullptr };
+
+		glm::mat4 model{ 1.0f };
+	};
+
+	struct RenderItem
+	{
+		std::string name;
+
+		RenderState state;
+		DrawParams draw;
+
+		std::shared_ptr<Material> material;
+		std::shared_ptr<VertexArrayBase> vao;
+
+		glm::mat4 model{ 1.0f };
+	};
+
+	struct RenderPass
+	{
+		PassDesc desc;
+		std::vector<RenderItem> items{};
+	};
+
+	class FrameGraph
+	{
+	public:
+		RenderPass& AddPass(RenderPass pass)
+		{
+			passes.emplace_back(pass);
+			return *passes.end();
+		}
+
+		RenderPass& GetPass(PassType type)
+		{
+			for (int i = 0; i < passes.size(); i++)
+			{
+				if (passes[i].desc.type == type)
+				{
+					return passes[i];
+				}
+			}
+			throw std::runtime_error("[frame graph] unexpected pass type");
+		}
+
+		void Clear()
+		{
+			passes.clear();
+		}
+
+		std::vector<RenderPass> passes{};
+
 	};
 }

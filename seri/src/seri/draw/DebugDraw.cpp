@@ -64,12 +64,12 @@ namespace seri::debug
 		renderCommand.camera = camera;
 		renderCommand.material = _material;
 		renderCommand.vao = _vertexArray;
-		renderCommand.desc.depthTestEnabled = false;
-		renderCommand.drawMode = seri::DrawMode::arrays;
-		renderCommand.topology = seri::Topology::line;
-		renderCommand.count = vertices.size();
+		renderCommand.state.depthTestEnabled = false;
+		renderCommand.draw.mode = seri::DrawMode::arrays;
+		renderCommand.draw.topology = seri::Topology::line;
+		renderCommand.draw.count = vertices.size();
 		renderCommand.rt = seri::RenderingManager::GetEditorRT();
-		renderCommand.trs = seri::Util::GetIdentityMatrix();
+		renderCommand.model = seri::Util::GetIdentityMatrix();
 
 		seri::RenderingManager::Submit(renderCommand);
 	}

@@ -21,32 +21,28 @@ namespace seri
 	{
 		auto camera = seri::Graphic::GetCameraPerspective();
 
-		seri::RenderingManager::Begin(camera);
-
 		_material->SetMat4("u_inv_view", glm::inverse(camera->GetView()));
 		_material->SetMat4("u_inv_proj", glm::inverse(camera->GetProjection()));
 		_material->SetFloat3("u_cam_pos", camera->GetCameraProperties().position);
 
 		seri::RenderCommand renderCommand_grid{};
 		renderCommand_grid.name = "infinite_grid";
-		renderCommand_grid.desc.depthTestEnabled = true;
-		renderCommand_grid.desc.depthWriteEnabled = false;
-		renderCommand_grid.desc.blendEnabled = true;
-		renderCommand_grid.desc.cullFaceEnabled = false;
+		renderCommand_grid.state.depthTestEnabled = true;
+		renderCommand_grid.state.depthWriteEnabled = false;
+		renderCommand_grid.state.blendEnabled = true;
+		renderCommand_grid.state.cullFaceEnabled = false;
 		renderCommand_grid.camera = camera;
-		renderCommand_grid.drawMode = DrawMode::arrays;
+		renderCommand_grid.draw.mode = DrawMode::arrays;
+		renderCommand_grid.draw.count = static_cast<uint32_t>(_positions.size());
 		renderCommand_grid.material = _material;
 		renderCommand_grid.vao = _vertexArray;
 		renderCommand_grid.rt = seri::RenderingManager::GetEditorRT();
-		renderCommand_grid.count = static_cast<uint32_t>(_positions.size());
 		seri::RenderingManager::Submit(renderCommand_grid);
 
 		seri::RenderCommand renderCommand_restore{};
 		renderCommand_restore.name = "infinite_grid_restore";
 		renderCommand_restore.noop = true;
 		seri::RenderingManager::Submit(renderCommand_restore);
-
-		seri::RenderingManager::End();
 	}
 
 	void InfiniteGrid::SetDefaultPositions()

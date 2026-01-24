@@ -246,23 +246,19 @@ namespace seri::editor
 
 		void Update() override
 		{
-			seri::RenderingManager::Begin(seri::Graphic::GetCameraPerspective());
-
 			seri::RenderCommand renderCommand{};
 			renderCommand.name = "basic_cube";
 			renderCommand.camera = seri::Graphic::GetCameraPerspective();
 			renderCommand.material = basicMaterial;
 			renderCommand.vao = basicVertexArray;
 			renderCommand.rt = seri::RenderingManager::GetEditorRT();
-			renderCommand.trs = seri::Util::GetTRS(
+			renderCommand.model = seri::Util::GetTRS(
 				{ 0.0f, 0.0f, 0.0f },
 				{ 0.0f, 45.0f, 0.0f },
 				{ 1.0f, 1.0f, 1.0f }
 			);
 
 			seri::RenderingManager::Submit(renderCommand);
-
-			seri::RenderingManager::End();
 		}
 
 		void Destroy() override
