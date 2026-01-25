@@ -35,36 +35,65 @@ namespace seri
 			LogOpenGLInfo();
 			EnableOpenGLDebugOutput();
 
-			mainRT = FramebufferBase::Create();
+			// ubo
+			{
+				lightUBO = UniformBufferBase::Create(sizeof(UniformBufferLight), UniformBinding::light);
+				cameraUBO = UniformBufferBase::Create(sizeof(UniformBufferCamera), UniformBinding::camera);
+			}
 
-			FramebufferDesc framebufferDesc{};
-			framebufferDesc.width = 1280;
-			framebufferDesc.height = 720;
+			// rt
+			{
+				mainRT = FramebufferBase::Create();
 
-			TextureDesc textureDescColor{};
-			textureDescColor.format = TextureFormat::rgba__rgba8ubyte;
-			textureDescColor.wrapS = TextureWrap::clamp_to_edge;
-			textureDescColor.wrapR = TextureWrap::clamp_to_edge;
-			textureDescColor.wrapT = TextureWrap::clamp_to_edge;
-			textureDescColor.magFilter = TextureMagFilter::linear;
-			textureDescColor.minFilter = TextureMinFilter::linear;
+				FramebufferDesc framebufferDesc{};
+				framebufferDesc.width = 1280;
+				framebufferDesc.height = 720;
 
-			TextureDesc textureDescDepth{};
-			textureDescDepth.format = TextureFormat::depth_stencil__depth24_stencil8;
-			textureDescDepth.wrapS = TextureWrap::clamp_to_edge;
-			textureDescDepth.wrapR = TextureWrap::clamp_to_edge;
-			textureDescDepth.wrapT = TextureWrap::clamp_to_edge;
-			textureDescDepth.magFilter = TextureMagFilter::linear;
-			textureDescDepth.minFilter = TextureMinFilter::linear;
+				TextureDesc textureDescColor{};
+				textureDescColor.format = TextureFormat::rgba__rgba8ubyte;
+				textureDescColor.wrapS = TextureWrap::clamp_to_edge;
+				textureDescColor.wrapR = TextureWrap::clamp_to_edge;
+				textureDescColor.wrapT = TextureWrap::clamp_to_edge;
+				textureDescColor.magFilter = TextureMagFilter::linear;
+				textureDescColor.minFilter = TextureMinFilter::linear;
 
-			framebufferDesc.AddAttachments(
-				{ textureDescColor, textureDescDepth }
-			);
+				TextureDesc textureDescDepth{};
+				textureDescDepth.format = TextureFormat::depth_stencil__depth24_stencil8;
+				textureDescDepth.wrapS = TextureWrap::clamp_to_edge;
+				textureDescDepth.wrapR = TextureWrap::clamp_to_edge;
+				textureDescDepth.wrapT = TextureWrap::clamp_to_edge;
+				textureDescDepth.magFilter = TextureMagFilter::linear;
+				textureDescDepth.minFilter = TextureMinFilter::linear;
 
-			editorRT = FramebufferBase::Create(framebufferDesc);
+				framebufferDesc.AddAttachments(
+					{ textureDescColor, textureDescDepth }
+				);
 
-			lightUBO = UniformBufferBase::Create(sizeof(UniformBufferLight), UniformBinding::light);
-			cameraUBO = UniformBufferBase::Create(sizeof(UniformBufferCamera), UniformBinding::camera);
+				editorRT = FramebufferBase::Create(framebufferDesc);
+			}
+
+			// shadow
+			{
+				FramebufferDesc framebufferDesc{};
+				framebufferDesc.width = 1280;
+				framebufferDesc.height = 720;
+
+				TextureDesc textureDescShadow{};
+				textureDescShadow.format = TextureFormat::depth__depth32float;
+				textureDescShadow.wrapS = TextureWrap::clamp_to_border;
+				textureDescShadow.wrapT = TextureWrap::clamp_to_border;
+				textureDescShadow.magFilter = TextureMagFilter::linear;
+				textureDescShadow.minFilter = TextureMinFilter::linear;
+				textureDescShadow.compareMode = TextureCompareMode::ref_to_texture;
+				textureDescShadow.compareFunc = TextureCompareFunc::l_equal;
+				textureDescShadow.borderColor = glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f };
+
+				framebufferDesc.AddAttachments(
+					{ textureDescShadow }
+				);
+
+				shadowRT = FramebufferBase::Create(framebufferDesc);
+			}
 
 			_initialized = true;
 

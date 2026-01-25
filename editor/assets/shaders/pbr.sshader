@@ -41,6 +41,8 @@ uniform sampler2D u_diff_texture;
 uniform sampler2D u_normal_texture;
 uniform sampler2D u_arm_texture; // R=AO, G=Roughness, B=Metallic
 
+// uniform sampler2DShadow u_dir_light_shadow_map;
+
 out vec4 final_color;
 
 void main()
@@ -59,7 +61,7 @@ void main()
     vec3 color = vec3(0.0);
     if (u_dir_light_exist.x == 1)
     {
-        color += PBR_Dir_Light(u_dir_light, N, V, albedo, roughness, metallic);
+        color += PBR_Dir_Light(sent_pos.xyz, u_dir_light, N, V, albedo, roughness, metallic);
     }
     for (int i = 0; i < min(u_spot_light_count.x, MAX_SPOT_LIGHTS); i++)
     {

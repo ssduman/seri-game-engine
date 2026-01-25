@@ -52,6 +52,11 @@ namespace seri
 			return std::chrono::high_resolution_clock::now().time_since_epoch().count();
 		}
 
+		static int GetFPS()
+		{
+			return Util::RountToInt(1.0f / TimeWrapper::GetDeltaTime());
+		}
+
 	private:
 		TimeWrapper() = default;
 		~TimeWrapper() = default;

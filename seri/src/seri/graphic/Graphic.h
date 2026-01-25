@@ -2,6 +2,7 @@
 
 #include "seri/util/Util.h"
 #include "seri/camera/CameraBase.h"
+#include "seri/rendering/render/PipelineBase.h"
 #include "seri/rendering/common/FramebufferBase.h"
 
 namespace seri
@@ -14,7 +15,6 @@ namespace seri
 	{
 	public:
 		Graphic(Graphic const&) = delete;
-
 		void operator=(Graphic const&) = delete;
 
 		static Graphic& GetInstance()
@@ -29,20 +29,15 @@ namespace seri
 		}
 
 		static void AddCamera(std::shared_ptr<CameraBase> camera);
-
 		static std::shared_ptr<CameraBase> GetCameraOrtho();
-
 		static std::shared_ptr<CameraBase> GetCameraPerspective();
 
-		static void DrawModel(const std::shared_ptr<Model>& model, const std::shared_ptr<Material>& material, const glm::mat4& trs, const std::shared_ptr<CameraBase>& camera, const std::shared_ptr<FramebufferBase>& rt = nullptr);
-
-		static void Draw(const std::shared_ptr<Mesh>& mesh, const std::shared_ptr<Material>& material, const glm::mat4& trs, const std::shared_ptr<CameraBase>& camera, const std::shared_ptr<FramebufferBase>& rt = nullptr);
-
-		static void DrawInstanced(const std::shared_ptr<Mesh>& mesh, const std::shared_ptr<Material>& material, const std::vector<glm::mat4>& trs, const std::shared_ptr<CameraBase>& camera, const std::shared_ptr<FramebufferBase>& rt = nullptr);
+		static void DrawModel(const std::shared_ptr<Model>& model, const std::shared_ptr<Material>& material, const glm::mat4& trs);
+		static void Draw(const std::shared_ptr<Mesh>& mesh, const std::shared_ptr<Material>& material, const glm::mat4& trs, PassType passType = PassType::opaque);
+		static void DrawInstanced(const std::shared_ptr<Mesh>& mesh, const std::shared_ptr<Material>& material, const std::vector<glm::mat4>& trs);
 
 	private:
 		Graphic() = default;
-
 		~Graphic() = default;
 
 		std::shared_ptr<CameraBase> _cameraOrtho;

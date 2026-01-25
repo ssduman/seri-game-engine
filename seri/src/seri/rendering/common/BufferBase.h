@@ -23,6 +23,8 @@ namespace seri
 	{
 		camera,
 		light,
+		material,
+		shadow,
 	};
 
 	struct BufferDesc

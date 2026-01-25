@@ -6,7 +6,6 @@ namespace seri::literals
 	constexpr const char* kEngineName = "Seri Game Engine";
 
 	constexpr const char* kUniformColor = "u_color";
-	constexpr const char* kUniformViewPos = "u_view_pos";
 	constexpr const char* kUniformCameraPos = "u_camera_pos";
 	constexpr const char* kUniformLightDir = "u_light_dir";
 	constexpr const char* kUniformLightColor = "u_light_color";

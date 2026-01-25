@@ -1,0 +1,181 @@
+#include "Seripch.h"
+
+#include "seri/rendering/common/RenderCommandBufferBase.h"
+#include "seri/rendering/render/RenderingManager.h"
+
+namespace seri
+{
+	void RenderCommandBufferBase::Init()
+	{
+	}
+
+	void RenderCommandBufferBase::Begin()
+	{
+		auto perspectiveCamera = Graphic::GetCameraPerspective();
+		auto orthoCamera = Graphic::GetCameraOrtho();
+
+		auto editorRT = seri::RenderingManager::GetEditorRT();
+
+		RenderPass passShadow;
+		passShadow.desc.type = PassType::shadow;
+		passShadow.desc.rt = nullptr;
+		passShadow.desc.camera = nullptr;
+
+		RenderPass passSkybox;
+		passSkybox.desc.type = PassType::skybox;
+		passSkybox.desc.rt = editorRT;
+		passSkybox.desc.camera = perspectiveCamera;
+
+		RenderPass passOpaque;
+		passOpaque.desc.type = PassType::opaque;
+		passOpaque.desc.rt = editorRT;
+		passOpaque.desc.camera = perspectiveCamera;
+
+		RenderPass passTransparent;
+		passTransparent.desc.type = PassType::transparent;
+		passTransparent.desc.rt = editorRT;
+		passTransparent.desc.camera = perspectiveCamera;
+
+		RenderPass passDebug;
+		passDebug.desc.type = PassType::debug;
+		passDebug.desc.rt = editorRT;
+		passDebug.desc.camera = perspectiveCamera;
+
+		RenderPass passUI;
+		passUI.desc.type = PassType::ui;
+		passUI.desc.rt = editorRT;
+		passUI.desc.camera = orthoCamera;
+
+		_frameGraph.Clear();
+		_frameGraph.AddPass(passShadow);
+		_frameGraph.AddPass(passSkybox);
+		_frameGraph.AddPass(passOpaque);
+		_frameGraph.AddPass(passTransparent);
+		_frameGraph.AddPass(passDebug);
+		_frameGraph.AddPass(passUI);
+	}
+
+	void RenderCommandBufferBase::End()
+	{
+	}
+
+	void RenderCommandBufferBase::Submit(RenderItem renderItem)
+	{
+		_frameGraph.AddItem(renderItem);
+	}
+
+	void RenderCommandBufferBase::Submit(RenderCommand renderCommand)
+	{
+		_commands.emplace_back(renderCommand);
+	}
+
+	void RenderCommandBufferBase::SetState(RenderState state)
+	{
+		seri::RenderingManager::SetBlend(state.blendEnabled, state.blendFactorSrc, state.blendFactorDst);
+		seri::RenderingManager::SetFrontFace(state.frontFace);
+		seri::RenderingManager::SetCullFace(state.cullFaceEnabled, state.cullFace);
+		seri::RenderingManager::SetDepthFunc(state.depthTestEnabled, state.depthFunc);
+		seri::RenderingManager::SetDepthWrite(state.depthWriteEnabled);
+		seri::RenderingManager::SetStencilFunc(state.stencilTestEnabled, state.stencilFunc, state.stencilRef, state.stencilMaskAND);
+		seri::RenderingManager::SetStencilOp(state.stencilSfail, state.stencilDPfail, state.stencilDPpass);
+		seri::RenderingManager::SetStencilMask(state.stencilMask);
+		seri::RenderingManager::SetLineWidth(state.lineWidth);
+		seri::RenderingManager::SetPointSize(state.pointSize);
+
+		_statePrev = state;
+	}
+
+	void RenderCommandBufferBase::OnPassChanged(RenderPass renderPass)
+	{
+		auto& cam = renderPass.desc.camera;
+
+		glm::vec4 camPos = cam->GetPosition();
+		glm::mat4 view = cam->GetView();
+		glm::mat4 projection = cam->GetProjection();
+
+		UniformBufferCamera cameraUBO{};
+		cameraUBO.view = view;
+		cameraUBO.proj = projection;
+		cameraUBO.viewProj = projection * view;
+		cameraUBO.cameraPos = camPos;
+		cameraUBO.time = glm::vec4{ TimeWrapper::GetTime(), TimeWrapper::GetDeltaTime(), 0.0f, 0.0f };
+
+		seri::RenderingManager::GetCameraUBO()->SetData(&cameraUBO, sizeof(UniformBufferCamera));
+	}
+
+	void RenderCommandBufferBase::Execute()
+	{
+		for (const RenderCommand& cmd : _commands)
+		{
+			auto& rt = cmd.rt;
+			auto& cam = cmd.camera;
+
+			rt->Bind();
+
+			SetState(cmd.state);
+
+			if (cmd.noop)
+			{
+				rt->Unbind();
+				continue;
+			}
+
+			glm::vec4 camPos = cam->GetPosition();
+			glm::mat4 view = cam->GetView();
+			glm::mat4 projection = cam->GetProjection();
+
+			RenderPass pass{};
+			pass.desc.camera = cam;
+			OnPassChanged(pass);
+
+			cmd.material->SetMat4(literals::kUniformModel, cmd.model);
+			cmd.material->SetMat4(literals::kUniformView, view);
+			cmd.material->SetMat4(literals::kUniformProjection, projection);
+			cmd.material->SetFloat4(literals::kUniformCameraPos, camPos);
+			cmd.material->Apply();
+
+			Draw(cmd.draw, cmd.vao);
+
+			rt->Unbind();
+		}
+
+		for (const RenderPass& pass : _frameGraph.passes)
+		{
+			auto& rt = pass.desc.rt;
+			auto& cam = pass.desc.camera;
+
+			if (!rt || !cam || pass.items.size() == 0)
+			{
+				continue;
+			}
+
+			rt->Bind();
+
+			glm::vec4 camPos = cam->GetPosition();
+			glm::mat4 view = cam->GetView();
+			glm::mat4 projection = cam->GetProjection();
+
+			OnPassChanged(pass);
+
+			for (const RenderItem& cmd : pass.items)
+			{
+				SetState(cmd.state);
+
+				cmd.material->SetMat4(literals::kUniformModel, cmd.model);
+				cmd.material->SetMat4(literals::kUniformView, view);
+				cmd.material->SetMat4(literals::kUniformProjection, projection);
+				cmd.material->SetFloat4(literals::kUniformCameraPos, camPos);
+				cmd.material->Apply();
+
+				Draw(cmd.draw, cmd.vao);
+			}
+
+			rt->Unbind();
+		}
+
+		_commands.clear();
+		_statsPrev = _stats;
+		_stats.Reset();
+	}
+
+}

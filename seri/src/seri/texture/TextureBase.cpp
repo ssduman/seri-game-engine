@@ -47,6 +47,15 @@ namespace seri
 		stbi_write_png(path.c_str(), width, height, components, data, width * components);
 	}
 
+	void TextureBase::UnbindTex2D(int slot)
+	{
+#if defined (SERI_USE_RENDERING_OPENGL)
+		return seri::TextureOpenGL::UnbindTex2DImpl(slot);
+#else
+		static_assert(false, "unknown rendering type for unbind texture");
+#endif
+	}
+
 	std::shared_ptr<TextureBase> TextureBase::Create()
 	{
 #if defined (SERI_USE_RENDERING_OPENGL)

@@ -192,7 +192,6 @@ namespace seri::editor
 				{ seri::LayoutLocation::color }
 			);
 
-
 			basicVertexBuffer_3 = seri::VertexBufferBase::Create(normals);
 			basicVertexBuffer_3->AddElement(
 				{ seri::LayoutLocation::normal }
@@ -219,29 +218,6 @@ namespace seri::editor
 			basicMaterial = std::make_shared<seri::Material>();
 			basicMaterial->SetShader(basicShader);
 			basicMaterial->SetTexture("u_texture", basicTexture);
-
-			basicMaterial->SetInt("SetInt1", 42);
-			basicMaterial->SetInt("SetInt2", 43);
-			basicMaterial->SetInt("SetInt3", 44);
-			basicMaterial->SetFloat("SetFloat1", 1.0f);
-			basicMaterial->SetFloat("SetFloat2", 3.0f);
-			basicMaterial->SetFloat2("SetFloat2", { 2.0f, 2.0f });
-			basicMaterial->SetFloat2("SetFloat22", { 22.0f, 22.0f });
-			basicMaterial->SetFloat3("SetFloat3", { 3.0f, 3.0f, 3.0f });
-			basicMaterial->SetFloat4("SetFloat4", { 4.0f, 4.0f, 4.0f, 4.0f });
-			basicMaterial->SetMat4("SetMat4", { 5.0f });
-			basicMaterial->SetMat4("SetMat55", { 55.0f });
-
-			YAML::Node root;
-			root["IDInfo"] = seri::asset::IDInfo::Serialize(seri::asset::IDInfo{});
-			root["Material"] = seri::asset::MaterialAsset::Serialize(basicMaterial);
-
-			auto file = seri::asset::AssetManager::GetWorkingDirectory() / "test_mat.yaml";
-			std::ofstream outfile(file);
-			outfile << root;
-			outfile.flush();
-
-			auto deserializedMaterial = seri::asset::MaterialAsset::Deserialize(YAML::LoadFile(file.string())["Material"]);
 		}
 
 		void Update() override

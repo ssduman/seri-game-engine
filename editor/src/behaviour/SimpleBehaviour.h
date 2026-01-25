@@ -1,7 +1,6 @@
 #pragma once
 
 #include <seri/core/Seri.h>
-
 #include <seri/graphic/Mesh.h>
 #include <seri/graphic/Model.h>
 #include <seri/graphic/Material.h>
@@ -17,106 +16,69 @@ namespace seri::editor
 	public:
 		void Init() override
 		{
-			quad_2d = seri::Mesh::quad_2d();
-			quad_3d = seri::Mesh::quad_3d();
-			cube_3d = seri::Mesh::cube_3d();
-			font_mesh = std::make_shared<seri::Mesh>();
+			cube3d = seri::Mesh::cube_3d();
+			fontMesh = std::make_shared<seri::Mesh>();
+			modelSkinned = seri::ModelImporter{}.Load("assets/spiderman/source/spiderman.fbx");
 
-			model_0 = seri::ModelImporter{}.Load("assets/spiderman/source/spiderman.fbx");
-			model_1 = seri::ModelImporter{}.Load("assets/cannon/cannon_01_1k.fbx");
+			auto texture0 = seri::TextureBase::Create();
+			texture0->Init(seri::TextureDesc{}, "assets/textures/passage.png");
 
-			auto texture_0 = seri::TextureBase::Create();
-			texture_0->Init(seri::TextureDesc{}, "assets/textures/passage.png");
-
-			auto texture_1 = seri::TextureBase::Create();
-			texture_1->Init(seri::TextureDesc{}, "assets/spiderman/textures/spiderman.png");
-
-			auto texture_2 = seri::TextureBase::Create();
-			texture_2->Init(seri::TextureDesc{}, "assets/cannon/textures/cannon_01_diff_1k.jpg");
-
-			const auto& fontInfo = seri::font::FontManager::GetPredefinedFonts()[fontIndex]->fontInfo;
-			const auto& fontTexture = seri::font::FontManager::GetPredefinedFonts()[fontIndex]->texture;
+			auto texture1 = seri::TextureBase::Create();
+			texture1->Init(seri::TextureDesc{}, "assets/spiderman/textures/spiderman.png");
 
 			materialFont = std::make_shared<seri::Material>();
 			materialFont->SetShader(seri::ShaderLibrary::Find("typer"));
-			materialFont->SetTexture("u_texture", fontTexture);
-
-			materialGrid = std::make_shared<seri::Material>();
-			materialGrid->SetShader(seri::ShaderLibrary::Find("grid"));
-
-			materialCannon = std::make_shared<seri::Material>();
-			materialCannon->SetShader(seri::ShaderLibrary::Find("entity"));
-			materialCannon->SetTexture("u_texture", texture_2);
+			materialFont->SetTexture("u_texture", seri::font::FontManager::GetPredefinedFonts()[fontIndex]->texture);
 
 			materialInstanced = std::make_shared<seri::Material>();
 			materialInstanced->SetShader(seri::ShaderLibrary::Find("entity_instanced"));
-			materialInstanced->SetTexture("u_texture", texture_0);
+			materialInstanced->SetTexture("u_texture", texture0);
 
-			for (size_t i = 0; model_0 && i < model_0->meshes.size(); i++)
+			for (size_t i = 0; modelSkinned && i < modelSkinned->meshes.size(); i++)
 			{
 				auto materialSkinned = std::make_shared<seri::Material>();
 				materialSkinned->SetShader(seri::ShaderLibrary::Find("entity_skinned"));
-				materialSkinned->SetTexture("u_texture", texture_1);
+				materialSkinned->SetTexture("u_texture", texture1);
 				materialsSkinned.emplace_back(materialSkinned);
 			}
 
-			udpSocketServer = std::make_unique<seri::netcode::Socket>(seri::netcode::SocketType::udp);
-			udpSocketServer->Bind({ "localhost", 5200 });
-
-			udpSocketClient = std::make_unique<seri::netcode::Socket>(seri::netcode::SocketType::udp);
-			udpSocketClient->Connect({ "127.0.0.1", 5200 });
-
-			for (unsigned int i = 0; i < 100; i++)
+			for (unsigned int i = 0; i < instanceCount; i++)
 			{
 				instancedTRSs.push_back(seri::Util::GetTRS({ 1.0f + i % 20, i / 20, -1.0f }, { 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f }));
 			}
-			cube_3d->MakeInstanced(instancedTRSs);
+			cube3d->MakeInstanced(instancedTRSs);
+
+			udpSocketServer = std::make_unique<seri::netcode::Socket>(seri::netcode::SocketType::udp);
+			udpSocketServer->Bind({ "localhost", 5200 });
+			udpSocketClient = std::make_unique<seri::netcode::Socket>(seri::netcode::SocketType::udp);
+			udpSocketClient->Connect({ "127.0.0.1", 5200 });
 		}
 
 		void Update() override
 		{
-			seri::RenderingStats renderingStats = seri::RenderingManager::GetRenderingStats();
-			std::string statsStr =
-				"draw calls: " + std::to_string(renderingStats.drawCalls) +
-				", tri: " + std::to_string(renderingStats.triangles) +
-				", frame: " + std::to_string(seri::TimeWrapper::GetFrameCount()) +
-				", fps: " + std::to_string(seri::Util::RountToInt(1.0f / seri::TimeWrapper::GetDeltaTime()));
-			seri::font::FontManager::MakeText(font_mesh, fontIndex, statsStr, 0, 60);
-
-			glm::vec3 pos_3d{ 0.0f, 0.0f, 0.0f };
-			glm::quat rot_3d = glm::quat(glm::vec3{ glm::radians(0.0f), glm::radians(0.0f), glm::radians(0.0f) });
-			glm::vec3 scale_3d{ 1.0f, 1.0f, 1.0f };
-			glm::vec3 scale_l{ 0.01f, 0.01f, 0.01f };
-
 			for (size_t i = 0; i < instancedTRSs.size(); i++)
 			{
-				float row = i % 20;
-				float col = i / 20;
-				instancedTRSs[i] *= glm::mat4_cast(glm::quat(glm::vec3{ glm::radians(seri::Random::Range(0.5f, 2.0f)), glm::radians(seri::Random::Range(0.5f, 2.0f)), glm::radians(0.0f) }));
+				instancedTRSs[i] *= glm::mat4_cast(seri::Util::ToQuaternion({ seri::Random::Range(0.5f, 2.0f), seri::Random::Range(0.5f, 2.0f), 0.0f }));
 			}
-			cube_3d->UpdateInstanced(instancedTRSs);
-			seri::Graphic::DrawInstanced(cube_3d, materialInstanced, instancedTRSs, seri::Graphic::GetCameraPerspective(), seri::RenderingManager::GetEditorRT());
+			cube3d->UpdateInstanced(instancedTRSs);
+			seri::Graphic::DrawInstanced(cube3d, materialInstanced, instancedTRSs);
 
-			if (model_0)
+			if (modelSkinned)
 			{
-				model_0->UpdateAnimations(seri::WindowManager::GetTime());
+				modelSkinned->UpdateAnimations(seri::WindowManager::GetTime());
 
-				for (size_t m = 0; m < model_0->meshes.size(); m++)
+				for (size_t m = 0; m < modelSkinned->meshes.size(); m++)
 				{
-					const auto& mesh = model_0->meshes[m];
+					const auto& mesh = modelSkinned->meshes[m];
 					const auto& materialSkinned = materialsSkinned[m];
-					seri::Graphic::Draw(mesh, materialSkinned, seri::Util::GetTRS(pos_3d, rot_3d, scale_3d), seri::Graphic::GetCameraPerspective(), seri::RenderingManager::GetEditorRT());
+					seri::Graphic::Draw(mesh, materialSkinned, seri::Util::GetTRS({ -1.5f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f }));
 				}
 			}
 
-			if (model_1)
-			{
-				seri::Graphic::DrawModel(model_1, materialCannon, seri::Util::GetTRS({ -4.0f, 0.0f, 0.0f }, rot_3d, scale_l), seri::Graphic::GetCameraPerspective(), seri::RenderingManager::GetEditorRT());
-			}
-
-			seri::Graphic::Draw(font_mesh, materialFont, seri::Util::GetIdentityMatrix(), seri::Graphic::GetCameraOrtho(), seri::RenderingManager::GetEditorRT());
-
-			//seri::Graphic::Draw(quad_2d, materialGrid, seri::Util::GetIdentityMatrix(), seri::Graphic::GetCameraPerspective(), seri::RenderingManager::GetEditorRT());
+			seri::RenderingStats renderingStats = seri::RenderingManager::GetRenderingStats();
+			std::string statsStr = fmt::format("draw calls: {}, tri: {}, fps: {}", renderingStats.drawCalls, renderingStats.triangles, seri::TimeWrapper::GetFPS());
+			seri::font::FontManager::MakeText(fontMesh, fontIndex, statsStr, -seri::WindowManager::GetWidth() / 2 + 20, -seri::WindowManager::GetHeight() / 2 + 20);
+			seri::Graphic::Draw(fontMesh, materialFont, seri::Util::GetIdentityMatrix(), seri::PassType::ui);
 		}
 
 		void Destroy() override
@@ -125,18 +87,13 @@ namespace seri::editor
 
 	private:
 		int fontIndex = 2;
+		int instanceCount = 128;
 
-		std::shared_ptr<seri::Mesh> quad_2d;
-		std::shared_ptr<seri::Mesh> quad_3d;
-		std::shared_ptr<seri::Mesh> cube_3d;
-		std::shared_ptr<seri::Mesh> font_mesh;
-
-		std::shared_ptr<seri::Model> model_0;
-		std::shared_ptr<seri::Model> model_1;
+		std::shared_ptr<seri::Mesh> cube3d;
+		std::shared_ptr<seri::Mesh> fontMesh;
+		std::shared_ptr<seri::Model> modelSkinned;
 
 		std::shared_ptr<seri::Material> materialFont;
-		std::shared_ptr<seri::Material> materialGrid;
-		std::shared_ptr<seri::Material> materialCannon;
 		std::shared_ptr<seri::Material> materialInstanced;
 		std::vector<std::shared_ptr<seri::Material>> materialsSkinned;
 

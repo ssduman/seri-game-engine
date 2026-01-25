@@ -103,7 +103,6 @@ namespace seri
 	bool Util::IsIgnoredUniform(std::string_view uniformName)
 	{
 		if (uniformName.starts_with(seri::literals::kUniformColor) ||
-			uniformName.starts_with(seri::literals::kUniformViewPos) ||
 			uniformName.starts_with(seri::literals::kUniformLightDir) ||
 			uniformName.starts_with(seri::literals::kUniformLightColor) ||
 			uniformName.starts_with(seri::literals::kUniformBones) ||

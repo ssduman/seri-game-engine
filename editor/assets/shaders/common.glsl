@@ -49,6 +49,12 @@ layout(std140, binding = 1) uniform LightBuffer
     ivec4 u_point_light_count;
 };
 
+layout(std140, binding = 3) uniform ShadowBuffer
+{
+    mat4 u_dir_light_view_proj;
+    vec4 u_dir_light_modifiers; // x=shadow bias, y=normal bias, z=shadow strength, w=unused
+};
+
 float Saturate(float x) 
 { 
     return clamp(x, 0.0, 1.0);
@@ -137,6 +143,21 @@ vec3 GetNormal(sampler2D normalMap, vec2 texCoords, vec3 N, vec3 fragPos)
     return normalize(TBN * tangentNormal);
 }
 
+float ShadowDir(sampler2DShadow u_dir_light_shadow_map, vec3 pos, vec3 N, vec3 L)
+{
+    vec4 ls = u_dir_light_view_proj * vec4(pos, 1.0);
+    vec3 p = ls.xyz / ls.w;
+    p = p * 0.5 + 0.5;
+
+    if (p.x < 0 || p.x > 1 || p.y < 0 || p.y > 1 || p.z > 1)
+    {
+        return 1.0;
+    }
+
+    float bias = u_dir_light_modifiers.x + u_dir_light_modifiers.y * (1.0 - max(dot(N, L), 0.0));
+    return texture(u_dir_light_shadow_map, vec3(p.xy, p.z - bias));
+}
+
 vec3 BRDF_PBR(vec3 N, vec3 V, vec3 L, vec3 radiance, vec3 albedo, float roughness, float metallic)
 {
     vec3 H = normalize(V + L);
@@ -168,7 +189,7 @@ vec3 BRDF_PBR(vec3 N, vec3 V, vec3 L, vec3 radiance, vec3 albedo, float roughnes
     return (diffuse + specular) * radiance * NdotL;
 }
 
-vec3 PBR_Dir_Light(DirectionalLight dirLight, vec3 N, vec3 V, vec3 albedo, float roughness, float metallic)
+vec3 PBR_Dir_Light(vec3 pos, DirectionalLight dirLight, vec3 N, vec3 V, vec3 albedo, float roughness, float metallic)
 {
     vec3 L = normalize(-dirLight.direction.xyz);
     vec3 radiance = dirLight.color.rgb;

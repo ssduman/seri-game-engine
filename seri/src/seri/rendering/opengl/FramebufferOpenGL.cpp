@@ -21,7 +21,7 @@ namespace seri
 				continue;
 			}
 
-			if (attachment.textureDesc.format == TextureFormat::depth__depth24 || attachment.textureDesc.format == TextureFormat::depth_stencil__depth24_stencil8)
+			if (attachment.textureDesc.format == TextureFormat::depth__depth24 || attachment.textureDesc.format == TextureFormat::depth__depth32float || attachment.textureDesc.format == TextureFormat::depth_stencil__depth24_stencil8)
 			{
 				_depthAttachment = attachment;
 			}
@@ -85,7 +85,7 @@ namespace seri
 			_depthTexture = TextureBase::Create();
 			_depthTexture->Init(_depthAttachment.textureDesc, _desc.width, _desc.height);
 
-			GLenum attachmentType = _depthAttachment.textureDesc.format == TextureFormat::depth__depth24 ? GL_DEPTH_ATTACHMENT : GL_DEPTH_STENCIL_ATTACHMENT;
+			GLenum attachmentType = (_depthAttachment.textureDesc.format == TextureFormat::depth__depth24 || _depthAttachment.textureDesc.format == TextureFormat::depth__depth32float) ? GL_DEPTH_ATTACHMENT : GL_DEPTH_STENCIL_ATTACHMENT;
 			glFramebufferTexture2D(GL_FRAMEBUFFER, attachmentType, GL_TEXTURE_2D, _depthTexture->GetHandle(), _depthAttachment.textureDesc.mip);
 		}
 

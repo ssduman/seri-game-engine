@@ -28,6 +28,7 @@ namespace seri
 		rgba__rgba8ubyte,
 
 		depth__depth24,
+		depth__depth32float,
 		depth_stencil__depth24_stencil8,
 	};
 
@@ -70,6 +71,20 @@ namespace seri
 		nearest,
 	};
 
+	enum class TextureCompareMode
+	{
+		off,
+		ref_to_texture,
+	};
+
+	enum class TextureCompareFunc
+	{
+		less,
+		greater,
+		l_equal,
+		g_equal,
+	};
+
 	enum class TextureDataType
 	{
 		byte_type,
@@ -87,6 +102,7 @@ namespace seri
 	{
 		int mip{ 0 };
 		bool flip{ true };
+		glm::vec4 borderColor{ 0.0f, 0.0f, 0.0f, 0.0f };
 		TextureSlot slot{ TextureSlot::uv0 };
 		TextureFormat format{ TextureFormat::none };
 		TextureTarget target{ TextureTarget::two_d };
@@ -95,6 +111,8 @@ namespace seri
 		TextureWrap wrapR{ TextureWrap::clamp_to_edge };
 		TextureMagFilter magFilter{ TextureMagFilter::linear };
 		TextureMinFilter minFilter{ TextureMinFilter::linear };
+		TextureCompareMode compareMode{ TextureCompareMode::off };
+		TextureCompareFunc compareFunc{ TextureCompareFunc::l_equal };
 	};
 
 	class TextureBase : public seri::asset::AssetBase
@@ -144,6 +162,7 @@ namespace seri
 		static void UnloadTexture(void* image);
 		static void WriteTexture(const std::string& path, const void* data, int width, int height, int components, bool flip);
 
+		static void UnbindTex2D(int slot);
 		static std::shared_ptr<TextureBase> Create();
 
 	protected:

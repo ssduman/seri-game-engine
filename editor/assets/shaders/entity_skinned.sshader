@@ -48,7 +48,7 @@ in vec4 sent_pos;
 in vec2 sent_uv;
 in vec3 sent_normal;
 
-uniform vec3 u_view_pos;
+uniform vec4 u_camera_pos;
 uniform vec3 u_light_dir;
 uniform vec4 u_light_color;
 
@@ -65,7 +65,7 @@ void main()
     vec3 ambient = ambient_strength * u_light_color.xyz;
 
     float specular_strength = 0.5;
-    vec3 view_dir = normalize(u_view_pos - sent_pos.xyz);
+    vec3 view_dir = normalize(u_camera_pos.xyz - sent_pos.xyz);
     vec3 reflect_dir = reflect(-light_dir_norm, sent_normal);
     float spec = pow(max(dot(view_dir, reflect_dir), 0.0), 32);
     vec3 specular = specular_strength * spec * u_light_color.xyz;

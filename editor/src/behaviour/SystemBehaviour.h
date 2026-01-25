@@ -25,9 +25,7 @@ namespace seri::editor
 						{ 0.0f, 0.0f, 0.0f },
 						{ 0.0f, 0.0f, 0.0f },
 						{ 0.01f, 0.01f, 0.01f }
-					),
-					seri::Graphic::GetCameraPerspective(),
-					seri::RenderingManager::GetEditorRT()
+					)
 				);
 			}
 		}

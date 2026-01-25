@@ -4,158 +4,55 @@
 
 namespace seri
 {
-	void RenderCommandBufferOpenGL::Init()
+	void RenderCommandBufferOpenGL::Draw(DrawParams draw, const std::shared_ptr<VertexArrayBase>& vao)
 	{
-	}
+		_stats.drawCalls += 1;
 
-	void RenderCommandBufferOpenGL::Begin()
-	{
-		auto perspectiveCamera = Graphic::GetCameraPerspective();
-		auto orthoCamera = Graphic::GetCameraOrtho();
+		vao->Bind();
 
-		auto editorRT = RenderingManager::GetEditorRT();
-
-		RenderPass passShadow;
-		passShadow.desc.type = PassType::shadow;
-		passShadow.desc.rt = nullptr;
-		passShadow.desc.camera = nullptr;
-
-		RenderPass passSkybox;
-		passSkybox.desc.type = PassType::skybox;
-		passSkybox.desc.rt = nullptr;
-		passSkybox.desc.camera = perspectiveCamera;
-
-		RenderPass passOpaque;
-		passOpaque.desc.type = PassType::opaque;
-		passOpaque.desc.rt = editorRT;
-		passOpaque.desc.camera = perspectiveCamera;
-
-		RenderPass passTransparent;
-		passTransparent.desc.type = PassType::transparent;
-		passTransparent.desc.rt = editorRT;
-		passTransparent.desc.camera = perspectiveCamera;
-
-		RenderPass passDebug;
-		passDebug.desc.type = PassType::debug;
-		passDebug.desc.rt = editorRT;
-		passDebug.desc.camera = perspectiveCamera;
-
-		RenderPass passUI;
-		passUI.desc.type = PassType::ui;
-		passUI.desc.rt = editorRT;
-		passUI.desc.camera = orthoCamera;
-
-		_frameGraph.Clear();
-		_frameGraph.AddPass(passShadow);
-		_frameGraph.AddPass(passSkybox);
-		_frameGraph.AddPass(passOpaque);
-		_frameGraph.AddPass(passTransparent);
-		_frameGraph.AddPass(passDebug);
-		_frameGraph.AddPass(passUI);
-	}
-
-	void RenderCommandBufferOpenGL::End()
-	{
-	}
-
-	void RenderCommandBufferOpenGL::Submit(RenderCommand renderCommand)
-	{
-		_commands.emplace_back(renderCommand);
-	}
-
-	void RenderCommandBufferOpenGL::Execute()
-	{
-		for (const auto& command : _commands)
+		switch (draw.mode)
 		{
-			command.rt->Bind();
+			case DrawMode::arrays:
+				{
+					_stats.triangles += draw.count / 3;
 
-			RenderingManager::SetBlend(command.state.blendEnabled, command.state.blendFactorSrc, command.state.blendFactorDst);
-			RenderingManager::SetFrontFace(command.state.frontFace);
-			RenderingManager::SetCullFace(command.state.cullFaceEnabled, command.state.cullFace);
-			RenderingManager::SetDepthFunc(command.state.depthTestEnabled, command.state.depthFunc);
-			RenderingManager::SetDepthWrite(command.state.depthWriteEnabled);
-			RenderingManager::SetStencilFunc(command.state.stencilTestEnabled, command.state.stencilFunc, command.state.stencilRef, command.state.stencilMaskAND);
-			RenderingManager::SetStencilOp(command.state.stencilSfail, command.state.stencilDPfail, command.state.stencilDPpass);
-			RenderingManager::SetStencilMask(command.state.stencilMask);
-			RenderingManager::SetLineWidth(command.state.lineWidth);
-			RenderingManager::SetPointSize(command.state.pointSize);
+					glDrawArrays(
+						GetTopology(draw.topology),
+						0,
+						draw.count
+					);
+				}
+				break;
+			case DrawMode::elements:
+				{
+					uint32_t indexCount = vao->GetIndexBuffer()->GetCount();
 
-			if (command.noop)
-			{
-				continue;
-			}
+					_stats.triangles += indexCount / 3;
 
-			glm::vec4 camPos = command.camera->GetPosition();
-			glm::mat4 view = command.camera->GetView();
-			glm::mat4 projection = command.camera->GetProjection();
+					glDrawElements(
+						GetTopology(draw.topology),
+						indexCount,
+						GetDataType(draw.dataType),
+						draw.indices
+					);
+				}
+				break;
+			case DrawMode::elements_instanced:
+				{
+					uint32_t indexCount = vao->GetIndexBuffer()->GetCount();
 
-			command.material->SetMat4(literals::kUniformModel, command.model);
-			command.material->SetMat4(literals::kUniformView, view);
-			command.material->SetMat4(literals::kUniformProjection, projection);
-			command.material->SetFloat4(literals::kUniformCameraPos, camPos);
-			command.material->Apply();
-			command.vao->Bind();
+					_stats.triangles += (indexCount / 3) * draw.instanceCount;
 
-			_stats.drawCalls += 1;
-
-			switch (command.draw.mode)
-			{
-				case DrawMode::arrays:
-					{
-						_stats.triangles += command.draw.count / 3;
-
-						glDrawArrays(
-							GetTopology(command.draw.topology),
-							0,
-							command.draw.count
-						);
-					}
-					break;
-				case DrawMode::elements:
-					{
-						uint32_t indexCount = command.vao->GetIndexBuffer()->GetCount();
-
-						_stats.triangles += indexCount / 3;
-
-						glDrawElements(
-							GetTopology(command.draw.topology),
-							indexCount,
-							GetDataType(command.draw.dataType),
-							command.draw.indices
-						);
-					}
-					break;
-				case DrawMode::elements_instanced:
-					{
-						uint32_t indexCount = command.vao->GetIndexBuffer()->GetCount();
-
-						_stats.triangles += (indexCount / 3) * command.draw.instanceCount;
-
-						glDrawElementsInstanced(
-							GetTopology(command.draw.topology),
-							indexCount,
-							GetDataType(command.draw.dataType),
-							command.draw.indices,
-							command.draw.instanceCount
-						);
-					}
-					break;
-				default:
-					break;
-			}
+					glDrawElementsInstanced(
+						GetTopology(draw.topology),
+						indexCount,
+						GetDataType(draw.dataType),
+						draw.indices,
+						draw.instanceCount
+					);
+				}
+				break;
 		}
-
-		for (const auto& pass : _frameGraph.passes)
-		{
-			for (const auto& cmd : pass.items)
-			{
-
-			}
-		}
-
-		_commands.clear();
-		_statsPrev = _stats;
-		_stats.Reset();
 	}
 
 	GLenum RenderCommandBufferOpenGL::GetTopology(Topology topology)

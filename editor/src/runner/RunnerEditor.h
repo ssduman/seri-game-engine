@@ -23,7 +23,7 @@ namespace seri::editor
 			layerManager.AddLayer(std::make_shared<seri::editor::EditorLayer>());
 
 			//BasicBehaviour basicBehaviour{};
-			//SimpleBehaviour simpleBehaviour{};
+			SimpleBehaviour simpleBehaviour{};
 			SystemBehaviour systemBehaviour{};
 
 			seri::BehaviourManager::InitBehaviours();

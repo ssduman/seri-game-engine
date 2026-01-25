@@ -11,11 +11,7 @@ namespace seri
 	class RenderCommandBufferOpenGL : public RenderCommandBufferBase
 	{
 	public:
-		void Init() override;
-		void Begin() override;
-		void End() override;
-		void Submit(RenderCommand renderCommand) override;
-		void Execute() override;
+		void Draw(DrawParams draw, const std::shared_ptr<VertexArrayBase>& vao) override;
 
 	private:
 		GLenum GetTopology(Topology topology);

@@ -47,4 +47,19 @@ namespace seri
 		UniformBufferPointLight pointLights[literals::kMaxPointLightCount];
 		glm::ivec4 pointLightCount{ 0 };
 	};
+
+	struct UniformBufferMaterial
+	{
+		glm::vec4 baseColor{ 1.0f, 1.0f, 1.0f, 1.0f };
+
+		glm::ivec4 uses{ 1, 1, 1,0 }; // x=diff, y=normal, z=arm
+		glm::vec4 modifiers{ 0.0f, 0.0f, 0.0f, 0.0f }; // x=ao, y=roughness, z=metallic, w=unused
+	};
+
+	struct UniformBufferShadow
+	{
+		glm::mat4 dirLightViewProj;
+
+		glm::vec4 modifiers{ 0.0005f, 0.002f, 1.0f, 0.0f }; // x=shadow bias, y=normal bias, z=shadow strength, w=unused
+	};
 }

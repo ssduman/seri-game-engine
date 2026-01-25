@@ -197,6 +197,7 @@ namespace seri
 
 	struct RenderItem
 	{
+		PassType type;
 		std::string name;
 
 		RenderState state;
@@ -217,22 +218,20 @@ namespace seri
 	class FrameGraph
 	{
 	public:
-		RenderPass& AddPass(RenderPass pass)
+		void AddPass(RenderPass pass)
 		{
 			passes.emplace_back(pass);
-			return *passes.end();
 		}
 
 		RenderPass& GetPass(PassType type)
 		{
-			for (int i = 0; i < passes.size(); i++)
-			{
-				if (passes[i].desc.type == type)
-				{
-					return passes[i];
-				}
-			}
-			throw std::runtime_error("[frame graph] unexpected pass type");
+			return passes[static_cast<int>(type)];
+		}
+
+		void AddItem(RenderItem item)
+		{
+			auto& pass = GetPass(item.type);
+			pass.items.emplace_back(item);
 		}
 
 		void Clear()

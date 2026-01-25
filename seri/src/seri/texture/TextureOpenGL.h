@@ -156,6 +156,12 @@ namespace seri
 			Unbind();
 		}
 
+		static void UnbindTex2DImpl(int slot)
+		{
+			glActiveTexture(GL_TEXTURE0 + slot);
+			glBindTexture(GL_TEXTURE_2D, 0);
+		}
+
 	private:
 		void Init()
 		{
@@ -173,16 +179,23 @@ namespace seri
 				}
 			}
 
+			_borderColor = _desc.borderColor;
+
 			_slot = GetSlotOpenGL(_desc.slot);
 			_format = GetFormatOpenGL(_desc.format);
 			_internalformat = GetInternalFormatOpenGL(_desc.format);
 			_dataType = GetDataTypeFromFormatOpenGL(_desc.format);
 			_target = GetTargetOpenGL(_desc.target);
+
 			_wrapS = GetWrapOpenGL(_desc.wrapS);
 			_wrapT = GetWrapOpenGL(_desc.wrapT);
 			_wrapR = GetWrapOpenGL(_desc.wrapR);
+
 			_magFilter = GetMagFilterOpenGL(_desc.magFilter);
 			_minFilter = GetMinFilterOpenGL(_desc.minFilter);
+
+			_compareMode = GetCompareModeOpenGL(_desc.compareMode);
+			_compareFunc = GetCompareFuncOpenGL(_desc.compareFunc);
 		}
 
 		void Generate()
@@ -239,6 +252,11 @@ namespace seri
 
 			glTexParameteri(_target, GL_TEXTURE_MAG_FILTER, _magFilter);
 			glTexParameteri(_target, GL_TEXTURE_MIN_FILTER, _minFilter);
+
+			glTexParameteri(_target, GL_TEXTURE_COMPARE_MODE, _compareMode);
+			glTexParameteri(_target, GL_TEXTURE_COMPARE_FUNC, _compareFunc);
+
+			glTexParameterfv(_target, GL_TEXTURE_BORDER_COLOR, glm::value_ptr(_borderColor));
 
 			glGenerateMipmap(_target);
 
@@ -349,6 +367,7 @@ namespace seri
 				case seri::TextureFormat::rgba__rgba8ubyte: return GL_RGBA;
 
 				case seri::TextureFormat::depth__depth24: return GL_DEPTH_COMPONENT;
+				case seri::TextureFormat::depth__depth32float: return GL_DEPTH_COMPONENT;
 				case seri::TextureFormat::depth_stencil__depth24_stencil8: return GL_DEPTH_STENCIL;
 			}
 
@@ -369,6 +388,7 @@ namespace seri
 				case seri::TextureFormat::rgba__rgba8ubyte: return GL_RGBA8;
 
 				case seri::TextureFormat::depth__depth24: return GL_DEPTH_COMPONENT24;
+				case seri::TextureFormat::depth__depth32float: return GL_DEPTH_COMPONENT32F;
 				case seri::TextureFormat::depth_stencil__depth24_stencil8: return GL_DEPTH24_STENCIL8;
 			}
 
@@ -389,11 +409,36 @@ namespace seri
 				case seri::TextureFormat::rgba__rgba8ubyte: return GL_UNSIGNED_BYTE;
 
 				case seri::TextureFormat::depth__depth24: return GL_UNSIGNED_INT;
+				case seri::TextureFormat::depth__depth32float: return GL_FLOAT;
 				case seri::TextureFormat::depth_stencil__depth24_stencil8: return GL_UNSIGNED_INT_24_8;
 			}
 
 			return 0;
 		}
+
+		GLenum GetCompareModeOpenGL(TextureCompareMode compareMode)
+		{
+			switch (compareMode)
+			{
+				case seri::TextureCompareMode::off: return GL_NONE;
+				case seri::TextureCompareMode::ref_to_texture: return GL_COMPARE_REF_TO_TEXTURE;
+			}
+
+			return GL_NONE;
+		};
+
+		GLenum GetCompareFuncOpenGL(TextureCompareFunc compareFunc)
+		{
+			switch (compareFunc)
+			{
+				case seri::TextureCompareFunc::less: return GL_LESS;
+				case seri::TextureCompareFunc::greater: return GL_GREATER;
+				case seri::TextureCompareFunc::l_equal: return GL_LEQUAL;
+				case seri::TextureCompareFunc::g_equal: return GL_GEQUAL;
+			}
+
+			return GL_LEQUAL;
+		};
 
 		GLenum _slot;
 		GLenum _format;
@@ -405,6 +450,9 @@ namespace seri
 		GLenum _dataType;
 		GLenum _magFilter;
 		GLenum _minFilter;
+		GLenum _compareMode;
+		GLenum _compareFunc;
+		glm::vec4 _borderColor;
 
 		TextureDesc _desc;
 		unsigned int _handle{ 0 };

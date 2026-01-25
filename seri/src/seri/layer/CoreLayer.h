@@ -31,124 +31,129 @@ namespace seri
 		{
 			srand(static_cast<unsigned int>(time(0)));
 
-			seri::WindowManager::Instance()->Init({ /*title*/ "Seri Game Engine - Editor", /*fullscreen*/ false, /*w*/ 1280, /*h*/ 720 });
-			seri::RenderingManager::Instance()->Init(seri::WindowManager::Instance(), RenderingProperties{});
+			WindowManager::Instance()->Init({ /*title*/ "Seri Game Engine - Editor", /*fullscreen*/ false, /*w*/ 1280, /*h*/ 720 });
+			RenderingManager::Instance()->Init(WindowManager::Instance(), RenderingProperties{});
 
-			seri::ShaderLibrary::Init("assets/shaders/");
-			seri::asset::AssetManager::Init();
-			seri::TimeWrapper::Init();
-			seri::Application::Init();
-			seri::Graphic::Init();
-			seri::InputManager::Init();
-			seri::BehaviourManager::Init();
-			seri::font::FontManager::Init("assets/fonts/");
-			seri::sound::SoundManager::Init("assets/sounds/");
-			seri::scene::SceneManager::Init();
-			seri::asset::AssetManager::StartAssetWatcher();
-			seri::scripting::ScriptingManager::Init();
-			seri::debug::DebugDraw::Init();
+			ShaderLibrary::Init("assets/shaders/");
+			asset::AssetManager::Init();
+			TimeWrapper::Init();
+			Application::Init();
+			Graphic::Init();
+			InputManager::Init();
+			BehaviourManager::Init();
+			font::FontManager::Init("assets/fonts/");
+			sound::SoundManager::Init("assets/sounds/");
+			scene::SceneManager::Init();
+			asset::AssetManager::StartAssetWatcher();
+			scripting::ScriptingManager::Init();
+			debug::DebugDraw::Init();
 
-			seri::WindowManager::Instance()->AddEventCallback(seri::event::MakeEventCallback(
-				[](const seri::event::IEventData& data)
+			WindowManager::Instance()->AddEventCallback(event::MakeEventCallback(
+				[](const event::IEventData& data)
 				{
-					seri::event::EventDispatcher{}(data);
+					event::EventDispatcher{}(data);
 				}
 			));
 
-			seri::WindowManager::Instance()->AddEventCallback(seri::event::MakeEventCallback(
-				[](const seri::event::IEventData& data)
+			WindowManager::Instance()->AddEventCallback(event::MakeEventCallback(
+				[](const event::IEventData& data)
 				{
-					if (data.eventType == seri::event::EventType::window_resize)
+					if (data.eventType == event::EventType::window_resize)
 					{
-						auto& d = seri::event::EventDispatcher::CastEventData<seri::event::WindowResizeEventData&>(data);
+						auto& d = event::EventDispatcher::CastEventData<event::WindowResizeEventData&>(data);
 
-						seri::RenderingManager::SetViewport(0, 0, d.width, d.height);
+						RenderingManager::SetViewport(0, 0, d.width, d.height);
 
-						seri::RenderingManager::GetEditorRT()->Bind();
-						seri::RenderingManager::GetEditorRT()->Resize(d.width, d.height);
-						seri::RenderingManager::GetEditorRT()->Unbind();
+						RenderingManager::GetEditorRT()->Bind();
+						RenderingManager::GetEditorRT()->Resize(d.width, d.height);
+						RenderingManager::GetEditorRT()->Unbind();
 
-						seri::Graphic::GetCameraOrtho()->OnWindowResizeEvent(d);
-						seri::Graphic::GetCameraPerspective()->OnWindowResizeEvent(d);
+						Graphic::GetCameraOrtho()->OnWindowResizeEvent(d);
+						Graphic::GetCameraPerspective()->OnWindowResizeEvent(d);
 					}
 				}
 			));
 
-			seri::CameraProperties cameraPropertiesOrtho;
-			cameraPropertiesOrtho.width = seri::WindowManager::Instance()->GetWindowProperties().windowWidth;
-			cameraPropertiesOrtho.height = seri::WindowManager::Instance()->GetWindowProperties().windowHeight;
+			CameraProperties cameraPropertiesOrtho;
+			cameraPropertiesOrtho.width = WindowManager::Instance()->GetWindowProperties().windowWidth;
+			cameraPropertiesOrtho.height = WindowManager::Instance()->GetWindowProperties().windowHeight;
 			cameraPropertiesOrtho.isOrtho = true;
-			cameraPropertiesOrtho.aspect = seri::WindowManager::GetAspectRatio();
-			auto cameraOrtho = std::make_shared<seri::EditorCamera>(cameraPropertiesOrtho);
+			cameraPropertiesOrtho.aspect = WindowManager::GetAspectRatio();
+			auto cameraOrtho = std::make_shared<EditorCamera>(cameraPropertiesOrtho);
 			cameraOrtho->Init();
 
-			seri::CameraProperties cameraPropertiesPerspective;
-			cameraPropertiesPerspective.width = seri::WindowManager::Instance()->GetWindowProperties().windowWidth;
-			cameraPropertiesPerspective.height = seri::WindowManager::Instance()->GetWindowProperties().windowHeight;
+			CameraProperties cameraPropertiesPerspective;
+			cameraPropertiesPerspective.width = WindowManager::Instance()->GetWindowProperties().windowWidth;
+			cameraPropertiesPerspective.height = WindowManager::Instance()->GetWindowProperties().windowHeight;
 			cameraPropertiesPerspective.isOrtho = false;
-			cameraPropertiesPerspective.aspect = seri::WindowManager::GetAspectRatio();
+			cameraPropertiesPerspective.aspect = WindowManager::GetAspectRatio();
 			cameraPropertiesPerspective.position = { 0.0f, 4.0f, 6.0f };
 			cameraPropertiesPerspective.rotation = Util::ToQuaternion({ -30.0f, 0.0f, 0.0f });
-			auto cameraPerspective = std::make_shared<seri::EditorCamera>(cameraPropertiesPerspective);
+			auto cameraPerspective = std::make_shared<EditorCamera>(cameraPropertiesPerspective);
 			cameraPerspective->Init();
 
-			seri::Graphic::AddCamera(cameraOrtho);
-			seri::Graphic::AddCamera(cameraPerspective);
+			Graphic::AddCamera(cameraOrtho);
+			Graphic::AddCamera(cameraPerspective);
 
-			seri::Application::SetVSyncCount(1);
-			seri::Application::SetTargetFrameRate(60);
+			RenderingManager::Init();
+
+			Application::SetVSyncCount(1);
+			Application::SetTargetFrameRate(60);
 		}
 
 		~CoreLayer() override = default;
 
 		void PreUpdate() override
 		{
-			seri::Application::SetFrameBegin();
+			Application::SetFrameBegin();
 		}
 
 		void Update() override
 		{
-			seri::RenderingManager::GetEditorRT()->Bind();
-			seri::RenderingManager::ClearColor();
-			seri::RenderingManager::Clear();
+			RenderingManager::Begin();
 
-			seri::RenderingManager::GetMainRT()->Bind();
-			seri::RenderingManager::ClearColor();
-			seri::RenderingManager::Clear();
+			RenderingManager::GetEditorRT()->Bind();
+			RenderingManager::ClearColor();
+			RenderingManager::Clear();
 
-			seri::TimeWrapper::UpdateTime(seri::WindowManager::GetTime());
+			RenderingManager::GetMainRT()->Bind();
+			RenderingManager::ClearColor();
+			RenderingManager::Clear();
 
-			seri::Graphic::GetCameraOrtho()->Update();
-			seri::Graphic::GetCameraPerspective()->Update();
+			TimeWrapper::UpdateTime(WindowManager::GetTime());
 
-			seri::asset::AssetManager::Update();
-			seri::scene::SceneManager::Update();
+			Graphic::GetCameraOrtho()->Update();
+			Graphic::GetCameraPerspective()->Update();
 
-			seri::system::TransformSystem::Update();
-			seri::system::MeshRendererSystem::Update();
-			seri::system::LightSystem::Update();
-			seri::scripting::ScriptingManager::Update();
+			asset::AssetManager::Update();
+			scene::SceneManager::Update();
 
-			seri::BehaviourManager::UpdateBehaviours();
+			system::TransformSystem::Update();
+			system::MeshRendererSystem::Update();
+			system::LightSystem::Update();
+			scripting::ScriptingManager::Update();
 
-			seri::debug::DebugDraw::Render(seri::Graphic::GetCameraPerspective());
+			BehaviourManager::UpdateBehaviours();
 
-			seri::debug::DebugDraw::EndFrame();
+			debug::DebugDraw::Render(Graphic::GetCameraPerspective());
+			debug::DebugDraw::EndFrame();
 
-			seri::RenderingManager::Execute();
+			RenderingManager::Execute();
+
+			RenderingManager::End();
 		}
 
 		void PostUpdate() override
 		{
-			seri::InputManager::Reset();
+			InputManager::Reset();
 
-			seri::RenderingManager::GetEditorRT()->Bind();
-			seri::WindowManager::PollEvents();
-			seri::WindowManager::SwapBuffers();
+			RenderingManager::GetEditorRT()->Bind();
+			WindowManager::PollEvents();
+			WindowManager::SwapBuffers();
 
-			seri::Application::SetFrameEnd();
+			Application::SetFrameEnd();
 
-			double waitTime = seri::Application::GetWaitTime();
+			double waitTime = Application::GetWaitTime();
 			if (waitTime > 0.0)
 			{
 				//std::this_thread::sleep_for(std::chrono::duration<double, std::milli>(waitTime));

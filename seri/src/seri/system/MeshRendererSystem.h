@@ -48,9 +48,7 @@ namespace seri::system
 				seri::Graphic::DrawModel(
 					model,
 					material,
-					transform.worldMatrix,
-					seri::Graphic::GetCameraPerspective(),
-					seri::RenderingManager::GetEditorRT()
+					transform.worldMatrix
 				);
 			}
 		}

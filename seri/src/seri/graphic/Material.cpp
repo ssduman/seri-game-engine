@@ -164,6 +164,11 @@ namespace seri
 			_shader->SetMat4(kv.first, kv.second);
 		}
 
+		for (int i = 0; i < _textures.size(); i++)
+		{
+			TextureBase::UnbindTex2D(i);
+		}
+
 		for (auto& kv : _textures)
 		{
 			const std::string& name = kv.first;

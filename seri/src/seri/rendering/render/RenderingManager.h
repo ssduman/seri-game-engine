@@ -89,6 +89,26 @@ namespace seri
 			_renderingManager->SetFrontFace(frontFace);
 		}
 
+		static void Init()
+		{
+			_renderCommandBuffer->Init();
+		}
+
+		static void Begin()
+		{
+			_renderCommandBuffer->Begin();
+		}
+
+		static void End()
+		{
+			_renderCommandBuffer->End();
+		}
+
+		static void Submit(RenderItem renderItem)
+		{
+			_renderCommandBuffer->Submit(renderItem);
+		}
+
 		static void Submit(RenderCommand renderCommand)
 		{
 			if (renderCommand.rt == nullptr)

@@ -46,18 +46,17 @@ namespace seri
 		return GetInstance()._cameraPerspective;
 	}
 
-	void Graphic::DrawModel(const std::shared_ptr<Model>& model, const std::shared_ptr<Material>& material, const glm::mat4& trs, const std::shared_ptr<CameraBase>& camera, const std::shared_ptr<FramebufferBase>& rt)
+	void Graphic::DrawModel(const std::shared_ptr<Model>& model, const std::shared_ptr<Material>& material, const glm::mat4& trs)
 	{
 		for (const auto& mesh : model->meshes)
 		{
-			Graphic::Draw(mesh, material, trs, camera, rt);
+			Graphic::Draw(mesh, material, trs);
 		}
 	}
 
-	void Graphic::Draw(const std::shared_ptr<Mesh>& mesh, const std::shared_ptr<Material>& material, const glm::mat4& trs, const std::shared_ptr<CameraBase>& camera, const std::shared_ptr<FramebufferBase>& rt)
+	void Graphic::Draw(const std::shared_ptr<Mesh>& mesh, const std::shared_ptr<Material>& material, const glm::mat4& trs, PassType passType)
 	{
 		material->SetFloat4(literals::kUniformColor, glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f });
-		material->SetFloat3(literals::kUniformViewPos, camera->GetCameraProperties().position);
 		material->SetFloat3(literals::kUniformLightDir, glm::vec3{ 0.0f, 0.0f, -1.0f });
 		material->SetFloat4(literals::kUniformLightColor, glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f });
 
@@ -75,32 +74,29 @@ namespace seri
 			}
 		}
 
-		seri::RenderCommand renderCommand{};
-		renderCommand.name = "draw";
-		renderCommand.camera = camera;
-		renderCommand.material = material;
-		renderCommand.vao = mesh->GetVao();
-		renderCommand.rt = rt;
-		renderCommand.model = trs * mesh->transformation;
-		seri::RenderingManager::Submit(renderCommand);
+		RenderItem cmd{};
+		cmd.type = passType;
+		cmd.name = "draw";
+		cmd.material = material;
+		cmd.model = trs * mesh->transformation;
+		cmd.vao = mesh->GetVao();
+		RenderingManager::Submit(cmd);
 	}
 
-	void Graphic::DrawInstanced(const std::shared_ptr<Mesh>& mesh, const std::shared_ptr<Material>& material, const std::vector<glm::mat4>& trs, const std::shared_ptr<CameraBase>& camera, const std::shared_ptr<FramebufferBase>& rt)
+	void Graphic::DrawInstanced(const std::shared_ptr<Mesh>& mesh, const std::shared_ptr<Material>& material, const std::vector<glm::mat4>& trs)
 	{
 		material->SetFloat4(literals::kUniformColor, glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f });
-		material->SetFloat3(literals::kUniformViewPos, camera->GetCameraProperties().position);
 		material->SetFloat3(literals::kUniformLightDir, glm::vec3{ 0.0f, 0.0f, -1.0f });
 		material->SetFloat4(literals::kUniformLightColor, glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f });
 
-		seri::RenderCommand renderCommand{};
-		renderCommand.name = "draw_instanced";
-		renderCommand.camera = camera;
-		renderCommand.material = material;
-		renderCommand.vao = mesh->GetVao();
-		renderCommand.rt = rt;
-		renderCommand.draw.mode = seri::DrawMode::elements_instanced;
-		renderCommand.draw.instanceCount = static_cast<uint32_t>(trs.size());
-		seri::RenderingManager::Submit(renderCommand);
+		RenderItem cmd{};
+		cmd.type = PassType::opaque;
+		cmd.name = "draw_instanced";
+		cmd.material = material;
+		cmd.vao = mesh->GetVao();
+		cmd.draw.mode = DrawMode::elements_instanced;
+		cmd.draw.instanceCount = static_cast<uint32_t>(trs.size());
+		RenderingManager::Submit(cmd);
 	}
 
 }
