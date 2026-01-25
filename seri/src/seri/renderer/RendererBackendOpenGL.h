@@ -1,6 +1,6 @@
 #pragma once
 
-#if false
+#if 0
 
 #include "seri/logging/Logger.h"
 #include "seri/renderer/AuxiliaryStructs.h"

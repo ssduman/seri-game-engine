@@ -1,6 +1,6 @@
 #pragma once
 
-#if false
+#if 0
 
 namespace seri
 {
