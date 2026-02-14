@@ -15,15 +15,21 @@ namespace seri::literals
 	constexpr const char* kUniformProjection = "u_projection";
 	constexpr const char* kUniformViewSkybox = "u_view_skybox";
 	constexpr const char* kUniformViewProjection = "u_view_projection";
+	constexpr const char* kUniformLightViewProjection = "u_light_view_projection";
 
 	constexpr const char* kUniformDirLight = "u_dir_light";
 	constexpr const char* kUniformDirLightExists = "u_dir_light_exists";
+	constexpr const char* kUniformDirLightShadowMap = "u_dir_light_shadow_map";
 
 	constexpr const char* kUniformDirSpotLights = "u_spot_lights";
 	constexpr const char* kUniformSpotLightCount = "u_spot_light_count";
 
 	constexpr const char* kUniformDirPointLights = "u_point_lights";
 	constexpr const char* kUniformPointLightCount = "u_point_light_count";
+
+	constexpr const char* kUniformDiffTexture = "u_diff_texture";
+	constexpr const char* kUniformNormalTexture = "u_normal_texture";
+	constexpr const char* kUniformArmTexture = "u_arm_texture";
 
 	constexpr const int kMaxDirLightCount = 1;
 	constexpr const int kMaxSpotLightCount = 8;

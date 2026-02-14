@@ -15,10 +15,11 @@ namespace seri
 		auto orthoCamera = Graphic::GetCameraOrtho();
 
 		auto editorRT = seri::RenderingManager::GetEditorRT();
+		auto shadowRT = seri::RenderingManager::GetShadowRT();
 
 		RenderPass passShadow;
 		passShadow.desc.type = PassType::shadow;
-		passShadow.desc.rt = nullptr;
+		passShadow.desc.rt = shadowRT;
 		passShadow.desc.camera = nullptr;
 
 		RenderPass passSkybox;
@@ -143,19 +144,54 @@ namespace seri
 		{
 			auto& rt = pass.desc.rt;
 			auto& cam = pass.desc.camera;
-
-			if (!rt || !cam || pass.items.size() == 0)
+			if (!rt || pass.items.empty())
 			{
 				continue;
 			}
 
 			rt->Bind();
 
+			if (pass.desc.type == PassType::shadow)
+			{
+				seri::RenderingManager::SetViewport(0, 0, rt->GetWidth(), rt->GetHeight());
+				seri::RenderingManager::Clear();
+
+				glm::mat4 lightViewProj = seri::RenderingManager::GetShadowLightViewProj();
+
+				for (const RenderItem& item : pass.items)
+				{
+					SetState(item.state);
+					item.material->SetMat4(literals::kUniformModel, item.model);
+					item.material->SetMat4(literals::kUniformLightViewProjection, lightViewProj);
+					item.material->Apply();
+					Draw(item.draw, item.vao);
+				}
+
+				rt->Unbind();
+				continue;
+			}
+
+			if (!cam)
+			{
+				continue;
+			}
+
+			seri::RenderingManager::SetViewport(0, 0, rt->GetWidth(), rt->GetHeight());
+
 			glm::vec4 camPos = cam->GetPosition();
 			glm::mat4 view = cam->GetView();
 			glm::mat4 projection = cam->GetProjection();
 
 			OnPassChanged(pass);
+
+			if (pass.desc.type == PassType::opaque)
+			{
+				const auto& shadowDepthTex = seri::RenderingManager::GetShadowRT()->GetDepthTexture();
+				if (shadowDepthTex)
+				{
+					shadowDepthTex->Bind(static_cast<int>(seri::TextureSlotName::shadow));
+				}
+			}
 
 			for (const RenderItem& cmd : pass.items)
 			{
@@ -165,6 +201,7 @@ namespace seri
 				cmd.material->SetMat4(literals::kUniformView, view);
 				cmd.material->SetMat4(literals::kUniformProjection, projection);
 				cmd.material->SetFloat4(literals::kUniformCameraPos, camPos);
+				cmd.material->SetInt(literals::kUniformDirLightShadowMap, static_cast<int>(seri::TextureSlotName::shadow));
 				cmd.material->Apply();
 
 				Draw(cmd.draw, cmd.vao);

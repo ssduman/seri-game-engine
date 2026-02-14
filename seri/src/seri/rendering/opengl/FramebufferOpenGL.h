@@ -18,6 +18,7 @@ namespace seri
 		void Unbind() override;
 
 		uint32_t GetFirstColorTextureHandle() override;
+		std::shared_ptr<TextureBase> GetDepthTexture() override;
 
 		void Invalidate() override;
 

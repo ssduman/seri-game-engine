@@ -39,6 +39,7 @@ namespace seri
 			{
 				lightUBO = UniformBufferBase::Create(sizeof(UniformBufferLight), UniformBinding::light);
 				cameraUBO = UniformBufferBase::Create(sizeof(UniformBufferCamera), UniformBinding::camera);
+				shadowUBO = UniformBufferBase::Create(sizeof(UniformBufferShadow), UniformBinding::shadow);
 			}
 
 			// rt
@@ -75,8 +76,8 @@ namespace seri
 			// shadow
 			{
 				FramebufferDesc framebufferDesc{};
-				framebufferDesc.width = 1280;
-				framebufferDesc.height = 720;
+				framebufferDesc.width = 2048;
+				framebufferDesc.height = 2048;
 
 				TextureDesc textureDescShadow{};
 				textureDescShadow.format = TextureFormat::depth__depth32float;

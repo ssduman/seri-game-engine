@@ -144,6 +144,11 @@ namespace seri
 			return _renderingManager->editorRT;
 		}
 
+		static std::shared_ptr<FramebufferBase> GetShadowRT()
+		{
+			return _renderingManager->shadowRT;
+		}
+
 		static std::shared_ptr<UniformBufferBase> GetLightUBO()
 		{
 			return _renderingManager->lightUBO;
@@ -152,6 +157,21 @@ namespace seri
 		static std::shared_ptr<UniformBufferBase> GetCameraUBO()
 		{
 			return _renderingManager->cameraUBO;
+		}
+
+		static std::shared_ptr<UniformBufferBase> GetShadowUBO()
+		{
+			return _renderingManager->shadowUBO;
+		}
+
+		static void SetShadowLightViewProj(const glm::mat4& m)
+		{
+			_renderingManager->shadowLightViewProj = m;
+		}
+
+		static glm::mat4 GetShadowLightViewProj()
+		{
+			return _renderingManager->shadowLightViewProj;
 		}
 
 	private:

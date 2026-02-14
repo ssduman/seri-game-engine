@@ -109,19 +109,19 @@ namespace seri
 	class Mesh
 	{
 	public:
-		std::vector<uint32_t> indices;
-		std::vector<glm::vec3> vertices;
-		std::vector<glm::vec2> uv0s;
-		std::vector<glm::vec2> uv1s;
-		std::vector<glm::vec2> uv2s;
-		std::vector<glm::vec2> uv3s;
-		std::vector<glm::vec2> uv4s;
-		std::vector<glm::vec2> uv5s;
-		std::vector<glm::vec2> uv6s;
-		std::vector<glm::vec2> uv7s;
-		std::vector<glm::vec3> colors;
-		std::vector<glm::vec3> normals;
-		std::vector<TangentData> tangentData;
+		std::vector<uint32_t> indices{};
+		std::vector<glm::vec3> vertices{};
+		std::vector<glm::vec2> uv0s{};
+		std::vector<glm::vec2> uv1s{};
+		std::vector<glm::vec2> uv2s{};
+		std::vector<glm::vec2> uv3s{};
+		std::vector<glm::vec2> uv4s{};
+		std::vector<glm::vec2> uv5s{};
+		std::vector<glm::vec2> uv6s{};
+		std::vector<glm::vec2> uv7s{};
+		std::vector<glm::vec3> colors{};
+		std::vector<glm::vec3> normals{};
+		std::vector<TangentData> tangentData{};
 
 		NodeData nodeData{};
 		Animation animation{};
@@ -130,8 +130,8 @@ namespace seri
 		std::vector<VertexBoneData> bonesForVertices{};
 		std::vector<glm::vec3> blendShapes{};
 
-		std::string name{};
-		std::string nodeName{};
+		std::string name{ "" };
+		std::string nodeName{ "" };
 		std::unordered_map<std::string, int> boneNameToIndexMap{};
 
 		glm::mat4 transformation{ 1.0f };
@@ -265,6 +265,8 @@ namespace seri
 
 			_vao = VertexArrayBase::Create();
 
+			Bind();
+
 			if (indices.size() > 0)
 			{
 				_ebo = IndexBufferBase::Create(indices);
@@ -340,6 +342,8 @@ namespace seri
 
 				_vao->AddVertexBuffer(_vbo_skin);
 			}
+
+			Unbind();
 		}
 
 		void Update()
@@ -541,6 +545,54 @@ namespace seri
 				0, 1, 3,
 				1, 2, 3,
 			};
+
+			mesh->Build();
+
+			return mesh;
+		}
+
+		static std::shared_ptr<Mesh> plane_3d(int subdivisions = 1, float size = 1.0f)
+		{
+			std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
+
+			int vertCount = subdivisions + 1;
+			float half = size * 0.5f;
+			float step = size / static_cast<float>(subdivisions);
+
+			for (int z = 0; z < vertCount; z++)
+			{
+				for (int x = 0; x < vertCount; x++)
+				{
+					float px = -half + step * static_cast<float>(x);
+					float pz = -half + step * static_cast<float>(z);
+					float u = static_cast<float>(x) / static_cast<float>(subdivisions);
+					float v = static_cast<float>(z) / static_cast<float>(subdivisions);
+
+					mesh->vertices.push_back({ px, 0.0f, pz });
+					mesh->normals.push_back({ 0.0f, 1.0f, 0.0f });
+					mesh->uv0s.push_back({ u, v });
+					mesh->tangentData.push_back({ { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } });
+				}
+			}
+
+			for (int z = 0; z < subdivisions; z++)
+			{
+				for (int x = 0; x < subdivisions; x++)
+				{
+					uint32_t topLeft = z * vertCount + x;
+					uint32_t topRight = topLeft + 1;
+					uint32_t bottomLeft = (z + 1) * vertCount + x;
+					uint32_t bottomRight = bottomLeft + 1;
+
+					mesh->indices.push_back(topLeft);
+					mesh->indices.push_back(bottomLeft);
+					mesh->indices.push_back(topRight);
+
+					mesh->indices.push_back(topRight);
+					mesh->indices.push_back(bottomLeft);
+					mesh->indices.push_back(bottomRight);
+				}
+			}
 
 			mesh->Build();
 

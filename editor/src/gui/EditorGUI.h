@@ -123,6 +123,8 @@ namespace seri::editor
 		void ShowEditorImage(std::shared_ptr<seri::TextureBase>& texture, float size);
 		bool ShowEditorImageButton(std::shared_ptr<seri::TextureBase>& texture, float size);
 
+		void ShowEditorHierarchyAddMenu(const std::shared_ptr<seri::scene::Scene>& activeScene, uint64_t parentId);
+
 		void DrawEditorLayout();
 
 		bool DrawBool(const char* label, bool& value);

@@ -130,6 +130,12 @@ namespace seri::asset
 			return nullptr;
 		}
 
+		static void AddAsset(uint64_t id, std::shared_ptr<AssetBase> asset)
+		{
+			asset->id = id;
+			GetInstance()._assetCache[id] = asset;
+		}
+
 		void Save();
 		void InitDefaultAssets();
 		void UpdateAssetTree();

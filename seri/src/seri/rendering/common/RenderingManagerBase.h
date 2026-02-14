@@ -52,6 +52,8 @@ namespace seri
 		std::shared_ptr<FramebufferBase> shadowRT{ nullptr };
 		std::shared_ptr<UniformBufferBase> lightUBO{ nullptr };
 		std::shared_ptr<UniformBufferBase> cameraUBO{ nullptr };
+		std::shared_ptr<UniformBufferBase> shadowUBO{ nullptr };
+		glm::mat4 shadowLightViewProj{ 1.0f };
 
 	protected:
 		RenderingProperties _renderingProperties;

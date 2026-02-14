@@ -14,6 +14,14 @@ namespace seri
 		uv3,
 	};
 
+	enum class TextureSlotName
+	{
+		diff,
+		normal,
+		arm,
+		shadow,
+	};
+
 	enum class TextureFormat
 	{
 		none,

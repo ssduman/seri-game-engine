@@ -129,17 +129,24 @@ vec3 FresnelSchlick(float cosTheta, vec3 F0)
 
 vec3 GetNormal(sampler2D normalMap, vec2 texCoords, vec3 N, vec3 fragPos)
 {
-    vec3 tangentNormal = texture(normalMap, texCoords).xyz * 2.0 - 1.0;
-    
+    vec3 sampled = texture(normalMap, texCoords).xyz;
+
+    if (dot(sampled, sampled) < 0.01)
+    {
+        return N;
+    }
+
+    vec3 tangentNormal = sampled * 2.0 - 1.0;
+
     vec3 Q1 = dFdx(fragPos);
     vec3 Q2 = dFdy(fragPos);
     vec2 st1 = dFdx(texCoords);
     vec2 st2 = dFdy(texCoords);
-    
+
     vec3 T = normalize(Q1 * st2.t - Q2 * st1.t);
     vec3 B = -normalize(cross(N, T));
     mat3 TBN = mat3(T, B, N);
-    
+
     return normalize(TBN * tangentNormal);
 }
 
@@ -155,7 +162,26 @@ float ShadowDir(sampler2DShadow u_dir_light_shadow_map, vec3 pos, vec3 N, vec3 L
     }
 
     float bias = u_dir_light_modifiers.x + u_dir_light_modifiers.y * (1.0 - max(dot(N, L), 0.0));
-    return texture(u_dir_light_shadow_map, vec3(p.xy, p.z - bias));
+    float depth = p.z - bias;
+
+    // fade out shadow near frustum edges
+    float fadeRange = 0.1;
+    float fade = min(
+        min(smoothstep(0.0, fadeRange, p.x), smoothstep(0.0, fadeRange, 1.0 - p.x)),
+        min(smoothstep(0.0, fadeRange, p.y), smoothstep(0.0, fadeRange, 1.0 - p.y))
+    );
+
+    // 5x5 PCF for smooth shadow edges
+    vec2 texelSize = 1.0 / vec2(textureSize(u_dir_light_shadow_map, 0));
+    float shadow = 0.0;
+    for (int x = -2; x <= 2; x++)
+    {
+        for (int y = -2; y <= 2; y++)
+        {
+            shadow += texture(u_dir_light_shadow_map, vec3(p.xy + vec2(x, y) * texelSize, depth));
+        }
+    }
+    return mix(1.0, shadow / 25.0, fade);
 }
 
 vec3 BRDF_PBR(vec3 N, vec3 V, vec3 L, vec3 radiance, vec3 albedo, float roughness, float metallic)

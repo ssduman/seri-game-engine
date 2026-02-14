@@ -49,6 +49,7 @@ namespace seri
 		virtual void Resize(uint32_t width, uint32_t height) = 0;
 
 		virtual uint32_t GetFirstColorTextureHandle() = 0;
+		virtual std::shared_ptr<TextureBase> GetDepthTexture() = 0;
 
 		uint32_t GetWidth()
 		{

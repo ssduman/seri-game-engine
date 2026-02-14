@@ -39,6 +39,10 @@ namespace seri::asset
 		YAML::Node boolsNode;
 		for (const auto& kv : asset->GetBools())
 		{
+			if (Util::IsIgnoredUniform(kv.first))
+			{
+				continue;
+			}
 			boolsNode[kv.first] = kv.second;
 		}
 		root["Bools"] = boolsNode;
@@ -46,6 +50,10 @@ namespace seri::asset
 		YAML::Node intsNode;
 		for (const auto& kv : asset->GetInts())
 		{
+			if (Util::IsIgnoredUniform(kv.first))
+			{
+				continue;
+			}
 			intsNode[kv.first] = kv.second;
 		}
 		root["Ints"] = intsNode;
@@ -53,6 +61,10 @@ namespace seri::asset
 		YAML::Node int2sNode;
 		for (const auto& kv : asset->GetInt2s())
 		{
+			if (Util::IsIgnoredUniform(kv.first))
+			{
+				continue;
+			}
 			int2sNode[kv.first] = YAMLUtil::IVec2ToYAML(kv.second);
 		}
 		root["Int2s"] = int2sNode;
@@ -60,6 +72,10 @@ namespace seri::asset
 		YAML::Node int3sNode;
 		for (const auto& kv : asset->GetInt3s())
 		{
+			if (Util::IsIgnoredUniform(kv.first))
+			{
+				continue;
+			}
 			int3sNode[kv.first] = YAMLUtil::IVec3ToYAML(kv.second);
 		}
 		root["Int3s"] = int3sNode;
@@ -67,6 +83,10 @@ namespace seri::asset
 		YAML::Node int4sNode;
 		for (const auto& kv : asset->GetInt4s())
 		{
+			if (Util::IsIgnoredUniform(kv.first))
+			{
+				continue;
+			}
 			int4sNode[kv.first] = YAMLUtil::IVec4ToYAML(kv.second);
 		}
 		root["Int4s"] = int4sNode;
@@ -74,6 +94,10 @@ namespace seri::asset
 		YAML::Node floatsNode;
 		for (const auto& kv : asset->GetFloats())
 		{
+			if (Util::IsIgnoredUniform(kv.first))
+			{
+				continue;
+			}
 			floatsNode[kv.first] = kv.second;
 		}
 		root["Floats"] = floatsNode;
@@ -81,6 +105,10 @@ namespace seri::asset
 		YAML::Node float2sNode;
 		for (const auto& kv : asset->GetFloat2s())
 		{
+			if (Util::IsIgnoredUniform(kv.first))
+			{
+				continue;
+			}
 			float2sNode[kv.first] = YAMLUtil::Vec2ToYAML(kv.second);
 		}
 		root["Float2s"] = float2sNode;
@@ -121,6 +149,10 @@ namespace seri::asset
 		YAML::Node texturesNode;
 		for (const auto& kv : asset->GetTextures())
 		{
+			if (Util::IsIgnoredUniform(kv.first))
+			{
+				continue;
+			}
 			texturesNode[kv.first] = kv.second ? kv.second->id : 0;
 		}
 		root["Textures"] = texturesNode;

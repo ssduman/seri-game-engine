@@ -436,15 +436,7 @@ namespace seri::editor
 
 			if (ImGui::BeginPopupContextItem())
 			{
-				if (ImGui::BeginMenu("Add"))
-				{
-					if (ImGui::MenuItem("Empty Object"))
-					{
-						activeScene->AddEntityAsChild(seri::Random::UUID(), 0, "Entity");
-					}
-					ImGui::EndMenu();
-				}
-
+				ShowEditorHierarchyAddMenu(activeScene, 0);
 				ImGui::EndPopup();
 			}
 
@@ -504,14 +496,7 @@ namespace seri::editor
 
 			if (ImGui::BeginPopupContextItem())
 			{
-				if (ImGui::BeginMenu("Add"))
-				{
-					if (ImGui::MenuItem("Empty Object"))
-					{
-						seri::scene::SceneManager::GetActiveScene()->AddEntityAsChild(seri::Random::UUID(), child.id, "Entity");
-					}
-					ImGui::EndMenu();
-				}
+				ShowEditorHierarchyAddMenu(activeScene, child.id);
 
 				if (ImGui::MenuItem("Delete"))
 				{
@@ -527,6 +512,85 @@ namespace seri::editor
 
 				ImGui::TreePop();
 			}
+		}
+	}
+
+	void EditorGUI::ShowEditorHierarchyAddMenu(const std::shared_ptr<seri::scene::Scene>& activeScene, uint64_t parentId)
+	{
+		if (ImGui::BeginMenu("Add"))
+		{
+			if (ImGui::MenuItem("Empty Object"))
+			{
+				activeScene->AddEntityAsChild(seri::Random::UUID(), parentId, "Entity");
+			}
+			if (ImGui::MenuItem("Plane"))
+			{
+				uint64_t entityId = seri::Random::UUID();
+				activeScene->AddEntityAsChild(entityId, parentId, "Plane");
+
+				entt::entity entity = activeScene->GetEntityByID(entityId);
+				auto& registry = seri::scene::SceneManager::GetRegistry();
+
+				// TODO: use default assets instead of creating new ones every time and handle serialization
+
+				auto model = std::make_shared<seri::Model>();
+				model->id = seri::Random::UUID();
+				model->materialCount = 1;
+				model->meshes.push_back(std::move(seri::Mesh::plane_3d(128, 8.0f)));
+				model->Build();
+				seri::asset::AssetManager::AddAsset(model->id, model);
+
+				int comp = 4;
+				int dimX = 256;
+				int dimY = 256;
+				int totalBytes = dimX * dimY * comp;
+				uint8_t* white = (uint8_t*)malloc(totalBytes);
+				for (int i = 0; i < totalBytes; i += comp)
+				{
+					white[i + 0] = 255;
+					white[i + 1] = 255;
+					white[i + 2] = 255;
+					white[i + 3] = 255;
+				}
+				uint8_t* normal = (uint8_t*)malloc(totalBytes);
+				for (int i = 0; i < totalBytes; i += comp)
+				{
+					normal[i + 0] = 128; // x = 0
+					normal[i + 1] = 128; // y = 0
+					normal[i + 2] = 255; // z = 1
+					normal[i + 3] = 255;
+				}
+				uint8_t* arm = (uint8_t*)malloc(totalBytes);
+				for (int i = 0; i < totalBytes; i += comp)
+				{
+					arm[i + 0] = 255; // AO = 1.0
+					arm[i + 1] = 128; // Roughness = 0.5
+					arm[i + 2] = 0;   // Metallic = 0.0
+					arm[i + 3] = 255;
+				}
+				auto diffTex = seri::TextureBase::Create();
+				diffTex->id = seri::Random::UUID();
+				diffTex->Init(seri::TextureDesc{}, white, dimX, dimY, comp);
+				auto normalTex = seri::TextureBase::Create();
+				normalTex->id = seri::Random::UUID();
+				normalTex->Init(seri::TextureDesc{}, normal, dimX, dimY, comp);
+				auto armTex = seri::TextureBase::Create();
+				armTex->id = seri::Random::UUID();
+				armTex->Init(seri::TextureDesc{}, arm, dimX, dimY, comp);
+
+				auto material = std::make_shared<seri::Material>();
+				material->id = seri::Random::UUID();
+				material->SetShader(seri::ShaderLibrary::Find("pbr"));
+				material->SetTexture(seri::literals::kUniformDiffTexture, diffTex);
+				material->SetTexture(seri::literals::kUniformNormalTexture, normalTex);
+				material->SetTexture(seri::literals::kUniformArmTexture, armTex);
+				seri::asset::AssetManager::AddAsset(material->id, material);
+
+				registry.emplace_or_replace<seri::component::MeshComponent>(entity, seri::component::MeshComponent{ model->id });
+				registry.emplace_or_replace<seri::component::MeshRendererComponent>(entity, seri::component::MeshRendererComponent{ material->id });
+			}
+
+			ImGui::EndMenu();
 		}
 	}
 

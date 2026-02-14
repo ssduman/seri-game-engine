@@ -105,11 +105,13 @@ namespace seri
 		if (uniformName.starts_with(seri::literals::kUniformColor) ||
 			uniformName.starts_with(seri::literals::kUniformLightDir) ||
 			uniformName.starts_with(seri::literals::kUniformLightColor) ||
+			uniformName.starts_with(seri::literals::kUniformLightViewProjection) ||
 			uniformName.starts_with(seri::literals::kUniformBones) ||
 			uniformName.starts_with(seri::literals::kUniformView) ||
 			uniformName.starts_with(seri::literals::kUniformModel) ||
 			uniformName.starts_with(seri::literals::kUniformProjection) ||
 			uniformName.starts_with(seri::literals::kUniformCameraPos) ||
+			uniformName.starts_with(seri::literals::kUniformDirLightShadowMap) ||
 			false
 			)
 		{

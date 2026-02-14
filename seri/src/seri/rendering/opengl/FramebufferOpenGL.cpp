@@ -62,6 +62,11 @@ namespace seri
 		return 0;
 	}
 
+	std::shared_ptr<TextureBase> FramebufferOpenGL::GetDepthTexture()
+	{
+		return _depthTexture;
+	}
+
 	void FramebufferOpenGL::Invalidate()
 	{
 		if (_handle > 0)

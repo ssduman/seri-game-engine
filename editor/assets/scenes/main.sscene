@@ -59,3 +59,17 @@ Entities:
         Range: 10
         Intensity: 2
         Color: [1, 1, 1]
+  - Entity:
+      IDComponent:
+        ID: 12743443325995983336
+        ParentID: 0
+        Name: Entity
+      TransformComponent:
+        Position: [-0.54028064, 0.793363571, 0]
+        Rotation: [0, -0, 0]
+        Scale: [0.00999999978, 0.00999999978, 0.00999999978]
+      MeshComponent:
+        MeshAssetID: 8933691566797930938
+      MeshRendererComponent:
+        MaterialAssetID: 16756991584035094998
+        CastShadow: true
