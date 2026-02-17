@@ -164,14 +164,39 @@ namespace seri
 			return _renderingManager->shadowUBO;
 		}
 
-		static void SetShadowLightViewProj(const glm::mat4& m)
+		static glm::mat4 GetDirShadowLightViewProj()
 		{
-			_renderingManager->shadowLightViewProj = m;
+			return _renderingManager->dirShadowLightViewProj;
 		}
 
-		static glm::mat4 GetShadowLightViewProj()
+		static void SetDirShadowLightViewProj(const glm::mat4& m)
 		{
-			return _renderingManager->shadowLightViewProj;
+			_renderingManager->dirShadowLightViewProj = m;
+		}
+
+		static std::shared_ptr<FramebufferBase> GetSpotShadowRT(int index)
+		{
+			return _renderingManager->spotShadowRTs[index];
+		}
+
+		static glm::mat4 GetSpotShadowLightViewProj(int index)
+		{
+			return _renderingManager->spotShadowLightViewProjs[index];
+		}
+
+		static void SetSpotShadowLightViewProj(int index, const glm::mat4& m)
+		{
+			_renderingManager->spotShadowLightViewProjs[index] = m;
+		}
+
+		static int GetSpotShadowCount()
+		{
+			return _renderingManager->spotShadowCount;
+		}
+
+		static void SetSpotShadowCount(int count)
+		{
+			_renderingManager->spotShadowCount = count;
 		}
 
 	private:

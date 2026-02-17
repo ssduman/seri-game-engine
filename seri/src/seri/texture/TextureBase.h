@@ -19,7 +19,11 @@ namespace seri
 		diff,
 		normal,
 		arm,
-		shadow,
+		dir_shadow,
+		spot_shadow_0,
+		spot_shadow_1,
+		spot_shadow_2,
+		spot_shadow_3,
 	};
 
 	enum class TextureFormat

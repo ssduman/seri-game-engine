@@ -50,10 +50,16 @@ namespace seri
 		std::shared_ptr<FramebufferBase> mainRT{ nullptr };
 		std::shared_ptr<FramebufferBase> editorRT{ nullptr };
 		std::shared_ptr<FramebufferBase> shadowRT{ nullptr };
+		std::shared_ptr<FramebufferBase> spotShadowRTs[literals::kMaxSpotLightShadowCount];
+
 		std::shared_ptr<UniformBufferBase> lightUBO{ nullptr };
 		std::shared_ptr<UniformBufferBase> cameraUBO{ nullptr };
 		std::shared_ptr<UniformBufferBase> shadowUBO{ nullptr };
-		glm::mat4 shadowLightViewProj{ 1.0f };
+		
+		glm::mat4 dirShadowLightViewProj{ 1.0f };
+		
+		int spotShadowCount{ 0 };
+		glm::mat4 spotShadowLightViewProjs[literals::kMaxSpotLightShadowCount];
 
 	protected:
 		RenderingProperties _renderingProperties;

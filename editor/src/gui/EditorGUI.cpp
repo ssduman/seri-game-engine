@@ -770,6 +770,7 @@ namespace seri::editor
 			changed |= DrawFloat("Intensity", spotLightComp->intensity, 0.1f, 0.0f, 200.0f);
 			changed |= DrawFloat("Inner Angle", spotLightComp->innerAngle, 0.1f, 0.0f, 360.0f);
 			changed |= DrawFloat("Outer Angle", spotLightComp->outerAngle, 0.1f, 0.0f, 360.0f);
+			changed |= DrawBool("Cast Shadow", spotLightComp->castShadow);
 			changed |= DrawColorVec3("Color", spotLightComp->color, 0.05f);
 
 			if (changed)

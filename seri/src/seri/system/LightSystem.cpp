@@ -8,6 +8,7 @@ namespace seri::system
 		const auto& registry = scene::SceneManager::GetRegistry();
 
 		UniformBufferLight outUBO{};
+		UniformBufferShadow shadowUBO{};
 
 		auto dirView = registry.view<component::TransformComponent, component::DirectionalLightComponent>();
 		for (auto entity : dirView)
@@ -22,9 +23,31 @@ namespace seri::system
 
 			outUBO.dirLightExist.x = 1;
 
+			// light ubo
 			UniformBufferDirectionalLight& dirLightUBO = outUBO.dirLight;
 			dirLightUBO.direction = glm::vec4(GetForward(transform.rotation), 0.0f);
 			dirLightUBO.color = glm::vec4(light.color * light.intensity, 1.0f);
+
+			// shadow ubo
+			glm::vec3 lightDir = glm::normalize(glm::vec3(outUBO.dirLight.direction));
+			glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+			if (glm::abs(glm::dot(lightDir, up)) > 0.999f)
+			{
+				up = glm::vec3(1.0f, 0.0f, 0.0f);
+			}
+
+			const float orthoSize = 20.0f;
+			const float nearPlane = 0.1f;
+			const float farPlane = 200.0f;
+			const float lightDist = 100.0f;
+			glm::vec3 lightPos = -lightDir * lightDist;
+
+			glm::mat4 lightView = glm::lookAt(lightPos, glm::vec3(0.0f), up);
+			glm::mat4 lightProj = glm::ortho(-orthoSize, orthoSize, -orthoSize, orthoSize, nearPlane, farPlane);
+			glm::mat4 lightViewProj = lightProj * lightView;
+
+			shadowUBO.dirLightViewProj = lightViewProj;
+			RenderingManager::SetDirShadowLightViewProj(lightViewProj);
 		}
 
 		auto spotView = registry.view<component::TransformComponent, component::SpotLightComponent>();
@@ -38,6 +61,7 @@ namespace seri::system
 			auto& transform = spotView.get<component::TransformComponent>(entity);
 			auto& light = spotView.get<component::SpotLightComponent>(entity);
 
+			// light ubo
 			UniformBufferSpotLight& spotLight = outUBO.spotLights[outUBO.spotLightCount.x++];
 			spotLight.position = glm::vec4(transform.position, 0.0f);
 			spotLight.direction = glm::vec4(GetForward(transform.rotation), 0.0f);
@@ -49,6 +73,31 @@ namespace seri::system
 				light.linear
 			);
 			spotLight.params2 = glm::vec4(light.quadratic, 0.0f, 0.0f, 0.0f);
+
+			// shadow ubo
+			if (light.castShadow && shadowUBO.spotLightShadowCount.x < literals::kMaxSpotLightShadowCount)
+			{
+				glm::vec3 forward = GetForward(transform.rotation);
+				glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+				if (glm::abs(glm::dot(forward, up)) > 0.999f)
+				{
+					up = glm::vec3(1.0f, 0.0f, 0.0f);
+				}
+
+				const float nearPlane = 0.1f;
+				const float farPlane = 100.0f;
+				float fov = glm::radians(light.outerAngle * 2.0f);
+
+				glm::mat4 lightView = glm::lookAt(transform.position, transform.position + forward, up);
+				glm::mat4 lightProj = glm::perspective(fov, 1.0f, nearPlane, farPlane);
+				glm::mat4 lightViewProj = lightProj * lightView;
+
+				shadowUBO.spotLightViewProj[shadowUBO.spotLightShadowCount.x] = lightViewProj;
+				RenderingManager::SetSpotShadowLightViewProj(shadowUBO.spotLightShadowCount.x, lightViewProj);
+
+				shadowUBO.spotLightShadowCount.x += 1;
+				RenderingManager::SetSpotShadowCount(shadowUBO.spotLightShadowCount.x);
+			}
 		}
 
 		auto pointView = registry.view<component::TransformComponent, component::PointLightComponent>();
@@ -69,33 +118,7 @@ namespace seri::system
 		}
 
 		RenderingManager::GetLightUBO()->SetData(&outUBO, sizeof(UniformBufferLight));
-
-		if (outUBO.dirLightExist.x == 1)
-		{
-			glm::vec3 lightDir = glm::normalize(glm::vec3(outUBO.dirLight.direction));
-
-			glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
-			if (glm::abs(glm::dot(lightDir, up)) > 0.999f)
-			{
-				up = glm::vec3(1.0f, 0.0f, 0.0f);
-			}
-
-			const float orthoSize = 20.0f;
-			const float nearPlane = 0.1f;
-			const float farPlane = 200.0f;
-			const float lightDist = 100.0f;
-			glm::vec3 lightPos = -lightDir * lightDist;
-
-			glm::mat4 lightView = glm::lookAt(lightPos, glm::vec3(0.0f), up);
-			glm::mat4 lightProj = glm::ortho(-orthoSize, orthoSize, -orthoSize, orthoSize, nearPlane, farPlane);
-			glm::mat4 lightViewProj = lightProj * lightView;
-
-			UniformBufferShadow shadowUBOData{};
-			shadowUBOData.dirLightViewProj = lightViewProj;
-
-			RenderingManager::SetShadowLightViewProj(lightViewProj);
-			RenderingManager::GetShadowUBO()->SetData(&shadowUBOData, sizeof(UniformBufferShadow));
-		}
+		RenderingManager::GetShadowUBO()->SetData(&shadowUBO, sizeof(UniformBufferShadow));
 	}
 
 	glm::vec3 LightSystem::GetForward(const glm::vec3& eulerDeg)

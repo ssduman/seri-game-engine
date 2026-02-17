@@ -149,25 +149,54 @@ namespace seri
 				continue;
 			}
 
-			rt->Bind();
-
 			if (pass.desc.type == PassType::shadow)
 			{
-				seri::RenderingManager::SetViewport(0, 0, rt->GetWidth(), rt->GetHeight());
-				seri::RenderingManager::Clear();
-
-				glm::mat4 lightViewProj = seri::RenderingManager::GetShadowLightViewProj();
-
-				for (const RenderItem& item : pass.items)
+				// directional light shadow
 				{
-					SetState(item.state);
-					item.material->SetMat4(literals::kUniformModel, item.model);
-					item.material->SetMat4(literals::kUniformLightViewProjection, lightViewProj);
-					item.material->Apply();
-					Draw(item.draw, item.vao);
+					rt->Bind();
+					seri::RenderingManager::SetViewport(0, 0, rt->GetWidth(), rt->GetHeight());
+					seri::RenderingManager::Clear();
+
+					glm::mat4 lightViewProj = seri::RenderingManager::GetDirShadowLightViewProj();
+
+					for (const RenderItem& item : pass.items)
+					{
+						SetState(item.state);
+						item.material->SetMat4(literals::kUniformModel, item.model);
+						item.material->SetMat4(literals::kUniformLightViewProjection, lightViewProj);
+						item.material->Apply();
+						Draw(item.draw, item.vao);
+					}
+
+					rt->Unbind();
 				}
 
-				rt->Unbind();
+				// spot light shadows
+				if (false)
+				{
+					int spotShadowCount = seri::RenderingManager::GetSpotShadowCount();
+					for (int i = 0; i < spotShadowCount; i++)
+					{
+						auto spotShadowRT = seri::RenderingManager::GetSpotShadowRT(i);
+						spotShadowRT->Bind();
+						seri::RenderingManager::SetViewport(0, 0, spotShadowRT->GetWidth(), spotShadowRT->GetHeight());
+						seri::RenderingManager::Clear();
+
+						glm::mat4 spotLightViewProj = seri::RenderingManager::GetSpotShadowLightViewProj(i);
+
+						for (const RenderItem& item : pass.items)
+						{
+							SetState(item.state);
+							item.material->SetMat4(literals::kUniformModel, item.model);
+							item.material->SetMat4(literals::kUniformLightViewProjection, spotLightViewProj);
+							item.material->Apply();
+							Draw(item.draw, item.vao);
+						}
+
+						spotShadowRT->Unbind();
+					}
+				}
+
 				continue;
 			}
 
@@ -176,6 +205,7 @@ namespace seri
 				continue;
 			}
 
+			rt->Bind();
 			seri::RenderingManager::SetViewport(0, 0, rt->GetWidth(), rt->GetHeight());
 
 			glm::vec4 camPos = cam->GetPosition();
@@ -189,7 +219,17 @@ namespace seri
 				const auto& shadowDepthTex = seri::RenderingManager::GetShadowRT()->GetDepthTexture();
 				if (shadowDepthTex)
 				{
-					shadowDepthTex->Bind(static_cast<int>(seri::TextureSlotName::shadow));
+					shadowDepthTex->Bind(static_cast<int>(seri::TextureSlotName::dir_shadow));
+				}
+
+				int spotShadowCount = seri::RenderingManager::GetSpotShadowCount();
+				for (int i = 0; i < spotShadowCount; i++)
+				{
+					const auto& spotShadowDepthTex = seri::RenderingManager::GetSpotShadowRT(i)->GetDepthTexture();
+					if (spotShadowDepthTex)
+					{
+						spotShadowDepthTex->Bind(static_cast<int>(seri::TextureSlotName::spot_shadow_0) + i);
+					}
 				}
 			}
 
@@ -201,7 +241,11 @@ namespace seri
 				cmd.material->SetMat4(literals::kUniformView, view);
 				cmd.material->SetMat4(literals::kUniformProjection, projection);
 				cmd.material->SetFloat4(literals::kUniformCameraPos, camPos);
-				cmd.material->SetInt(literals::kUniformDirLightShadowMap, static_cast<int>(seri::TextureSlotName::shadow));
+				cmd.material->SetInt(literals::kUniformDirLightShadowMap, static_cast<int>(seri::TextureSlotName::dir_shadow));
+				cmd.material->SetInt(literals::kUniformSpotLightShadowMap0, static_cast<int>(seri::TextureSlotName::spot_shadow_0));
+				cmd.material->SetInt(literals::kUniformSpotLightShadowMap1, static_cast<int>(seri::TextureSlotName::spot_shadow_1));
+				cmd.material->SetInt(literals::kUniformSpotLightShadowMap2, static_cast<int>(seri::TextureSlotName::spot_shadow_2));
+				cmd.material->SetInt(literals::kUniformSpotLightShadowMap3, static_cast<int>(seri::TextureSlotName::spot_shadow_3));
 				cmd.material->Apply();
 
 				Draw(cmd.draw, cmd.vao);

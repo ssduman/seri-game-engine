@@ -34,6 +34,7 @@ Entities:
         InnerAngle: 32.7999992
         OuterAngle: 14.6000004
         Color: [1, 1, 1]
+        CastShadow: true
   - Entity:
       IDComponent:
         ID: 7583628060710826251

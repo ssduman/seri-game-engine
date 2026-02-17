@@ -85,6 +85,7 @@ namespace seri::component
 		float intensity = 10.0f;
 		float innerAngle = 20.0f;
 		float outerAngle = 30.0f;
+		bool castShadow = false;
 		glm::vec3 color{ 1.0f, 1.0f, 1.0f };
 
 		float constant = 1.0f;
@@ -102,7 +103,7 @@ namespace seri::component
 		float range = 10.0f;
 		float intensity = 10.0f;
 		glm::vec3 color{ 1.0f, 1.0f, 1.0f };
-		
+
 		float constant = 1.0f;
 		float linear = 0.09f;
 		float quadratic = 0.032f;

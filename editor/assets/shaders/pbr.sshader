@@ -42,6 +42,10 @@ uniform sampler2D u_normal_texture;
 uniform sampler2D u_arm_texture; // R=AO, G=Roughness, B=Metallic
 
 uniform sampler2DShadow u_dir_light_shadow_map;
+uniform sampler2DShadow u_spot_light_shadow_map_0;
+uniform sampler2DShadow u_spot_light_shadow_map_1;
+uniform sampler2DShadow u_spot_light_shadow_map_2;
+uniform sampler2DShadow u_spot_light_shadow_map_3;
 
 out vec4 final_color;
 
@@ -67,7 +71,20 @@ void main()
     }
     for (int i = 0; i < min(u_spot_light_count.x, MAX_SPOT_LIGHTS); i++)
     {
-        color += PBR_Spot_Light(sent_pos.xyz, u_spot_lights[i], N, V, albedo, roughness, metallic);
+        vec3 spotColor = PBR_Spot_Light(sent_pos.xyz, u_spot_lights[i], N, V, albedo, roughness, metallic);
+
+        if (i < u_spot_light_shadow_count.x)
+        {
+            vec3 L = normalize(u_spot_lights[i].position.xyz - sent_pos.xyz);
+            float shadow = 1.0;
+            if (i == 0) shadow = ShadowSpot(u_spot_light_shadow_map_0, u_spot_light_view_proj[0], sent_pos.xyz, N, L);
+            else if (i == 1) shadow = ShadowSpot(u_spot_light_shadow_map_1, u_spot_light_view_proj[1], sent_pos.xyz, N, L);
+            else if (i == 2) shadow = ShadowSpot(u_spot_light_shadow_map_2, u_spot_light_view_proj[2], sent_pos.xyz, N, L);
+            else if (i == 3) shadow = ShadowSpot(u_spot_light_shadow_map_3, u_spot_light_view_proj[3], sent_pos.xyz, N, L);
+            spotColor *= shadow;
+        }
+
+        color += spotColor;
     }
     for (int i = 0; i < min(u_point_light_count.x, MAX_POINT_LIGHTS); i++)
     {

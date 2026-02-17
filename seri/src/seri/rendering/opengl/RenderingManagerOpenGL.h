@@ -46,10 +46,6 @@ namespace seri
 			{
 				mainRT = FramebufferBase::Create();
 
-				FramebufferDesc framebufferDesc{};
-				framebufferDesc.width = 1280;
-				framebufferDesc.height = 720;
-
 				TextureDesc textureDescColor{};
 				textureDescColor.format = TextureFormat::rgba__rgba8ubyte;
 				textureDescColor.wrapS = TextureWrap::clamp_to_edge;
@@ -66,19 +62,16 @@ namespace seri
 				textureDescDepth.magFilter = TextureMagFilter::linear;
 				textureDescDepth.minFilter = TextureMinFilter::linear;
 
-				framebufferDesc.AddAttachments(
-					{ textureDescColor, textureDescDepth }
-				);
+				FramebufferDesc framebufferDesc{};
+				framebufferDesc.width = 1280;
+				framebufferDesc.height = 720;
+				framebufferDesc.AddAttachments({ textureDescColor, textureDescDepth });
 
 				editorRT = FramebufferBase::Create(framebufferDesc);
 			}
 
 			// shadow
 			{
-				FramebufferDesc framebufferDesc{};
-				framebufferDesc.width = 2048;
-				framebufferDesc.height = 2048;
-
 				TextureDesc textureDescShadow{};
 				textureDescShadow.format = TextureFormat::depth__depth32float;
 				textureDescShadow.wrapS = TextureWrap::clamp_to_border;
@@ -89,11 +82,34 @@ namespace seri
 				textureDescShadow.compareFunc = TextureCompareFunc::l_equal;
 				textureDescShadow.borderColor = glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f };
 
-				framebufferDesc.AddAttachments(
-					{ textureDescShadow }
-				);
+				FramebufferDesc framebufferDesc{};
+				framebufferDesc.width = 2048;
+				framebufferDesc.height = 2048;
+				framebufferDesc.AddAttachments({ textureDescShadow });
 
 				shadowRT = FramebufferBase::Create(framebufferDesc);
+			}
+
+			// spot light shadows
+			{
+				TextureDesc textureDescShadow{};
+				textureDescShadow.format = TextureFormat::depth__depth32float;
+				textureDescShadow.wrapS = TextureWrap::clamp_to_border;
+				textureDescShadow.wrapT = TextureWrap::clamp_to_border;
+				textureDescShadow.magFilter = TextureMagFilter::linear;
+				textureDescShadow.minFilter = TextureMinFilter::linear;
+				textureDescShadow.compareMode = TextureCompareMode::ref_to_texture;
+				textureDescShadow.compareFunc = TextureCompareFunc::l_equal;
+				textureDescShadow.borderColor = glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f };
+
+				for (int i = 0; i < literals::kMaxSpotLightShadowCount; i++)
+				{
+					FramebufferDesc framebufferDesc{};
+					framebufferDesc.width = 1024;
+					framebufferDesc.height = 1024;
+					framebufferDesc.AddAttachments({ textureDescShadow });
+					spotShadowRTs[i] = FramebufferBase::Create(framebufferDesc);
+				}
 			}
 
 			_initialized = true;

@@ -21,10 +21,14 @@ namespace seri::literals
 	constexpr const char* kUniformDirLightExists = "u_dir_light_exists";
 	constexpr const char* kUniformDirLightShadowMap = "u_dir_light_shadow_map";
 
-	constexpr const char* kUniformDirSpotLights = "u_spot_lights";
+	constexpr const char* kUniformSpotLights = "u_spot_lights";
 	constexpr const char* kUniformSpotLightCount = "u_spot_light_count";
+	constexpr const char* kUniformSpotLightShadowMap0 = "u_spot_light_shadow_map_0";
+	constexpr const char* kUniformSpotLightShadowMap1 = "u_spot_light_shadow_map_1";
+	constexpr const char* kUniformSpotLightShadowMap2 = "u_spot_light_shadow_map_2";
+	constexpr const char* kUniformSpotLightShadowMap3 = "u_spot_light_shadow_map_3";
 
-	constexpr const char* kUniformDirPointLights = "u_point_lights";
+	constexpr const char* kUniformPointLights = "u_point_lights";
 	constexpr const char* kUniformPointLightCount = "u_point_light_count";
 
 	constexpr const char* kUniformDiffTexture = "u_diff_texture";
@@ -34,4 +38,5 @@ namespace seri::literals
 	constexpr const int kMaxDirLightCount = 1;
 	constexpr const int kMaxSpotLightCount = 8;
 	constexpr const int kMaxPointLightCount = 8;
+	constexpr const int kMaxSpotLightShadowCount = 4;
 }

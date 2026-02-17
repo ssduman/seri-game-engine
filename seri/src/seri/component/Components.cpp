@@ -102,6 +102,7 @@ namespace seri::component
 		component.intensity = YAMLUtil::GetType<float>(node["Intensity"]);
 		component.innerAngle = YAMLUtil::GetType<float>(node["InnerAngle"]);
 		component.outerAngle = YAMLUtil::GetType<float>(node["OuterAngle"]);
+		component.castShadow = YAMLUtil::GetType<bool>(node["CastShadow"]);
 		component.color = YAMLUtil::Vec3FromYAML(node["Color"]);
 		return component;
 	}
@@ -111,6 +112,7 @@ namespace seri::component
 		node["Intensity"] = component.intensity;
 		node["InnerAngle"] = component.innerAngle;
 		node["OuterAngle"] = component.outerAngle;
+		node["CastShadow"] = component.castShadow;
 		node["Color"] = YAMLUtil::Vec3ToYAML(component.color);
 		return node;
 	}

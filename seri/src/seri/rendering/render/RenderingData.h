@@ -58,8 +58,11 @@ namespace seri
 
 	struct UniformBufferShadow
 	{
+		glm::vec4 modifiers{ 0.0005f, 0.002f, 1.0f, 0.0f }; // x=shadow bias, y=normal bias, z=shadow strength, w=unused
+
 		glm::mat4 dirLightViewProj;
 
-		glm::vec4 modifiers{ 0.0005f, 0.002f, 1.0f, 0.0f }; // x=shadow bias, y=normal bias, z=shadow strength, w=unused
+		glm::mat4 spotLightViewProj[literals::kMaxSpotLightShadowCount];
+		glm::ivec4 spotLightShadowCount{ 0 };
 	};
 }
