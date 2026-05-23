@@ -11,7 +11,7 @@ project "Seri"
   objdir("%{wks.location}/bin/int/" .. outputdir .. "/%{prj.name}")
 
   dependson {
-    "sdl",
+    -- "sdl",
   }
 
   files {
@@ -59,7 +59,7 @@ project "Seri"
     "%{IncludeDir.freetype}",
     "%{IncludeDir.nlohmann}",
     "%{IncludeDir.miniaudio}",
-    "%{IncludeDir.sdl}",
+    -- "%{IncludeDir.sdl}",
     "%{IncludeDir.entt}",
     "%{IncludeDir.yamlcpp}",
     "%{IncludeDir.fmt}",
@@ -67,10 +67,12 @@ project "Seri"
     "%{IncludeDir.lua}",
     "%{IncludeDir.sol2}",
     "%{IncludeDir.ImGuizmo}",
+    "%{IncludeDir.boost}",
   }
 
   libdirs {
-    "%{LibDir.sdl}",
+    -- "%{LibDir.sdl}",
+    "%{LibDir.boost}",
   }
 
   links {
@@ -78,7 +80,7 @@ project "Seri"
     "lua",
     "glad",
     "GLFW",
-    "SDL3",
+    -- "SDL3",
     "ImGui",
     "ImGuizmo",
     "assimp",
@@ -88,7 +90,7 @@ project "Seri"
   }
 
   filter "files:vendor/yaml-cpp/src/**.cpp"
-    flags { "NoPCH" }
+    enablepch "Off"
 
   filter "system:windows"
     systemversion "latest"

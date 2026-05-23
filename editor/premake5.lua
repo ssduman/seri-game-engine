@@ -44,7 +44,7 @@ project "Editor"
     "%{IncludeDir.freetype}",
     "%{IncludeDir.nlohmann}",
     "%{IncludeDir.miniaudio}",
-    "%{IncludeDir.sdl}",
+    -- "%{IncludeDir.sdl}",
     "%{IncludeDir.entt}",
     "%{IncludeDir.yamlcpp}",
     "%{IncludeDir.fmt}",
@@ -52,21 +52,23 @@ project "Editor"
     "%{IncludeDir.lua}",
     "%{IncludeDir.sol2}",
     "%{IncludeDir.ImGuizmo}",
+    "%{IncludeDir.boost}",
   }
 
   libdirs {
-    "%{LibDir.sdl}",
+    -- "%{LibDir.sdl}",
+    "%{LibDir.boost}",
   }
 
   links {
     "Seri",
-    "SDL3",
+    -- "SDL3",
     "efsw-static-lib",
   }
 
   postbuildcommands {
+    -- "{COPY} %{LibDir.sdl}/SDL3.dll %{cfg.targetdir}",
     "{COPYDIR} %{prj.location}assets %{cfg.buildtarget.directory}assets",
-    "{COPY} %{LibDir.sdl}/SDL3.dll %{cfg.targetdir}"
   }
 
   filter "system:windows"

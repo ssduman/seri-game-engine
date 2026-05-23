@@ -36,6 +36,6 @@ echo f | xcopy /f /y "script/vendor/assimp/config.h" "seri/vendor/assimp/include
 echo f | xcopy /f /y "script/vendor/assimp/revision.h" "seri/vendor/assimp/code/assimp/revision.h"
 
 :: premake
-call script\premake5\premake5.exe vs2022
+call script\premake5\premake5.exe vs2026
 
 pause

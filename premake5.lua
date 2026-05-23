@@ -1,3 +1,33 @@
+local function loadEnv(envpath)
+  local localEnv = {}
+  
+  local f = io.open(envpath, "r")
+  if not f then
+    error("env path not found: " .. envpath)
+  end
+  
+  for line in f:lines() do
+    local k, v = line:match("([^=]+)=(.*)")
+    if k then
+      localEnv[k] = v
+    end
+  end
+  
+  f:close()
+
+  return localEnv
+end
+
+local localEnv = loadEnv(".env")
+local boostLibPath = localEnv["BOOST_LIB_PATH"]
+local boostIncludePath = localEnv["BOOST_INCLUDE_PATH"]
+
+if not boostLibPath or not boostIncludePath then
+  error("boost lib or/and include path is not set")
+else
+  print("boost lib path: " .. boostLibPath .. ", boost include path: " .. boostIncludePath)
+end
+
 outputdir = "%{cfg.buildcfg}-%{cfg.architecture}"
 
 IncludeDir = {}
@@ -18,15 +48,17 @@ IncludeDir["efsw"] = "%{wks.location}/seri/vendor/efsw/include"
 IncludeDir["lua"] = "%{wks.location}/seri/vendor/lua"
 IncludeDir["sol2"] = "%{wks.location}/seri/vendor/sol2/include"
 IncludeDir["ImGuizmo"] = "%{wks.location}/seri/vendor/imguizmo"
+IncludeDir["boost"] = boostIncludePath
 
 LibDir = {}
 LibDir["sdl"] = "%{wks.location}/seri/vendor/sdl/build/%{cfg.buildcfg}"
+LibDir["boost"] = boostLibPath
 
 workspace "Seri Game Engine"
   architecture "x86_64"
   startproject "Editor"
   configurations { "Debug", "Release" }
-  flags { "MultiProcessorCompile" }
+  multiprocessorcompile "On"
 
   group "Core"
     include "seri"
@@ -49,7 +81,7 @@ workspace "Seri Game Engine"
     include "seri/vendor/imgui"
     include "seri/vendor/assimp"
     include "seri/vendor/freetype"
-    include "seri/vendor/sdl"
+    -- include "seri/vendor/sdl"
     include "seri/vendor/fmt"
     include "seri/vendor/efsw/premake5_project.lua"
     include "seri/vendor/lua"
