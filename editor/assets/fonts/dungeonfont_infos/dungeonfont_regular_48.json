@@ -2367,26 +2367,26 @@
     {
       "unicode": 286,
       "width": 21,
-      "height": 47,
+      "height": 48,
       "advance": 22,
       "bearingX": 0,
-      "bearingY": 50,
+      "bearingY": 51,
       "uvL": 178,
-      "uvB": 910,
+      "uvB": 909,
       "uvW": 21,
-      "uvH": 47
+      "uvH": 48
     },
     {
       "unicode": 287,
       "width": 21,
-      "height": 35,
+      "height": 36,
       "advance": 22,
       "bearingX": 0,
-      "bearingY": 35,
+      "bearingY": 36,
       "uvL": 512,
-      "uvB": 922,
+      "uvB": 921,
       "uvW": 21,
-      "uvH": 35
+      "uvH": 36
     },
     {
       "unicode": 304,

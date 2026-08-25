@@ -1,6 +1,6 @@
 #pragma once
 
-#include <seri/core/Seri.h>
+#include <core/Seri.h>
 
 #include "camera/Camera.h"
 

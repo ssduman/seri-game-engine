@@ -1,0 +1,207 @@
+#pragma once
+
+#include "util/Util.h"
+#include "camera/CameraBase.h"
+#include "rendering/render/PipelineBase.h"
+#include "rendering/render/RenderingStats.h"
+#include "rendering/common/RenderingManagerBase.h"
+#include "rendering/common/RenderCommandBufferBase.h"
+
+#include <memory>
+
+namespace seri
+{
+	class RenderingManager
+	{
+	public:
+		static std::unique_ptr<RenderingManagerBase>& Instance()
+		{
+			return _renderingManager;
+		}
+
+		static void SetViewport(int x, int y, int width, int height)
+		{
+			_renderingManager->SetViewport(x, y, width, height);
+		}
+
+		static void Clear()
+		{
+			_renderingManager->Clear();
+		}
+
+		static void ClearColor(const glm::vec4& color)
+		{
+			_renderingManager->ClearColor(color.r, color.g, color.b, color.a);
+		}
+
+		static void ClearColor(float red = 0.2f, float green = 0.2f, float blue = 0.2f, float alpha = 1.0f)
+		{
+			_renderingManager->ClearColor(red, green, blue, alpha);
+		}
+
+		static void SetPointSize(float size)
+		{
+			_renderingManager->SetPointSize(size);
+		}
+
+		static void SetLineWidth(float width)
+		{
+			_renderingManager->SetLineWidth(width);
+		}
+
+		static void SetBlend(bool enabled, BlendFactor srcFactor, BlendFactor dstFactor)
+		{
+			_renderingManager->SetBlend(enabled, srcFactor, dstFactor);
+		}
+
+		static void SetDepthFunc(bool enabled, DepthFunc depthFunc)
+		{
+			_renderingManager->SetDepthFunc(enabled, depthFunc);
+		}
+
+		static void SetDepthWrite(bool enabled)
+		{
+			_renderingManager->SetDepthWrite(enabled);
+		}
+
+		static void SetStencilFunc(bool enabled, StencilFunc stencilFunc, int32_t ref, uint32_t mask)
+		{
+			_renderingManager->SetStencilFunc(enabled, stencilFunc, ref, mask);
+		}
+
+		static void SetStencilOp(StencilOp sfail, StencilOp dpfail, StencilOp dppass)
+		{
+			_renderingManager->SetStencilOp(sfail, dpfail, dppass);
+		}
+
+		static void SetStencilMask(uint32_t mask)
+		{
+			_renderingManager->SetStencilMask(mask);
+		}
+
+		static void SetCullFace(bool enabled, CullFace cullFace)
+		{
+			_renderingManager->SetCullFace(enabled, cullFace);
+		}
+
+		static void SetFrontFace(FrontFace frontFace)
+		{
+			_renderingManager->SetFrontFace(frontFace);
+		}
+
+		static void Init()
+		{
+			_renderCommandBuffer->Init();
+		}
+
+		static void Begin()
+		{
+			_renderCommandBuffer->Begin();
+		}
+
+		static void End()
+		{
+			_renderCommandBuffer->End();
+		}
+
+		static void Submit(RenderItem renderItem)
+		{
+			_renderCommandBuffer->Submit(renderItem);
+		}
+
+		static void Submit(RenderCommand renderCommand)
+		{
+			if (renderCommand.rt == nullptr)
+			{
+				renderCommand.rt = _renderingManager->mainRT;
+			}
+
+			_renderCommandBuffer->Submit(renderCommand);
+		}
+
+		static void Execute()
+		{
+			RenderCommand renderCommand;
+			renderCommand.name = "noop";
+			renderCommand.noop = true;
+			Submit(renderCommand);
+
+			_renderCommandBuffer->Execute();
+		}
+
+		static RenderingStats GetRenderingStats()
+		{
+			return _renderCommandBuffer->GetStats();
+		}
+
+		static std::shared_ptr<FramebufferBase> GetMainRT()
+		{
+			return _renderingManager->mainRT;
+		}
+
+		static std::shared_ptr<FramebufferBase> GetEditorRT()
+		{
+			return _renderingManager->editorRT;
+		}
+
+		static std::shared_ptr<FramebufferBase> GetShadowRT()
+		{
+			return _renderingManager->shadowRT;
+		}
+
+		static std::shared_ptr<UniformBufferBase> GetLightUBO()
+		{
+			return _renderingManager->lightUBO;
+		}
+
+		static std::shared_ptr<UniformBufferBase> GetCameraUBO()
+		{
+			return _renderingManager->cameraUBO;
+		}
+
+		static std::shared_ptr<UniformBufferBase> GetShadowUBO()
+		{
+			return _renderingManager->shadowUBO;
+		}
+
+		static glm::mat4 GetDirShadowLightViewProj()
+		{
+			return _renderingManager->dirShadowLightViewProj;
+		}
+
+		static void SetDirShadowLightViewProj(const glm::mat4& m)
+		{
+			_renderingManager->dirShadowLightViewProj = m;
+		}
+
+		static std::shared_ptr<FramebufferBase> GetSpotShadowRT(int index)
+		{
+			return _renderingManager->spotShadowRTs[index];
+		}
+
+		static glm::mat4 GetSpotShadowLightViewProj(int index)
+		{
+			return _renderingManager->spotShadowLightViewProjs[index];
+		}
+
+		static void SetSpotShadowLightViewProj(int index, const glm::mat4& m)
+		{
+			_renderingManager->spotShadowLightViewProjs[index] = m;
+		}
+
+		static int GetSpotShadowCount()
+		{
+			return _renderingManager->spotShadowCount;
+		}
+
+		static void SetSpotShadowCount(int count)
+		{
+			_renderingManager->spotShadowCount = count;
+		}
+
+	private:
+		static std::unique_ptr<RenderingManagerBase> _renderingManager;
+		static std::unique_ptr<RenderCommandBufferBase> _renderCommandBuffer;
+
+	};
+}

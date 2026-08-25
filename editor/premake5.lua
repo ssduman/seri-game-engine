@@ -16,13 +16,13 @@ project "Editor"
     "GLFW_INCLUDE_NONE",
     "GLM_ENABLE_EXPERIMENTAL",
     "FMT_UNICODE=0",
-    "YAML_CPP_STATIC_DEFINE",
+    "FMT_SHARED",
+    "ASSIMP_DLL",
+    "BOOST_LOG_DYN_LINK",
   }
 
   linkoptions {
     "-IGNORE:4098",
-    "-IGNORE:4267",
-    "-IGNORE:4244",
   }
 
   disablewarnings {
@@ -34,41 +34,23 @@ project "Editor"
   includedirs {
     "src",
     "%{wks.location}/seri/src",
-    "%{wks.location}/seri/vendor",
     "%{IncludeDir.glad}",
-    "%{IncludeDir.GLFW}",
-    "%{IncludeDir.glm}",
-    "%{IncludeDir.stb}",
-    "%{IncludeDir.ImGui}",
-    "%{IncludeDir.assimp}",
-    "%{IncludeDir.freetype}",
-    "%{IncludeDir.nlohmann}",
-    "%{IncludeDir.miniaudio}",
-    -- "%{IncludeDir.sdl}",
-    "%{IncludeDir.entt}",
-    "%{IncludeDir.yamlcpp}",
-    "%{IncludeDir.fmt}",
-    "%{IncludeDir.efsw}",
-    "%{IncludeDir.lua}",
-    "%{IncludeDir.sol2}",
-    "%{IncludeDir.ImGuizmo}",
-    "%{IncludeDir.boost}",
   }
 
-  libdirs {
-    -- "%{LibDir.sdl}",
-    "%{LibDir.boost}",
+  externalincludedirs {
+    "%{IncludeDir.vcpkg}",
   }
+  externalwarnings "Off"
 
   links {
     "Seri",
-    -- "SDL3",
-    "efsw-static-lib",
-  }
-
-  postbuildcommands {
-    -- "{COPY} %{LibDir.sdl}/SDL3.dll %{cfg.targetdir}",
-    "{COPYDIR} %{prj.location}assets %{cfg.buildtarget.directory}assets",
+    "opengl32.lib",
+    "glfw3dll",
+    "efsw",
+    "glm",
+    "imguizmo",
+    "lua",
+    "SDL3",
   }
 
   filter "system:windows"
@@ -78,8 +60,40 @@ project "Editor"
     defines { "DEBUG" }
     runtime "Debug"
     symbols "On"
+    libdirs {
+      "%{LibDir.vcpkg_debug}",
+    }
+    links {
+      "%{Lib.boost_log_debug}",
+      "%{Lib.boost_log_setup_debug}",
+      "%{Lib.assimp_debug}",
+      "fmtd",
+      "freetyped",
+      "imguid",
+      "yaml-cppd",
+    }
+    postbuildcommands {
+      '{COPYDIR} "%{BinDir.vcpkg_debug}" "%{cfg.targetdir}"',
+      "{COPYDIR} %{prj.location}assets %{cfg.buildtarget.directory}assets",
+    }
 
   filter { "configurations:Release" }
     defines { "NDEBUG" }
     runtime "Release"
     optimize "On"
+    libdirs {
+      "%{LibDir.vcpkg}",
+    }
+    links {
+      "%{Lib.boost_log}",
+      "%{Lib.boost_log_setup}",
+      "%{Lib.assimp}",
+      "fmt",
+      "freetype",
+      "imgui",
+      "yaml-cpp",
+    }
+    postbuildcommands {
+      '{COPYDIR} "%{BinDir.vcpkg}" "%{cfg.targetdir}"',
+      "{COPYDIR} %{prj.location}assets %{cfg.buildtarget.directory}assets",
+    }

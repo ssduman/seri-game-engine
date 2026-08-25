@@ -2,7 +2,7 @@
 #pragma warning(disable: 4100)
 #pragma warning(disable: 4244)
 
-#include <seri/core/Seri.h>
+#include <core/Seri.h>
 
 #include "camera/Camera.h"
 

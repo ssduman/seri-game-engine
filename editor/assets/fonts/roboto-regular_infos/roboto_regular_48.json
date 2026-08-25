@@ -1683,14 +1683,14 @@
     {
       "unicode": 199,
       "width": 28,
-      "height": 45,
+      "height": 44,
       "advance": 31,
       "bearingX": 2,
       "bearingY": 34,
       "uvL": 230,
-      "uvB": 868,
+      "uvB": 869,
       "uvW": 28,
-      "uvH": 45
+      "uvH": 44
     },
     {
       "unicode": 200,
@@ -2019,14 +2019,14 @@
     {
       "unicode": 227,
       "width": 22,
-      "height": 37,
+      "height": 36,
       "advance": 26,
       "bearingX": 2,
-      "bearingY": 37,
+      "bearingY": 36,
       "uvL": 731,
-      "uvB": 831,
+      "uvB": 832,
       "uvW": 22,
-      "uvH": 37
+      "uvH": 36
     },
     {
       "unicode": 228,
@@ -2067,14 +2067,14 @@
     {
       "unicode": 231,
       "width": 22,
-      "height": 37,
+      "height": 36,
       "advance": 25,
       "bearingX": 2,
       "bearingY": 26,
       "uvL": 230,
-      "uvB": 827,
+      "uvB": 829,
       "uvW": 22,
-      "uvH": 37
+      "uvH": 36
     },
     {
       "unicode": 232,
@@ -2187,14 +2187,14 @@
     {
       "unicode": 241,
       "width": 21,
-      "height": 37,
+      "height": 36,
       "advance": 27,
       "bearingX": 3,
-      "bearingY": 37,
+      "bearingY": 36,
       "uvL": 808,
-      "uvB": 816,
+      "uvB": 817,
       "uvW": 21,
-      "uvH": 37
+      "uvH": 36
     },
     {
       "unicode": 242,
@@ -2235,14 +2235,14 @@
     {
       "unicode": 245,
       "width": 24,
-      "height": 37,
+      "height": 36,
       "advance": 27,
       "bearingX": 2,
-      "bearingY": 37,
+      "bearingY": 36,
       "uvL": 532,
-      "uvB": 808,
+      "uvB": 809,
       "uvW": 24,
-      "uvH": 37
+      "uvH": 36
     },
     {
       "unicode": 246,
@@ -2383,8 +2383,8 @@
       "advance": 27,
       "bearingX": 2,
       "bearingY": 36,
-      "uvL": 58,
-      "uvB": 780,
+      "uvL": 719,
+      "uvB": 781,
       "uvW": 22,
       "uvH": 47
     },
@@ -2415,26 +2415,26 @@
     {
       "unicode": 350,
       "width": 26,
-      "height": 45,
+      "height": 44,
       "advance": 28,
       "bearingX": 1,
       "bearingY": 34,
-      "uvL": 440,
-      "uvB": 782,
+      "uvL": 58,
+      "uvB": 783,
       "uvW": 26,
-      "uvH": 45
+      "uvH": 44
     },
     {
       "unicode": 351,
       "width": 21,
-      "height": 37,
+      "height": 36,
       "advance": 25,
       "bearingX": 2,
       "bearingY": 26,
-      "uvL": 585,
-      "uvB": 790,
+      "uvL": 440,
+      "uvB": 791,
       "uvW": 21,
-      "uvH": 37
+      "uvH": 36
     }
   ],
   "kerningDataList": []

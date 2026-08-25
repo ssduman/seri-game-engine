@@ -1,23 +1,23 @@
 #pragma once
 
-#include <seri/core/Seri.h>
+#include <core/Seri.h>
 
-#include <ImGui/imgui.h>
-#include <ImGui/misc/cpp/imgui_stdlib.h>
-#include <ImGui/backends/imgui_impl_opengl3.h>
-#include <ImGui/misc/freetype/imgui_freetype.h>
+#include <imgui.h>
+#include <imgui_stdlib.h>
+#include <imgui_impl_opengl3.h>
+#include <imgui_freetype.h>
 
-#include <ImGuizmo/ImGuizmo.h>
+#include <ImGuizmo.h>
 
 #include <memory>
 #include <unordered_map>
 
 #if defined (SERI_USE_WINDOW_GLFW)
 #include <GLFW/glfw3.h>
-#include <ImGui/backends/imgui_impl_glfw.h>
+#include <imgui_impl_glfw.h>
 #elif defined (SERI_USE_WINDOW_SDL3)
 #include <SDL3/SDL.h>
-#include <ImGui/backends/imgui_impl_sdl3.h>
+#include <imgui_impl_sdl3.h>
 #endif
 
 namespace seri::editor

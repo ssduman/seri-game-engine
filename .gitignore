@@ -3,12 +3,8 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
-# Environment variables (local secrets/paths)
-.env
-!.env.example
-
-# Submodule
-# seri/vendor/
+# vcpkg
+vcpkg_installed/
 
 # Solution files
 *.sln

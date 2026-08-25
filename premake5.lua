@@ -1,58 +1,29 @@
-local function loadEnv(envpath)
-  local localEnv = {}
-  
-  local f = io.open(envpath, "r")
-  if not f then
-    error("env path not found: " .. envpath)
-  end
-  
-  for line in f:lines() do
-    local k, v = line:match("([^=]+)=(.*)")
-    if k then
-      localEnv[k] = v
-    end
-  end
-  
-  f:close()
-
-  return localEnv
-end
-
-local localEnv = loadEnv(".env")
-local boostLibPath = localEnv["BOOST_LIB_PATH"]
-local boostIncludePath = localEnv["BOOST_INCLUDE_PATH"]
-
-if not boostLibPath or not boostIncludePath then
-  error("boost lib or/and include path is not set")
-else
-  print("boost lib path: " .. boostLibPath .. ", boost include path: " .. boostIncludePath)
-end
-
 outputdir = "%{cfg.buildcfg}-%{cfg.architecture}"
 
+vcpkg_dir = "%{wks.location}/vcpkg_installed/" .. "x64-windows"
+
+boost_ver = "vc145-mt-x64-1_92"
+boost_ver_debug = "vc145-mt-gd-x64-1_92"
+
 IncludeDir = {}
-IncludeDir["glad"] = "%{wks.location}/seri/vendor/glad/include"
-IncludeDir["GLFW"] = "%{wks.location}/seri/vendor/glfw/include"
-IncludeDir["glm"] = "%{wks.location}/seri/vendor/glm"
-IncludeDir["stb"] = "%{wks.location}/seri/vendor/stb"
-IncludeDir["ImGui"] = "%{wks.location}/seri/vendor/imgui"
-IncludeDir["assimp"] = "%{wks.location}/seri/vendor/assimp/include"
-IncludeDir["freetype"] = "%{wks.location}/seri/vendor/freetype/include"
-IncludeDir["nlohmann"] = "%{wks.location}/seri/vendor/nlohmann"
-IncludeDir["miniaudio"] = "%{wks.location}/seri/vendor/miniaudio"
-IncludeDir["sdl"] = "%{wks.location}/seri/vendor/sdl/include"
-IncludeDir["entt"] = "%{wks.location}/seri/vendor/entt/single_include"
-IncludeDir["yamlcpp"] = "%{wks.location}/seri/vendor/yaml-cpp/include"
-IncludeDir["fmt"] = "%{wks.location}/seri/vendor/fmt/include"
-IncludeDir["efsw"] = "%{wks.location}/seri/vendor/efsw/include"
-IncludeDir["lua"] = "%{wks.location}/seri/vendor/lua"
-IncludeDir["sol2"] = "%{wks.location}/seri/vendor/sol2/include"
-IncludeDir["ImGuizmo"] = "%{wks.location}/seri/vendor/imguizmo"
-IncludeDir["boost"] = boostIncludePath
+IncludeDir["vcpkg"] = vcpkg_dir .. "/include"
+IncludeDir["glad"] = "%{wks.location}/seri/third_party/glad/include"
 
 LibDir = {}
-LibDir["sdl"] = "%{wks.location}/seri/vendor/sdl/build/%{cfg.buildcfg}"
-LibDir["boost"] = boostLibPath
+LibDir["vcpkg"] = vcpkg_dir .. "/lib"
+LibDir["vcpkg_debug"] = vcpkg_dir .. "/debug/lib"
+
+BinDir = {}
+BinDir["vcpkg"] = vcpkg_dir .. "/bin"
+BinDir["vcpkg_debug"] = vcpkg_dir .. "/debug/bin"
+
+Lib = {}
+Lib["assimp"] = "assimp-vc145-mt"
+Lib["assimp_debug"] = "assimp-vc145-mtd"
+Lib["boost_log"] = "boost_log-" .. boost_ver
+Lib["boost_log_debug"] = "boost_log-" .. boost_ver_debug
+Lib["boost_log_setup"] = "boost_log_setup-" .. boost_ver
+Lib["boost_log_setup_debug"] = "boost_log_setup-" .. boost_ver_debug
 
 workspace "Seri Game Engine"
   architecture "x86_64"
@@ -74,16 +45,7 @@ workspace "Seri Game Engine"
     -- include "misc/snake"
     -- include "misc/tetris"
   group ""
-  
+
   group "Dependencies"
-    include "seri/vendor/glad"
-    include "seri/vendor/glfw"
-    include "seri/vendor/imgui"
-    include "seri/vendor/assimp"
-    include "seri/vendor/freetype"
-    -- include "seri/vendor/sdl"
-    include "seri/vendor/fmt"
-    include "seri/vendor/efsw/premake5_project.lua"
-    include "seri/vendor/lua"
-    include "seri/vendor/imguizmo"
+    include "seri/third_party/glad"
   group ""

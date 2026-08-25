@@ -1,11 +1,19 @@
 #pragma once
 
-#include <seri/core/Seri.h>
+#include <core/Seri.h>
 
-#include "layer/EditorLayer.h"
-#include "behaviour/BasicBehaviour.h"
-#include "behaviour/SimpleBehaviour.h"
-#include "behaviour/SystemBehaviour.h"
+#include "editor_layer/EditorLayer.h"
+#include "editor_behaviour/BasicBehaviour.h"
+#include "editor_behaviour/SimpleBehaviour.h"
+#include "editor_behaviour/SystemBehaviour.h"
+
+#include <boost/asio.hpp>
+#include <boost/asio/io_context.hpp>
+#include <boost/log/trivial.hpp>
+
+#include <thread>
+#include <memory>
+#include <vector>
 
 namespace seri::editor
 {
@@ -18,6 +26,8 @@ namespace seri::editor
 
 		void operator()(int argc, char* argv[])
 		{
+			BOOST_LOG_TRIVIAL(error) << "boost log";
+
 			seri::LayerManager layerManager{};
 			layerManager.AddLayer(std::make_shared<seri::CoreLayer>());
 			layerManager.AddLayer(std::make_shared<seri::editor::EditorLayer>());
@@ -41,6 +51,10 @@ namespace seri::editor
 
 			LOGGER(info, fmt::format("[editor] seri game engine - editor loop stopped"));
 		}
+
+	private:
+		std::vector<std::thread> _threads;
+		std::unique_ptr<boost::asio::io_context> _ioContext;
 
 	};
 }
