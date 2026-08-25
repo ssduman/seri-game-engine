@@ -1,6 +1,9 @@
 # Seri Game Engine #
+
 * A 2D/3D OpenGL Game Engine.
+
 ## Roadmap: ##
+
 * [X] FBX Loading and Drawing
 * [X] Skeletal Animation
 * [X] Font Loading and Text Rendering
@@ -13,15 +16,13 @@
 * [ ] NetCode
 * [ ] DirectX Support
 * [ ] Scripting
-## Build: ##
-* Download and install Visual Studio 2026 and CMake
-* Run `git clone --recursive https://github.com/ssduman/seri-game-engine`
-* Double click to `generate.bat`
-* Open `Seri Game Engine.sln`, build and run in Visual Studio 2026
-* Uses Premake to generate Visual Studio 2026 project files, and CMake to build some projects
-* Download and install `Boost 1.91.0 MSVC 14.5`
-* Create `.env` file and fill `Boost` paths.
+
+## Install: ##
+
+* See [Install](INSTALL.md)
+
 ## Dependencies: ##
+
 * [GLFW](https://github.com/glfw/glfw)
 * [glad](https://github.com/Dav1dde/glad)
 * [stb](https://github.com/nothings/stb)
@@ -38,7 +39,9 @@
 * [efsw](https://github.com/SpartanJ/efsw)
 * [Lua](https://github.com/lua/lua)
 * [sol2](https://github.com/ThePhD/sol2)
-* [Boost 1.91.0 MSVC 14.5](https://www.boost.org/releases/1.91.0/)
+* [Boost](https://www.boost.org/)
+* [vcpkg](https://github.com/microsoft/vcpkg)
+
 ## Images: ##
 <table>
     <tr>
