@@ -232,7 +232,8 @@ namespace seri
 				throw std::runtime_error("[rendering] glad load error");
 			}
 
-			LOGGER(info, "[rendering] loaded opengl " << GLAD_VERSION_MAJOR(version) << "." << GLAD_VERSION_MINOR(version));
+			LOGGER(info, "[rendering] glad generator version: " << GLAD_GENERATOR_VERSION);
+			LOGGER(info, "[rendering] loaded opengl: " << GLAD_VERSION_MAJOR(version) << "." << GLAD_VERSION_MINOR(version));
 		}
 
 		void SetOpenGLOptions()
