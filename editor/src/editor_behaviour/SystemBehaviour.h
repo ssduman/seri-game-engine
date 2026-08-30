@@ -1,7 +1,7 @@
 #pragma once
 
-#include <core/Seri.h>
-#include <behaviour/BehaviourBase.h>
+#include <seri/core/Seri.h>
+#include <seri/behaviour/BehaviourBase.h>
 
 namespace seri::editor
 {

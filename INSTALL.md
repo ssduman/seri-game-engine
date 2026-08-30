@@ -77,3 +77,25 @@ bootstrap-vcpkg.bat
 ### Rebuilding a dependency from scratch
 
 * Delete `vcpkg_installed\` and re-run `generate.bat`. To also bypass the binary cache, delete `%LOCALAPPDATA%\vcpkg\archives`.
+
+## Dependencies: ##
+
+* [GLFW](https://github.com/glfw/glfw)
+* [glad](https://github.com/Dav1dde/glad)
+* [stb](https://github.com/nothings/stb)
+* [GLM](https://github.com/g-truc/glm)
+* [FreeType](https://github.com/freetype/freetype)
+* [assimp](https://github.com/assimp/assimp)
+* [Dear ImGui](https://github.com/ocornut/imgui)
+* [ImGuizmo](https://github.com/CedricGuillemet/ImGuizmo)
+* [miniaudio](https://github.com/mackron/miniaudio)
+* [SDL](https://github.com/libsdl-org/SDL)
+* [EnTT](https://github.com/skypjack/entt)
+* [yaml-cpp](https://github.com/jbeder/yaml-cpp)
+* [fmt](https://github.com/fmtlib/fmt)
+* [efsw](https://github.com/SpartanJ/efsw)
+* [Lua](https://github.com/lua/lua)
+* [sol2](https://github.com/ThePhD/sol2)
+* [Boost](https://www.boost.org/)
+* [vcpkg](https://github.com/microsoft/vcpkg)
+* [Premake](https://github.com/premake/premake-core)

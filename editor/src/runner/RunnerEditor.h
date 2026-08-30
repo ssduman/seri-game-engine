@@ -1,6 +1,6 @@
 #pragma once
 
-#include <core/Seri.h>
+#include <seri/core/Seri.h>
 
 #include "editor_layer/EditorLayer.h"
 #include "editor_behaviour/BasicBehaviour.h"

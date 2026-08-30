@@ -1,8 +1,8 @@
 #pragma once
 
-#include <core/Seri.h>
-#include <util/YAMLUtil.h>
-#include <behaviour/BehaviourBase.h>
+#include <seri/core/Seri.h>
+#include <seri/util/YAMLUtil.h>
+#include <seri/behaviour/BehaviourBase.h>
 
 namespace seri::editor
 {

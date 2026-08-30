@@ -33,7 +33,7 @@ project "Editor"
 
   includedirs {
     "src",
-    "%{wks.location}/seri/src",
+    "%{wks.location}/seri",
     "%{IncludeDir.glad}",
   }
 

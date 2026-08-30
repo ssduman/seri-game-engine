@@ -1,8 +1,8 @@
 #pragma once
 
-#include <core/Seri.h>
+#include <seri/core/Seri.h>
 
-#include "camera/Camera.h"
+#include "seri/camera/Camera.h"
 
 #include <cmath>
 #include <random>

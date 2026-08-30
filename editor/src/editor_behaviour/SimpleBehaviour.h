@@ -1,13 +1,13 @@
 #pragma once
 
-#include <core/Seri.h>
-#include <graphic/Mesh.h>
-#include <graphic/Model.h>
-#include <graphic/Material.h>
-#include <random/Random.h>
-#include <netcode/Socket.h>
-#include <model/ModelImporter.h>
-#include <behaviour/BehaviourBase.h>
+#include <seri/core/Seri.h>
+#include <seri/graphic/Mesh.h>
+#include <seri/graphic/Model.h>
+#include <seri/graphic/Material.h>
+#include <seri/random/Random.h>
+#include <seri/netcode/Socket.h>
+#include <seri/model/ModelImporter.h>
+#include <seri/behaviour/BehaviourBase.h>
 
 namespace seri::editor
 {

@@ -5,14 +5,14 @@ project "Seri"
   staticruntime "Off"
 
   pchheader "Seripch.h"
-  pchsource "src/core/Seripch.cpp"
+  pchsource "seri/core/Seripch.cpp"
 
   targetdir("%{wks.location}/bin/" .. outputdir .. "/%{prj.name}")
   objdir("%{wks.location}/bin/int/" .. outputdir .. "/%{prj.name}")
 
   files {
-    "src/**.h",
-    "src/**.cpp",
+    "seri/**.h",
+    "seri/**.cpp",
   }
 
   defines {
@@ -34,8 +34,8 @@ project "Seri"
   }
 
   includedirs {
-    "src",
-    "src/core",
+    "%{wks.location}/seri",
+    "seri/core",
     "%{IncludeDir.glad}",
   }
 

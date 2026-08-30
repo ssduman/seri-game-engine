@@ -22,7 +22,7 @@ project "Misc"
 
   includedirs {
     "src",
-    "%{wks.location}/seri/src",
+    "%{wks.location}/seri",
     "%{wks.location}/seri/vendor",
     "%{IncludeDir.glad}",
     "%{IncludeDir.GLFW}",
