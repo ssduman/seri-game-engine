@@ -24,6 +24,8 @@ Lib["boost_log"] = "boost_log-" .. boost_ver
 Lib["boost_log_debug"] = "boost_log-" .. boost_ver_debug
 Lib["boost_log_setup"] = "boost_log_setup-" .. boost_ver
 Lib["boost_log_setup_debug"] = "boost_log_setup-" .. boost_ver_debug
+Lib["boost_thread"] = "boost_thread-" .. boost_ver
+Lib["boost_thread_debug"] = "boost_thread-" .. boost_ver_debug
 
 workspace "Seri Game Engine"
   architecture "x86_64"

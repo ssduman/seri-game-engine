@@ -175,7 +175,7 @@ namespace seri
 
 			animTimeInTick = std::fmod(timeInTicks, animation.durationInTick);
 			animTime = static_cast<float>(animTimeInTick) / static_cast<float>(animation.tickPerSecond);
-			//LOGGER(info, "[mesh] time: " << time << ", localAnimationTime: " << localAnimationTime);
+			//LOGGER(info) << "[mesh] time: " << time << ", localAnimationTime: " << localAnimationTime;
 
 			UpdateAnimation(nodeData, glm::mat4{ 1.0f });
 		}
@@ -193,7 +193,7 @@ namespace seri
 
 					if (nodeAnim.nodeName != nodeName)
 					{
-						LOGGER(error, "[mesh] bone anim name mismatch: " << nodeAnim.nodeName << ", " << nodeName);
+						LOGGER(error) << "[mesh] bone anim name mismatch: " << nodeAnim.nodeName << ", " << nodeName;
 					}
 
 					glm::vec3 position = InterpolatePosition(nodeAnim);
@@ -215,7 +215,7 @@ namespace seri
 				{
 					if (bones.at(boneIndex).name != nodeName)
 					{
-						LOGGER(error, "[mesh] bone name mismatch: " << nodeName << ", " << bones.at(boneIndex).name);
+						LOGGER(error) << "[mesh] bone name mismatch: " << nodeName << ", " << bones.at(boneIndex).name;
 					}
 					else
 					{
@@ -241,7 +241,7 @@ namespace seri
 		{
 			if (_vao)
 			{
-				//LOGGER(warning, "[mesh] vao already generated for build");
+				//LOGGER(warning) << "[mesh] vao already generated for build";
 				return;
 			}
 
@@ -333,7 +333,7 @@ namespace seri
 			if (!_vao)
 			{
 				Build();
-				//LOGGER(error, "[mesh] vao for update not generated");
+				//LOGGER(error) << "[mesh] vao for update not generated";
 				return;
 			}
 
@@ -389,19 +389,19 @@ namespace seri
 		{
 			if (modelMatrices.size() > SERI_MAX_INSTANCED_COUNT)
 			{
-				LOGGER(error, "[mesh] model matrices size exceeds max instanced count");
+				LOGGER(error) << "[mesh] model matrices size exceeds max instanced count";
 				return;
 			}
 
 			if (!_vao)
 			{
-				LOGGER(error, "[mesh] vao for instanced not generated");
+				LOGGER(error) << "[mesh] vao for instanced not generated";
 				return;
 			}
 
 			if (_vbo_instanced)
 			{
-				LOGGER(error, "[mesh] vbo for instanced already generated");
+				LOGGER(error) << "[mesh] vbo for instanced already generated";
 				return;
 			}
 
@@ -417,19 +417,19 @@ namespace seri
 		{
 			if (modelMatrices.size() > SERI_MAX_INSTANCED_COUNT)
 			{
-				LOGGER(error, "[mesh] model matrices size exceeds max instanced count");
+				LOGGER(error) << "[mesh] model matrices size exceeds max instanced count";
 				return;
 			}
 
 			if (!_vao)
 			{
-				LOGGER(error, "[mesh] vao for instanced not generated");
+				LOGGER(error) << "[mesh] vao for instanced not generated";
 				return;
 			}
 
 			if (!_vbo_instanced)
 			{
-				LOGGER(error, "[mesh] vbo for instanced not generated");
+				LOGGER(error) << "[mesh] vbo for instanced not generated";
 				return;
 			}
 

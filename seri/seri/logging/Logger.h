@@ -1,58 +1,100 @@
 #pragma once
 
-#include "seri/core/Core.h"
+#include <boost/log/sources/global_logger_storage.hpp>
+#include <boost/log/sources/record_ostream.hpp>
+#include <boost/log/sources/severity_feature.hpp>
+#include <boost/log/sources/severity_logger.hpp>
+#include <boost/log/utility/manipulators/add_value.hpp>
 
-#include <mutex>
 #include <string>
-#include <chrono>
-#include <iomanip>
-#include <sstream>
-#include <iostream>
 
 namespace seri
 {
 	enum class LogLevel
 	{
-		none,
-		error,
-		warning,
-		info,
-		debug,
-		verbose,
+		none = 0,
+		error = 1,
+		warning = 2,
+		info = 3,
+		verbose = 4,
 	};
 
-	class StreamLogger
+	enum class LogClock
+	{
+		utc,
+		local,
+	};
+
+	struct LoggerConfig
+	{
+		LogLevel level{ LogLevel::info };
+
+		LogClock clock{ LogClock::local };
+		std::string timeStampFormat{ "%H:%M:%S.%f %d.%m.%Y" };
+
+		bool autoFlush{ true };
+
+		bool showThreadId{ true };
+	};
+
+	using SeriLogger = boost::log::sources::severity_logger_mt<LogLevel>;
+
+	BOOST_LOG_INLINE_GLOBAL_LOGGER_DEFAULT(GlobalLogger, SeriLogger);
+
+	class Logger
 	{
 	public:
-		StreamLogger(LogLevel level, unsigned line, const char* file);
-		~StreamLogger();
+		static void Init(const LoggerConfig& config);
+		static void Shutdown();
 
-		template<typename T>
-		StreamLogger& operator<<(const T& v)
-		{
-			_ss << v;
-			return *this;
-		}
+		static void SetLogLevel(LogLevel level);
 
-		StreamLogger& operator<<(std::ostream& (*f)(std::ostream&))
+		static LogLevel FromString(const char*);
+		static const char* ToString(LogLevel level);
+		static const char* ToString3(LogLevel level);
+
+		static constexpr const char* TrimPath(const char* path)
 		{
-			_ss << f;
-			return *this;
+			const char* name = path;
+			for (const char* it = path; *it != '\0'; it++)
+			{
+				if (*it == '/' || *it == '\\')
+				{
+					name = it + 1;
+				}
+			}
+			return name;
 		}
 
 	private:
-		std::string GetDateTime();
-		std::string ToStringLevel(LogLevel lvl);
+		Logger() = default;
+		~Logger() = default;
 
-		LogLevel _level;
-		unsigned _line;
-		const char* _file;
-		std::ostringstream _ss;
+		Logger(Logger&& other) = delete;
+		Logger(const Logger& other) = delete;
+		Logger& operator=(Logger&& other) = default;
+		Logger& operator=(const Logger& other) = delete;
 
-		static std::mutex _mutex;
+		static void FormatRecord(const boost::log::record_view& record, boost::log::formatting_ostream& stream);
 
+		static void EnableColor();
+		static const char* ToColor(LogLevel level);
+
+		static Logger& GetInstance()
+		{
+			static Logger instance;
+			return instance;
+		}
+
+		LoggerConfig _config{};
+		std::locale _timeStampLocale{};
+		bool _inited{ false };
+		bool _colorEnabled{ false };
 	};
 }
 
-#define LOGGER(lvl, msg) seri::StreamLogger(seri::LogLevel::lvl, __LINE__, __FILE__) << msg
-#define LOGGER_S(lvl) seri::StreamLogger(seri::LogLevel::lvl, __LINE__, __FILE__)
+#define LOGGER(lvl) \
+	BOOST_LOG_STREAM_SEV(::seri::GlobalLogger::get(), ::seri::LogLevel::lvl) \
+		<< ::boost::log::add_value("File", ::seri::Logger::TrimPath(__FILE__)) \
+		<< ::boost::log::add_value("Line", static_cast<unsigned int>(__LINE__)) \
+		<< ::boost::log::add_value("Function", static_cast<const char*>(__FUNCTION__))

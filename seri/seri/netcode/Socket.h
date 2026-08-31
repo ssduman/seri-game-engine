@@ -34,14 +34,14 @@ namespace seri::netcode
 			if (WSAStartup(MAKEWORD(2, 2), &_wsaData) != 0)
 			{
 				_success = false;
-				LOGGER(error, "[netcode] WSAStartup failed");
+				LOGGER(error) << "[netcode] WSAStartup failed";
 				return;
 			}
 
 			_sockfd = socket(AF_INET, SOCK_DGRAM, st);
 			if (_sockfd == INVALID_SOCKET)
 			{
-				LOGGER(error, "[netcode] socket creation failed");
+				LOGGER(error) << "[netcode] socket creation failed";
 				WSACleanup();
 				return;
 			}
@@ -77,13 +77,13 @@ namespace seri::netcode
 			if (bind(_sockfd, (sockaddr*)&_serverAddr, sizeof(_serverAddr)) == SOCKET_ERROR)
 			{
 				_success = false;
-				LOGGER(error, "[netcode] bind failed");
+				LOGGER(error) << "[netcode] bind failed";
 				closesocket(_sockfd);
 				WSACleanup();
 				return false;
 			}
 
-			LOGGER(info, "[netcode] server is running on port: " << re.port);
+			LOGGER(info) << "[netcode] server is running on port: " << re.port;
 
 			return true;
 		}
@@ -100,7 +100,7 @@ namespace seri::netcode
 
 			inet_pton(AF_INET, re.ip, &_serverAddr.sin_addr.s_addr);
 
-			LOGGER(info, "[netcode] client connected to port: " << re.port);
+			LOGGER(info) << "[netcode] client connected to port: " << re.port;
 
 			return true;
 		}
@@ -130,7 +130,7 @@ namespace seri::netcode
 				int recvLen = recvfrom(_sockfd, _buffer, sizeof(_buffer), 0, (sockaddr*)&clientAddr, &clientLen);
 				if (recvLen == SOCKET_ERROR)
 				{
-					LOGGER(info, "[netcode] recvfrom failed");
+					LOGGER(info) << "[netcode] recvfrom failed";
 					return;
 				}
 
@@ -138,7 +138,7 @@ namespace seri::netcode
 				inet_ntop(AF_INET, &(clientAddr.sin_addr), ipStr, INET_ADDRSTRLEN);
 				int port = ntohs(clientAddr.sin_port);
 
-				LOGGER(info, "[netcode] message from: " << ipStr << ":" << port << ", received: " << recvLen);
+				LOGGER(info) << "[netcode] message from: " << ipStr << ":" << port << ", received: " << recvLen;
 
 				Send(clientAddr);
 			}

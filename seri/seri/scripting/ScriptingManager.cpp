@@ -27,7 +27,7 @@ namespace seri::scripting
 	{
 		_luaState.set_function("Logger", [&](const std::string& msg)
 			{
-				LOGGER(info, fmt::format("[lua] {}", msg));
+				LOGGER(info) << fmt::format("[lua] {}", msg);
 			}
 		);
 

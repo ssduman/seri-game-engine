@@ -21,6 +21,7 @@ project "Seri"
     "FMT_UNICODE=0",
     "FMT_SHARED",
     "ASSIMP_DLL",
+    "BOOST_LOG_DYN_LINK",
   }
 
   linkoptions {

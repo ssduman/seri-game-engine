@@ -24,7 +24,7 @@ namespace seri
 			SDL_DestroyWindow(_window);
 			SDL_Quit();
 
-			LOGGER(info, "[window] sdl window manager destroyed and terminated successfully");
+			LOGGER(info) << "[window] sdl window manager destroyed and terminated successfully";
 		}
 
 		void Init(WindowProperties windowProperties) override
@@ -42,7 +42,7 @@ namespace seri
 
 			_initialized = true;
 
-			LOGGER(info, "[window] sdl window manager created successfully");
+			LOGGER(info) << "[window] sdl window manager created successfully";
 		}
 
 		double GetTime() override
@@ -77,7 +77,7 @@ namespace seri
 					SDL_SetWindowRelativeMouseMode(_window, true);
 					break;
 				default:
-					LOGGER(info, "[window] unexpected cursor mode");
+					LOGGER(info) << "[window] unexpected cursor mode";
 					break;
 			}
 		}
@@ -99,7 +99,7 @@ namespace seri
 			bool ret = SDL_GL_SetSwapInterval(count);
 			if (!ret)
 			{
-				LOGGER(error, "[window] sdl set vsync error: " + std::string(SDL_GetError()));
+				LOGGER(error) << "[window] sdl set vsync error: " + std::string(SDL_GetError());
 			}
 		}
 
@@ -122,24 +122,24 @@ namespace seri
 						{
 							_shouldClose = true;
 
-							LOGGER(info, "[window] sdl event: quit");
+							LOGGER(info) << "[window] sdl event: quit";
 						}
 						break;
 					case SDL_EVENT_WINDOW_CLOSE_REQUESTED:
 						{
 							FireEvent(event::WindowCloseEventData{});
 
-							LOGGER(info, "[window] sdl event: window closing");
+							LOGGER(info) << "[window] sdl event: window closing";
 						}
 						break;
 					case SDL_EVENT_WINDOW_SHOWN:
 						{
-							LOGGER(info, "[window] sdl event: window shown");
+							LOGGER(info) << "[window] sdl event: window shown";
 						}
 						break;
 					case SDL_EVENT_WINDOW_HIDDEN:
 						{
-							LOGGER(info, "[window] sdl event: window hidden");
+							LOGGER(info) << "[window] sdl event: window hidden";
 						}
 						break;
 					case SDL_EVENT_WINDOW_MOVED:
@@ -147,27 +147,27 @@ namespace seri
 							int x = event.window.data1;
 							int y = event.window.data2;
 
-							//LOGGER(info, "[window] sdl event: window moved: " << x << ", " << y);
+							//LOGGER(info) << "[window] sdl event: window moved: " << x << ", " << y;
 						}
 						break;
 					case SDL_EVENT_WINDOW_MINIMIZED:
 						{
-							LOGGER(info, "[window] sdl event: window minimized");
+							LOGGER(info) << "[window] sdl event: window minimized";
 						}
 						break;
 					case SDL_EVENT_WINDOW_MAXIMIZED:
 						{
-							LOGGER(info, "[window] sdl event: window maximized");
+							LOGGER(info) << "[window] sdl event: window maximized";
 						}
 						break;
 					case SDL_EVENT_WINDOW_FOCUS_GAINED:
 						{
-							LOGGER(info, "[window] sdl event: window focused");
+							LOGGER(info) << "[window] sdl event: window focused";
 						}
 						break;
 					case SDL_EVENT_WINDOW_FOCUS_LOST:
 						{
-							LOGGER(info, "[window] sdl event: window not focused");
+							LOGGER(info) << "[window] sdl event: window not focused";
 						}
 						break;
 					case SDL_EVENT_WINDOW_RESIZED:
@@ -179,7 +179,7 @@ namespace seri
 
 							FireEvent(event::WindowResizeEventData{ w, h });
 
-							//LOGGER(info, "[window] sdl event: window resized: " << w << ", " << h);
+							//LOGGER(info) << "[window] sdl event: window resized: " << w << ", " << h;
 						}
 						break;
 					case SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED:
@@ -191,21 +191,21 @@ namespace seri
 
 							FireEvent(event::WindowResizeEventData{ w, h });
 
-							//LOGGER(info, "[window] sdl event: window pixel size changed: " << w << ", " << h);
+							//LOGGER(info) << "[window] sdl event: window pixel size changed: " << w << ", " << h;
 						}
 						break;
 					case SDL_EVENT_WINDOW_MOUSE_ENTER:
 						{
 							FireEvent(event::MouseEnterEventData{ true });
 
-							//LOGGER(info, "[window] sdl event: mouse enter");
+							//LOGGER(info) << "[window] sdl event: mouse enter";
 						}
 						break;
 					case SDL_EVENT_WINDOW_MOUSE_LEAVE:
 						{
 							FireEvent(event::MouseEnterEventData{ false });
 
-							//LOGGER(info, "[window] sdl event: mouse leave");
+							//LOGGER(info) << "[window] sdl event: mouse leave";
 						}
 						break;
 					case SDL_EVENT_MOUSE_MOTION:
@@ -217,7 +217,7 @@ namespace seri
 
 							InputManager::RegisterCursorPosition(xpos, ypos);
 
-							//LOGGER(info, "[window] sdl event: mouse move");
+							//LOGGER(info) << "[window] sdl event: mouse move";
 						}
 						break;
 					case SDL_EVENT_MOUSE_BUTTON_DOWN:
@@ -249,7 +249,7 @@ namespace seri
 
 							if (buttonEnum == MouseButtonCode::noop)
 							{
-								LOGGER(info, "[window] sdl event: mouse button down: unexpected button type");
+								LOGGER(info) << "[window] sdl event: mouse button down: unexpected button type";
 								break;
 							}
 
@@ -257,7 +257,7 @@ namespace seri
 
 							InputManager::RegisterMouse(buttonEnum, actionEnum);
 
-							//LOGGER(info, "[window] sdl event: mouse button down");
+							//LOGGER(info) << "[window] sdl event: mouse button down";
 						}
 						break;
 					case SDL_EVENT_MOUSE_BUTTON_UP:
@@ -289,7 +289,7 @@ namespace seri
 
 							if (buttonEnum == MouseButtonCode::noop)
 							{
-								LOGGER(info, "[window] sdl event: mouse button up: unexpected button type");
+								LOGGER(info) << "[window] sdl event: mouse button up: unexpected button type";
 								break;
 							}
 
@@ -297,7 +297,7 @@ namespace seri
 
 							InputManager::RegisterMouse(buttonEnum, actionEnum);
 
-							//LOGGER(info, "[window] sdl event: mouse button up");
+							//LOGGER(info) << "[window] sdl event: mouse button up";
 						}
 						break;
 					case SDL_EVENT_MOUSE_WHEEL:
@@ -309,7 +309,7 @@ namespace seri
 
 							InputManager::RegisterScrollDelta(xoffset, yoffset);
 
-							//LOGGER(info, "[window] sdl event: mouse wheel");
+							//LOGGER(info) << "[window] sdl event: mouse wheel";
 						}
 						break;
 					case SDL_EVENT_KEY_DOWN:
@@ -327,7 +327,7 @@ namespace seri
 
 							if (keyEnum == KeyCode::unknown)
 							{
-								LOGGER(info, "[window] sdl event: key down: unexpected key type");
+								LOGGER(info) << "[window] sdl event: key down: unexpected key type";
 								break;
 							}
 
@@ -340,7 +340,7 @@ namespace seri
 								SetWindowShouldCloseToTrue();
 							}
 
-							//LOGGER(info, "[window] sdl event: key down: " << seri::ToString(keyEnum) << ", repeat: " << seri::ToString(actionEnum));
+							//LOGGER(info) << "[window] sdl event: key down: " << seri::ToString(keyEnum) << ", repeat: " << seri::ToString(actionEnum);
 						}
 						break;
 					case SDL_EVENT_KEY_UP:
@@ -358,7 +358,7 @@ namespace seri
 
 							if (keyEnum == KeyCode::unknown)
 							{
-								LOGGER(info, "[window] sdl event: key up: unexpected key type");
+								LOGGER(info) << "[window] sdl event: key up: unexpected key type";
 								break;
 							}
 
@@ -371,12 +371,12 @@ namespace seri
 								SetWindowShouldCloseToTrue();
 							}
 
-							//LOGGER(info, "[window] sdl event: key up: " << seri::ToString(keyEnum));
+							//LOGGER(info) << "[window] sdl event: key up: " << seri::ToString(keyEnum);
 						}
 						break;
 					case SDL_EVENT_TEXT_INPUT:
 						{
-							LOGGER(info, "[window] sdl event: text input");
+							LOGGER(info) << "[window] sdl event: text input";
 						}
 						break;
 					default:
@@ -450,7 +450,7 @@ namespace seri
 			_context = SDL_GL_CreateContext(_window);
 			if (!_context)
 			{
-				LOGGER(error, "[window] sdl gl create context error: " + std::string(SDL_GetError()));
+				LOGGER(error) << "[window] sdl gl create context error: " + std::string(SDL_GetError());
 				SDL_DestroyWindow(_window);
 				SDL_Quit();
 			}
@@ -464,7 +464,7 @@ namespace seri
 				throw std::runtime_error("[window] sdl init error: " + std::string(SDL_GetError()));
 			}
 
-			LOGGER(info, "[window] sdl version '" << SDL_MAJOR_VERSION << "." << SDL_MINOR_VERSION << "." << SDL_MICRO_VERSION << "' init succeeded");
+			LOGGER(info) << "[window] sdl version '" << SDL_MAJOR_VERSION << "." << SDL_MINOR_VERSION << "." << SDL_MICRO_VERSION << "' init succeeded";
 		}
 
 		void CreateWindowSDL()
@@ -490,11 +490,11 @@ namespace seri
 
 			if (!_window)
 			{
-				LOGGER(error, "[window] sdl window creating error: " + std::string(SDL_GetError()));
+				LOGGER(error) << "[window] sdl window creating error: " + std::string(SDL_GetError());
 				SDL_Quit();
 			}
 
-			LOGGER(info, "[window] sdl window created");
+			LOGGER(info) << "[window] sdl window created";
 		}
 
 		KeyCode GetKeyCodeEnum(int key)

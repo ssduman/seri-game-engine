@@ -15,12 +15,12 @@ namespace seri
 	public:
 		EditorCamera(seri::CameraProperties cameraProperties) : CameraBase(cameraProperties)
 		{
-			//LOGGER(info, "camera init succeeded");
+			//LOGGER(info) << "camera init succeeded";
 		}
 
 		~EditorCamera() override
 		{
-			//LOGGER(info, "camera delete succeeded");
+			//LOGGER(info) << "camera delete succeeded";
 		}
 
 		void Init() override

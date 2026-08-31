@@ -81,7 +81,7 @@ namespace seri
 		}
 		catch (const std::exception& ex)
 		{
-			LOGGER(error, "exception occurred while reading path: " << path << ", exception: " << ex.what());
+			LOGGER(error) << "exception occurred while reading path: " << path << ", exception: " << ex.what();
 			return std::string{};
 		}
 	}

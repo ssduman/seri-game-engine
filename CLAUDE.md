@@ -44,7 +44,8 @@ A 2D/3D OpenGL game engine written in C++20, featuring an ECS architecture, PBR 
 
 ## Important Notes
 
-- The engine is under active development
+- Ignore misc/ folder.
+- The engine is under active development.
 - Run `generate.bat` to restore dependencies and regenerate the solution. See `INSTALL.md` for fresh-install and upgrade paths.
 - To change a dependency version, edit `vcpkg.json` — never edit anything under `vcpkg_installed/`.
 - Linking uses the `x64-windows` triplet (dynamic libs, `/MD`). Editor post-build copies the vcpkg DLLs next to the executable.

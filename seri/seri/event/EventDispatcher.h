@@ -11,7 +11,7 @@ namespace seri::event
 	{
 		void operator()(const IEventData& data)
 		{
-			//LOGGER(info, "event: " << data.ToString());
+			//LOGGER(info) << "event: " << data.ToString();
 
 			switch (data.eventType)
 			{

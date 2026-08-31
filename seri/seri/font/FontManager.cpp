@@ -22,7 +22,7 @@ namespace seri::font
 			}
 
 			std::string fontName = entry.path().stem().string();
-			LOGGER(info, "[font] font found: " << fontName);
+			LOGGER(info) << "[font] font found: " << fontName;
 
 			FontGeneratorParams genParams{};
 			FontGeneratorInitParams initParams{};

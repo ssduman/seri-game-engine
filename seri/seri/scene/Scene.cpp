@@ -68,7 +68,7 @@ namespace seri::scene
 
 		_isDirty = false;
 
-		LOGGER(info, fmt::format("[scene] serialized to {}", file));
+		LOGGER(info) << fmt::format("[scene] serialized to {}", file);
 	}
 
 	void Scene::Deserialize(const std::string& file)
@@ -79,7 +79,7 @@ namespace seri::scene
 
 		if (!root["SceneComponent"] || !root["SceneComponent"].IsMap())
 		{
-			LOGGER(error, fmt::format("[scene] failed to deserialize scene from file: {}", file));
+			LOGGER(error) << fmt::format("[scene] failed to deserialize scene from file: {}", file);
 			return;
 		}
 
@@ -115,7 +115,7 @@ namespace seri::scene
 
 		_isDirty = false;
 
-		LOGGER(info, fmt::format("[scene] parsed: {}", file));
+		LOGGER(info) << fmt::format("[scene] parsed: {}", file);
 	}
 
 	void Scene::GetAllEntityIDs(std::vector<uint64_t>& ids)

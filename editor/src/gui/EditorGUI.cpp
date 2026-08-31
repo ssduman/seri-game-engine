@@ -4,7 +4,7 @@ namespace seri::editor
 {
 	EditorGUI::EditorGUI()
 	{
-		LOGGER(info, "[gui] editor init succeeded");
+		LOGGER(info) << "[gui] editor init succeeded";
 	}
 
 	EditorGUI::~EditorGUI()
@@ -19,7 +19,7 @@ namespace seri::editor
 
 		ImGui::DestroyContext();
 
-		LOGGER(info, "[gui] editor delete succeeded");
+		LOGGER(info) << "[gui] editor delete succeeded";
 	}
 
 	void EditorGUI::Init()
@@ -627,7 +627,7 @@ namespace seri::editor
 				break;
 			default:
 				{
-					LOGGER(error, "[gui] editor unknown inspector type");
+					LOGGER(error) << "[gui] editor unknown inspector type";
 				}
 				break;
 		}

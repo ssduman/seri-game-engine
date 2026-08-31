@@ -18,7 +18,7 @@ namespace seri
 		{
 			if (GetInstance()._cameraOrtho != nullptr)
 			{
-				LOGGER(warning, "there is already ortho camera");
+				LOGGER(warning) << "there is already ortho camera";
 				return;
 			}
 
@@ -28,7 +28,7 @@ namespace seri
 		{
 			if (GetInstance()._cameraPerspective != nullptr)
 			{
-				LOGGER(warning, "there is already perspective camera");
+				LOGGER(warning) << "there is already perspective camera";
 				return;
 			}
 

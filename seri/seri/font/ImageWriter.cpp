@@ -88,7 +88,7 @@ namespace seri::font
 		);
 		if (write_error == 0)
 		{
-			LOGGER(error, "[font] error in writing to stb png: " << write_error);
+			LOGGER(error) << "[font] error in writing to stb png: " << write_error;
 			return 0;
 		}
 

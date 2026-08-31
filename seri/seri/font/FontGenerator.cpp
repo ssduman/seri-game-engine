@@ -22,7 +22,7 @@ namespace seri::font
 				MakeCyrillic();
 				break;
 			default:
-				LOGGER(error, "[font] unknown character set: " << get_character_set_str(_params.character_set));
+				LOGGER(error) << "[font] unknown character set: " << get_character_set_str(_params.character_set);
 				return;
 		}
 
@@ -86,21 +86,21 @@ namespace seri::font
 		_error = FT_Init_FreeType(&_library);
 		if (_error)
 		{
-			LOGGER(error, "[font] init ft failed: " << FT_Error_String(_error));
+			LOGGER(error) << "[font] init ft failed: " << FT_Error_String(_error);
 			return;
 		}
 
 		_error = FT_New_Face(_library, (_params.input_folder_path + "/" + _params.font_name + ".ttf").c_str(), /*face_index*/ 0, &_face);
 		if (_error)
 		{
-			LOGGER(error, "[font] load font face failed: " << FT_Error_String(_error));
+			LOGGER(error) << "[font] load font face failed: " << FT_Error_String(_error);
 			return;
 		}
 
 		_error = FT_Select_Charmap(_face, FT_ENCODING_UNICODE);
 		if (_error)
 		{
-			LOGGER(error, "[font] setting char map failed: " << FT_Error_String(_error));
+			LOGGER(error) << "[font] setting char map failed: " << FT_Error_String(_error);
 			return;
 		}
 	}
@@ -199,7 +199,7 @@ namespace seri::font
 		static bool write_log = false;
 		if (write_log)
 		{
-			LOGGER(info,
+			LOGGER(info) <<
 				"[font] font info:" << "\n" <<
 				" freetype version: " << _ft_version << "\n" <<
 				" face has hinter: " << (_has_hinter ? "true" : "false") << "\n" <<
@@ -208,8 +208,7 @@ namespace seri::font
 				" style is bold: " << (_is_bold ? "true" : "false") << "\n" <<
 				" style is italic: " << (_is_italic ? "true" : "false") << "\n" <<
 				" module name: " << _module_name << "\n" <<
-				" hinting engine: " << _hinting_engine
-			);
+				" hinting engine: " << _hinting_engine;
 		}
 	}
 
@@ -249,14 +248,14 @@ namespace seri::font
 		_error = FT_Set_Pixel_Sizes(_face, /*pixel_width*/ 0, /*pixel_height*/ _init_params.pixel_size);
 		if (_error)
 		{
-			LOGGER(error, "[font] setting pixel size failed: " << FT_Error_String(_error));
+			LOGGER(error) << "[font] setting pixel size failed: " << FT_Error_String(_error);
 			return;
 		}
 #else
 		_error = FT_Set_Char_Size(_face, /*char_width*/ 0, /*char_height*/ _init_params.pixel_size * 64, /*horz_resolution*/ 0, /*vert_resolution*/ 0);
 		if (_error)
 		{
-			LOGGER(error, "[font] setting char size failed: " << FT_Error_String(_error));
+			LOGGER(error) << "[font] setting char size failed: " << FT_Error_String(_error);
 			return;
 		}
 #endif
@@ -287,7 +286,7 @@ namespace seri::font
 
 		// log
 		FontMetadata font_metadata = _font_info_handler->GetFontInfo().metadata;
-		LOGGER(info, "[font] inited font: " << font_metadata.name << ", style: " << font_metadata.style << ", size: " << font_metadata.pointSize);
+		LOGGER(info) << "[font] inited font: " << font_metadata.name << ", style: " << font_metadata.style << ", size: " << font_metadata.pointSize;
 	}
 
 	std::shared_ptr<FontData> FontGenerator::Generate()
@@ -316,7 +315,7 @@ namespace seri::font
 		long long timetaken = std::chrono::duration_cast<std::chrono::milliseconds>(end - beg).count();
 
 		// log
-		LOGGER(info, "[font] generated font: " << font_metadata.name << ", style: " << font_metadata.style << ", size: " << font_metadata.pointSize << ", timetaken: " << timetaken << " ms");
+		LOGGER(info) << "[font] generated font: " << font_metadata.name << ", style: " << font_metadata.style << ", size: " << font_metadata.pointSize << ", timetaken: " << timetaken << " ms";
 
 		// create font data
 		std::shared_ptr<FontData> fontData = std::make_shared<FontData>();
@@ -339,7 +338,7 @@ namespace seri::font
 		{
 			if (unicode >= 32)
 			{
-				//LOGGER(error, "[font] error in get glyph: " << unicode);
+				//LOGGER(error) << "[font] error in get glyph: " << unicode;
 			}
 			_font_info_handler->AddGlyphData(unicode);
 			return;
@@ -349,7 +348,7 @@ namespace seri::font
 		_error = FT_Load_Glyph(_face, glyph_index, load_flags);
 		if (_error)
 		{
-			LOGGER(error, "[font] error in load glyph: " << FT_Error_String(_error));
+			LOGGER(error) << "[font] error in load glyph: " << FT_Error_String(_error);
 			return;
 		}
 
@@ -376,7 +375,7 @@ namespace seri::font
 		_error = FT_Get_Glyph(slot, &glyph_main);
 		if (_error)
 		{
-			LOGGER(error, "[font] error in get glyph main: " << FT_Error_String(_error));
+			LOGGER(error) << "[font] error in get glyph main: " << FT_Error_String(_error);
 			return;
 		}
 
@@ -384,7 +383,7 @@ namespace seri::font
 		_error = FT_Glyph_To_Bitmap(&glyph_main, render_mode, /*origin*/ nullptr, /*destroy*/ true);
 		if (_error)
 		{
-			LOGGER(error, "[font] error in glyph main to bitmap: " << FT_Error_String(_error));
+			LOGGER(error) << "[font] error in glyph main to bitmap: " << FT_Error_String(_error);
 			return;
 		}
 
@@ -453,7 +452,7 @@ namespace seri::font
 		FT_UInt left_glyph_index = FT_Get_Char_Index(_face, unicode_l);
 		if (left_glyph_index == 0)
 		{
-			LOGGER(error, "[font] error in get char index for unicode_l: " << unicode_l);
+			LOGGER(error) << "[font] error in get char index for unicode_l: " << unicode_l;
 			return;
 		}
 
@@ -465,7 +464,7 @@ namespace seri::font
 			FT_UInt right_glyph_index = FT_Get_Char_Index(_face, unicode_r);
 			if (right_glyph_index == 0)
 			{
-				LOGGER(error, "[font] error in get char index for unicode_r: " << unicode_r);
+				LOGGER(error) << "[font] error in get char index for unicode_r: " << unicode_r;
 				continue;
 			}
 
@@ -474,7 +473,7 @@ namespace seri::font
 			_error = FT_Get_Kerning(_face, left_glyph_index, right_glyph_index, FT_KERNING_UNFITTED, &kerning); // FT_KERNING_DEFAULT, FT_KERNING_UNFITTED, FT_KERNING_UNSCALED
 			if (_error)
 			{
-				LOGGER(error, "[font] error in get kerning: " << FT_Error_String(_error));
+				LOGGER(error) << "[font] error in get kerning: " << FT_Error_String(_error);
 				return;
 			}
 

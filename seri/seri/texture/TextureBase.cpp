@@ -18,7 +18,7 @@ namespace seri
 		void* image = stbi_load(texturePath.c_str(), &width, &height, &components, 0);
 		if (!image)
 		{
-			LOGGER(error, "init texture '" << texturePath << "' failed: " << stbi_failure_reason());
+			LOGGER(error) << "init texture '" << texturePath << "' failed: " << stbi_failure_reason();
 		}
 		return image;
 	}
@@ -29,7 +29,7 @@ namespace seri
 		void* image = stbi_load_from_memory((const stbi_uc*)data, size, &width, &height, &components, 0);
 		if (!image)
 		{
-			LOGGER(error, "init texture from buffer with size " << size << " failed: " << stbi_failure_reason());
+			LOGGER(error) << "init texture from buffer with size " << size << " failed: " << stbi_failure_reason();
 		}
 		return image;
 	}

@@ -39,7 +39,7 @@ namespace seri::font
 		stbrp_pack_rects(&_ctx, &rect, 1);
 		if (!rect.was_packed)
 		{
-			LOGGER(error, "[font] unicode: " << id << " was not packed");
+			LOGGER(error) << "[font] unicode: " << id << " was not packed";
 		}
 		return { rect.x + _params.padding, rect.y + _params.padding };
 	}

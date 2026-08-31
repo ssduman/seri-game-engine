@@ -66,6 +66,7 @@ project "Editor"
     links {
       "%{Lib.boost_log_debug}",
       "%{Lib.boost_log_setup_debug}",
+      "%{Lib.boost_thread_debug}",
       "%{Lib.assimp_debug}",
       "fmtd",
       "freetyped",
@@ -87,6 +88,7 @@ project "Editor"
     links {
       "%{Lib.boost_log}",
       "%{Lib.boost_log_setup}",
+      "%{Lib.boost_thread}",
       "%{Lib.assimp}",
       "fmt",
       "freetype",

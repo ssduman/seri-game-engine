@@ -134,7 +134,7 @@ namespace seri
 		{
 			if (_drawCount != 0)
 			{
-				//LOGGER(warning, "draw count already set to " << _drawCount << " and will not change to given value " << drawCount);
+				//LOGGER(warning) << "draw count already set to " << _drawCount << " and will not change to given value " << drawCount;
 				return;
 			}
 			_drawCount = drawCount;

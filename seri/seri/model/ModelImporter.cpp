@@ -34,7 +34,7 @@ namespace seri
 		const aiScene* ai_scene = ai_importer.ReadFile(modelPath, FlagBuilder());
 		if (!ai_scene || ai_scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !ai_scene->mRootNode)
 		{
-			LOGGER(error, fmt::format("[model] read model path '{}' failed: {}", modelPath, ai_importer.GetErrorString()));
+			LOGGER(error) << fmt::format("[model] read model path '{}' failed: {}", modelPath, ai_importer.GetErrorString());
 			return nullptr;
 		}
 
@@ -78,10 +78,10 @@ namespace seri
 		std::string hasSkel = ai_scene->HasSkeletons() ? "y" : "n";
 		std::string hasAnim = ai_scene->HasAnimations() ? "y" : "n";
 
-		LOGGER(info, fmt::format(
+		LOGGER(info) << fmt::format(
 			"[model] loaded '{}', mesh: {}, mat: {}, tri: {}, anim: {}, skeleton: {}",
 			modelName, model->meshes.size(), model->materialCount, triCount, hasAnim, hasSkel
-		));
+		);
 
 		return model;
 	}
@@ -243,7 +243,7 @@ namespace seri
 			}
 			else
 			{
-				LOGGER(error, "[model] getting " << GetString(ai_tt) << " texture with index " << i << " failed");
+				LOGGER(error) << "[model] getting " << GetString(ai_tt) << " texture with index " << i << " failed";
 			}
 		}
 	}
@@ -319,7 +319,7 @@ namespace seri
 			return;
 		}
 
-		//LOGGER(info, "[model] mesh '" << ai_mesh->mName.C_Str() << "' has " << ai_mesh->mNumBones << " bones");
+		//LOGGER(info) << "[model] mesh '" << ai_mesh->mName.C_Str() << "' has " << ai_mesh->mNumBones << " bones";
 
 		mesh->bonesForVertices.resize(mesh->vertices.size());
 
@@ -347,7 +347,7 @@ namespace seri
 				mesh->bones[boneIndex] = Bone{ boneIndex, boneName, boneOffsetMatrix };
 			}
 
-			//LOGGER(info, "[model] mesh: " << mesh->name << ", bone index: " << boneIndex << ", bone name: " << boneName);
+			//LOGGER(info) << "[model] mesh: " << mesh->name << ", bone index: " << boneIndex << ", bone name: " << boneName;
 
 			for (unsigned int j = 0; j < ai_bone->mNumWeights; j++)
 			{
@@ -361,7 +361,7 @@ namespace seri
 	{
 		if (!ai_scene->HasAnimations())
 		{
-			//LOGGER(info, "[model] no animations found");
+			//LOGGER(info) << "[model] no animations found";
 			return {};
 		}
 
@@ -390,19 +390,18 @@ namespace seri
 
 				if (animation.nodeAnimations.find(nodeName) != animation.nodeAnimations.end())
 				{
-					LOGGER(error, "[model] duplicate node animation found: " << nodeName);
+					LOGGER(error) << "[model] duplicate node animation found: " << nodeName;
 					continue;
 				}
 
 				animation.nodeAnimations[nodeName] = LoadNodeAnimation(ai_node_anim);
 			}
 
-			LOGGER(info,
+			LOGGER(info) <<
 				"[model] anim: " << animName << ", duration: " << duration << ", has " <<
 				ai_animation->mNumChannels << " skeletal, " <<
 				ai_animation->mNumMeshChannels << " mesh channels, " <<
-				ai_animation->mNumMorphMeshChannels << " morph mesh"
-			);
+				ai_animation->mNumMorphMeshChannels << " morph mesh";
 		}
 
 		return animation;
@@ -486,7 +485,7 @@ namespace seri
 				}
 			}
 
-			LOGGER(info, fmt::format("[model] blend shape '{}', count: {}, weight: {} loaded", blendShapeName, ai_mesh->mNumAnimMeshes, weight));
+			LOGGER(info) << fmt::format("[model] blend shape '{}', count: {}, weight: {} loaded", blendShapeName, ai_mesh->mNumAnimMeshes, weight);
 		}
 	}
 

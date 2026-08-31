@@ -52,7 +52,7 @@ namespace seri
 						point->GetDrawer().setSubDataBuffer(seri::aux::Index::position, positions, 0);
 						point->GetDrawer().setSubDataBuffer(seri::aux::Index::color, colors, positionsSize);
 
-						LOGGER(info, "point created");
+						LOGGER(info) << "point created";
 
 						return point;
 					}
@@ -74,7 +74,7 @@ namespace seri
 						line->GetDrawer().setSubDataBuffer(seri::aux::Index::position, positions, 0);
 						line->GetDrawer().setSubDataBuffer(seri::aux::Index::color, colors, positionsSize);
 
-						LOGGER(info, "line created");
+						LOGGER(info) << "line created";
 
 						return line;
 					}
@@ -100,7 +100,7 @@ namespace seri
 						triangle->GetDrawer().setSubDataBuffer(seri::aux::Index::color, colors, positionsSize);
 						triangle->GetDrawer().setSubDataBuffer(seri::aux::Index::texture, texturePositions, positionsSize + colorsSize);
 
-						LOGGER(info, "triangle created");
+						LOGGER(info) << "triangle created";
 
 						return triangle;
 					}
@@ -127,7 +127,7 @@ namespace seri
 						rectangle->GetDrawer().setSubDataBuffer(seri::aux::Index::position, positions, 0);
 						rectangle->GetDrawer().setSubDataBuffer(seri::aux::Index::texture, texturePositions, positionsSize);
 
-						LOGGER(info, "rectangle created");
+						LOGGER(info) << "rectangle created";
 
 						return rectangle;
 					}
@@ -165,7 +165,7 @@ namespace seri
 						circle->GetDrawer().setSubDataBuffer(seri::aux::Index::color, colors, positionsSize);
 						circle->GetDrawer().setSubDataBuffer(seri::aux::Index::texture, texturePositions, positionsSize + colorsSize);
 
-						LOGGER(info, "circle created");
+						LOGGER(info) << "circle created";
 
 						return circle;
 					}
@@ -274,7 +274,7 @@ namespace seri
 						cube->GetDrawer().setSubDataBuffer(seri::aux::Index::position, positions, 0);
 						cube->GetDrawer().setSubDataBuffer(seri::aux::Index::texture, texturePositions, positionsSize);
 
-						LOGGER(info, "cube created");
+						LOGGER(info) << "cube created";
 
 						return cube;
 					}
@@ -296,7 +296,7 @@ namespace seri
 
 						polygon->GetDrawer().setDataBuffer(seri::aux::Index::position, positions);
 
-						LOGGER(info, "polygon created");
+						LOGGER(info) << "polygon created";
 
 						return polygon;
 					}

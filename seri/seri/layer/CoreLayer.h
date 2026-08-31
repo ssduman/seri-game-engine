@@ -21,6 +21,7 @@
 #include "seri/system/TransformSystem.h"
 #include "seri/system/MeshRendererSystem.h"
 #include "seri/draw/DebugDraw.h"
+#include "seri/logging/Logger.h"
 
 namespace seri
 {
@@ -30,6 +31,10 @@ namespace seri
 		CoreLayer() : LayerBase("CoreLayer")
 		{
 			srand(static_cast<unsigned int>(time(0)));
+
+			LoggerConfig loggerConfig;
+			loggerConfig.level = LogLevel::info;
+			Logger::Init(loggerConfig);
 
 			WindowManager::Instance()->Init({ /*title*/ "Seri Game Engine - Editor", /*fullscreen*/ false, /*w*/ 1280, /*h*/ 720 });
 			RenderingManager::Instance()->Init(WindowManager::Instance(), RenderingProperties{});
@@ -101,7 +106,10 @@ namespace seri
 			Application::SetTargetFrameRate(60);
 		}
 
-		~CoreLayer() override = default;
+		~CoreLayer() override
+		{
+			Logger::Shutdown();
+		}
 
 		void PreUpdate() override
 		{

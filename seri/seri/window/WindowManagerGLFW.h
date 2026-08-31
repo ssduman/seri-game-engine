@@ -21,7 +21,7 @@ namespace seri
 			glfwDestroyWindow(_window);
 			glfwTerminate();
 
-			LOGGER(info, "[window] glfw window manager destroyed and terminated successfully");
+			LOGGER(info) << "[window] glfw window manager destroyed and terminated successfully";
 		}
 
 		void Init(WindowProperties windowProperties) override
@@ -40,7 +40,7 @@ namespace seri
 
 			_initialized = true;
 
-			LOGGER(info, "[window] glfw window manager created successfully");
+			LOGGER(info) << "[window] glfw window manager created successfully";
 		}
 
 		double GetTime() override
@@ -72,7 +72,7 @@ namespace seri
 					glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 					break;
 				default:
-					LOGGER(info, "[window] unexpected cursor mode");
+					LOGGER(info) << "[window] unexpected cursor mode";
 					break;
 			}
 		}
@@ -171,7 +171,7 @@ namespace seri
 				throw std::runtime_error("[window] glfw init error");
 			}
 
-			LOGGER(info, "[window] gflw version '" << glfwGetVersionString() << "' init succeeded");
+			LOGGER(info) << "[window] gflw version '" << glfwGetVersionString() << "' init succeeded";
 		}
 
 		void CreateWindowGLFW()
@@ -201,7 +201,7 @@ namespace seri
 				throw std::runtime_error("[window] glfw window creating error");
 			}
 
-			LOGGER(info, "[window] glfw window created");
+			LOGGER(info) << "[window] glfw window created";
 		}
 
 		void SetWindowEventCallbacks()
@@ -219,7 +219,7 @@ namespace seri
 
 						if (keyEnum == KeyCode::unknown)
 						{
-							//LOGGER(info, "[window] glfw event: key: unexpected key type");
+							//LOGGER(info) << "[window] glfw event: key: unexpected key type";
 							return;
 						}
 
@@ -353,7 +353,7 @@ namespace seri
 				{
 					if (auto windowManager = static_cast<WindowManagerGLFW*>(glfwGetWindowUserPointer(window)))
 					{
-						//LOGGER(info, "[window] window new position: " << xpos << ", " << ypos);
+						//LOGGER(info) << "[window] window new position: " << xpos << ", " << ypos;
 					}
 				}
 			);
@@ -363,7 +363,7 @@ namespace seri
 				{
 					if (auto windowManager = static_cast<WindowManagerGLFW*>(glfwGetWindowUserPointer(window)))
 					{
-						//LOGGER(info, "[window] window new size: " << width << ", " << height);
+						//LOGGER(info) << "[window] window new size: " << width << ", " << height;
 					}
 				}
 			);
@@ -373,7 +373,7 @@ namespace seri
 				{
 					if (auto windowManager = static_cast<WindowManagerGLFW*>(glfwGetWindowUserPointer(window)))
 					{
-						//LOGGER(info, "[window] window refresh");
+						//LOGGER(info) << "[window] window refresh";
 					}
 				}
 			);
@@ -383,7 +383,7 @@ namespace seri
 				{
 					if (auto windowManager = static_cast<WindowManagerGLFW*>(glfwGetWindowUserPointer(window)))
 					{
-						//LOGGER(info, "[window] window focus state: " << (focused ? "focused" : "not focused"));
+						//LOGGER(info) << "[window] window focus state: " << (focused ? "focused" : "not focused");
 					}
 				}
 			);
@@ -393,7 +393,7 @@ namespace seri
 				{
 					if (auto windowManager = static_cast<WindowManagerGLFW*>(glfwGetWindowUserPointer(window)))
 					{
-						LOGGER(info, "[window] window iconify state: " << (iconified ? "iconified" : "not iconified"));
+						LOGGER(info) << "[window] window iconify state: " << (iconified ? "iconified" : "not iconified");
 					}
 				}
 			);
@@ -403,7 +403,7 @@ namespace seri
 				{
 					if (auto windowManager = static_cast<WindowManagerGLFW*>(glfwGetWindowUserPointer(window)))
 					{
-						LOGGER(info, "[window] window maximize state: " << (maximized ? "maximized" : "not maximized"));
+						LOGGER(info) << "[window] window maximize state: " << (maximized ? "maximized" : "not maximized");
 					}
 				}
 			);
@@ -413,7 +413,7 @@ namespace seri
 				{
 					if (auto windowManager = static_cast<WindowManagerGLFW*>(glfwGetWindowUserPointer(window)))
 					{
-						LOGGER(info, "[window] window new scale: " << xscale << ", " << yscale);
+						LOGGER(info) << "[window] window new scale: " << xscale << ", " << yscale;
 					}
 				}
 			);
@@ -422,7 +422,7 @@ namespace seri
 			glfwSetErrorCallback(
 				[](int error, const char* description)
 				{
-					LOGGER(error, "[window] glfw error " << error << ": " << description);
+					LOGGER(error) << "[window] glfw error " << error << ": " << description;
 				}
 			);
 		}
