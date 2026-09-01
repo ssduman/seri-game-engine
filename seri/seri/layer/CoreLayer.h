@@ -11,7 +11,6 @@
 #include "seri/scene/SceneManager.h"
 #include "seri/shader/ShaderLibrary.h"
 #include "seri/rendering/render/RenderingManager.h"
-#include "seri/behaviour/BehaviourManager.h"
 #include "seri/texture/Skybox.h"
 #include "seri/camera/EditorCamera.h"
 #include "seri/event/EventCallback.h"
@@ -46,7 +45,6 @@ namespace seri
 			Application::Init();
 			Graphic::Init();
 			InputManager::Init();
-			BehaviourManager::Init();
 			font::FontManager::Init("assets/fonts/");
 			sound::SoundManager::Init("assets/sounds/");
 			scene::SceneManager::Init();
@@ -116,10 +114,9 @@ namespace seri
 		void PreUpdate() override
 		{
 			Application::SetFrameBegin();
-		}
 
-		void Update() override
-		{
+			TimeWrapper::UpdateTime(WindowManager::GetTime());
+
 			RenderingManager::Begin();
 
 			RenderingManager::GetEditorRT()->Bind();
@@ -130,11 +127,13 @@ namespace seri
 			RenderingManager::ClearColor();
 			RenderingManager::Clear();
 
-			TimeWrapper::UpdateTime(WindowManager::GetTime());
-			float deltaTime = TimeWrapper::GetDeltaTime();
-
 			Graphic::GetCameraOrtho()->Update();
 			Graphic::GetCameraPerspective()->Update();
+		}
+
+		void Update() override
+		{
+			float deltaTime = TimeWrapper::GetDeltaTime();
 
 			asset::AssetManager::Update();
 			scene::SceneManager::Update();
@@ -148,11 +147,12 @@ namespace seri
 
 			scripting::ScriptingManager::Update();
 
-			BehaviourManager::UpdateBehaviours();
-
 			debug::DebugDraw::Render(Graphic::GetCameraPerspective());
 			debug::DebugDraw::EndFrame();
+		}
 
+		void OnRender() override
+		{
 			RenderingManager::Execute();
 
 			RenderingManager::End();
@@ -162,7 +162,6 @@ namespace seri
 		{
 			InputManager::Reset();
 
-			RenderingManager::GetEditorRT()->Bind();
 			WindowManager::PollEvents();
 			WindowManager::SwapBuffers();
 

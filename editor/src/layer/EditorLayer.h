@@ -24,18 +24,10 @@ namespace seri::editor
 
 		~EditorLayer() override = default;
 
-		void PreUpdate() override
-		{
-		}
-
-		void Update() override
+		void OnRender() override
 		{
 			editorGUI->Update();
 			editorGUI->Render();
-		}
-
-		void PostUpdate() override
-		{
 		}
 
 	private:

@@ -27,8 +27,6 @@
 #include "seri/graphic/Graphic.h"
 #include "seri/graphic/Material.h"
 
-#include "seri/behaviour/BehaviourManager.h"
-
 #include "seri/script/ScriptBase.h"
 #include "seri/script/ScriptRegistry.h"
 #include "seri/script/ScriptSystem.h"
