@@ -1,13 +1,13 @@
 #pragma once
 
-#include "seri/core/Entity.h"
+#include "seri/shape/ShapeEntity.h"
 
 namespace seri
 {
-	class Circle : public Entity
+	class Circle : public ShapeEntity
 	{
 	public:
-		Circle(std::shared_ptr<CameraBase> camera) : Entity(camera)
+		Circle(std::shared_ptr<CameraBase> camera) : ShapeEntity(camera)
 		{
 			_entityType = EntityType::circle;
 		}

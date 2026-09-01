@@ -1,13 +1,13 @@
 #pragma once
 
-#include "seri/core/Entity.h"
+#include "seri/shape/ShapeEntity.h"
 
 namespace seri
 {
-	class Triangle : public Entity
+	class Triangle : public ShapeEntity
 	{
 	public:
-		Triangle(std::shared_ptr<CameraBase> camera) : Entity(camera)
+		Triangle(std::shared_ptr<CameraBase> camera) : ShapeEntity(camera)
 		{
 			_entityType = EntityType::triangle;
 		}

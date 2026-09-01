@@ -1,77 +1,84 @@
 #pragma once
 
-#include "seri/util/Util.h"
-#include "seri/core/Object.h"
-#include "seri/core/EntityType.h"
-#include "seri/texture/Color.h"
-#include "seri/texture/TextureBase.h"
-#include "seri/shader/ShaderLibrary.h"
-#include "seri/math/Transform.h"
-#include "seri/camera/CameraBase.h"
-#include "seri/rendering/render/RenderingManager.h"
+#include <entt/entt.hpp>
 
-#include <memory>
-#include <string>
-#include <vector>
+#include <utility>
 
 namespace seri
 {
-	class Entity : public Object
+	class Entity
 	{
 	public:
-		Entity() = delete;
+		Entity() = default;
 
-		Entity(std::shared_ptr<CameraBase>& camera) : _camera(camera)
+		Entity(entt::entity handle, entt::registry* registry) : _handle(handle), _registry(registry) {}
+
+		template<typename T>
+		bool Has() const
 		{
-			_shader = ShaderBase::Create();
-			_texture = TextureBase::Create();
+			return IsValid() && _registry->any_of<T>(_handle);
 		}
 
-		Entity(Entity&& other) = default;
-
-		Entity(const Entity& other) = delete;
-
-		Entity& operator=(Entity&& other) = default;
-
-		Entity& operator=(const Entity& other) = delete;
-
-		~Entity() override
+		template<typename T>
+		T& Get() const
 		{
+			return _registry->get<T>(_handle);
 		}
 
-		void Init() override
+		template<typename T>
+		T* TryGet() const
 		{
-			ShaderLibrary::SetMVP(_shader, _camera);
+			return IsValid() ? _registry->try_get<T>(_handle) : nullptr;
 		}
 
-		void Update() override
+		template<typename T, typename... Args>
+		T& Add(Args&&... args) const
 		{
-			ShaderLibrary::SetView(_shader, _camera->GetView());
-			ShaderLibrary::SetProjection(_shader, _camera->GetProjection());
+			return _registry->emplace_or_replace<T>(_handle, std::forward<Args>(args)...);
 		}
 
-		std::shared_ptr<ShaderBase>& GetShader()
+		template<typename T>
+		void Remove() const
 		{
-			return _shader;
+			if (Has<T>())
+			{
+				_registry->remove<T>(_handle);
+			}
 		}
 
-		std::shared_ptr<TextureBase>& GetTexture()
+		bool IsValid() const
 		{
-			return _texture;
+			return _registry != nullptr && _registry->valid(_handle);
 		}
 
-		Transform& GetTransform()
+		entt::entity GetHandle() const
 		{
-			return _transform;
+			return _handle;
 		}
 
-	protected:
-		std::shared_ptr<CameraBase> _camera;
-		std::shared_ptr<ShaderBase> _shader;
-		std::shared_ptr<TextureBase> _texture;
-		
-		Transform _transform;
-		EntityType _entityType{ EntityType::unknown };
+		entt::registry* GetRegistry() const
+		{
+			return _registry;
+		}
+
+		operator entt::entity() const
+		{
+			return _handle;
+		}
+
+		explicit operator bool() const
+		{
+			return IsValid();
+		}
+
+		bool operator==(const Entity& other) const
+		{
+			return _handle == other._handle && _registry == other._registry;
+		}
+
+	private:
+		entt::entity _handle{ entt::null };
+		entt::registry* _registry{ nullptr };
 
 	};
 }

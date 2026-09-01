@@ -27,11 +27,11 @@ namespace seri
 		{
 			if (std::find(_layers.begin(), _layers.end(), layer) == _layers.end())
 			{
-				_layers.emplace_back(layer);
+				_layers.emplace_back(std::move(layer));
 			}
 		}
 
-		void DeleteLayer(std::shared_ptr<LayerBase> layer)
+		void DeleteLayer(const std::shared_ptr<LayerBase>& layer)
 		{
 			auto it = std::find(_layers.begin(), _layers.end(), layer);
 			if (it != _layers.end())

@@ -26,6 +26,7 @@ namespace seri::scene
 		RegisterComponent<seri::component::DirectionalLightComponent>();
 		RegisterComponent<seri::component::SpotLightComponent>();
 		RegisterComponent<seri::component::PointLightComponent>();
+		RegisterComponent<seri::component::ScriptComponent>();
 
 		SceneManager::GetInstance()._activeScene = std::make_shared<Scene>();
 		SceneManager::GetInstance()._activeScene->Init();

@@ -6,6 +6,9 @@
 #include <entt/entt.hpp>
 #include <yaml-cpp/yaml.h>
 
+#include <string>
+#include <vector>
+
 namespace seri::component
 {
 	struct IDComponent
@@ -17,7 +20,7 @@ namespace seri::component
 		std::string name{ "" };
 
 		static IDComponent Deserialize(const YAML::Node& node);
-		static YAML::Node Serialize(IDComponent component);
+		static YAML::Node Serialize(const IDComponent& component);
 	};
 
 	struct TransformComponent
@@ -32,7 +35,7 @@ namespace seri::component
 		glm::mat4 worldMatrix{ 1.0f };
 
 		static TransformComponent Deserialize(const YAML::Node& node);
-		static YAML::Node Serialize(TransformComponent component);
+		static YAML::Node Serialize(const TransformComponent& component);
 	};
 
 	struct SceneComponent
@@ -43,7 +46,7 @@ namespace seri::component
 		bool isActive{ true };
 
 		static SceneComponent Deserialize(const YAML::Node& node);
-		static YAML::Node Serialize(SceneComponent component);
+		static YAML::Node Serialize(const SceneComponent& component);
 	};
 
 	struct MeshComponent
@@ -53,7 +56,7 @@ namespace seri::component
 		uint64_t meshAssetId{ 0 };
 
 		static MeshComponent Deserialize(const YAML::Node& node);
-		static YAML::Node Serialize(MeshComponent component);
+		static YAML::Node Serialize(const MeshComponent& component);
 	};
 
 	struct MeshRendererComponent
@@ -64,7 +67,7 @@ namespace seri::component
 		bool castShadow = true;
 
 		static MeshRendererComponent Deserialize(const YAML::Node& node);
-		static YAML::Node Serialize(MeshRendererComponent component);
+		static YAML::Node Serialize(const MeshRendererComponent& component);
 	};
 
 	struct DirectionalLightComponent
@@ -75,7 +78,7 @@ namespace seri::component
 		glm::vec3 color{ 1.0f, 1.0f, 1.0f };
 
 		static DirectionalLightComponent Deserialize(const YAML::Node& node);
-		static YAML::Node Serialize(DirectionalLightComponent component);
+		static YAML::Node Serialize(const DirectionalLightComponent& component);
 	};
 
 	struct SpotLightComponent
@@ -93,7 +96,7 @@ namespace seri::component
 		float quadratic = 0.032f;
 
 		static SpotLightComponent Deserialize(const YAML::Node& node);
-		static YAML::Node Serialize(SpotLightComponent component);
+		static YAML::Node Serialize(const SpotLightComponent& component);
 	};
 
 	struct PointLightComponent
@@ -109,7 +112,24 @@ namespace seri::component
 		float quadratic = 0.032f;
 
 		static PointLightComponent Deserialize(const YAML::Node& node);
-		static YAML::Node Serialize(PointLightComponent component);
+		static YAML::Node Serialize(const PointLightComponent& component);
+	};
+
+	struct ScriptComponent
+	{
+		static constexpr std::string_view compName = "ScriptComponent";
+
+		struct Entry
+		{
+			std::string name{ "" };
+			bool enabled{ true };
+		};
+
+		std::vector<Entry> entries{};
+		bool dirty{ true };
+
+		static ScriptComponent Deserialize(const YAML::Node& node);
+		static YAML::Node Serialize(const ScriptComponent& component);
 	};
 
 }

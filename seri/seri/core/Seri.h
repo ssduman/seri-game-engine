@@ -4,6 +4,7 @@
 
 #include "seri/core/Core.h"
 #include "seri/core/Object.h"
+#include "seri/core/Entity.h"
 #include "seri/core/IRunner.h"
 #include "seri/core/Application.h"
 #include "seri/core/TimeWrapper.h"
@@ -27,6 +28,10 @@
 #include "seri/graphic/Material.h"
 
 #include "seri/behaviour/BehaviourManager.h"
+
+#include "seri/script/ScriptBase.h"
+#include "seri/script/ScriptRegistry.h"
+#include "seri/script/ScriptSystem.h"
 
 #include "seri/logging/Logger.h"
 

@@ -798,6 +798,82 @@ namespace seri::editor
 			}
 		}
 
+		if (auto* scriptComp = registry.try_get<seri::component::ScriptComponent>(entity))
+		{
+			ScopedChild scopedChild("##ScriptComponent", ImVec2(0, 0), childFlags);
+
+			ImGui::TextUnformatted("Script Component");
+			ImGui::Separator();
+
+			bool changed = false;
+			bool rebuild = false;
+			int removeIndex = -1;
+
+			for (size_t i = 0; i < scriptComp->entries.size(); i++)
+			{
+				auto& entry = scriptComp->entries[i];
+
+				ImGui::PushID(static_cast<int>(i));
+
+				changed |= ImGui::Checkbox("##enabled", &entry.enabled);
+				ImGui::SameLine();
+
+				const bool known = seri::script::ScriptRegistry::Contains(entry.name);
+				if (!known)
+				{
+					ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.9f, 0.4f, 0.4f, 1.0f));
+				}
+				ImGui::AlignTextToFramePadding();
+				ImGui::TextUnformatted(entry.name.empty() ? "<none>" : entry.name.c_str());
+				if (!known)
+				{
+					ImGui::PopStyleColor();
+					if (ImGui::IsItemHovered())
+					{
+						ImGui::SetTooltip("script is not registered");
+					}
+				}
+
+				ImGui::SameLine(ImGui::GetContentRegionAvail().x - 10.0f);
+				if (ImGui::SmallButton("X"))
+				{
+					removeIndex = static_cast<int>(i);
+				}
+
+				ImGui::PopID();
+			}
+
+			if (removeIndex >= 0)
+			{
+				scriptComp->entries.erase(scriptComp->entries.begin() + removeIndex);
+				rebuild = true;
+			}
+
+			ImGui::Spacing();
+
+			if (ImGui::Button("Add Script", ImVec2(-1, 0)))
+			{
+				ImGui::OpenPopup("ScriptPickerPopup");
+			}
+
+			std::string selection;
+			if (ShowEditorScriptPickerPopup(selection))
+			{
+				scriptComp->entries.push_back({ selection, true });
+				rebuild = true;
+			}
+
+			if (rebuild)
+			{
+				scriptComp->dirty = true;
+			}
+
+			if (changed || rebuild)
+			{
+				scene->SetAsDirty();
+			}
+		}
+
 		ImGui::NewLine();
 
 		if (ImGui::Button("Add Component", ImVec2(-1, 0)))
@@ -1099,6 +1175,56 @@ namespace seri::editor
 
 			ImGui::EndPopup();
 		}
+	}
+
+	bool EditorGUI::ShowEditorScriptPickerPopup(std::string& selection)
+	{
+		static char search[128] = "";
+
+		selection.clear();
+
+		if (!ImGui::BeginPopup("ScriptPickerPopup"))
+		{
+			return false;
+		}
+
+		ImGui::TextUnformatted("Add Script");
+		ImGui::Separator();
+
+		ImGui::InputTextWithHint("##Search", "Search scripts...", search, IM_ARRAYSIZE(search));
+
+		ImGui::Spacing();
+
+		bool picked = false;
+
+		for (const auto& name : seri::script::ScriptRegistry::GetNames())
+		{
+			if (search[0] != '\0' && name.find(search) == std::string::npos)
+			{
+				continue;
+			}
+
+			ImGui::PushID(name.c_str());
+
+			if (ImGui::Selectable(name.c_str()))
+			{
+				selection = name;
+				picked = true;
+				ImGui::CloseCurrentPopup();
+				search[0] = '\0';
+			}
+
+			ImGui::PopID();
+
+			if (picked)
+			{
+				break;
+			}
+		}
+
+		ImGui::EndPopup();
+
+		return picked;
 	}
 
 	bool EditorGUI::ShowEditorAssetPickerPopup(seri::asset::AssetType type, bool& selected, uint64_t& selection)

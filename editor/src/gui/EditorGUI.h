@@ -118,6 +118,7 @@ namespace seri::editor
 		void ShowEditorProjectAssetGrid();
 
 		void ShowEditorComponentPickerPopup();
+		bool ShowEditorScriptPickerPopup(std::string& selection);
 		bool ShowEditorAssetPickerPopup(seri::asset::AssetType type, bool& selected, uint64_t& selection);
 
 		void ShowEditorImage(std::shared_ptr<seri::TextureBase>& texture, float size);

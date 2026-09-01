@@ -20,6 +20,7 @@
 #include "seri/system/LightSystem.h"
 #include "seri/system/TransformSystem.h"
 #include "seri/system/MeshRendererSystem.h"
+#include "seri/script/ScriptSystem.h"
 #include "seri/draw/DebugDraw.h"
 #include "seri/logging/Logger.h"
 
@@ -51,6 +52,7 @@ namespace seri
 			scene::SceneManager::Init();
 			asset::AssetManager::StartAssetWatcher();
 			scripting::ScriptingManager::Init();
+			script::ScriptSystem::Init();
 			debug::DebugDraw::Init();
 
 			WindowManager::Instance()->AddEventCallback(event::MakeEventCallback(
@@ -129,6 +131,7 @@ namespace seri
 			RenderingManager::Clear();
 
 			TimeWrapper::UpdateTime(WindowManager::GetTime());
+			float deltaTime = TimeWrapper::GetDeltaTime();
 
 			Graphic::GetCameraOrtho()->Update();
 			Graphic::GetCameraPerspective()->Update();
@@ -136,9 +139,13 @@ namespace seri
 			asset::AssetManager::Update();
 			scene::SceneManager::Update();
 
+			script::ScriptSystem::Update(deltaTime);
+			script::ScriptSystem::LateUpdate(deltaTime);
+
 			system::TransformSystem::Update();
-			system::MeshRendererSystem::Update();
 			system::LightSystem::Update();
+			system::MeshRendererSystem::Update();
+
 			scripting::ScriptingManager::Update();
 
 			BehaviourManager::UpdateBehaviours();

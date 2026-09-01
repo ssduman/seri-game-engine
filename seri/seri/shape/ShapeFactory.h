@@ -19,7 +19,7 @@ namespace seri
 	class ShapeFactory
 	{
 	public:
-		static std::shared_ptr<seri::Entity> CreateShape(const std::shared_ptr<seri::CameraBase>& camera, seri::EntityType entityType)
+		static std::shared_ptr<seri::ShapeEntity> CreateShape(const std::shared_ptr<seri::CameraBase>& camera, seri::EntityType entityType)
 		{
 			static auto randomColor = []() -> glm::vec4 { return glm::linearRand(glm::vec4{ 0.0f, 0.0f, 0.0f, 1.0f }, glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f }); };
 

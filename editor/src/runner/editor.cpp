@@ -9,6 +9,7 @@ int main(int argc, char* argv[])
 	catch (const std::exception& ex)
 	{
 		LOGGER(error) << "exception occurred: " << ex.what();
+		return -1;
 	}
 
 	return 0;

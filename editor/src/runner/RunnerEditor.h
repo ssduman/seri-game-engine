@@ -23,8 +23,8 @@ namespace seri::editor
 		void operator()(int argc, char* argv[])
 		{
 			seri::LayerManager layerManager{};
-			layerManager.AddLayer(std::make_shared<seri::CoreLayer>());
-			layerManager.AddLayer(std::make_shared<seri::editor::EditorLayer>());
+			layerManager.AddLayer(std::move(std::make_shared<seri::CoreLayer>()));
+			layerManager.AddLayer(std::move(std::make_shared<seri::editor::EditorLayer>()));
 
 			//BasicBehaviour basicBehaviour{};
 			SimpleBehaviour simpleBehaviour{};
