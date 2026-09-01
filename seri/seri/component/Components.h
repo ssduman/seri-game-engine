@@ -123,6 +123,7 @@ namespace seri::component
 		{
 			std::string name{ "" };
 			bool enabled{ true };
+			YAML::Node fields{};
 		};
 
 		std::vector<Entry> entries{};

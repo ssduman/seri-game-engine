@@ -31,6 +31,82 @@ namespace seri::script
 
 			return false;
 		}
+
+		void ApplyFieldsTo(const component::ScriptComponent::Entry& entry, ScriptBase& script)
+		{
+			if (!entry.fields.IsMap())
+			{
+				return;
+			}
+
+			std::vector<ScriptField> fields = script.GetSerializedFields();
+
+			for (const ScriptField& field : fields)
+			{
+				const YAML::Node& node = entry.fields[field.name];
+				if (!node || field.ptr == nullptr)
+				{
+					continue;
+				}
+
+				switch (field.type)
+				{
+					case ScriptField::Type::boolean:
+						*static_cast<bool*>(field.ptr) = node.as<bool>();
+						break;
+					case ScriptField::Type::integer:
+						*static_cast<int*>(field.ptr) = node.as<int>();
+						break;
+					case ScriptField::Type::floating:
+						*static_cast<float*>(field.ptr) = node.as<float>();
+						break;
+					case ScriptField::Type::vec3:
+					case ScriptField::Type::color3:
+						*static_cast<glm::vec3*>(field.ptr) = YAMLUtil::Vec3FromYAML(node);
+						break;
+					case ScriptField::Type::text:
+						*static_cast<std::string*>(field.ptr) = YAMLUtil::DeepCopyYAMLString(node);
+						break;
+				}
+			}
+		}
+
+		void OverrideFieldsFrom(component::ScriptComponent::Entry& entry, ScriptBase& script)
+		{
+			std::vector<ScriptField> fields = script.GetSerializedFields();
+
+			YAML::Node node;
+
+			for (const ScriptField& field : fields)
+			{
+				if (field.ptr == nullptr)
+				{
+					continue;
+				}
+
+				switch (field.type)
+				{
+					case ScriptField::Type::boolean:
+						node[field.name] = *static_cast<bool*>(field.ptr);
+						break;
+					case ScriptField::Type::integer:
+						node[field.name] = *static_cast<int*>(field.ptr);
+						break;
+					case ScriptField::Type::floating:
+						node[field.name] = *static_cast<float*>(field.ptr);
+						break;
+					case ScriptField::Type::vec3:
+					case ScriptField::Type::color3:
+						node[field.name] = YAMLUtil::Vec3ToYAML(*static_cast<glm::vec3*>(field.ptr));
+						break;
+					case ScriptField::Type::text:
+						node[field.name] = *static_cast<std::string*>(field.ptr);
+						break;
+				}
+			}
+
+			entry.fields = node;
+		}
 	}
 
 	void ScriptSystem::Init()
@@ -204,6 +280,7 @@ namespace seri::script
 			{
 				instance.script->entity = handle;
 				SafeCall(instance, "OnCreate", [&]() { instance.script->OnCreate(); });
+				ApplyFieldsTo(entry, *instance.script);
 			}
 
 			instances.emplace_back(std::move(instance));
@@ -262,5 +339,48 @@ namespace seri::script
 				LOGGER(error) << fmt::format("[script] deferred command threw: {}", ex.what());
 			}
 		}
+	}
+
+	void ScriptSystem::OverrideFields(entt::entity entity, size_t index)
+	{
+		auto it = _instances.find(entity);
+		if (it == _instances.end() || index >= it->second.size())
+		{
+			return;
+		}
+
+		ScriptInstance& instance = it->second[index];
+		if (!instance.script || instance.faulted)
+		{
+			return;
+		}
+
+		auto& registry = scene::SceneManager::GetRegistry();
+		auto* scriptComponent = registry.try_get<component::ScriptComponent>(entity);
+		if (!scriptComponent || index >= scriptComponent->entries.size())
+		{
+			return;
+		}
+
+		OverrideFieldsFrom(scriptComponent->entries[index], *instance.script);
+	}
+
+	std::vector<ScriptField> ScriptSystem::GetSerializedFields(entt::entity entity, size_t index)
+	{
+		std::vector<ScriptField> fields{};
+
+		auto it = _instances.find(entity);
+		if (it == _instances.end() || index >= it->second.size())
+		{
+			return {};
+		}
+
+		ScriptInstance& instance = it->second[index];
+		if (!instance.script || instance.faulted)
+		{
+			return {};
+		}
+
+		return instance.script->GetSerializedFields();
 	}
 }

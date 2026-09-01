@@ -2,8 +2,28 @@
 
 #include "seri/core/Entity.h"
 
+#include <string>
+#include <vector>
+
 namespace seri::script
 {
+	struct ScriptField
+	{
+		enum class Type
+		{
+			boolean,
+			integer,
+			floating,
+			vec3,
+			color3,
+			text,
+		};
+
+		std::string name{ "" };
+		Type type{ Type::floating };
+		void* ptr{ nullptr };
+	};
+
 	class ScriptBase
 	{
 	public:
@@ -16,6 +36,8 @@ namespace seri::script
 		virtual void OnEnable() {}
 		virtual void OnDisable() {}
 		virtual void OnDestroy() {}
+
+		virtual std::vector<ScriptField> GetSerializedFields() { return {}; }
 
 		seri::Entity entity{};
 

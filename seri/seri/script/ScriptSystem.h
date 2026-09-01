@@ -35,6 +35,9 @@ namespace seri::script
 		static void SetEnabled(bool enabled);
 		static bool IsEnabled();
 
+		static void OverrideFields(entt::entity entity, size_t index);
+		static std::vector<ScriptField> GetSerializedFields(entt::entity entity, size_t index);
+
 	private:
 		static void OnScriptComponentDestroyed(entt::registry& registry, entt::entity entity);
 

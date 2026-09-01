@@ -19,8 +19,17 @@ namespace seri::script
 			transform->rotation.y += _speed * deltaTime;
 		}
 
+		std::vector<ScriptField> GetSerializedFields() override
+		{
+			return {
+				{ "Speed", ScriptField::Type::floating, &_speed },
+				{ "Label", ScriptField::Type::text, &_label },
+			};
+		}
+
 	private:
 		float _speed{ 45.0f };
+		std::string _label{ "rotator" };
 
 	};
 }

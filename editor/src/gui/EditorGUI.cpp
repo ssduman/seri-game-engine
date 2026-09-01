@@ -840,6 +840,48 @@ namespace seri::editor
 					removeIndex = static_cast<int>(i);
 				}
 
+				ImGui::Indent();
+
+				for (const auto& field : seri::script::ScriptSystem::GetSerializedFields(entity, i))
+				{
+					bool fieldChanged = false;
+
+					ImGui::PushID(field.name.c_str());
+					ImGui::SetNextItemWidth(-1);
+
+					switch (field.type)
+					{
+						case seri::script::ScriptField::Type::boolean:
+							fieldChanged = DrawBool(field.name.c_str(), *static_cast<bool*>(field.ptr));
+							break;
+						case seri::script::ScriptField::Type::integer:
+							fieldChanged = DrawInt(field.name.c_str(), *static_cast<int*>(field.ptr));
+							break;
+						case seri::script::ScriptField::Type::floating:
+							fieldChanged = DrawFloat(field.name.c_str(), *static_cast<float*>(field.ptr));
+							break;
+						case seri::script::ScriptField::Type::vec3:
+							fieldChanged = DrawVec3(field.name.c_str(), *static_cast<glm::vec3*>(field.ptr), 0.1f);
+							break;
+						case seri::script::ScriptField::Type::color3:
+							fieldChanged = DrawColorVec3(field.name.c_str(), *static_cast<glm::vec3*>(field.ptr), 0.05f);
+							break;
+						case seri::script::ScriptField::Type::text:
+							fieldChanged = DrawTextInput(field.name.c_str(), *static_cast<std::string*>(field.ptr));
+							break;
+					}
+
+					ImGui::PopID();
+
+					if (fieldChanged)
+					{
+						seri::script::ScriptSystem::OverrideFields(entity, i);
+						changed = true;
+					}
+				}
+
+				ImGui::Unindent();
+
 				ImGui::PopID();
 			}
 

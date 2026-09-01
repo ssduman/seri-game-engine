@@ -153,6 +153,10 @@ namespace seri::component
 				{
 					entry.enabled = YAMLUtil::GetType<bool>(scriptNode["Enabled"]);
 				}
+				if (scriptNode["Fields"] && scriptNode["Fields"].IsMap())
+				{
+					entry.fields = YAML::Clone(scriptNode["Fields"]);
+				}
 
 				component.entries.emplace_back(std::move(entry));
 			}
@@ -168,6 +172,10 @@ namespace seri::component
 			YAML::Node scriptNode;
 			scriptNode["Name"] = entry.name;
 			scriptNode["Enabled"] = entry.enabled;
+			if (entry.fields.IsMap() && entry.fields.size() > 0)
+			{
+				scriptNode["Fields"] = entry.fields;
+			}
 			scriptsNode.push_back(scriptNode);
 		}
 
