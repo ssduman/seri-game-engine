@@ -3,6 +3,7 @@
 #include <seri/core/Seri.h>
 
 #include <imgui.h>
+#include <imgui_internal.h>
 #include <imgui_stdlib.h>
 #include <imgui_impl_opengl3.h>
 #include <imgui_freetype.h>
@@ -127,6 +128,7 @@ namespace seri::editor
 		void ShowEditorHierarchyAddMenu(const std::shared_ptr<seri::scene::Scene>& activeScene, uint64_t parentId);
 
 		void DrawEditorLayout();
+		void BuildDefaultDockLayout(ImGuiID dockspaceId);
 
 		bool DrawBool(const char* label, bool& value);
 		bool DrawInt(const char* label, int& value, float speed = 1.0f, int min = 0, int max = 0);

@@ -6,6 +6,9 @@
 # vcpkg
 vcpkg_installed/
 
+# ini
+imgui.ini
+
 # Solution files
 *.sln
 *.slnx

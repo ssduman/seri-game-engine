@@ -1457,6 +1457,30 @@ namespace seri::editor
 		ImGui::Columns(1);
 	}
 
+	void EditorGUI::BuildDefaultDockLayout(ImGuiID dockspaceId)
+	{
+		ImGui::DockBuilderRemoveNode(dockspaceId);
+		ImGui::DockBuilderAddNode(dockspaceId, ImGuiDockNodeFlags_DockSpace);
+		ImGui::DockBuilderSetNodeSize(dockspaceId, ImGui::GetMainViewport()->WorkSize);
+
+		ImGuiID dockCenter = dockspaceId;
+		ImGuiID dockLeft = ImGui::DockBuilderSplitNode(dockCenter, ImGuiDir_Left, 0.15f, nullptr, &dockCenter);
+		ImGuiID dockBottom = ImGui::DockBuilderSplitNode(dockCenter, ImGuiDir_Down, 0.35f, nullptr, &dockCenter);
+		ImGuiID dockRight = ImGui::DockBuilderSplitNode(dockCenter, ImGuiDir_Right, 0.30f, nullptr, &dockCenter);
+		ImGuiID dockBottomRight = ImGui::DockBuilderSplitNode(dockBottom, ImGuiDir_Right, 0.30f, nullptr, &dockBottom);
+
+		ImGui::DockBuilderDockWindow("Hierarchy", dockLeft);
+		ImGui::DockBuilderDockWindow("Game", dockCenter);
+		ImGui::DockBuilderDockWindow("Scene", dockCenter);
+		ImGui::DockBuilderDockWindow("Inspector", dockRight);
+		ImGui::DockBuilderDockWindow("Project", dockBottom);
+		ImGui::DockBuilderDockWindow("Console", dockBottomRight);
+
+		ImGui::DockBuilderFinish(dockspaceId);
+
+		LOGGER(info) << "[gui] default dock layout built";
+	}
+
 	void EditorGUI::DrawEditorLayout()
 	{
 		static bool showMainMenu = true;
@@ -1487,6 +1511,12 @@ namespace seri::editor
 		);
 
 		ImGuiID dockspace_id = ImGui::GetID("MainDockSpace");
+
+		if (ImGui::DockBuilderGetNode(dockspace_id) == nullptr)
+		{
+			BuildDefaultDockLayout(dockspace_id);
+		}
+
 		ImGui::DockSpace(dockspace_id, ImVec2(0, 0), ImGuiDockNodeFlags_None);
 
 		if (ImGui::BeginMenuBar())
