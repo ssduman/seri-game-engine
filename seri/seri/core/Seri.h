@@ -48,6 +48,7 @@
 #include "seri/input/InputManager.h"
 
 #include "seri/event/IEvent.h"
+#include "seri/event/EventManager.h"
 #include "seri/event/EventDispatcher.h"
 
 #include "seri/window/WindowManager.h"

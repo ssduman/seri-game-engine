@@ -46,7 +46,7 @@ namespace seri::editor
 
 		~IUserEventData() override = default;
 
-		std::string ToString() override
+		std::string ToString() const override
 		{
 			return "IUserEventData";
 		}
@@ -60,7 +60,7 @@ namespace seri::editor
 
 		~UserGameStateEventData() override = default;
 
-		std::string ToString() override
+		std::string ToString() const override
 		{
 			std::stringstream ss;
 			ss << seri::event::ToString(eventType) << "/" << ::seri::editor::ToString(userEventType) << ": "

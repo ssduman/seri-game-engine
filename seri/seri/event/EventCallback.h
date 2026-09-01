@@ -3,6 +3,7 @@
 #include "seri/event/EventData.h"
 
 #include <memory>
+#include <utility>
 
 namespace seri::event
 {
@@ -13,7 +14,7 @@ namespace seri::event
 
 		virtual ~IEventCallback() = default;
 
-		virtual void FireEvent(const IEventData& data) = 0;
+		virtual bool FireEvent(const IEventData& data) = 0;
 
 	};
 
@@ -25,9 +26,9 @@ namespace seri::event
 
 		~EventCallback() override = default;
 
-		void FireEvent(const IEventData& data) override
+		bool FireEvent(const IEventData& data) override
 		{
-			_f(data);
+			return _f(data);
 		}
 
 	private:

@@ -16,7 +16,7 @@ namespace seri::event
 
 		virtual ~IEventData() {}
 
-		virtual std::string ToString() = 0;
+		virtual std::string ToString() const = 0;
 
 		EventType eventType = EventType::unknown;
 	};
@@ -31,7 +31,7 @@ namespace seri::event
 
 		~KeyEventData() override = default;
 
-		std::string ToString() override
+		std::string ToString() const override
 		{
 			std::stringstream modss;
 			for (auto mod : mods)
@@ -65,7 +65,7 @@ namespace seri::event
 
 		~CharacterEventData() override = default;
 
-		std::string ToString() override
+		std::string ToString() const override
 		{
 			std::stringstream ss;
 			ss << ::seri::event::ToString(eventType) << ": {"
@@ -87,7 +87,7 @@ namespace seri::event
 
 		~CharacterModsEventData() override = default;
 
-		std::string ToString() override
+		std::string ToString() const override
 		{
 			std::stringstream modss;
 			for (auto mod : mods)
@@ -118,7 +118,7 @@ namespace seri::event
 
 		~MouseEnterEventData() override = default;
 
-		std::string ToString() override
+		std::string ToString() const override
 		{
 			std::stringstream ss;
 			ss << ::seri::event::ToString(eventType) << ": {"
@@ -140,7 +140,7 @@ namespace seri::event
 
 		~MouseButtonEventData() override = default;
 
-		std::string ToString() override
+		std::string ToString() const override
 		{
 			std::stringstream ss;
 			ss << ::seri::event::ToString(eventType) << ": {"
@@ -166,7 +166,7 @@ namespace seri::event
 
 		~MouseScrollEventData() override = default;
 
-		std::string ToString() override
+		std::string ToString() const override
 		{
 			std::stringstream ss;
 			ss << ::seri::event::ToString(eventType) << ": {"
@@ -190,7 +190,7 @@ namespace seri::event
 
 		~MousePositionEventData() override = default;
 
-		std::string ToString() override
+		std::string ToString() const override
 		{
 			std::stringstream ss;
 			ss << ::seri::event::ToString(eventType) << ": {"
@@ -215,7 +215,7 @@ namespace seri::event
 
 		~WindowDropEventData() override = default;
 
-		std::string ToString() override
+		std::string ToString() const override
 		{
 			std::stringstream pathss;
 			for (auto& path : paths)
@@ -243,7 +243,7 @@ namespace seri::event
 
 		~WindowCloseEventData() override = default;
 
-		std::string ToString() override
+		std::string ToString() const override
 		{
 			std::stringstream ss;
 			ss << ::seri::event::ToString(eventType) << ": {"
@@ -263,7 +263,7 @@ namespace seri::event
 
 		~WindowResizeEventData() override = default;
 
-		std::string ToString() override
+		std::string ToString() const override
 		{
 			std::stringstream ss;
 			ss << ::seri::event::ToString(eventType) << ": {"
@@ -274,7 +274,7 @@ namespace seri::event
 			return ss.str();
 		}
 
-		double width;
-		double height;
+		int width;
+		int height;
 	};
 }

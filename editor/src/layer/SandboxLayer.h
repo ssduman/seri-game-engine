@@ -31,7 +31,7 @@ namespace seri::editor
 
 		~SandboxLayer() override = default;
 
-		void Update() override
+		void OnUpdate() override
 		{
 			if (runSystem)
 			{

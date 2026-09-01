@@ -2,7 +2,7 @@
 
 #include "seri/logging/Logger.h"
 #include "seri/event/EventData.h"
-#include "seri/event/EventCallback.h"
+#include "seri/event/EventManager.h"
 #include "seri/core/TimeWrapper.h"
 
 #include <memory>
@@ -96,20 +96,9 @@ namespace seri
 			return (float)GetWidth() / (float)GetHeight();
 		}
 
-		void FireEvent(const event::IEventData& data)
+		bool FireEvent(const event::IEventData& data)
 		{
-			for (const auto& _eventCallback : _eventCallbacks)
-			{
-				if (_eventCallback)
-				{
-					_eventCallback->FireEvent(data);
-				}
-			}
-		};
-
-		void AddEventCallback(std::shared_ptr<event::IEventCallback> eventCallback)
-		{
-			_eventCallbacks.emplace_back(std::move(eventCallback));
+			return event::EventManager::Fire(data);
 		}
 
 		void AddProcessEventDelegate(const ProcessEventDelegate& delegate)
@@ -127,8 +116,6 @@ namespace seri
 		WindowProperties _windowProperties;
 
 		bool _initialized{ false };
-
-		std::vector<std::shared_ptr<event::IEventCallback>> _eventCallbacks;
 
 		std::vector<ProcessEventDelegate> processEventDelegateList;
 

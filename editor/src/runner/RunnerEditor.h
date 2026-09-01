@@ -29,10 +29,10 @@ namespace seri::editor
 
 			while (!seri::WindowManager::GetWindowShouldClose())
 			{
-				layerManager.PreUpdate();
-				layerManager.Update();
+				layerManager.OnPreUpdate();
+				layerManager.OnUpdate();
 				layerManager.OnRender();
-				layerManager.PostUpdate();
+				layerManager.OnPostUpdate();
 			}
 
 			LOGGER(info) << "[editor] seri game engine - editor loop stopped";

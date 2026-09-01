@@ -13,10 +13,10 @@ namespace seri
 
 		virtual ~LayerBase() = default;
 
-		virtual void PreUpdate() {}
-		virtual void Update() {}
+		virtual void OnPreUpdate() {}
+		virtual void OnUpdate() {}
 		virtual void OnRender() {}
-		virtual void PostUpdate() {}
+		virtual void OnPostUpdate() {}
 
 		std::string layerName;
 	};
@@ -41,19 +41,19 @@ namespace seri
 			}
 		}
 
-		void PreUpdate()
+		void OnPreUpdate()
 		{
 			for (auto& layer : _layers)
 			{
-				layer->PreUpdate();
+				layer->OnPreUpdate();
 			}
 		}
 
-		void Update()
+		void OnUpdate()
 		{
 			for (auto& layer : _layers)
 			{
-				layer->Update();
+				layer->OnUpdate();
 			}
 		}
 
@@ -65,11 +65,11 @@ namespace seri
 			}
 		}
 
-		void PostUpdate()
+		void OnPostUpdate()
 		{
 			for (auto& layer : _layers)
 			{
-				layer->PostUpdate();
+				layer->OnPostUpdate();
 			}
 		}
 

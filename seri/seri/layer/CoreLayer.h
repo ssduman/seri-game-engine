@@ -13,7 +13,7 @@
 #include "seri/rendering/render/RenderingManager.h"
 #include "seri/texture/Skybox.h"
 #include "seri/camera/EditorCamera.h"
-#include "seri/event/EventCallback.h"
+#include "seri/event/EventManager.h"
 #include "seri/event/EventDispatcher.h"
 #include "seri/scripting/ScriptingManager.h"
 #include "seri/system/LightSystem.h"
@@ -36,7 +36,15 @@ namespace seri
 			loggerConfig.level = LogLevel::info;
 			Logger::Init(loggerConfig);
 
-			WindowManager::Instance()->Init({ /*title*/ "Seri Game Engine - Editor", /*fullscreen*/ false, /*w*/ 1280, /*h*/ 720 });
+			WindowManager::Instance()->Init(
+				{
+					.windowTitle = "Seri Game Engine - Editor",
+					.isFullscreen = false,
+					.windowWidth = 1280,
+					.windowHeight = 720
+				}
+			);
+
 			RenderingManager::Instance()->Init(WindowManager::Instance(), RenderingProperties{});
 
 			ShaderLibrary::Init("assets/shaders/");
@@ -53,31 +61,21 @@ namespace seri
 			script::ScriptSystem::Init();
 			debug::DebugDraw::Init();
 
-			WindowManager::Instance()->AddEventCallback(event::MakeEventCallback(
-				[](const event::IEventData& data)
+			event::EventManager::Subscribe<event::WindowResizeEventData>(
+				[](const event::WindowResizeEventData& data) -> bool
 				{
-					event::EventDispatcher{}(data);
+					RenderingManager::SetViewport(0, 0, data.width, data.height);
+
+					RenderingManager::GetEditorRT()->Bind();
+					RenderingManager::GetEditorRT()->Resize(data.width, data.height);
+					RenderingManager::GetEditorRT()->Unbind();
+
+					Graphic::GetCameraOrtho()->OnWindowResizeEvent(data);
+					Graphic::GetCameraPerspective()->OnWindowResizeEvent(data);
+
+					return false;
 				}
-			));
-
-			WindowManager::Instance()->AddEventCallback(event::MakeEventCallback(
-				[](const event::IEventData& data)
-				{
-					if (data.eventType == event::EventType::window_resize)
-					{
-						auto& d = event::EventDispatcher::CastEventData<event::WindowResizeEventData&>(data);
-
-						RenderingManager::SetViewport(0, 0, d.width, d.height);
-
-						RenderingManager::GetEditorRT()->Bind();
-						RenderingManager::GetEditorRT()->Resize(d.width, d.height);
-						RenderingManager::GetEditorRT()->Unbind();
-
-						Graphic::GetCameraOrtho()->OnWindowResizeEvent(d);
-						Graphic::GetCameraPerspective()->OnWindowResizeEvent(d);
-					}
-				}
-			));
+			);
 
 			CameraProperties cameraPropertiesOrtho;
 			cameraPropertiesOrtho.width = WindowManager::Instance()->GetWindowProperties().windowWidth;
@@ -108,10 +106,9 @@ namespace seri
 
 		~CoreLayer() override
 		{
-			Logger::Shutdown();
 		}
 
-		void PreUpdate() override
+		void OnPreUpdate() override
 		{
 			Application::SetFrameBegin();
 
@@ -131,7 +128,7 @@ namespace seri
 			Graphic::GetCameraPerspective()->Update();
 		}
 
-		void Update() override
+		void OnUpdate() override
 		{
 			float deltaTime = TimeWrapper::GetDeltaTime();
 
@@ -158,7 +155,7 @@ namespace seri
 			RenderingManager::End();
 		}
 
-		void PostUpdate() override
+		void OnPostUpdate() override
 		{
 			InputManager::Reset();
 
