@@ -12,7 +12,7 @@ namespace seri
 	FramebufferOpenGL::FramebufferOpenGL(FramebufferDesc desc)
 	{
 		_desc = desc;
-		_ascpectRatio = GetAspectRatio();
+		_fixedAspectRatio = GetAspectRatio();
 
 		for (auto& attachment : desc.attachments)
 		{
@@ -154,9 +154,31 @@ namespace seri
 
 	void FramebufferOpenGL::Resize(uint32_t width, uint32_t height)
 	{
-		if (_desc.fixedAspectRatio)
+		if (width == 0 || height == 0)
 		{
-			//height = static_cast<uint32_t>(width * (1.0f / _ascpectRatio));
+			return;
+		}
+
+		if (_desc.fixedAspectRatio && _fixedAspectRatio > 0.0f)
+		{
+			if (static_cast<float>(width) / static_cast<float>(height) > _fixedAspectRatio)
+			{
+				width = static_cast<uint32_t>(height * _fixedAspectRatio);
+			}
+			else
+			{
+				height = static_cast<uint32_t>(width / _fixedAspectRatio);
+			}
+
+			if (width == 0 || height == 0)
+			{
+				return;
+			}
+		}
+
+		if (_desc.width == width && _desc.height == height)
+		{
+			return;
 		}
 
 		_desc.width = width;

@@ -71,14 +71,14 @@ namespace seri
 
 	void CameraBase::OnWindowResizeEvent(const event::WindowResizeEventData& data)
 	{
-		if (data.width <= 0.0f || data.height <= 0.0f)
+		if (data.width <= 0 || data.height <= 0)
 		{
 			return;
 		}
 
-		_cameraProperties.width = data.width;
-		_cameraProperties.height = data.height;
-		_cameraProperties.aspect = data.width / data.height;
+		_cameraProperties.width = static_cast<float>(data.width);
+		_cameraProperties.height = static_cast<float>(data.height);
+		_cameraProperties.aspect = _cameraProperties.width / _cameraProperties.height;
 
 		UpdateProjection();
 	}

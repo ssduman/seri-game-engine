@@ -27,7 +27,7 @@ namespace seri
 	private:
 		uint32_t _handle;
 
-		float _ascpectRatio{ 0.0f };
+		float _fixedAspectRatio{ 0.0f };
 
 		FramebufferTextureDesc _depthAttachment;
 		std::vector<FramebufferTextureDesc> _colorAttachments;

@@ -66,30 +66,34 @@ namespace seri
 				{
 					RenderingManager::SetViewport(0, 0, data.width, data.height);
 
-					RenderingManager::GetEditorRT()->Bind();
-					RenderingManager::GetEditorRT()->Resize(data.width, data.height);
-					RenderingManager::GetEditorRT()->Unbind();
+					auto editorRT = RenderingManager::GetEditorRT();
+					editorRT->Resize(data.width, data.height);
 
-					Graphic::GetCameraOrtho()->OnWindowResizeEvent(data);
-					Graphic::GetCameraPerspective()->OnWindowResizeEvent(data);
+					event::WindowResizeEventData editorRTData{
+						static_cast<int>(editorRT->GetWidth()),
+						static_cast<int>(editorRT->GetHeight())
+					};
+
+					Graphic::GetCameraOrtho()->OnWindowResizeEvent(editorRTData);
+					Graphic::GetCameraPerspective()->OnWindowResizeEvent(editorRTData);
 
 					return false;
 				}
 			);
 
 			CameraProperties cameraPropertiesOrtho;
-			cameraPropertiesOrtho.width = WindowManager::Instance()->GetWindowProperties().windowWidth;
-			cameraPropertiesOrtho.height = WindowManager::Instance()->GetWindowProperties().windowHeight;
+			cameraPropertiesOrtho.width = static_cast<float>(RenderingManager::GetEditorRT()->GetWidth());
+			cameraPropertiesOrtho.height = static_cast<float>(RenderingManager::GetEditorRT()->GetHeight());
 			cameraPropertiesOrtho.isOrtho = true;
-			cameraPropertiesOrtho.aspect = WindowManager::GetAspectRatio();
+			cameraPropertiesOrtho.aspect = RenderingManager::GetEditorRT()->GetAspectRatio();
 			auto cameraOrtho = std::make_shared<EditorCamera>(cameraPropertiesOrtho);
 			cameraOrtho->Init();
 
 			CameraProperties cameraPropertiesPerspective;
-			cameraPropertiesPerspective.width = WindowManager::Instance()->GetWindowProperties().windowWidth;
-			cameraPropertiesPerspective.height = WindowManager::Instance()->GetWindowProperties().windowHeight;
+			cameraPropertiesPerspective.width = static_cast<float>(RenderingManager::GetEditorRT()->GetWidth());
+			cameraPropertiesPerspective.height = static_cast<float>(RenderingManager::GetEditorRT()->GetHeight());
 			cameraPropertiesPerspective.isOrtho = false;
-			cameraPropertiesPerspective.aspect = WindowManager::GetAspectRatio();
+			cameraPropertiesPerspective.aspect = RenderingManager::GetEditorRT()->GetAspectRatio();
 			cameraPropertiesPerspective.position = { 0.0f, 4.0f, 6.0f };
 			cameraPropertiesPerspective.rotation = Util::ToQuaternion({ -30.0f, 0.0f, 0.0f });
 			auto cameraPerspective = std::make_shared<EditorCamera>(cameraPropertiesPerspective);

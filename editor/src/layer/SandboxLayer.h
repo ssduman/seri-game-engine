@@ -364,7 +364,8 @@ namespace seri::editor
 
 			seri::RenderingStats renderingStats = seri::RenderingManager::GetRenderingStats();
 			std::string statsStr = fmt::format("draw calls: {}, tri: {}, fps: {}", renderingStats.drawCalls, renderingStats.triangles, seri::TimeWrapper::GetFPS());
-			seri::font::FontManager::MakeText(fontMesh, fontIndex, statsStr, -seri::WindowManager::GetWidth() / 2 + 20, -seri::WindowManager::GetHeight() / 2 + 20);
+			auto editorRT = seri::RenderingManager::GetEditorRT();
+			seri::font::FontManager::MakeText(fontMesh, fontIndex, statsStr, -static_cast<int>(editorRT->GetWidth()) / 2 + 20, -static_cast<int>(editorRT->GetHeight()) / 2 + 20);
 			seri::Graphic::Draw(fontMesh, materialFont, seri::Util::GetIdentityMatrix(), seri::PassType::ui);
 		}
 
