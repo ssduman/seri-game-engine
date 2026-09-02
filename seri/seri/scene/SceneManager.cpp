@@ -10,12 +10,6 @@
 
 namespace seri::scene
 {
-	SceneManager& SceneManager::GetInstance()
-	{
-		static SceneManager instance;
-		return instance;
-	}
-
 	void SceneManager::Init()
 	{
 		RegisterComponent<seri::component::IDComponent>();

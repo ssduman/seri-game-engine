@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "seri/core/Singleton.h"
+
 #include "seri/util/Util.h"
 #include "seri/window/WindowManager.h"
 
@@ -9,19 +11,9 @@
 
 namespace seri
 {
-	class Application
+	class Application : public seri::Singleton<Application>
 	{
 	public:
-		Application(Application const&) = delete;
-
-		void operator=(Application const&) = delete;
-
-		static Application& GetInstance()
-		{
-			static Application instance;
-			return instance;
-		}
-
 		static void Init()
 		{
 			GetInstance();
@@ -61,10 +53,13 @@ namespace seri
 			return GetInstance()._targetMs - timetakenMs;
 		}
 
-	private:
+	protected:
+		friend struct seri::Singleton<Application>;
+
 		Application() = default;
 		~Application() = default;
 
+	private:
 		int _vSyncCount{ 0 };
 		double _targetFrameRate{ 60.0 };
 		bool _runInBackground{ true };

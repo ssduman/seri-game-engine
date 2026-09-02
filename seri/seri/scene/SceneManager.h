@@ -1,5 +1,7 @@
 #pragma once
 
+#include "seri/core/Singleton.h"
+
 #include "seri/util/Util.h"
 #include "seri/scene/Scene.h"
 #include "seri/component/Components.h"
@@ -24,15 +26,9 @@ namespace seri::scene
 		std::function<void(entt::registry&, entt::entity, const YAML::Node&)> Deserialize;
 	};
 
-	class SceneManager
+	class SceneManager : public seri::Singleton<SceneManager>
 	{
 	public:
-		SceneManager() = default;
-		SceneManager(SceneManager const&) = delete;
-		void operator=(SceneManager const&) = delete;
-
-		static SceneManager& GetInstance();
-
 		static void Init();
 		static void Update();
 
@@ -48,6 +44,12 @@ namespace seri::scene
 		static void RemoveComponent(entt::entity entity, std::string_view compName);
 		static void SerializeComponent(entt::entity entity, YAML::Node& node, std::string_view compName);
 		static void DeserializeComponent(entt::entity entity, const YAML::Node& node, std::string_view compName);
+
+	protected:
+		friend struct seri::Singleton<SceneManager>;
+
+		SceneManager() = default;
+		~SceneManager() = default;
 
 	private:
 		template<typename T>

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "seri/core/Singleton.h"
+
 #include "seri/event/EventCallback.h"
 #include "seri/event/EventData.h"
 
@@ -17,19 +19,9 @@ namespace seri::event
 {
 	using EventHandle = uint64_t;
 
-	class EventManager
+	class EventManager : public seri::Singleton<EventManager>
 	{
 	public:
-		EventManager(EventManager const&) = delete;
-
-		void operator=(EventManager const&) = delete;
-
-		static EventManager& GetInstance()
-		{
-			static EventManager instance;
-			return instance;
-		}
-
 		template<typename T, typename F>
 		static EventHandle Subscribe(F callback)
 		{
@@ -47,10 +39,13 @@ namespace seri::event
 
 		static bool Fire(const IEventData& data);
 
-	private:
+	protected:
+		friend struct seri::Singleton<EventManager>;
+
 		EventManager() = default;
 		~EventManager() = default;
 
+	private:
 		static EventHandle SubscribeImpl(std::type_index typeId, std::shared_ptr<IEventCallback> callback);
 
 		struct Subscriber

@@ -1,24 +1,16 @@
 #pragma once
 
+#include "seri/core/Singleton.h"
+
 #include "seri/util/Util.h"
 
 #include <chrono>
 
 namespace seri
 {
-	class TimeWrapper
+	class TimeWrapper : public seri::Singleton<TimeWrapper>
 	{
 	public:
-		TimeWrapper(TimeWrapper const&) = delete;
-
-		void operator=(TimeWrapper const&) = delete;
-
-		static TimeWrapper& GetInstance()
-		{
-			static TimeWrapper instance;
-			return instance;
-		}
-
 		static void Init()
 		{
 			GetInstance();
@@ -57,10 +49,13 @@ namespace seri
 			return Util::RountToInt(1.0f / TimeWrapper::GetDeltaTime());
 		}
 
-	private:
+	protected:
+		friend struct seri::Singleton<TimeWrapper>;
+
 		TimeWrapper() = default;
 		~TimeWrapper() = default;
 
+	private:
 		float _time{ 0.0f };
 		float _deltaTime{ 0.016f };
 		double _lastFrame{ 0.0 };

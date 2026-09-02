@@ -1,5 +1,7 @@
 #pragma once
 
+#include "seri/core/Singleton.h"
+
 #include "seri/logging/Logger.h"
 #include "seri/script/ScriptBase.h"
 
@@ -15,20 +17,10 @@
 
 namespace seri::script
 {
-	class ScriptRegistry
+	class ScriptRegistry : public seri::Singleton<ScriptRegistry>
 	{
 	public:
 		using Factory = std::function<std::unique_ptr<ScriptBase>()>;
-
-		ScriptRegistry(ScriptRegistry const&) = delete;
-
-		void operator=(ScriptRegistry const&) = delete;
-
-		static ScriptRegistry& GetInstance()
-		{
-			static ScriptRegistry instance;
-			return instance;
-		}
 
 		template<typename T>
 		static void Register(std::string_view name)
@@ -55,10 +47,13 @@ namespace seri::script
 
 		static const std::vector<std::string>& GetNames();
 
-	private:
+	protected:
+		friend struct seri::Singleton<ScriptRegistry>;
+
 		ScriptRegistry() = default;
 		~ScriptRegistry() = default;
 
+	private:
 		std::unordered_map<std::string, Factory> _factories{};
 		std::vector<std::string> _names{};
 

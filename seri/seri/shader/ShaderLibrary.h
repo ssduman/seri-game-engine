@@ -1,5 +1,7 @@
 #pragma once
 
+#include "seri/core/Singleton.h"
+
 #include "seri/util/Util.h"
 #include "seri/camera/CameraBase.h"
 #include "seri/shader/ShaderBase.h"
@@ -10,7 +12,7 @@
 
 namespace seri
 {
-	class ShaderLibrary
+	class ShaderLibrary : public seri::Singleton<ShaderLibrary>
 	{
 	public:
 		struct GLSLInfo
@@ -28,10 +30,6 @@ namespace seri
 			std::string fsCode{ "" };
 		};
 
-		ShaderLibrary(ShaderLibrary const&) = delete;
-		void operator=(ShaderLibrary const&) = delete;
-
-		static ShaderLibrary& GetInstance();
 		static void Init(const char* shaderFolderPath);
 
 		static GLSLInfo& GetGLSL(const std::string& name);
@@ -42,10 +40,13 @@ namespace seri
 		static void SetProjection(std::shared_ptr<ShaderBase>& shader, const glm::mat4& projection);
 		static void SetMVP(std::shared_ptr<ShaderBase>& shader, const std::shared_ptr<CameraBase>& camera);
 
-	private:
+	protected:
+		friend struct seri::Singleton<ShaderLibrary>;
+
 		ShaderLibrary() = default;
 		~ShaderLibrary() = default;
 
+	private:
 		std::unordered_map<std::string, GLSLInfo> _predefinedGLSLs{};
 		std::unordered_map<std::string, ShaderInfo> _predefinedShaders{};
 

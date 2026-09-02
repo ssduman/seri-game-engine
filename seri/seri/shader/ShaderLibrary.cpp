@@ -4,12 +4,6 @@
 
 namespace seri
 {
-	ShaderLibrary& ShaderLibrary::GetInstance()
-	{
-		static ShaderLibrary instance;
-		return instance;
-	}
-
 	void ShaderLibrary::Init(const char* shaderFolderPath)
 	{
 		GetInstance()._predefinedGLSLs = {};

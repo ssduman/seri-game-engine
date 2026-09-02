@@ -1,26 +1,16 @@
 #pragma once
 
+#include "seri/core/Singleton.h"
+
 #include "seri/util/Util.h"
 
 #include <sol/sol.hpp>
 
 namespace seri::scripting
 {
-	class ScriptingManager
+	class ScriptingManager : public seri::Singleton<ScriptingManager>
 	{
 	public:
-		ScriptingManager(ScriptingManager const&) = delete;
-
-		void operator=(ScriptingManager const&) = delete;
-
-		ScriptingManager() = default;
-
-		static ScriptingManager& GetInstance()
-		{
-			static ScriptingManager instance;
-			return instance;
-		}
-
 		static void Init()
 		{
 			GetInstance();
@@ -37,6 +27,12 @@ namespace seri::scripting
 		void InitLuaLibraries();
 		void InitLuaUserTypes();
 		void InitLuaFunctions();
+
+	protected:
+		friend struct seri::Singleton<ScriptingManager>;
+
+		ScriptingManager() = default;
+		~ScriptingManager() = default;
 
 	private:
 		sol::state _luaState;

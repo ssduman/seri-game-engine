@@ -1,5 +1,7 @@
 #pragma once
 
+#include "seri/core/Singleton.h"
+
 #include "seri/util/Util.h"
 #include "seri/input/KeyCode.h"
 
@@ -7,19 +9,9 @@
 
 namespace seri
 {
-	class InputManager
+	class InputManager : public seri::Singleton<InputManager>
 	{
 	public:
-		InputManager(InputManager const&) = delete;
-
-		void operator=(InputManager const&) = delete;
-
-		static InputManager& GetInstance()
-		{
-			static InputManager instance;
-			return instance;
-		}
-
 		static void Init()
 		{
 			GetInstance()._keys = std::vector<InputAction>(static_cast<int>(KeyCode::len), InputAction::noop);
@@ -121,11 +113,13 @@ namespace seri
 			return GetInstance()._scrollDelta;
 		}
 
-	private:
-		InputManager() = default;
+	protected:
+		friend struct seri::Singleton<InputManager>;
 
+		InputManager() = default;
 		~InputManager() = default;
 
+	private:
 		std::vector<InputAction> _keys{};
 		std::vector<InputAction> _mouse{};
 		std::vector<bool> _mousePressing{};

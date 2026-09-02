@@ -1,5 +1,7 @@
 #pragma once
 
+#include "seri/core/Singleton.h"
+
 #include "seri/util/Util.h"
 #include "seri/scene/Scene.h"
 #include "seri/texture/Skybox.h"
@@ -36,21 +38,9 @@ namespace seri::asset
 		std::vector<AssetTreeNode> children{};
 	};
 
-	class AssetManager
+	class AssetManager : public seri::Singleton<AssetManager>
 	{
 	public:
-		AssetManager(AssetManager const&) = delete;
-
-		void operator=(AssetManager const&) = delete;
-
-		AssetManager() = default;
-
-		static AssetManager& GetInstance()
-		{
-			static AssetManager instance;
-			return instance;
-		}
-
 		static void Init()
 		{
 			GetInstance();
@@ -153,6 +143,12 @@ namespace seri::asset
 		const char* kAssetTexturePNGExtension = "png";
 		const char* kAssetTextureJPGExtension = "jpg";
 		const char* kAssetTextureJPEGExtension = "jpeg";
+
+	protected:
+		friend struct seri::Singleton<AssetManager>;
+
+		AssetManager() = default;
+		~AssetManager() = default;
 
 	private:
 		AssetTreeNode _assetTreeRoot{};

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "seri/core/Singleton.h"
+
 #include "seri/logging/Logger.h"
 
 #include "seri/font/FontGenerator.h"
@@ -12,20 +14,10 @@ class seri::Mesh;
 
 namespace seri::font
 {
-	class FontManager
+	class FontManager : public seri::Singleton<FontManager>
 	{
 	public:
-		FontManager(FontManager const&) = delete;
-
-		void operator=(FontManager const&) = delete;
-
 		static void Init(const char* fontFolderPath);
-
-		static FontManager& GetInstance()
-		{
-			static FontManager instance;
-			return instance;
-		}
 
 		static std::vector<std::shared_ptr<FontData>>& GetPredefinedFonts()
 		{
@@ -35,10 +27,13 @@ namespace seri::font
 		static void MakeText(std::shared_ptr<seri::Mesh>& mesh, const FontInfo& fontInfo, std::string text, float posX, float posY);
 		static void MakeText(std::shared_ptr<seri::Mesh>& mesh, int fontIndex, std::string text, float posX, float posY);
 
-	private:
+	protected:
+		friend struct seri::Singleton<FontManager>;
+
 		FontManager() = default;
 		~FontManager() = default;
 
+	private:
 		std::vector<std::shared_ptr<FontData>> _predefinedFonts;
 
 	};
