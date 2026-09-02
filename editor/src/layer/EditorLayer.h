@@ -20,6 +20,9 @@ namespace seri::editor
 					editorGUI->ProcessEvent(event);
 				}
 			);
+
+			seri::WindowManager::SetVSyncCount(1);
+			seri::Application::SetTargetFrameRate(30);
 		}
 
 		~EditorLayer() override = default;

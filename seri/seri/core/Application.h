@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "seri/core/Core.h"
 #include "seri/core/Singleton.h"
 
 #include "seri/util/Util.h"
@@ -38,12 +39,12 @@ namespace seri
 
 		static void SetFrameBegin()
 		{
-			GetInstance()._frameBegTime = std::chrono::high_resolution_clock::now();
+			GetInstance()._frameBegTime = std::chrono::steady_clock::now();
 		}
 
 		static void SetFrameEnd()
 		{
-			GetInstance()._frameEndTime = std::chrono::high_resolution_clock::now();
+			GetInstance()._frameEndTime = std::chrono::steady_clock::now();
 		}
 
 		static double GetWaitTime()
@@ -53,11 +54,13 @@ namespace seri
 			return GetInstance()._targetMs - timetakenMs;
 		}
 
+		static void WaitForTargetFrameRate();
+
 	protected:
 		friend struct seri::Singleton<Application>;
 
-		Application() = default;
-		~Application() = default;
+		Application();
+		~Application();
 
 	private:
 		int _vSyncCount{ 0 };
@@ -66,8 +69,8 @@ namespace seri
 
 		double _targetMs = 1000.0 / _targetFrameRate;
 
-		std::chrono::high_resolution_clock::time_point _frameBegTime;
-		std::chrono::high_resolution_clock::time_point _frameEndTime;
+		std::chrono::steady_clock::time_point _frameBegTime;
+		std::chrono::steady_clock::time_point _frameEndTime;
 
 	};
 }

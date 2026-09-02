@@ -99,9 +99,6 @@ namespace seri
 			Graphic::AddCamera(cameraPerspective);
 
 			RenderingManager::Init();
-
-			Application::SetVSyncCount(1);
-			Application::SetTargetFrameRate(60);
 		}
 
 		~CoreLayer() override
@@ -164,11 +161,7 @@ namespace seri
 
 			Application::SetFrameEnd();
 
-			double waitTime = Application::GetWaitTime();
-			if (waitTime > 0.0)
-			{
-				//std::this_thread::sleep_for(std::chrono::duration<double, std::milli>(waitTime));
-			}
+			Application::WaitForTargetFrameRate();
 		}
 
 	};
