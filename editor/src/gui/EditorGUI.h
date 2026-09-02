@@ -1,5 +1,6 @@
 #pragma once
 
+#include <seri/core/Core.h>
 #include <seri/core/Seri.h>
 
 #include <imgui.h>
@@ -73,29 +74,13 @@ namespace seri::editor
 			}
 		};
 
-		void SetIO()
-		{
-			auto& io = ImGui::GetIO();
-			io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-			io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
-			io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-			io.ConfigWindowsMoveFromTitleBarOnly = true;
-		}
-
-		void SetStyle()
-		{
-			ImGui::StyleColorsDark();
-			auto& style = ImGui::GetStyle();
-
-			style.GrabRounding = 6.0f;
-			style.ChildRounding = 6.0f;
-			style.FrameRounding = 6.0f;
-			style.PopupRounding = 6.0f;
-			style.WindowRounding = 6.0f;
-			style.ScrollbarRounding = 6.0f;
-		}
+		void SetIO();
+		void SetStyle();
+		void SetFonts();
 
 		void CheckShortcuts();
+
+		void Save();
 
 		void ShowEditorMainMenuBar();
 
@@ -140,7 +125,10 @@ namespace seri::editor
 		bool DrawTextInput(const char* label, std::string& value, size_t bufferSize = 512);
 		bool DrawAssetPicker(const char* label, uint64_t assetId, seri::asset::AssetType assetType, uint64_t& selection);
 
+		ImVec4 RGB0_255To0_1(int r, int g, int b, float a = 1.0f);
+
 		uint64_t _selectedEntityId{ 0 };
+		uint64_t _pendingDeleteEntityId{ 0 };
 		InspectorType _inspectorType{ InspectorType::none };
 
 		GizmoSpace _gizmoSpace{ GizmoSpace::local };
@@ -148,6 +136,14 @@ namespace seri::editor
 
 		seri::asset::AssetTreeNode* _selectedFolder{ nullptr };
 		seri::asset::AssetTreeNode _selectedAsset{};
+
+		bool _showHierarchy{ true };
+		bool _showScene{ true };
+		bool _showGame{ true };
+		bool _showInspector{ true };
+		bool _showConsole{ true };
+		bool _showProject{ true };
+		bool _resetLayout{ false };
 
 	};
 }

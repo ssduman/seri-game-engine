@@ -4,11 +4,17 @@ namespace seri::editor
 {
 	EditorGUI::EditorGUI()
 	{
-		LOGGER(info) << "[gui] editor init succeeded";
+		LOGGER(info) << "[gui] created";
 	}
 
 	EditorGUI::~EditorGUI()
 	{
+		if (ImGui::GetCurrentContext() == nullptr)
+		{
+			LOGGER(warning) << "[gui] unexpected context to destroy";
+			return;
+		}
+
 		ImGui_ImplOpenGL3_Shutdown();
 
 #if defined (SERI_USE_WINDOW_GLFW)
@@ -19,7 +25,7 @@ namespace seri::editor
 
 		ImGui::DestroyContext();
 
-		LOGGER(info) << "[gui] editor delete succeeded";
+		LOGGER(info) << "[gui] destroyed";
 	}
 
 	void EditorGUI::Init()
@@ -28,6 +34,7 @@ namespace seri::editor
 		ImGui::CreateContext();
 
 		SetIO();
+		SetFonts();
 		SetStyle();
 
 #if defined (SERI_USE_WINDOW_GLFW)
@@ -85,14 +92,209 @@ namespace seri::editor
 #endif
 	}
 
+	void EditorGUI::SetIO()
+	{
+		auto& io = ImGui::GetIO();
+		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+		io.ConfigWindowsMoveFromTitleBarOnly = true;
+	}
+
+	void EditorGUI::SetFonts()
+	{
+		auto& io = ImGui::GetIO();
+
+		io.Fonts->FontLoaderFlags |= ImGuiFreeTypeLoaderFlags_LightHinting;
+
+		std::filesystem::path fontPath = seri::asset::AssetManager::GetAssetDirectory() / "fonts" / "Roboto-Regular.ttf";
+		if (std::filesystem::exists(fontPath))
+		{
+			ImFontConfig config{};
+			config.OversampleH = 2;
+			config.OversampleV = 1;
+			config.PixelSnapH = false;
+
+			io.FontDefault = io.Fonts->AddFontFromFileTTF(fontPath.string().c_str(), 16.0f, &config);
+		}
+		else
+		{
+			LOGGER(warning) << fmt::format("[gui] editor font not found: {}", fontPath.string());
+		}
+	}
+
+	void EditorGUI::SetStyle()
+	{
+		auto& style = ImGui::GetStyle();
+
+		const ImVec4 bgDeep = RGB0_255To0_1(18, 20, 24);
+		const ImVec4 bgWindow = RGB0_255To0_1(28, 31, 38);
+		const ImVec4 bgPanel = RGB0_255To0_1(34, 38, 46);
+		const ImVec4 bgRaised = RGB0_255To0_1(42, 47, 57);
+		const ImVec4 bgHovered = RGB0_255To0_1(52, 58, 70);
+		const ImVec4 bgActive = RGB0_255To0_1(62, 69, 83);
+		const ImVec4 border = RGB0_255To0_1(48, 53, 63);
+		const ImVec4 text = RGB0_255To0_1(228, 231, 236);
+		const ImVec4 textDim = RGB0_255To0_1(138, 145, 158);
+		const ImVec4 accent = RGB0_255To0_1(76, 141, 255);
+		const ImVec4 accentHovered = RGB0_255To0_1(107, 161, 255);
+		const ImVec4 accentActive = RGB0_255To0_1(60, 121, 224);
+		const ImVec4 warning = RGB0_255To0_1(240, 173, 78);
+
+		style.WindowPadding = ImVec2(10.0f, 10.0f);
+		style.FramePadding = ImVec2(8.0f, 5.0f);
+		style.ItemSpacing = ImVec2(8.0f, 6.0f);
+		style.ItemInnerSpacing = ImVec2(6.0f, 5.0f);
+		style.CellPadding = ImVec2(8.0f, 4.0f);
+		style.IndentSpacing = 22.0f;
+		style.ScrollbarSize = 12.0f;
+		style.GrabMinSize = 10.0f;
+
+		style.WindowBorderSize = 1.0f;
+		style.ChildBorderSize = 1.0f;
+		style.PopupBorderSize = 1.0f;
+		style.FrameBorderSize = 0.0f;
+		style.TabBorderSize = 0.0f;
+		style.TabBarBorderSize = 2.0f;
+		style.TabBarOverlineSize = 2.0f;
+		style.SeparatorTextBorderSize = 1.0f;
+		style.DockingSeparatorSize = 2.0f;
+
+		style.WindowRounding = 8.0f;
+		style.ChildRounding = 6.0f;
+		style.FrameRounding = 5.0f;
+		style.PopupRounding = 6.0f;
+		style.ScrollbarRounding = 9.0f;
+		style.GrabRounding = 5.0f;
+		style.TabRounding = 6.0f;
+		style.ImageRounding = 4.0f;
+
+		style.WindowTitleAlign = ImVec2(0.0f, 0.5f);
+		style.WindowMenuButtonPosition = ImGuiDir_None;
+		style.ColorButtonPosition = ImGuiDir_Right;
+		style.SeparatorTextAlign = ImVec2(0.0f, 0.5f);
+		style.SeparatorTextPadding = ImVec2(16.0f, 4.0f);
+
+		style.TreeLinesFlags = ImGuiTreeNodeFlags_DrawLinesToNodes;
+		style.TreeLinesSize = 1.0f;
+
+		style.AntiAliasedLines = true;
+		style.AntiAliasedLinesUseTex = true;
+		style.AntiAliasedFill = true;
+
+		style.DisabledAlpha = 0.45f;
+
+		ImVec4* colors = style.Colors;
+
+		colors[ImGuiCol_Text] = text;
+		colors[ImGuiCol_TextDisabled] = textDim;
+		colors[ImGuiCol_TextSelectedBg] = ImVec4(accent.x, accent.y, accent.z, 0.35f);
+		colors[ImGuiCol_TextLink] = accentHovered;
+
+		colors[ImGuiCol_WindowBg] = bgWindow;
+		colors[ImGuiCol_ChildBg] = ImVec4(0.0f, 0.0f, 0.0f, 0.0f);
+		colors[ImGuiCol_PopupBg] = bgPanel;
+		colors[ImGuiCol_Border] = border;
+		colors[ImGuiCol_BorderShadow] = ImVec4(0.0f, 0.0f, 0.0f, 0.0f);
+
+		colors[ImGuiCol_FrameBg] = bgPanel;
+		colors[ImGuiCol_FrameBgHovered] = bgHovered;
+		colors[ImGuiCol_FrameBgActive] = bgActive;
+
+		colors[ImGuiCol_TitleBg] = bgDeep;
+		colors[ImGuiCol_TitleBgActive] = bgPanel;
+		colors[ImGuiCol_TitleBgCollapsed] = bgDeep;
+		colors[ImGuiCol_MenuBarBg] = bgDeep;
+
+		colors[ImGuiCol_ScrollbarBg] = ImVec4(0.0f, 0.0f, 0.0f, 0.0f);
+		colors[ImGuiCol_ScrollbarGrab] = bgRaised;
+		colors[ImGuiCol_ScrollbarGrabHovered] = bgHovered;
+		colors[ImGuiCol_ScrollbarGrabActive] = bgActive;
+
+		colors[ImGuiCol_CheckMark] = accent;
+		colors[ImGuiCol_CheckboxSelectedBg] = ImVec4(accent.x, accent.y, accent.z, 0.18f);
+		colors[ImGuiCol_SliderGrab] = accent;
+		colors[ImGuiCol_SliderGrabActive] = accentHovered;
+		colors[ImGuiCol_InputTextCursor] = text;
+
+		colors[ImGuiCol_Button] = bgRaised;
+		colors[ImGuiCol_ButtonHovered] = bgHovered;
+		colors[ImGuiCol_ButtonActive] = bgActive;
+
+		colors[ImGuiCol_Header] = ImVec4(accent.x, accent.y, accent.z, 0.28f);
+		colors[ImGuiCol_HeaderHovered] = ImVec4(accent.x, accent.y, accent.z, 0.40f);
+		colors[ImGuiCol_HeaderActive] = ImVec4(accent.x, accent.y, accent.z, 0.55f);
+
+		colors[ImGuiCol_Separator] = border;
+		colors[ImGuiCol_SeparatorHovered] = accentActive;
+		colors[ImGuiCol_SeparatorActive] = accent;
+
+		colors[ImGuiCol_ResizeGrip] = ImVec4(0.0f, 0.0f, 0.0f, 0.0f);
+		colors[ImGuiCol_ResizeGripHovered] = ImVec4(accent.x, accent.y, accent.z, 0.45f);
+		colors[ImGuiCol_ResizeGripActive] = accent;
+
+		colors[ImGuiCol_Tab] = bgDeep;
+		colors[ImGuiCol_TabHovered] = bgHovered;
+		colors[ImGuiCol_TabSelected] = bgWindow;
+		colors[ImGuiCol_TabSelectedOverline] = accent;
+		colors[ImGuiCol_TabDimmed] = bgDeep;
+		colors[ImGuiCol_TabDimmedSelected] = bgPanel;
+		colors[ImGuiCol_TabDimmedSelectedOverline] = ImVec4(accent.x, accent.y, accent.z, 0.35f);
+
+		colors[ImGuiCol_DockingPreview] = ImVec4(accent.x, accent.y, accent.z, 0.45f);
+		colors[ImGuiCol_DockingEmptyBg] = bgDeep;
+
+		colors[ImGuiCol_PlotLines] = accentHovered;
+		colors[ImGuiCol_PlotLinesHovered] = accent;
+		colors[ImGuiCol_PlotHistogram] = accent;
+		colors[ImGuiCol_PlotHistogramHovered] = accentHovered;
+
+		colors[ImGuiCol_TableHeaderBg] = bgPanel;
+		colors[ImGuiCol_TableBorderStrong] = border;
+		colors[ImGuiCol_TableBorderLight] = ImVec4(border.x, border.y, border.z, 0.5f);
+		colors[ImGuiCol_TableRowBg] = ImVec4(0.0f, 0.0f, 0.0f, 0.0f);
+		colors[ImGuiCol_TableRowBgAlt] = ImVec4(1.0f, 1.0f, 1.0f, 0.025f);
+
+		colors[ImGuiCol_TreeLines] = border;
+		colors[ImGuiCol_UnsavedMarker] = warning;
+
+		colors[ImGuiCol_DragDropTarget] = accent;
+		colors[ImGuiCol_DragDropTargetBg] = ImVec4(accent.x, accent.y, accent.z, 0.20f);
+
+		colors[ImGuiCol_NavCursor] = accent;
+		colors[ImGuiCol_NavWindowingHighlight] = accentHovered;
+		colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.0f, 0.0f, 0.0f, 0.55f);
+		colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.0f, 0.0f, 0.0f, 0.55f);
+
+		if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+		{
+			style.WindowRounding = 0.0f;
+			colors[ImGuiCol_WindowBg].w = 1.0f;
+		}
+	}
+
+	void EditorGUI::Save()
+	{
+		if (auto activeScene = seri::scene::SceneManager::GetActiveScene())
+		{
+			activeScene->Save();
+		}
+
+		seri::asset::AssetManager::GetInstance().Save();
+	}
+
 	void EditorGUI::CheckShortcuts()
 	{
 		auto& io = ImGui::GetIO();
 
-		if (io.KeyCtrl && ImGui::IsKeyPressed(ImGuiKey_S))
+		if (io.WantTextInput)
 		{
-			seri::scene::SceneManager::GetActiveScene()->Save();
-			seri::asset::AssetManager::GetInstance().Save();
+			return;
+		}
+
+		if (io.KeyCtrl && ImGui::IsKeyPressed(ImGuiKey_S, false))
+		{
+			Save();
 		}
 	}
 
@@ -112,7 +314,25 @@ namespace seri::editor
 			{
 				if (ImGui::MenuItem("Save", "CTRL+S"))
 				{
-					seri::scene::SceneManager::GetActiveScene()->Save();
+					Save();
+				}
+
+				ImGui::EndMenu();
+			}
+			if (ImGui::BeginMenu("Window"))
+			{
+				ImGui::MenuItem("Hierarchy", nullptr, &_showHierarchy);
+				ImGui::MenuItem("Scene", nullptr, &_showScene);
+				ImGui::MenuItem("Game", nullptr, &_showGame);
+				ImGui::MenuItem("Inspector", nullptr, &_showInspector);
+				ImGui::MenuItem("Project", nullptr, &_showProject);
+				ImGui::MenuItem("Console", nullptr, &_showConsole);
+
+				ImGui::Separator();
+
+				if (ImGui::MenuItem("Reset Layout"))
+				{
+					_resetLayout = true;
 				}
 
 				ImGui::EndMenu();
@@ -125,8 +345,17 @@ namespace seri::editor
 	void EditorGUI::ShowEditorSceneImage()
 	{
 		ImVec2 panelSize = ImGui::GetContentRegionAvail();
+		if (panelSize.x <= 0.0f || panelSize.y <= 0.0f)
+		{
+			return;
+		}
 
 		float fbAspect = seri::RenderingManager::GetEditorRT()->GetAspectRatio();
+		if (fbAspect <= 0.0f)
+		{
+			return;
+		}
+
 		float panelAspect = panelSize.x / panelSize.y;
 
 		ImVec2 imageSize;
@@ -289,7 +518,6 @@ namespace seri::editor
 
 		float gizmoSize = 64.0f;
 		float padding = 5.0f;
-		bool alwaysRun = true;
 
 		float x = imageMin.x + imageSize.x - gizmoSize - padding;
 		float y = imageMin.y + padding;
@@ -308,7 +536,7 @@ namespace seri::editor
 			0x10101010
 		);
 
-		if (ImGuizmo::IsUsing() || alwaysRun)
+		if (ImGuizmo::IsUsingViewManipulate())
 		{
 			camera->SetFromViewMatrix(view);
 		}
@@ -425,21 +653,23 @@ namespace seri::editor
 		}
 
 		ImGui::SetNextItemOpen(true, ImGuiCond_Once);
-		if (ImGui::TreeNodeEx(sceneName.c_str(), flags))
+		bool open = ImGui::TreeNodeEx("##SceneRoot", flags, "%s", sceneName.c_str());
+
+		bool clicked = ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen();
+		if (clicked)
 		{
-			bool clicked = ImGui::IsItemClicked();
-			if (clicked)
-			{
-				_selectedEntityId = activeScene->GetID();
-				_inspectorType = InspectorType::scene;
-			}
+			_selectedEntityId = activeScene->GetID();
+			_inspectorType = InspectorType::scene;
+		}
 
-			if (ImGui::BeginPopupContextItem())
-			{
-				ShowEditorHierarchyAddMenu(activeScene, 0);
-				ImGui::EndPopup();
-			}
+		if (ImGui::BeginPopupContextItem())
+		{
+			ShowEditorHierarchyAddMenu(activeScene, 0);
+			ImGui::EndPopup();
+		}
 
+		if (open)
+		{
 			uint64_t selectedId = 0;
 			ShowEditorHierarchyImpl(activeScene, sceneTreeRoot, selectedId);
 			if (!clicked && selectedId != 0)
@@ -449,6 +679,19 @@ namespace seri::editor
 			}
 
 			ImGui::TreePop();
+		}
+
+		if (_pendingDeleteEntityId != 0)
+		{
+			activeScene->DeleteEntity(_pendingDeleteEntityId);
+
+			if (_selectedEntityId == _pendingDeleteEntityId)
+			{
+				_selectedEntityId = 0;
+				_inspectorType = InspectorType::none;
+			}
+
+			_pendingDeleteEntityId = 0;
 		}
 	}
 
@@ -487,9 +730,8 @@ namespace seri::editor
 			std::string label = idComponent->name;
 
 			bool open = ImGui::TreeNodeEx((void*)(intptr_t)child.id, flags, "%s", label.c_str());
-			bool clicked = ImGui::IsItemClicked();
 
-			if (clicked)
+			if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
 			{
 				selectedId = child.id;
 			}
@@ -500,7 +742,7 @@ namespace seri::editor
 
 				if (ImGui::MenuItem("Delete"))
 				{
-					seri::scene::SceneManager::GetActiveScene()->DeleteEntity(child.id);
+					_pendingDeleteEntityId = child.id;
 				}
 
 				ImGui::EndPopup();
@@ -540,34 +782,33 @@ namespace seri::editor
 				model->Build();
 				seri::asset::AssetManager::AddAsset(model->id, model);
 
-				int comp = 4;
-				int dimX = 256;
-				int dimY = 256;
-				int totalBytes = dimX * dimY * comp;
+				const int comp = 4;
+				const int dimX = 256;
+				const int dimY = 256;
+				const int totalBytes = dimX * dimY * comp;
+
 				uint8_t* white = (uint8_t*)malloc(totalBytes);
+				uint8_t* normal = (uint8_t*)malloc(totalBytes);
+				uint8_t* arm = (uint8_t*)malloc(totalBytes);
+
 				for (int i = 0; i < totalBytes; i += comp)
 				{
 					white[i + 0] = 255;
 					white[i + 1] = 255;
 					white[i + 2] = 255;
 					white[i + 3] = 255;
-				}
-				uint8_t* normal = (uint8_t*)malloc(totalBytes);
-				for (int i = 0; i < totalBytes; i += comp)
-				{
+
 					normal[i + 0] = 128; // x = 0
 					normal[i + 1] = 128; // y = 0
 					normal[i + 2] = 255; // z = 1
 					normal[i + 3] = 255;
-				}
-				uint8_t* arm = (uint8_t*)malloc(totalBytes);
-				for (int i = 0; i < totalBytes; i += comp)
-				{
+
 					arm[i + 0] = 255; // AO = 1.0
 					arm[i + 1] = 128; // Roughness = 0.5
 					arm[i + 2] = 0;   // Metallic = 0.0
 					arm[i + 3] = 255;
 				}
+
 				auto diffTex = seri::TextureBase::Create();
 				diffTex->id = seri::Random::UUID();
 				diffTex->Init(seri::TextureDesc{}, white, dimX, dimY, comp);
@@ -639,17 +880,17 @@ namespace seri::editor
 
 		auto idComponent = scene->GetIDComponent();
 		{
-			ImGui::Text(fmt::format("id: {}", idComponent.id).c_str());
-			ImGui::Text(fmt::format("parent id: {}", idComponent.parentId).c_str());
-			ImGui::Text(fmt::format("name: {}", idComponent.name.c_str()).c_str());
+			ImGui::Text("id: %llu", idComponent.id);
+			ImGui::Text("parent id: %llu", idComponent.parentId);
+			ImGui::Text("name: %s", idComponent.name.c_str());
 
 			ImGui::Separator();
 		}
 
 		auto sceneComponent = scene->GetSceneComponent();
 		{
-			ImGui::Text(fmt::format("version: {}", sceneComponent.version).c_str());
-			ImGui::Text(fmt::format("active: {}", sceneComponent.isActive).c_str());
+			ImGui::Text("version: %s", sceneComponent.version.c_str());
+			ImGui::Text("active: %s", sceneComponent.isActive ? "true" : "false");
 
 			ImGui::Separator();
 		}
@@ -937,23 +1178,39 @@ namespace seri::editor
 			case seri::asset::AssetType::shader:
 				{
 					auto asset = seri::asset::AssetManager::GetAssetByID<seri::ShaderBase>(_selectedAsset.id);
-					ImGui::Text(fmt::format("shader: {}", asset->id).c_str());
+					if (!asset)
+					{
+						ImGui::TextDisabled("shader not loaded");
+						break;
+					}
+					ImGui::Text("shader: %llu", asset->id);
 				}
 				break;
 			case seri::asset::AssetType::texture:
 				{
 					auto asset = seri::asset::AssetManager::GetAssetByID<seri::TextureBase>(_selectedAsset.id);
-					ImGui::Text(fmt::format("texture: {}", asset->id).c_str());
+					if (!asset)
+					{
+						ImGui::TextDisabled("texture not loaded");
+						break;
+					}
+					ImGui::Text("texture: %llu", asset->id);
+					ShowEditorImage(asset, 128.0f);
 				}
 				break;
 			case seri::asset::AssetType::mesh:
 				{
 					auto asset = seri::asset::AssetManager::GetAssetByID<seri::Model>(_selectedAsset.id);
-					ImGui::Text(fmt::format("mesh: {}", asset->id).c_str());
-					ImGui::Text(fmt::format("material count: {}", asset->materialCount).c_str());
+					if (!asset)
+					{
+						ImGui::TextDisabled("mesh not loaded");
+						break;
+					}
+					ImGui::Text("mesh: %llu", asset->id);
+					ImGui::Text("material count: %d", asset->materialCount);
 					for (auto& mesh : asset->meshes)
 					{
-						ImGui::Text(fmt::format(" mesh: {}, mat: {}", mesh->name, mesh->materialIndex).c_str());
+						ImGui::Text(" mesh: %s, mat: %d", mesh->name.c_str(), mesh->materialIndex);
 					}
 				}
 				break;
@@ -1011,14 +1268,15 @@ namespace seri::editor
 		ImGui::Separator();
 
 		ImGui::TextDisabled("ID: %llu", asset->id);
-		ImGui::TextDisabled("Shader: %llu", asset->GetShader()->id);
+		ImGui::TextDisabled("Shader: %llu", asset->GetShader() ? asset->GetShader()->id : 0);
 
 		{
 			ImGui::Separator();
 
 			PropertyRow("Shader");
 
-			std::string shaderName = asset->GetShader()->id == 0 ? "<None>" : seri::asset::AssetManager::GetAssetName(asset->GetShader()->id);
+			auto shader = asset->GetShader();
+			std::string shaderName = (!shader || shader->id == 0) ? "<None>" : seri::asset::AssetManager::GetAssetName(shader->id);
 			if (ImGui::Button(shaderName.c_str()))
 			{
 				ImGui::OpenPopup("AssetPickerPopup");
@@ -1324,7 +1582,7 @@ namespace seri::editor
 				continue;
 			}
 
-			ImGui::PushID(assetMetadata.id);
+			ImGui::PushID((void*)(intptr_t)assetMetadata.id);
 
 			if (assetMetadata.id == 0)
 			{
@@ -1386,12 +1644,23 @@ namespace seri::editor
 
 	void EditorGUI::ShowEditorImage(std::shared_ptr<seri::TextureBase>& texture, float size)
 	{
+		if (!texture)
+		{
+			ImGui::Dummy({ size, size });
+			return;
+		}
+
 		auto tex = (ImTextureID)(intptr_t)texture->GetHandle();
 		ImGui::Image(tex, { size, size }, { 0, 1 }, { 1, 0 });
 	}
 
 	bool EditorGUI::ShowEditorImageButton(std::shared_ptr<seri::TextureBase>& texture, float size)
 	{
+		if (!texture)
+		{
+			return ImGui::Button("##missing", { size, size });
+		}
+
 		auto tex = (ImTextureID)(intptr_t)texture->GetHandle();
 		return ImGui::ImageButton(fmt::format("tex##{}", texture->id).c_str(), tex, { size, size }, { 0, 1 }, { 1, 0 });
 	}
@@ -1399,6 +1668,11 @@ namespace seri::editor
 	void EditorGUI::ShowEditorProject()
 	{
 		seri::asset::AssetTreeNode& assetTreeRoot = seri::asset::AssetManager::GetAssetTreeRoot();
+
+		if (_selectedFolder == nullptr)
+		{
+			_selectedFolder = &assetTreeRoot;
+		}
 
 		ImGui::Columns(2);
 
@@ -1437,13 +1711,15 @@ namespace seri::editor
 			ImGui::SetNextItemOpen(true, ImGuiCond_Once);
 		}
 
-		if (ImGui::TreeNodeEx((void*)(intptr_t)node.id, flags, "%s", label.c_str()))
-		{
-			if (ImGui::IsItemClicked())
-			{
-				_selectedFolder = &node;
-			}
+		bool open = ImGui::TreeNodeEx((void*)(intptr_t)node.id, flags, "%s", label.c_str());
 
+		if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
+		{
+			_selectedFolder = &node;
+		}
+
+		if (open)
+		{
 			for (auto& child : node.children)
 			{
 				if (child.isFolder)
@@ -1525,17 +1801,15 @@ namespace seri::editor
 
 	void EditorGUI::DrawEditorLayout()
 	{
-		static bool showMainMenu = true;
-		static bool showHierarchy = true;
-		static bool showScene = true;
-		static bool showGame = true;
-		static bool showInspector = true;
-		static bool showConsole = true;
-		static bool showProject = true;
-
 		ImGuiWindowFlags window_flags =
-			ImGuiWindowFlags_MenuBar |
-			ImGuiWindowFlags_NoDocking
+			ImGuiWindowFlags_NoDocking |
+			ImGuiWindowFlags_NoTitleBar |
+			ImGuiWindowFlags_NoCollapse |
+			ImGuiWindowFlags_NoResize |
+			ImGuiWindowFlags_NoMove |
+			ImGuiWindowFlags_NoBringToFrontOnFocus |
+			ImGuiWindowFlags_NoNavFocus |
+			ImGuiWindowFlags_NoBackground
 			;
 
 		ImGuiViewport* viewport = ImGui::GetMainViewport();
@@ -1543,86 +1817,66 @@ namespace seri::editor
 		ImGui::SetNextWindowSize(viewport->WorkSize);
 		ImGui::SetNextWindowViewport(viewport->ID);
 
-		ImGui::Begin("Editor DockSpace", nullptr,
-			ImGuiWindowFlags_NoTitleBar |
-			ImGuiWindowFlags_NoCollapse |
-			ImGuiWindowFlags_NoResize |
-			ImGuiWindowFlags_NoMove |
-			ImGuiWindowFlags_NoBringToFrontOnFocus |
-			ImGuiWindowFlags_NoNavFocus
-		);
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+
+		ImGui::Begin("Editor DockSpace", nullptr, window_flags);
+
+		ImGui::PopStyleVar(3);
 
 		ImGuiID dockspace_id = ImGui::GetID("MainDockSpace");
 
-		if (ImGui::DockBuilderGetNode(dockspace_id) == nullptr)
+		if (_resetLayout || ImGui::DockBuilderGetNode(dockspace_id) == nullptr)
 		{
 			BuildDefaultDockLayout(dockspace_id);
+			_resetLayout = false;
 		}
 
-		ImGui::DockSpace(dockspace_id, ImVec2(0, 0), ImGuiDockNodeFlags_None);
-
-		if (ImGui::BeginMenuBar())
-		{
-			if (ImGui::BeginMenu("Window"))
-			{
-				ImGui::MenuItem("Hierarchy", nullptr, &showHierarchy);
-				ImGui::MenuItem("Scene", nullptr, &showScene);
-				ImGui::MenuItem("Game", nullptr, &showGame);
-				ImGui::MenuItem("Inspector", nullptr, &showInspector);
-				ImGui::MenuItem("Project", nullptr, &showProject);
-				ImGui::MenuItem("Console", nullptr, &showConsole);
-
-				ImGui::EndMenu();
-			}
-
-			ImGui::EndMenuBar();
-		}
+		ImGui::DockSpace(dockspace_id, ImVec2(0, 0), ImGuiDockNodeFlags_PassthruCentralNode);
 
 		ImGui::End();
 
-		if (showMainMenu)
-		{
-			ShowEditorMainMenuBar();
-		}
+		ShowEditorMainMenuBar();
 
-		if (showInspector)
+		if (_showInspector)
 		{
-			ImGui::Begin("Inspector", &showInspector);
+			ImGui::Begin("Inspector", &_showInspector);
 			ShowEditorInspector();
 			ImGui::End();
 		}
 
-		if (showHierarchy)
+		if (_showHierarchy)
 		{
-			ImGui::Begin("Hierarchy", &showHierarchy);
+			ImGui::Begin("Hierarchy", &_showHierarchy);
 			ShowEditorHierarchy();
 			ImGui::End();
 		}
 
-		if (showScene)
+		if (_showScene)
 		{
-			ImGui::Begin("Scene", &showScene);
+			ImGui::Begin("Scene", &_showScene);
 			ShowEditorSceneImage();
 			ImGui::End();
 		}
 
-		if (showGame)
+		if (_showGame)
 		{
-			ImGui::Begin("Game", &showGame);
+			ImGui::Begin("Game", &_showGame);
 			ImGui::Text("todo");
 			ImGui::End();
 		}
 
-		if (showProject)
+		if (_showProject)
 		{
-			ImGui::Begin("Project", &showProject);
+			ImGui::Begin("Project", &_showProject);
 			ShowEditorProject();
 			ImGui::End();
 		}
 
-		if (showConsole)
+		if (_showConsole)
 		{
-			ImGui::Begin("Console", &showConsole);
+			ImGui::Begin("Console", &_showConsole);
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 			ImGui::End();
 		}
@@ -1900,12 +2154,18 @@ namespace seri::editor
 			ImGui::OpenPopup("AssetPickerPopup");
 		}
 
-		changed |= ShowEditorAssetPickerPopup(assetType, changed, selection);
+		bool selected = false;
+		changed |= ShowEditorAssetPickerPopup(assetType, selected, selection);
 
 		ImGui::Columns(1);
 		ImGui::PopID();
 
 		return changed;
+	}
+
+	ImVec4 EditorGUI::RGB0_255To0_1(int r, int g, int b, float a)
+	{
+		return ImVec4(r / 255.0f, g / 255.0f, b / 255.0f, a);
 	}
 
 }
