@@ -6,6 +6,7 @@
     "assimp",
     "boost-asio",
     "boost-log",
+    "doctest",
     "efsw",
     "entt",
     "fmt",
@@ -44,6 +45,10 @@
     {
       "name": "boost-log",
       "version": "1.92.0"
+    },
+    {
+      "name": "doctest",
+      "version": "2.5.3"
     },
     {
       "name": "efsw",

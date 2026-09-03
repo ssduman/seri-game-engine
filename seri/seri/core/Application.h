@@ -1,7 +1,5 @@
 #pragma once
 
-#pragma once
-
 #include "seri/core/Core.h"
 #include "seri/core/Singleton.h"
 

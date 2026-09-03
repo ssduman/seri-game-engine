@@ -10,7 +10,7 @@
 * [X] Instancing
 * [X] Lighting and Shadow
 * [X] Basic Sound
-* [X] Basic Editor GUI
+* [X] Editor GUI
 * [X] PBR
 * [ ] Physics
 * [ ] NetCode

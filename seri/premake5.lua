@@ -61,3 +61,53 @@ project "Seri"
     defines { "NDEBUG" }
     runtime "Release"
     optimize "On"
+
+  usage "PUBLIC"
+    includedirs {
+      "%{wks.location}/seri",
+    }
+
+    externalincludedirs {
+      "%{IncludeDir.vcpkg}",
+    }
+    externalwarnings "Off"
+
+    defines {
+      "GLFW_INCLUDE_NONE",
+      "GLM_ENABLE_EXPERIMENTAL",
+      "FMT_UNICODE=0",
+      "FMT_SHARED",
+      "ASSIMP_DLL",
+      "BOOST_LOG_DYN_LINK",
+    }
+
+  usage "INTERFACE"
+    links { "Seri" }
+
+    filter { "configurations:Debug" }
+      libdirs {
+        "%{LibDir.vcpkg_debug}",
+      }
+      links {
+        "%{Lib.boost_log_debug}",
+        "%{Lib.boost_log_setup_debug}",
+        "%{Lib.boost_thread_debug}",
+        "fmtd",
+      }
+      postbuildcommands {
+        '{COPYDIR} "%{BinDir.vcpkg_debug}" "%{cfg.targetdir}"',
+      }
+
+    filter { "configurations:Release" }
+      libdirs {
+        "%{LibDir.vcpkg}",
+      }
+      links {
+        "%{Lib.boost_log}",
+        "%{Lib.boost_log_setup}",
+        "%{Lib.boost_thread}",
+        "fmt",
+      }
+      postbuildcommands {
+        '{COPYDIR} "%{BinDir.vcpkg}" "%{cfg.targetdir}"',
+      }

@@ -41,6 +41,10 @@ workspace "Seri Game Engine"
     include "editor"
   group ""
 
+  group "Test"
+    include "test"
+  group ""
+
   group "Misc"
     -- include "misc/misc"
     -- include "misc/maze"

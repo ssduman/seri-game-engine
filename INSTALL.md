@@ -1,9 +1,8 @@
 # Install
 
-* Third-party dependencies come from `vcpkg` in manifest mode.
-* Nothing is installed machine-wide.
-* Packages declared in `vcpkg.json` are built into a `vcpkg_installed/` folder inside this repository.
-* The only dependency still vendored is `glad`.
+* Third-party dependencies come from `vcpkg` in manifest mode
+* Packages declared in `vcpkg.json` are built into a `vcpkg_installed/` folder inside this repository
+* The only dependency not coming from `vcpkg` is `glad`
 
 ## Prerequisites
 
@@ -22,15 +21,13 @@ cd seri-game-engine
 
 ### 2. Get vcpkg
 
-* If you do not already have a vcpkg clone:
-
 ```bat
-git clone https://github.com/microsoft/vcpkg C:\vcpkg
-C:\vcpkg\bootstrap-vcpkg.bat
+git clone https://github.com/microsoft/vcpkg
+cd <path-to-vcpkg>
+bootstrap-vcpkg.bat
 ```
 
-* `bootstrap-vcpkg.bat`  must be re-run whenever you update the clone
-* Set `VCPKG_ROOT` to `vcpkg` as Environment Variable so `generate.bat` can find it anywhere
+* Add `VCPKG_ROOT` and set to `<path-to-vcpkg>` as Environment Variable so `generate.bat` can find it
 
 ### 3. Generate the solution
 
@@ -40,45 +37,47 @@ generate.bat
 
 ### 4. Build
 
-* Open `Seri Game Engine.sln` and build. `Editor` is the startup project.
+* Open `Seri Game Engine.slnx`, build and run
 
-## Adding a package
+## Adding library
 
-1. Look up the port name and version from `vcpkg`:
+1. Look up the port name and version for the library from `vcpkg`
 
-1. Add it to `dependencies` in `vcpkg.json`, add version, port or features if suitable:
+2. Add it to `dependencies` and `overrides` fields in `vcpkg.json`, then add version, port or features if suitable
 
-1. Install it with `generate.bat` and update `premake` configs:
+3. Reinstall with `generate.bat` and update `premake` configs
 
-## Upgrading packages
+## Upgrade library
 
-1. Update your vcpkg clone and re-bootstrap:
+1. Update your `vcpkg` clone and re-bootstrap
 
 ```bat
-cd C:\vcpkg
+cd <path-to-vcpkg>
 git pull
 bootstrap-vcpkg.bat
 ```
 
-1. Get the new baseline commit SHA to put in `vcpkg.json`.
+2. Get the new baseline commit SHA to put in `vcpkg.json`
 
-1. Look up the new version and port of each package you want to move.
+3. Look up the new versions and ports of each packages you want to upgrade
 
-1. Re-run `generate.bat`:
+4. Re-run `generate.bat`
 
 ## Removing a package
 
-1. Delete it from `dependencies` in `vcpkg.json`, and its `overrides` entry if it has one.
+1. Delete it from `vcpkg.json` entirely
 
-1. Delete all related settings from `premake` configs.
+2. Delete all related settings from `premake` configs
+
+3. Delete it from `vcpkg_installed/` if exists
 
 ## Troubleshooting
 
 ### Rebuilding a dependency from scratch
 
-* Delete `vcpkg_installed\` and re-run `generate.bat`. To also bypass the binary cache, delete `%LOCALAPPDATA%\vcpkg\archives`.
+* Delete `vcpkg_installed/` and re-run `generate.bat`. To also bypass the cache, delete `%LOCALAPPDATA%/vcpkg/archives`
 
-## Dependencies: ##
+## Dependencies ##
 
 * [GLFW](https://github.com/glfw/glfw)
 * [glad](https://github.com/Dav1dde/glad)
@@ -97,5 +96,6 @@ bootstrap-vcpkg.bat
 * [Lua](https://github.com/lua/lua)
 * [sol2](https://github.com/ThePhD/sol2)
 * [Boost](https://www.boost.org/)
+* [doctest](https://github.com/doctest/doctest/)
 * [vcpkg](https://github.com/microsoft/vcpkg)
 * [Premake](https://github.com/premake/premake-core)

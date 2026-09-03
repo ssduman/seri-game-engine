@@ -12,15 +12,6 @@ project "Editor"
     "src/**.cpp",
   }
 
-  defines {
-    "GLFW_INCLUDE_NONE",
-    "GLM_ENABLE_EXPERIMENTAL",
-    "FMT_UNICODE=0",
-    "FMT_SHARED",
-    "ASSIMP_DLL",
-    "BOOST_LOG_DYN_LINK",
-  }
-
   linkoptions {
     "-IGNORE:4098",
   }
@@ -33,17 +24,12 @@ project "Editor"
 
   includedirs {
     "src",
-    "%{wks.location}/seri",
     "%{IncludeDir.glad}",
   }
 
-  externalincludedirs {
-    "%{IncludeDir.vcpkg}",
-  }
-  externalwarnings "Off"
+  uses { "Seri" }
 
   links {
-    "Seri",
     "opengl32.lib",
     "glfw3dll",
     "efsw",
@@ -64,17 +50,12 @@ project "Editor"
       "%{LibDir.vcpkg_debug}",
     }
     links {
-      "%{Lib.boost_log_debug}",
-      "%{Lib.boost_log_setup_debug}",
-      "%{Lib.boost_thread_debug}",
       "%{Lib.assimp_debug}",
-      "fmtd",
       "freetyped",
       "imguid",
       "yaml-cppd",
     }
     postbuildcommands {
-      '{COPYDIR} "%{BinDir.vcpkg_debug}" "%{cfg.targetdir}"',
       "{COPYDIR} %{prj.location}assets %{cfg.buildtarget.directory}assets",
     }
 
@@ -86,16 +67,11 @@ project "Editor"
       "%{LibDir.vcpkg}",
     }
     links {
-      "%{Lib.boost_log}",
-      "%{Lib.boost_log_setup}",
-      "%{Lib.boost_thread}",
       "%{Lib.assimp}",
-      "fmt",
       "freetype",
       "imgui",
       "yaml-cpp",
     }
     postbuildcommands {
-      '{COPYDIR} "%{BinDir.vcpkg}" "%{cfg.targetdir}"',
       "{COPYDIR} %{prj.location}assets %{cfg.buildtarget.directory}assets",
     }
