@@ -74,6 +74,36 @@ namespace seri
 			_windowManager->SetCursorMode(cursorMode);
 		}
 
+		static void SetCustomTitleBar(const TitleBarHitTestDelegate& titleBarHitTestFunc)
+		{
+			_windowManager->SetCustomTitleBar(titleBarHitTestFunc);
+		}
+
+		static void SetWindowIcon(int width, int height, const unsigned char* pixels)
+		{
+			_windowManager->SetWindowIcon(width, height, pixels);
+		}
+
+		static void IconifyWindow()
+		{
+			_windowManager->IconifyWindow();
+		}
+
+		static void MaximizeWindow()
+		{
+			_windowManager->MaximizeWindow();
+		}
+
+		static void RestoreWindow()
+		{
+			_windowManager->RestoreWindow();
+		}
+
+		static bool IsWindowMaximized()
+		{
+			return _windowManager->IsWindowMaximized();
+		}
+
 		static void FireEvent(const event::IEventData& data)
 		{
 			_windowManager->FireEvent(data);

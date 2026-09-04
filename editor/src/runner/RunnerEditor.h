@@ -5,10 +5,6 @@
 #include "layer/EditorLayer.h"
 #include "layer/SandboxLayer.h"
 
-#include <thread>
-#include <memory>
-#include <vector>
-
 namespace seri::editor
 {
 	class RunnerEditor : public seri::IRunner

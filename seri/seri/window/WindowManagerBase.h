@@ -27,6 +27,8 @@ namespace seri
 
 	using ProcessEventDelegate = std::function<void(const void*)>;
 
+	using TitleBarHitTestDelegate = std::function<bool(int x, int y)>;
+
 	class WindowManagerBase
 	{
 	public:
@@ -75,6 +77,18 @@ namespace seri
 		virtual void SetOpenGLHints() = 0;
 
 		virtual void SetOpenGLContext() = 0;
+
+		virtual void SetCustomTitleBar(const TitleBarHitTestDelegate& titleBarHitTestFunc) = 0;
+
+		virtual void SetWindowIcon(int width, int height, const unsigned char* pixels) = 0;
+
+		virtual void IconifyWindow() = 0;
+
+		virtual void MaximizeWindow() = 0;
+
+		virtual void RestoreWindow() = 0;
+
+		virtual bool IsWindowMaximized() = 0;
 
 		WindowProperties GetWindowProperties()
 		{

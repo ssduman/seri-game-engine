@@ -78,11 +78,16 @@ namespace seri::editor
 		void SetStyle();
 		void SetFonts();
 
+		void LoadEditorIcon();
+
 		void CheckShortcuts();
 
 		void Save();
 
-		void ShowEditorMainMenuBar();
+		void ShowEditorTitleBar();
+		void ShowEditorTitleBarMenus();
+		void ShowEditorTitleBarControls();
+		bool ShowEditorTitleBarButton(const char* id, float width, const ImVec4& hoveredColor, const ImVec4& activeColor);
 
 		void ShowEditorSceneImage();
 		void ControlEditorSceneMove(const ImVec2& imageMin, const ImVec2& imageMax);
@@ -125,7 +130,7 @@ namespace seri::editor
 		bool DrawTextInput(const char* label, std::string& value, size_t bufferSize = 512);
 		bool DrawAssetPicker(const char* label, uint64_t assetId, seri::asset::AssetType assetType, uint64_t& selection);
 
-		ImVec4 RGB0_255To0_1(int r, int g, int b, float a = 1.0f);
+		ImVec4 RGBNormalized(int r, int g, int b);
 
 		uint64_t _selectedEntityId{ 0 };
 		uint64_t _pendingDeleteEntityId{ 0 };
@@ -144,6 +149,14 @@ namespace seri::editor
 		bool _showConsole{ true };
 		bool _showProject{ true };
 		bool _resetLayout{ false };
+
+		std::shared_ptr<seri::TextureBase> _editorIcon;
+		bool _titleBarDraggable{ false };
+		float _titleBarControlsMinX{ 0.0f };
+		float _titleBarMenusMinX{ 0.0f };
+		float _titleBarMenusMaxX{ 0.0f };
+
+		static constexpr float kTitleBarHeight = 36.0f;
 
 	};
 }

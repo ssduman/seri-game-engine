@@ -163,7 +163,47 @@ namespace seri
 			glfwMakeContextCurrent(_window);
 		}
 
+		void SetCustomTitleBar(const TitleBarHitTestDelegate& titleBarHitTestFunc) override
+		{
+			_titleBarHitTestFunc = titleBarHitTestFunc;
+
+			EnableCustomTitleBarNative();
+		}
+
+		void SetWindowIcon(int width, int height, const unsigned char* pixels) override
+		{
+			GLFWimage image{ width, height, const_cast<unsigned char*>(pixels) };
+			glfwSetWindowIcon(_window, 1, &image);
+		}
+
+		void IconifyWindow() override
+		{
+			glfwIconifyWindow(_window);
+		}
+
+		void MaximizeWindow() override
+		{
+			glfwMaximizeWindow(_window);
+		}
+
+		void RestoreWindow() override
+		{
+			glfwRestoreWindow(_window);
+		}
+
+		bool IsWindowMaximized() override
+		{
+			return glfwGetWindowAttrib(_window, GLFW_MAXIMIZED) == GLFW_TRUE;
+		}
+
+		bool GetHitTestTitleBar(int x, int y)
+		{
+			return _titleBarHitTestFunc && _titleBarHitTestFunc(x, y);
+		}
+
 	private:
+		void EnableCustomTitleBarNative();
+
 		void InitGLFW()
 		{
 			if (!glfwInit())
@@ -519,6 +559,8 @@ namespace seri
 		}
 
 		GLFWwindow* _window{ nullptr };
+
+		TitleBarHitTestDelegate _titleBarHitTestFunc;
 
 	};
 }

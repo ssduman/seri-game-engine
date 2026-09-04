@@ -9,6 +9,8 @@ namespace seri::editor
 
 	EditorGUI::~EditorGUI()
 	{
+		seri::WindowManager::SetCustomTitleBar(nullptr);
+
 		if (ImGui::GetCurrentContext() == nullptr)
 		{
 			LOGGER(warning) << "[gui] unexpected context to destroy";
@@ -36,6 +38,23 @@ namespace seri::editor
 		SetIO();
 		SetFonts();
 		SetStyle();
+
+		LoadEditorIcon();
+
+		seri::WindowManager::SetCustomTitleBar(
+			[this](int x, int y)
+			{
+				if (!_titleBarDraggable || y < 0 || y >= static_cast<int>(kTitleBarHeight))
+				{
+					return false;
+				}
+
+				bool overMenus = x >= static_cast<int>(_titleBarMenusMinX) && x < static_cast<int>(_titleBarMenusMaxX);
+				bool overControls = x >= static_cast<int>(_titleBarControlsMinX);
+
+				return !overMenus && !overControls;
+			}
+		);
 
 #if defined (SERI_USE_WINDOW_GLFW)
 		ImGui_ImplGlfw_InitForOpenGL(static_cast<GLFWwindow*>(seri::WindowManager::GetWindowHandle()), true);
@@ -105,16 +124,10 @@ namespace seri::editor
 	{
 		auto& io = ImGui::GetIO();
 
-		io.Fonts->FontLoaderFlags |= ImGuiFreeTypeLoaderFlags_LightHinting;
-
 		std::filesystem::path fontPath = seri::asset::AssetManager::GetAssetDirectory() / "fonts" / "Roboto-Regular.ttf";
 		if (std::filesystem::exists(fontPath))
 		{
 			ImFontConfig config{};
-			config.OversampleH = 2;
-			config.OversampleV = 1;
-			config.PixelSnapH = false;
-
 			io.FontDefault = io.Fonts->AddFontFromFileTTF(fontPath.string().c_str(), 16.0f, &config);
 		}
 		else
@@ -127,19 +140,19 @@ namespace seri::editor
 	{
 		auto& style = ImGui::GetStyle();
 
-		const ImVec4 bgDeep = RGB0_255To0_1(18, 20, 24);
-		const ImVec4 bgWindow = RGB0_255To0_1(28, 31, 38);
-		const ImVec4 bgPanel = RGB0_255To0_1(34, 38, 46);
-		const ImVec4 bgRaised = RGB0_255To0_1(42, 47, 57);
-		const ImVec4 bgHovered = RGB0_255To0_1(52, 58, 70);
-		const ImVec4 bgActive = RGB0_255To0_1(62, 69, 83);
-		const ImVec4 border = RGB0_255To0_1(48, 53, 63);
-		const ImVec4 text = RGB0_255To0_1(228, 231, 236);
-		const ImVec4 textDim = RGB0_255To0_1(138, 145, 158);
-		const ImVec4 accent = RGB0_255To0_1(76, 141, 255);
-		const ImVec4 accentHovered = RGB0_255To0_1(107, 161, 255);
-		const ImVec4 accentActive = RGB0_255To0_1(60, 121, 224);
-		const ImVec4 warning = RGB0_255To0_1(240, 173, 78);
+		const ImVec4 bgDeep = RGBNormalized(18, 20, 24);
+		const ImVec4 bgWindow = RGBNormalized(28, 31, 38);
+		const ImVec4 bgPanel = RGBNormalized(34, 38, 46);
+		const ImVec4 bgRaised = RGBNormalized(42, 47, 57);
+		const ImVec4 bgHovered = RGBNormalized(52, 58, 70);
+		const ImVec4 bgActive = RGBNormalized(62, 69, 83);
+		const ImVec4 border = RGBNormalized(48, 53, 63);
+		const ImVec4 text = RGBNormalized(228, 231, 236);
+		const ImVec4 textDim = RGBNormalized(138, 145, 158);
+		const ImVec4 accent = RGBNormalized(76, 141, 255);
+		const ImVec4 accentHovered = RGBNormalized(107, 161, 255);
+		const ImVec4 accentActive = RGBNormalized(60, 121, 224);
+		const ImVec4 warning = RGBNormalized(240, 173, 78);
 
 		style.WindowPadding = ImVec2(10.0f, 10.0f);
 		style.FramePadding = ImVec2(8.0f, 5.0f);
@@ -166,7 +179,7 @@ namespace seri::editor
 		style.PopupRounding = 6.0f;
 		style.ScrollbarRounding = 9.0f;
 		style.GrabRounding = 5.0f;
-		style.TabRounding = 6.0f;
+		style.TabRounding = 3.0f;
 		style.ImageRounding = 4.0f;
 
 		style.WindowTitleAlign = ImVec2(0.0f, 0.5f);
@@ -273,6 +286,37 @@ namespace seri::editor
 		}
 	}
 
+	void EditorGUI::LoadEditorIcon()
+	{
+		std::filesystem::path iconPath = seri::asset::AssetManager::GetAssetDirectory() / "icons" / "seri.png";
+		if (!std::filesystem::exists(iconPath))
+		{
+			LOGGER(warning) << fmt::format("[gui] editor icon not found: {}", iconPath.string());
+			return;
+		}
+
+		seri::TextureDesc desc{};
+		desc.minFilter = seri::TextureMinFilter::linear_mipmap_linear;
+
+		_editorIcon = seri::TextureBase::Create();
+		_editorIcon->Init(desc, iconPath.string());
+
+		int width, height, components;
+		if (void* pixels = seri::TextureBase::LoadTexture(iconPath.string(), width, height, components, false))
+		{
+			if (components == 4)
+			{
+				seri::WindowManager::SetWindowIcon(width, height, static_cast<const unsigned char*>(pixels));
+			}
+			else
+			{
+				LOGGER(warning) << "[gui] editor icon has unsupported number of components: " << components;
+			}
+
+			seri::TextureBase::UnloadTexture(pixels);
+		}
+	}
+
 	void EditorGUI::Save()
 	{
 		if (auto activeScene = seri::scene::SceneManager::GetActiveScene())
@@ -298,48 +342,182 @@ namespace seri::editor
 		}
 	}
 
-	void EditorGUI::ShowEditorMainMenuBar()
+	void EditorGUI::ShowEditorTitleBar()
 	{
-		if (ImGui::BeginMainMenuBar())
+		ImGuiViewport* viewport = ImGui::GetMainViewport();
+
+		ImGuiWindowFlags window_flags =
+			ImGuiWindowFlags_NoScrollbar |
+			ImGuiWindowFlags_NoSavedSettings |
+			ImGuiWindowFlags_MenuBar
+			;
+
+		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(8.0f, (kTitleBarHeight - ImGui::GetFontSize()) * 0.5f));
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+
+		bool open = ImGui::BeginViewportSideBar("##EditorTitleBar", viewport, ImGuiDir_Up, kTitleBarHeight, window_flags);
+		bool menuBar = open && ImGui::BeginMenuBar();
+
+		ImGui::PopStyleVar(2);
+
+		_titleBarDraggable = false;
+
+		if (menuBar)
 		{
-			if (ImGui::BeginMenu("File"))
+			const float iconSize = 20.0f;
+			ImVec2 iconMin(ImGui::GetCursorScreenPos().x, ImGui::GetWindowPos().y + (kTitleBarHeight - iconSize) * 0.5f);
+			if (_editorIcon)
 			{
-				if (ImGui::MenuItem("Noop", "Noop"))
-				{
-				}
-
-				ImGui::EndMenu();
+				auto tex = (ImTextureID)(intptr_t)_editorIcon->GetHandle();
+				ImGui::GetWindowDrawList()->AddImage(tex, iconMin, ImVec2(iconMin.x + iconSize, iconMin.y + iconSize), ImVec2(0, 1), ImVec2(1, 0));
 			}
-			if (ImGui::BeginMenu("Edit"))
-			{
-				if (ImGui::MenuItem("Save", "CTRL+S"))
-				{
-					Save();
-				}
+			ImGui::Dummy(ImVec2(iconSize, 0.0f));
 
-				ImGui::EndMenu();
-			}
-			if (ImGui::BeginMenu("Window"))
-			{
-				ImGui::MenuItem("Hierarchy", nullptr, &_showHierarchy);
-				ImGui::MenuItem("Scene", nullptr, &_showScene);
-				ImGui::MenuItem("Game", nullptr, &_showGame);
-				ImGui::MenuItem("Inspector", nullptr, &_showInspector);
-				ImGui::MenuItem("Project", nullptr, &_showProject);
-				ImGui::MenuItem("Console", nullptr, &_showConsole);
+			ImGui::TextUnformatted("Seri");
 
-				ImGui::Separator();
+			ImGui::Dummy(ImVec2(6.0f, 0.0f));
 
-				if (ImGui::MenuItem("Reset Layout"))
-				{
-					_resetLayout = true;
-				}
+			_titleBarMenusMinX = ImGui::GetCursorPosX();
+			ShowEditorTitleBarMenus();
+			_titleBarMenusMaxX = ImGui::GetCursorPosX();
 
-				ImGui::EndMenu();
-			}
+			ShowEditorTitleBarControls();
 
-			ImGui::EndMainMenuBar();
+			_titleBarDraggable = !ImGui::IsPopupOpen("", ImGuiPopupFlags_AnyPopup);
+
+			ImGui::EndMenuBar();
 		}
+
+		ImGui::End();
+	}
+
+	void EditorGUI::ShowEditorTitleBarMenus()
+	{
+		if (ImGui::BeginMenu("File"))
+		{
+			if (ImGui::MenuItem("Noop", "Noop"))
+			{
+			}
+
+			ImGui::EndMenu();
+		}
+		if (ImGui::BeginMenu("Edit"))
+		{
+			if (ImGui::MenuItem("Save", "CTRL+S"))
+			{
+				Save();
+			}
+
+			ImGui::EndMenu();
+		}
+		if (ImGui::BeginMenu("Window"))
+		{
+			ImGui::MenuItem("Hierarchy", nullptr, &_showHierarchy);
+			ImGui::MenuItem("Scene", nullptr, &_showScene);
+			ImGui::MenuItem("Game", nullptr, &_showGame);
+			ImGui::MenuItem("Inspector", nullptr, &_showInspector);
+			ImGui::MenuItem("Project", nullptr, &_showProject);
+			ImGui::MenuItem("Console", nullptr, &_showConsole);
+
+			ImGui::Separator();
+
+			if (ImGui::MenuItem("Reset Layout"))
+			{
+				_resetLayout = true;
+			}
+
+			ImGui::EndMenu();
+		}
+	}
+
+	void EditorGUI::ShowEditorTitleBarControls()
+	{
+		const float buttonWidth = 46.0f;
+		const ImVec4 hovered = ImVec4(1.0f, 1.0f, 1.0f, 0.10f);
+		const ImVec4 active = ImVec4(1.0f, 1.0f, 1.0f, 0.06f);
+		const ImVec4 closeHovered = RGBNormalized(196, 43, 28);
+		const ImVec4 closeActive = RGBNormalized(160, 35, 23);
+		const ImU32 glyphColor = ImGui::GetColorU32(ImGuiCol_Text);
+
+		auto itemCenter = []()
+			{
+				ImVec2 min = ImGui::GetItemRectMin();
+				ImVec2 max = ImGui::GetItemRectMax();
+				return ImFloor(ImVec2((min.x + max.x) * 0.5f, (min.y + max.y) * 0.5f));
+			};
+
+		_titleBarControlsMinX = ImGui::GetWindowWidth() - buttonWidth * 3.0f;
+
+		ImGui::SetCursorPos(ImVec2(_titleBarControlsMinX, 0.0f));
+
+		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 0.0f);
+		ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0.0f);
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0.0f, 0.0f));
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
+
+		ImDrawList* drawList = ImGui::GetWindowDrawList();
+
+		if (ShowEditorTitleBarButton("##minimize", buttonWidth, hovered, active))
+		{
+			seri::WindowManager::IconifyWindow();
+		}
+
+		ImVec2 c = itemCenter();
+
+		drawList->AddLine(ImVec2(c.x - 5.0f, c.y), ImVec2(c.x + 4.0f, c.y), glyphColor, 1.0f);
+
+		bool maximized = seri::WindowManager::IsWindowMaximized();
+		if (ShowEditorTitleBarButton("##maximize", buttonWidth, hovered, active))
+		{
+			if (maximized)
+			{
+				seri::WindowManager::RestoreWindow();
+			}
+			else
+			{
+				seri::WindowManager::MaximizeWindow();
+			}
+		}
+
+		c = itemCenter();
+
+		if (maximized)
+		{
+			drawList->AddRect(ImVec2(c.x - 5.0f, c.y - 3.0f), ImVec2(c.x + 3.0f, c.y + 5.0f), glyphColor, 0.0f, 0, 1.0f);
+			ImVec2 points[4] = {
+				ImVec2(c.x - 2.5f, c.y - 2.5f),
+				ImVec2(c.x - 2.5f, c.y - 4.5f),
+				ImVec2(c.x + 4.5f, c.y - 4.5f),
+				ImVec2(c.x + 4.5f, c.y + 2.5f),
+			};
+			drawList->AddPolyline(points, 4, glyphColor, ImDrawFlags_None, 1.0f);
+		}
+		else
+		{
+			drawList->AddRect(ImVec2(c.x - 5.0f, c.y - 5.0f), ImVec2(c.x + 5.0f, c.y + 5.0f), glyphColor, 0.0f, 0, 1.0f);
+		}
+
+		if (ShowEditorTitleBarButton("##close", buttonWidth, closeHovered, closeActive))
+		{
+			seri::WindowManager::SetWindowShouldCloseToTrue();
+		}
+
+		c = itemCenter();
+
+		drawList->AddLine(ImVec2(c.x - 5.0f, c.y - 5.0f), ImVec2(c.x + 4.0f, c.y + 4.0f), glyphColor, 1.0f);
+		drawList->AddLine(ImVec2(c.x - 5.0f, c.y + 4.0f), ImVec2(c.x + 4.0f, c.y - 5.0f), glyphColor, 1.0f);
+
+		ImGui::PopStyleColor();
+		ImGui::PopStyleVar(3);
+	}
+
+	bool EditorGUI::ShowEditorTitleBarButton(const char* id, float width, const ImVec4& hoveredColor, const ImVec4& activeColor)
+	{
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, hoveredColor);
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, activeColor);
+		bool pressed = ImGui::Button(id, ImVec2(width, kTitleBarHeight));
+		ImGui::PopStyleColor(2);
+		return pressed;
 	}
 
 	void EditorGUI::ShowEditorSceneImage()
@@ -1833,11 +2011,17 @@ namespace seri::editor
 			_resetLayout = false;
 		}
 
+		const float tabPadding = 4.0f;
+		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(tabPadding, ImGui::GetStyle().FramePadding.y));
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(4.0f, ImGui::GetStyle().ItemInnerSpacing.y));
+		// negative border cancels the FramePadding.x offset ImGui adds before the first dock tab, so tabs start at the node edge
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, -tabPadding);
 		ImGui::DockSpace(dockspace_id, ImVec2(0, 0), ImGuiDockNodeFlags_PassthruCentralNode);
+		ImGui::PopStyleVar(3);
 
 		ImGui::End();
 
-		ShowEditorMainMenuBar();
+		ShowEditorTitleBar();
 
 		if (_showInspector)
 		{
@@ -2163,9 +2347,9 @@ namespace seri::editor
 		return changed;
 	}
 
-	ImVec4 EditorGUI::RGB0_255To0_1(int r, int g, int b, float a)
+	ImVec4 EditorGUI::RGBNormalized(int r, int g, int b)
 	{
-		return ImVec4(r / 255.0f, g / 255.0f, b / 255.0f, a);
+		return ImVec4(r / 255.0f, g / 255.0f, b / 255.0f, 1.0f);
 	}
 
 }

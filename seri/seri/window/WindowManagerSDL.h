@@ -456,6 +456,82 @@ namespace seri
 			}
 		}
 
+		void SetCustomTitleBar(const TitleBarHitTestDelegate& titleBarHitTestFunc) override
+		{
+			_titleBarHitTestFunc = titleBarHitTestFunc;
+
+			SDL_SetWindowBordered(_window, false);
+			SDL_SetWindowHitTest(_window,
+				[](SDL_Window* window, const SDL_Point* area, void* data) -> SDL_HitTestResult
+				{
+					auto windowManager = static_cast<WindowManagerSDL*>(data);
+
+					if ((SDL_GetWindowFlags(window) & SDL_WINDOW_MAXIMIZED) == 0)
+					{
+						const int border = 8;
+						int width, height;
+						SDL_GetWindowSize(window, &width, &height);
+
+						bool left = area->x < border;
+						bool right = area->x >= width - border;
+						bool top = area->y < border;
+						bool bottom = area->y >= height - border;
+
+						if (top && left) return SDL_HITTEST_RESIZE_TOPLEFT;
+						if (top && right) return SDL_HITTEST_RESIZE_TOPRIGHT;
+						if (bottom && left) return SDL_HITTEST_RESIZE_BOTTOMLEFT;
+						if (bottom && right) return SDL_HITTEST_RESIZE_BOTTOMRIGHT;
+						if (left) return SDL_HITTEST_RESIZE_LEFT;
+						if (right) return SDL_HITTEST_RESIZE_RIGHT;
+						if (top) return SDL_HITTEST_RESIZE_TOP;
+						if (bottom) return SDL_HITTEST_RESIZE_BOTTOM;
+					}
+
+					if (windowManager->_titleBarHitTestFunc && windowManager->_titleBarHitTestFunc(area->x, area->y))
+					{
+						return SDL_HITTEST_DRAGGABLE;
+					}
+
+					return SDL_HITTEST_NORMAL;
+				},
+				this
+			);
+		}
+
+		void SetWindowIcon(int width, int height, const unsigned char* pixels) override
+		{
+			SDL_Surface* surface = SDL_CreateSurfaceFrom(width, height, SDL_PIXELFORMAT_RGBA32, const_cast<unsigned char*>(pixels), width * 4);
+			if (surface)
+			{
+				SDL_SetWindowIcon(_window, surface);
+				SDL_DestroySurface(surface);
+			}
+			else
+			{
+				LOGGER(error) << "[window] sdl create surface from icon error: " + std::string(SDL_GetError());
+			}
+		}
+
+		void IconifyWindow() override
+		{
+			SDL_MinimizeWindow(_window);
+		}
+
+		void MaximizeWindow() override
+		{
+			SDL_MaximizeWindow(_window);
+		}
+
+		void RestoreWindow() override
+		{
+			SDL_RestoreWindow(_window);
+		}
+
+		bool IsWindowMaximized() override
+		{
+			return (SDL_GetWindowFlags(_window) & SDL_WINDOW_MAXIMIZED) != 0;
+		}
+
 	private:
 		void InitSDL()
 		{
@@ -565,9 +641,12 @@ namespace seri
 		}
 
 		SDL_Window* _window{ nullptr };
+
 		SDL_GLContext _context;
 
 		bool _shouldClose{ false };
+
+		TitleBarHitTestDelegate _titleBarHitTestFunc;
 
 	};
 }
