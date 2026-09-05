@@ -105,7 +105,7 @@ namespace seri
 		{
 			if (!IsActiveForUsing())
 			{
-				LOGGER(error) << "[shader] not active for bind";
+				LIB_LOGGER(error, shader) << "not active for bind";
 				return;
 			}
 
@@ -123,7 +123,7 @@ namespace seri
 			{
 				Unbind();
 				Del();
-				LOGGER(verbose) << "[shader] deleted: " << _program;
+				LIB_LOGGER(verbose, shader) << "deleted: " << _program;
 			}
 		}
 
@@ -211,7 +211,7 @@ namespace seri
 			if (!errorStatusSuccess)
 			{
 				glGetShaderInfoLog(shader, 512, nullptr, errorStatusLog);
-				LOGGER(error) << "[shader] program compilation failed: " << errorStatusLog;
+				LIB_LOGGER(error, shader) << "program compilation failed: " << errorStatusLog;
 				return false;
 			}
 
@@ -236,7 +236,7 @@ namespace seri
 					glGetProgramInfoLog(_program, logLength, nullptr, log.data());
 				}
 
-				LOGGER(error) << fmt::format("[shader] program linking failed:\n{}", log);
+				LIB_LOGGER(error, shader) << fmt::format("program linking failed:\n{}", log);
 
 				return false;
 			}

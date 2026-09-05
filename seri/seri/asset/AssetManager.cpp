@@ -26,7 +26,7 @@ namespace seri::asset
 						}
 						else
 						{
-							LOGGER(error) << fmt::format("[asset] could not found material {} to save", id);
+							LIB_LOGGER(error, asset) << fmt::format("could not found material {} to save", id);
 							break;
 						}
 
@@ -60,7 +60,7 @@ namespace seri::asset
 						}
 						else
 						{
-							LOGGER(error) << fmt::format("[asset] could not found model {} to save", id);
+							LIB_LOGGER(error, asset) << fmt::format("could not found model {} to save", id);
 							break;
 						}
 
@@ -79,7 +79,7 @@ namespace seri::asset
 					break;
 				default:
 					{
-						//LOGGER(info) << fmt::format("[asset] unexpected asset type for saving: {}", static_cast<int>(metadata.type));
+						//LIB_LOGGER(info, asset) << fmt::format("unexpected asset type for saving: {}", static_cast<int>(metadata.type));
 					}
 					break;
 			}
@@ -100,7 +100,7 @@ namespace seri::asset
 		BuildAssetTree(_assetTreeRoot);
 		LoadAfterUpdate();
 
-		LOGGER(info) << "[asset] asset tree updated";
+		LIB_LOGGER(info, asset) << "asset tree updated";
 	}
 
 	void asset::AssetManager::BuildAssetTree(AssetTreeNode& parent)
@@ -141,7 +141,7 @@ namespace seri::asset
 						assetOfMeta = assetOfMeta.replace_extension("");
 						if (deleteAllMeta || !std::filesystem::exists(assetOfMeta))
 						{
-							LOGGER(info) << fmt::format("[asset] deleting meta '{}' because not has its asset", node.path.string());
+							LIB_LOGGER(info, asset) << fmt::format("deleting meta '{}' because not has its asset", node.path.string());
 							std::filesystem::remove(node.path);
 						}
 					}
@@ -345,7 +345,7 @@ namespace seri::asset
 					break;
 				default:
 					{
-						//LOGGER(info) << fmt::format("[asset] unexpected asset type for loading: {}", static_cast<int>(metadata.type));
+						//LIB_LOGGER(info, asset) << fmt::format("unexpected asset type for loading: {}", static_cast<int>(metadata.type));
 					}
 					break;
 			}

@@ -93,8 +93,16 @@ namespace seri
 	};
 }
 
-#define LOGGER(lvl) \
-	BOOST_LOG_STREAM_SEV(::seri::GlobalLogger::get(), ::seri::LogLevel::lvl) \
-		<< ::boost::log::add_value("File", ::seri::Logger::TrimPath(__FILE__)) \
+#define LOGGER_ATTRIBUTES \
+	::boost::log::add_value("File", ::seri::Logger::TrimPath(__FILE__)) \
 		<< ::boost::log::add_value("Line", static_cast<unsigned int>(__LINE__)) \
 		<< ::boost::log::add_value("Function", static_cast<const char*>(__FUNCTION__))
+
+#define LOGGER(level) \
+	BOOST_LOG_STREAM_SEV(::seri::GlobalLogger::get(), ::seri::LogLevel::level) \
+		<< LOGGER_ATTRIBUTES
+
+#define LIB_LOGGER(level, module) \
+	BOOST_LOG_STREAM_SEV(::seri::GlobalLogger::get(), ::seri::LogLevel::level) \
+		<< ::boost::log::add_value("Module", #module) \
+		<< LOGGER_ATTRIBUTES

@@ -16,7 +16,7 @@ namespace seri
 
 		~RenderingManagerOpenGL() override
 		{
-			LOGGER(info) << "[rendering] opengl rendering manager destroyed";
+			LIB_LOGGER(info, rendering) << "opengl rendering manager destroyed";
 		}
 
 		void Init(std::unique_ptr<WindowManagerBase>& windowManager, RenderingProperties renderingProperties) override
@@ -114,7 +114,7 @@ namespace seri
 
 			_initialized = true;
 
-			LOGGER(info) << "[rendering] opengl rendering manager successfully";
+			LIB_LOGGER(info, rendering) << "opengl rendering manager successfully";
 		}
 
 		void SetViewport(int x, int y, int width, int height) override
@@ -232,8 +232,8 @@ namespace seri
 				throw std::runtime_error("[rendering] glad load error");
 			}
 
-			LOGGER(info) << "[rendering] glad generator version: " << GLAD_GENERATOR_VERSION;
-			LOGGER(info) << "[rendering] loaded opengl: " << GLAD_VERSION_MAJOR(version) << "." << GLAD_VERSION_MINOR(version);
+			LIB_LOGGER(info, rendering) << "glad generator version: " << GLAD_GENERATOR_VERSION;
+			LIB_LOGGER(info, rendering) << "loaded opengl: " << GLAD_VERSION_MAJOR(version) << "." << GLAD_VERSION_MINOR(version);
 		}
 
 		void SetOpenGLOptions()
@@ -251,10 +251,10 @@ namespace seri
 
 		void LogOpenGLInfo()
 		{
-			LOGGER(info) << "[rendering] vendor: " << GetGLString(GL_VENDOR);
-			LOGGER(info) << "[rendering] version: " << GetGLString(GL_VERSION);
-			LOGGER(info) << "[rendering] renderer: " << GetGLString(GL_RENDERER);
-			LOGGER(info) << "[rendering] shading language version: " << GetGLString(GL_SHADING_LANGUAGE_VERSION);
+			LIB_LOGGER(info, rendering) << "vendor: " << GetGLString(GL_VENDOR);
+			LIB_LOGGER(info, rendering) << "version: " << GetGLString(GL_VERSION);
+			LIB_LOGGER(info, rendering) << "renderer: " << GetGLString(GL_RENDERER);
+			LIB_LOGGER(info, rendering) << "shading language version: " << GetGLString(GL_SHADING_LANGUAGE_VERSION);
 		}
 
 		void CheckOpenGLError()
@@ -262,7 +262,7 @@ namespace seri
 			GLenum err;
 			while ((err = glGetError()) != GL_NO_ERROR)
 			{
-				LOGGER(error) << "[rendering] gl error occurred: " << err;
+				LIB_LOGGER(error, rendering) << "gl error occurred: " << err;
 			}
 		}
 
@@ -371,7 +371,7 @@ namespace seri
 						return;
 					}
 
-					LOGGER(verbose) << "[rendering] gl debug message:" << "\n"
+					LIB_LOGGER(verbose, rendering) << "gl debug message:" << "\n"
 						<< "severity: " << getDebugSeverityString(severity) << "\n"
 						<< "type: " << getDebugTypeString(type) << "\n"
 						<< "source: " << getDebugSourceString(source) << "\n"

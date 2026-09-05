@@ -149,7 +149,7 @@ namespace seri
 				}
 				else
 				{
-					LOGGER(error) << "[texture] texture " << faces[i] << " could not loaded for cube map";
+					LIB_LOGGER(error, texture) << "texture " << faces[i] << " could not loaded for cube map";
 				}
 			}
 
@@ -228,19 +228,19 @@ namespace seri
 					switch (err)
 					{
 						case GL_INVALID_ENUM:
-							LOGGER(error) << "[texture] error: GL_INVALID_ENUM";
+							LIB_LOGGER(error, texture) << "error: GL_INVALID_ENUM";
 							break;
 						case GL_INVALID_VALUE:
-							LOGGER(error) << "[texture] error: GL_INVALID_VALUE";
+							LIB_LOGGER(error, texture) << "error: GL_INVALID_VALUE";
 							break;
 						case GL_INVALID_OPERATION:
-							LOGGER(error) << "[texture] error: GL_INVALID_OPERATION";
+							LIB_LOGGER(error, texture) << "error: GL_INVALID_OPERATION";
 							break;
 						case GL_OUT_OF_MEMORY:
-							LOGGER(error) << "[texture] error: GL_OUT_OF_MEMORY";
+							LIB_LOGGER(error, texture) << "error: GL_OUT_OF_MEMORY";
 							break;
 						default:
-							LOGGER(error) << "[texture] error: unknown: " << err;
+							LIB_LOGGER(error, texture) << "error: unknown: " << err;
 							break;
 					}
 				}

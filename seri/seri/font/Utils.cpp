@@ -26,7 +26,7 @@ namespace seri::font
 		}
 		catch (const std::exception& e)
 		{
-			LOGGER(error) << "[font] exception occurred while splitting: " << str << ", exception: " << e.what();
+			LIB_LOGGER(error, font) << "exception occurred while splitting: " << str << ", exception: " << e.what();
 			return {};
 		}
 	}

@@ -65,7 +65,7 @@ namespace seri::scene
 			{
 				return _entityMap[id];
 			}
-			LOGGER(error) << fmt::format("[scene] entity with id {} not found", id);
+			LIB_LOGGER(error, scene) << fmt::format("entity with id {} not found", id);
 			return entt::null;
 		}
 

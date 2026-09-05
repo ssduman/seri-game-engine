@@ -53,7 +53,7 @@ namespace seri
 
 		GetInstance()._inited = true;
 
-		LOGGER(info) << "[logger] inited, level: " << ToString(GetInstance()._config.level)
+		LIB_LOGGER(info, logger) << "inited, level: " << ToString(GetInstance()._config.level)
 			<< ", clock: " << (isUTC ? "utc" : "local")
 			<< ", timestamp format: " << GetInstance()._config.timeStampFormat;
 	}
@@ -65,7 +65,7 @@ namespace seri
 			return;
 		}
 
-		LOGGER(info) << "[logger] shutting down";
+		LIB_LOGGER(info, logger) << "shutting down";
 
 		auto core = boost::log::core::get();
 		core->flush();
@@ -223,6 +223,12 @@ namespace seri
 		else
 		{
 			stream << "[" << ToString3(level) << "] ";
+		}
+
+		auto module = boost::log::extract<std::string>("Module", record);
+		if (module)
+		{
+			stream << "[" << module.get() << "] ";
 		}
 
 		if (severity && severity.get() == LogLevel::error)

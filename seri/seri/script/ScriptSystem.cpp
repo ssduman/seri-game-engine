@@ -21,12 +21,12 @@ namespace seri::script
 			catch (const std::exception& ex)
 			{
 				instance.faulted = true;
-				LOGGER(error) << fmt::format("[script] '{}' threw, script disabled: {}", stage, ex.what());
+				LIB_LOGGER(error, script) << fmt::format("'{}' threw, script disabled: {}", stage, ex.what());
 			}
 			catch (...)
 			{
 				instance.faulted = true;
-				LOGGER(error) << fmt::format("[script] '{}' threw unknown exception, script disabled", stage);
+				LIB_LOGGER(error, script) << fmt::format("'{}' threw unknown exception, script disabled", stage);
 			}
 
 			return false;
@@ -124,7 +124,7 @@ namespace seri::script
 
 		_inited = true;
 
-		LOGGER(info) << fmt::format("[script] inited with {} registered script(s)", ScriptRegistry::GetNames().size());
+		LIB_LOGGER(info, script) << fmt::format("inited with {} registered script(s)", ScriptRegistry::GetNames().size());
 	}
 
 	void ScriptSystem::Update(float deltaTime)
@@ -274,7 +274,7 @@ namespace seri::script
 
 			if (!instance.script)
 			{
-				LOGGER(error) << fmt::format("[script] '{}' is not registered", entry.name);
+				LIB_LOGGER(error, script) << fmt::format("'{}' is not registered", entry.name);
 			}
 			else
 			{
@@ -336,7 +336,7 @@ namespace seri::script
 			}
 			catch (const std::exception& ex)
 			{
-				LOGGER(error) << fmt::format("[script] deferred command threw: {}", ex.what());
+				LIB_LOGGER(error, script) << fmt::format("deferred command threw: {}", ex.what());
 			}
 		}
 	}

@@ -31,14 +31,14 @@ namespace seri::script
 
 			if (GetInstance()._factories.contains(key))
 			{
-				LOGGER(warning) << fmt::format("[script] '{}' is already registered", key);
+				LIB_LOGGER(warning, script) << fmt::format("'{}' is already registered", key);
 				return;
 			}
 
 			GetInstance()._factories.emplace(key, []() { return std::unique_ptr<ScriptBase>{ new T{} }; });
 			GetInstance()._names.emplace_back(key);
 
-			LOGGER(info) << fmt::format("[script] '{}' registered", key);
+			LIB_LOGGER(info, script) << fmt::format("'{}' registered", key);
 		}
 
 		static std::unique_ptr<ScriptBase> Create(const std::string& name);

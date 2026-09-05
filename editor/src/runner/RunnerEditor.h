@@ -21,7 +21,7 @@ namespace seri::editor
 			layerManager.AddLayer(std::move(std::make_shared<seri::editor::SandboxLayer>()));
 			layerManager.AddLayer(std::move(std::make_shared<seri::editor::EditorLayer>()));
 
-			LOGGER(info) << "[editor] seri game engine - editor loop starting";
+			LIB_LOGGER(info, editor) << "seri game engine - editor loop starting";
 
 			while (!seri::WindowManager::GetWindowShouldClose())
 			{
@@ -31,7 +31,7 @@ namespace seri::editor
 				layerManager.OnPostUpdate();
 			}
 
-			LOGGER(info) << "[editor] seri game engine - editor loop stopped";
+			LIB_LOGGER(info, editor) << "seri game engine - editor loop stopped";
 		}
 
 	};

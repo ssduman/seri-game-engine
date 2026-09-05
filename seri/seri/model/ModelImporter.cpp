@@ -34,7 +34,7 @@ namespace seri
 		const aiScene* ai_scene = ai_importer.ReadFile(modelPath, FlagBuilder());
 		if (!ai_scene || ai_scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !ai_scene->mRootNode)
 		{
-			LOGGER(error) << fmt::format("[model] read model path '{}' failed: {}", modelPath, ai_importer.GetErrorString());
+			LIB_LOGGER(error, model) << fmt::format("read model path '{}' failed: {}", modelPath, ai_importer.GetErrorString());
 			return nullptr;
 		}
 
@@ -243,7 +243,7 @@ namespace seri
 			}
 			else
 			{
-				LOGGER(error) << "[model] getting " << GetString(ai_tt) << " texture with index " << i << " failed";
+				LIB_LOGGER(error, model) << "getting " << GetString(ai_tt) << " texture with index " << i << " failed";
 			}
 		}
 	}
@@ -319,7 +319,7 @@ namespace seri
 			return;
 		}
 
-		//LOGGER(info) << "[model] mesh '" << ai_mesh->mName.C_Str() << "' has " << ai_mesh->mNumBones << " bones";
+		//LIB_LOGGER(info, model) << "mesh '" << ai_mesh->mName.C_Str() << "' has " << ai_mesh->mNumBones << " bones";
 
 		mesh->bonesForVertices.resize(mesh->vertices.size());
 
@@ -347,7 +347,7 @@ namespace seri
 				mesh->bones[boneIndex] = Bone{ boneIndex, boneName, boneOffsetMatrix };
 			}
 
-			//LOGGER(info) << "[model] mesh: " << mesh->name << ", bone index: " << boneIndex << ", bone name: " << boneName;
+			//LIB_LOGGER(info, model) << "mesh: " << mesh->name << ", bone index: " << boneIndex << ", bone name: " << boneName;
 
 			for (unsigned int j = 0; j < ai_bone->mNumWeights; j++)
 			{
@@ -361,7 +361,7 @@ namespace seri
 	{
 		if (!ai_scene->HasAnimations())
 		{
-			//LOGGER(info) << "[model] no animations found";
+			//LIB_LOGGER(info, model) << "no animations found";
 			return {};
 		}
 
@@ -390,7 +390,7 @@ namespace seri
 
 				if (animation.nodeAnimations.find(nodeName) != animation.nodeAnimations.end())
 				{
-					LOGGER(error) << "[model] duplicate node animation found: " << nodeName;
+					LIB_LOGGER(error, model) << "duplicate node animation found: " << nodeName;
 					continue;
 				}
 
@@ -485,7 +485,7 @@ namespace seri
 				}
 			}
 
-			LOGGER(info) << fmt::format("[model] blend shape '{}', count: {}, weight: {} loaded", blendShapeName, ai_mesh->mNumAnimMeshes, weight);
+			LIB_LOGGER(info, model) << fmt::format("blend shape '{}', count: {}, weight: {} loaded", blendShapeName, ai_mesh->mNumAnimMeshes, weight);
 		}
 	}
 

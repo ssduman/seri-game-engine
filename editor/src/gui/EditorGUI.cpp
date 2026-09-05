@@ -4,7 +4,7 @@ namespace seri::editor
 {
 	EditorGUI::EditorGUI()
 	{
-		LOGGER(info) << "[gui] created";
+		LIB_LOGGER(info, gui) << "created";
 	}
 
 	EditorGUI::~EditorGUI()
@@ -13,7 +13,7 @@ namespace seri::editor
 
 		if (ImGui::GetCurrentContext() == nullptr)
 		{
-			LOGGER(warning) << "[gui] unexpected context to destroy";
+			LIB_LOGGER(warning, gui) << "unexpected context to destroy";
 			return;
 		}
 
@@ -27,7 +27,7 @@ namespace seri::editor
 
 		ImGui::DestroyContext();
 
-		LOGGER(info) << "[gui] destroyed";
+		LIB_LOGGER(info, gui) << "destroyed";
 	}
 
 	void EditorGUI::Init()
@@ -132,7 +132,7 @@ namespace seri::editor
 		}
 		else
 		{
-			LOGGER(warning) << fmt::format("[gui] editor font not found: {}", fontPath.string());
+			LIB_LOGGER(warning, gui) << fmt::format("editor font not found: {}", fontPath.string());
 		}
 	}
 
@@ -291,7 +291,7 @@ namespace seri::editor
 		std::filesystem::path iconPath = seri::asset::AssetManager::GetAssetDirectory() / "icons" / "seri.png";
 		if (!std::filesystem::exists(iconPath))
 		{
-			LOGGER(warning) << fmt::format("[gui] editor icon not found: {}", iconPath.string());
+			LIB_LOGGER(warning, gui) << fmt::format("editor icon not found: {}", iconPath.string());
 			return;
 		}
 
@@ -310,7 +310,7 @@ namespace seri::editor
 			}
 			else
 			{
-				LOGGER(warning) << "[gui] editor icon has unsupported number of components: " << components;
+				LIB_LOGGER(warning, gui) << "editor icon has unsupported number of components: " << components;
 			}
 
 			seri::TextureBase::UnloadTexture(pixels);
@@ -1046,7 +1046,7 @@ namespace seri::editor
 				break;
 			default:
 				{
-					LOGGER(error) << "[gui] editor unknown inspector type";
+					LIB_LOGGER(error, gui) << "editor unknown inspector type";
 				}
 				break;
 		}
@@ -1974,7 +1974,7 @@ namespace seri::editor
 
 		ImGui::DockBuilderFinish(dockspaceId);
 
-		LOGGER(info) << "[gui] default dock layout built";
+		LIB_LOGGER(info, gui) << "default dock layout built";
 	}
 
 	void EditorGUI::DrawEditorLayout()

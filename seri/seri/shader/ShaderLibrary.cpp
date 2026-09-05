@@ -36,7 +36,7 @@ namespace seri
 
 				if (Util::Contains(path, "#include"))
 				{
-					LOGGER(error) << fmt::format("[shader library] glsl include not supported in glsl: {}", name);
+					LIB_LOGGER(error, shader_library) << fmt::format("glsl include not supported in glsl: {}", name);
 					continue;
 				}
 
@@ -48,7 +48,7 @@ namespace seri
 			}
 		}
 
-		LOGGER(info) << fmt::format("[shader library] init done, glsl count: {}, shader count: {}", GetInstance()._predefinedGLSLs.size(), GetInstance()._predefinedShaders.size());
+		LIB_LOGGER(info, shader_library) << fmt::format("init done, glsl count: {}, shader count: {}", GetInstance()._predefinedGLSLs.size(), GetInstance()._predefinedShaders.size());
 	}
 
 	ShaderLibrary::GLSLInfo& ShaderLibrary::GetGLSL(const std::string& name)

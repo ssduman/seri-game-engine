@@ -51,7 +51,7 @@ namespace seri::asset
 			GetInstance()._fileWatcher = std::make_shared<efsw::FileWatcher>();
 			GetInstance()._fileWatcher->watch();
 
-			LOGGER(info) << fmt::format("[asset] asset directory: {}", GetAssetDirectory().string());
+			LIB_LOGGER(info, asset) << fmt::format("asset directory: {}", GetAssetDirectory().string());
 		}
 
 		static void Update()

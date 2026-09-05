@@ -121,7 +121,7 @@ namespace seri
 
 		SetWindowPos(hwnd, nullptr, 0, 0, 0, 0, SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
 
-		LOGGER(info) << "[window] custom title bar enabled";
+		LIB_LOGGER(info, window) << "custom title bar enabled";
 	}
 }
 

@@ -132,7 +132,7 @@ namespace seri
 	{
 		if (_faces.size() != 6)
 		{
-			LOGGER(error) << "[skybox] there should be exactly 6 textures for skybox";
+			LIB_LOGGER(error, skybox) << "there should be exactly 6 textures for skybox";
 			return;
 		}
 

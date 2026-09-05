@@ -121,31 +121,31 @@ namespace seri
 			switch (status)
 			{
 				case GL_FRAMEBUFFER_UNDEFINED:
-					LOGGER(error) << "[framebuffer] error: GL_FRAMEBUFFER_UNDEFINED";
+					LIB_LOGGER(error, framebuffer) << "error: GL_FRAMEBUFFER_UNDEFINED";
 					break;
 				case GL_FRAMEBUFFER_UNSUPPORTED:
-					LOGGER(error) << "[framebuffer] error: GL_FRAMEBUFFER_UNSUPPORTED";
+					LIB_LOGGER(error, framebuffer) << "error: GL_FRAMEBUFFER_UNSUPPORTED";
 					break;
 				case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
-					LOGGER(error) << "[framebuffer] error: GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT";
+					LIB_LOGGER(error, framebuffer) << "error: GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT";
 					break;
 				case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
-					LOGGER(error) << "[framebuffer] error: GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT";
+					LIB_LOGGER(error, framebuffer) << "error: GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT";
 					break;
 				case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER:
-					LOGGER(error) << "[framebuffer] error: GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER";
+					LIB_LOGGER(error, framebuffer) << "error: GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER";
 					break;
 				case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER:
-					LOGGER(error) << "[framebuffer] error: GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER";
+					LIB_LOGGER(error, framebuffer) << "error: GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER";
 					break;
 				case GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE:
-					LOGGER(error) << "[framebuffer] error: GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE";
+					LIB_LOGGER(error, framebuffer) << "error: GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE";
 					break;
 				case GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS:
-					LOGGER(error) << "[framebuffer] error: GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS";
+					LIB_LOGGER(error, framebuffer) << "error: GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS";
 					break;
 				default:
-					LOGGER(error) << "[framebuffer] error: unknown: " << status;
+					LIB_LOGGER(error, framebuffer) << "error: unknown: " << status;
 			}
 		}
 
