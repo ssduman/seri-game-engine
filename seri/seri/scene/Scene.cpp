@@ -27,8 +27,24 @@ namespace seri::scene
 		_infiniteGrid->Update();
 	}
 
+	void Scene::SetAsDirty()
+	{
+		if (seri::scene::SceneManager::GetState() != seri::scene::SceneState::edit)
+		{
+			return;
+		}
+
+		_isDirty = true;
+	}
+
 	void Scene::Save()
 	{
+		if (seri::scene::SceneManager::GetState() != seri::scene::SceneState::edit)
+		{
+			LIB_LOGGER(warning, scene) << "scene can only be saved in edit state";
+			return;
+		}
+
 		Serialize(_filePath);
 	}
 
@@ -181,13 +197,26 @@ namespace seri::scene
 		{
 			SetAsDirty();
 
-			entt::entity entity = GetEntityByID(id);
-			seri::scene::SceneManager::DestroyEntity(entity);
-
-			_entityMap.erase(id);
+			DestroyEntityTree(node.children[deleteIndex]);
 
 			node.children.erase(node.children.begin() + deleteIndex);
 		}
+	}
+
+	void Scene::DestroyEntityTree(SceneTreeNode& node)
+	{
+		for (auto& childNode : node.children)
+		{
+			DestroyEntityTree(childNode);
+		}
+
+		entt::entity entity = GetEntityByID(node.id);
+		if (entity != entt::null)
+		{
+			seri::scene::SceneManager::DestroyEntity(entity);
+		}
+
+		_entityMap.erase(node.id);
 	}
 
 	void Scene::AddEntityAsChild(uint64_t id, uint64_t parentId, const std::string& name)

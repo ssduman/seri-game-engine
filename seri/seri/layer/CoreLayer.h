@@ -42,8 +42,8 @@ namespace seri
 				{
 					.windowTitle = "Seri Game Engine - Editor",
 					.isFullscreen = false,
-					.windowWidth = 1280,
-					.windowHeight = 720
+					.windowWidth = 1600,
+					.windowHeight = 900
 				}
 			);
 

@@ -136,6 +136,7 @@ namespace seri::editor
 
 		uint64_t _selectedEntityId{ 0 };
 		uint64_t _pendingDeleteEntityId{ 0 };
+		uint64_t _pendingExpandEntityId{ 0 };
 		InspectorType _inspectorType{ InspectorType::none };
 
 		GizmoSpace _gizmoSpace{ GizmoSpace::local };

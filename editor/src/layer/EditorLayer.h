@@ -21,7 +21,7 @@ namespace seri::editor
 				}
 			);
 
-			seri::WindowManager::SetVSyncCount(1);
+			seri::Application::SetVSyncCount(1);
 			seri::Application::SetTargetFrameRate(30);
 		}
 

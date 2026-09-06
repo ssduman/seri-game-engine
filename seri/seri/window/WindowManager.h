@@ -29,11 +29,6 @@ namespace seri
 			return _windowManager->GetTime();
 		}
 
-		static void SetVSyncCount(int count)
-		{
-			_windowManager->SetVSyncCount(count);
-		}
-
 		static void PollEvents()
 		{
 			_windowManager->PollEvents();
@@ -110,6 +105,13 @@ namespace seri
 		}
 
 	private:
+		static void SetVSyncCount(int count)
+		{
+			_windowManager->SetVSyncCount(count);
+		}
+
+		friend class Application;
+
 		static std::unique_ptr<WindowManagerBase> _windowManager;
 
 	};

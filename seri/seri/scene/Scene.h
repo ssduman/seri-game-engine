@@ -60,6 +60,11 @@ namespace seri::scene
 			return _sceneTreeRoot;
 		}
 
+		bool HasEntity(uint64_t id)
+		{
+			return _entityMap.contains(id);
+		}
+
 		entt::entity GetEntityByID(uint64_t id)
 		{
 			if (_entityMap.contains(id))
@@ -75,10 +80,7 @@ namespace seri::scene
 			return _isDirty;
 		}
 
-		void SetAsDirty()
-		{
-			_isDirty = true;
-		}
+		void SetAsDirty();
 
 		void Save();
 
@@ -97,6 +99,7 @@ namespace seri::scene
 		void GetAllEntityIDs(SceneTreeNode& node, std::vector<uint64_t>& ids);
 
 		void DeleteEntity(SceneTreeNode& node, uint64_t id);
+		void DestroyEntityTree(SceneTreeNode& node);
 		void AddEntityAsChild(SceneTreeNode& node, uint64_t id, uint64_t parentId, const std::string& name);
 
 		std::string _filePath{ "" };

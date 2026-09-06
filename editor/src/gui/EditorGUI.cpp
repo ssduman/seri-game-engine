@@ -180,7 +180,7 @@ namespace seri::editor
 		style.PopupRounding = 6.0f;
 		style.ScrollbarRounding = 9.0f;
 		style.GrabRounding = 5.0f;
-		style.TabRounding = 3.0f;
+		style.TabRounding = 0.0f;
 		style.ImageRounding = 4.0f;
 
 		style.WindowTitleAlign = ImVec2(0.0f, 0.5f);
@@ -406,7 +406,8 @@ namespace seri::editor
 		}
 		if (ImGui::BeginMenu("Edit"))
 		{
-			if (ImGui::MenuItem("Save", "CTRL+S"))
+			bool canSave = seri::scene::SceneManager::GetState() == seri::scene::SceneState::edit;
+			if (ImGui::MenuItem("Save", "CTRL+S", false, canSave))
 			{
 				Save();
 			}
@@ -968,11 +969,27 @@ namespace seri::editor
 			ImGui::TreePop();
 		}
 
+		if (ImGui::BeginPopupContextWindow("##HierarchyContext", ImGuiPopupFlags_MouseButtonRight | ImGuiPopupFlags_NoOpenOverItems))
+		{
+			ShowEditorHierarchyAddMenu(activeScene, 0);
+			ImGui::EndPopup();
+		}
+
+		if (_pendingDeleteEntityId == 0 &&
+			_selectedEntityId != 0 &&
+			!ImGui::GetIO().WantTextInput &&
+			ImGui::IsWindowFocused(ImGuiFocusedFlags_RootAndChildWindows) &&
+			ImGui::IsKeyPressed(ImGuiKey_Delete, false) &&
+			activeScene->HasEntity(_selectedEntityId))
+		{
+			_pendingDeleteEntityId = _selectedEntityId;
+		}
+
 		if (_pendingDeleteEntityId != 0)
 		{
 			activeScene->DeleteEntity(_pendingDeleteEntityId);
 
-			if (_selectedEntityId == _pendingDeleteEntityId)
+			if (_selectedEntityId != 0 && !activeScene->HasEntity(_selectedEntityId))
 			{
 				_selectedEntityId = 0;
 				_inspectorType = InspectorType::none;
@@ -1006,6 +1023,12 @@ namespace seri::editor
 			if (entity == entt::null)
 			{
 				continue;
+			}
+
+			if (_pendingExpandEntityId == child.id)
+			{
+				ImGui::SetNextItemOpen(true);
+				_pendingExpandEntityId = 0;
 			}
 
 			auto* idComponent = seri::scene::SceneManager::GetRegistry().try_get<seri::component::IDComponent>(entity);
@@ -1051,11 +1074,15 @@ namespace seri::editor
 			if (ImGui::MenuItem("Empty Object"))
 			{
 				activeScene->AddEntityAsChild(seri::Random::UUID(), parentId, "Entity");
+
+				_pendingExpandEntityId = parentId;
 			}
 			if (ImGui::MenuItem("Plane"))
 			{
 				uint64_t entityId = seri::Random::UUID();
 				activeScene->AddEntityAsChild(entityId, parentId, "Plane");
+
+				_pendingExpandEntityId = parentId;
 
 				entt::entity entity = activeScene->GetEntityByID(entityId);
 				auto& registry = seri::scene::SceneManager::GetRegistry();

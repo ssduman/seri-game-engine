@@ -33,7 +33,12 @@ namespace seri
 	{
 		auto& instance = GetInstance();
 
-		if (instance._vSyncCount == 0)
+		if (instance._vSyncCount != 0)
+		{
+			return;
+		}
+
+		if (instance._targetFrameRate <= 1.0)
 		{
 			return;
 		}

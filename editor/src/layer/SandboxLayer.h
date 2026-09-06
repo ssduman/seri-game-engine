@@ -335,7 +335,7 @@ namespace seri::editor
 			{
 				instancedTRSs[i] *= glm::mat4_cast(seri::Util::ToQuaternion({ seri::Random::Range(1.0f, 90.0f) * dt, seri::Random::Range(1.0f, 90.0f) * dt, 0.0f }));
 			}
-			seri::Graphic::DrawInstanced(cube3d, materialInstanced, instancedTRSs);
+			//seri::Graphic::DrawInstanced(cube3d, materialInstanced, instancedTRSs);
 
 			seri::RenderingStats renderingStats = seri::RenderingManager::GetRenderingStats();
 			std::string statsStr = fmt::format("draw calls: {}, tri: {}, fps: {}", renderingStats.drawCalls, renderingStats.triangles, seri::TimeWrapper::GetFPS());
