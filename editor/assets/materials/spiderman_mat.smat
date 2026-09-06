@@ -1,0 +1,17 @@
+IDInfo:
+  ID: 5409632833911735546
+  Version: 0.1
+Material:
+  Bools: ~
+  Ints: ~
+  Int2s: ~
+  Int3s: ~
+  Int4s: ~
+  Floats: ~
+  Float2s: ~
+  Float3s: ~
+  Float4s: ~
+  Mat4s: ~
+  Textures:
+    u_texture: 15745590776061413606
+  ShaderID: 14617446799888362624

@@ -6,7 +6,6 @@
 #include <seri/graphic/Material.h>
 #include <seri/random/Random.h>
 #include <seri/netcode/Socket.h>
-#include <seri/model/ModelImporter.h>
 
 namespace seri::editor
 {
@@ -267,13 +266,9 @@ namespace seri::editor
 		{
 			cube3d = seri::Mesh::cube_3d();
 			fontMesh = std::make_shared<seri::Mesh>();
-			modelSkinned = seri::ModelImporter{}.Load("assets/spiderman/source/spiderman.fbx");
 
 			auto texture0 = seri::TextureBase::Create();
 			texture0->Init(seri::TextureDesc{}, "assets/textures/passage.png");
-
-			auto texture1 = seri::TextureBase::Create();
-			texture1->Init(seri::TextureDesc{}, "assets/spiderman/textures/spiderman.png");
 
 			materialFont = std::make_shared<seri::Material>();
 			materialFont->SetShader(seri::ShaderLibrary::Find("typer"));
@@ -282,14 +277,6 @@ namespace seri::editor
 			materialInstanced = std::make_shared<seri::Material>();
 			materialInstanced->SetShader(seri::ShaderLibrary::Find("entity_instanced"));
 			materialInstanced->SetTexture("u_texture", texture0);
-
-			for (size_t i = 0; modelSkinned && i < modelSkinned->meshes.size(); i++)
-			{
-				auto materialSkinned = std::make_shared<seri::Material>();
-				materialSkinned->SetShader(seri::ShaderLibrary::Find("entity_skinned"));
-				materialSkinned->SetTexture("u_texture", texture1);
-				materialsSkinned.emplace_back(materialSkinned);
-			}
 
 			for (unsigned int i = 0; i < instanceCount; i++)
 			{
@@ -350,18 +337,6 @@ namespace seri::editor
 			cube3d->UpdateInstanced(instancedTRSs);
 			seri::Graphic::DrawInstanced(cube3d, materialInstanced, instancedTRSs);
 
-			if (modelSkinned)
-			{
-				modelSkinned->UpdateAnimations(seri::WindowManager::GetTime());
-
-				for (size_t m = 0; m < modelSkinned->meshes.size(); m++)
-				{
-					const auto& mesh = modelSkinned->meshes[m];
-					const auto& materialSkinned = materialsSkinned[m];
-					seri::Graphic::Draw(mesh, materialSkinned, seri::Util::GetTRS({ -1.5f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f }));
-				}
-			}
-
 			seri::RenderingStats renderingStats = seri::RenderingManager::GetRenderingStats();
 			std::string statsStr = fmt::format("draw calls: {}, tri: {}, fps: {}", renderingStats.drawCalls, renderingStats.triangles, seri::TimeWrapper::GetFPS());
 			auto editorRT = seri::RenderingManager::GetEditorRT();
@@ -389,11 +364,9 @@ namespace seri::editor
 
 		std::shared_ptr<seri::Mesh> cube3d;
 		std::shared_ptr<seri::Mesh> fontMesh;
-		std::shared_ptr<seri::Model> modelSkinned;
 
 		std::shared_ptr<seri::Material> materialFont;
 		std::shared_ptr<seri::Material> materialInstanced;
-		std::vector<std::shared_ptr<seri::Material>> materialsSkinned;
 
 		std::vector<glm::mat4> instancedTRSs;
 

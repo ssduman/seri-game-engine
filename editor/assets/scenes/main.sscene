@@ -74,3 +74,20 @@ Entities:
       MeshRendererComponent:
         MaterialAssetID: 16756991584035094998
         CastShadow: true
+  - Entity:
+      IDComponent:
+        ID: 12086628059403622804
+        ParentID: 0
+        Name: Spiderman
+      TransformComponent:
+        Position: [-1.5, 0, 0]
+        Rotation: [0, 0, 0]
+        Scale: [1, 1, 1]
+      SkinnedMeshRendererComponent:
+        MeshAssetID: 17928092336128327075
+        MaterialAssetIDs:
+          - 5409632833911735546
+      AnimatorComponent:
+        Playing: true
+        Loop: true
+        Speed: 1

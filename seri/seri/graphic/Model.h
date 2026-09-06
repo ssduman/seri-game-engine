@@ -44,6 +44,25 @@ namespace seri
 			}
 		}
 
+		double GetAnimationDuration() const
+		{
+			double duration = 0.0;
+			for (const auto& mesh : meshes)
+			{
+				if (mesh->animation.tickPerSecond <= 0.0)
+				{
+					continue;
+				}
+
+				double meshDuration = mesh->animation.durationInTick / mesh->animation.tickPerSecond;
+				if (meshDuration > duration)
+				{
+					duration = meshDuration;
+				}
+			}
+			return duration;
+		}
+
 	private:
 
 	};

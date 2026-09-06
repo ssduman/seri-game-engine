@@ -19,6 +19,8 @@
 #include "seri/system/LightSystem.h"
 #include "seri/system/TransformSystem.h"
 #include "seri/system/MeshRendererSystem.h"
+#include "seri/system/AnimatorSystem.h"
+#include "seri/system/SkinnedMeshRendererSystem.h"
 #include "seri/script/ScriptSystem.h"
 #include "seri/draw/DebugDraw.h"
 #include "seri/logging/Logger.h"
@@ -146,7 +148,9 @@ namespace seri
 
 			system::TransformSystem::Update();
 			system::LightSystem::Update();
+			system::AnimatorSystem::Update();
 			system::MeshRendererSystem::Update();
+			system::SkinnedMeshRendererSystem::Update();
 
 			scripting::ScriptingManager::Update();
 

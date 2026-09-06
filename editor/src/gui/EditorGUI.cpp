@@ -4,7 +4,7 @@ namespace seri::editor
 {
 	EditorGUI::EditorGUI()
 	{
-		LIB_LOGGER(info, gui) << "created";
+		LIB_LOGGER(info, gui) << "created, imgui version: " << IMGUI_VERSION;
 	}
 
 	EditorGUI::~EditorGUI()
@@ -1265,6 +1265,80 @@ namespace seri::editor
 			{
 				scene->SetAsDirty();
 				meshRendererComp->materialAssetId = selection;
+			}
+		}
+
+		if (auto* skinnedMeshRendererComp = registry.try_get<seri::component::SkinnedMeshRendererComponent>(entity))
+		{
+			ScopedChild scopedChild("##SkinnedMeshRendererComponent", ImVec2(0, 0), childFlags);
+
+			ImGui::TextUnformatted("Skinned Mesh Renderer Component");
+			ImGui::Separator();
+
+			bool changed = false;
+			uint64_t selection = 0;
+
+			if (DrawAssetPicker("Mesh", skinnedMeshRendererComp->meshAssetId, seri::asset::AssetType::mesh, selection))
+			{
+				skinnedMeshRendererComp->meshAssetId = selection;
+				changed = true;
+			}
+
+			ImGui::TextUnformatted("Materials");
+
+			for (size_t i = 0; i < skinnedMeshRendererComp->materialAssetIds.size(); i++)
+			{
+				ImGui::PushID(static_cast<int>(i));
+
+				std::string label = fmt::format("Element {}", i);
+
+				if (DrawAssetPicker(label.c_str(), skinnedMeshRendererComp->materialAssetIds[i], seri::asset::AssetType::material, selection))
+				{
+					skinnedMeshRendererComp->materialAssetIds[i] = selection;
+					changed = true;
+				}
+
+				ImGui::PopID();
+			}
+
+			if (ImGui::Button("Add Material"))
+			{
+				skinnedMeshRendererComp->materialAssetIds.push_back(0);
+				changed = true;
+			}
+
+			ImGui::SameLine();
+
+			if (ImGui::Button("Remove Material") && !skinnedMeshRendererComp->materialAssetIds.empty())
+			{
+				skinnedMeshRendererComp->materialAssetIds.pop_back();
+				changed = true;
+			}
+
+			if (changed)
+			{
+				scene->SetAsDirty();
+			}
+		}
+
+		if (auto* animatorComp = registry.try_get<seri::component::AnimatorComponent>(entity))
+		{
+			ScopedChild scopedChild("##AnimatorComponent", ImVec2(0, 0), childFlags);
+
+			ImGui::TextUnformatted("Animator Component");
+			ImGui::Separator();
+
+			bool changed = false;
+
+			changed |= DrawBool("Playing", animatorComp->playing);
+			changed |= DrawBool("Loop", animatorComp->loop);
+			changed |= DrawFloat("Speed", animatorComp->speed, 0.05f, -10.0f, 10.0f);
+
+			DrawLabel("Time", fmt::format("{:.3f}", animatorComp->time).c_str(), true);
+
+			if (changed)
+			{
+				scene->SetAsDirty();
 			}
 		}
 

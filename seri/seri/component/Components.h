@@ -70,6 +70,31 @@ namespace seri::component
 		static YAML::Node Serialize(const MeshRendererComponent& component);
 	};
 
+	struct SkinnedMeshRendererComponent
+	{
+		static constexpr std::string_view compName = "SkinnedMeshRendererComponent";
+
+		uint64_t meshAssetId{ 0 };
+		std::vector<uint64_t> materialAssetIds{};
+
+		static SkinnedMeshRendererComponent Deserialize(const YAML::Node& node);
+		static YAML::Node Serialize(const SkinnedMeshRendererComponent& component);
+	};
+
+	struct AnimatorComponent
+	{
+		static constexpr std::string_view compName = "AnimatorComponent";
+
+		bool playing{ true };
+		bool loop{ true };
+		float speed{ 1.0f };
+
+		float time{ 0.0f };
+
+		static AnimatorComponent Deserialize(const YAML::Node& node);
+		static YAML::Node Serialize(const AnimatorComponent& component);
+	};
+
 	struct DirectionalLightComponent
 	{
 		static constexpr std::string_view compName = "DirectionalLightComponent";

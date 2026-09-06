@@ -81,6 +81,53 @@ namespace seri::component
 		return node;
 	}
 
+	SkinnedMeshRendererComponent SkinnedMeshRendererComponent::Deserialize(const YAML::Node& node)
+	{
+		SkinnedMeshRendererComponent component{};
+		component.meshAssetId = YAMLUtil::GetType<uint64_t>(node["MeshAssetID"]);
+
+		const YAML::Node& materialsNode = node["MaterialAssetIDs"];
+		if (materialsNode && materialsNode.IsSequence())
+		{
+			for (const auto& materialNode : materialsNode)
+			{
+				component.materialAssetIds.emplace_back(YAMLUtil::GetType<uint64_t>(materialNode));
+			}
+		}
+
+		return component;
+	}
+	YAML::Node SkinnedMeshRendererComponent::Serialize(const SkinnedMeshRendererComponent& component)
+	{
+		YAML::Node materialsNode;
+		for (uint64_t materialAssetId : component.materialAssetIds)
+		{
+			materialsNode.push_back(materialAssetId);
+		}
+
+		YAML::Node node;
+		node["MeshAssetID"] = component.meshAssetId;
+		node["MaterialAssetIDs"] = materialsNode;
+		return node;
+	}
+
+	AnimatorComponent AnimatorComponent::Deserialize(const YAML::Node& node)
+	{
+		AnimatorComponent component{};
+		component.playing = YAMLUtil::GetType<bool>(node["Playing"]);
+		component.loop = YAMLUtil::GetType<bool>(node["Loop"]);
+		component.speed = YAMLUtil::GetType<float>(node["Speed"]);
+		return component;
+	}
+	YAML::Node AnimatorComponent::Serialize(const AnimatorComponent& component)
+	{
+		YAML::Node node;
+		node["Playing"] = component.playing;
+		node["Loop"] = component.loop;
+		node["Speed"] = component.speed;
+		return node;
+	}
+
 	DirectionalLightComponent DirectionalLightComponent::Deserialize(const YAML::Node& node)
 	{
 		DirectionalLightComponent component{};
