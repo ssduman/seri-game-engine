@@ -14,6 +14,13 @@
 
 namespace seri::scene
 {
+	enum class SceneState
+	{
+		edit,
+		play,
+		paused,
+	};
+
 	struct ComponentIO
 	{
 		std::string_view name;
@@ -35,6 +42,9 @@ namespace seri::scene
 		static entt::registry& GetRegistry();
 		static entt::entity CreateEntity();
 		static void DestroyEntity(entt::entity entity);
+
+		static SceneState GetState();
+		static void SetState(SceneState state);
 
 		static std::shared_ptr<Scene> GetActiveScene();
 		static const std::vector<seri::scene::ComponentIO>& GetCompIO();
@@ -100,6 +110,8 @@ namespace seri::scene
 		}
 
 		entt::registry registry;
+
+		SceneState _state{ SceneState::edit };
 
 		std::shared_ptr<Scene> _activeScene;
 		std::vector<std::shared_ptr<Scene>> _scenes;

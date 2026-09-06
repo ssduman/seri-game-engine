@@ -2,6 +2,7 @@
 
 #include <seri/core/Core.h>
 #include <seri/core/Seri.h>
+#include <seri/util/Util.h>
 
 #include <imgui.h>
 #include <imgui_internal.h>
@@ -88,6 +89,7 @@ namespace seri::editor
 		void ShowEditorTitleBarMenus();
 		void ShowEditorTitleBarControls();
 		bool ShowEditorTitleBarButton(const char* id, float width, const ImVec4& hoveredColor, const ImVec4& activeColor);
+		void ShowEditorTitleBarPlayControls();
 
 		void ShowEditorSceneImage();
 		void ControlEditorSceneMove(const ImVec2& imageMin, const ImVec2& imageMax);
@@ -144,7 +146,7 @@ namespace seri::editor
 
 		bool _showHierarchy{ true };
 		bool _showScene{ true };
-		bool _showGame{ true };
+		bool _showGame{ false };
 		bool _showInspector{ true };
 		bool _showConsole{ true };
 		bool _showProject{ true };
@@ -155,6 +157,8 @@ namespace seri::editor
 		float _titleBarControlsMinX{ 0.0f };
 		float _titleBarMenusMinX{ 0.0f };
 		float _titleBarMenusMaxX{ 0.0f };
+		float _titleBarPlayMinX{ 0.0f };
+		float _titleBarPlayMaxX{ 0.0f };
 
 		static constexpr float kTitleBarHeight = 36.0f;
 

@@ -2,6 +2,7 @@
 
 #include "seri/scene/SceneManager.h"
 #include "seri/scene/Scene.h"
+#include "seri/script/ScriptSystem.h"
 
 #include <entt/entt.hpp>
 
@@ -46,6 +47,26 @@ namespace seri::scene
 	void SceneManager::DestroyEntity(entt::entity entity)
 	{
 		GetRegistry().destroy(entity);
+	}
+
+	SceneState SceneManager::GetState()
+	{
+		return GetInstance()._state;
+	}
+
+	void SceneManager::SetState(SceneState state)
+	{
+		if (GetInstance()._state == state)
+		{
+			return;
+		}
+
+		GetInstance()._state = state;
+
+		if (state == SceneState::edit)
+		{
+			seri::script::ScriptSystem::Reset();
+		}
 	}
 
 	std::shared_ptr<Scene> SceneManager::GetActiveScene()

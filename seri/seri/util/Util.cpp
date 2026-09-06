@@ -34,6 +34,22 @@ namespace seri
 		return str.find(substr) != std::string::npos;
 	}
 
+	bool Util::ContainsIgnoreCase(std::string_view str, std::string_view substr)
+	{
+		if (substr.empty())
+		{
+			return true;
+		}
+
+		auto it = std::search(str.begin(), str.end(), substr.begin(), substr.end(),
+			[](char a, char b)
+			{
+				return std::tolower(static_cast<unsigned char>(a)) == std::tolower(static_cast<unsigned char>(b));
+			}
+		);
+		return it != str.end();
+	}
+
 	glm::quat Util::ToQuaternion(const glm::vec3& euler)
 	{
 		return glm::quat(glm::radians(euler));

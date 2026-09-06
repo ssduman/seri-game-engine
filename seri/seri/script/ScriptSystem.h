@@ -30,6 +30,9 @@ namespace seri::script
 		static void Update(float deltaTime);
 		static void LateUpdate(float deltaTime);
 
+		static void Sync();
+		static void Reset();
+
 		static void Defer(std::function<void()> command);
 
 		static void SetEnabled(bool enabled);

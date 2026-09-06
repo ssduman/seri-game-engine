@@ -36,6 +36,19 @@ namespace seri
 	struct Util
 	{
 		template <typename T>
+		static T Min(T a, T b)
+		{
+			if (a < b)
+			{
+				return a;
+			}
+			else
+			{
+				return b;
+			}
+		}
+
+		template <typename T>
 		static T Max(T a, T b)
 		{
 			if (a > b)
@@ -59,6 +72,8 @@ namespace seri
 		static void ToLower(std::string& s);
 
 		static bool Contains(std::string_view str, std::string_view substr);
+
+		static bool ContainsIgnoreCase(std::string_view str, std::string_view substr);
 
 		static glm::quat ToQuaternion(const glm::vec3& euler);
 

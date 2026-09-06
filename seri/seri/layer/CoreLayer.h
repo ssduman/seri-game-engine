@@ -136,8 +136,13 @@ namespace seri
 			asset::AssetManager::Update();
 			scene::SceneManager::Update();
 
-			script::ScriptSystem::Update(deltaTime);
-			script::ScriptSystem::LateUpdate(deltaTime);
+			script::ScriptSystem::Sync();
+
+			if (scene::SceneManager::GetState() == scene::SceneState::play)
+			{
+				script::ScriptSystem::Update(deltaTime);
+				script::ScriptSystem::LateUpdate(deltaTime);
+			}
 
 			system::TransformSystem::Update();
 			system::LightSystem::Update();

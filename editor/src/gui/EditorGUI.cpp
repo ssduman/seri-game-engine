@@ -50,9 +50,10 @@ namespace seri::editor
 				}
 
 				bool overMenus = x >= static_cast<int>(_titleBarMenusMinX) && x < static_cast<int>(_titleBarMenusMaxX);
+				bool overPlay = x >= static_cast<int>(_titleBarPlayMinX) && x < static_cast<int>(_titleBarPlayMaxX);
 				bool overControls = x >= static_cast<int>(_titleBarControlsMinX);
 
-				return !overMenus && !overControls;
+				return !overMenus && !overPlay && !overControls;
 			}
 		);
 
@@ -381,6 +382,8 @@ namespace seri::editor
 			ShowEditorTitleBarMenus();
 			_titleBarMenusMaxX = ImGui::GetCursorPosX();
 
+			ShowEditorTitleBarPlayControls();
+
 			ShowEditorTitleBarControls();
 
 			_titleBarDraggable = !ImGui::IsPopupOpen("", ImGuiPopupFlags_AnyPopup);
@@ -509,6 +512,112 @@ namespace seri::editor
 
 		ImGui::PopStyleColor();
 		ImGui::PopStyleVar(3);
+	}
+
+	void EditorGUI::ShowEditorTitleBarPlayControls()
+	{
+		seri::scene::SceneState state = seri::scene::SceneManager::GetState();
+		bool playing = state != seri::scene::SceneState::edit;
+		bool paused = state == seri::scene::SceneState::paused;
+		bool running = state == seri::scene::SceneState::play;
+
+		const float buttonWidth = 34.0f;
+		const ImVec4 transparent = ImVec4(0.0f, 0.0f, 0.0f, 0.0f);
+		const ImVec4 highlight = ImVec4(1.0f, 1.0f, 1.0f, 0.14f);
+		const ImVec4 hovered = ImVec4(1.0f, 1.0f, 1.0f, 0.10f);
+		const ImVec4 active = ImVec4(1.0f, 1.0f, 1.0f, 0.06f);
+
+		auto itemCenter = []()
+			{
+				ImVec2 min = ImGui::GetItemRectMin();
+				ImVec2 max = ImGui::GetItemRectMax();
+				return ImFloor(ImVec2((min.x + max.x) * 0.5f, (min.y + max.y) * 0.5f));
+			};
+
+		_titleBarPlayMinX = ImFloor((ImGui::GetWindowWidth() - buttonWidth * 3.0f) * 0.5f);
+		_titleBarPlayMaxX = _titleBarPlayMinX + buttonWidth * 3.0f;
+
+		ImGui::SetCursorPos(ImVec2(_titleBarPlayMinX, 0.0f));
+
+		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 0.0f);
+		ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0.0f);
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0.0f, 0.0f));
+
+		ImDrawList* drawList = ImGui::GetWindowDrawList();
+
+		ImGui::PushStyleColor(ImGuiCol_Button, running ? highlight : transparent);
+		ImGui::BeginDisabled(running);
+
+		if (ShowEditorTitleBarButton("##play", buttonWidth, hovered, active))
+		{
+			seri::scene::SceneManager::SetState(seri::scene::SceneState::play);
+		}
+
+		ImVec2 c = itemCenter();
+
+		drawList->AddTriangleFilled(
+			ImVec2(c.x - 4.0f, c.y - 6.0f),
+			ImVec2(c.x - 4.0f, c.y + 6.0f),
+			ImVec2(c.x + 6.0f, c.y),
+			ImGui::GetColorU32(ImGuiCol_Text)
+		);
+
+		ImGui::SetItemTooltip("Play");
+
+		ImGui::EndDisabled();
+		ImGui::PopStyleColor();
+
+		ImGui::PushStyleColor(ImGuiCol_Button, paused ? highlight : transparent);
+		ImGui::BeginDisabled(!running);
+
+		if (ShowEditorTitleBarButton("##pause", buttonWidth, hovered, active))
+		{
+			seri::scene::SceneManager::SetState(seri::scene::SceneState::paused);
+		}
+
+		c = itemCenter();
+
+		drawList->AddRectFilled(ImVec2(c.x - 5.0f, c.y - 6.0f), ImVec2(c.x - 2.0f, c.y + 6.0f), ImGui::GetColorU32(ImGuiCol_Text));
+		drawList->AddRectFilled(ImVec2(c.x + 2.0f, c.y - 6.0f), ImVec2(c.x + 5.0f, c.y + 6.0f), ImGui::GetColorU32(ImGuiCol_Text));
+
+		ImGui::SetItemTooltip("Pause");
+
+		ImGui::EndDisabled();
+		ImGui::PopStyleColor();
+
+		ImGui::PushStyleColor(ImGuiCol_Button, transparent);
+		ImGui::BeginDisabled(!playing);
+
+		if (ShowEditorTitleBarButton("##stop", buttonWidth, hovered, active))
+		{
+			seri::scene::SceneManager::SetState(seri::scene::SceneState::edit);
+		}
+
+		c = itemCenter();
+
+		drawList->AddRectFilled(ImVec2(c.x - 5.0f, c.y - 5.0f), ImVec2(c.x + 5.0f, c.y + 5.0f), ImGui::GetColorU32(ImGuiCol_Text));
+
+		ImGui::SetItemTooltip("Stop");
+
+		ImGui::EndDisabled();
+		ImGui::PopStyleColor();
+
+		ImGui::PopStyleVar(3);
+
+		const char* stateText = paused ? "Paused" : (running ? "Playing" : "Edit");
+
+		ImVec2 buttonMin = ImGui::GetItemRectMin();
+		ImVec2 buttonMax = ImGui::GetItemRectMax();
+		ImVec2 textSize = ImGui::CalcTextSize(stateText);
+
+		ImVec2 textPos = ImFloor(
+			ImVec2(
+				buttonMax.x + 12.0f,
+				(buttonMin.y + buttonMax.y - textSize.y) * 0.5f
+			)
+		);
+
+		drawList->AddText(textPos, ImGui::GetColorU32(ImGuiCol_Text), stateText);
 	}
 
 	bool EditorGUI::ShowEditorTitleBarButton(const char* id, float width, const ImVec4& hoveredColor, const ImVec4& activeColor)
@@ -1632,7 +1741,7 @@ namespace seri::editor
 
 			for (const auto& info : seri::scene::SceneManager::GetCompIO())
 			{
-				if (search[0] != '\0' && info.name.find(search) == std::string::npos)
+				if (!Util::ContainsIgnoreCase(info.name, search))
 				{
 					continue;
 				}
@@ -1677,7 +1786,7 @@ namespace seri::editor
 
 		for (const auto& name : seri::script::ScriptRegistry::GetNames())
 		{
-			if (search[0] != '\0' && name.find(search) == std::string::npos)
+			if (!Util::ContainsIgnoreCase(name, search))
 			{
 				continue;
 			}
@@ -1731,21 +1840,6 @@ namespace seri::editor
 				break;
 		}
 
-		const auto MatchesSearch = [](std::string_view name, std::string_view search) -> bool
-			{
-				if (search.empty())
-				{
-					return true;
-				}
-				auto it = std::search(name.begin(), name.end(), search.begin(), search.end(),
-					[](char a, char b)
-					{
-						return std::tolower(a) == std::tolower(b);
-					}
-				);
-				return it != name.end();
-			};
-
 		seri::asset::AssetMetadata noneAsset{
 			.id = 0,
 			.name = "<none>"
@@ -1755,7 +1849,7 @@ namespace seri::editor
 
 		for (auto assetMetadata : assetMedataList)
 		{
-			if (!MatchesSearch(assetMetadata.name, search))
+			if (!Util::ContainsIgnoreCase(assetMetadata.name, search))
 			{
 				continue;
 			}

@@ -25,6 +25,7 @@ A 2D/3D OpenGL game engine written in C++20, featuring an ECS architecture, PBR 
 | Lua + sol2 | Scripting |
 | stb_image | Image loading |
 | nlohmann/json | JSON |
+| doctest | Unit test |
 
 ## Key Design Patterns
 
@@ -57,3 +58,4 @@ A 2D/3D OpenGL game engine written in C++20, featuring an ECS architecture, PBR 
 - Do not overengineer things, do what asked.
 - Do not try to write test cases.
 - Do not write unnamed namespace unless make things absolutely easy.
+- Do not add unnecessary const qualifier to variables.

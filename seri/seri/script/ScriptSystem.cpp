@@ -127,6 +127,22 @@ namespace seri::script
 		LIB_LOGGER(info, script) << fmt::format("inited with {} registered script(s)", ScriptRegistry::GetNames().size());
 	}
 
+	void ScriptSystem::Sync()
+	{
+		auto& registry = scene::SceneManager::GetRegistry();
+		auto view = registry.view<component::ScriptComponent>();
+
+		for (entt::entity entity : view)
+		{
+			auto& scriptComponent = view.get<component::ScriptComponent>(entity);
+
+			if (scriptComponent.dirty)
+			{
+				RebuildInstances(registry, entity, scriptComponent);
+			}
+		}
+	}
+
 	void ScriptSystem::Update(float deltaTime)
 	{
 		if (!_enabled)
@@ -236,6 +252,30 @@ namespace seri::script
 		}
 
 		FlushDeferred();
+	}
+
+	void ScriptSystem::Reset()
+	{
+		std::vector<entt::entity> entities{};
+		entities.reserve(_instances.size());
+		for (const auto& item : _instances)
+		{
+			entities.push_back(item.first);
+		}
+
+		for (entt::entity entity : entities)
+		{
+			DestroyInstances(entity);
+		}
+
+		_instances.clear();
+		_deferred.clear();
+
+		auto& registry = scene::SceneManager::GetRegistry();
+		for (entt::entity entity : registry.view<component::ScriptComponent>())
+		{
+			registry.get<component::ScriptComponent>(entity).dirty = true;
+		}
 	}
 
 	void ScriptSystem::Defer(std::function<void()> command)
