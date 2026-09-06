@@ -34,7 +34,20 @@ namespace seri::scene
 
 	void Scene::Serialize(const std::string& file)
 	{
-		auto& registry = seri::scene::SceneManager::GetRegistry();
+		YAML::Node root = SerializeToNode();
+
+		std::ofstream fout(file);
+		fout << root;
+		fout.flush();
+
+		_isDirty = false;
+
+		LIB_LOGGER(info, scene) << fmt::format("serialized to {}", file);
+	}
+
+	YAML::Node Scene::SerializeToNode()
+	{
+		bool wasDirty = _isDirty;
 
 		std::vector<uint64_t> ids{};
 		GetAllEntityIDs(ids);
@@ -62,13 +75,9 @@ namespace seri::scene
 		root["SceneComponent"] = seri::component::SceneComponent::Serialize(_sceneComponent);
 		root["Entities"] = entitiesNode;
 
-		std::ofstream fout(file);
-		fout << root;
-		fout.flush();
+		_isDirty = wasDirty;
 
-		_isDirty = false;
-
-		LIB_LOGGER(info, scene) << fmt::format("serialized to {}", file);
+		return root;
 	}
 
 	void Scene::Deserialize(const std::string& file)
@@ -77,10 +86,22 @@ namespace seri::scene
 
 		YAML::Node root = YAML::LoadFile(file);
 
-		if (!root["SceneComponent"] || !root["SceneComponent"].IsMap())
+		if (!DeserializeFromNode(root))
 		{
 			LIB_LOGGER(error, scene) << fmt::format("failed to deserialize scene from file: {}", file);
 			return;
+		}
+
+		LIB_LOGGER(info, scene) << fmt::format("parsed: {}", file);
+	}
+
+	bool Scene::DeserializeFromNode(const YAML::Node& rootNode)
+	{
+		YAML::Node root = rootNode;
+
+		if (!root["SceneComponent"] || !root["SceneComponent"].IsMap())
+		{
+			return false;
 		}
 
 		_idComponent = seri::component::IDComponent::Deserialize(root["IDComponent"]);
@@ -90,6 +111,7 @@ namespace seri::scene
 		_sceneTreeRoot = SceneTreeNode{};
 
 		auto& registry = seri::scene::SceneManager::GetRegistry();
+		registry.clear();
 
 		if (YAML::Node entities = root["Entities"])
 		{
@@ -115,7 +137,7 @@ namespace seri::scene
 
 		_isDirty = false;
 
-		LIB_LOGGER(info, scene) << fmt::format("parsed: {}", file);
+		return true;
 	}
 
 	void Scene::GetAllEntityIDs(std::vector<uint64_t>& ids)

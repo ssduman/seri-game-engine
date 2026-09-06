@@ -282,12 +282,11 @@ namespace seri::editor
 			{
 				instancedTRSs.push_back(seri::Util::GetTRS({ 1.0f + i % 20, i / 20, -1.0f }, { 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f }));
 			}
-			cube3d->MakeInstanced(instancedTRSs);
 
-			udpSocketServer = std::make_unique<seri::netcode::Socket>(seri::netcode::SocketType::udp);
-			udpSocketServer->Bind({ "localhost", 5200 });
-			udpSocketClient = std::make_unique<seri::netcode::Socket>(seri::netcode::SocketType::udp);
-			udpSocketClient->Connect({ "127.0.0.1", 5200 });
+			//udpSocketServer = std::make_unique<seri::netcode::Socket>(seri::netcode::SocketType::udp);
+			//udpSocketServer->Bind({ "localhost", 5200 });
+			//udpSocketClient = std::make_unique<seri::netcode::Socket>(seri::netcode::SocketType::udp);
+			//udpSocketClient->Connect({ "127.0.0.1", 5200 });
 		}
 
 		void UpdateSystem()
@@ -330,11 +329,12 @@ namespace seri::editor
 
 		void UpdateSimple()
 		{
+			auto dt = seri::TimeWrapper::GetDeltaTime();
+
 			for (size_t i = 0; i < instancedTRSs.size(); i++)
 			{
-				instancedTRSs[i] *= glm::mat4_cast(seri::Util::ToQuaternion({ seri::Random::Range(0.5f, 2.0f), seri::Random::Range(0.5f, 2.0f), 0.0f }));
+				instancedTRSs[i] *= glm::mat4_cast(seri::Util::ToQuaternion({ seri::Random::Range(1.0f, 90.0f) * dt, seri::Random::Range(1.0f, 90.0f) * dt, 0.0f }));
 			}
-			cube3d->UpdateInstanced(instancedTRSs);
 			seri::Graphic::DrawInstanced(cube3d, materialInstanced, instancedTRSs);
 
 			seri::RenderingStats renderingStats = seri::RenderingManager::GetRenderingStats();

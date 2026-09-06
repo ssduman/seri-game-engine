@@ -69,8 +69,6 @@ namespace seri::system
 				{
 					animator.time = glm::clamp(animator.time, 0.0f, static_cast<float>(duration));
 				}
-
-				model->UpdateAnimations(animator.time);
 			}
 		}
 	};

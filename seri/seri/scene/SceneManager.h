@@ -119,5 +119,9 @@ namespace seri::scene
 		std::vector<seri::scene::ComponentIO> _componentIOs{};
 		std::unordered_map<std::string_view, ComponentIO> _componentIOmaps{};
 
+		YAML::Node _snapshot{};
+		bool _hasSnapshot{ false };
+		bool _snapshotDirty{ false };
+
 	};
 }

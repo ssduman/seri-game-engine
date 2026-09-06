@@ -140,7 +140,9 @@ namespace seri
 
 			script::ScriptSystem::Sync();
 
-			if (scene::SceneManager::GetState() == scene::SceneState::play)
+			bool isPlaying = scene::SceneManager::GetState() == scene::SceneState::play;
+
+			if (isPlaying)
 			{
 				script::ScriptSystem::Update(deltaTime);
 				script::ScriptSystem::LateUpdate(deltaTime);
@@ -148,7 +150,12 @@ namespace seri
 
 			system::TransformSystem::Update();
 			system::LightSystem::Update();
-			system::AnimatorSystem::Update();
+
+			if (isPlaying)
+			{
+				system::AnimatorSystem::Update();
+			}
+
 			system::MeshRendererSystem::Update();
 			system::SkinnedMeshRendererSystem::Update();
 

@@ -22,8 +22,8 @@ namespace seri
 		void End();
 		void Submit(RenderItem renderItem);
 		void Submit(RenderCommand renderCommand);
-		void SetState(RenderState state);
-		void OnPassChanged(RenderPass renderPass);
+		void SetState(const RenderState& state);
+		void OnPassChanged(const RenderPass& renderPass);
 		void Execute();
 
 		virtual void Draw(DrawParams draw, const std::shared_ptr<VertexArrayBase>& vao) = 0;

@@ -56,18 +56,42 @@ namespace seri::scene
 		return GetInstance()._state;
 	}
 
-	void SceneManager::SetState(SceneState state)
+	void SceneManager::SetState(SceneState newState)
 	{
-		if (GetInstance()._state == state)
+		auto& instance = GetInstance();
+
+		if (instance._state == newState)
 		{
 			return;
 		}
 
-		GetInstance()._state = state;
+		SceneState prevState = instance._state;
 
-		if (state == SceneState::edit)
+		instance._state = newState;
+
+		if (prevState == SceneState::edit)
+		{
+			instance._snapshot = instance._activeScene->SerializeToNode();
+			instance._snapshotDirty = instance._activeScene->IsDirty();
+			instance._hasSnapshot = true;
+		}
+
+		if (newState == SceneState::edit)
 		{
 			seri::script::ScriptSystem::Reset();
+
+			if (instance._hasSnapshot)
+			{
+				instance._activeScene->DeserializeFromNode(instance._snapshot);
+
+				if (instance._snapshotDirty)
+				{
+					instance._activeScene->SetAsDirty();
+				}
+
+				instance._snapshot = YAML::Node{};
+				instance._hasSnapshot = false;
+			}
 		}
 	}
 

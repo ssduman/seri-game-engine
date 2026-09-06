@@ -106,7 +106,7 @@ namespace seri
 
 		static void Submit(RenderItem renderItem)
 		{
-			_renderCommandBuffer->Submit(renderItem);
+			_renderCommandBuffer->Submit(std::move(renderItem));
 		}
 
 		static void Submit(RenderCommand renderCommand)

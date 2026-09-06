@@ -7,6 +7,7 @@
 #include "seri/component/Components.h"
 
 #include <entt/entt.hpp>
+#include <yaml-cpp/yaml.h>
 
 #include <string>
 #include <memory>
@@ -83,6 +84,9 @@ namespace seri::scene
 
 		void Serialize(const std::string& file);
 		void Deserialize(const std::string& file);
+
+		YAML::Node SerializeToNode();
+		bool DeserializeFromNode(const YAML::Node& rootNode);
 
 		void GetAllEntityIDs(std::vector<uint64_t>& ids);
 

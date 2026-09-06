@@ -60,31 +60,30 @@ namespace seri
 		material->SetFloat3(literals::kUniformLightDir, glm::vec3{ 0.0f, 0.0f, -1.0f });
 		material->SetFloat4(literals::kUniformLightColor, glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f });
 
-		if (mesh->bonesForVertices.size() > 0)
-		{
-			for (auto i = 0; i < SERI_MAX_BONES; i++)
-			{
-				std::string loc = fmt::format("{}[{}]", literals::kUniformBones, std::to_string(i));
-				glm::mat4 transform = glm::mat4{ 1.0f };
-				if (mesh->bones.find(i) != mesh->bones.end())
-				{
-					transform = mesh->bones[i].transform;
-				}
-				material->SetMat4(loc.c_str(), transform);
-			}
-		}
-
 		RenderItem cmd{};
 		cmd.type = passType;
 		cmd.name = "draw";
 		cmd.material = material;
 		cmd.model = trs * mesh->transformation;
 		cmd.vao = mesh->GetVao();
-		RenderingManager::Submit(cmd);
+
+		if (mesh->bonesForVertices.size() > 0)
+		{
+			mesh->FillBonePalette(cmd.bones);
+		}
+
+		RenderingManager::Submit(std::move(cmd));
 	}
 
 	void Graphic::DrawInstanced(const std::shared_ptr<Mesh>& mesh, const std::shared_ptr<Material>& material, const std::vector<glm::mat4>& trs)
 	{
+		if (trs.empty())
+		{
+			return;
+		}
+
+		mesh->UploadInstanced(trs);
+
 		material->SetFloat4(literals::kUniformColor, glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f });
 		material->SetFloat3(literals::kUniformLightDir, glm::vec3{ 0.0f, 0.0f, -1.0f });
 		material->SetFloat4(literals::kUniformLightColor, glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f });

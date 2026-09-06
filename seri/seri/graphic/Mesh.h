@@ -385,6 +385,55 @@ namespace seri
 			tangentData.clear();
 		}
 
+		void FillBonePalette(std::vector<glm::mat4>& palette)
+		{
+			palette.clear();
+
+			if (bones.empty())
+			{
+				return;
+			}
+
+			int maxIndex = -1;
+			for (const auto& kv : bones)
+			{
+				if (kv.first > maxIndex)
+				{
+					maxIndex = kv.first;
+				}
+			}
+
+			if (maxIndex < 0)
+			{
+				return;
+			}
+
+			int count = std::min(maxIndex + 1, SERI_MAX_BONES);
+
+			palette.assign(count, glm::mat4{ 1.0f });
+
+			for (const auto& kv : bones)
+			{
+				if (kv.first < 0 || kv.first >= count)
+				{
+					continue;
+				}
+
+				palette[kv.first] = kv.second.transform;
+			}
+		}
+
+		void UploadInstanced(const std::vector<glm::mat4>& modelMatrices)
+		{
+			if (!_vbo_instanced)
+			{
+				MakeInstanced(modelMatrices);
+				return;
+			}
+
+			UpdateInstanced(modelMatrices);
+		}
+
 		void MakeInstanced(const std::vector<glm::mat4>& modelMatrices)
 		{
 			if (modelMatrices.size() > SERI_MAX_INSTANCED_COUNT)
@@ -405,12 +454,18 @@ namespace seri
 				return;
 			}
 
-			_vbo_instanced = VertexBufferBase::Create(modelMatrices);
+			_vbo_instanced = VertexBufferBase::Create(
+				nullptr,
+				SERI_MAX_INSTANCED_COUNT * sizeof(glm::mat4),
+				BufferUsage::dynamic_draw
+			);
 			_vbo_instanced->AddElement(
 				{ seri::LayoutLocation::instanced_mat4 }
 			);
 
 			_vao->AddVertexBuffer(_vbo_instanced);
+
+			_vbo_instanced->UpdateData(modelMatrices.data(), static_cast<uint32_t>(modelMatrices.size() * sizeof(glm::mat4)));
 		}
 
 		void UpdateInstanced(const std::vector<glm::mat4>& modelMatrices)

@@ -143,6 +143,65 @@ namespace seri
 
 		float lineWidth{ 1.0f };
 		float pointSize{ 1.0f };
+
+		static bool IsBlendChanged(const RenderState& a, const RenderState& b)
+		{
+			return a.blendEnabled != b.blendEnabled
+				|| a.blendFactorSrc != b.blendFactorSrc
+				|| a.blendFactorDst != b.blendFactorDst;
+		}
+
+		static bool IsFrontFaceChanged(const RenderState& a, const RenderState& b)
+		{
+			return a.frontFace != b.frontFace;
+		}
+
+		static bool IsCullFaceChanged(const RenderState& a, const RenderState& b)
+		{
+			return a.cullFaceEnabled != b.cullFaceEnabled
+				|| a.cullFace != b.cullFace;
+		}
+
+		static bool IsDepthFuncChanged(const RenderState& a, const RenderState& b)
+		{
+			return a.depthTestEnabled != b.depthTestEnabled
+				|| a.depthFunc != b.depthFunc;
+		}
+
+		static bool IsDepthWriteChanged(const RenderState& a, const RenderState& b)
+		{
+			return a.depthWriteEnabled != b.depthWriteEnabled;
+		}
+
+		static bool IsStencilFuncChanged(const RenderState& a, const RenderState& b)
+		{
+			return a.stencilTestEnabled != b.stencilTestEnabled
+				|| a.stencilFunc != b.stencilFunc
+				|| a.stencilRef != b.stencilRef
+				|| a.stencilMaskAND != b.stencilMaskAND;
+		}
+
+		static bool IsStencilOpChanged(const RenderState& a, const RenderState& b)
+		{
+			return a.stencilSfail != b.stencilSfail
+				|| a.stencilDPfail != b.stencilDPfail
+				|| a.stencilDPpass != b.stencilDPpass;
+		}
+
+		static bool IsStencilMaskChanged(const RenderState& a, const RenderState& b)
+		{
+			return a.stencilMask != b.stencilMask;
+		}
+
+		static bool IsLineWidthChanged(const RenderState& a, const RenderState& b)
+		{
+			return a.lineWidth != b.lineWidth;
+		}
+
+		static bool IsPointSizeChanged(const RenderState& a, const RenderState& b)
+		{
+			return a.pointSize != b.pointSize;
+		}
 	};
 
 	struct PassDesc
@@ -207,6 +266,7 @@ namespace seri
 		std::shared_ptr<VertexArrayBase> vao;
 
 		glm::mat4 model{ 1.0f };
+		std::vector<glm::mat4> bones{};
 	};
 
 	struct RenderPass
@@ -220,7 +280,7 @@ namespace seri
 	public:
 		void AddPass(RenderPass pass)
 		{
-			passes.emplace_back(pass);
+			passes.emplace_back(std::move(pass));
 		}
 
 		RenderPass& GetPass(PassType type)
@@ -231,7 +291,7 @@ namespace seri
 		void AddItem(RenderItem item)
 		{
 			auto& pass = GetPass(item.type);
-			pass.items.emplace_back(item);
+			pass.items.emplace_back(std::move(item));
 		}
 
 		void Clear()

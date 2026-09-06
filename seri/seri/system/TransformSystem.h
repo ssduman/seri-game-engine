@@ -23,7 +23,7 @@ namespace seri::system
 		}
 
 	private:
-		static void UpdateRecursive(seri::scene::SceneTreeNode node, const glm::mat4& parentWorld)
+		static void UpdateRecursive(const seri::scene::SceneTreeNode& node, const glm::mat4& parentWorld)
 		{
 			auto& registry = seri::scene::SceneManager::GetRegistry();
 

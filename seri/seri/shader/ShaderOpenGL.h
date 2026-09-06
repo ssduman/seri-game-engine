@@ -54,6 +54,7 @@ namespace seri
 			int32_t currSlot = 0;
 
 			_uniforms.clear();
+			_locations.clear();
 
 			GLint uniformCount = 0;
 			glGetProgramiv(_program, GL_ACTIVE_UNIFORMS, &uniformCount);
@@ -89,6 +90,8 @@ namespace seri
 				}
 
 				int32_t slot = IsSamplerType(uniformType) ? currSlot++ : -1;
+
+				_locations.emplace(name, static_cast<int>(location));
 
 				_uniforms.push_back(
 					{
@@ -182,6 +185,16 @@ namespace seri
 			glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, &value[0][0]);
 		}
 
+		void SetMat4Array(const std::string& name, const glm::mat4* values, uint32_t count) override
+		{
+			if (values == nullptr || count == 0)
+			{
+				return;
+			}
+
+			glUniformMatrix4fv(GetUniformLocation(name), count, GL_FALSE, &values[0][0][0]);
+		}
+
 		std::shared_ptr<ShaderBase> Clone() override
 		{
 			auto shader = ShaderBase::Create();
@@ -248,11 +261,21 @@ namespace seri
 		{
 			glDeleteProgram(_program);
 			_program = 0;
+			_locations.clear();
 		}
 
 		int GetUniformLocation(const std::string& name)
 		{
-			return glGetUniformLocation(_program, name.c_str());
+			auto it = _locations.find(name);
+			if (it != _locations.end())
+			{
+				return it->second;
+			}
+
+			int location = glGetUniformLocation(_program, name.c_str());
+			_locations.emplace(name, location);
+
+			return location;
 		}
 
 		std::string ParseIncludes(const std::string& code)
@@ -325,6 +348,8 @@ namespace seri
 		}
 
 		unsigned int _program{ 0 };
+
+		std::unordered_map<std::string, int> _locations{};
 
 	};
 }

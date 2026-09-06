@@ -62,7 +62,7 @@ namespace seri
 
 	void RenderCommandBufferBase::Submit(RenderItem renderItem)
 	{
-		_frameGraph.AddItem(renderItem);
+		_frameGraph.AddItem(std::move(renderItem));
 	}
 
 	void RenderCommandBufferBase::Submit(RenderCommand renderCommand)
@@ -70,23 +70,62 @@ namespace seri
 		_commands.emplace_back(renderCommand);
 	}
 
-	void RenderCommandBufferBase::SetState(RenderState state)
+	void RenderCommandBufferBase::SetState(const RenderState& state)
 	{
-		seri::RenderingManager::SetBlend(state.blendEnabled, state.blendFactorSrc, state.blendFactorDst);
-		seri::RenderingManager::SetFrontFace(state.frontFace);
-		seri::RenderingManager::SetCullFace(state.cullFaceEnabled, state.cullFace);
-		seri::RenderingManager::SetDepthFunc(state.depthTestEnabled, state.depthFunc);
-		seri::RenderingManager::SetDepthWrite(state.depthWriteEnabled);
-		seri::RenderingManager::SetStencilFunc(state.stencilTestEnabled, state.stencilFunc, state.stencilRef, state.stencilMaskAND);
-		seri::RenderingManager::SetStencilOp(state.stencilSfail, state.stencilDPfail, state.stencilDPpass);
-		seri::RenderingManager::SetStencilMask(state.stencilMask);
-		seri::RenderingManager::SetLineWidth(state.lineWidth);
-		seri::RenderingManager::SetPointSize(state.pointSize);
+		if (RenderState::IsBlendChanged(state, _statePrev))
+		{
+			seri::RenderingManager::SetBlend(state.blendEnabled, state.blendFactorSrc, state.blendFactorDst);
+		}
+
+		if (RenderState::IsFrontFaceChanged(state, _statePrev))
+		{
+			seri::RenderingManager::SetFrontFace(state.frontFace);
+		}
+
+		if (RenderState::IsCullFaceChanged(state, _statePrev))
+		{
+			seri::RenderingManager::SetCullFace(state.cullFaceEnabled, state.cullFace);
+		}
+
+		if (RenderState::IsDepthFuncChanged(state, _statePrev))
+		{
+			seri::RenderingManager::SetDepthFunc(state.depthTestEnabled, state.depthFunc);
+		}
+
+		if (RenderState::IsDepthWriteChanged(state, _statePrev))
+		{
+			seri::RenderingManager::SetDepthWrite(state.depthWriteEnabled);
+		}
+
+		if (RenderState::IsStencilFuncChanged(state, _statePrev))
+		{
+			seri::RenderingManager::SetStencilFunc(state.stencilTestEnabled, state.stencilFunc, state.stencilRef, state.stencilMaskAND);
+		}
+
+		if (RenderState::IsStencilOpChanged(state, _statePrev))
+		{
+			seri::RenderingManager::SetStencilOp(state.stencilSfail, state.stencilDPfail, state.stencilDPpass);
+		}
+
+		if (RenderState::IsStencilMaskChanged(state, _statePrev))
+		{
+			seri::RenderingManager::SetStencilMask(state.stencilMask);
+		}
+
+		if (RenderState::IsLineWidthChanged(state, _statePrev))
+		{
+			seri::RenderingManager::SetLineWidth(state.lineWidth);
+		}
+
+		if (RenderState::IsPointSizeChanged(state, _statePrev))
+		{
+			seri::RenderingManager::SetPointSize(state.pointSize);
+		}
 
 		_statePrev = state;
 	}
 
-	void RenderCommandBufferBase::OnPassChanged(RenderPass renderPass)
+	void RenderCommandBufferBase::OnPassChanged(const RenderPass& renderPass)
 	{
 		auto& cam = renderPass.desc.camera;
 
@@ -247,6 +286,15 @@ namespace seri
 				cmd.material->SetInt(literals::kUniformSpotLightShadowMap2, static_cast<int>(seri::TextureSlotName::spot_shadow_2));
 				cmd.material->SetInt(literals::kUniformSpotLightShadowMap3, static_cast<int>(seri::TextureSlotName::spot_shadow_3));
 				cmd.material->Apply();
+
+				if (!cmd.bones.empty())
+				{
+					auto shader = cmd.material->GetShader();
+					if (shader && shader->IsActiveForUsing())
+					{
+						shader->SetMat4Array(literals::kUniformBones, cmd.bones.data(), static_cast<uint32_t>(cmd.bones.size()));
+					}
+				}
 
 				Draw(cmd.draw, cmd.vao);
 			}

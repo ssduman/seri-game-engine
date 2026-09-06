@@ -48,6 +48,12 @@ namespace seri::system
 					continue;
 				}
 
+				if (model->GetAnimationDuration() > 0.0)
+				{
+					auto* animator = registry.try_get<seri::component::AnimatorComponent>(entity);
+					model->UpdateAnimations(animator ? animator->time : 0.0f);
+				}
+
 				int slotCount = static_cast<int>(renderer.materialAssetIds.size());
 
 				for (const auto& mesh : model->meshes)
