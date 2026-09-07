@@ -314,7 +314,7 @@ namespace seri::editor
 		{
 			seri::RenderCommand renderCommand{};
 			renderCommand.name = "basic_cube";
-			renderCommand.camera = seri::Graphic::GetCameraPerspective();
+			renderCommand.camera = seri::Graphic::GetActiveCamera();
 			renderCommand.material = basicMaterial;
 			renderCommand.vao = basicVertexArray;
 			renderCommand.rt = seri::RenderingManager::GetEditorRT();

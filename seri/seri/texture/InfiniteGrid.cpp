@@ -19,7 +19,7 @@ namespace seri
 
 	void InfiniteGrid::Update()
 	{
-		auto camera = seri::Graphic::GetCameraPerspective();
+		auto camera = seri::Graphic::GetActiveCamera();
 
 		_material->SetMat4("u_inv_view", glm::inverse(camera->GetView()));
 		_material->SetMat4("u_inv_proj", glm::inverse(camera->GetProjection()));

@@ -16,14 +16,7 @@ namespace seri
 		}
 		else
 		{
-			glm::vec3 up = GetUp();
-			glm::vec3 front = GetFront();
-
-			_view = glm::lookAt(
-				_cameraProperties.position,
-				_cameraProperties.position + front,
-				up
-			);
+			_view = BuildViewMatrix();
 		}
 	}
 
@@ -52,23 +45,6 @@ namespace seri
 		}
 	}
 
-	void CameraBase::UpdateEulerAngles()
-	{
-		//constexpr glm::vec3 worldUp{ 0.0f, 1.0f, 0.0f };
-
-		//float pitch = glm::radians(_cameraProperties.rotation.x);
-		//float yaw = glm::radians(_cameraProperties.rotation.y);
-
-		//glm::vec3 front;
-		//front.x = cos(yaw) * cos(pitch);
-		//front.y = sin(yaw);
-		//front.z = cos(yaw) * sin(pitch);
-
-		//_cameraProperties.front = glm::normalize(front);
-		//_cameraProperties.right = glm::normalize(glm::cross(_cameraProperties.front, worldUp));
-		//_cameraProperties.up = glm::normalize(glm::cross(_cameraProperties.right, _cameraProperties.front));
-	}
-
 	void CameraBase::OnWindowResizeEvent(const event::WindowResizeEventData& data)
 	{
 		if (data.width <= 0 || data.height <= 0)
@@ -83,7 +59,7 @@ namespace seri
 		UpdateProjection();
 	}
 
-	const bool CameraBase::IsOrtho() const
+	bool CameraBase::IsOrtho() const
 	{
 		return _cameraProperties.isOrtho;
 	}
@@ -120,12 +96,7 @@ namespace seri
 
 	glm::vec4 CameraBase::GetPosition()
 	{
-		return glm::vec4{
-			_cameraProperties.position.x,
-			_cameraProperties.position.y,
-			_cameraProperties.position.z,
-			0.0f
-		};
+		return glm::vec4{ _cameraProperties.position, 1.0f };
 	}
 
 	const glm::mat4& CameraBase::GetView()

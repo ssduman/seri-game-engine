@@ -128,6 +128,29 @@ namespace seri::component
 		return node;
 	}
 
+	CameraComponent CameraComponent::Deserialize(const YAML::Node& node)
+	{
+		CameraComponent component{};
+		component.isMain = YAMLUtil::GetType<bool>(node["IsMain"]);
+		component.isOrtho = YAMLUtil::GetType<bool>(node["IsOrtho"]);
+		component.fov = YAMLUtil::GetType<float>(node["FoV"]);
+		component.orthoSize = YAMLUtil::GetType<float>(node["OrthoSize"]);
+		component.nearPlane = YAMLUtil::GetType<float>(node["NearPlane"]);
+		component.farPlane = YAMLUtil::GetType<float>(node["FarPlane"]);
+		return component;
+	}
+	YAML::Node CameraComponent::Serialize(const CameraComponent& component)
+	{
+		YAML::Node node;
+		node["IsMain"] = component.isMain;
+		node["IsOrtho"] = component.isOrtho;
+		node["FoV"] = component.fov;
+		node["OrthoSize"] = component.orthoSize;
+		node["NearPlane"] = component.nearPlane;
+		node["FarPlane"] = component.farPlane;
+		return node;
+	}
+
 	DirectionalLightComponent DirectionalLightComponent::Deserialize(const YAML::Node& node)
 	{
 		DirectionalLightComponent component{};

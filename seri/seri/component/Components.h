@@ -95,6 +95,21 @@ namespace seri::component
 		static YAML::Node Serialize(const AnimatorComponent& component);
 	};
 
+	struct CameraComponent
+	{
+		static constexpr std::string_view compName = "CameraComponent";
+
+		bool isMain{ true };
+		bool isOrtho{ false };
+		float fov{ 60.0f };
+		float orthoSize{ 5.0f };
+		float nearPlane{ 0.1f };
+		float farPlane{ 1000.0f };
+
+		static CameraComponent Deserialize(const YAML::Node& node);
+		static YAML::Node Serialize(const CameraComponent& component);
+	};
+
 	struct DirectionalLightComponent
 	{
 		static constexpr std::string_view compName = "DirectionalLightComponent";

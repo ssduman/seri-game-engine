@@ -335,11 +335,6 @@ namespace seri
 
 							InputManager::RegisterKey(keyEnum, actionEnum);
 
-							if (keyEnum == KeyCode::escape && actionEnum == InputAction::press)
-							{
-								SetWindowShouldCloseToTrue();
-							}
-
 							//LIB_LOGGER(info, window) << "sdl event: key down: " << seri::ToString(keyEnum) << ", repeat: " << seri::ToString(actionEnum);
 						}
 						break;
@@ -365,11 +360,6 @@ namespace seri
 							FireEvent(event::KeyEventData{ keyEnum, scancode, actionEnum, std::move(modsVector) });
 
 							InputManager::RegisterKey(keyEnum, actionEnum);
-
-							if (keyEnum == KeyCode::escape)
-							{
-								SetWindowShouldCloseToTrue();
-							}
 
 							//LIB_LOGGER(info, window) << "sdl event: key up: " << seri::ToString(keyEnum);
 						}

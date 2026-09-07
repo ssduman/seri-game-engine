@@ -16,9 +16,6 @@ namespace seri
 		float width{ 1920.0f };
 		float height{ 1080.0f };
 
-		float speed{ 5.0f };
-		float sensitivity{ 0.1f };
-
 		glm::vec3 position{ 0.0f, 0.0f, 0.0f };
 		glm::quat rotation{ 1.0f, 0.0f, 0.0f, 0.0f };
 	};
@@ -34,7 +31,7 @@ namespace seri
 
 		void OnWindowResizeEvent(const event::WindowResizeEventData& data);
 
-		const bool IsOrtho() const;
+		bool IsOrtho() const;
 
 		glm::vec3 GetUp();
 		glm::vec3 GetFront();
@@ -51,7 +48,6 @@ namespace seri
 		CameraProperties& GetCameraProperties();
 
 	protected:
-		void UpdateEulerAngles();
 		void UpdateView();
 		void UpdateProjection();
 

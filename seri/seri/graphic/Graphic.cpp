@@ -2,48 +2,54 @@
 
 #include "seri/util/Util.h"
 #include "seri/camera/CameraBase.h"
+#include "seri/camera/EditorCamera.h"
 #include "seri/graphic/Graphic.h"
 #include "seri/graphic/Mesh.h"
 #include "seri/graphic/Model.h"
 #include "seri/graphic/Material.h"
 #include "seri/rendering/render/RenderingManager.h"
+#include "seri/scene/SceneManager.h"
 
 namespace seri
 {
-	void Graphic::AddCamera(std::shared_ptr<CameraBase> camera)
+	void Graphic::SetCameraUI(std::shared_ptr<CameraBase> camera)
 	{
-		GetInstance()._cameras.push_back(camera);
-
-		if (camera->IsOrtho())
-		{
-			if (GetInstance()._cameraOrtho != nullptr)
-			{
-				LOGGER(warning) << "there is already ortho camera";
-				return;
-			}
-
-			GetInstance()._cameraOrtho = camera;
-		}
-		else
-		{
-			if (GetInstance()._cameraPerspective != nullptr)
-			{
-				LOGGER(warning) << "there is already perspective camera";
-				return;
-			}
-
-			GetInstance()._cameraPerspective = camera;
-		}
+		GetInstance()._cameraUI = camera;
 	}
 
-	std::shared_ptr<CameraBase> Graphic::GetCameraOrtho()
+	void Graphic::SetEditorCamera(std::shared_ptr<EditorCamera> camera)
 	{
-		return GetInstance()._cameraOrtho;
+		GetInstance()._cameraEditor = camera;
 	}
 
-	std::shared_ptr<CameraBase> Graphic::GetCameraPerspective()
+	void Graphic::SetRuntimeCamera(std::shared_ptr<CameraBase> camera)
 	{
-		return GetInstance()._cameraPerspective;
+		GetInstance()._cameraRuntime = camera;
+	}
+
+	std::shared_ptr<CameraBase> Graphic::GetCameraUI()
+	{
+		return GetInstance()._cameraUI;
+	}
+
+	std::shared_ptr<EditorCamera> Graphic::GetEditorCamera()
+	{
+		return GetInstance()._cameraEditor;
+	}
+
+	std::shared_ptr<CameraBase> Graphic::GetRuntimeCamera()
+	{
+		return GetInstance()._cameraRuntime;
+	}
+
+	std::shared_ptr<CameraBase> Graphic::GetActiveCamera()
+	{
+		if (scene::SceneManager::GetState() != scene::SceneState::edit && GetInstance()._cameraRuntime != nullptr)
+		{
+			return GetInstance()._cameraRuntime;
+		}
+
+		return GetInstance()._cameraEditor;
 	}
 
 	void Graphic::DrawModel(const std::shared_ptr<Model>& model, const std::shared_ptr<Material>& material, const glm::mat4& trs)

@@ -54,12 +54,12 @@ namespace seri
 
 	void Skybox::Update()
 	{
-		_material->SetMat4(literals::kUniformViewSkybox, glm::mat4(glm::mat3(seri::Graphic::GetCameraPerspective()->GetView())));
+		_material->SetMat4(literals::kUniformViewSkybox, glm::mat4(glm::mat3(seri::Graphic::GetActiveCamera()->GetView())));
 
 		seri::RenderCommand renderCommand_skybox{};
 		renderCommand_skybox.name = "skybox";
 		renderCommand_skybox.state.depthFunc = DepthFunc::l_equal;
-		renderCommand_skybox.camera = seri::Graphic::GetCameraPerspective();
+		renderCommand_skybox.camera = seri::Graphic::GetActiveCamera();
 		renderCommand_skybox.draw.mode = DrawMode::arrays;
 		renderCommand_skybox.draw.count = static_cast<uint32_t>(_positions.size());
 		renderCommand_skybox.material = _material;

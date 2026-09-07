@@ -266,11 +266,6 @@ namespace seri
 						windowManager->FireEvent(event::KeyEventData{ keyEnum, scancode, actionEnum, std::move(modsVector) });
 
 						InputManager::RegisterKey(keyEnum, actionEnum);
-
-						if (keyEnum == KeyCode::escape && actionEnum == InputAction::press)
-						{
-							windowManager->SetWindowShouldCloseToTrue();
-						}
 					}
 				}
 			);

@@ -341,6 +341,19 @@ namespace seri::editor
 		{
 			Save();
 		}
+
+		if (ImGui::IsKeyPressed(ImGuiKey_Escape, false) &&
+			!ImGui::IsPopupOpen(nullptr, ImGuiPopupFlags_AnyPopupId | ImGuiPopupFlags_AnyPopupLevel))
+		{
+			if (seri::scene::SceneManager::GetState() == seri::scene::SceneState::edit)
+			{
+				seri::WindowManager::SetWindowShouldCloseToTrue();
+			}
+			else
+			{
+				seri::scene::SceneManager::SetState(seri::scene::SceneState::edit);
+			}
+		}
 	}
 
 	void EditorGUI::ShowEditorTitleBar()
@@ -677,6 +690,11 @@ namespace seri::editor
 			ImVec2(1, 0)
 		);
 
+		if (seri::scene::SceneManager::GetState() != seri::scene::SceneState::edit)
+		{
+			return;
+		}
+
 		ShowEditorSceneGizmo(imageMin, imageSize);
 		ShowEditorSceneEntityGizmo(imageMin, imageSize);
 		ShowEditorSceneGizmoToolbar(imageMin);
@@ -685,76 +703,98 @@ namespace seri::editor
 
 	void EditorGUI::ControlEditorSceneMove(const ImVec2& imageMin, const ImVec2& imageMax)
 	{
-		static bool moveActive = false;
+		static bool lookActive = false;
+		static bool panActive = false;
 		static ImVec2 lastMouse = ImVec2(0, 0);
+		static double anchorX = 0.0;
+		static double anchorY = 0.0;
 
 		ImVec2 mouse = ImGui::GetMousePos();
 
-		if (ImGui::IsMouseClicked(ImGuiMouseButton_Right))
-		{
-			bool panelActive =
-				ImGui::IsWindowHovered(ImGuiHoveredFlags_AllowWhenBlockedByActiveItem) ||
-				ImGui::IsWindowFocused();
-			bool mouseInside =
-				mouse.x >= imageMin.x && mouse.x <= imageMax.x &&
-				mouse.y >= imageMin.y && mouse.y <= imageMax.y;
+		bool panelActive =
+			ImGui::IsWindowHovered(ImGuiHoveredFlags_AllowWhenBlockedByActiveItem) ||
+			ImGui::IsWindowFocused();
+		bool mouseInside =
+			mouse.x >= imageMin.x && mouse.x <= imageMax.x &&
+			mouse.y >= imageMin.y && mouse.y <= imageMax.y;
 
-			if (panelActive && mouseInside)
-			{
-				moveActive = true;
-				lastMouse = mouse;
-			}
+		if (ImGui::IsMouseClicked(ImGuiMouseButton_Right) && panelActive && mouseInside)
+		{
+			lookActive = true;
+
+			auto cursor = seri::WindowManager::GetCursorPosition();
+			anchorX = cursor.first;
+			anchorY = cursor.second;
 		}
 		if (ImGui::IsMouseReleased(ImGuiMouseButton_Right))
 		{
-			moveActive = false;
+			lookActive = false;
 		}
 
-		if (moveActive)
+		if (ImGui::IsMouseClicked(ImGuiMouseButton_Middle) && panelActive && mouseInside)
+		{
+			panActive = true;
+			lastMouse = mouse;
+		}
+		if (ImGui::IsMouseReleased(ImGuiMouseButton_Middle))
+		{
+			panActive = false;
+		}
+
+		auto camera = seri::Graphic::GetEditorCamera();
+
+		if (lookActive)
 		{
 			ImGui::SetMouseCursor(ImGuiMouseCursor_None);
 
-			ImVec2 delta = { mouse.x - lastMouse.x, mouse.y - lastMouse.y };
-			lastMouse = mouse;
+			auto cursor = seri::WindowManager::GetCursorPosition();
 
-			auto deltaTime = seri::TimeWrapper::GetDeltaTime();
+			camera->Look(
+				static_cast<float>(cursor.first - anchorX),
+				static_cast<float>(cursor.second - anchorY)
+			);
 
-			auto camera = seri::Graphic::GetCameraPerspective();
-			auto& camProps = camera->GetCameraProperties();
+			seri::WindowManager::SetCursorPosition(anchorX, anchorY);
 
-			float sensitivity = camProps.sensitivity;
-
-			float yawDeltaDeg = -delta.x * sensitivity;
-			float pitchDeltaDeg = -delta.y * sensitivity;
-
-			glm::vec3 front = camera->GetFront();
-			glm::vec3 right = camera->GetRight();
-			glm::vec3 worldUp{ 0.0f, 1.0f, 0.0f };
-
-			glm::quat qYaw = glm::angleAxis(glm::radians(yawDeltaDeg), worldUp);
-			glm::quat orientAfterYaw = glm::normalize(qYaw * camProps.rotation);
-			glm::vec3 rightAfterYaw = glm::normalize(orientAfterYaw * glm::vec3(1.0f, 0.0f, 0.0f));
-			glm::quat qPitch = glm::angleAxis(glm::radians(pitchDeltaDeg), rightAfterYaw);
-			camProps.rotation = glm::normalize(qPitch * orientAfterYaw);
-
-			float speed = ImGui::GetIO().KeyShift ? camProps.speed * 2.0f : camProps.speed;
-
+			glm::vec3 direction{ 0.0f, 0.0f, 0.0f };
 			if (ImGui::IsKeyDown(ImGuiKey_W))
 			{
-				camProps.position += front * speed * deltaTime;
+				direction.z += 1.0f;
 			}
 			if (ImGui::IsKeyDown(ImGuiKey_S))
 			{
-				camProps.position -= front * speed * deltaTime;
+				direction.z -= 1.0f;
 			}
 			if (ImGui::IsKeyDown(ImGuiKey_A))
 			{
-				camProps.position -= right * speed * deltaTime;
+				direction.x -= 1.0f;
 			}
 			if (ImGui::IsKeyDown(ImGuiKey_D))
 			{
-				camProps.position += right * speed * deltaTime;
+				direction.x += 1.0f;
 			}
+			if (ImGui::IsKeyDown(ImGuiKey_E))
+			{
+				direction.y += 1.0f;
+			}
+			if (ImGui::IsKeyDown(ImGuiKey_Q))
+			{
+				direction.y -= 1.0f;
+			}
+
+			camera->Move(direction, seri::TimeWrapper::GetDeltaTime(), ImGui::GetIO().KeyShift);
+		}
+		else if (panActive)
+		{
+			ImVec2 delta = { mouse.x - lastMouse.x, mouse.y - lastMouse.y };
+			lastMouse = mouse;
+
+			camera->Pan(delta.x, delta.y, imageMax.y - imageMin.y);
+		}
+
+		if (!lookActive && panelActive && mouseInside && ImGui::GetIO().MouseWheel != 0.0f)
+		{
+			camera->Zoom(ImGui::GetIO().MouseWheel);
 		}
 	}
 
@@ -810,7 +850,7 @@ namespace seri::editor
 		float x = imageMin.x + imageSize.x - gizmoSize - padding;
 		float y = imageMin.y + padding;
 
-		auto camera = seri::Graphic::GetCameraPerspective();
+		auto camera = seri::Graphic::GetEditorCamera();
 
 		glm::mat4 view = camera->GetView();
 
@@ -895,8 +935,8 @@ namespace seri::editor
 		ImGuizmo::PushID("scene_entity_gizmo");
 
 		ImGuizmo::Manipulate(
-			glm::value_ptr(Graphic::GetCameraPerspective()->GetView()),
-			glm::value_ptr(Graphic::GetCameraPerspective()->GetProjection()),
+			glm::value_ptr(Graphic::GetEditorCamera()->GetView()),
+			glm::value_ptr(Graphic::GetEditorCamera()->GetProjection()),
 			operation,
 			mode,
 			glm::value_ptr(worldMatrix),
@@ -1076,6 +1116,16 @@ namespace seri::editor
 				activeScene->AddEntityAsChild(seri::Random::UUID(), parentId, "Entity");
 
 				_pendingExpandEntityId = parentId;
+			}
+			if (ImGui::MenuItem("Camera"))
+			{
+				uint64_t entityId = seri::Random::UUID();
+				activeScene->AddEntityAsChild(entityId, parentId, "Camera");
+
+				_pendingExpandEntityId = parentId;
+
+				entt::entity entity = activeScene->GetEntityByID(entityId);
+				seri::scene::SceneManager::AddComponent(entity, seri::component::CameraComponent::compName);
 			}
 			if (ImGui::MenuItem("Plane"))
 			{
@@ -1366,6 +1416,41 @@ namespace seri::editor
 			if (changed)
 			{
 				scene->SetAsDirty();
+			}
+		}
+
+		if (auto* cameraComp = registry.try_get<seri::component::CameraComponent>(entity))
+		{
+			ScopedChild scopedChild("##CameraComponent", ImVec2(0, 0), childFlags);
+
+			ImGui::TextUnformatted("Camera Component");
+			ImGui::Separator();
+
+			bool changed = false;
+
+			changed |= DrawBool("Main", cameraComp->isMain);
+			changed |= DrawBool("Orthographic", cameraComp->isOrtho);
+
+			if (cameraComp->isOrtho)
+			{
+				changed |= DrawFloat("Size", cameraComp->orthoSize, 0.1f, 0.01f, 1000.0f);
+			}
+			else
+			{
+				changed |= DrawFloat("Field Of View", cameraComp->fov, 0.1f, 1.0f, 179.0f);
+			}
+
+			changed |= DrawFloat("Near Plane", cameraComp->nearPlane, 0.01f, 0.001f, 1000.0f);
+			changed |= DrawFloat("Far Plane", cameraComp->farPlane, 1.0f, 0.01f, 10000.0f);
+
+			if (changed)
+			{
+				scene->SetAsDirty();
+			}
+
+			if (seri::scene::SceneManager::GetState() == seri::scene::SceneState::edit)
+			{
+				seri::system::CameraSystem::DrawFrustum(entity);
 			}
 		}
 

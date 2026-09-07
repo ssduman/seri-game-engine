@@ -17,6 +17,7 @@
 #include "seri/event/EventDispatcher.h"
 #include "seri/scripting/ScriptingManager.h"
 #include "seri/system/LightSystem.h"
+#include "seri/system/CameraSystem.h"
 #include "seri/system/TransformSystem.h"
 #include "seri/system/MeshRendererSystem.h"
 #include "seri/system/AnimatorSystem.h"
@@ -76,33 +77,33 @@ namespace seri
 						static_cast<int>(editorRT->GetHeight())
 					};
 
-					Graphic::GetCameraOrtho()->OnWindowResizeEvent(editorRTData);
-					Graphic::GetCameraPerspective()->OnWindowResizeEvent(editorRTData);
+					Graphic::GetCameraUI()->OnWindowResizeEvent(editorRTData);
+					Graphic::GetEditorCamera()->OnWindowResizeEvent(editorRTData);
 
 					return false;
 				}
 			);
 
-			CameraProperties cameraPropertiesOrtho;
-			cameraPropertiesOrtho.width = static_cast<float>(RenderingManager::GetEditorRT()->GetWidth());
-			cameraPropertiesOrtho.height = static_cast<float>(RenderingManager::GetEditorRT()->GetHeight());
-			cameraPropertiesOrtho.isOrtho = true;
-			cameraPropertiesOrtho.aspect = RenderingManager::GetEditorRT()->GetAspectRatio();
-			auto cameraOrtho = std::make_shared<EditorCamera>(cameraPropertiesOrtho);
-			cameraOrtho->Init();
+			CameraProperties cameraPropertiesUI;
+			cameraPropertiesUI.width = static_cast<float>(RenderingManager::GetEditorRT()->GetWidth());
+			cameraPropertiesUI.height = static_cast<float>(RenderingManager::GetEditorRT()->GetHeight());
+			cameraPropertiesUI.isOrtho = true;
+			cameraPropertiesUI.aspect = RenderingManager::GetEditorRT()->GetAspectRatio();
+			auto cameraUI = std::make_shared<EditorCamera>(cameraPropertiesUI);
+			cameraUI->Init();
 
-			CameraProperties cameraPropertiesPerspective;
-			cameraPropertiesPerspective.width = static_cast<float>(RenderingManager::GetEditorRT()->GetWidth());
-			cameraPropertiesPerspective.height = static_cast<float>(RenderingManager::GetEditorRT()->GetHeight());
-			cameraPropertiesPerspective.isOrtho = false;
-			cameraPropertiesPerspective.aspect = RenderingManager::GetEditorRT()->GetAspectRatio();
-			cameraPropertiesPerspective.position = { 0.0f, 4.0f, 6.0f };
-			cameraPropertiesPerspective.rotation = Util::ToQuaternion({ -30.0f, 0.0f, 0.0f });
-			auto cameraPerspective = std::make_shared<EditorCamera>(cameraPropertiesPerspective);
-			cameraPerspective->Init();
+			CameraProperties cameraPropertiesEditor;
+			cameraPropertiesEditor.width = static_cast<float>(RenderingManager::GetEditorRT()->GetWidth());
+			cameraPropertiesEditor.height = static_cast<float>(RenderingManager::GetEditorRT()->GetHeight());
+			cameraPropertiesEditor.isOrtho = false;
+			cameraPropertiesEditor.aspect = RenderingManager::GetEditorRT()->GetAspectRatio();
+			cameraPropertiesEditor.position = { 0.0f, 4.0f, 6.0f };
+			cameraPropertiesEditor.rotation = Util::ToQuaternion({ -30.0f, 0.0f, 0.0f });
+			auto cameraEditor = std::make_shared<EditorCamera>(cameraPropertiesEditor);
+			cameraEditor->Init();
 
-			Graphic::AddCamera(cameraOrtho);
-			Graphic::AddCamera(cameraPerspective);
+			Graphic::SetCameraUI(cameraUI);
+			Graphic::SetEditorCamera(cameraEditor);
 
 			RenderingManager::Init();
 		}
@@ -127,8 +128,8 @@ namespace seri
 			RenderingManager::ClearColor();
 			RenderingManager::Clear();
 
-			Graphic::GetCameraOrtho()->Update();
-			Graphic::GetCameraPerspective()->Update();
+			Graphic::GetCameraUI()->Update();
+			Graphic::GetEditorCamera()->Update();
 		}
 
 		void OnUpdate() override
@@ -149,6 +150,7 @@ namespace seri
 			}
 
 			system::TransformSystem::Update();
+			system::CameraSystem::Update();
 			system::LightSystem::Update();
 
 			if (isPlaying)
@@ -161,7 +163,7 @@ namespace seri
 
 			scripting::ScriptingManager::Update();
 
-			debug::DebugDraw::Render(Graphic::GetCameraPerspective());
+			debug::DebugDraw::Render(Graphic::GetActiveCamera());
 			debug::DebugDraw::EndFrame();
 		}
 

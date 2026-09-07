@@ -69,6 +69,16 @@ namespace seri
 			_windowManager->SetCursorMode(cursorMode);
 		}
 
+		static std::pair<double, double> GetCursorPosition()
+		{
+			return _windowManager->GetCursorPosition();
+		}
+
+		static void SetCursorPosition(double xpos, double ypos)
+		{
+			_windowManager->SetCursorPosition(xpos, ypos);
+		}
+
 		static void SetCustomTitleBar(const TitleBarHitTestDelegate& titleBarHitTestFunc)
 		{
 			_windowManager->SetCustomTitleBar(titleBarHitTestFunc);

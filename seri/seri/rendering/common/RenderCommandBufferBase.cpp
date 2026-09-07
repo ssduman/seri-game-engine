@@ -11,8 +11,8 @@ namespace seri
 
 	void RenderCommandBufferBase::Begin()
 	{
-		auto perspectiveCamera = Graphic::GetCameraPerspective();
-		auto orthoCamera = Graphic::GetCameraOrtho();
+		auto activeCamera = Graphic::GetActiveCamera();
+		auto uiCamera = Graphic::GetCameraUI();
 
 		auto editorRT = seri::RenderingManager::GetEditorRT();
 		auto shadowRT = seri::RenderingManager::GetShadowRT();
@@ -25,27 +25,27 @@ namespace seri
 		RenderPass passSkybox;
 		passSkybox.desc.type = PassType::skybox;
 		passSkybox.desc.rt = editorRT;
-		passSkybox.desc.camera = perspectiveCamera;
+		passSkybox.desc.camera = activeCamera;
 
 		RenderPass passOpaque;
 		passOpaque.desc.type = PassType::opaque;
 		passOpaque.desc.rt = editorRT;
-		passOpaque.desc.camera = perspectiveCamera;
+		passOpaque.desc.camera = activeCamera;
 
 		RenderPass passTransparent;
 		passTransparent.desc.type = PassType::transparent;
 		passTransparent.desc.rt = editorRT;
-		passTransparent.desc.camera = perspectiveCamera;
+		passTransparent.desc.camera = activeCamera;
 
 		RenderPass passDebug;
 		passDebug.desc.type = PassType::debug;
 		passDebug.desc.rt = editorRT;
-		passDebug.desc.camera = perspectiveCamera;
+		passDebug.desc.camera = activeCamera;
 
 		RenderPass passUI;
 		passUI.desc.type = PassType::ui;
 		passUI.desc.rt = editorRT;
-		passUI.desc.camera = orthoCamera;
+		passUI.desc.camera = uiCamera;
 
 		_frameGraph.Clear();
 		_frameGraph.AddPass(passShadow);
