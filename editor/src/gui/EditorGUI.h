@@ -13,6 +13,8 @@
 #include <ImGuizmo.h>
 
 #include <memory>
+#include <string>
+#include <vector>
 #include <unordered_map>
 
 #if defined (SERI_USE_WINDOW_GLFW)
@@ -106,6 +108,20 @@ namespace seri::editor
 		void ShowEditorInspectorAsset();
 		void ShowEditorInspectorAssetMaterial();
 
+		void PullEditorConsoleLogs();
+		void ShowEditorConsole();
+		void ShowEditorConsoleToolbar();
+		void ShowEditorConsoleEntries();
+		void ShowEditorConsoleDetail();
+		void ShowEditorConsoleLevelFilter(seri::LogLevel level);
+		void ShowEditorConsoleMenuItems();
+		void CopyEditorConsoleEntries();
+		void ClearEditorConsole();
+		void RebuildEditorConsoleFilter();
+		bool MatchEditorConsoleFilter(const seri::LogEntry& entry);
+		std::string BuildEditorConsoleLine(const seri::LogEntry& entry, bool detailed);
+		ImVec4 GetEditorConsoleLevelColor(seri::LogLevel level);
+
 		void ShowEditorProject();
 		void ShowEditorProjectFolderTree(seri::asset::AssetTreeNode& node);
 		void ShowEditorProjectAssetGrid();
@@ -152,6 +168,23 @@ namespace seri::editor
 		bool _showConsole{ true };
 		bool _showProject{ true };
 		bool _resetLayout{ false };
+
+		std::vector<seri::LogEntry> _consoleEntries;
+		std::vector<int> _consoleVisibleEntries;
+		std::string _consoleSearch;
+		bool _consoleLevelEnabled[5]{ true, true, true, true, true };
+		int _consoleLevelCounts[5]{};
+		bool _consoleAutoScroll{ true };
+		bool _consoleShowTimeStamp{ true };
+		bool _consoleShowThreadId{ false };
+		bool _consoleShowModule{ true };
+		bool _consoleShowSource{ false };
+		bool _consoleFilterDirty{ true };
+		bool _consoleClearPending{ false };
+		bool _consoleScrollToBottom{ false };
+		bool _consoleShowDetail{ true };
+		int _consoleSelectedEntry{ -1 };
+		size_t _consoleMaxEntries{ 4096 };
 
 		std::shared_ptr<seri::TextureBase> _editorIcon;
 		bool _titleBarDraggable{ false };

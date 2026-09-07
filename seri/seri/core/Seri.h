@@ -32,6 +32,7 @@
 #include "seri/script/ScriptSystem.h"
 
 #include "seri/logging/Logger.h"
+#include "seri/logging/LogBuffer.h"
 
 #include "seri/camera/CameraBase.h"
 #include "seri/camera/EditorCamera.h"

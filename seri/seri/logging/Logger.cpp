@@ -1,6 +1,7 @@
 #include "Seripch.h"
 
 #include "seri/core/Core.h"
+#include "seri/logging/LogBuffer.h"
 #include "seri/logging/Logger.h"
 
 #include <boost/date_time/posix_time/posix_time.hpp>
@@ -12,6 +13,7 @@
 #include <boost/log/core.hpp>
 #include <boost/log/expressions.hpp>
 #include <boost/log/utility/setup/console.hpp>
+#include <boost/make_shared.hpp>
 
 #ifdef SERI_WINDOWS
 #include <windows.h>
@@ -48,6 +50,15 @@ namespace seri
 		auto sink = boost::log::add_console_log(std::clog);
 		sink->set_formatter(&FormatRecord);
 		sink->locked_backend()->auto_flush(GetInstance()._config.autoFlush);
+
+		if (GetInstance()._config.bufferLogs)
+		{
+			LogBuffer::SetCapacity(GetInstance()._config.bufferCapacity);
+
+			auto bufferSink = boost::make_shared<LogBufferSink>(boost::make_shared<LogBufferBackend>());
+			bufferSink->set_formatter(boost::log::expressions::stream << boost::log::expressions::smessage);
+			core->add_sink(bufferSink);
+		}
 
 		SetLogLevel(GetInstance()._config.level);
 

@@ -80,6 +80,8 @@ namespace seri::editor
 		ImGuizmo::BeginFrame();
 		ImGuizmo::Enable(true);
 
+		PullEditorConsoleLogs();
+
 		DrawEditorLayout();
 
 		CheckShortcuts();
@@ -2123,6 +2125,387 @@ namespace seri::editor
 		return ImGui::ImageButton(fmt::format("tex##{}", texture->id).c_str(), tex, { size, size }, { 0, 1 }, { 1, 0 });
 	}
 
+	void EditorGUI::PullEditorConsoleLogs()
+	{
+		size_t previousCount = _consoleEntries.size();
+
+		seri::LogBuffer::Drain(_consoleEntries);
+
+		if (_consoleEntries.size() == previousCount)
+		{
+			return;
+		}
+
+		for (size_t i = previousCount; i < _consoleEntries.size(); i++)
+		{
+			_consoleLevelCounts[static_cast<int>(_consoleEntries[i].level)]++;
+		}
+
+		if (_consoleEntries.size() > _consoleMaxEntries)
+		{
+			size_t removeCount = _consoleEntries.size() - _consoleMaxEntries;
+
+			for (size_t i = 0; i < removeCount; i++)
+			{
+				_consoleLevelCounts[static_cast<int>(_consoleEntries[i].level)]--;
+			}
+
+			_consoleEntries.erase(_consoleEntries.begin(), _consoleEntries.begin() + removeCount);
+			_consoleSelectedEntry = -1;
+			_consoleFilterDirty = true;
+		}
+		else if (!_consoleFilterDirty)
+		{
+			for (size_t i = previousCount; i < _consoleEntries.size(); i++)
+			{
+				if (MatchEditorConsoleFilter(_consoleEntries[i]))
+				{
+					_consoleVisibleEntries.push_back(static_cast<int>(i));
+				}
+			}
+		}
+
+		if (_consoleAutoScroll)
+		{
+			_consoleScrollToBottom = true;
+		}
+	}
+
+	void EditorGUI::ShowEditorConsole()
+	{
+		ShowEditorConsoleToolbar();
+
+		ImGui::Separator();
+
+		ShowEditorConsoleEntries();
+		ShowEditorConsoleDetail();
+
+		if (_consoleClearPending)
+		{
+			ClearEditorConsole();
+			_consoleClearPending = false;
+		}
+	}
+
+	void EditorGUI::ShowEditorConsoleToolbar()
+	{
+		if (ImGui::Button("Options"))
+		{
+			ImGui::OpenPopup("ConsoleOptions");
+		}
+
+		if (ImGui::BeginPopup("ConsoleOptions"))
+		{
+			ImGui::Checkbox("Auto scroll", &_consoleAutoScroll);
+			ImGui::Checkbox("Show detail", &_consoleShowDetail);
+
+			ImGui::Separator();
+
+			ImGui::Checkbox("Timestamp", &_consoleShowTimeStamp);
+			ImGui::Checkbox("Thread id", &_consoleShowThreadId);
+			ImGui::Checkbox("Module", &_consoleShowModule);
+			ImGui::Checkbox("Source", &_consoleShowSource);
+
+			ImGui::EndPopup();
+		}
+
+		ImGui::SameLine();
+		ShowEditorConsoleLevelFilter(seri::LogLevel::error);
+
+		ImGui::SameLine();
+		ShowEditorConsoleLevelFilter(seri::LogLevel::warning);
+
+		ImGui::SameLine();
+		ShowEditorConsoleLevelFilter(seri::LogLevel::info);
+
+		ImGui::SameLine();
+		ShowEditorConsoleLevelFilter(seri::LogLevel::verbose);
+
+		ImGui::SameLine();
+
+		float clearButtonWidth = _consoleSearch.empty() ? 0.0f : ImGui::CalcTextSize("X").x + ImGui::GetStyle().FramePadding.x * 2.0f + ImGui::GetStyle().ItemSpacing.x;
+		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x - clearButtonWidth);
+
+		if (ImGui::InputTextWithHint("##ConsoleSearch", "search", &_consoleSearch))
+		{
+			_consoleFilterDirty = true;
+		}
+
+		if (!_consoleSearch.empty())
+		{
+			ImGui::SameLine();
+
+			if (ImGui::Button("X##ConsoleSearchClear"))
+			{
+				_consoleSearch.clear();
+				_consoleFilterDirty = true;
+			}
+		}
+	}
+
+	void EditorGUI::ShowEditorConsoleLevelFilter(seri::LogLevel level)
+	{
+		int index = static_cast<int>(level);
+
+		bool enabled = _consoleLevelEnabled[index];
+
+		ImGui::PushStyleColor(ImGuiCol_Text, enabled ? GetEditorConsoleLevelColor(level) : ImGui::GetStyle().Colors[ImGuiCol_TextDisabled]);
+
+		std::string label = std::string(seri::Logger::ToString3(level)) + " " + std::to_string(_consoleLevelCounts[index]) + "##ConsoleLevel" + std::to_string(index);
+
+		if (ImGui::Button(label.c_str()))
+		{
+			_consoleLevelEnabled[index] = !enabled;
+			_consoleFilterDirty = true;
+		}
+
+		ImGui::PopStyleColor();
+	}
+
+	void EditorGUI::ShowEditorConsoleEntries()
+	{
+		if (_consoleFilterDirty)
+		{
+			RebuildEditorConsoleFilter();
+		}
+
+		bool hasDetail = _consoleShowDetail && _consoleSelectedEntry >= 0 && _consoleSelectedEntry < static_cast<int>(_consoleEntries.size());
+
+		float detailHeight = hasDetail ? seri::Util::Min(ImGui::GetTextLineHeightWithSpacing() * 4.0f, ImGui::GetContentRegionAvail().y * 0.4f) : 0.0f;
+
+		ImGui::BeginChild("ConsoleEntries", ImVec2(0.0f, -detailHeight), ImGuiChildFlags_Borders, ImGuiWindowFlags_HorizontalScrollbar);
+
+		ImGuiListClipper clipper;
+		clipper.Begin(static_cast<int>(_consoleVisibleEntries.size()));
+
+		while (clipper.Step())
+		{
+			for (int row = clipper.DisplayStart; row < clipper.DisplayEnd; row++)
+			{
+				int index = _consoleVisibleEntries[row];
+
+				const seri::LogEntry& entry = _consoleEntries[index];
+
+				std::string line = BuildEditorConsoleLine(entry, false);
+
+				ImGui::PushID(index);
+				ImGui::PushStyleColor(ImGuiCol_Text, GetEditorConsoleLevelColor(entry.level));
+
+				if (ImGui::Selectable(line.c_str(), _consoleSelectedEntry == index))
+				{
+					_consoleSelectedEntry = index;
+				}
+
+				ImGui::PopStyleColor();
+
+				if (ImGui::BeginPopupContextItem("ConsoleEntryMenu"))
+				{
+					_consoleSelectedEntry = index;
+
+					if (ImGui::MenuItem("Copy"))
+					{
+						ImGui::SetClipboardText(BuildEditorConsoleLine(entry, true).c_str());
+					}
+
+					ImGui::Separator();
+
+					ShowEditorConsoleMenuItems();
+
+					ImGui::EndPopup();
+				}
+
+				ImGui::PopID();
+			}
+		}
+
+		clipper.End();
+
+		if (ImGui::BeginPopupContextWindow("ConsoleMenu", ImGuiPopupFlags_MouseButtonRight | ImGuiPopupFlags_NoOpenOverItems))
+		{
+			ShowEditorConsoleMenuItems();
+
+			ImGui::EndPopup();
+		}
+
+		if (_consoleScrollToBottom)
+		{
+			ImGui::SetScrollHereY(1.0f);
+			_consoleScrollToBottom = false;
+		}
+
+		ImGui::EndChild();
+	}
+
+	void EditorGUI::ShowEditorConsoleDetail()
+	{
+		if (!_consoleShowDetail || _consoleSelectedEntry < 0 || _consoleSelectedEntry >= static_cast<int>(_consoleEntries.size()))
+		{
+			return;
+		}
+
+		const seri::LogEntry& entry = _consoleEntries[_consoleSelectedEntry];
+
+		ImGui::BeginChild("ConsoleDetail", ImVec2(0.0f, 0.0f), ImGuiChildFlags_Borders);
+
+		ImGuiStyle& style = ImGui::GetStyle();
+
+		float closeWidth = ImGui::CalcTextSize("x").x + style.FramePadding.x * 2.0f;
+
+		ImGui::PushTextWrapPos(ImGui::GetContentRegionMax().x - closeWidth - style.ItemSpacing.x);
+		ImGui::TextUnformatted(BuildEditorConsoleLine(entry, true).c_str());
+		ImGui::PopTextWrapPos();
+
+		ImGui::SetCursorScreenPos(
+			ImVec2(
+				ImGui::GetWindowPos().x + ImGui::GetContentRegionMax().x - closeWidth,
+				ImGui::GetWindowPos().y + style.WindowPadding.y
+			)
+		);
+
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
+		ImGui::PushStyleColor(ImGuiCol_Text, style.Colors[ImGuiCol_TextDisabled]);
+
+		if (ImGui::SmallButton("x##ConsoleDetailClose"))
+		{
+			_consoleSelectedEntry = -1;
+		}
+
+		ImGui::PopStyleColor(2);
+
+		ImGui::EndChild();
+	}
+
+	void EditorGUI::ShowEditorConsoleMenuItems()
+	{
+		if (ImGui::MenuItem("Copy all"))
+		{
+			CopyEditorConsoleEntries();
+		}
+
+		if (ImGui::MenuItem("Clear"))
+		{
+			_consoleClearPending = true;
+		}
+	}
+
+	void EditorGUI::CopyEditorConsoleEntries()
+	{
+		std::string text;
+
+		for (int index : _consoleVisibleEntries)
+		{
+			text += BuildEditorConsoleLine(_consoleEntries[index], false);
+			text += "\n";
+		}
+
+		ImGui::SetClipboardText(text.c_str());
+	}
+
+	void EditorGUI::ClearEditorConsole()
+	{
+		seri::LogBuffer::Clear();
+
+		_consoleEntries.clear();
+		_consoleVisibleEntries.clear();
+		_consoleSelectedEntry = -1;
+		_consoleFilterDirty = true;
+
+		for (int& count : _consoleLevelCounts)
+		{
+			count = 0;
+		}
+	}
+
+	void EditorGUI::RebuildEditorConsoleFilter()
+	{
+		_consoleVisibleEntries.clear();
+
+		for (size_t i = 0; i < _consoleEntries.size(); i++)
+		{
+			if (MatchEditorConsoleFilter(_consoleEntries[i]))
+			{
+				_consoleVisibleEntries.push_back(static_cast<int>(i));
+			}
+		}
+
+		_consoleFilterDirty = false;
+	}
+
+	bool EditorGUI::MatchEditorConsoleFilter(const seri::LogEntry& entry)
+	{
+		if (!_consoleLevelEnabled[static_cast<int>(entry.level)])
+		{
+			return false;
+		}
+
+		if (_consoleSearch.empty())
+		{
+			return true;
+		}
+
+		return seri::Util::ContainsIgnoreCase(entry.message, _consoleSearch) ||
+			seri::Util::ContainsIgnoreCase(entry.module, _consoleSearch) ||
+			seri::Util::ContainsIgnoreCase(entry.file, _consoleSearch);
+	}
+
+	std::string EditorGUI::BuildEditorConsoleLine(const seri::LogEntry& entry, bool detailed)
+	{
+		std::string line;
+
+		if (detailed || _consoleShowTimeStamp)
+		{
+			line += entry.timeStamp;
+			line += " ";
+		}
+
+		if ((detailed || _consoleShowThreadId) && !entry.threadId.empty())
+		{
+			line += "[" + entry.threadId + "] ";
+		}
+
+		line += "[";
+		line += seri::Logger::ToString3(entry.level);
+		line += "] ";
+
+		if ((detailed || _consoleShowModule) && !entry.module.empty())
+		{
+			line += "[" + entry.module + "] ";
+		}
+
+		if ((detailed || _consoleShowSource) && !entry.file.empty())
+		{
+			line += "(" + entry.file + ":" + std::to_string(entry.line);
+
+			if (detailed && !entry.function.empty())
+			{
+				line += " " + entry.function;
+			}
+
+			line += ") ";
+		}
+
+		line += entry.message;
+
+		return line;
+	}
+
+	ImVec4 EditorGUI::GetEditorConsoleLevelColor(seri::LogLevel level)
+	{
+		switch (level)
+		{
+			case seri::LogLevel::error:
+				return RGBNormalized(235, 94, 94);
+			case seri::LogLevel::warning:
+				return RGBNormalized(230, 190, 90);
+			case seri::LogLevel::info:
+				return RGBNormalized(205, 210, 220);
+			case seri::LogLevel::verbose:
+				return RGBNormalized(140, 146, 158);
+			default:
+				return RGBNormalized(205, 210, 220);
+		}
+	}
+
 	void EditorGUI::ShowEditorProject()
 	{
 		seri::asset::AssetTreeNode& assetTreeRoot = seri::asset::AssetManager::GetAssetTreeRoot();
@@ -2341,7 +2724,7 @@ namespace seri::editor
 		if (_showConsole)
 		{
 			ImGui::Begin("Console", &_showConsole);
-			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+			ShowEditorConsole();
 			ImGui::End();
 		}
 	}

@@ -35,6 +35,9 @@ namespace seri
 		bool autoFlush{ true };
 
 		bool showThreadId{ true };
+
+		bool bufferLogs{ true };
+		size_t bufferCapacity{ 4096 };
 	};
 
 	using SeriLogger = boost::log::sources::severity_logger_mt<LogLevel>;
