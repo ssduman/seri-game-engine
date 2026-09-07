@@ -1,29 +1,12 @@
 #pragma once
 
-#include <seri/core/Core.h>
-#include <seri/core/Seri.h>
-#include <seri/util/Util.h>
-
-#include <imgui.h>
-#include <imgui_internal.h>
-#include <imgui_stdlib.h>
-#include <imgui_impl_opengl3.h>
-#include <imgui_freetype.h>
-
-#include <ImGuizmo.h>
-
-#include <memory>
-#include <string>
-#include <vector>
-#include <unordered_map>
-
-#if defined (SERI_USE_WINDOW_GLFW)
-#include <GLFW/glfw3.h>
-#include <imgui_impl_glfw.h>
-#elif defined (SERI_USE_WINDOW_SDL3)
-#include <SDL3/SDL.h>
-#include <imgui_impl_sdl3.h>
-#endif
+#include "gui/GUIContext.h"
+#include "gui/panels/ConsolePanel.h"
+#include "gui/panels/HierarchyPanel.h"
+#include "gui/panels/InspectorPanel.h"
+#include "gui/panels/ProjectPanel.h"
+#include "gui/panels/ScenePanel.h"
+#include "gui/panels/TitleBar.h"
 
 namespace seri::editor
 {
@@ -43,158 +26,20 @@ namespace seri::editor
 		void ProcessEvent(const void* event);
 
 	private:
-		enum class InspectorType
-		{
-			none,
-			scene,
-			entity,
-			asset,
-		};
-
-		enum class GizmoSpace
-		{
-			local,
-			world,
-		};
-
-		enum class GizmoOperation
-		{
-			translate,
-			rotate,
-			scale,
-		};
-
-		struct ScopedChild
-		{
-			ScopedChild(const char* id, ImVec2 size = ImVec2(0, 0), ImGuiChildFlags flags = ImGuiChildFlags_Borders | ImGuiChildFlags_AutoResizeY)
-			{
-				ImGui::BeginChild(id, size, flags);
-			}
-
-			~ScopedChild()
-			{
-				ImGui::EndChild();
-			}
-		};
-
-		void SetIO();
-		void SetStyle();
-		void SetFonts();
-
-		void LoadEditorIcon();
-
 		void CheckShortcuts();
 
-		void Save();
+		void DrawLayout();
 
-		void ShowEditorTitleBar();
-		void ShowEditorTitleBarMenus();
-		void ShowEditorTitleBarControls();
-		bool ShowEditorTitleBarButton(const char* id, float width, const ImVec4& hoveredColor, const ImVec4& activeColor);
-		void ShowEditorTitleBarPlayControls();
-
-		void ShowEditorSceneImage();
-		void ControlEditorSceneMove(const ImVec2& imageMin, const ImVec2& imageMax);
-		void ShowEditorSceneGizmoToolbar(const ImVec2& imageMin);
-		void ShowEditorSceneGizmo(const ImVec2& imageMin, const ImVec2& finalSize);
-		void ShowEditorSceneEntityGizmo(const ImVec2& imageMin, const ImVec2& finalSize);
-
-		void ShowEditorHierarchy();
-		void ShowEditorHierarchyImpl(const std::shared_ptr<seri::scene::Scene>& activeScene, seri::scene::SceneTreeNode& node, uint64_t& selectedId);
-
-		void ShowEditorInspector();
-		void ShowEditorInspectorScene();
-		void ShowEditorInspectorEntity();
-		void ShowEditorInspectorAsset();
-		void ShowEditorInspectorAssetMaterial();
-
-		void PullEditorConsoleLogs();
-		void ShowEditorConsole();
-		void ShowEditorConsoleToolbar();
-		void ShowEditorConsoleEntries();
-		void ShowEditorConsoleDetail();
-		void ShowEditorConsoleLevelFilter(seri::LogLevel level);
-		void ShowEditorConsoleMenuItems();
-		void CopyEditorConsoleEntries();
-		void ClearEditorConsole();
-		void RebuildEditorConsoleFilter();
-		bool MatchEditorConsoleFilter(const seri::LogEntry& entry);
-		std::string BuildEditorConsoleLine(const seri::LogEntry& entry, bool detailed);
-		ImVec4 GetEditorConsoleLevelColor(seri::LogLevel level);
-
-		void ShowEditorProject();
-		void ShowEditorProjectFolderTree(seri::asset::AssetTreeNode& node);
-		void ShowEditorProjectAssetGrid();
-
-		void ShowEditorComponentPickerPopup();
-		bool ShowEditorScriptPickerPopup(std::string& selection);
-		bool ShowEditorAssetPickerPopup(seri::asset::AssetType type, bool& selected, uint64_t& selection);
-
-		void ShowEditorImage(std::shared_ptr<seri::TextureBase>& texture, float size);
-		bool ShowEditorImageButton(std::shared_ptr<seri::TextureBase>& texture, float size);
-
-		void ShowEditorHierarchyAddMenu(const std::shared_ptr<seri::scene::Scene>& activeScene, uint64_t parentId);
-
-		void DrawEditorLayout();
 		void BuildDefaultDockLayout(ImGuiID dockspaceId);
 
-		bool DrawBool(const char* label, bool& value);
-		bool DrawInt(const char* label, int& value, float speed = 1.0f, int min = 0, int max = 0);
-		bool DrawFloat(const char* label, float& value, float speed = 0.1f, float min = 0.0f, float max = 0.0f, const char* format = "%.3f");
-		bool DrawVec3(const char* label, glm::vec3& v, float speed);
-		bool DrawColorVec3(const char* label, glm::vec3& color, float speed);
-		bool DrawColorVec4(const char* label, glm::vec4& color, float speed);
-		bool DrawLabel(const char* label, const char* value, bool isDisabled);
-		bool DrawTextInput(const char* label, std::string& value, size_t bufferSize = 512);
-		bool DrawAssetPicker(const char* label, uint64_t assetId, seri::asset::AssetType assetType, uint64_t& selection);
+		GUIContext _context;
 
-		ImVec4 RGBNormalized(int r, int g, int b);
-
-		uint64_t _selectedEntityId{ 0 };
-		uint64_t _pendingDeleteEntityId{ 0 };
-		uint64_t _pendingExpandEntityId{ 0 };
-		InspectorType _inspectorType{ InspectorType::none };
-
-		GizmoSpace _gizmoSpace{ GizmoSpace::local };
-		GizmoOperation _gizmoOperation{ GizmoOperation::translate };
-
-		seri::asset::AssetTreeNode* _selectedFolder{ nullptr };
-		seri::asset::AssetTreeNode _selectedAsset{};
-
-		bool _showHierarchy{ true };
-		bool _showScene{ true };
-		bool _showGame{ false };
-		bool _showInspector{ true };
-		bool _showConsole{ true };
-		bool _showProject{ true };
-		bool _resetLayout{ false };
-
-		std::vector<seri::LogEntry> _consoleEntries;
-		std::vector<int> _consoleVisibleEntries;
-		std::string _consoleSearch;
-		bool _consoleLevelEnabled[5]{ true, true, true, true, true };
-		int _consoleLevelCounts[5]{};
-		bool _consoleAutoScroll{ true };
-		bool _consoleShowTimeStamp{ true };
-		bool _consoleShowThreadId{ false };
-		bool _consoleShowModule{ true };
-		bool _consoleShowSource{ false };
-		bool _consoleFilterDirty{ true };
-		bool _consoleClearPending{ false };
-		bool _consoleScrollToBottom{ false };
-		bool _consoleShowDetail{ true };
-		int _consoleSelectedEntry{ -1 };
-		size_t _consoleMaxEntries{ 4096 };
-
-		std::shared_ptr<seri::TextureBase> _editorIcon;
-		bool _titleBarDraggable{ false };
-		float _titleBarControlsMinX{ 0.0f };
-		float _titleBarMenusMinX{ 0.0f };
-		float _titleBarMenusMaxX{ 0.0f };
-		float _titleBarPlayMinX{ 0.0f };
-		float _titleBarPlayMaxX{ 0.0f };
-
-		static constexpr float kTitleBarHeight = 36.0f;
+		TitleBar _titleBar;
+		HierarchyPanel _hierarchyPanel;
+		ScenePanel _scenePanel;
+		InspectorPanel _inspectorPanel;
+		ProjectPanel _projectPanel;
+		ConsolePanel _consolePanel;
 
 	};
 }
