@@ -2,7 +2,6 @@
 
 1. frustum culling
 1. sorting and batching for submissions
-1. game view
 1. text component
 1. physics
 1. tracy profiler

@@ -128,6 +128,10 @@ namespace seri
 			uniformName.starts_with(seri::literals::kUniformProjection) ||
 			uniformName.starts_with(seri::literals::kUniformCameraPos) ||
 			uniformName.starts_with(seri::literals::kUniformDirLightShadowMap) ||
+			uniformName.starts_with(seri::literals::kUniformSpotLightShadowMap0) ||
+			uniformName.starts_with(seri::literals::kUniformSpotLightShadowMap1) ||
+			uniformName.starts_with(seri::literals::kUniformSpotLightShadowMap2) ||
+			uniformName.starts_with(seri::literals::kUniformSpotLightShadowMap3) ||
 			false
 			)
 		{

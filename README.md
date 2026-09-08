@@ -25,7 +25,7 @@
 <table>
     <tr>
         <td align="center">
-            <img src="https://github.com/ssduman/seri-game-engine/blob/master/misc/images/editor.png" alt="editor">
+            <img src="misc/images/editor.png" alt="editor">
             <br />
             <i> editor <i>
         </td>

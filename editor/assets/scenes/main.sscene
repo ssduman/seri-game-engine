@@ -12,28 +12,13 @@ Entities:
         ParentID: 0
         Name: Cannon
       TransformComponent:
-        Position: [0, 0, 0]
-        Rotation: [0, -21.5, 0]
-        Scale: [0.00999999978, 0.00999999978, 0.00999999978]
+        Position: [1, 0, 0]
+        Rotation: [0, 20, 0]
+        Scale: [0.01, 0.01, 0.01]
       MeshComponent:
         MeshAssetID: 8933691566797930938
       MeshRendererComponent:
         MaterialAssetID: 16756991584035094998
-        CastShadow: true
-  - Entity:
-      IDComponent:
-        ID: 5443721493636187564
-        ParentID: 0
-        Name: Spot
-      TransformComponent:
-        Position: [0, 1.29999995, 0]
-        Rotation: [-123, 0, 0]
-        Scale: [1, 1, 1]
-      SpotLightComponent:
-        Intensity: 5.80000019
-        InnerAngle: 32.7999992
-        OuterAngle: 14.6000004
-        Color: [1, 1, 1]
         CastShadow: true
   - Entity:
       IDComponent:
@@ -45,42 +30,15 @@ Entities:
         Rotation: [-90, 0, 0]
         Scale: [1, 1, 1]
       DirectionalLightComponent:
-        Intensity: 2.5999999
+        Intensity: 2.6
         Color: [1, 1, 1]
-  - Entity:
-      IDComponent:
-        ID: 15746612874434647559
-        ParentID: 0
-        Name: Point
-      TransformComponent:
-        Position: [2.29999995, 0.899999976, 0]
-        Rotation: [0, 0, 0]
-        Scale: [1, 1, 1]
-      PointLightComponent:
-        Range: 10
-        Intensity: 2
-        Color: [1, 1, 1]
-  - Entity:
-      IDComponent:
-        ID: 12743443325995983336
-        ParentID: 0
-        Name: Entity
-      TransformComponent:
-        Position: [-0.54028064, 0.793363571, 0]
-        Rotation: [0, -0, 0]
-        Scale: [0.00999999978, 0.00999999978, 0.00999999978]
-      MeshComponent:
-        MeshAssetID: 8933691566797930938
-      MeshRendererComponent:
-        MaterialAssetID: 16756991584035094998
-        CastShadow: true
   - Entity:
       IDComponent:
         ID: 12086628059403622804
         ParentID: 0
         Name: Spiderman
       TransformComponent:
-        Position: [-1.5, 0, 0]
+        Position: [-1, 0, 0]
         Rotation: [0, 0, 0]
         Scale: [1, 1, 1]
       SkinnedMeshRendererComponent:
@@ -91,3 +49,19 @@ Entities:
         Playing: true
         Loop: true
         Speed: 1
+  - Entity:
+      IDComponent:
+        ID: 9014697105732902977
+        ParentID: 0
+        Name: Camera
+      TransformComponent:
+        Position: [0, 2, 3]
+        Rotation: [-20, 0, 0]
+        Scale: [1, 1, 1]
+      CameraComponent:
+        IsMain: true
+        IsOrtho: false
+        FoV: 60
+        OrthoSize: 5
+        NearPlane: 0.1
+        FarPlane: 1000
