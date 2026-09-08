@@ -76,7 +76,7 @@ namespace seri::system
 
 	CameraProperties CameraSystem::BuildCameraProperties(const component::TransformComponent& transform, const component::CameraComponent& camera)
 	{
-		float aspect = RenderingManager::GetEditorRT()->GetAspectRatio();
+		float aspect = RenderingManager::GetGameRT()->GetAspectRatio();
 
 		CameraProperties properties{};
 		properties.isOrtho = camera.isOrtho;

@@ -2,6 +2,7 @@
 
 #include "gui/GUIContext.h"
 #include "gui/panels/ConsolePanel.h"
+#include "gui/panels/GamePanel.h"
 #include "gui/panels/HierarchyPanel.h"
 #include "gui/panels/InspectorPanel.h"
 #include "gui/panels/ProjectPanel.h"
@@ -37,6 +38,7 @@ namespace seri::editor
 		TitleBar _titleBar;
 		HierarchyPanel _hierarchyPanel;
 		ScenePanel _scenePanel;
+		GamePanel _gamePanel;
 		InspectorPanel _inspectorPanel;
 		ProjectPanel _projectPanel;
 		ConsolePanel _consolePanel;

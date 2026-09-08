@@ -49,6 +49,7 @@ namespace seri
 
 		std::shared_ptr<FramebufferBase> mainRT{ nullptr };
 		std::shared_ptr<FramebufferBase> editorRT{ nullptr };
+		std::shared_ptr<FramebufferBase> gameRT{ nullptr };
 		std::shared_ptr<FramebufferBase> shadowRT{ nullptr };
 		std::shared_ptr<FramebufferBase> spotShadowRTs[literals::kMaxSpotLightShadowCount];
 

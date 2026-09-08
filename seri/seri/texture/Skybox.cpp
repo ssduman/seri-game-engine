@@ -54,23 +54,15 @@ namespace seri
 
 	void Skybox::Update()
 	{
-		_material->SetMat4(literals::kUniformViewSkybox, glm::mat4(glm::mat3(seri::Graphic::GetActiveCamera()->GetView())));
-
-		seri::RenderCommand renderCommand_skybox{};
-		renderCommand_skybox.name = "skybox";
-		renderCommand_skybox.state.depthFunc = DepthFunc::l_equal;
-		renderCommand_skybox.camera = seri::Graphic::GetActiveCamera();
-		renderCommand_skybox.draw.mode = DrawMode::arrays;
-		renderCommand_skybox.draw.count = static_cast<uint32_t>(_positions.size());
-		renderCommand_skybox.material = _material;
-		renderCommand_skybox.vao = _vertexArray;
-		renderCommand_skybox.rt = seri::RenderingManager::GetEditorRT();
-		seri::RenderingManager::Submit(renderCommand_skybox);
-
-		seri::RenderCommand renderCommand_restore{};
-		renderCommand_restore.name = "skybox_restore";
-		renderCommand_restore.noop = true;
-		seri::RenderingManager::Submit(renderCommand_restore);
+		seri::RenderItem renderItem_skybox{};
+		renderItem_skybox.type = PassType::skybox;
+		renderItem_skybox.name = "skybox";
+		renderItem_skybox.state.depthFunc = DepthFunc::l_equal;
+		renderItem_skybox.draw.mode = DrawMode::arrays;
+		renderItem_skybox.draw.count = static_cast<uint32_t>(_positions.size());
+		renderItem_skybox.material = _material;
+		renderItem_skybox.vao = _vertexArray;
+		seri::RenderingManager::Submit(std::move(renderItem_skybox));
 	}
 
 	void Skybox::SetDefaultPositions()

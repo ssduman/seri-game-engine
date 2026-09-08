@@ -20,7 +20,7 @@ namespace seri::editor
 
 		bool showHierarchy{ true };
 		bool showScene{ true };
-		bool showGame{ false };
+		bool showGame{ true };
 		bool showInspector{ true };
 		bool showConsole{ true };
 		bool showProject{ true };

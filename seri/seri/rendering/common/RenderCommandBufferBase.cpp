@@ -13,8 +13,10 @@ namespace seri
 	{
 		auto activeCamera = Graphic::GetActiveCamera();
 		auto uiCamera = Graphic::GetCameraUI();
+		auto runtimeCamera = Graphic::GetRuntimeCamera();
 
 		auto editorRT = seri::RenderingManager::GetEditorRT();
+		auto gameRT = seri::RenderingManager::GetGameRT();
 		auto shadowRT = seri::RenderingManager::GetShadowRT();
 
 		RenderPass passShadow;
@@ -54,6 +56,30 @@ namespace seri
 		_frameGraph.AddPass(passTransparent);
 		_frameGraph.AddPass(passDebug);
 		_frameGraph.AddPass(passUI);
+
+		if (runtimeCamera == nullptr)
+		{
+			return;
+		}
+
+		RenderPass passGameSkybox;
+		passGameSkybox.desc.type = PassType::skybox;
+		passGameSkybox.desc.rt = gameRT;
+		passGameSkybox.desc.camera = runtimeCamera;
+
+		RenderPass passGameOpaque;
+		passGameOpaque.desc.type = PassType::opaque;
+		passGameOpaque.desc.rt = gameRT;
+		passGameOpaque.desc.camera = runtimeCamera;
+
+		RenderPass passGameTransparent;
+		passGameTransparent.desc.type = PassType::transparent;
+		passGameTransparent.desc.rt = gameRT;
+		passGameTransparent.desc.camera = runtimeCamera;
+
+		_frameGraph.AddPass(passGameSkybox);
+		_frameGraph.AddPass(passGameOpaque);
+		_frameGraph.AddPass(passGameTransparent);
 	}
 
 	void RenderCommandBufferBase::End()
@@ -159,6 +185,8 @@ namespace seri
 				rt->Unbind();
 				continue;
 			}
+
+			seri::RenderingManager::SetViewport(0, 0, rt->GetWidth(), rt->GetHeight());
 
 			glm::vec4 camPos = cam->GetPosition();
 			glm::mat4 view = cam->GetView();
@@ -275,6 +303,11 @@ namespace seri
 			for (const RenderItem& cmd : pass.items)
 			{
 				SetState(cmd.state);
+
+				if (pass.desc.type == PassType::skybox)
+				{
+					cmd.material->SetMat4(literals::kUniformViewSkybox, glm::mat4(glm::mat3(view)));
+				}
 
 				cmd.material->SetMat4(literals::kUniformModel, cmd.model);
 				cmd.material->SetMat4(literals::kUniformView, view);

@@ -283,15 +283,15 @@ namespace seri
 			passes.emplace_back(std::move(pass));
 		}
 
-		RenderPass& GetPass(PassType type)
-		{
-			return passes[static_cast<int>(type)];
-		}
-
 		void AddItem(RenderItem item)
 		{
-			auto& pass = GetPass(item.type);
-			pass.items.emplace_back(std::move(item));
+			for (auto& pass : passes)
+			{
+				if (pass.desc.type == item.type)
+				{
+					pass.items.emplace_back(item);
+				}
+			}
 		}
 
 		void Clear()

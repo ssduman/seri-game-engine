@@ -59,19 +59,18 @@ namespace seri::debug
 
 		_material->SetMat4(literals::kUniformViewProjection, camera->GetViewProjection());
 
-		seri::RenderCommand renderCommand{};
-		renderCommand.name = "debug_line";
-		renderCommand.camera = camera;
-		renderCommand.material = _material;
-		renderCommand.vao = _vertexArray;
-		renderCommand.state.depthTestEnabled = false;
-		renderCommand.draw.mode = seri::DrawMode::arrays;
-		renderCommand.draw.topology = seri::Topology::line;
-		renderCommand.draw.count = vertices.size();
-		renderCommand.rt = seri::RenderingManager::GetEditorRT();
-		renderCommand.model = seri::Util::GetIdentityMatrix();
+		seri::RenderItem renderItem{};
+		renderItem.type = seri::PassType::debug;
+		renderItem.name = "debug_line";
+		renderItem.material = _material;
+		renderItem.vao = _vertexArray;
+		renderItem.state.depthTestEnabled = false;
+		renderItem.draw.mode = seri::DrawMode::arrays;
+		renderItem.draw.topology = seri::Topology::line;
+		renderItem.draw.count = vertices.size();
+		renderItem.model = seri::Util::GetIdentityMatrix();
 
-		seri::RenderingManager::Submit(renderCommand);
+		seri::RenderingManager::Submit(std::move(renderItem));
 	}
 
 	void DebugDraw::Line(const glm::vec3& beg, const glm::vec3& end, const Color& color, float duration)

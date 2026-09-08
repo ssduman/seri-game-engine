@@ -68,6 +68,14 @@ namespace seri
 				framebufferDesc.AddAttachments({ textureDescColor, textureDescDepth });
 
 				editorRT = FramebufferBase::Create(framebufferDesc);
+
+				FramebufferDesc gameFramebufferDesc{};
+				gameFramebufferDesc.width = 1280;
+				gameFramebufferDesc.height = 720;
+				gameFramebufferDesc.fixedAspectRatio = false;
+				gameFramebufferDesc.AddAttachments({ textureDescColor, textureDescDepth });
+
+				gameRT = FramebufferBase::Create(gameFramebufferDesc);
 			}
 
 			// shadow

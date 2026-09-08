@@ -144,6 +144,11 @@ namespace seri
 			return _renderingManager->editorRT;
 		}
 
+		static std::shared_ptr<FramebufferBase> GetGameRT()
+		{
+			return _renderingManager->gameRT;
+		}
+
 		static std::shared_ptr<FramebufferBase> GetShadowRT()
 		{
 			return _renderingManager->shadowRT;

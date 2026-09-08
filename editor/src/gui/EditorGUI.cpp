@@ -75,6 +75,7 @@ namespace seri::editor
 		ImGuizmo::Enable(true);
 
 		_consolePanel.Update();
+		_gamePanel.Update(_context);
 
 		DrawLayout();
 
@@ -208,43 +209,78 @@ namespace seri::editor
 
 		if (_context.showInspector)
 		{
-			ImGui::Begin("Inspector", &_context.showInspector);
-			_inspectorPanel.Draw(_context);
+			if (ImGui::Begin("Inspector", &_context.showInspector))
+			{
+				_inspectorPanel.Draw(_context);
+			}
 			ImGui::End();
 		}
 
 		if (_context.showHierarchy)
 		{
-			ImGui::Begin("Hierarchy", &_context.showHierarchy);
-			_hierarchyPanel.Draw(_context);
+			if (ImGui::Begin("Hierarchy", &_context.showHierarchy))
+			{
+				_hierarchyPanel.Draw(_context);
+			}
 			ImGui::End();
 		}
 
 		if (_context.showScene)
 		{
-			ImGui::Begin("Scene", &_context.showScene);
-			_scenePanel.Draw(_context);
+			if (ImGui::Begin("Scene", &_context.showScene))
+			{
+				_scenePanel.Draw(_context);
+			}
 			ImGui::End();
 		}
 
 		if (_context.showGame)
 		{
-			ImGui::Begin("Game", &_context.showGame);
-			ImGui::Text("todo");
-			ImGui::End();
+			if (_gamePanel.IsMaximized())
+			{
+				ImGuiWindowFlags flags =
+					ImGuiWindowFlags_NoDocking |
+					ImGuiWindowFlags_NoResize |
+					ImGuiWindowFlags_NoMove |
+					ImGuiWindowFlags_NoCollapse |
+					ImGuiWindowFlags_NoSavedSettings
+					;
+
+				ImGui::SetNextWindowPos(viewport->WorkPos);
+				ImGui::SetNextWindowSize(viewport->WorkSize);
+				ImGui::SetNextWindowViewport(viewport->ID);
+
+				if (ImGui::Begin("Game##maximized", &_context.showGame, flags))
+				{
+					_gamePanel.Draw(_context);
+				}
+				ImGui::End();
+			}
+			else
+			{
+				if (ImGui::Begin("Game", &_context.showGame))
+				{
+					_gamePanel.Draw(_context);
+				}
+				ImGui::End();
+			}
 		}
 
 		if (_context.showProject)
 		{
-			ImGui::Begin("Project", &_context.showProject);
-			_projectPanel.Draw(_context);
+			if (ImGui::Begin("Project", &_context.showProject))
+			{
+				_projectPanel.Draw(_context);
+			}
 			ImGui::End();
 		}
 
 		if (_context.showConsole)
 		{
-			ImGui::Begin("Console", &_context.showConsole);
-			_consolePanel.Draw();
+			if (ImGui::Begin("Console", &_context.showConsole))
+			{
+				_consolePanel.Draw();
+			}
 			ImGui::End();
 		}
 	}

@@ -25,24 +25,18 @@ namespace seri
 		_material->SetMat4("u_inv_proj", glm::inverse(camera->GetProjection()));
 		_material->SetFloat3("u_cam_pos", camera->GetCameraProperties().position);
 
-		seri::RenderCommand renderCommand_grid{};
-		renderCommand_grid.name = "infinite_grid";
-		renderCommand_grid.state.depthTestEnabled = true;
-		renderCommand_grid.state.depthWriteEnabled = false;
-		renderCommand_grid.state.blendEnabled = true;
-		renderCommand_grid.state.cullFaceEnabled = false;
-		renderCommand_grid.camera = camera;
-		renderCommand_grid.draw.mode = DrawMode::arrays;
-		renderCommand_grid.draw.count = static_cast<uint32_t>(_positions.size());
-		renderCommand_grid.material = _material;
-		renderCommand_grid.vao = _vertexArray;
-		renderCommand_grid.rt = seri::RenderingManager::GetEditorRT();
-		seri::RenderingManager::Submit(renderCommand_grid);
-
-		seri::RenderCommand renderCommand_restore{};
-		renderCommand_restore.name = "infinite_grid_restore";
-		renderCommand_restore.noop = true;
-		seri::RenderingManager::Submit(renderCommand_restore);
+		seri::RenderItem renderItem_grid{};
+		renderItem_grid.type = PassType::debug;
+		renderItem_grid.name = "infinite_grid";
+		renderItem_grid.state.depthTestEnabled = true;
+		renderItem_grid.state.depthWriteEnabled = false;
+		renderItem_grid.state.blendEnabled = true;
+		renderItem_grid.state.cullFaceEnabled = false;
+		renderItem_grid.draw.mode = DrawMode::arrays;
+		renderItem_grid.draw.count = static_cast<uint32_t>(_positions.size());
+		renderItem_grid.material = _material;
+		renderItem_grid.vao = _vertexArray;
+		seri::RenderingManager::Submit(std::move(renderItem_grid));
 	}
 
 	void InfiniteGrid::SetDefaultPositions()

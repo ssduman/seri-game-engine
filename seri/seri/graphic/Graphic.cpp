@@ -44,11 +44,6 @@ namespace seri
 
 	std::shared_ptr<CameraBase> Graphic::GetActiveCamera()
 	{
-		if (scene::SceneManager::GetState() != scene::SceneState::edit && GetInstance()._cameraRuntime != nullptr)
-		{
-			return GetInstance()._cameraRuntime;
-		}
-
 		return GetInstance()._cameraEditor;
 	}
 
