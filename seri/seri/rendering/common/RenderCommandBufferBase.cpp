@@ -272,8 +272,18 @@ namespace seri
 				continue;
 			}
 
+			bool wireframe =
+				seri::RenderingManager::GetEditorWireframe() &&
+				rt == seri::RenderingManager::GetEditorRT() &&
+				(pass.desc.type == PassType::opaque || pass.desc.type == PassType::transparent);
+
 			rt->Bind();
 			seri::RenderingManager::SetViewport(0, 0, rt->GetWidth(), rt->GetHeight());
+
+			if (wireframe)
+			{
+				seri::RenderingManager::SetPolygonMode(PolygonMode::line);
+			}
 
 			glm::vec4 camPos = cam->GetPosition();
 			glm::mat4 view = cam->GetView();
@@ -330,6 +340,11 @@ namespace seri
 				}
 
 				Draw(cmd.draw, cmd.vao);
+			}
+
+			if (wireframe)
+			{
+				seri::RenderingManager::SetPolygonMode(PolygonMode::fill);
 			}
 
 			rt->Unbind();

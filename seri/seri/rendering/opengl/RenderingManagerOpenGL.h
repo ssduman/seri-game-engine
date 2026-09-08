@@ -231,6 +231,11 @@ namespace seri
 			glFrontFace(GetFrontFace(frontFace));
 		}
 
+		void SetPolygonMode(PolygonMode polygonMode) override
+		{
+			glPolygonMode(GL_FRONT_AND_BACK, GetPolygonMode(polygonMode));
+		}
+
 	protected:
 		void LoadGlad(std::unique_ptr<WindowManagerBase>& windowManager)
 		{
@@ -414,6 +419,17 @@ namespace seri
 				case FrontFace::ccw: return GL_CCW;
 			}
 			return GL_CCW;
+		}
+
+		GLenum GetPolygonMode(PolygonMode polygonMode)
+		{
+			switch (polygonMode)
+			{
+				case PolygonMode::fill: return GL_FILL;
+				case PolygonMode::line: return GL_LINE;
+				case PolygonMode::point: return GL_POINT;
+			}
+			return GL_FILL;
 		}
 
 		GLenum GetDepthFunc(DepthFunc depthFunc)

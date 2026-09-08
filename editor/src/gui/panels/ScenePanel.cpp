@@ -2,8 +2,17 @@
 
 namespace seri::editor
 {
+	const char* ScenePanel::kShadingModeNames[ScenePanel::kShadingModeCount] = {
+		"Shaded",
+		"Wireframe",
+	};
+
 	void ScenePanel::Draw(GUIContext& ctx)
 	{
+		ShowOptions();
+
+		ImGui::Separator();
+
 		ImVec2 panelSize = ImGui::GetContentRegionAvail();
 		if (panelSize.x <= 0.0f || panelSize.y <= 0.0f)
 		{
@@ -58,6 +67,25 @@ namespace seri::editor
 		ShowEntityGizmo(ctx, imageMin, imageSize);
 		ShowGizmoToolbar(imageMin);
 		ControlMove(imageMin, imageMax);
+	}
+
+	void ScenePanel::ShowOptions()
+	{
+		ImGui::SetNextItemWidth(140.0f);
+
+		if (ImGui::BeginCombo("##SceneShading", kShadingModeNames[static_cast<int>(_shadingMode)]))
+		{
+			for (int i = 0; i < kShadingModeCount; i++)
+			{
+				if (ImGui::Selectable(kShadingModeNames[i], static_cast<int>(_shadingMode) == i))
+				{
+					_shadingMode = static_cast<ShadingMode>(i);
+					seri::RenderingManager::SetEditorWireframe(_shadingMode == ShadingMode::wireframe);
+				}
+			}
+
+			ImGui::EndCombo();
+		}
 	}
 
 	void ScenePanel::ControlMove(const ImVec2& imageMin, const ImVec2& imageMax)

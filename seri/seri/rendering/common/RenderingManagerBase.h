@@ -47,6 +47,8 @@ namespace seri
 
 		virtual void SetFrontFace(FrontFace frontFace) = 0;
 
+		virtual void SetPolygonMode(PolygonMode polygonMode) = 0;
+
 		std::shared_ptr<FramebufferBase> mainRT{ nullptr };
 		std::shared_ptr<FramebufferBase> editorRT{ nullptr };
 		std::shared_ptr<FramebufferBase> gameRT{ nullptr };
@@ -61,6 +63,8 @@ namespace seri
 		
 		int spotShadowCount{ 0 };
 		glm::mat4 spotShadowLightViewProjs[literals::kMaxSpotLightShadowCount];
+
+		bool editorWireframe{ false };
 
 	protected:
 		RenderingProperties _renderingProperties;

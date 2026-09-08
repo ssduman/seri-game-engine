@@ -82,6 +82,13 @@ namespace seri
 		ccw,
 	};
 
+	enum class PolygonMode
+	{
+		fill,
+		line,
+		point,
+	};
+
 	enum class BlendFactor
 	{
 		zero,

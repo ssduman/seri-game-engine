@@ -89,6 +89,11 @@ namespace seri
 			_renderingManager->SetFrontFace(frontFace);
 		}
 
+		static void SetPolygonMode(PolygonMode polygonMode)
+		{
+			_renderingManager->SetPolygonMode(polygonMode);
+		}
+
 		static void Init()
 		{
 			_renderCommandBuffer->Init();
@@ -202,6 +207,16 @@ namespace seri
 		static void SetSpotShadowCount(int count)
 		{
 			_renderingManager->spotShadowCount = count;
+		}
+
+		static bool GetEditorWireframe()
+		{
+			return _renderingManager->editorWireframe;
+		}
+
+		static void SetEditorWireframe(bool enabled)
+		{
+			_renderingManager->editorWireframe = enabled;
 		}
 
 	private:
