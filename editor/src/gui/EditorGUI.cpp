@@ -126,11 +126,7 @@ namespace seri::editor
 		if (ImGui::IsKeyPressed(ImGuiKey_Escape, false) &&
 			!ImGui::IsPopupOpen(nullptr, ImGuiPopupFlags_AnyPopupId | ImGuiPopupFlags_AnyPopupLevel))
 		{
-			if (seri::scene::SceneManager::GetState() == seri::scene::SceneState::edit)
-			{
-				seri::WindowManager::SetWindowShouldCloseToTrue();
-			}
-			else
+			if (seri::scene::SceneManager::GetState() != seri::scene::SceneState::edit)
 			{
 				seri::scene::SceneManager::SetState(seri::scene::SceneState::edit);
 			}

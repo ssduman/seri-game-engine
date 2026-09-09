@@ -72,6 +72,26 @@ namespace seri
 		sampler2d_type,
 	};
 
+	inline const char* UniformTypeToString(UniformType type)
+	{
+		switch (type)
+		{
+			case UniformType::unknown_type: return "unknown";
+			case UniformType::bool_type: return "bool";
+			case UniformType::int_type: return "int";
+			case UniformType::float_type: return "float";
+			case UniformType::vec2_type: return "vec2";
+			case UniformType::vec3_type: return "vec3";
+			case UniformType::vec4_type: return "vec4";
+			case UniformType::ivec2_type: return "ivec2";
+			case UniformType::ivec3_type: return "ivec3";
+			case UniformType::ivec4_type: return "ivec4";
+			case UniformType::cubemap_type: return "cubemap";
+			case UniformType::sampler2d_type: return "sampler2d";
+			default: return "unknown";
+		}
+	}
+
 	struct BufferElementDesc
 	{
 		friend struct BufferLayoutDesc;

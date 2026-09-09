@@ -282,8 +282,20 @@ namespace seri::asset
 	std::shared_ptr<Model> MeshAsset::Deserialize(const YAML::Node& root, seri::asset::AssetMetadata metadata)
 	{
 		std::shared_ptr<Model> asset = seri::ModelImporter{}.Load(metadata.source.string());
+		if (!asset)
+		{
+			return nullptr;
+		}
 
-		asset->materialCount = YAMLUtil::GetType<int>(root["MaterialCount"]);
+		if (!root || !root.IsMap())
+		{
+			return asset;
+		}
+
+		if (root["MaterialCount"])
+		{
+			asset->materialCount = YAMLUtil::GetType<int>(root["MaterialCount"]);
+		}
 
 		const YAML::Node& meshesNode = root["Meshes"];
 		for (const auto& meshNode : meshesNode)

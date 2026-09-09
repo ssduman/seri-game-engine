@@ -467,25 +467,25 @@ namespace seri
 
 	void ModelImporter::LoadBlendShapes(const aiMesh* ai_mesh, std::shared_ptr<Mesh>& mesh)
 	{
-		assert(ai_mesh->mNumAnimMeshes <= 1);
-
 		for (unsigned int i = 0; i < ai_mesh->mNumAnimMeshes; i++)
 		{
 			aiAnimMesh* ai_anim_mesh = ai_mesh->mAnimMeshes[i];
 
-			std::string blendShapeName = ai_anim_mesh->mName.C_Str();
-			float weight = ai_anim_mesh->mWeight;
-
-			if (ai_anim_mesh->HasPositions())
+			if (!ai_anim_mesh->HasPositions())
 			{
-				for (unsigned int v = 0; v < ai_anim_mesh->mNumVertices; v++)
-				{
-					glm::vec3 vertex = ConvertVector(ai_anim_mesh->mVertices[v]);
-					mesh->blendShapes.emplace_back(vertex);
-				}
+				continue;
 			}
 
-			LIB_LOGGER(info, model) << fmt::format("blend shape '{}', count: {}, weight: {} loaded", blendShapeName, ai_mesh->mNumAnimMeshes, weight);
+			for (unsigned int v = 0; v < ai_anim_mesh->mNumVertices; v++)
+			{
+				glm::vec3 vertex = ConvertVector(ai_anim_mesh->mVertices[v]);
+				mesh->blendShapes.emplace_back(vertex);
+			}
+		}
+
+		if (ai_mesh->mNumAnimMeshes > 0)
+		{
+			LIB_LOGGER(info, model) << fmt::format("mesh '{}', blend shape count: {} loaded", ai_mesh->mName.C_Str(), ai_mesh->mNumAnimMeshes);
 		}
 	}
 

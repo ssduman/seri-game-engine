@@ -16,4 +16,19 @@ namespace seri::editor
 
 		seri::asset::AssetManager::GetInstance().Save();
 	}
+
+	const char* GetAssetTypeName(const seri::asset::AssetTreeNode& node)
+	{
+		if (node.isFolder)
+		{
+			return "folder";
+		}
+
+		if (node.type == seri::asset::AssetType::none)
+		{
+			return "file";
+		}
+
+		return seri::asset::AssetTypeToString(node.type);
+	}
 }

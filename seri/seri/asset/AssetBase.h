@@ -19,6 +19,22 @@ namespace seri::asset
 		prefab,
 	};
 
+	inline const char* AssetTypeToString(AssetType type)
+	{
+		switch (type)
+		{
+			case AssetType::none: return "none";
+			case AssetType::material: return "material";
+			case AssetType::shader: return "shader";
+			case AssetType::texture: return "texture";
+			case AssetType::mesh: return "mesh";
+			case AssetType::skybox: return "skybox";
+			case AssetType::scene: return "scene";
+			case AssetType::prefab: return "prefab";
+			default: return "unknown";
+		}
+	}
+
 	struct AssetMetadata
 	{
 		uint64_t id{ 0 };

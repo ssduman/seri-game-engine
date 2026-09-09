@@ -390,13 +390,20 @@ namespace seri::editor
 		ImGui::TextUnformatted(label);
 		ImGui::NextColumn();
 
+		const char* text = value ? value : "<none>";
+
 		if (isDisabled)
 		{
-			ImGui::TextDisabled("%s", value ? value : "<None>");
+			ImGui::TextDisabled("%s", text);
 		}
 		else
 		{
-			ImGui::Text("%s", value ? value : "<None>");
+			ImGui::Text("%s", text);
+		}
+
+		if (ImGui::IsItemHovered() && ImGui::CalcTextSize(text).x > ImGui::GetContentRegionAvail().x)
+		{
+			ImGui::SetTooltip("%s", text);
 		}
 
 		ImGui::Columns(1);

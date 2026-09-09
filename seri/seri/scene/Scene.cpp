@@ -2,6 +2,7 @@
 
 #include "seri/scene/Scene.h"
 #include "seri/scene/SceneManager.h"
+#include "seri/asset/AssetManager.h"
 #include "seri/util/Util.h"
 #include "seri/texture/Skybox.h"
 #include "seri/component/Components.h"
@@ -52,9 +53,7 @@ namespace seri::scene
 	{
 		YAML::Node root = SerializeToNode();
 
-		std::ofstream fout(file);
-		fout << root;
-		fout.flush();
+		seri::asset::AssetManager::WriteAssetFile(file, root);
 
 		_isDirty = false;
 

@@ -445,6 +445,13 @@ namespace seri::editor
 
 	void InspectorPanel::DrawAsset(GUIContext& ctx)
 	{
+		DrawAssetHeader(ctx);
+
+		if (ctx.selectedAsset.isFolder)
+		{
+			return;
+		}
+
 		switch (ctx.selectedAsset.type)
 		{
 			case seri::asset::AssetType::material:
@@ -452,85 +459,82 @@ namespace seri::editor
 					DrawAssetMaterial(ctx);
 				}
 				break;
-			case seri::asset::AssetType::shader:
-				{
-					auto asset = seri::asset::AssetManager::GetAssetByID<seri::ShaderBase>(ctx.selectedAsset.id);
-					if (!asset)
-					{
-						ImGui::TextDisabled("shader not loaded");
-						break;
-					}
-					ImGui::Text("shader: %llu", asset->id);
-				}
-				break;
 			case seri::asset::AssetType::texture:
 				{
-					auto asset = seri::asset::AssetManager::GetAssetByID<seri::TextureBase>(ctx.selectedAsset.id);
-					if (!asset)
-					{
-						ImGui::TextDisabled("texture not loaded");
-						break;
-					}
-					ImGui::Text("texture: %llu", asset->id);
-					ShowEditorImage(asset, 128.0f);
+					DrawAssetTexture(ctx);
 				}
 				break;
 			case seri::asset::AssetType::mesh:
 				{
-					auto asset = seri::asset::AssetManager::GetAssetByID<seri::Model>(ctx.selectedAsset.id);
-					if (!asset)
-					{
-						ImGui::TextDisabled("mesh not loaded");
-						break;
-					}
-					ImGui::Text("mesh: %llu", asset->id);
-					ImGui::Text("material count: %d", asset->materialCount);
-					for (auto& mesh : asset->meshes)
-					{
-						ImGui::Text(" mesh: %s, mat: %d", mesh->name.c_str(), mesh->materialIndex);
-					}
+					DrawAssetMesh(ctx);
+				}
+				break;
+			case seri::asset::AssetType::shader:
+				{
+					DrawAssetShader(ctx);
 				}
 				break;
 			default:
-				{
-					ImGui::Text("other asset");
-				}
 				break;
+		}
+	}
+
+	void InspectorPanel::DrawAssetHeader(GUIContext& ctx)
+	{
+		const seri::asset::AssetTreeNode& node = ctx.selectedAsset;
+
+		ScopedChild scopedChild("##AssetHeader", ImVec2(0, 0), ImGuiChildFlags_Borders | ImGuiChildFlags_AutoResizeY);
+
+		ImGui::TextUnformatted(node.name.empty() ? "assets" : node.name.c_str());
+		ImGui::SameLine();
+		ImGui::TextDisabled("(%s)", GetAssetTypeName(node));
+
+		ImGui::Separator();
+
+		std::error_code ec;
+		std::filesystem::path relative = std::filesystem::relative(node.path, seri::asset::AssetManager::GetWorkingDirectory(), ec);
+		std::string path = ec ? node.path.string() : relative.string();
+
+		DrawLabel("Path", path.c_str(), true);
+
+		if (node.isFolder)
+		{
+			DrawLabel("Items", std::to_string(node.children.size()).c_str(), true);
+			return;
+		}
+
+		DrawLabel("ID", std::to_string(node.id).c_str(), true);
+
+		if (node.type == seri::asset::AssetType::material || node.type == seri::asset::AssetType::mesh)
+		{
+			if (ImGui::Button("Save Asset", ImVec2(-1, 0)))
+			{
+				seri::asset::AssetManager::SaveAsset(node.id);
+			}
 		}
 	}
 
 	void InspectorPanel::DrawAssetMaterial(GUIContext& ctx)
 	{
-		constexpr float previewSize = 64.0f;
+		constexpr float previewSize = 56.0f;
 		constexpr float labelWidth = 150.0f;
 
 		auto asset = seri::asset::AssetManager::GetAssetByID<seri::Material>(ctx.selectedAsset.id);
 		if (!asset)
 		{
+			ImGui::TextDisabled("material not loaded");
 			return;
 		}
 
 		ImGui::PushID("material_inspector");
 
-		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 6.0f);
-		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(10, 8));
-		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(6, 4));
-
-		auto Section = [](const char* title)
+		auto PropertyRow = [&](const std::string& label)
 			{
-				ImGui::Spacing();
-				ImGui::Separator();
-				ImGui::TextUnformatted(title);
-				ImGui::Spacing();
-			};
-
-		auto PropertyRow = [&](std::string_view label)
-			{
-				ImGui::PushID(label.data());
+				ImGui::PushID(label.c_str());
 				ImGui::Columns(2, nullptr, false);
 				ImGui::SetColumnWidth(0, labelWidth);
 				ImGui::AlignTextToFramePadding();
-				ImGui::TextUnformatted(label.data());
+				ImGui::TextUnformatted(label.c_str());
 				ImGui::NextColumn();
 				ImGui::SetNextItemWidth(-1);
 			};
@@ -541,20 +545,17 @@ namespace seri::editor
 				ImGui::PopID();
 			};
 
-		ImGui::TextUnformatted("Material");
-		ImGui::Separator();
-
-		ImGui::TextDisabled("ID: %llu", asset->id);
-		ImGui::TextDisabled("Shader: %llu", asset->GetShader() ? asset->GetShader()->id : 0);
-
 		{
+			ScopedChild scopedChild("##MaterialShader", ImVec2(0, 0), ImGuiChildFlags_Borders | ImGuiChildFlags_AutoResizeY);
+
+			ImGui::TextUnformatted("Shader");
 			ImGui::Separator();
 
 			PropertyRow("Shader");
 
 			auto shader = asset->GetShader();
-			std::string shaderName = (!shader || shader->id == 0) ? "<None>" : seri::asset::AssetManager::GetAssetName(shader->id);
-			if (ImGui::Button(shaderName.c_str()))
+			std::string shaderName = (!shader || shader->id == 0) ? "<none>" : seri::asset::AssetManager::GetAssetName(shader->id);
+			if (ImGui::Button(shaderName.c_str(), ImVec2(-1, 0)))
 			{
 				ImGui::OpenPopup("AssetPickerPopup");
 			}
@@ -566,33 +567,51 @@ namespace seri::editor
 				if (selected)
 				{
 					auto newShader = seri::asset::AssetManager::GetAssetByID<seri::ShaderBase>(selection);
-					asset->SetShader(newShader);
+					if (newShader)
+					{
+						asset->SetShader(newShader->Clone());
+					}
 				}
 			}
 
 			EndPropertyRow();
 		}
 
-		if (!asset->GetTextures().empty())
 		{
+			ScopedChild scopedChild("##MaterialTextures", ImVec2(0, 0), ImGuiChildFlags_Borders | ImGuiChildFlags_AutoResizeY);
+
+			ImGui::TextUnformatted("Textures");
 			ImGui::Separator();
+
+			bool hasTexture = false;
 
 			for (auto& tex : asset->GetTextures())
 			{
+				if (Util::IsIgnoredUniform(tex.first))
+				{
+					continue;
+				}
+
+				hasTexture = true;
+
 				ImGui::PushID(tex.first.c_str());
 
 				ImGui::Columns(2, nullptr, false);
 				ImGui::SetColumnWidth(0, labelWidth);
 				ImGui::AlignTextToFramePadding();
 				ImGui::TextUnformatted(tex.first.c_str());
+
+				if (tex.second)
+				{
+					ImGui::TextDisabled("%s", seri::asset::AssetManager::GetAssetName(tex.second->id).c_str());
+				}
+
 				ImGui::NextColumn();
 
 				bool clicked = false;
 				if (tex.second)
 				{
-					ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4, 4));
-					clicked = ShowEditorImageButton(tex.second, previewSize - 8.0f);
-					ImGui::PopStyleVar();
+					clicked = ShowEditorImageButton(tex.second, previewSize);
 				}
 				else
 				{
@@ -600,7 +619,7 @@ namespace seri::editor
 					ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImGui::GetStyleColorVec4(ImGuiCol_FrameBgHovered));
 					ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImGui::GetStyleColorVec4(ImGuiCol_FrameBgActive));
 
-					clicked = ImGui::Button("None", ImVec2(previewSize, previewSize));
+					clicked = ImGui::Button("none", ImVec2(previewSize, previewSize));
 
 					ImGui::PopStyleColor(3);
 				}
@@ -633,84 +652,232 @@ namespace seri::editor
 				ImGui::Spacing();
 				ImGui::PopID();
 			}
+
+			if (!hasTexture)
+			{
+				ImGui::TextDisabled("no texture slot");
+			}
 		}
 
-		if (!asset->GetBools().empty())
 		{
+			ScopedChild scopedChild("##MaterialProperties", ImVec2(0, 0), ImGuiChildFlags_Borders | ImGuiChildFlags_AutoResizeY);
+
+			ImGui::TextUnformatted("Properties");
+			ImGui::Separator();
+
+			bool hasProperty = false;
+
 			for (auto& kv : asset->GetBools())
 			{
+				if (Util::IsIgnoredUniform(kv.first))
+				{
+					continue;
+				}
+				hasProperty = true;
 				PropertyRow(kv.first);
 				ImGui::Checkbox("##bool", &kv.second);
 				EndPropertyRow();
 			}
-		}
 
-		if (!asset->GetInts().empty() || !asset->GetInt2s().empty() || !asset->GetInt3s().empty() || !asset->GetInt4s().empty())
-		{
 			for (auto& kv : asset->GetInts())
 			{
+				if (Util::IsIgnoredUniform(kv.first))
+				{
+					continue;
+				}
+				hasProperty = true;
 				PropertyRow(kv.first);
 				ImGui::DragInt("##int", &kv.second);
 				EndPropertyRow();
 			}
+
 			for (auto& kv : asset->GetInt2s())
 			{
+				if (Util::IsIgnoredUniform(kv.first))
+				{
+					continue;
+				}
+				hasProperty = true;
 				PropertyRow(kv.first);
 				ImGui::DragInt2("##int2", glm::value_ptr(kv.second));
 				EndPropertyRow();
 			}
+
 			for (auto& kv : asset->GetInt3s())
 			{
+				if (Util::IsIgnoredUniform(kv.first))
+				{
+					continue;
+				}
+				hasProperty = true;
 				PropertyRow(kv.first);
 				ImGui::DragInt3("##int3", glm::value_ptr(kv.second));
 				EndPropertyRow();
 			}
+
 			for (auto& kv : asset->GetInt4s())
 			{
+				if (Util::IsIgnoredUniform(kv.first))
+				{
+					continue;
+				}
+				hasProperty = true;
 				PropertyRow(kv.first);
 				ImGui::DragInt4("##int4", glm::value_ptr(kv.second));
 				EndPropertyRow();
 			}
-		}
 
-		if (!asset->GetFloats().empty() || !asset->GetFloat2s().empty() || !asset->GetFloat3s().empty() || !asset->GetFloat4s().empty())
-		{
 			for (auto& kv : asset->GetFloats())
 			{
+				if (Util::IsIgnoredUniform(kv.first))
+				{
+					continue;
+				}
+				hasProperty = true;
 				PropertyRow(kv.first);
 				ImGui::DragFloat("##float", &kv.second, 0.01f);
 				EndPropertyRow();
 			}
+
 			for (auto& kv : asset->GetFloat2s())
 			{
+				if (Util::IsIgnoredUniform(kv.first))
+				{
+					continue;
+				}
+				hasProperty = true;
 				PropertyRow(kv.first);
 				ImGui::DragFloat2("##float2", glm::value_ptr(kv.second), 0.01f);
 				EndPropertyRow();
 			}
+
 			for (auto& kv : asset->GetFloat3s())
 			{
 				if (Util::IsIgnoredUniform(kv.first))
 				{
 					continue;
 				}
+				hasProperty = true;
+				if (Util::ContainsIgnoreCase(kv.first, "color"))
+				{
+					DrawColorVec3(kv.first.c_str(), kv.second, 0.01f);
+					continue;
+				}
 				PropertyRow(kv.first);
 				ImGui::DragFloat3("##float3", glm::value_ptr(kv.second), 0.01f);
 				EndPropertyRow();
 			}
+
 			for (auto& kv : asset->GetFloat4s())
 			{
 				if (Util::IsIgnoredUniform(kv.first))
 				{
 					continue;
 				}
+				hasProperty = true;
+				if (Util::ContainsIgnoreCase(kv.first, "color"))
+				{
+					DrawColorVec4(kv.first.c_str(), kv.second, 0.01f);
+					continue;
+				}
 				PropertyRow(kv.first);
 				ImGui::DragFloat4("##float4", glm::value_ptr(kv.second), 0.01f);
 				EndPropertyRow();
 			}
+
+			if (!hasProperty)
+			{
+				ImGui::TextDisabled("no property");
+			}
 		}
 
-		ImGui::PopStyleVar(3);
 		ImGui::PopID();
+	}
+
+	void InspectorPanel::DrawAssetTexture(GUIContext& ctx)
+	{
+		auto asset = seri::asset::AssetManager::GetAssetByID<seri::TextureBase>(ctx.selectedAsset.id);
+		if (!asset)
+		{
+			ImGui::TextDisabled("texture not loaded");
+			return;
+		}
+
+		ScopedChild scopedChild("##AssetTexture", ImVec2(0, 0), ImGuiChildFlags_Borders | ImGuiChildFlags_AutoResizeY);
+
+		ImGui::TextUnformatted("Texture");
+		ImGui::Separator();
+
+		DrawLabel("Size", fmt::format("{} x {}", asset->GetWidth(), asset->GetHeight()).c_str(), true);
+
+		float size = ImGui::GetContentRegionAvail().x;
+		if (size > 256.0f)
+		{
+			size = 256.0f;
+		}
+
+		ShowEditorImage(asset, size);
+	}
+
+	void InspectorPanel::DrawAssetMesh(GUIContext& ctx)
+	{
+		auto asset = seri::asset::AssetManager::GetAssetByID<seri::Model>(ctx.selectedAsset.id);
+		if (!asset)
+		{
+			ImGui::TextDisabled("mesh not loaded");
+			return;
+		}
+
+		ScopedChild scopedChild("##AssetMesh", ImVec2(0, 0), ImGuiChildFlags_Borders | ImGuiChildFlags_AutoResizeY);
+
+		ImGui::TextUnformatted("Mesh");
+		ImGui::Separator();
+
+		DrawLabel("Meshes", std::to_string(asset->meshes.size()).c_str(), true);
+		DrawLabel("Materials", std::to_string(asset->materialCount).c_str(), true);
+
+		ImGui::Spacing();
+
+		for (auto& mesh : asset->meshes)
+		{
+			ImGui::PushID(mesh->name.c_str());
+
+			ImGui::AlignTextToFramePadding();
+			ImGui::TextUnformatted(mesh->name.c_str());
+
+			int materialIndex = mesh->materialIndex;
+			if (DrawInt("Material", materialIndex, 0.1f, 0, asset->materialCount > 0 ? asset->materialCount - 1 : 0))
+			{
+				mesh->materialIndex = materialIndex;
+			}
+
+			if (!mesh->materialName.empty())
+			{
+				ImGui::TextDisabled("%s", mesh->materialName.c_str());
+			}
+
+			ImGui::PopID();
+		}
+	}
+
+	void InspectorPanel::DrawAssetShader(GUIContext& ctx)
+	{
+		auto asset = seri::asset::AssetManager::GetAssetByID<seri::ShaderBase>(ctx.selectedAsset.id);
+		if (!asset)
+		{
+			ImGui::TextDisabled("shader not loaded");
+			return;
+		}
+
+		ScopedChild scopedChild("##AssetShader", ImVec2(0, 0), ImGuiChildFlags_Borders | ImGuiChildFlags_AutoResizeY);
+
+		ImGui::TextUnformatted("Shader");
+		ImGui::Separator();
+
+		for (const auto& uniform : asset->GetUniforms())
+		{
+			ImGui::BulletText("%s : %s", uniform.name.c_str(), seri::UniformTypeToString(uniform.type));
+		}
 	}
 
 	void InspectorPanel::ShowComponentPickerPopup(GUIContext& ctx)

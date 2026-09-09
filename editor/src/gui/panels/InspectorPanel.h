@@ -16,7 +16,15 @@ namespace seri::editor
 
 		void DrawAsset(GUIContext& ctx);
 
+		void DrawAssetHeader(GUIContext& ctx);
+
 		void DrawAssetMaterial(GUIContext& ctx);
+
+		void DrawAssetTexture(GUIContext& ctx);
+
+		void DrawAssetMesh(GUIContext& ctx);
+
+		void DrawAssetShader(GUIContext& ctx);
 
 		void ShowComponentPickerPopup(GUIContext& ctx);
 

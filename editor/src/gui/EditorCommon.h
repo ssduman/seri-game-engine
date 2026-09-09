@@ -33,4 +33,6 @@ namespace seri::editor
 	ImVec4 RGBNormalized(int r, int g, int b);
 
 	void Save();
+
+	const char* GetAssetTypeName(const seri::asset::AssetTreeNode& node);
 }
