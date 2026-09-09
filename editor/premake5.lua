@@ -55,9 +55,6 @@ project "Editor"
       "imguid",
       "yaml-cppd",
     }
-    postbuildcommands {
-      "{COPYDIR} %{prj.location}assets %{cfg.buildtarget.directory}assets",
-    }
 
   filter { "configurations:Release" }
     defines { "NDEBUG" }
@@ -71,7 +68,4 @@ project "Editor"
       "freetype",
       "imgui",
       "yaml-cpp",
-    }
-    postbuildcommands {
-      "{COPYDIR} %{prj.location}assets %{cfg.buildtarget.directory}assets",
     }

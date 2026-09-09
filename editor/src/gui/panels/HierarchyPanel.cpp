@@ -231,7 +231,7 @@ namespace seri::editor
 				seri::asset::AssetManager::AddAsset(material->id, material);
 
 				registry.emplace_or_replace<seri::component::MeshComponent>(entity, seri::component::MeshComponent{ model->id });
-				registry.emplace_or_replace<seri::component::MeshRendererComponent>(entity, seri::component::MeshRendererComponent{ material->id });
+				registry.emplace_or_replace<seri::component::MeshRendererComponent>(entity, seri::component::MeshRendererComponent{ { material->id } });
 			}
 
 			ImGui::EndMenu();

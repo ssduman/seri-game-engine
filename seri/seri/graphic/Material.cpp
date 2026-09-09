@@ -174,14 +174,16 @@ namespace seri
 			const std::string& name = kv.first;
 			const std::shared_ptr<TextureBase>& tex = kv.second;
 
-			if (!tex || !tex->IsActiveForUsing())
+			int slot = _shader->GetTextureSlot(name);
+			if (slot < 0)
 			{
 				continue;
 			}
 
-			int slot = _shader->GetTextureSlot(name);
-			if (slot < 0)
+			if (!tex || !tex->IsActiveForUsing())
 			{
+				TextureBase::UnbindTex2D(slot);
+				_shader->SetInt(name, slot);
 				continue;
 			}
 

@@ -48,24 +48,37 @@ namespace seri::system
 					continue;
 				}
 
-				if (renderer.materialAssetId == 0)
+				if (renderer.materialAssetIds.empty())
 				{
 					continue;
 				}
 
 				std::shared_ptr<Model> model = seri::asset::AssetManager::GetAssetByID<Model>(mesh.meshAssetId);
-				std::shared_ptr<Material> material = seri::asset::AssetManager::GetAssetByID<Material>(renderer.materialAssetId);
 
-				if (!model || !material)
+				if (!model)
 				{
 					continue;
 				}
 
-				seri::Graphic::DrawModel(
-					model,
-					material,
-					transform.worldMatrix
-				);
+				int slotCount = static_cast<int>(renderer.materialAssetIds.size());
+
+				for (const auto& meshPart : model->meshes)
+				{
+					int slot = meshPart->materialIndex;
+					if (slot < 0 || slot >= slotCount)
+					{
+						slot = slotCount - 1;
+					}
+
+					std::shared_ptr<Material> material = seri::asset::AssetManager::GetAssetByID<Material>(renderer.materialAssetIds[slot]);
+
+					if (!material)
+					{
+						continue;
+					}
+
+					seri::Graphic::Draw(meshPart, material, transform.worldMatrix);
+				}
 
 				if (renderer.castShadow)
 				{

@@ -3,61 +3,81 @@ IDInfo:
   Version: 0.1
 Model:
   MaterialCount: 5
+  ImportScale: 1
   Meshes:
-    - MeshName: HLeib01
+    - MeshIndex: 0
+      MeshName: HLeib01
       MaterialName: HLeibTex
       MaterialIndex: 1
-    - MeshName: OK
+    - MeshIndex: 1
+      MeshName: OK
       MaterialName: Skin
       MaterialIndex: 2
-    - MeshName: Bein1Li
+    - MeshIndex: 2
+      MeshName: Bein1Li
       MaterialName: BeinTex
       MaterialIndex: 3
-    - MeshName: Bein1Re
+    - MeshIndex: 3
+      MeshName: Bein1Re
       MaterialName: BeinTex
       MaterialIndex: 3
-    - MeshName: Bein2Li
+    - MeshIndex: 4
+      MeshName: Bein2Li
       MaterialName: BeinTex
       MaterialIndex: 3
-    - MeshName: Bein2Re
+    - MeshIndex: 5
+      MeshName: Bein2Re
       MaterialName: BeinTex
       MaterialIndex: 3
-    - MeshName: Bein3Re
+    - MeshIndex: 6
+      MeshName: Bein3Re
       MaterialName: BeinTex
       MaterialIndex: 3
-    - MeshName: Bein3Li
+    - MeshIndex: 7
+      MeshName: Bein3Li
       MaterialName: BeinTex
       MaterialIndex: 3
-    - MeshName: Bein4Re
+    - MeshIndex: 8
+      MeshName: Bein4Re
       MaterialName: BeinTex
       MaterialIndex: 3
-    - MeshName: Bein4Li
+    - MeshIndex: 9
+      MeshName: Bein4Li
       MaterialName: BeinTex
       MaterialIndex: 3
-    - MeshName: Zahn
+    - MeshIndex: 10
+      MeshName: Zahn
       MaterialName: BeinTex
       MaterialIndex: 3
-    - MeshName: klZahn
+    - MeshIndex: 11
+      MeshName: klZahn
       MaterialName: BeinTex
       MaterialIndex: 3
-    - MeshName: Kopf
+    - MeshIndex: 12
+      MeshName: Kopf
       MaterialName: Skin
       MaterialIndex: 2
-    - MeshName: Brust
+    - MeshIndex: 13
+      MeshName: Brust
       MaterialName: Skin
       MaterialIndex: 2
-    - MeshName: Kopf2
+    - MeshIndex: 14
+      MeshName: Kopf2
       MaterialName: Skin
       MaterialIndex: 2
-    - MeshName: Zahn2
+    - MeshIndex: 15
+      MeshName: Zahn2
       MaterialName: BeinTex
       MaterialIndex: 3
-    - MeshName: klZahn2
+    - MeshIndex: 16
+      MeshName: klZahn2
       MaterialName: BeinTex
       MaterialIndex: 3
-    - MeshName: Auge
+    - MeshIndex: 17
+      MeshName: Auge
       MaterialName: Augentex
       MaterialIndex: 4
-    - MeshName: Duplicate05
+    - MeshIndex: 18
+      MeshName: Duplicate05
       MaterialName: Augentex
       MaterialIndex: 4

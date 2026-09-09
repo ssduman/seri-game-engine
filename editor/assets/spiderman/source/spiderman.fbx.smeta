@@ -3,7 +3,9 @@ IDInfo:
   Version: 0.1
 Model:
   MaterialCount: 1
+  ImportScale: 1
   Meshes:
-    - MeshName: unamedmesh
+    - MeshIndex: 0
+      MeshName: unamedmesh
       MaterialName: DefaultMaterial
       MaterialIndex: 0

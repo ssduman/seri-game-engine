@@ -8,6 +8,8 @@ namespace seri::editor
 
 		selection.clear();
 
+		ImGui::SetNextWindowSizeConstraints(ImVec2(280.0f, 0.0f), ImVec2(FLT_MAX, 400.0f));
+
 		if (!ImGui::BeginPopup("ScriptPickerPopup"))
 		{
 			return false;
@@ -16,7 +18,13 @@ namespace seri::editor
 		ImGui::TextUnformatted("Add Script");
 		ImGui::Separator();
 
-		ImGui::InputTextWithHint("##Search", "Search scripts...", search, IM_ARRAYSIZE(search));
+		if (ImGui::IsWindowAppearing())
+		{
+			ImGui::SetKeyboardFocusHere();
+		}
+
+		ImGui::SetNextItemWidth(-1);
+		ImGui::InputTextWithHint("##Search", "Search...", search, IM_ARRAYSIZE(search));
 
 		ImGui::Spacing();
 
@@ -57,6 +65,8 @@ namespace seri::editor
 		selected = false;
 		selection = 0;
 
+		ImGui::SetNextWindowSizeConstraints(ImVec2(320.0f, 0.0f), ImVec2(FLT_MAX, 400.0f));
+
 		if (!ImGui::BeginPopup("AssetPickerPopup"))
 		{
 			return false;
@@ -65,7 +75,13 @@ namespace seri::editor
 		static char search[64]{};
 		const float size = 64.0f;
 
-		ImGui::InputText("Search", search, sizeof(search));
+		if (ImGui::IsWindowAppearing())
+		{
+			ImGui::SetKeyboardFocusHere();
+		}
+
+		ImGui::SetNextItemWidth(-1);
+		ImGui::InputTextWithHint("##Search", "Search...", search, sizeof(search));
 		ImGui::Separator();
 
 		switch (type)

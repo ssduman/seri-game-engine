@@ -103,7 +103,7 @@ namespace seri::editor
 		float clearButtonWidth = _search.empty() ? 0.0f : ImGui::CalcTextSize("X").x + ImGui::GetStyle().FramePadding.x * 2.0f + ImGui::GetStyle().ItemSpacing.x;
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x - clearButtonWidth);
 
-		if (ImGui::InputTextWithHint("##ConsoleSearch", "search", &_search))
+		if (ImGui::InputTextWithHint("##ConsoleSearch", "Search...", &_search))
 		{
 			_filterDirty = true;
 		}

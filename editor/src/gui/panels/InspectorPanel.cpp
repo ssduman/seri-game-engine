@@ -140,12 +140,58 @@ namespace seri::editor
 			bool changed = false;
 			uint64_t selection = 0;
 
-			changed |= DrawAssetPicker("Material", meshRendererComp->materialAssetId, seri::asset::AssetType::material, selection);
+			changed |= DrawBool("Cast Shadow", meshRendererComp->castShadow);
+
+			std::shared_ptr<seri::Model> model;
+			if (auto* meshComp = registry.try_get<seri::component::MeshComponent>(entity))
+			{
+				model = seri::asset::AssetManager::GetAssetByID<seri::Model>(meshComp->meshAssetId);
+			}
+
+			ImGui::TextUnformatted("Materials");
+
+			for (size_t i = 0; i < meshRendererComp->materialAssetIds.size(); i++)
+			{
+				ImGui::PushID(static_cast<int>(i));
+
+				std::string label = GetMaterialSlotLabel(model, i);
+
+				if (DrawAssetPicker(label.c_str(), meshRendererComp->materialAssetIds[i], seri::asset::AssetType::material, selection))
+				{
+					meshRendererComp->materialAssetIds[i] = selection;
+					changed = true;
+				}
+
+				ImGui::PopID();
+			}
+
+			if (ImGui::Button("Add Material"))
+			{
+				meshRendererComp->materialAssetIds.push_back(0);
+				changed = true;
+			}
+
+			ImGui::SameLine();
+
+			if (ImGui::Button("Remove Material") && !meshRendererComp->materialAssetIds.empty())
+			{
+				meshRendererComp->materialAssetIds.pop_back();
+				changed = true;
+			}
+
+			if (model && model->materialCount != static_cast<int>(meshRendererComp->materialAssetIds.size()))
+			{
+				ImGui::SameLine();
+				if (ImGui::Button("Fit"))
+				{
+					meshRendererComp->materialAssetIds.resize(model->materialCount, 0);
+					changed = true;
+				}
+			}
 
 			if (changed)
 			{
 				scene->SetAsDirty();
-				meshRendererComp->materialAssetId = selection;
 			}
 		}
 
@@ -165,13 +211,15 @@ namespace seri::editor
 				changed = true;
 			}
 
+			auto skinnedModel = seri::asset::AssetManager::GetAssetByID<seri::Model>(skinnedMeshRendererComp->meshAssetId);
+
 			ImGui::TextUnformatted("Materials");
 
 			for (size_t i = 0; i < skinnedMeshRendererComp->materialAssetIds.size(); i++)
 			{
 				ImGui::PushID(static_cast<int>(i));
 
-				std::string label = fmt::format("Element {}", i);
+				std::string label = GetMaterialSlotLabel(skinnedModel, i);
 
 				if (DrawAssetPicker(label.c_str(), skinnedMeshRendererComp->materialAssetIds[i], seri::asset::AssetType::material, selection))
 				{
@@ -836,11 +884,19 @@ namespace seri::editor
 		DrawLabel("Meshes", std::to_string(asset->meshes.size()).c_str(), true);
 		DrawLabel("Materials", std::to_string(asset->materialCount).c_str(), true);
 
+		float importScale = asset->importScale;
+		if (DrawFloat("Scale", importScale, 0.01f, 0.0001f, 1000.0f, "%.4f"))
+		{
+			asset->SetImportScale(importScale);
+		}
+
 		ImGui::Spacing();
 
-		for (auto& mesh : asset->meshes)
+		for (size_t i = 0; i < asset->meshes.size(); i++)
 		{
-			ImGui::PushID(mesh->name.c_str());
+			auto& mesh = asset->meshes[i];
+
+			ImGui::PushID(static_cast<int>(i));
 
 			ImGui::AlignTextToFramePadding();
 			ImGui::TextUnformatted(mesh->name.c_str());
@@ -880,6 +936,22 @@ namespace seri::editor
 		}
 	}
 
+	std::string InspectorPanel::GetMaterialSlotLabel(const std::shared_ptr<seri::Model>& model, size_t slot)
+	{
+		if (model)
+		{
+			for (const auto& mesh : model->meshes)
+			{
+				if (mesh->materialIndex == static_cast<int>(slot) && !mesh->materialName.empty())
+				{
+					return mesh->materialName;
+				}
+			}
+		}
+
+		return fmt::format("Element {}", slot);
+	}
+
 	void InspectorPanel::ShowComponentPickerPopup(GUIContext& ctx)
 	{
 		static char search[128] = "";
@@ -892,7 +964,7 @@ namespace seri::editor
 			ImGui::TextUnformatted("Add Component");
 			ImGui::Separator();
 
-			ImGui::InputTextWithHint("##Search", "Search components...", search, IM_ARRAYSIZE(search));
+			ImGui::InputTextWithHint("##Search", "Search...", search, IM_ARRAYSIZE(search));
 
 			ImGui::Spacing();
 

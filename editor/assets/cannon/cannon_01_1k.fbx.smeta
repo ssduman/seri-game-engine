@@ -3,34 +3,45 @@ IDInfo:
   Version: 0.1
 Model:
   MaterialCount: 1
+  ImportScale: 1
   Meshes:
-    - MeshName: Cube.001
+    - MeshIndex: 0
+      MeshName: Cube.001
       MaterialName: cannon_01
       MaterialIndex: 0
-    - MeshName: Cube.002
+    - MeshIndex: 1
+      MeshName: Cube.002
       MaterialName: cannon_01
       MaterialIndex: 0
-    - MeshName: Cylinder.004
+    - MeshIndex: 2
+      MeshName: Cylinder.004
       MaterialName: cannon_01
       MaterialIndex: 0
-    - MeshName: Cylinder.005
+    - MeshIndex: 3
+      MeshName: Cylinder.005
       MaterialName: cannon_01
       MaterialIndex: 0
-    - MeshName: Cube.004
+    - MeshIndex: 4
+      MeshName: Cube.004
       MaterialName: cannon_01
       MaterialIndex: 0
-    - MeshName: Cube.005
+    - MeshIndex: 5
+      MeshName: Cube.005
       MaterialName: cannon_01
       MaterialIndex: 0
-    - MeshName: Cube.006
+    - MeshIndex: 6
+      MeshName: Cube.006
       MaterialName: cannon_01
       MaterialIndex: 0
-    - MeshName: Cylinder.006
+    - MeshIndex: 7
+      MeshName: Cylinder.006
       MaterialName: cannon_01
       MaterialIndex: 0
-    - MeshName: Cylinder.007
+    - MeshIndex: 8
+      MeshName: Cylinder.007
       MaterialName: cannon_01
       MaterialIndex: 0
-    - MeshName: Cylinder.008
+    - MeshIndex: 9
+      MeshName: Cylinder.008
       MaterialName: cannon_01
       MaterialIndex: 0

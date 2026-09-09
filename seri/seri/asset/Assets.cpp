@@ -264,11 +264,15 @@ namespace seri::asset
 		YAML::Node root;
 
 		root["MaterialCount"] = model->materialCount;
+		root["ImportScale"] = model->importScale;
 
 		YAML::Node meshesNode;
-		for (const auto& mesh : model->meshes)
+		for (size_t i = 0; i < model->meshes.size(); i++)
 		{
+			const auto& mesh = model->meshes[i];
+
 			YAML::Node meshNode;
+			meshNode["MeshIndex"] = static_cast<int>(i);
 			meshNode["MeshName"] = mesh->name;
 			meshNode["MaterialName"] = mesh->materialName;
 			meshNode["MaterialIndex"] = mesh->materialIndex;
@@ -297,12 +301,29 @@ namespace seri::asset
 			asset->materialCount = YAMLUtil::GetType<int>(root["MaterialCount"]);
 		}
 
+		if (root["ImportScale"])
+		{
+			asset->SetImportScale(YAMLUtil::GetType<float>(root["ImportScale"]));
+		}
+
 		const YAML::Node& meshesNode = root["Meshes"];
 		for (const auto& meshNode : meshesNode)
 		{
 			std::string meshName = YAMLUtil::DeepCopyYAMLString(meshNode["MeshName"]);
 			std::string materialName = YAMLUtil::DeepCopyYAMLString(meshNode["MaterialName"]);
 			int materialIndex = YAMLUtil::GetType<int>(meshNode["MaterialIndex"]);
+
+			if (meshNode["MeshIndex"])
+			{
+				int meshIndex = YAMLUtil::GetType<int>(meshNode["MeshIndex"]);
+				if (meshIndex >= 0 && meshIndex < static_cast<int>(asset->meshes.size()))
+				{
+					asset->meshes[meshIndex]->materialName = materialName;
+					asset->meshes[meshIndex]->materialIndex = materialIndex;
+					continue;
+				}
+			}
+
 			for (const auto& mesh : asset->meshes)
 			{
 				if (mesh->name == meshName)

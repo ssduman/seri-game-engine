@@ -26,7 +26,24 @@ namespace seri
 		}
 
 		int materialCount{ 0 };
+		float importScale{ 1.0f };
 		std::vector<std::shared_ptr<Mesh>> meshes{};
+
+		void SetImportScale(float scale)
+		{
+			if (scale <= 0.0f || scale == importScale)
+			{
+				return;
+			}
+
+			glm::mat4 delta = glm::scale(glm::mat4{ 1.0f }, glm::vec3{ scale / importScale });
+			for (const auto& mesh : meshes)
+			{
+				mesh->transformation = delta * mesh->transformation;
+			}
+
+			importScale = scale;
+		}
 
 		void Build()
 		{

@@ -55,6 +55,12 @@ void main()
     albedo = SRGBToLinear(albedo);
 
     vec3 arm = texture(u_arm_texture, sent_uv).rgb;
+
+    if (dot(arm, arm) < 0.0001)
+    {
+        arm = vec3(1.0, 0.5, 0.0);
+    }
+
     float ao        = arm.r;
     float roughness = clamp(arm.g, 0.04, 1.0);
     float metallic  = arm.b;

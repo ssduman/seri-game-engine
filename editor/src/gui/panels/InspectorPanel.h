@@ -28,5 +28,7 @@ namespace seri::editor
 
 		void ShowComponentPickerPopup(GUIContext& ctx);
 
+		std::string GetMaterialSlotLabel(const std::shared_ptr<seri::Model>& model, size_t slot);
+
 	};
 }

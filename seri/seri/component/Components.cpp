@@ -69,14 +69,34 @@ namespace seri::component
 	MeshRendererComponent MeshRendererComponent::Deserialize(const YAML::Node& node)
 	{
 		MeshRendererComponent component{};
-		component.materialAssetId = YAMLUtil::GetType<uint64_t>(node["MaterialAssetID"]);
+
+		const YAML::Node& materialsNode = node["MaterialAssetIDs"];
+		if (materialsNode && materialsNode.IsSequence())
+		{
+			for (const auto& materialNode : materialsNode)
+			{
+				component.materialAssetIds.emplace_back(YAMLUtil::GetType<uint64_t>(materialNode));
+			}
+		}
+		else if (node["MaterialAssetID"])
+		{
+			component.materialAssetIds.emplace_back(YAMLUtil::GetType<uint64_t>(node["MaterialAssetID"]));
+		}
+
 		component.castShadow = YAMLUtil::GetType<bool>(node["CastShadow"]);
+
 		return component;
 	}
 	YAML::Node MeshRendererComponent::Serialize(const MeshRendererComponent& component)
 	{
+		YAML::Node materialsNode;
+		for (uint64_t materialAssetId : component.materialAssetIds)
+		{
+			materialsNode.push_back(materialAssetId);
+		}
+
 		YAML::Node node;
-		node["MaterialAssetID"] = component.materialAssetId;
+		node["MaterialAssetIDs"] = materialsNode;
 		node["CastShadow"] = component.castShadow;
 		return node;
 	}

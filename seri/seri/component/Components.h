@@ -63,7 +63,7 @@ namespace seri::component
 	{
 		static constexpr std::string_view compName = "MeshRendererComponent";
 
-		uint64_t materialAssetId{ 0 };
+		std::vector<uint64_t> materialAssetIds{};
 		bool castShadow = true;
 
 		static MeshRendererComponent Deserialize(const YAML::Node& node);
