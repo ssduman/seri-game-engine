@@ -5,6 +5,8 @@ namespace seri::literals
 	constexpr const char* kVersion = "0.1";
 	constexpr const char* kEngineName = "Seri Game Engine";
 
+	constexpr const char* kDefaultFontName = "Roboto-Regular.ttf";
+
 	constexpr const char* kUniformColor = "u_color";
 	constexpr const char* kUniformCameraPos = "u_camera_pos";
 	constexpr const char* kUniformLightDir = "u_light_dir";
@@ -34,6 +36,9 @@ namespace seri::literals
 	constexpr const char* kUniformDiffTexture = "u_diff_texture";
 	constexpr const char* kUniformNormalTexture = "u_normal_texture";
 	constexpr const char* kUniformArmTexture = "u_arm_texture";
+
+	constexpr const char* kUniformTextTexture = "u_text_texture";
+	constexpr const char* kUniformTextColor = "u_text_color";
 
 	constexpr const int kMaxDirLightCount = 1;
 	constexpr const int kMaxSpotLightCount = 8;

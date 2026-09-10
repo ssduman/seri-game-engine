@@ -224,6 +224,31 @@ namespace seri::component
 		return node;
 	}
 
+	TextComponent TextComponent::Deserialize(const YAML::Node& node)
+	{
+		TextComponent component{};
+		component.fontAssetId = YAMLUtil::GetType<uint64_t>(node["FontAssetID"]);
+		component.text = YAMLUtil::DeepCopyYAMLString(node["Text"]);
+		component.fontSize = YAMLUtil::GetType<float>(node["FontSize"]);
+		component.lineSpacing = YAMLUtil::GetType<float>(node["LineSpacing"]);
+		component.color = YAMLUtil::Vec4FromYAML(node["Color"]);
+		component.alignH = static_cast<seri::font::TextAlignH>(YAMLUtil::GetType<int>(node["AlignH"]));
+		component.alignV = static_cast<seri::font::TextAlignV>(YAMLUtil::GetType<int>(node["AlignV"]));
+		return component;
+	}
+	YAML::Node TextComponent::Serialize(const TextComponent& component)
+	{
+		YAML::Node node;
+		node["FontAssetID"] = component.fontAssetId;
+		node["Text"] = component.text;
+		node["FontSize"] = component.fontSize;
+		node["LineSpacing"] = component.lineSpacing;
+		node["Color"] = YAMLUtil::Vec4ToYAML(component.color);
+		node["AlignH"] = static_cast<int>(component.alignH);
+		node["AlignV"] = static_cast<int>(component.alignV);
+		return node;
+	}
+
 	ScriptComponent ScriptComponent::Deserialize(const YAML::Node& node)
 	{
 		ScriptComponent component{};

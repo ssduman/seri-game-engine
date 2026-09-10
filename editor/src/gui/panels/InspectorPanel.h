@@ -26,6 +26,8 @@ namespace seri::editor
 
 		void DrawAssetShader(GUIContext& ctx);
 
+		void DrawAssetFont(GUIContext& ctx);
+
 		void ShowComponentPickerPopup(GUIContext& ctx);
 
 		std::string GetMaterialSlotLabel(const std::shared_ptr<seri::Model>& model, size_t slot);

@@ -91,5 +91,7 @@ namespace seri
 
 		static bool IsIgnoredUniform(std::string_view uniformName);
 
+		static void DecodeUTF8(const std::string& text, std::vector<uint32_t>& codepoints);
+
 	};
 }

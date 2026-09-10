@@ -271,8 +271,7 @@ namespace seri::editor
 			texture0->Init(seri::TextureDesc{}, "assets/textures/passage.png");
 
 			materialFont = std::make_shared<seri::Material>();
-			materialFont->SetShader(seri::ShaderLibrary::Find("typer"));
-			materialFont->SetTexture("u_texture", seri::font::FontManager::GetPredefinedFonts()[fontIndex]->texture);
+			materialFont->SetShader(seri::ShaderLibrary::Find("text"));
 
 			materialInstanced = std::make_shared<seri::Material>();
 			materialInstanced->SetShader(seri::ShaderLibrary::Find("entity_instanced"));
@@ -331,17 +330,48 @@ namespace seri::editor
 		{
 			auto dt = seri::TimeWrapper::GetDeltaTime();
 
-			for (size_t i = 0; i < instancedTRSs.size(); i++)
+			const bool drawInstanced = false;
+			if (drawInstanced)
 			{
-				instancedTRSs[i] *= glm::mat4_cast(seri::Util::ToQuaternion({ seri::Random::Range(1.0f, 90.0f) * dt, seri::Random::Range(1.0f, 90.0f) * dt, 0.0f }));
+				for (size_t i = 0; i < instancedTRSs.size(); i++)
+				{
+					instancedTRSs[i] *= glm::mat4_cast(seri::Util::ToQuaternion({ seri::Random::Range(1.0f, 90.0f) * dt, seri::Random::Range(1.0f, 90.0f) * dt, 0.0f }));
+				}
+				seri::Graphic::DrawInstanced(cube3d, materialInstanced, instancedTRSs);
 			}
-			//seri::Graphic::DrawInstanced(cube3d, materialInstanced, instancedTRSs);
 
-			seri::RenderingStats renderingStats = seri::RenderingManager::GetRenderingStats();
-			std::string statsStr = fmt::format("draw calls: {}, tri: {}, fps: {}", renderingStats.drawCalls, renderingStats.triangles, seri::TimeWrapper::GetFPS());
-			auto editorRT = seri::RenderingManager::GetEditorRT();
-			seri::font::FontManager::MakeText(fontMesh, fontIndex, statsStr, -static_cast<int>(editorRT->GetWidth()) / 2 + 20, -static_cast<int>(editorRT->GetHeight()) / 2 + 20);
-			seri::Graphic::Draw(fontMesh, materialFont, seri::Util::GetIdentityMatrix(), seri::PassType::ui);
+			const bool drawText = true;
+			if (drawText)
+			{
+				std::shared_ptr<seri::font::Font> font = seri::font::FontManager::GetDefaultFont();
+				if (font)
+				{
+					seri::RenderingStats renderingStats = seri::RenderingManager::GetRenderingStats();
+					std::string statsStr = fmt::format("draw calls: {}, tri: {}, fps: {}", renderingStats.drawCalls, renderingStats.triangles, seri::TimeWrapper::GetFPS());
+
+					seri::font::TextDesc textDesc{};
+					textDesc.fontSize = 36.0f;
+					textDesc.alignH = seri::font::TextAlignH::left;
+					textDesc.alignV = seri::font::TextAlignV::bottom;
+
+					seri::font::TextMesh::BuildTextMesh(*fontMesh, *font, statsStr, textDesc);
+
+					if (fontMesh->GetVao())
+					{
+						auto editorRT = seri::RenderingManager::GetEditorRT();
+						glm::vec3 textPos{
+							-static_cast<float>(editorRT->GetWidth()) / 2.0f + 20.0f,
+							-static_cast<float>(editorRT->GetHeight()) / 2.0f + 20.0f,
+							0.0f
+						};
+
+						materialFont->SetTexture(seri::literals::kUniformTextTexture, font->GetAtlas());
+						materialFont->SetFloat4(seri::literals::kUniformTextColor, glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f });
+
+						seri::Graphic::Draw(fontMesh, materialFont, glm::translate(glm::mat4{ 1.0f }, textPos), seri::PassType::ui);
+					}
+				}
+			}
 		}
 
 		bool runSystem{ false };
@@ -359,7 +389,6 @@ namespace seri::editor
 		std::shared_ptr<seri::VertexBufferBase> basicVertexBuffer_all;
 		std::shared_ptr<seri::VertexArrayBase> basicVertexArray;
 
-		int fontIndex = 2;
 		int instanceCount = 128;
 
 		std::shared_ptr<seri::Mesh> cube3d;

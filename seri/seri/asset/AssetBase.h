@@ -17,6 +17,7 @@ namespace seri::asset
 		skybox,
 		scene,
 		prefab,
+		font,
 	};
 
 	inline const char* AssetTypeToString(AssetType type)
@@ -31,6 +32,7 @@ namespace seri::asset
 			case AssetType::skybox: return "skybox";
 			case AssetType::scene: return "scene";
 			case AssetType::prefab: return "prefab";
+			case AssetType::font: return "font";
 			default: return "unknown";
 		}
 	}

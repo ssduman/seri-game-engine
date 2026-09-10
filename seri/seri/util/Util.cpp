@@ -141,4 +141,52 @@ namespace seri
 		return false;
 	}
 
+	void Util::DecodeUTF8(const std::string& text, std::vector<uint32_t>& codepoints)
+	{
+		codepoints.reserve(text.size());
+
+		size_t index = 0;
+		while (index < text.size())
+		{
+			unsigned char lead = static_cast<unsigned char>(text[index]);
+
+			int extra = 0;
+			uint32_t codepoint = lead;
+
+			if (lead >= 0xF0)
+			{
+				extra = 3;
+				codepoint = lead & 0x07;
+			}
+			else if (lead >= 0xE0)
+			{
+				extra = 2;
+				codepoint = lead & 0x0F;
+			}
+			else if (lead >= 0xC0)
+			{
+				extra = 1;
+				codepoint = lead & 0x1F;
+			}
+			else if (lead >= 0x80)
+			{
+				index++;
+				continue;
+			}
+
+			if (index + extra >= text.size())
+			{
+				break;
+			}
+
+			for (int i = 1; i <= extra; i++)
+			{
+				codepoint = (codepoint << 6) | (static_cast<unsigned char>(text[index + i]) & 0x3F);
+			}
+
+			codepoints.push_back(codepoint);
+			index += extra + 1;
+		}
+	}
+
 }

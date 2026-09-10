@@ -20,6 +20,7 @@ namespace seri::editor
 
 		if (ImGui::IsWindowAppearing())
 		{
+			search[0] = '\0';
 			ImGui::SetKeyboardFocusHere();
 		}
 
@@ -44,7 +45,6 @@ namespace seri::editor
 				selection = name;
 				picked = true;
 				ImGui::CloseCurrentPopup();
-				search[0] = '\0';
 			}
 
 			ImGui::PopID();
@@ -77,6 +77,7 @@ namespace seri::editor
 
 		if (ImGui::IsWindowAppearing())
 		{
+			search[0] = '\0';
 			ImGui::SetKeyboardFocusHere();
 		}
 
@@ -128,7 +129,6 @@ namespace seri::editor
 							ImGui::CloseCurrentPopup();
 							ImGui::PopID();
 							ImGui::EndPopup();
-							search[0] = '\0';
 							return true;
 						}
 
@@ -145,7 +145,6 @@ namespace seri::editor
 							ImGui::CloseCurrentPopup();
 							ImGui::PopID();
 							ImGui::EndPopup();
-							search[0] = '\0';
 							return true;
 						}
 					}
@@ -168,7 +167,7 @@ namespace seri::editor
 		return false;
 	}
 
-	void ShowEditorImage(std::shared_ptr<seri::TextureBase>& texture, float size)
+	void ShowEditorImage(std::shared_ptr<seri::TextureBase>& texture, float size, bool flip)
 	{
 		if (!texture)
 		{
@@ -177,7 +176,9 @@ namespace seri::editor
 		}
 
 		auto tex = (ImTextureID)(intptr_t)texture->GetHandle();
-		ImGui::Image(tex, { size, size }, { 0, 1 }, { 1, 0 });
+		ImVec2 uv0 = flip ? ImVec2{ 0, 1 } : ImVec2{ 0, 0 };
+		ImVec2 uv1 = flip ? ImVec2{ 1, 0 } : ImVec2{ 1, 1 };
+		ImGui::Image(tex, { size, size }, uv0, uv1);
 	}
 
 	bool ShowEditorImageButton(std::shared_ptr<seri::TextureBase>& texture, float size)
@@ -444,6 +445,70 @@ namespace seri::editor
 		ImGui::SetNextItemWidth(-1);
 
 		changed |= ImGui::InputText("##value", &value);
+
+		ImGui::Columns(1);
+		ImGui::PopID();
+
+		return changed;
+	}
+
+	bool DrawTextArea(const char* label, std::string& value, float height)
+	{
+		bool changed = false;
+
+		ImGui::PushID(label);
+
+		ImGui::Columns(2, nullptr, false);
+		ImGui::SetColumnWidth(0, 90.0f);
+
+		ImGui::AlignTextToFramePadding();
+		ImGui::TextUnformatted(label);
+		ImGui::NextColumn();
+
+		changed |= ImGui::InputTextMultiline("##value", &value, ImVec2(-1.0f, height));
+
+		ImGui::Columns(1);
+		ImGui::PopID();
+
+		return changed;
+	}
+
+	bool DrawCombo(const char* label, int& value, const char* const* names, int count)
+	{
+		bool changed = false;
+
+		ImGui::PushID(label);
+
+		ImGui::Columns(2, nullptr, false);
+		ImGui::SetColumnWidth(0, 90.0f);
+
+		ImGui::AlignTextToFramePadding();
+		ImGui::TextUnformatted(label);
+		ImGui::NextColumn();
+
+		ImGui::SetNextItemWidth(-1);
+
+		const char* preview = value >= 0 && value < count ? names[value] : "";
+
+		if (ImGui::BeginCombo("##value", preview))
+		{
+			for (int index = 0; index < count; index++)
+			{
+				bool selected = index == value;
+				if (ImGui::Selectable(names[index], selected))
+				{
+					value = index;
+					changed = true;
+				}
+
+				if (selected)
+				{
+					ImGui::SetItemDefaultFocus();
+				}
+			}
+
+			ImGui::EndCombo();
+		}
 
 		ImGui::Columns(1);
 		ImGui::PopID();

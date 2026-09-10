@@ -15,7 +15,7 @@ void main()
 {
     sent_uv = in_uv0;
 
-    gl_Position = u_projection * u_view * u_model vec4(in_vertex.xy, 0.0, 1.0);
+    gl_Position = u_projection * u_view * u_model * vec4(in_vertex, 1.0);
 }
 
 #end_vs
@@ -26,14 +26,21 @@ void main()
 
 in vec2 sent_uv;
 
-uniform sampler2D u_texture;
+uniform sampler2D u_text_texture;
+uniform vec4 u_text_color;
 
 out vec4 final_color;
 
 void main()
 {
-    vec4 sampled = vec4(1.0, 1.0, 1.0, texture(u_texture, sent_uv).r);
-    final_color = sampled;
+    float coverage = texture(u_text_texture, sent_uv).r;
+
+    if (coverage <= 0.0)
+    {
+        discard;
+    }
+
+    final_color = vec4(u_text_color.rgb, u_text_color.a * coverage);
 }
 
 #end_fs

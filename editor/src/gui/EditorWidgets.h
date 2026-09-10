@@ -4,7 +4,7 @@
 
 namespace seri::editor
 {
-	void ShowEditorImage(std::shared_ptr<seri::TextureBase>& texture, float size);
+	void ShowEditorImage(std::shared_ptr<seri::TextureBase>& texture, float size, bool flip = true);
 
 	bool ShowEditorImageButton(std::shared_ptr<seri::TextureBase>& texture, float size);
 
@@ -27,6 +27,10 @@ namespace seri::editor
 	bool DrawLabel(const char* label, const char* value, bool isDisabled);
 
 	bool DrawTextInput(const char* label, std::string& value, size_t bufferSize = 512);
+
+	bool DrawTextArea(const char* label, std::string& value, float height);
+
+	bool DrawCombo(const char* label, int& value, const char* const* names, int count);
 
 	bool DrawAssetPicker(const char* label, uint64_t assetId, seri::asset::AssetType assetType, uint64_t& selection);
 }

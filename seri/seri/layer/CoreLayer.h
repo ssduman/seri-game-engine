@@ -4,7 +4,6 @@
 #include "seri/core/TimeWrapper.h"
 #include "seri/core/Application.h"
 #include "seri/graphic/Graphic.h"
-#include "seri/font/FontManager.h"
 #include "seri/asset/AssetManager.h"
 #include "seri/input/InputManager.h"
 #include "seri/sound/SoundManager.h"
@@ -20,6 +19,7 @@
 #include "seri/system/CameraSystem.h"
 #include "seri/system/TransformSystem.h"
 #include "seri/system/MeshRendererSystem.h"
+#include "seri/system/TextRendererSystem.h"
 #include "seri/system/AnimatorSystem.h"
 #include "seri/system/SkinnedMeshRendererSystem.h"
 #include "seri/script/ScriptSystem.h"
@@ -56,7 +56,6 @@ namespace seri
 			Application::Init();
 			Graphic::Init();
 			InputManager::Init();
-			font::FontManager::Init("assets/fonts/");
 			sound::SoundManager::Init("assets/sounds/");
 			scene::SceneManager::Init();
 			asset::AssetManager::StartAssetWatcher();
@@ -164,6 +163,7 @@ namespace seri
 
 			system::MeshRendererSystem::Update();
 			system::SkinnedMeshRendererSystem::Update();
+			system::TextRendererSystem::Update();
 
 			scripting::ScriptingManager::Update();
 

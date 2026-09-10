@@ -43,7 +43,9 @@
 #include "seri/texture/Skybox.h"
 #include "seri/texture/TextureBase.h"
 
+#include "seri/font/Font.h"
 #include "seri/font/FontManager.h"
+#include "seri/font/TextMesh.h"
 
 #include "seri/input/Input.h"
 #include "seri/input/InputManager.h"

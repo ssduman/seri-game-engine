@@ -1,6 +1,7 @@
 #include "Seripch.h"
 
 #include "seri/asset/AssetManager.h"
+#include "seri/font/Font.h"
 
 #include <yaml-cpp/yaml.h>
 
@@ -293,6 +294,14 @@ namespace seri::asset
 				{
 					assetMetadata.type = seri::asset::AssetType::texture;
 				}
+				else if (node.extension == kAssetFontTTFExtension)
+				{
+					assetMetadata.type = seri::asset::AssetType::font;
+				}
+				else if (node.extension == kAssetFontOTFExtension)
+				{
+					assetMetadata.type = seri::asset::AssetType::font;
+				}
 
 				node.type = assetMetadata.type;
 				_assetMetadataCache[existingId] = assetMetadata;
@@ -332,6 +341,25 @@ namespace seri::asset
 					texture->Init(seri::TextureDesc{}, metadata.source.string());
 					texture->id = metadata.id;
 					_assetCache[metadata.id] = texture;
+				}
+				return _assetCache[metadata.id];
+			};
+
+		auto GetFont = [&](const seri::asset::AssetMetadata& metadata) -> std::shared_ptr<AssetBase>
+			{
+				if (metadata.id == 0)
+				{
+					return nullptr;
+				}
+				if (_assetCache.find(metadata.id) == _assetCache.end())
+				{
+					std::shared_ptr<seri::font::Font> font = std::make_shared<seri::font::Font>();
+					if (!font->Load(metadata.source.string(), seri::font::FontDesc{}))
+					{
+						return nullptr;
+					}
+					font->id = metadata.id;
+					_assetCache[metadata.id] = font;
 				}
 				return _assetCache[metadata.id];
 			};
@@ -442,6 +470,11 @@ namespace seri::asset
 					case seri::asset::AssetType::mesh:
 						{
 							GetMesh(metadata);
+						}
+						break;
+					case seri::asset::AssetType::font:
+						{
+							GetFont(metadata);
 						}
 						break;
 					default:

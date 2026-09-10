@@ -2,12 +2,20 @@
 
 #include "seri/util/Util.h"
 #include "seri/util/YAMLUtil.h"
+#include "seri/font/TextMesh.h"
 
 #include <entt/entt.hpp>
 #include <yaml-cpp/yaml.h>
 
 #include <string>
 #include <vector>
+#include <memory>
+
+namespace seri
+{
+	class Mesh;
+	class Material;
+}
 
 namespace seri::component
 {
@@ -153,6 +161,38 @@ namespace seri::component
 
 		static PointLightComponent Deserialize(const YAML::Node& node);
 		static YAML::Node Serialize(const PointLightComponent& component);
+	};
+
+	struct TextComponent
+	{
+		static constexpr std::string_view compName = "TextComponent";
+
+		uint64_t fontAssetId{ 0 };
+		std::string text{ "New Text" };
+		float fontSize{ 1.0f };
+		float lineSpacing{ 1.0f };
+		glm::vec4 color{ 1.0f, 1.0f, 1.0f, 1.0f };
+		seri::font::TextAlignH alignH{ seri::font::TextAlignH::center };
+		seri::font::TextAlignV alignV{ seri::font::TextAlignV::middle };
+
+		struct BuiltState
+		{
+			uint64_t fontAssetId{ 0 };
+			std::string text{ "" };
+			float fontSize{ 0.0f };
+			float lineSpacing{ 0.0f };
+			seri::font::TextAlignH alignH{};
+			seri::font::TextAlignV alignV{};
+
+			bool operator==(const BuiltState& other) const = default;
+		};
+
+		std::shared_ptr<seri::Mesh> mesh{};
+		std::shared_ptr<seri::Material> material{};
+		BuiltState built{};
+
+		static TextComponent Deserialize(const YAML::Node& node);
+		static YAML::Node Serialize(const TextComponent& component);
 	};
 
 	struct ScriptComponent

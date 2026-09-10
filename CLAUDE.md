@@ -14,3 +14,4 @@ A 2D/3D OpenGL game engine written in C++20, featuring an ECS architecture, PBR 
 - Do not run any git command that changes git state, like add or commit or restore
 - Set PascalCase for classes, camelCase for methods and variables
 - Never edit anything under vcpkg_installed/ folder
+- Prefer functions to be inside a struct or class over free functions

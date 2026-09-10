@@ -24,6 +24,8 @@ namespace seri::editor
 				return IM_COL32(110, 170, 110, 255);
 			case seri::asset::AssetType::texture:
 				return IM_COL32(90, 140, 200, 255);
+			case seri::asset::AssetType::font:
+				return IM_COL32(200, 120, 150, 255);
 			default:
 				return IM_COL32(120, 120, 126, 255);
 		}

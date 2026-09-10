@@ -364,6 +364,59 @@ namespace seri::editor
 			}
 		}
 
+		if (auto* textComp = registry.try_get<seri::component::TextComponent>(entity))
+		{
+			ScopedChild scopedChild("##TextComponent", ImVec2(0, 0), childFlags);
+
+			ImGui::TextUnformatted("Text Component");
+			ImGui::Separator();
+
+			bool changed = false;
+			uint64_t selection = 0;
+
+			if (DrawAssetPicker("Font", textComp->fontAssetId, seri::asset::AssetType::font, selection))
+			{
+				textComp->fontAssetId = selection;
+				changed = true;
+			}
+
+			changed |= DrawTextArea("Text", textComp->text, 60.0f);
+			changed |= DrawFloat("Font Size", textComp->fontSize, 0.1f, 0.001f, 1000.0f);
+			changed |= DrawFloat("Line Spacing", textComp->lineSpacing, 0.1f, 0.01f, 10.0f);
+			changed |= DrawColorVec4("Color", textComp->color, 0.01f);
+
+			static const char* alignHNames[] = {
+				seri::font::TextAlignHToString(seri::font::TextAlignH::left),
+				seri::font::TextAlignHToString(seri::font::TextAlignH::center),
+				seri::font::TextAlignHToString(seri::font::TextAlignH::right),
+			};
+			static const char* alignVNames[] = {
+				seri::font::TextAlignVToString(seri::font::TextAlignV::top),
+				seri::font::TextAlignVToString(seri::font::TextAlignV::middle),
+				seri::font::TextAlignVToString(seri::font::TextAlignV::bottom),
+				seri::font::TextAlignVToString(seri::font::TextAlignV::baseline),
+			};
+
+			int alignH = static_cast<int>(textComp->alignH);
+			if (DrawCombo("Align H", alignH, alignHNames, IM_ARRAYSIZE(alignHNames)))
+			{
+				textComp->alignH = static_cast<seri::font::TextAlignH>(alignH);
+				changed = true;
+			}
+
+			int alignV = static_cast<int>(textComp->alignV);
+			if (DrawCombo("Align V", alignV, alignVNames, IM_ARRAYSIZE(alignVNames)))
+			{
+				textComp->alignV = static_cast<seri::font::TextAlignV>(alignV);
+				changed = true;
+			}
+
+			if (changed)
+			{
+				scene->SetAsDirty();
+			}
+		}
+
 		if (auto* scriptComp = registry.try_get<seri::component::ScriptComponent>(entity))
 		{
 			ScopedChild scopedChild("##ScriptComponent", ImVec2(0, 0), childFlags);
@@ -520,6 +573,11 @@ namespace seri::editor
 			case seri::asset::AssetType::shader:
 				{
 					DrawAssetShader(ctx);
+				}
+				break;
+			case seri::asset::AssetType::font:
+				{
+					DrawAssetFont(ctx);
 				}
 				break;
 			default:
@@ -867,6 +925,45 @@ namespace seri::editor
 		ShowEditorImage(asset, size);
 	}
 
+	void InspectorPanel::DrawAssetFont(GUIContext& ctx)
+	{
+		auto asset = seri::asset::AssetManager::GetAssetByID<seri::font::Font>(ctx.selectedAsset.id);
+		if (!asset)
+		{
+			ImGui::TextDisabled("font not loaded");
+			return;
+		}
+
+		ScopedChild scopedChild("##AssetFont", ImVec2(0, 0), ImGuiChildFlags_Borders | ImGuiChildFlags_AutoResizeY);
+
+		ImGui::TextUnformatted("Font");
+		ImGui::Separator();
+
+		const seri::font::FontMetrics& metrics = asset->GetMetrics();
+
+		DrawLabel("Family", asset->GetFamilyName().c_str(), true);
+		DrawLabel("Style", asset->GetStyleName().c_str(), true);
+		DrawLabel("Baked Size", std::to_string(asset->GetDesc().pixelSize).c_str(), true);
+		DrawLabel("Glyphs", std::to_string(asset->GetGlyphCount()).c_str(), true);
+		DrawLabel("Line Height", fmt::format("{:.2f}", metrics.lineHeight).c_str(), true);
+
+		auto atlas = asset->GetAtlas();
+		if (!atlas)
+		{
+			return;
+		}
+
+		DrawLabel("Atlas", fmt::format("{} x {}", atlas->GetWidth(), atlas->GetHeight()).c_str(), true);
+
+		float size = ImGui::GetContentRegionAvail().x;
+		if (size > 256.0f)
+		{
+			size = 256.0f;
+		}
+
+		ShowEditorImage(atlas, size, /*flip*/ false);
+	}
+
 	void InspectorPanel::DrawAssetMesh(GUIContext& ctx)
 	{
 		auto asset = seri::asset::AssetManager::GetAssetByID<seri::Model>(ctx.selectedAsset.id);
@@ -964,6 +1061,12 @@ namespace seri::editor
 			ImGui::TextUnformatted("Add Component");
 			ImGui::Separator();
 
+			if (ImGui::IsWindowAppearing())
+			{
+				search[0] = '\0';
+				ImGui::SetKeyboardFocusHere();
+			}
+
 			ImGui::InputTextWithHint("##Search", "Search...", search, IM_ARRAYSIZE(search));
 
 			ImGui::Spacing();
@@ -983,7 +1086,6 @@ namespace seri::editor
 				{
 					seri::scene::SceneManager::AddComponent(entity, info.name);
 					ImGui::CloseCurrentPopup();
-					search[0] = '\0';
 				}
 
 				ImGui::PopID();

@@ -188,6 +188,8 @@ namespace seri::asset
 		const char* kAssetTextureJPGExtension = "jpg";
 		const char* kAssetTextureJPEGExtension = "jpeg";
 		const char* kAssetTextureTGAExtension = "tga";
+		const char* kAssetFontTTFExtension = "ttf";
+		const char* kAssetFontOTFExtension = "otf";
 
 	protected:
 		friend struct seri::Singleton<AssetManager>;
