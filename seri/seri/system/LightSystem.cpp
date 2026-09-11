@@ -27,7 +27,7 @@ namespace seri::system
 
 			// light ubo
 			UniformBufferDirectionalLight& dirLightUBO = outUBO.dirLight;
-			dirLightUBO.direction = glm::vec4(GetForward(transform.rotation), 0.0f);
+			dirLightUBO.direction = glm::vec4(GetForward(transform.worldMatrix), 0.0f);
 			dirLightUBO.color = glm::vec4(light.color * light.intensity, 1.0f);
 
 			// shadow ubo
@@ -65,8 +65,8 @@ namespace seri::system
 
 			// light ubo
 			UniformBufferSpotLight& spotLight = outUBO.spotLights[outUBO.spotLightCount.x++];
-			spotLight.position = glm::vec4(transform.position, 0.0f);
-			spotLight.direction = glm::vec4(GetForward(transform.rotation), 0.0f);
+			spotLight.position = glm::vec4(GetPosition(transform.worldMatrix), 0.0f);
+			spotLight.direction = glm::vec4(GetForward(transform.worldMatrix), 0.0f);
 			spotLight.color = glm::vec4(light.color * light.intensity, 1.0f);
 			spotLight.params = glm::vec4(
 				std::cos(glm::radians(light.innerAngle)),
@@ -79,7 +79,7 @@ namespace seri::system
 			// shadow ubo
 			if (light.castShadow && shadowUBO.spotLightShadowCount.x < literals::kMaxSpotLightShadowCount)
 			{
-				glm::vec3 forward = GetForward(transform.rotation);
+				glm::vec3 forward = GetForward(transform.worldMatrix);
 				glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
 				if (glm::abs(glm::dot(forward, up)) > 0.999f)
 				{
@@ -90,7 +90,7 @@ namespace seri::system
 				const float farPlane = 100.0f;
 				float fov = glm::radians(light.outerAngle * 2.0f);
 
-				glm::mat4 lightView = glm::lookAt(transform.position, transform.position + forward, up);
+				glm::mat4 lightView = glm::lookAt(GetPosition(transform.worldMatrix), GetPosition(transform.worldMatrix) + forward, up);
 				glm::mat4 lightProj = glm::perspective(fov, 1.0f, nearPlane, farPlane);
 				glm::mat4 lightViewProj = lightProj * lightView;
 
@@ -114,7 +114,7 @@ namespace seri::system
 			auto& light = pointView.get<component::PointLightComponent>(entity);
 
 			UniformBufferPointLight& pointLightUBO = outUBO.pointLights[outUBO.pointLightCount.x++];
-			pointLightUBO.position = glm::vec4(transform.position, 1.0f);
+			pointLightUBO.position = glm::vec4(GetPosition(transform.worldMatrix), 1.0f);
 			pointLightUBO.color = glm::vec4(light.color * light.intensity, 1.0f);
 			pointLightUBO.params = glm::vec4(light.constant, light.linear, light.quadratic, 0.0f);
 		}
@@ -140,10 +140,10 @@ namespace seri::system
 		const int rayCount = 8;
 
 		glm::mat3 basis = GetBasis(transform->worldMatrix);
-		glm::vec3 position = glm::vec3{ transform->worldMatrix[3] };
+		glm::vec3 position = GetPosition(transform->worldMatrix);
 		glm::vec3 right = basis[0];
 		glm::vec3 up = basis[1];
-		glm::vec3 forward = -basis[2];
+		glm::vec3 forward = GetForward(transform->worldMatrix);
 		glm::vec4 color{ light->color, 1.0f };
 
 		debug::DebugDraw::DrawCircle(position, forward, radius, color);
@@ -169,9 +169,8 @@ namespace seri::system
 
 		const float range = 10.0f;
 
-		glm::mat3 basis = GetBasis(transform->worldMatrix);
-		glm::vec3 position = glm::vec3{ transform->worldMatrix[3] };
-		glm::vec3 forward = -basis[2];
+		glm::vec3 position = GetPosition(transform->worldMatrix);
+		glm::vec3 forward = GetForward(transform->worldMatrix);
 
 		debug::DebugDraw::DrawCone(position, forward, light->outerAngle, range, glm::vec4{ light->color, 1.0f });
 		debug::DebugDraw::DrawCone(position, forward, light->innerAngle, range, glm::vec4{ light->color, 0.35f });
@@ -188,7 +187,7 @@ namespace seri::system
 			return;
 		}
 
-		glm::vec3 position = glm::vec3{ transform->worldMatrix[3] };
+		glm::vec3 position = GetPosition(transform->worldMatrix);
 
 		debug::DebugDraw::DrawWireSphere(position, light->range, glm::vec4{ light->color, 1.0f });
 	}
@@ -203,21 +202,13 @@ namespace seri::system
 		return basis;
 	}
 
-	glm::vec3 LightSystem::GetForward(const glm::vec3& eulerDeg)
+	glm::vec3 LightSystem::GetForward(const glm::mat4& worldMatrix)
 	{
-		float pitch = glm::radians(eulerDeg.x);
-		float yaw = glm::radians(eulerDeg.y);
+		return -glm::normalize(glm::vec3{ worldMatrix[2] });
+	}
 
-		//glm::vec3 forward;
-		//forward.x = cos(yaw) * cos(pitch);
-		//forward.y = sin(pitch);
-		//forward.z = sin(yaw) * cos(pitch);
-
-		glm::vec3 forward;
-		forward.x = cos(pitch) * sin(yaw);
-		forward.y = sin(pitch);
-		forward.z = -cos(pitch) * cos(yaw);
-
-		return glm::normalize(forward);
+	glm::vec3 LightSystem::GetPosition(const glm::mat4& worldMatrix)
+	{
+		return glm::vec3{ worldMatrix[3] };
 	}
 }

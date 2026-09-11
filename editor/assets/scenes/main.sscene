@@ -14,7 +14,7 @@ Entities:
       TransformComponent:
         Position: [1, 0, 0]
         Rotation: [0, 90, 0]
-        Scale: [0.01, 0.01, 0.01]
+        Scale: [1, 1, 1]
       MeshComponent:
         MeshAssetID: 8933691566797930938
       MeshRendererComponent:
@@ -28,7 +28,7 @@ Entities:
         Name: Sun
       TransformComponent:
         Position: [0, 0, 0]
-        Rotation: [0, 0, 0]
+        Rotation: [-20, 0, 0]
         Scale: [1, 1, 1]
       DirectionalLightComponent:
         Intensity: 2.6
@@ -46,6 +46,7 @@ Entities:
         MeshAssetID: 17928092336128327075
         MaterialAssetIDs:
           - 5409632833911735546
+        CastShadow: true
       AnimatorComponent:
         Playing: true
         Loop: true
@@ -66,3 +67,18 @@ Entities:
         OrthoSize: 5
         NearPlane: 0.1
         FarPlane: 1000
+  - Entity:
+      IDComponent:
+        ID: 17946932770949669738
+        ParentID: 0
+        Name: Plane
+      TransformComponent:
+        Position: [0, 0, 0]
+        Rotation: [0, 0, 0]
+        Scale: [20, 1, 20]
+      MeshComponent:
+        MeshAssetID: 7727350781887956022
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 11063561003705071796
+        CastShadow: true

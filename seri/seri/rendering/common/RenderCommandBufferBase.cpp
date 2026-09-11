@@ -232,6 +232,16 @@ namespace seri
 						item.material->SetMat4(literals::kUniformModel, item.model);
 						item.material->SetMat4(literals::kUniformLightViewProjection, lightViewProj);
 						item.material->Apply();
+
+						if (!item.bones.empty())
+						{
+							auto shader = item.material->GetShader();
+							if (shader && shader->IsActiveForUsing())
+							{
+								shader->SetMat4Array(literals::kUniformBones, item.bones.data(), static_cast<uint32_t>(item.bones.size()));
+							}
+						}
+
 						Draw(item.draw, item.vao);
 					}
 

@@ -71,6 +71,8 @@ namespace seri::editor
 
 		auto entity = scene->GetEntityByID(ctx.selectedEntityId);
 
+		std::string_view removeComp{};
+
 		ImGuiChildFlags childFlags = ImGuiChildFlags_Borders | ImGuiChildFlags_AutoResizeY;
 
 		if (auto* idComp = registry.try_get<seri::component::IDComponent>(entity))
@@ -115,8 +117,10 @@ namespace seri::editor
 		{
 			ScopedChild scopedChild("##MeshComponent", ImVec2(0, 0), childFlags);
 
-			ImGui::TextUnformatted("Mesh Component");
-			ImGui::Separator();
+			if (DrawComponentHeader("Mesh Component"))
+			{
+				removeComp = seri::component::MeshComponent::kCompName;
+			}
 
 			bool changed = false;
 			uint64_t selection = 0;
@@ -134,8 +138,10 @@ namespace seri::editor
 		{
 			ScopedChild scopedChild("##MeshRendererComponent", ImVec2(0, 0), childFlags);
 
-			ImGui::TextUnformatted("Mesh Renderer Component");
-			ImGui::Separator();
+			if (DrawComponentHeader("Mesh Renderer Component"))
+			{
+				removeComp = seri::component::MeshRendererComponent::kCompName;
+			}
 
 			bool changed = false;
 			uint64_t selection = 0;
@@ -199,8 +205,10 @@ namespace seri::editor
 		{
 			ScopedChild scopedChild("##SkinnedMeshRendererComponent", ImVec2(0, 0), childFlags);
 
-			ImGui::TextUnformatted("Skinned Mesh Renderer Component");
-			ImGui::Separator();
+			if (DrawComponentHeader("Skinned Mesh Renderer Component"))
+			{
+				removeComp = seri::component::SkinnedMeshRendererComponent::kCompName;
+			}
 
 			bool changed = false;
 			uint64_t selection = 0;
@@ -212,6 +220,8 @@ namespace seri::editor
 			}
 
 			auto skinnedModel = seri::asset::AssetManager::GetAssetByID<seri::Model>(skinnedMeshRendererComp->meshAssetId);
+
+			changed |= DrawBool("Cast Shadow", skinnedMeshRendererComp->castShadow);
 
 			ImGui::TextUnformatted("Materials");
 
@@ -254,8 +264,10 @@ namespace seri::editor
 		{
 			ScopedChild scopedChild("##AnimatorComponent", ImVec2(0, 0), childFlags);
 
-			ImGui::TextUnformatted("Animator Component");
-			ImGui::Separator();
+			if (DrawComponentHeader("Animator Component"))
+			{
+				removeComp = seri::component::AnimatorComponent::kCompName;
+			}
 
 			bool changed = false;
 
@@ -275,8 +287,10 @@ namespace seri::editor
 		{
 			ScopedChild scopedChild("##CameraComponent", ImVec2(0, 0), childFlags);
 
-			ImGui::TextUnformatted("Camera Component");
-			ImGui::Separator();
+			if (DrawComponentHeader("Camera Component"))
+			{
+				removeComp = seri::component::CameraComponent::kCompName;
+			}
 
 			bool changed = false;
 
@@ -310,8 +324,10 @@ namespace seri::editor
 		{
 			ScopedChild scopedChild("##DirectionalLightComponent", ImVec2(0, 0), childFlags);
 
-			ImGui::TextUnformatted("Directional Light Component");
-			ImGui::Separator();
+			if (DrawComponentHeader("Directional Light Component"))
+			{
+				removeComp = seri::component::DirectionalLightComponent::kCompName;
+			}
 
 			bool changed = false;
 
@@ -333,8 +349,10 @@ namespace seri::editor
 		{
 			ScopedChild scopedChild("##SpotLightComponent", ImVec2(0, 0), childFlags);
 
-			ImGui::TextUnformatted("Spot Light Component");
-			ImGui::Separator();
+			if (DrawComponentHeader("Spot Light Component"))
+			{
+				removeComp = seri::component::SpotLightComponent::kCompName;
+			}
 
 			bool changed = false;
 
@@ -359,8 +377,10 @@ namespace seri::editor
 		{
 			ScopedChild scopedChild("##PointLightComponent", ImVec2(0, 0), childFlags);
 
-			ImGui::TextUnformatted("Point Light Component");
-			ImGui::Separator();
+			if (DrawComponentHeader("Point Light Component"))
+			{
+				removeComp = seri::component::PointLightComponent::kCompName;
+			}
 
 			bool changed = false;
 
@@ -383,8 +403,10 @@ namespace seri::editor
 		{
 			ScopedChild scopedChild("##TextComponent", ImVec2(0, 0), childFlags);
 
-			ImGui::TextUnformatted("Text Component");
-			ImGui::Separator();
+			if (DrawComponentHeader("Text Component"))
+			{
+				removeComp = seri::component::TextComponent::kCompName;
+			}
 
 			bool changed = false;
 			uint64_t selection = 0;
@@ -436,8 +458,10 @@ namespace seri::editor
 		{
 			ScopedChild scopedChild("##ScriptComponent", ImVec2(0, 0), childFlags);
 
-			ImGui::TextUnformatted("Script Component");
-			ImGui::Separator();
+			if (DrawComponentHeader("Script Component"))
+			{
+				removeComp = seri::component::ScriptComponent::kCompName;
+			}
 
 			bool changed = false;
 			bool rebuild = false;
@@ -557,6 +581,12 @@ namespace seri::editor
 			ImGui::OpenPopup("AddComponentPopup");
 		}
 		ShowComponentPickerPopup(ctx);
+
+		if (!removeComp.empty())
+		{
+			seri::scene::SceneManager::RemoveComponent(entity, removeComp);
+			scene->SetAsDirty();
+		}
 	}
 
 	void InspectorPanel::DrawAsset(GUIContext& ctx)
@@ -1064,6 +1094,32 @@ namespace seri::editor
 		return fmt::format("Element {}", slot);
 	}
 
+	bool InspectorPanel::DrawComponentHeader(const char* title)
+	{
+		bool remove = false;
+
+		ImGui::PushID(title);
+
+		ImGui::TextUnformatted(title);
+		ImGui::SameLine();
+
+		const char* removeStr = "X";
+
+		float buttonWidth = ImGui::CalcTextSize(removeStr).x + ImGui::GetStyle().FramePadding.x * 2.0f;
+		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + ImGui::GetContentRegionAvail().x - buttonWidth);
+
+		if (ImGui::SmallButton(removeStr))
+		{
+			remove = true;
+		}
+
+		ImGui::PopID();
+
+		ImGui::Separator();
+
+		return remove;
+	}
+
 	void InspectorPanel::ShowComponentPickerPopup(GUIContext& ctx)
 	{
 		static char search[128] = "";
@@ -1088,6 +1144,12 @@ namespace seri::editor
 
 			for (const auto& info : seri::scene::SceneManager::GetCompIO())
 			{
+				if (info.name == seri::component::IDComponent::kCompName ||
+					info.name == seri::component::TransformComponent::kCompName)
+				{
+					continue;
+				}
+
 				if (!Util::ContainsIgnoreCase(info.name, search))
 				{
 					continue;

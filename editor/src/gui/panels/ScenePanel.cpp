@@ -58,14 +58,13 @@ namespace seri::editor
 			ImVec2(1, 0)
 		);
 
-		if (seri::scene::SceneManager::GetState() != seri::scene::SceneState::edit)
+		if (seri::scene::SceneManager::GetState() == seri::scene::SceneState::edit)
 		{
-			return;
+			ShowGizmo(imageMin, imageSize);
+			ShowEntityGizmo(ctx, imageMin, imageSize);
+			ShowGizmoToolbar(imageMin);
 		}
 
-		ShowGizmo(imageMin, imageSize);
-		ShowEntityGizmo(ctx, imageMin, imageSize);
-		ShowGizmoToolbar(imageMin);
 		ControlMove(imageMin, imageMax);
 	}
 

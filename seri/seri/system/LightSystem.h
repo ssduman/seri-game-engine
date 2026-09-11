@@ -20,7 +20,9 @@ namespace seri::system
 		static void DrawPointLightGizmo(entt::entity entity);
 
 	private:
-		static glm::vec3 GetForward(const glm::vec3& eulerDeg);
+		static glm::vec3 GetForward(const glm::mat4& worldMatrix);
+
+		static glm::vec3 GetPosition(const glm::mat4& worldMatrix);
 
 		static glm::mat3 GetBasis(const glm::mat4& worldMatrix);
 

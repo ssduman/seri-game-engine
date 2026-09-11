@@ -14,10 +14,6 @@ namespace seri::editor
 	public:
 		SandboxLayer() : LayerBase("SandboxLayer")
 		{
-			if (runSystem)
-			{
-				InitSystem();
-			}
 			if (runBasic)
 			{
 				InitBasic();
@@ -32,10 +28,6 @@ namespace seri::editor
 
 		void OnUpdate() override
 		{
-			if (runSystem)
-			{
-				UpdateSystem();
-			}
 			if (runBasic)
 			{
 				UpdateBasic();
@@ -47,10 +39,6 @@ namespace seri::editor
 		}
 
 	private:
-		void InitSystem()
-		{
-		}
-
 		void InitBasic()
 		{
 			float mult = 0.4f;
@@ -288,27 +276,6 @@ namespace seri::editor
 			//udpSocketClient->Connect({ "127.0.0.1", 5200 });
 		}
 
-		void UpdateSystem()
-		{
-			std::shared_ptr<seri::Model> model = seri::asset::AssetManager::GetAssetByID<seri::Model>(8933691566797930938);
-			std::shared_ptr<seri::Material> material = seri::asset::AssetManager::GetAssetByID<seri::Material>(5128232576114054222);
-
-			if (!model || !material)
-			{
-				return;
-			}
-
-			seri::Graphic::DrawModel(
-				model,
-				material,
-				seri::Util::GetTRS(
-					{ 0.0f, 0.0f, 0.0f },
-					{ 0.0f, 0.0f, 0.0f },
-					{ 0.01f, 0.01f, 0.01f }
-				)
-			);
-		}
-
 		void UpdateBasic()
 		{
 			seri::RenderCommand renderCommand{};
@@ -374,7 +341,6 @@ namespace seri::editor
 			}
 		}
 
-		bool runSystem{ false };
 		bool runBasic{ false };
 		bool runSimple{ true };
 

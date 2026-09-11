@@ -3,7 +3,7 @@ IDInfo:
   Version: 0.1
 Model:
   MaterialCount: 1
-  ImportScale: 1
+  ImportScale: 0.01
   Meshes:
     - MeshIndex: 0
       MeshName: Cube.001

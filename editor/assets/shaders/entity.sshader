@@ -36,31 +36,18 @@ in vec2 sent_uv;
 in vec3 sent_normal;
 
 uniform vec4 u_camera_pos;
-uniform vec3 u_light_dir;
-uniform vec4 u_light_color;
 
 uniform vec4 u_color = vec4(1.0, 1.0, 1.0, 1.0);
 uniform sampler2D u_texture;
+uniform sampler2DShadow u_dir_light_shadow_map;
 
 out vec4 final_color;
 
 void main()
 {
-    vec3 light_dir_norm = normalize(-u_light_dir);
+    vec3 lighting = Phong_Dir_Light(u_dir_light_shadow_map, sent_pos.xyz, sent_normal, u_camera_pos.xyz);
 
-    float ambient_strength = 0.2;
-    vec3 ambient = ambient_strength * u_light_color.xyz;
-
-    float specular_strength = 0.5;
-    vec3 view_dir = normalize(u_camera_pos.xyz - sent_pos.xyz);
-    vec3 reflect_dir = reflect(-light_dir_norm, sent_normal);
-    float spec = pow(max(dot(view_dir, reflect_dir), 0.0), 32);
-    vec3 specular = specular_strength * spec * u_light_color.xyz;
-
-    float diffuse_strength = 0.9;
-    vec3 diffuse = diffuse_strength * max(dot(sent_normal, light_dir_norm), 0.0) * u_light_color.xyz;
-
-    final_color = texture(u_texture, sent_uv) * vec4(clamp(ambient + diffuse + specular, 0.0, 1.0), 1.0);
+    final_color = texture(u_texture, sent_uv) * vec4(lighting, 1.0);
 }
 
 #end_fs

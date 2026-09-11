@@ -21,7 +21,7 @@ namespace seri::component
 {
 	struct IDComponent
 	{
-		static constexpr std::string_view compName = "IDComponent";
+		static constexpr std::string_view kCompName = "IDComponent";
 
 		uint64_t id{ 0 };
 		uint64_t parentId{ 0 };
@@ -33,7 +33,7 @@ namespace seri::component
 
 	struct TransformComponent
 	{
-		static constexpr std::string_view compName = "TransformComponent";
+		static constexpr std::string_view kCompName = "TransformComponent";
 
 		glm::vec3 position{ 0.0f, 0.0f, 0.0f };
 		glm::vec3 rotation{ 0.0f, 0.0f, 0.0f };
@@ -48,7 +48,7 @@ namespace seri::component
 
 	struct SceneComponent
 	{
-		static constexpr std::string_view compName = "SceneComponent";
+		static constexpr std::string_view kCompName = "SceneComponent";
 
 		std::string version{ "0.0" };
 		bool isActive{ true };
@@ -59,7 +59,7 @@ namespace seri::component
 
 	struct MeshComponent
 	{
-		static constexpr std::string_view compName = "MeshComponent";
+		static constexpr std::string_view kCompName = "MeshComponent";
 
 		uint64_t meshAssetId{ 0 };
 
@@ -69,7 +69,7 @@ namespace seri::component
 
 	struct MeshRendererComponent
 	{
-		static constexpr std::string_view compName = "MeshRendererComponent";
+		static constexpr std::string_view kCompName = "MeshRendererComponent";
 
 		std::vector<uint64_t> materialAssetIds{};
 		bool castShadow = true;
@@ -80,10 +80,11 @@ namespace seri::component
 
 	struct SkinnedMeshRendererComponent
 	{
-		static constexpr std::string_view compName = "SkinnedMeshRendererComponent";
+		static constexpr std::string_view kCompName = "SkinnedMeshRendererComponent";
 
 		uint64_t meshAssetId{ 0 };
 		std::vector<uint64_t> materialAssetIds{};
+		bool castShadow = true;
 
 		static SkinnedMeshRendererComponent Deserialize(const YAML::Node& node);
 		static YAML::Node Serialize(const SkinnedMeshRendererComponent& component);
@@ -91,7 +92,7 @@ namespace seri::component
 
 	struct AnimatorComponent
 	{
-		static constexpr std::string_view compName = "AnimatorComponent";
+		static constexpr std::string_view kCompName = "AnimatorComponent";
 
 		bool playing{ true };
 		bool loop{ true };
@@ -105,7 +106,7 @@ namespace seri::component
 
 	struct CameraComponent
 	{
-		static constexpr std::string_view compName = "CameraComponent";
+		static constexpr std::string_view kCompName = "CameraComponent";
 
 		bool isMain{ true };
 		bool isOrtho{ false };
@@ -120,7 +121,7 @@ namespace seri::component
 
 	struct DirectionalLightComponent
 	{
-		static constexpr std::string_view compName = "DirectionalLightComponent";
+		static constexpr std::string_view kCompName = "DirectionalLightComponent";
 
 		float intensity = 1.0f;
 		glm::vec3 color{ 1.0f, 1.0f, 1.0f };
@@ -131,7 +132,7 @@ namespace seri::component
 
 	struct SpotLightComponent
 	{
-		static constexpr std::string_view compName = "SpotLightComponent";
+		static constexpr std::string_view kCompName = "SpotLightComponent";
 
 		float intensity = 10.0f;
 		float innerAngle = 20.0f;
@@ -149,7 +150,7 @@ namespace seri::component
 
 	struct PointLightComponent
 	{
-		static constexpr std::string_view compName = "PointLightComponent";
+		static constexpr std::string_view kCompName = "PointLightComponent";
 
 		float range = 10.0f;
 		float intensity = 10.0f;
@@ -165,7 +166,7 @@ namespace seri::component
 
 	struct TextComponent
 	{
-		static constexpr std::string_view compName = "TextComponent";
+		static constexpr std::string_view kCompName = "TextComponent";
 
 		uint64_t fontAssetId{ 0 };
 		std::string text{ "New Text" };
@@ -197,7 +198,7 @@ namespace seri::component
 
 	struct ScriptComponent
 	{
-		static constexpr std::string_view compName = "ScriptComponent";
+		static constexpr std::string_view kCompName = "ScriptComponent";
 
 		struct Entry
 		{

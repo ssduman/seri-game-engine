@@ -152,89 +152,77 @@ namespace seri::editor
 		{
 			if (ImGui::MenuItem("Empty Object"))
 			{
-				activeScene->AddEntityAsChild(seri::Random::UUID(), parentId, "Entity");
-
-				_pendingExpandEntityId = parentId;
+				AddEntity(activeScene, parentId, "Entity", {});
 			}
+
+			ImGui::Separator();
+
 			if (ImGui::MenuItem("Camera"))
 			{
-				uint64_t entityId = seri::Random::UUID();
-				activeScene->AddEntityAsChild(entityId, parentId, "Camera");
-
-				_pendingExpandEntityId = parentId;
-
-				entt::entity entity = activeScene->GetEntityByID(entityId);
-				seri::scene::SceneManager::AddComponent(entity, seri::component::CameraComponent::compName);
+				AddEntity(activeScene, parentId, "Camera", { seri::component::CameraComponent::kCompName });
 			}
-			if (ImGui::MenuItem("Plane"))
+
+			ImGui::Separator();
+
+			if (ImGui::MenuItem("Directional Light"))
 			{
-				uint64_t entityId = seri::Random::UUID();
-				activeScene->AddEntityAsChild(entityId, parentId, "Plane");
+				AddEntity(activeScene, parentId, "Directional Light", { seri::component::DirectionalLightComponent::kCompName });
+			}
+			if (ImGui::MenuItem("Spot Light"))
+			{
+				AddEntity(activeScene, parentId, "Spot Light", { seri::component::SpotLightComponent::kCompName });
+			}
+			if (ImGui::MenuItem("Point Light"))
+			{
+				AddEntity(activeScene, parentId, "Point Light", { seri::component::PointLightComponent::kCompName });
+			}
 
-				_pendingExpandEntityId = parentId;
+			ImGui::Separator();
 
-				entt::entity entity = activeScene->GetEntityByID(entityId);
-				auto& registry = seri::scene::SceneManager::GetRegistry();
+			if (ImGui::MenuItem("Mesh"))
+			{
+				AddEntity(activeScene, parentId, "Mesh", {
+					seri::component::MeshComponent::kCompName,
+					seri::component::MeshRendererComponent::kCompName,
+					});
+			}
+			if (ImGui::MenuItem("Skinned Mesh"))
+			{
+				AddEntity(activeScene, parentId, "Skinned Mesh", {
+					seri::component::SkinnedMeshRendererComponent::kCompName,
+					seri::component::AnimatorComponent::kCompName,
+					});
+			}
 
-				// TODO: use default assets instead of creating new ones every time and handle serialization
+			ImGui::Separator();
 
-				auto model = std::make_shared<seri::Model>();
-				model->id = seri::Random::UUID();
-				model->materialCount = 1;
-				model->meshes.push_back(std::move(seri::Mesh::plane_3d(128, 8.0f)));
-				model->Build();
-				seri::asset::AssetManager::AddAsset(model->id, model);
+			if (ImGui::MenuItem("Text"))
+			{
+				AddEntity(activeScene, parentId, "Text", { seri::component::TextComponent::kCompName });
+			}
 
-				const int comp = 4;
-				const int dimX = 256;
-				const int dimY = 256;
-				const int totalBytes = dimX * dimY * comp;
+			ImGui::Separator();
 
-				uint8_t* white = (uint8_t*)malloc(totalBytes);
-				uint8_t* normal = (uint8_t*)malloc(totalBytes);
-				uint8_t* arm = (uint8_t*)malloc(totalBytes);
-
-				for (int i = 0; i < totalBytes; i += comp)
-				{
-					white[i + 0] = 255;
-					white[i + 1] = 255;
-					white[i + 2] = 255;
-					white[i + 3] = 255;
-
-					normal[i + 0] = 128; // x = 0
-					normal[i + 1] = 128; // y = 0
-					normal[i + 2] = 255; // z = 1
-					normal[i + 3] = 255;
-
-					arm[i + 0] = 255; // AO = 1.0
-					arm[i + 1] = 128; // Roughness = 0.5
-					arm[i + 2] = 0;   // Metallic = 0.0
-					arm[i + 3] = 255;
-				}
-
-				auto diffTex = seri::TextureBase::Create();
-				diffTex->id = seri::Random::UUID();
-				diffTex->Init(seri::TextureDesc{}, white, dimX, dimY, comp);
-				auto normalTex = seri::TextureBase::Create();
-				normalTex->id = seri::Random::UUID();
-				normalTex->Init(seri::TextureDesc{}, normal, dimX, dimY, comp);
-				auto armTex = seri::TextureBase::Create();
-				armTex->id = seri::Random::UUID();
-				armTex->Init(seri::TextureDesc{}, arm, dimX, dimY, comp);
-
-				auto material = std::make_shared<seri::Material>();
-				material->id = seri::Random::UUID();
-				material->SetShader(seri::ShaderLibrary::Find("pbr"));
-				material->SetTexture(seri::literals::kUniformDiffTexture, diffTex);
-				material->SetTexture(seri::literals::kUniformNormalTexture, normalTex);
-				material->SetTexture(seri::literals::kUniformArmTexture, armTex);
-				seri::asset::AssetManager::AddAsset(material->id, material);
-
-				registry.emplace_or_replace<seri::component::MeshComponent>(entity, seri::component::MeshComponent{ model->id });
-				registry.emplace_or_replace<seri::component::MeshRendererComponent>(entity, seri::component::MeshRendererComponent{ { material->id } });
+			if (ImGui::MenuItem("Script"))
+			{
+				AddEntity(activeScene, parentId, "Script", { seri::component::ScriptComponent::kCompName });
 			}
 
 			ImGui::EndMenu();
+		}
+	}
+
+	void HierarchyPanel::AddEntity(const std::shared_ptr<seri::scene::Scene>& activeScene, uint64_t parentId, const char* name, std::initializer_list<std::string_view> compNames)
+	{
+		uint64_t entityId = seri::Random::UUID();
+		activeScene->AddEntityAsChild(entityId, parentId, name);
+
+		_pendingExpandEntityId = parentId;
+
+		entt::entity entity = activeScene->GetEntityByID(entityId);
+		for (std::string_view compName : compNames)
+		{
+			seri::scene::SceneManager::AddComponent(entity, compName);
 		}
 	}
 }

@@ -1,0 +1,38 @@
+#beg_vs
+
+#version 460 core
+
+layout(location = 0) in vec3 in_vertex;
+layout(location = 5) in ivec4 in_bone_ids;
+layout(location = 6) in vec4 in_weights;
+
+const int MAX_BONES = 200;
+
+uniform mat4 u_model;
+uniform mat4 u_light_view_projection;
+
+uniform mat4 u_bones[MAX_BONES];
+
+void main()
+{
+    mat4 bone_transform = 
+        u_bones[in_bone_ids[0]] * in_weights[0] +
+        u_bones[in_bone_ids[1]] * in_weights[1] +
+        u_bones[in_bone_ids[2]] * in_weights[2] +
+        u_bones[in_bone_ids[3]] * in_weights[3]
+    ;
+
+    gl_Position = u_light_view_projection * u_model * bone_transform * vec4(in_vertex, 1.0);
+}
+
+#end_vs
+
+#beg_fs
+
+#version 460 core
+
+void main()
+{
+}
+
+#end_fs

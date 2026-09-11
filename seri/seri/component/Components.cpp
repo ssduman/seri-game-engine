@@ -115,6 +115,11 @@ namespace seri::component
 			}
 		}
 
+		if (node["CastShadow"])
+		{
+			component.castShadow = YAMLUtil::GetType<bool>(node["CastShadow"]);
+		}
+
 		return component;
 	}
 	YAML::Node SkinnedMeshRendererComponent::Serialize(const SkinnedMeshRendererComponent& component)
@@ -128,6 +133,7 @@ namespace seri::component
 		YAML::Node node;
 		node["MeshAssetID"] = component.meshAssetId;
 		node["MaterialAssetIDs"] = materialsNode;
+		node["CastShadow"] = component.castShadow;
 		return node;
 	}
 

@@ -409,6 +409,9 @@ namespace seri::editor
 
 		const char* text = value ? value : "<none>";
 
+		ImGui::AlignTextToFramePadding();
+		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + ImGui::GetStyle().FramePadding.x);
+
 		if (isDisabled)
 		{
 			ImGui::TextDisabled("%s", text);

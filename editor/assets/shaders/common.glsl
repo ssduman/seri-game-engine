@@ -247,6 +247,33 @@ vec3 BRDF_PBR(vec3 N, vec3 V, vec3 L, vec3 radiance, vec3 albedo, float roughnes
     return (diffuse + specular) * radiance * NdotL;
 }
 
+vec3 Phong_Dir_Light(sampler2DShadow shadowMap, vec3 pos, vec3 N, vec3 cameraPos)
+{
+    float ambientStrength = 0.2;
+    float diffuseStrength = 0.9;
+    float specularStrength = 0.5;
+
+    vec3 ambient = vec3(ambientStrength);
+    vec3 diffuse = vec3(0.0);
+    vec3 specular = vec3(0.0);
+
+    if (u_dir_light_exist.x == 1)
+    {
+        vec3 L = normalize(-u_dir_light.direction.xyz);
+        vec3 radiance = u_dir_light.color.rgb;
+        float shadow = ShadowDir(shadowMap, pos, N, L);
+
+        vec3 V = normalize(cameraPos - pos);
+        vec3 R = reflect(-L, N);
+        float spec = pow(max(dot(V, R), 0.0), 32);
+
+        diffuse = diffuseStrength * max(dot(N, L), 0.0) * radiance * shadow;
+        specular = specularStrength * spec * radiance * shadow;
+    }
+
+    return clamp(ambient + diffuse + specular, 0.0, 1.0);
+}
+
 vec3 PBR_Dir_Light(vec3 pos, DirectionalLight dirLight, vec3 N, vec3 V, vec3 albedo, float roughness, float metallic)
 {
     vec3 L = normalize(-dirLight.direction.xyz);

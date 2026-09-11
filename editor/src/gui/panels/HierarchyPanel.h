@@ -14,6 +14,8 @@ namespace seri::editor
 
 		void ShowAddMenu(const std::shared_ptr<seri::scene::Scene>& activeScene, uint64_t parentId);
 
+		void AddEntity(const std::shared_ptr<seri::scene::Scene>& activeScene, uint64_t parentId, const char* name, std::initializer_list<std::string_view> compNames);
+
 		uint64_t _pendingDeleteEntityId{ 0 };
 		uint64_t _pendingExpandEntityId{ 0 };
 

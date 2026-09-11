@@ -7,6 +7,8 @@
 #include "seri/graphic/Model.h"
 #include "seri/graphic/Material.h"
 #include "seri/asset/AssetManager.h"
+#include "seri/shader/ShaderLibrary.h"
+#include "seri/rendering/render/RenderingManager.h"
 
 #include <entt/entt.hpp>
 
@@ -19,6 +21,13 @@ namespace seri::system
 	public:
 		static void Update()
 		{
+			static std::shared_ptr<Material> shadowMaterial = []()
+				{
+					auto mat = std::make_shared<Material>();
+					mat->SetShader(ShaderLibrary::Find("shadow_skinned"));
+					return mat;
+				}();
+
 			auto& registry = seri::scene::SceneManager::GetRegistry();
 
 			auto view = registry.view<
@@ -72,6 +81,26 @@ namespace seri::system
 					}
 
 					seri::Graphic::Draw(mesh, material, transform.worldMatrix);
+				}
+
+				if (renderer.castShadow)
+				{
+					for (const auto& mesh : model->meshes)
+					{
+						RenderItem shadowCmd{};
+						shadowCmd.type = PassType::shadow;
+						shadowCmd.name = "shadow_skinned";
+						shadowCmd.material = shadowMaterial;
+						shadowCmd.model = transform.worldMatrix * mesh->transformation;
+						shadowCmd.vao = mesh->GetVao();
+						
+						if (mesh->bonesForVertices.size() > 0)
+						{
+							mesh->FillBonePalette(shadowCmd.bones);
+						}
+						
+						seri::RenderingManager::Submit(std::move(shadowCmd));
+					}
 				}
 			}
 		}

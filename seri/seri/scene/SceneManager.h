@@ -66,7 +66,7 @@ namespace seri::scene
 		static seri::scene::ComponentIO MakeComponentIO()
 		{
 			return {
-				.name = T::compName,
+				.name = T::kCompName,
 				
 				.Has = [](entt::registry& registry, entt::entity entity)
 				{
@@ -90,7 +90,7 @@ namespace seri::scene
 				{
 					if (auto* comp = registry.try_get<T>(entity))
 					{
-						node[std::string(T::compName)] = T::Serialize(*comp);
+						node[std::string(T::kCompName)] = T::Serialize(*comp);
 					}
 				},
 
