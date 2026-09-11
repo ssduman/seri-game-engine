@@ -33,6 +33,11 @@ namespace seri::system
 				auto& transform = view.get<seri::component::TransformComponent>(entity);
 				auto& text = view.get<seri::component::TextComponent>(entity);
 
+				if (!transform.isActiveInHierarchy)
+				{
+					continue;
+				}
+
 				std::shared_ptr<seri::font::Font> font = seri::font::FontManager::GetFont(text.fontAssetId);
 				if (!font)
 				{

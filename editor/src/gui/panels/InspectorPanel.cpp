@@ -103,6 +103,7 @@ namespace seri::editor
 
 			bool changed = false;
 
+			changed |= DrawBool("Active", transformComp->isActive);
 			changed |= DrawVec3("Position", transformComp->position, 0.1f);
 			changed |= DrawVec3("Rotation", transformComp->rotation, 0.5f);
 			changed |= DrawVec3("Scale", transformComp->scale, 0.1f);
@@ -253,6 +254,56 @@ namespace seri::editor
 				skinnedMeshRendererComp->materialAssetIds.pop_back();
 				changed = true;
 			}
+
+			if (changed)
+			{
+				scene->SetAsDirty();
+			}
+		}
+
+		if (auto* spriteRendererComp = registry.try_get<seri::component::SpriteRendererComponent>(entity))
+		{
+			ScopedChild scopedChild("##SpriteRendererComponent", ImVec2(0, 0), childFlags);
+
+			if (DrawComponentHeader("Sprite Renderer Component"))
+			{
+				removeComp = seri::component::SpriteRendererComponent::kCompName;
+			}
+
+			bool changed = false;
+			uint64_t selection = 0;
+
+			if (DrawAssetPicker("Texture", spriteRendererComp->textureAssetId, seri::asset::AssetType::texture, selection))
+			{
+				spriteRendererComp->textureAssetId = selection;
+				changed = true;
+			}
+
+			changed |= DrawColorVec4("Color", spriteRendererComp->color, 0.01f);
+			changed |= DrawBool("Flip X", spriteRendererComp->flipX);
+			changed |= DrawBool("Flip Y", spriteRendererComp->flipY);
+
+			if (changed)
+			{
+				scene->SetAsDirty();
+			}
+		}
+
+		if (auto* audioComp = registry.try_get<seri::component::AudioComponent>(entity))
+		{
+			ScopedChild scopedChild("##AudioComponent", ImVec2(0, 0), childFlags);
+
+			if (DrawComponentHeader("Audio Component"))
+			{
+				removeComp = seri::component::AudioComponent::kCompName;
+			}
+
+			bool changed = false;
+
+			changed |= DrawTextInput("Sound", audioComp->soundPath);
+			changed |= DrawFloat("Volume", audioComp->volume, 0.01f, 0.0f, 1.0f);
+			changed |= DrawBool("Loop", audioComp->loop);
+			changed |= DrawBool("Play On Start", audioComp->playOnStart);
 
 			if (changed)
 			{

@@ -18,12 +18,12 @@ namespace seri::system
 
 			for (const auto& child : tree.children)
 			{
-				UpdateRecursive(child, glm::mat4{ 1.0f });
+				UpdateRecursive(child, glm::mat4{ 1.0f }, true);
 			}
 		}
 
 	private:
-		static void UpdateRecursive(const seri::scene::SceneTreeNode& node, const glm::mat4& parentWorld)
+		static void UpdateRecursive(const seri::scene::SceneTreeNode& node, const glm::mat4& parentWorld, bool parentActive)
 		{
 			auto& registry = seri::scene::SceneManager::GetRegistry();
 
@@ -33,10 +33,11 @@ namespace seri::system
 
 			transformComp.localMatrix = Util::GetTRS(transformComp.position, transformComp.rotation, transformComp.scale);
 			transformComp.worldMatrix = parentWorld * transformComp.localMatrix;
+			transformComp.isActiveInHierarchy = parentActive && transformComp.isActive;
 
 			for (const auto& child : node.children)
 			{
-				UpdateRecursive(child, transformComp.worldMatrix);
+				UpdateRecursive(child, transformComp.worldMatrix, transformComp.isActiveInHierarchy);
 			}
 		}
 	};

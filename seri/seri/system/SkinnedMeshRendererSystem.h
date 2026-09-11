@@ -40,6 +40,11 @@ namespace seri::system
 				auto& transform = view.get<seri::component::TransformComponent>(entity);
 				auto& renderer = view.get<seri::component::SkinnedMeshRendererComponent>(entity);
 
+				if (!transform.isActiveInHierarchy)
+				{
+					continue;
+				}
+
 				if (renderer.meshAssetId == 0)
 				{
 					continue;

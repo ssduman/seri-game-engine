@@ -27,6 +27,12 @@ namespace seri::component
 		component.position = YAMLUtil::Vec3FromYAML(node["Position"]);
 		component.rotation = YAMLUtil::Vec3FromYAML(node["Rotation"]);
 		component.scale = YAMLUtil::Vec3FromYAML(node["Scale"]);
+
+		if (node["IsActive"])
+		{
+			component.isActive = YAMLUtil::GetType<bool>(node["IsActive"]);
+		}
+
 		return component;
 	}
 	YAML::Node TransformComponent::Serialize(const TransformComponent& component)
@@ -35,6 +41,7 @@ namespace seri::component
 		node["Position"] = YAMLUtil::Vec3ToYAML(component.position);
 		node["Rotation"] = YAMLUtil::Vec3ToYAML(component.rotation);
 		node["Scale"] = YAMLUtil::Vec3ToYAML(component.scale);
+		node["IsActive"] = component.isActive;
 		return node;
 	}
 
@@ -134,6 +141,25 @@ namespace seri::component
 		node["MeshAssetID"] = component.meshAssetId;
 		node["MaterialAssetIDs"] = materialsNode;
 		node["CastShadow"] = component.castShadow;
+		return node;
+	}
+
+	SpriteRendererComponent SpriteRendererComponent::Deserialize(const YAML::Node& node)
+	{
+		SpriteRendererComponent component{};
+		component.textureAssetId = YAMLUtil::GetType<uint64_t>(node["TextureAssetID"]);
+		component.color = YAMLUtil::Vec4FromYAML(node["Color"]);
+		component.flipX = YAMLUtil::GetType<bool>(node["FlipX"]);
+		component.flipY = YAMLUtil::GetType<bool>(node["FlipY"]);
+		return component;
+	}
+	YAML::Node SpriteRendererComponent::Serialize(const SpriteRendererComponent& component)
+	{
+		YAML::Node node;
+		node["TextureAssetID"] = component.textureAssetId;
+		node["Color"] = YAMLUtil::Vec4ToYAML(component.color);
+		node["FlipX"] = component.flipX;
+		node["FlipY"] = component.flipY;
 		return node;
 	}
 
@@ -252,6 +278,25 @@ namespace seri::component
 		node["Color"] = YAMLUtil::Vec4ToYAML(component.color);
 		node["AlignH"] = static_cast<int>(component.alignH);
 		node["AlignV"] = static_cast<int>(component.alignV);
+		return node;
+	}
+
+	AudioComponent AudioComponent::Deserialize(const YAML::Node& node)
+	{
+		AudioComponent component{};
+		component.soundPath = YAMLUtil::GetType<std::string>(node["SoundPath"]);
+		component.volume = YAMLUtil::GetType<float>(node["Volume"]);
+		component.loop = YAMLUtil::GetType<bool>(node["Loop"]);
+		component.playOnStart = YAMLUtil::GetType<bool>(node["PlayOnStart"]);
+		return component;
+	}
+	YAML::Node AudioComponent::Serialize(const AudioComponent& component)
+	{
+		YAML::Node node;
+		node["SoundPath"] = component.soundPath;
+		node["Volume"] = component.volume;
+		node["Loop"] = component.loop;
+		node["PlayOnStart"] = component.playOnStart;
 		return node;
 	}
 

@@ -19,6 +19,8 @@
 #include "seri/system/CameraSystem.h"
 #include "seri/system/TransformSystem.h"
 #include "seri/system/MeshRendererSystem.h"
+#include "seri/system/AudioSystem.h"
+#include "seri/system/SpriteRendererSystem.h"
 #include "seri/system/TextRendererSystem.h"
 #include "seri/system/AnimatorSystem.h"
 #include "seri/system/SkinnedMeshRendererSystem.h"
@@ -163,6 +165,8 @@ namespace seri
 
 			system::MeshRendererSystem::Update();
 			system::SkinnedMeshRendererSystem::Update();
+			system::AudioSystem::Update();
+			system::SpriteRendererSystem::Update();
 			system::TextRendererSystem::Update();
 
 			scripting::ScriptingManager::Update();

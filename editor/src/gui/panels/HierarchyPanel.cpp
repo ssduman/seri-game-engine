@@ -196,6 +196,10 @@ namespace seri::editor
 
 			ImGui::Separator();
 
+			if (ImGui::MenuItem("Sprite"))
+			{
+				AddEntity(activeScene, parentId, "Sprite", { seri::component::SpriteRendererComponent::kCompName });
+			}
 			if (ImGui::MenuItem("Text"))
 			{
 				AddEntity(activeScene, parentId, "Text", { seri::component::TextComponent::kCompName });
@@ -203,6 +207,10 @@ namespace seri::editor
 
 			ImGui::Separator();
 
+			if (ImGui::MenuItem("Audio"))
+			{
+				AddEntity(activeScene, parentId, "Audio", { seri::component::AudioComponent::kCompName });
+			}
 			if (ImGui::MenuItem("Script"))
 			{
 				AddEntity(activeScene, parentId, "Script", { seri::component::ScriptComponent::kCompName });

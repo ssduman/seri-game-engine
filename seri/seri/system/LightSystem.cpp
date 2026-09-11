@@ -23,6 +23,11 @@ namespace seri::system
 			auto& transform = dirView.get<component::TransformComponent>(entity);
 			auto& light = dirView.get<component::DirectionalLightComponent>(entity);
 
+			if (!transform.isActiveInHierarchy)
+			{
+				continue;
+			}
+
 			outUBO.dirLightExist.x = 1;
 
 			// light ubo
@@ -62,6 +67,11 @@ namespace seri::system
 
 			auto& transform = spotView.get<component::TransformComponent>(entity);
 			auto& light = spotView.get<component::SpotLightComponent>(entity);
+
+			if (!transform.isActiveInHierarchy)
+			{
+				continue;
+			}
 
 			// light ubo
 			UniformBufferSpotLight& spotLight = outUBO.spotLights[outUBO.spotLightCount.x++];
@@ -112,6 +122,11 @@ namespace seri::system
 
 			auto& transform = pointView.get<component::TransformComponent>(entity);
 			auto& light = pointView.get<component::PointLightComponent>(entity);
+
+			if (!transform.isActiveInHierarchy)
+			{
+				continue;
+			}
 
 			UniformBufferPointLight& pointLightUBO = outUBO.pointLights[outUBO.pointLightCount.x++];
 			pointLightUBO.position = glm::vec4(GetPosition(transform.worldMatrix), 1.0f);

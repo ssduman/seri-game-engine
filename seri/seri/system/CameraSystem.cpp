@@ -60,6 +60,11 @@ namespace seri::system
 		auto view = registry.view<component::TransformComponent, component::CameraComponent>();
 		for (auto entity : view)
 		{
+			if (!view.get<component::TransformComponent>(entity).isActiveInHierarchy)
+			{
+				continue;
+			}
+
 			if (view.get<component::CameraComponent>(entity).isMain)
 			{
 				return entity;

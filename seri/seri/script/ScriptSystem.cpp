@@ -162,6 +162,12 @@ namespace seri::script
 				RebuildInstances(registry, entity, scriptComponent);
 			}
 
+			auto* transform = registry.try_get<component::TransformComponent>(entity);
+			if (transform != nullptr && !transform->isActiveInHierarchy)
+			{
+				continue;
+			}
+
 			auto it = _instances.find(entity);
 			if (it == _instances.end())
 			{
@@ -230,6 +236,12 @@ namespace seri::script
 		for (entt::entity entity : view)
 		{
 			auto& scriptComponent = view.get<component::ScriptComponent>(entity);
+
+			auto* transform = registry.try_get<component::TransformComponent>(entity);
+			if (transform != nullptr && !transform->isActiveInHierarchy)
+			{
+				continue;
+			}
 
 			auto it = _instances.find(entity);
 			if (it == _instances.end())

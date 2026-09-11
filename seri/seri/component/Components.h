@@ -38,9 +38,11 @@ namespace seri::component
 		glm::vec3 position{ 0.0f, 0.0f, 0.0f };
 		glm::vec3 rotation{ 0.0f, 0.0f, 0.0f };
 		glm::vec3 scale{ 1.0f, 1.0f, 1.0f };
+		bool isActive{ true };
 
 		glm::mat4 localMatrix{ 1.0f };
 		glm::mat4 worldMatrix{ 1.0f };
+		bool isActiveInHierarchy{ true };
 
 		static TransformComponent Deserialize(const YAML::Node& node);
 		static YAML::Node Serialize(const TransformComponent& component);
@@ -88,6 +90,31 @@ namespace seri::component
 
 		static SkinnedMeshRendererComponent Deserialize(const YAML::Node& node);
 		static YAML::Node Serialize(const SkinnedMeshRendererComponent& component);
+	};
+
+	struct SpriteRendererComponent
+	{
+		static constexpr std::string_view kCompName = "SpriteRendererComponent";
+
+		uint64_t textureAssetId{ 0 };
+		glm::vec4 color{ 1.0f, 1.0f, 1.0f, 1.0f };
+		bool flipX{ false };
+		bool flipY{ false };
+
+		struct BuiltState
+		{
+			bool flipX{ false };
+			bool flipY{ false };
+
+			bool operator==(const BuiltState& other) const = default;
+		};
+
+		std::shared_ptr<seri::Mesh> mesh{};
+		std::shared_ptr<seri::Material> material{};
+		BuiltState built{};
+
+		static SpriteRendererComponent Deserialize(const YAML::Node& node);
+		static YAML::Node Serialize(const SpriteRendererComponent& component);
 	};
 
 	struct AnimatorComponent
@@ -194,6 +221,23 @@ namespace seri::component
 
 		static TextComponent Deserialize(const YAML::Node& node);
 		static YAML::Node Serialize(const TextComponent& component);
+	};
+
+	struct AudioComponent
+	{
+		static constexpr std::string_view kCompName = "AudioComponent";
+
+		std::string soundPath{ "" };
+		float volume{ 1.0f };
+		bool loop{ false };
+		bool playOnStart{ true };
+
+		uint64_t handle{ 0 };
+		std::string builtPath{ "" };
+		bool started{ false };
+
+		static AudioComponent Deserialize(const YAML::Node& node);
+		static YAML::Node Serialize(const AudioComponent& component);
 	};
 
 	struct ScriptComponent

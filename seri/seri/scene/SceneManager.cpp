@@ -19,12 +19,14 @@ namespace seri::scene
 		RegisterComponent<seri::component::MeshComponent>();
 		RegisterComponent<seri::component::MeshRendererComponent>();
 		RegisterComponent<seri::component::SkinnedMeshRendererComponent>();
+		RegisterComponent<seri::component::SpriteRendererComponent>();
 		RegisterComponent<seri::component::AnimatorComponent>();
 		RegisterComponent<seri::component::CameraComponent>();
 		RegisterComponent<seri::component::DirectionalLightComponent>();
 		RegisterComponent<seri::component::SpotLightComponent>();
 		RegisterComponent<seri::component::PointLightComponent>();
 		RegisterComponent<seri::component::TextComponent>();
+		RegisterComponent<seri::component::AudioComponent>();
 		RegisterComponent<seri::component::ScriptComponent>();
 
 		SceneManager::GetInstance()._activeScene = std::make_shared<Scene>();

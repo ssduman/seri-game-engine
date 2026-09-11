@@ -43,6 +43,11 @@ namespace seri::system
 				auto& mesh = view.get<seri::component::MeshComponent>(entity);
 				auto& renderer = view.get<seri::component::MeshRendererComponent>(entity);
 
+				if (!transform.isActiveInHierarchy)
+				{
+					continue;
+				}
+
 				if (mesh.meshAssetId == 0)
 				{
 					continue;

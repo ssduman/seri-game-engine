@@ -15,6 +15,7 @@ Entities:
         Position: [1, 0, 0]
         Rotation: [0, 90, 0]
         Scale: [1, 1, 1]
+        IsActive: true
       MeshComponent:
         MeshAssetID: 8933691566797930938
       MeshRendererComponent:
@@ -30,6 +31,7 @@ Entities:
         Position: [0, 0, 0]
         Rotation: [-20, 0, 0]
         Scale: [1, 1, 1]
+        IsActive: true
       DirectionalLightComponent:
         Intensity: 2.6
         Color: [1, 1, 1]
@@ -42,6 +44,7 @@ Entities:
         Position: [-1, 0, 0]
         Rotation: [0, 0, 0]
         Scale: [1, 1, 1]
+        IsActive: true
       SkinnedMeshRendererComponent:
         MeshAssetID: 17928092336128327075
         MaterialAssetIDs:
@@ -60,6 +63,7 @@ Entities:
         Position: [0, 2, 3]
         Rotation: [-20, 0, 0]
         Scale: [1, 1, 1]
+        IsActive: true
       CameraComponent:
         IsMain: true
         IsOrtho: false
@@ -76,9 +80,10 @@ Entities:
         Position: [0, 0, 0]
         Rotation: [0, 0, 0]
         Scale: [20, 1, 20]
+        IsActive: true
       MeshComponent:
         MeshAssetID: 7727350781887956022
       MeshRendererComponent:
         MaterialAssetIDs:
-          - 11063561003705071796
+          - 13456060419817265592
         CastShadow: true
