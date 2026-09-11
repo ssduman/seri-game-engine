@@ -26,6 +26,10 @@ namespace seri::debug
 		static void DrawSphere(const glm::vec3& center, float radius, const glm::vec4& color, int segments = 24, float duration = -1.0f);
 		static void DrawRay(const glm::vec3& origin, const glm::vec3& dir, float length, const glm::vec4& color, float duration = -1.0f);
 		static void DrawFrustum(const glm::mat4& viewProj, const glm::vec4& color, float duration = -1.0f);
+		static void DrawCircle(const glm::vec3& center, const glm::vec3& normal, float radius, const glm::vec4& color, int segments = 24, float duration = -1.0f);
+		static void DrawWireSphere(const glm::vec3& center, float radius, const glm::vec4& color, int segments = 24, float duration = -1.0f);
+		static void DrawCone(const glm::vec3& apex, const glm::vec3& direction, float halfAngle, float range, const glm::vec4& color, int segments = 24, float duration = -1.0f);
+		static void DrawArrow(const glm::vec3& beg, const glm::vec3& end, const glm::vec4& color, float headSize = 0.2f, float duration = -1.0f);
 
 	private:
 		struct DebugVertex
@@ -48,6 +52,8 @@ namespace seri::debug
 		static inline std::shared_ptr<seri::VertexArrayBase> _vertexArray;
 
 		static inline const uint64_t kMaxDrawCount = 1 << 12;
+
+		static void BuildBasis(const glm::vec3& axis, glm::vec3& right, glm::vec3& up);
 
 	};
 }

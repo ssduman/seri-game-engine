@@ -277,7 +277,7 @@ namespace seri::editor
 			materialInstanced->SetShader(seri::ShaderLibrary::Find("entity_instanced"));
 			materialInstanced->SetTexture("u_texture", texture0);
 
-			for (unsigned int i = 0; i < instanceCount; i++)
+			for (int i = 0; i < instanceCount; i++)
 			{
 				instancedTRSs.push_back(seri::Util::GetTRS({ 1.0f + i % 20, i / 20, -1.0f }, { 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f }));
 			}

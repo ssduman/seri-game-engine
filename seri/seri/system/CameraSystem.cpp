@@ -34,7 +34,7 @@ namespace seri::system
 		runtimeCamera->Update();
 	}
 
-	void CameraSystem::DrawFrustum(entt::entity entity)
+	void CameraSystem::DrawFrustumGizmo(entt::entity entity)
 	{
 		auto& registry = scene::SceneManager::GetRegistry();
 

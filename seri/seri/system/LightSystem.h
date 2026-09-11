@@ -13,8 +13,16 @@ namespace seri::system
 	public:
 		static void Update();
 
+		static void DrawDirectionalLightGizmo(entt::entity entity);
+
+		static void DrawSpotLightGizmo(entt::entity entity);
+
+		static void DrawPointLightGizmo(entt::entity entity);
+
 	private:
 		static glm::vec3 GetForward(const glm::vec3& eulerDeg);
+
+		static glm::mat3 GetBasis(const glm::mat4& worldMatrix);
 
 	};
 }

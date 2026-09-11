@@ -1,6 +1,8 @@
 #include "Seripch.h"
 #include "LightSystem.h"
 
+#include "seri/draw/DebugDraw.h"
+
 namespace seri::system
 {
 	void LightSystem::Update()
@@ -119,6 +121,86 @@ namespace seri::system
 
 		RenderingManager::GetLightUBO()->SetData(&outUBO, sizeof(UniformBufferLight));
 		RenderingManager::GetShadowUBO()->SetData(&shadowUBO, sizeof(UniformBufferShadow));
+	}
+
+	void LightSystem::DrawDirectionalLightGizmo(entt::entity entity)
+	{
+		auto& registry = scene::SceneManager::GetRegistry();
+
+		auto* transform = registry.try_get<component::TransformComponent>(entity);
+		auto* light = registry.try_get<component::DirectionalLightComponent>(entity);
+		if (transform == nullptr || light == nullptr)
+		{
+			return;
+		}
+
+		const float radius = 0.25f;
+		const float length = 1.5f;
+		const float headSize = 0.2f;
+		const int rayCount = 8;
+
+		glm::mat3 basis = GetBasis(transform->worldMatrix);
+		glm::vec3 position = glm::vec3{ transform->worldMatrix[3] };
+		glm::vec3 right = basis[0];
+		glm::vec3 up = basis[1];
+		glm::vec3 forward = -basis[2];
+		glm::vec4 color{ light->color, 1.0f };
+
+		debug::DebugDraw::DrawCircle(position, forward, radius, color);
+
+		for (int i = 0; i < rayCount; ++i)
+		{
+			float angle = i * 2.0f * glm::pi<float>() / rayCount;
+			glm::vec3 offset = (right * std::cos(angle) + up * std::sin(angle)) * radius;
+			debug::DebugDraw::DrawArrow(position + offset, position + offset + forward * length, color, headSize);
+		}
+	}
+
+	void LightSystem::DrawSpotLightGizmo(entt::entity entity)
+	{
+		auto& registry = scene::SceneManager::GetRegistry();
+
+		auto* transform = registry.try_get<component::TransformComponent>(entity);
+		auto* light = registry.try_get<component::SpotLightComponent>(entity);
+		if (transform == nullptr || light == nullptr)
+		{
+			return;
+		}
+
+		const float range = 10.0f;
+
+		glm::mat3 basis = GetBasis(transform->worldMatrix);
+		glm::vec3 position = glm::vec3{ transform->worldMatrix[3] };
+		glm::vec3 forward = -basis[2];
+
+		debug::DebugDraw::DrawCone(position, forward, light->outerAngle, range, glm::vec4{ light->color, 1.0f });
+		debug::DebugDraw::DrawCone(position, forward, light->innerAngle, range, glm::vec4{ light->color, 0.35f });
+	}
+
+	void LightSystem::DrawPointLightGizmo(entt::entity entity)
+	{
+		auto& registry = scene::SceneManager::GetRegistry();
+
+		auto* transform = registry.try_get<component::TransformComponent>(entity);
+		auto* light = registry.try_get<component::PointLightComponent>(entity);
+		if (transform == nullptr || light == nullptr)
+		{
+			return;
+		}
+
+		glm::vec3 position = glm::vec3{ transform->worldMatrix[3] };
+
+		debug::DebugDraw::DrawWireSphere(position, light->range, glm::vec4{ light->color, 1.0f });
+	}
+
+	glm::mat3 LightSystem::GetBasis(const glm::mat4& worldMatrix)
+	{
+		glm::mat3 basis{ worldMatrix };
+		basis[0] = glm::normalize(basis[0]);
+		basis[1] = glm::normalize(basis[1]);
+		basis[2] = glm::normalize(basis[2]);
+
+		return basis;
 	}
 
 	glm::vec3 LightSystem::GetForward(const glm::vec3& eulerDeg)

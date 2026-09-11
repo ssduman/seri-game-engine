@@ -302,7 +302,7 @@ namespace seri::editor
 
 			if (seri::scene::SceneManager::GetState() == seri::scene::SceneState::edit)
 			{
-				seri::system::CameraSystem::DrawFrustum(entity);
+				seri::system::CameraSystem::DrawFrustumGizmo(entity);
 			}
 		}
 
@@ -321,6 +321,11 @@ namespace seri::editor
 			if (changed)
 			{
 				scene->SetAsDirty();
+			}
+
+			if (seri::scene::SceneManager::GetState() == seri::scene::SceneState::edit)
+			{
+				seri::system::LightSystem::DrawDirectionalLightGizmo(entity);
 			}
 		}
 
@@ -343,6 +348,11 @@ namespace seri::editor
 			{
 				scene->SetAsDirty();
 			}
+
+			if (seri::scene::SceneManager::GetState() == seri::scene::SceneState::edit)
+			{
+				seri::system::LightSystem::DrawSpotLightGizmo(entity);
+			}
 		}
 
 		if (auto* pointLightComp = registry.try_get<seri::component::PointLightComponent>(entity))
@@ -361,6 +371,11 @@ namespace seri::editor
 			if (changed)
 			{
 				scene->SetAsDirty();
+			}
+
+			if (seri::scene::SceneManager::GetState() == seri::scene::SceneState::edit)
+			{
+				seri::system::LightSystem::DrawPointLightGizmo(entity);
 			}
 		}
 

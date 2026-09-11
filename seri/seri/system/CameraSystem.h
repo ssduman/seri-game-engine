@@ -12,7 +12,7 @@ namespace seri::system
 	public:
 		static void Update();
 
-		static void DrawFrustum(entt::entity entity);
+		static void DrawFrustumGizmo(entt::entity entity);
 
 	private:
 		static entt::entity FindMainCameraEntity();

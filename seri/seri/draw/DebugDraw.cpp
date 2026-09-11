@@ -196,4 +196,75 @@ namespace seri::debug
 		Line(frustumCorners[3], frustumCorners[7], color, duration);
 	}
 
+	void DebugDraw::DrawCircle(const glm::vec3& center, const glm::vec3& normal, float radius, const glm::vec4& color, int segments, float duration)
+	{
+		glm::vec3 axis = glm::normalize(normal);
+		glm::vec3 right;
+		glm::vec3 up;
+		BuildBasis(axis, right, up);
+
+		glm::vec3 prev = center + right * radius;
+		for (int i = 1; i <= segments; ++i)
+		{
+			float angle = i * 2.0f * glm::pi<float>() / segments;
+			glm::vec3 next = center + (right * std::cos(angle) + up * std::sin(angle)) * radius;
+			Line(prev, next, color, duration);
+			prev = next;
+		}
+	}
+
+	void DebugDraw::DrawWireSphere(const glm::vec3& center, float radius, const glm::vec4& color, int segments, float duration)
+	{
+		DrawCircle(center, glm::vec3{ 1.0f, 0.0f, 0.0f }, radius, color, segments, duration);
+		DrawCircle(center, glm::vec3{ 0.0f, 1.0f, 0.0f }, radius, color, segments, duration);
+		DrawCircle(center, glm::vec3{ 0.0f, 0.0f, 1.0f }, radius, color, segments, duration);
+	}
+
+	void DebugDraw::DrawCone(const glm::vec3& apex, const glm::vec3& direction, float halfAngle, float range, const glm::vec4& color, int segments, float duration)
+	{
+		glm::vec3 forward = glm::normalize(direction);
+		glm::vec3 right;
+		glm::vec3 up;
+		BuildBasis(forward, right, up);
+
+		float radius = std::tan(glm::radians(glm::clamp(halfAngle, 0.0f, 89.0f))) * range;
+		glm::vec3 center = apex + forward * range;
+
+		DrawCircle(center, forward, radius, color, segments, duration);
+
+		Line(apex, center + right * radius, color, duration);
+		Line(apex, center - right * radius, color, duration);
+		Line(apex, center + up * radius, color, duration);
+		Line(apex, center - up * radius, color, duration);
+	}
+
+	void DebugDraw::DrawArrow(const glm::vec3& beg, const glm::vec3& end, const glm::vec4& color, float headSize, float duration)
+	{
+		Line(beg, end, color, duration);
+
+		glm::vec3 delta = end - beg;
+		if (glm::length(delta) < glm::epsilon<float>())
+		{
+			return;
+		}
+
+		glm::vec3 forward = glm::normalize(delta);
+		glm::vec3 right;
+		glm::vec3 up;
+		BuildBasis(forward, right, up);
+
+		glm::vec3 base = end - forward * headSize;
+		Line(end, base + right * headSize * 0.5f, color, duration);
+		Line(end, base - right * headSize * 0.5f, color, duration);
+		Line(end, base + up * headSize * 0.5f, color, duration);
+		Line(end, base - up * headSize * 0.5f, color, duration);
+	}
+
+	void DebugDraw::BuildBasis(const glm::vec3& axis, glm::vec3& right, glm::vec3& up)
+	{
+		glm::vec3 reference = std::abs(axis.y) > 0.999f ? glm::vec3{ 1.0f, 0.0f, 0.0f } : glm::vec3{ 0.0f, 1.0f, 0.0f };
+		right = glm::normalize(glm::cross(reference, axis));
+		up = glm::cross(axis, right);
+	}
+
 }
