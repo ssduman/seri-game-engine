@@ -1,0 +1,11 @@
+IDInfo:
+  ID: 7727350781887956022
+  Version: 0.1
+Model:
+  MaterialCount: 1
+  ImportScale: 1
+  Meshes:
+    - MeshIndex: 0
+      MeshName: plane
+      MaterialName: DefaultMaterial
+      MaterialIndex: 0

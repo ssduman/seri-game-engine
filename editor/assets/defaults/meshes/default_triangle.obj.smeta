@@ -1,0 +1,11 @@
+IDInfo:
+  ID: 6877135254382123599
+  Version: 0.1
+Model:
+  MaterialCount: 1
+  ImportScale: 1
+  Meshes:
+    - MeshIndex: 0
+      MeshName: triangle
+      MaterialName: DefaultMaterial
+      MaterialIndex: 0

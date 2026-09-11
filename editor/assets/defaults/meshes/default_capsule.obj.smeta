@@ -1,0 +1,11 @@
+IDInfo:
+  ID: 12455205723240658977
+  Version: 0.1
+Model:
+  MaterialCount: 1
+  ImportScale: 1
+  Meshes:
+    - MeshIndex: 0
+      MeshName: capsule
+      MaterialName: DefaultMaterial
+      MaterialIndex: 0

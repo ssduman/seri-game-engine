@@ -1,0 +1,11 @@
+IDInfo:
+  ID: 12579119115058728191
+  Version: 0.1
+Model:
+  MaterialCount: 1
+  ImportScale: 1
+  Meshes:
+    - MeshIndex: 0
+      MeshName: cylinder
+      MaterialName: DefaultMaterial
+      MaterialIndex: 0

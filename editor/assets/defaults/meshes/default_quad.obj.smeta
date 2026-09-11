@@ -1,0 +1,11 @@
+IDInfo:
+  ID: 14401075147269997067
+  Version: 0.1
+Model:
+  MaterialCount: 1
+  ImportScale: 1
+  Meshes:
+    - MeshIndex: 0
+      MeshName: quad
+      MaterialName: DefaultMaterial
+      MaterialIndex: 0

@@ -1,0 +1,11 @@
+IDInfo:
+  ID: 17574420532888226573
+  Version: 0.1
+Model:
+  MaterialCount: 1
+  ImportScale: 1
+  Meshes:
+    - MeshIndex: 0
+      MeshName: cone
+      MaterialName: DefaultMaterial
+      MaterialIndex: 0

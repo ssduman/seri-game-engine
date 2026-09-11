@@ -1,0 +1,11 @@
+IDInfo:
+  ID: 9078063403449755195
+  Version: 0.1
+Model:
+  MaterialCount: 1
+  ImportScale: 1
+  Meshes:
+    - MeshIndex: 0
+      MeshName: sphere
+      MaterialName: DefaultMaterial
+      MaterialIndex: 0

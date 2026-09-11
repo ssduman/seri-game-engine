@@ -423,3 +423,6 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# Asset files
+!editor/assets/**/*.obj
