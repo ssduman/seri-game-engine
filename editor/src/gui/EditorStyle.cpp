@@ -1,3 +1,5 @@
+#include "Editorpch.h"
+
 #include "gui/EditorStyle.h"
 
 namespace seri::editor

@@ -4,6 +4,9 @@ project "Editor"
   cppdialect "C++20"
   staticruntime "Off"
 
+  pchheader "Editorpch.h"
+  pchsource "src/core/Editorpch.cpp"
+
   targetdir("%{wks.location}/bin/" .. outputdir .. "/%{prj.name}")
   objdir("%{wks.location}/bin/int/" .. outputdir .. "/%{prj.name}")
 
@@ -24,10 +27,15 @@ project "Editor"
 
   includedirs {
     "src",
+    "src/core",
     "%{IncludeDir.glad}",
   }
 
   uses { "Seri" }
+
+  postbuildcommands {
+    'xcopy /Q /E /Y /I /D "' .. path.translate(_MAIN_SCRIPT_DIR .. "/editor/assets") .. '" "%{cfg.targetdir}/assets"',
+  }
 
   links {
     "opengl32.lib",
@@ -46,6 +54,7 @@ project "Editor"
     defines { "DEBUG" }
     runtime "Debug"
     symbols "On"
+    editandcontinue "Off"
     libdirs {
       "%{LibDir.vcpkg_debug}",
     }

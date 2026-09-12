@@ -1,3 +1,5 @@
+#include "Editorpch.h"
+
 #include "RunnerEditor.h"
 
 int main(int argc, char* argv[])

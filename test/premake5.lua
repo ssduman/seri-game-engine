@@ -21,6 +21,7 @@ project "Test"
     defines { "DEBUG" }
     runtime "Debug"
     symbols "On"
+    editandcontinue "Off"
 
   filter { "configurations:Release" }
     defines { "NDEBUG" }

@@ -1,3 +1,5 @@
+#include "Editorpch.h"
+
 #include "gui/EditorGUI.h"
 #include "gui/EditorStyle.h"
 

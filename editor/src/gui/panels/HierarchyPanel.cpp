@@ -1,3 +1,5 @@
+#include "Editorpch.h"
+
 #include "gui/panels/HierarchyPanel.h"
 
 namespace seri::editor

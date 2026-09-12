@@ -1,3 +1,5 @@
+#include "Editorpch.h"
+
 #include "gui/panels/ProjectPanel.h"
 #include "gui/EditorWidgets.h"
 

@@ -56,6 +56,7 @@ project "Seri"
     defines { "DEBUG" }
     runtime "Debug"
     symbols "On"
+    editandcontinue "Off"
 
   filter { "configurations:Release" }
     defines { "NDEBUG" }
@@ -95,7 +96,7 @@ project "Seri"
         "fmtd",
       }
       postbuildcommands {
-        '{COPYDIR} "%{BinDir.vcpkg_debug}" "%{cfg.targetdir}"',
+        'xcopy /Q /Y /I /D "' .. path.translate(BinDir.vcpkg_debug .. "/*.dll") .. '" "%{cfg.targetdir}/"',
       }
 
     filter { "configurations:Release" }
@@ -109,5 +110,5 @@ project "Seri"
         "fmt",
       }
       postbuildcommands {
-        '{COPYDIR} "%{BinDir.vcpkg}" "%{cfg.targetdir}"',
+        'xcopy /Q /Y /I /D "' .. path.translate(BinDir.vcpkg .. "/*.dll") .. '" "%{cfg.targetdir}/"',
       }
