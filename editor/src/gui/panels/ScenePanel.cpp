@@ -265,6 +265,13 @@ namespace seri::editor
 			return;
 		}
 
+		auto activeScene = seri::scene::SceneManager::GetActiveScene();
+
+		if (seri::system::UISystem::IsScreenSpace(activeScene->GetEntityByID(ctx.selectedEntityId)))
+		{
+			return;
+		}
+
 		ImGuizmo::MODE mode = ImGuizmo::WORLD;
 		switch (_gizmoSpace)
 		{

@@ -274,6 +274,8 @@ namespace seri
 
 		glm::mat4 model{ 1.0f };
 		std::vector<glm::mat4> bones{};
+
+		int sortOrder{ 0 };
 	};
 
 	struct RenderPass

@@ -3,6 +3,9 @@
 #include "seri/rendering/common/RenderCommandBufferBase.h"
 #include "seri/rendering/render/RenderingManager.h"
 
+#include <algorithm>
+#include <vector>
+
 namespace seri
 {
 	void RenderCommandBufferBase::Init()
@@ -77,9 +80,15 @@ namespace seri
 		passGameTransparent.desc.rt = gameRT;
 		passGameTransparent.desc.camera = runtimeCamera;
 
+		RenderPass passGameUI;
+		passGameUI.desc.type = PassType::ui;
+		passGameUI.desc.rt = gameRT;
+		passGameUI.desc.camera = uiCamera;
+
 		_frameGraph.AddPass(passGameSkybox);
 		_frameGraph.AddPass(passGameOpaque);
 		_frameGraph.AddPass(passGameTransparent);
+		_frameGraph.AddPass(passGameUI);
 	}
 
 	void RenderCommandBufferBase::End()
@@ -320,8 +329,26 @@ namespace seri
 				}
 			}
 
-			for (const RenderItem& cmd : pass.items)
+			std::vector<const RenderItem*> items;
+			items.reserve(pass.items.size());
+			for (const RenderItem& item : pass.items)
 			{
+				items.push_back(&item);
+			}
+
+			if (pass.desc.type == PassType::ui)
+			{
+				std::stable_sort(items.begin(), items.end(),
+					[](const RenderItem* a, const RenderItem* b)
+					{
+						return a->sortOrder < b->sortOrder;
+					});
+			}
+
+			for (const RenderItem* item : items)
+			{
+				const RenderItem& cmd = *item;
+
 				SetState(cmd.state);
 
 				if (pass.desc.type == PassType::skybox)

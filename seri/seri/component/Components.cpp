@@ -144,6 +144,42 @@ namespace seri::component
 		return node;
 	}
 
+	CanvasComponent CanvasComponent::Deserialize(const YAML::Node& node)
+	{
+		CanvasComponent component{};
+		component.mode = static_cast<CanvasRenderMode>(YAMLUtil::GetType<int>(node["Mode"]));
+		component.sortOrder = YAMLUtil::GetType<int>(node["SortOrder"]);
+		return component;
+	}
+	YAML::Node CanvasComponent::Serialize(const CanvasComponent& component)
+	{
+		YAML::Node node;
+		node["Mode"] = static_cast<int>(component.mode);
+		node["SortOrder"] = component.sortOrder;
+		return node;
+	}
+
+	RectComponent RectComponent::Deserialize(const YAML::Node& node)
+	{
+		RectComponent component{};
+		component.anchorMin = YAMLUtil::Vec2FromYAML(node["AnchorMin"]);
+		component.anchorMax = YAMLUtil::Vec2FromYAML(node["AnchorMax"]);
+		component.pivot = YAMLUtil::Vec2FromYAML(node["Pivot"]);
+		component.anchoredPosition = YAMLUtil::Vec2FromYAML(node["AnchoredPosition"]);
+		component.sizeDelta = YAMLUtil::Vec2FromYAML(node["SizeDelta"]);
+		return component;
+	}
+	YAML::Node RectComponent::Serialize(const RectComponent& component)
+	{
+		YAML::Node node;
+		node["AnchorMin"] = YAMLUtil::Vec2ToYAML(component.anchorMin);
+		node["AnchorMax"] = YAMLUtil::Vec2ToYAML(component.anchorMax);
+		node["Pivot"] = YAMLUtil::Vec2ToYAML(component.pivot);
+		node["AnchoredPosition"] = YAMLUtil::Vec2ToYAML(component.anchoredPosition);
+		node["SizeDelta"] = YAMLUtil::Vec2ToYAML(component.sizeDelta);
+		return node;
+	}
+
 	SpriteRendererComponent SpriteRendererComponent::Deserialize(const YAML::Node& node)
 	{
 		SpriteRendererComponent component{};

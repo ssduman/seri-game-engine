@@ -19,23 +19,35 @@ namespace seri::debug
 
 		_vertexArray = seri::VertexArrayBase::Create();
 		_vertexArray->AddVertexBuffer(_vertexBuffer);
+
+		_vertexBufferUI = seri::VertexBufferBase::Create(nullptr, kMaxDrawCount * sizeof(DebugVertex), BufferUsage::dynamic_draw);
+		_vertexBufferUI->AddElements({
+				{ seri::LayoutLocation::loc_0, seri::ShaderDataType::float3_type },
+				{ seri::LayoutLocation::loc_1, seri::ShaderDataType::float4_type },
+			});
+
+		_vertexArrayUI = seri::VertexArrayBase::Create();
+		_vertexArrayUI->AddVertexBuffer(_vertexBufferUI);
 	}
 
 	void DebugDraw::EndFrame()
 	{
 		float deltaTime = seri::TimeWrapper::GetDeltaTime();
 
-		for (auto it = _lines.begin(); it != _lines.end();)
+		for (auto* lines : { &_lines, &_linesUI })
 		{
-			it->duration -= deltaTime;
+			for (auto it = lines->begin(); it != lines->end();)
+			{
+				it->duration -= deltaTime;
 
-			if (it->duration <= 0.0f)
-			{
-				it = _lines.erase(it);
-			}
-			else
-			{
-				++it;
+				if (it->duration <= 0.0f)
+				{
+					it = lines->erase(it);
+				}
+				else
+				{
+					++it;
+				}
 			}
 		}
 	}
@@ -71,6 +83,52 @@ namespace seri::debug
 		renderItem.model = seri::Util::GetIdentityMatrix();
 
 		seri::RenderingManager::Submit(std::move(renderItem));
+	}
+
+	void DebugDraw::RenderUI(const std::shared_ptr<seri::CameraBase>& camera)
+	{
+		if (_linesUI.empty() || !camera)
+		{
+			return;
+		}
+
+		std::vector<DebugVertex> vertices;
+		vertices.reserve(_linesUI.size() * 2);
+		for (auto& line : _linesUI)
+		{
+			vertices.push_back(line.beg);
+			vertices.push_back(line.end);
+		}
+
+		_vertexBufferUI->SetData(vertices.data(), vertices.size() * sizeof(DebugVertex));
+
+		_material->SetMat4(literals::kUniformViewProjection, camera->GetViewProjection());
+
+		seri::RenderItem renderItem{};
+		renderItem.type = seri::PassType::ui;
+		renderItem.name = "debug_line_ui";
+		renderItem.material = _material;
+		renderItem.vao = _vertexArrayUI;
+		renderItem.state.depthTestEnabled = false;
+		renderItem.draw.mode = seri::DrawMode::arrays;
+		renderItem.draw.topology = seri::Topology::line;
+		renderItem.draw.count = vertices.size();
+		renderItem.model = seri::Util::GetIdentityMatrix();
+		renderItem.sortOrder = kUIGizmoSortOrder;
+
+		seri::RenderingManager::Submit(std::move(renderItem));
+	}
+
+	void DebugDraw::LineUI(const glm::vec3& beg, const glm::vec3& end, const Color& color, float duration)
+	{
+		DebugLine line;
+		line.beg.position = beg;
+		line.beg.color = color.GetColorRGBA();
+		line.end.position = end;
+		line.end.color = color.GetColorRGBA();
+		line.duration = duration;
+
+		_linesUI.push_back(line);
 	}
 
 	void DebugDraw::Line(const glm::vec3& beg, const glm::vec3& end, const Color& color, float duration)

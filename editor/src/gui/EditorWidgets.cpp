@@ -255,6 +255,42 @@ namespace seri::editor
 		return changed;
 	}
 
+	bool DrawVec2(const char* label, glm::vec2& v, float speed)
+	{
+		bool changed = false;
+
+		ImGui::PushID(label);
+
+		ImGui::Columns(2, nullptr, false);
+		ImGui::SetColumnWidth(0, 90.0f);
+
+		ImGui::AlignTextToFramePadding();
+		ImGui::TextUnformatted(label);
+		ImGui::NextColumn();
+
+		float width = ImGui::CalcItemWidth();
+		float spacing = ImGui::GetStyle().ItemSpacing.x;
+		float itemWidth = (width - spacing) / 2.0f;
+
+		for (int i = 0; i < 2; ++i)
+		{
+			ImGui::PushID(i);
+			ImGui::SetNextItemWidth(itemWidth);
+			changed |= ImGui::DragFloat("##v", &v[i], speed);
+			ImGui::PopID();
+
+			if (i < 1)
+			{
+				ImGui::SameLine();
+			}
+		}
+
+		ImGui::Columns(1);
+		ImGui::PopID();
+
+		return changed;
+	}
+
 	bool DrawVec3(const char* label, glm::vec3& v, float speed)
 	{
 		bool changed = false;

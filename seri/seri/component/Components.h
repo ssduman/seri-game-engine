@@ -92,6 +92,52 @@ namespace seri::component
 		static YAML::Node Serialize(const SkinnedMeshRendererComponent& component);
 	};
 
+	enum class CanvasRenderMode
+	{
+		screen_space = 0,
+		world_space = 1,
+	};
+
+	inline const char* CanvasRenderModeToString(CanvasRenderMode mode)
+	{
+		switch (mode)
+		{
+			case CanvasRenderMode::screen_space: return "screen space";
+			case CanvasRenderMode::world_space: return "world space";
+			default: return "unknown";
+		}
+	}
+
+	struct CanvasComponent
+	{
+		static constexpr std::string_view kCompName = "CanvasComponent";
+
+		CanvasRenderMode mode{ CanvasRenderMode::screen_space };
+		int sortOrder{ 0 };
+
+		static CanvasComponent Deserialize(const YAML::Node& node);
+		static YAML::Node Serialize(const CanvasComponent& component);
+	};
+
+	struct RectComponent
+	{
+		static constexpr std::string_view kCompName = "RectComponent";
+
+		glm::vec2 anchorMin{ 0.5f, 0.5f };
+		glm::vec2 anchorMax{ 0.5f, 0.5f };
+		glm::vec2 pivot{ 0.5f, 0.5f };
+		glm::vec2 anchoredPosition{ 0.0f, 0.0f };
+		glm::vec2 sizeDelta{ 100.0f, 100.0f };
+
+		glm::vec2 resolvedSize{ 0.0f, 0.0f };
+		glm::vec2 resolvedAnchorMinPos{ 0.0f, 0.0f };
+		glm::vec2 resolvedAnchorMaxPos{ 0.0f, 0.0f };
+		glm::mat4 resolvedParentFrame{ 1.0f };
+
+		static RectComponent Deserialize(const YAML::Node& node);
+		static YAML::Node Serialize(const RectComponent& component);
+	};
+
 	struct SpriteRendererComponent
 	{
 		static constexpr std::string_view kCompName = "SpriteRendererComponent";
@@ -105,6 +151,8 @@ namespace seri::component
 		{
 			bool flipX{ false };
 			bool flipY{ false };
+			glm::vec2 size{ 0.0f, 0.0f };
+			glm::vec2 pivot{ 0.0f, 0.0f };
 
 			bool operator==(const BuiltState& other) const = default;
 		};

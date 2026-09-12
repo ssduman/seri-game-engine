@@ -55,7 +55,7 @@ namespace seri
 		}
 	}
 
-	void Graphic::Draw(const std::shared_ptr<Mesh>& mesh, const std::shared_ptr<Material>& material, const glm::mat4& trs, PassType passType)
+	void Graphic::Draw(const std::shared_ptr<Mesh>& mesh, const std::shared_ptr<Material>& material, const glm::mat4& trs, PassType passType, int sortOrder)
 	{
 		material->SetFloat4(literals::kUniformColor, glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f });
 
@@ -65,6 +65,12 @@ namespace seri
 		cmd.material = material;
 		cmd.model = trs * mesh->transformation;
 		cmd.vao = mesh->GetVao();
+		cmd.sortOrder = sortOrder;
+
+		if (passType == PassType::ui)
+		{
+			cmd.state.depthTestEnabled = false;
+		}
 
 		if (mesh->bonesForVertices.size() > 0)
 		{

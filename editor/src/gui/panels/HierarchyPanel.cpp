@@ -196,13 +196,31 @@ namespace seri::editor
 
 			ImGui::Separator();
 
+			if (ImGui::MenuItem("Canvas"))
+			{
+				AddEntity(activeScene, parentId, "Canvas", {
+					seri::component::RectComponent::kCompName,
+					seri::component::CanvasComponent::kCompName,
+					});
+			}
+			if (ImGui::MenuItem("Image"))
+			{
+				AddEntity(activeScene, parentId, "Image", {
+					seri::component::RectComponent::kCompName,
+					seri::component::SpriteRendererComponent::kCompName,
+					});
+			}
 			if (ImGui::MenuItem("Sprite"))
 			{
-				AddEntity(activeScene, parentId, "Sprite", { seri::component::SpriteRendererComponent::kCompName });
+				AddEntity(activeScene, parentId, "Sprite", {
+					seri::component::SpriteRendererComponent::kCompName,
+					});
 			}
 			if (ImGui::MenuItem("Text"))
 			{
-				AddEntity(activeScene, parentId, "Text", { seri::component::TextComponent::kCompName });
+				AddEntity(activeScene, parentId, "Text", {
+					seri::component::TextComponent::kCompName,
+					});
 			}
 
 			ImGui::Separator();

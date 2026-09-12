@@ -20,6 +20,7 @@
 #include "seri/system/TransformSystem.h"
 #include "seri/system/MeshRendererSystem.h"
 #include "seri/system/AudioSystem.h"
+#include "seri/system/UISystem.h"
 #include "seri/system/SpriteRendererSystem.h"
 #include "seri/system/TextRendererSystem.h"
 #include "seri/system/AnimatorSystem.h"
@@ -90,6 +91,7 @@ namespace seri
 			cameraPropertiesUI.height = static_cast<float>(RenderingManager::GetEditorRT()->GetHeight());
 			cameraPropertiesUI.isOrtho = true;
 			cameraPropertiesUI.aspect = RenderingManager::GetEditorRT()->GetAspectRatio();
+			cameraPropertiesUI.position = { 0.0f, 0.0f, 10.0f };
 			auto cameraUI = std::make_shared<EditorCamera>(cameraPropertiesUI);
 			cameraUI->Init();
 
@@ -155,6 +157,7 @@ namespace seri
 			}
 
 			system::TransformSystem::Update();
+			system::UISystem::Update();
 			system::CameraSystem::Update();
 			system::LightSystem::Update();
 
@@ -172,6 +175,7 @@ namespace seri
 			scripting::ScriptingManager::Update();
 
 			debug::DebugDraw::Render(Graphic::GetActiveCamera());
+			debug::DebugDraw::RenderUI(Graphic::GetCameraUI());
 			debug::DebugDraw::EndFrame();
 		}
 

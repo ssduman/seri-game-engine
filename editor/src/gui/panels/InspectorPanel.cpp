@@ -261,6 +261,67 @@ namespace seri::editor
 			}
 		}
 
+		if (auto* canvasComp = registry.try_get<seri::component::CanvasComponent>(entity))
+		{
+			ScopedChild scopedChild("##CanvasComponent", ImVec2(0, 0), childFlags);
+
+			if (DrawComponentHeader("Canvas Component"))
+			{
+				removeComp = seri::component::CanvasComponent::kCompName;
+			}
+
+			bool changed = false;
+
+			static const char* modeNames[] = {
+				seri::component::CanvasRenderModeToString(seri::component::CanvasRenderMode::screen_space),
+				seri::component::CanvasRenderModeToString(seri::component::CanvasRenderMode::world_space),
+			};
+
+			int mode = static_cast<int>(canvasComp->mode);
+			if (DrawCombo("Mode", mode, modeNames, IM_ARRAYSIZE(modeNames)))
+			{
+				canvasComp->mode = static_cast<seri::component::CanvasRenderMode>(mode);
+				changed = true;
+			}
+
+			changed |= DrawInt("Sort Order", canvasComp->sortOrder, 1, -1000, 1000);
+
+			if (changed)
+			{
+				scene->SetAsDirty();
+			}
+		}
+
+		if (auto* rectComp = registry.try_get<seri::component::RectComponent>(entity))
+		{
+			ScopedChild scopedChild("##RectComponent", ImVec2(0, 0), childFlags);
+
+			if (DrawComponentHeader("Rect Component"))
+			{
+				removeComp = seri::component::RectComponent::kCompName;
+			}
+
+			bool changed = false;
+
+			changed |= DrawVec2("Anchor Min", rectComp->anchorMin, 0.01f);
+			changed |= DrawVec2("Anchor Max", rectComp->anchorMax, 0.01f);
+			changed |= DrawVec2("Pivot", rectComp->pivot, 0.01f);
+			changed |= DrawVec2("Position", rectComp->anchoredPosition, 1.0f);
+			changed |= DrawVec2("Size Delta", rectComp->sizeDelta, 1.0f);
+
+			DrawLabel("Size", fmt::format("{:.0f} x {:.0f}", rectComp->resolvedSize.x, rectComp->resolvedSize.y).c_str(), true);
+
+			if (changed)
+			{
+				scene->SetAsDirty();
+			}
+
+			if (seri::scene::SceneManager::GetState() == seri::scene::SceneState::edit)
+			{
+				seri::system::UISystem::DrawRectGizmo(entity);
+			}
+		}
+
 		if (auto* spriteRendererComp = registry.try_get<seri::component::SpriteRendererComponent>(entity))
 		{
 			ScopedChild scopedChild("##SpriteRendererComponent", ImVec2(0, 0), childFlags);

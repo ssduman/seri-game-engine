@@ -325,10 +325,10 @@ namespace seri::editor
 
 					if (fontMesh->GetVao())
 					{
-						auto editorRT = seri::RenderingManager::GetEditorRT();
+						glm::vec2 uiSize = seri::system::UISystem::GetScreenSize();
 						glm::vec3 textPos{
-							-static_cast<float>(editorRT->GetWidth()) / 2.0f + 20.0f,
-							-static_cast<float>(editorRT->GetHeight()) / 2.0f + 20.0f,
+							-uiSize.x / 2.0f + 20.0f,
+							-uiSize.y / 2.0f + 20.0f,
 							0.0f
 						};
 

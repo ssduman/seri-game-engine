@@ -18,6 +18,8 @@ namespace seri::editor
 
 	bool DrawFloat(const char* label, float& value, float speed = 0.1f, float min = 0.0f, float max = 0.0f, const char* format = "%.3f");
 
+	bool DrawVec2(const char* label, glm::vec2& v, float speed);
+
 	bool DrawVec3(const char* label, glm::vec3& v, float speed);
 
 	bool DrawColorVec3(const char* label, glm::vec3& color, float speed);

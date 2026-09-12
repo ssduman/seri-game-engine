@@ -19,6 +19,8 @@ namespace seri::scene
 		RegisterComponent<seri::component::MeshComponent>();
 		RegisterComponent<seri::component::MeshRendererComponent>();
 		RegisterComponent<seri::component::SkinnedMeshRendererComponent>();
+		RegisterComponent<seri::component::CanvasComponent>();
+		RegisterComponent<seri::component::RectComponent>();
 		RegisterComponent<seri::component::SpriteRendererComponent>();
 		RegisterComponent<seri::component::AnimatorComponent>();
 		RegisterComponent<seri::component::CameraComponent>();

@@ -32,7 +32,7 @@ namespace seri
 		static std::shared_ptr<CameraBase> GetActiveCamera();
 
 		static void DrawModel(const std::shared_ptr<Model>& model, const std::shared_ptr<Material>& material, const glm::mat4& trs);
-		static void Draw(const std::shared_ptr<Mesh>& mesh, const std::shared_ptr<Material>& material, const glm::mat4& trs, PassType passType = PassType::opaque);
+		static void Draw(const std::shared_ptr<Mesh>& mesh, const std::shared_ptr<Material>& material, const glm::mat4& trs, PassType passType = PassType::opaque, int sortOrder = 0);
 		static void DrawInstanced(const std::shared_ptr<Mesh>& mesh, const std::shared_ptr<Material>& material, const std::vector<glm::mat4>& trs);
 
 	protected:
