@@ -56,6 +56,8 @@ namespace seri
 
 		static void Quit();
 
+		static void Update();
+
 	protected:
 		friend struct seri::Singleton<Application>;
 
@@ -66,6 +68,7 @@ namespace seri
 		int _vSyncCount{ 0 };
 		double _targetFrameRate{ 60.0 };
 		bool _runInBackground{ true };
+		bool _quitRequested{ false };
 
 		double _targetMs = 1000.0 / _targetFrameRate;
 

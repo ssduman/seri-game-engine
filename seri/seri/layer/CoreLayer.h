@@ -146,6 +146,7 @@ namespace seri
 		{
 			float deltaTime = TimeWrapper::GetDeltaTime();
 
+			Application::Update();
 			asset::AssetManager::Update();
 			scene::SceneManager::Update();
 			script::LuaScriptManager::Update();

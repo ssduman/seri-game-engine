@@ -65,6 +65,20 @@ namespace seri
 
 	void Application::Quit()
 	{
+		GetInstance()._quitRequested = true;
+	}
+
+	void Application::Update()
+	{
+		auto& instance = GetInstance();
+
+		if (!instance._quitRequested)
+		{
+			return;
+		}
+
+		instance._quitRequested = false;
+
 		auto state = seri::scene::SceneManager::GetState();
 		switch (state)
 		{
