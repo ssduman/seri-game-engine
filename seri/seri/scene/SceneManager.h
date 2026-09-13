@@ -39,6 +39,8 @@ namespace seri::scene
 		static void Init();
 		static void Update();
 
+		static void ReloadScene();
+
 		static entt::registry& GetRegistry();
 		static entt::entity CreateEntity();
 		static void DestroyEntity(entt::entity entity);
@@ -67,12 +69,12 @@ namespace seri::scene
 		{
 			return {
 				.name = T::kCompName,
-				
+
 				.Has = [](entt::registry& registry, entt::entity entity)
 				{
 					return registry.any_of<T>(entity);
 				},
-				
+
 				.Add = [](entt::registry& registry, entt::entity entity)
 				{
 					registry.emplace_or_replace<T>(entity);
@@ -109,6 +111,8 @@ namespace seri::scene
 			GetInstance()._componentIOmaps.emplace(io.name, io);
 		}
 
+		void TryReload();
+
 		entt::registry registry;
 
 		SceneState _state{ SceneState::edit };
@@ -122,6 +126,7 @@ namespace seri::scene
 		YAML::Node _snapshot{};
 		bool _hasSnapshot{ false };
 		bool _snapshotDirty{ false };
+		bool _reloadRequested{ false };
 
 	};
 }

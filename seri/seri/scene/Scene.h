@@ -84,6 +84,8 @@ namespace seri::scene
 
 		void Save();
 
+		void Reload();
+
 		void Serialize(const std::string& file);
 		void Deserialize(const std::string& file);
 

@@ -17,6 +17,8 @@ namespace seri::editor
 
 	void GamePanel::Update(GUIContext& ctx)
 	{
+		seri::system::UISystem::SetPointerViewport({ 0.0f, 0.0f }, { 0.0f, 0.0f }, false);
+
 		seri::scene::SceneState state = seri::scene::SceneManager::GetState();
 		if (state == _statePrev)
 		{
@@ -116,6 +118,13 @@ namespace seri::editor
 			)
 		);
 		ImVec2 imageMax = ImVec2(imageMin.x + imageSize.x, imageMin.y + imageSize.y);
+
+		ImVec2 windowPos = ImGui::GetMainViewport()->Pos;
+		seri::system::UISystem::SetPointerViewport(
+			{ imageMin.x - windowPos.x, imageMin.y - windowPos.y },
+			{ imageSize.x, imageSize.y },
+			ImGui::IsWindowHovered()
+		);
 
 		auto tex = (ImTextureID)(intptr_t)gameRT->GetFirstColorTextureHandle();
 

@@ -3,6 +3,7 @@
 #include "seri/script/ScriptBase.h"
 #include "seri/logging/Logger.h"
 
+#include <fmt/format.h>
 #include <sol/sol.hpp>
 #include <glm/glm.hpp>
 
@@ -35,6 +36,7 @@ namespace seri::script
 		void OnEnable() override;
 		void OnDisable() override;
 		void OnDestroy() override;
+		void OnClick() override;
 
 		std::vector<ScriptField> GetSerializedFields() override;
 
@@ -52,6 +54,11 @@ namespace seri::script
 		template<typename... Args>
 		void Call(const char* functionName, Args&&... args)
 		{
+			if (!_loaded)
+			{
+				return;
+			}
+
 			sol::object object = _self[functionName];
 			if (object.get_type() != sol::type::function)
 			{
@@ -68,8 +75,7 @@ namespace seri::script
 			if (!result.valid())
 			{
 				sol::error error = result;
-				// throw std::runtime_error(error.what());
-				LIB_LOGGER(error, lua_scripting) << "exception occurred while calling function '" << functionName << "': " << error.what();
+				throw std::runtime_error(fmt::format("exception occurred while calling function '{}': {}", functionName, error.what()));
 			}
 		}
 

@@ -51,10 +51,7 @@ namespace seri::system
 		static void RebuildInstances(entt::registry& registry, entt::entity entity, component::ScriptComponent& scriptComponent);
 		static void DestroyInstances(entt::entity entity);
 
-		static void FlushDeferred();
-
-		static inline std::unordered_map<entt::entity, std::vector<ScriptInstance>> _instances{};
-		static inline std::vector<std::function<void()>> _deferred{};
+		static inline std::unordered_map<entt::entity, std::vector<ScriptInstance>> _scriptInstances{};
 		static inline bool _enabled{ true };
 		static inline bool _inited{ false };
 

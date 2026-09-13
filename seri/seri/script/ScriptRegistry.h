@@ -19,17 +19,9 @@ namespace seri::script
 	class ScriptRegistry : public seri::Singleton<ScriptRegistry>
 	{
 	public:
-		using Factory = std::function<std::unique_ptr<ScriptBase>()>;
+		using ScriptFactory = std::function<std::unique_ptr<ScriptBase>()>;
 
-		template<typename T>
-		static void Register(std::string_view name)
-		{
-			static_assert(std::is_base_of_v<SystemScript, T>, "script type must derive from SystemScript");
-
-			Register(name, ScriptKind::system, []() { return std::unique_ptr<ScriptBase>{ new T{} }; });
-		}
-
-		static bool Register(std::string_view name, ScriptKind kind, Factory factory);
+		static bool Register(std::string_view name, ScriptKind kind, ScriptFactory factory);
 
 		static void Unregister(const std::string& name);
 
@@ -48,14 +40,14 @@ namespace seri::script
 		~ScriptRegistry() = default;
 
 	private:
-		struct Entry
+		struct ScriptEntry
 		{
 			ScriptKind kind{ ScriptKind::system };
-			Factory factory{};
+			ScriptFactory factory{};
 		};
 
-		std::unordered_map<std::string, Entry> _entries{};
-		std::vector<std::string> _names{};
+		std::unordered_map<std::string, ScriptEntry> _scriptEntries{};
+		std::vector<std::string> _scriptNames{};
 
 	};
 }

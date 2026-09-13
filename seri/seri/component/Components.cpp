@@ -180,6 +180,27 @@ namespace seri::component
 		return node;
 	}
 
+	ButtonComponent ButtonComponent::Deserialize(const YAML::Node& node)
+	{
+		ButtonComponent component{};
+		component.interactable = YAMLUtil::GetType<bool>(node["Interactable"]);
+		component.normalColor = YAMLUtil::Vec4FromYAML(node["NormalColor"]);
+		component.hoverColor = YAMLUtil::Vec4FromYAML(node["HoverColor"]);
+		component.pressedColor = YAMLUtil::Vec4FromYAML(node["PressedColor"]);
+		component.disabledColor = YAMLUtil::Vec4FromYAML(node["DisabledColor"]);
+		return component;
+	}
+	YAML::Node ButtonComponent::Serialize(const ButtonComponent& component)
+	{
+		YAML::Node node;
+		node["Interactable"] = component.interactable;
+		node["NormalColor"] = YAMLUtil::Vec4ToYAML(component.normalColor);
+		node["HoverColor"] = YAMLUtil::Vec4ToYAML(component.hoverColor);
+		node["PressedColor"] = YAMLUtil::Vec4ToYAML(component.pressedColor);
+		node["DisabledColor"] = YAMLUtil::Vec4ToYAML(component.disabledColor);
+		return node;
+	}
+
 	SpriteRendererComponent SpriteRendererComponent::Deserialize(const YAML::Node& node)
 	{
 		SpriteRendererComponent component{};

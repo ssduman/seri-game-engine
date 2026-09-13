@@ -8,6 +8,6 @@ namespace seri::script
 {
 	void SystemScriptManager::Init()
 	{
-		ScriptRegistry::Register<RotatorScript>("Rotator");
+		ScriptRegistry::Register("Rotator", ScriptKind::system, []() { return std::unique_ptr<ScriptBase>{ new RotatorScript{} }; });
 	}
 }

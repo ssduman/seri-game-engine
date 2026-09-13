@@ -20,12 +20,12 @@ namespace seri::system
 			catch (const std::exception& ex)
 			{
 				instance.faulted = true;
-				LIB_LOGGER(error, script) << fmt::format("'{}' threw, script disabled: {}", stage, ex.what());
+				LIB_LOGGER(error, script_system) << fmt::format("'{}' threw, script disabled: {}", stage, ex.what());
 			}
 			catch (...)
 			{
 				instance.faulted = true;
-				LIB_LOGGER(error, script) << fmt::format("'{}' threw unknown exception, script disabled", stage);
+				LIB_LOGGER(error, script_system) << fmt::format("'{}' threw unknown exception, script disabled", stage);
 			}
 
 			return false;
@@ -116,12 +116,11 @@ namespace seri::system
 		}
 
 		scene::SceneManager::GetRegistry()
-			.on_destroy<component::ScriptComponent>()
-			.connect<&ScriptSystem::OnScriptComponentDestroyed>();
+			.on_destroy<component::ScriptComponent>().connect<&ScriptSystem::OnScriptComponentDestroyed>();
 
 		_inited = true;
 
-		LIB_LOGGER(info, script) << "inited with " << script::ScriptRegistry::GetNames().size() << " registered script(s)";
+		LIB_LOGGER(info, script_system) << "inited with " << script::ScriptRegistry::GetNames().size() << " registered script(s)";
 	}
 
 	void ScriptSystem::Sync()
@@ -165,13 +164,16 @@ namespace seri::system
 				continue;
 			}
 
-			auto it = _instances.find(entity);
-			if (it == _instances.end())
+			auto it = _scriptInstances.find(entity);
+			if (it == _scriptInstances.end())
 			{
 				continue;
 			}
 
 			std::vector<ScriptInstance>& instances = it->second;
+
+			auto* button = registry.try_get<component::ButtonComponent>(entity);
+			bool clicked = button != nullptr && button->clicked;
 
 			for (size_t i = 0; i < instances.size(); i++)
 			{
@@ -213,11 +215,14 @@ namespace seri::system
 					}
 				}
 
+				if (clicked && !SafeCall(instance, "OnClick", [&]() { instance.script->OnClick(); }))
+				{
+					continue;
+				}
+
 				SafeCall(instance, "OnUpdate", [&]() { instance.script->OnUpdate(deltaTime); });
 			}
 		}
-
-		FlushDeferred();
 	}
 
 	void ScriptSystem::LateUpdate(float deltaTime)
@@ -240,8 +245,8 @@ namespace seri::system
 				continue;
 			}
 
-			auto it = _instances.find(entity);
-			if (it == _instances.end())
+			auto it = _scriptInstances.find(entity);
+			if (it == _scriptInstances.end())
 			{
 				continue;
 			}
@@ -259,15 +264,13 @@ namespace seri::system
 				SafeCall(instance, "OnLateUpdate", [&]() { instance.script->OnLateUpdate(deltaTime); });
 			}
 		}
-
-		FlushDeferred();
 	}
 
 	void ScriptSystem::Reset()
 	{
 		std::vector<entt::entity> entities{};
-		entities.reserve(_instances.size());
-		for (const auto& item : _instances)
+		entities.reserve(_scriptInstances.size());
+		for (const auto& item : _scriptInstances)
 		{
 			entities.push_back(item.first);
 		}
@@ -277,19 +280,13 @@ namespace seri::system
 			DestroyInstances(entity);
 		}
 
-		_instances.clear();
-		_deferred.clear();
+		_scriptInstances.clear();
 
 		auto& registry = scene::SceneManager::GetRegistry();
 		for (entt::entity entity : registry.view<component::ScriptComponent>())
 		{
 			registry.get<component::ScriptComponent>(entity).dirty = true;
 		}
-	}
-
-	void ScriptSystem::Defer(std::function<void()> command)
-	{
-		_deferred.emplace_back(std::move(command));
 	}
 
 	void ScriptSystem::SetEnabled(bool enabled)
@@ -323,7 +320,7 @@ namespace seri::system
 
 			if (!instance.script)
 			{
-				LIB_LOGGER(error, script) << fmt::format("'{}' is not registered", entry.name);
+				LIB_LOGGER(error, script_system) << fmt::format("'{}' is not registered", entry.name);
 			}
 			else
 			{
@@ -335,15 +332,15 @@ namespace seri::system
 			instances.emplace_back(std::move(instance));
 		}
 
-		_instances[entity] = std::move(instances);
+		_scriptInstances[entity] = std::move(instances);
 
 		scriptComponent.dirty = false;
 	}
 
 	void ScriptSystem::DestroyInstances(entt::entity entity)
 	{
-		auto it = _instances.find(entity);
-		if (it == _instances.end())
+		auto it = _scriptInstances.find(entity);
+		if (it == _scriptInstances.end())
 		{
 			return;
 		}
@@ -364,30 +361,7 @@ namespace seri::system
 			SafeCall(instance, "OnDestroy", [&]() { instance.script->OnDestroy(); });
 		}
 
-		_instances.erase(it);
-	}
-
-	void ScriptSystem::FlushDeferred()
-	{
-		if (_deferred.empty())
-		{
-			return;
-		}
-
-		std::vector<std::function<void()>> commands = std::move(_deferred);
-		_deferred.clear();
-
-		for (auto& command : commands)
-		{
-			try
-			{
-				command();
-			}
-			catch (const std::exception& ex)
-			{
-				LIB_LOGGER(error, script) << fmt::format("deferred command threw: {}", ex.what());
-			}
-		}
+		_scriptInstances.erase(it);
 	}
 
 	void ScriptSystem::Rebuild(const std::string& name)
@@ -415,8 +389,8 @@ namespace seri::system
 		auto& registry = scene::SceneManager::GetRegistry();
 		auto* scriptComponent = registry.try_get<component::ScriptComponent>(entity);
 
-		auto it = _instances.find(entity);
-		if (!scriptComponent || it == _instances.end())
+		auto it = _scriptInstances.find(entity);
+		if (!scriptComponent || it == _scriptInstances.end())
 		{
 			return nullptr;
 		}
@@ -435,8 +409,8 @@ namespace seri::system
 
 	void ScriptSystem::OverrideFields(entt::entity entity, size_t index)
 	{
-		auto it = _instances.find(entity);
-		if (it == _instances.end() || index >= it->second.size())
+		auto it = _scriptInstances.find(entity);
+		if (it == _scriptInstances.end() || index >= it->second.size())
 		{
 			return;
 		}
@@ -461,8 +435,8 @@ namespace seri::system
 	{
 		std::vector<script::ScriptField> fields{};
 
-		auto it = _instances.find(entity);
-		if (it == _instances.end() || index >= it->second.size())
+		auto it = _scriptInstances.find(entity);
+		if (it == _scriptInstances.end() || index >= it->second.size())
 		{
 			return {};
 		}

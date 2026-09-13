@@ -80,7 +80,13 @@ namespace seri::system
 			}
 
 			sprite.material->SetTexture(literals::kUniformSpriteTexture, texture);
-			sprite.material->SetFloat4(literals::kUniformSpriteColor, sprite.color);
+			glm::vec4 color = sprite.color;
+			if (auto* button = registry.try_get<seri::component::ButtonComponent>(entity))
+			{
+				color *= button->GetTint();
+			}
+
+			sprite.material->SetFloat4(literals::kUniformSpriteColor, color);
 
 			bool isUI = UISystem::IsScreenSpace(entity);
 

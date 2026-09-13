@@ -138,6 +138,41 @@ namespace seri::component
 		static YAML::Node Serialize(const RectComponent& component);
 	};
 
+	struct ButtonComponent
+	{
+		static constexpr std::string_view kCompName = "ButtonComponent";
+
+		bool interactable{ true };
+		glm::vec4 normalColor{ 1.0f, 1.0f, 1.0f, 1.0f };
+		glm::vec4 hoverColor{ 0.9f, 0.9f, 0.9f, 1.0f };
+		glm::vec4 pressedColor{ 0.7f, 0.7f, 0.7f, 1.0f };
+		glm::vec4 disabledColor{ 0.5f, 0.5f, 0.5f, 0.5f };
+
+		bool hovered{ false };
+		bool pressed{ false };
+		bool clicked{ false };
+
+		glm::vec4 GetTint() const
+		{
+			if (!interactable)
+			{
+				return disabledColor;
+			}
+			if (pressed && hovered)
+			{
+				return pressedColor;
+			}
+			if (hovered)
+			{
+				return hoverColor;
+			}
+			return normalColor;
+		}
+
+		static ButtonComponent Deserialize(const YAML::Node& node);
+		static YAML::Node Serialize(const ButtonComponent& component);
+	};
+
 	struct SpriteRendererComponent
 	{
 		static constexpr std::string_view kCompName = "SpriteRendererComponent";

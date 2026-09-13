@@ -54,6 +54,8 @@ namespace seri
 
 		static void WaitForTargetFrameRate();
 
+		static void Quit();
+
 	protected:
 		friend struct seri::Singleton<Application>;
 

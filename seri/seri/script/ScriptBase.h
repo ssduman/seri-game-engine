@@ -42,6 +42,7 @@ namespace seri::script
 		virtual void OnEnable() {}
 		virtual void OnDisable() {}
 		virtual void OnDestroy() {}
+		virtual void OnClick() {}
 
 		virtual std::vector<ScriptField> GetSerializedFields() { return {}; }
 

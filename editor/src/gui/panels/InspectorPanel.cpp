@@ -324,6 +324,29 @@ namespace seri::editor
 			}
 		}
 
+		if (auto* buttonComp = registry.try_get<seri::component::ButtonComponent>(entity))
+		{
+			ScopedChild scopedChild("##ButtonComponent", ImVec2(0, 0), childFlags);
+
+			if (DrawComponentHeader("Button Component"))
+			{
+				removeComp = seri::component::ButtonComponent::kCompName;
+			}
+
+			bool changed = false;
+
+			changed |= DrawBool("Interactable", buttonComp->interactable);
+			changed |= DrawColorVec4("Normal", buttonComp->normalColor, 0.01f);
+			changed |= DrawColorVec4("Hover", buttonComp->hoverColor, 0.01f);
+			changed |= DrawColorVec4("Pressed", buttonComp->pressedColor, 0.01f);
+			changed |= DrawColorVec4("Disabled", buttonComp->disabledColor, 0.01f);
+
+			if (changed)
+			{
+				scene->SetAsDirty();
+			}
+		}
+
 		if (auto* spriteRendererComp = registry.try_get<seri::component::SpriteRendererComponent>(entity))
 		{
 			ScopedChild scopedChild("##SpriteRendererComponent", ImVec2(0, 0), childFlags);

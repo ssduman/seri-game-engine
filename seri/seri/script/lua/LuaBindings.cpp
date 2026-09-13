@@ -9,6 +9,7 @@
 #include "seri/sound/SoundManager.h"
 #include "seri/random/Random.h"
 #include "seri/core/Entity.h"
+#include "seri/core/Application.h"
 
 #include <sol/sol.hpp>
 
@@ -96,16 +97,16 @@ namespace seri::script
 					lua_pop(state, 1);
 				}
 
-				LIB_LOGGER(info, lua_script) << message;
+				LIB_LOGGER(info, lua_bindings) << message;
 
 				return 0;
 			}
 		);
 
 		sol::table logTable = lua.create_named_table("Log");
-		logTable["Info"] = [](const std::string& message) { LIB_LOGGER(info, lua_script) << message; };
-		logTable["Warning"] = [](const std::string& message) { LIB_LOGGER(warning, lua_script) << message; };
-		logTable["Error"] = [](const std::string& message) { LIB_LOGGER(error, lua_script) << message; };
+		logTable["Info"] = [](const std::string& message) { LIB_LOGGER(info, lua_bindings) << message; };
+		logTable["Warning"] = [](const std::string& message) { LIB_LOGGER(warning, lua_bindings) << message; };
+		logTable["Error"] = [](const std::string& message) { LIB_LOGGER(error, lua_bindings) << message; };
 
 		sol::table timeTable = lua.create_named_table("Time");
 		timeTable["delta_time"] = 0.0f;
@@ -114,6 +115,9 @@ namespace seri::script
 
 		sol::table audioTable = lua.create_named_table("Audio");
 		audioTable["Play"] = [](const std::string& path) { sound::SoundManager::Play(path); };
+
+		sol::table applicationTable = lua.create_named_table("Application");
+		applicationTable["Quit"] = []() { Application::Quit(); };
 	}
 
 	void LuaBindings::RegisterInput(sol::state& lua)
@@ -166,6 +170,19 @@ namespace seri::script
 			"size_delta", &component::RectComponent::sizeDelta
 		);
 
+		lua.new_usertype<component::ButtonComponent>(
+			"Button",
+			sol::no_constructor,
+			"interactable", &component::ButtonComponent::interactable,
+			"normal_color", &component::ButtonComponent::normalColor,
+			"hover_color", &component::ButtonComponent::hoverColor,
+			"pressed_color", &component::ButtonComponent::pressedColor,
+			"disabled_color", &component::ButtonComponent::disabledColor,
+			"hovered", sol::readonly(&component::ButtonComponent::hovered),
+			"pressed", sol::readonly(&component::ButtonComponent::pressed),
+			"clicked", sol::readonly(&component::ButtonComponent::clicked)
+		);
+
 		lua.new_usertype<component::TextComponent>(
 			"Text",
 			sol::no_constructor,
@@ -211,6 +228,7 @@ namespace seri::script
 			),
 			"transform", sol::readonly_property([](const seri::Entity& entity) { return entity.TryGet<component::TransformComponent>(); }),
 			"rect", sol::readonly_property([](const seri::Entity& entity) { return entity.TryGet<component::RectComponent>(); }),
+			"button", sol::readonly_property([](const seri::Entity& entity) { return entity.TryGet<component::ButtonComponent>(); }),
 			"text", sol::readonly_property([](const seri::Entity& entity) { return entity.TryGet<component::TextComponent>(); }),
 			"sprite", sol::readonly_property([](const seri::Entity& entity) { return entity.TryGet<component::SpriteRendererComponent>(); }),
 			"GetScript", [](const seri::Entity& entity, const std::string& name) -> sol::optional<sol::table>
@@ -243,5 +261,6 @@ namespace seri::script
 
 				return sol::nullopt;
 			};
+		sceneTable["Reload"] = []() { scene::SceneManager::ReloadScene(); };
 	}
 }

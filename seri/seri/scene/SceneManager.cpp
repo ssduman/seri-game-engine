@@ -3,6 +3,7 @@
 #include "seri/scene/SceneManager.h"
 #include "seri/scene/Scene.h"
 #include "seri/system/ScriptSystem.h"
+#include "seri/font/FontManager.h"
 
 #include <entt/entt.hpp>
 
@@ -21,6 +22,7 @@ namespace seri::scene
 		RegisterComponent<seri::component::SkinnedMeshRendererComponent>();
 		RegisterComponent<seri::component::CanvasComponent>();
 		RegisterComponent<seri::component::RectComponent>();
+		RegisterComponent<seri::component::ButtonComponent>();
 		RegisterComponent<seri::component::SpriteRendererComponent>();
 		RegisterComponent<seri::component::AnimatorComponent>();
 		RegisterComponent<seri::component::CameraComponent>();
@@ -39,7 +41,16 @@ namespace seri::scene
 
 	void SceneManager::Update()
 	{
-		SceneManager::GetInstance()._activeScene->Update();
+		auto& instance = GetInstance();
+
+		instance.TryReload();
+
+		instance._activeScene->Update();
+	}
+
+	void SceneManager::ReloadScene()
+	{
+		GetInstance()._reloadRequested = true;
 	}
 
 	entt::registry& SceneManager::GetRegistry()
@@ -132,6 +143,14 @@ namespace seri::scene
 
 		GetInstance()._activeScene->SetAsDirty();
 		comps[compName].Add(GetInstance().registry, entity);
+
+		if (compName == seri::component::TextComponent::kCompName)
+		{
+			if (std::shared_ptr<seri::font::Font> font = seri::font::FontManager::GetDefaultFont())
+			{
+				GetInstance().registry.get<seri::component::TextComponent>(entity).fontAssetId = font->id;
+			}
+		}
 	}
 
 	void SceneManager::RemoveComponent(entt::entity entity, std::string_view compName)
@@ -168,6 +187,27 @@ namespace seri::scene
 
 		GetInstance()._activeScene->SetAsDirty();
 		comps[compName].Deserialize(GetInstance().registry, entity, node);
+	}
+
+	void SceneManager::TryReload()
+	{
+		if (_reloadRequested)
+		{
+			_reloadRequested = false;
+
+			seri::system::ScriptSystem::Reset();
+
+			if (_hasSnapshot)
+			{
+				_activeScene->DeserializeFromNode(_snapshot);
+			}
+			else
+			{
+				_activeScene->Reload();
+			}
+
+			LIB_LOGGER(info, scene) << "scene reloaded";
+		}
 	}
 
 }

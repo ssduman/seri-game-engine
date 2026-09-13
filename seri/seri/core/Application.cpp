@@ -1,6 +1,8 @@
 #include "Seripch.h"
 
 #include "seri/core/Application.h"
+#include "seri/scene/SceneManager.h"
+#include "seri/window/WindowManager.h"
 
 #include <thread>
 
@@ -60,4 +62,21 @@ namespace seri
 			std::this_thread::yield();
 		}
 	}
+
+	void Application::Quit()
+	{
+		auto state = seri::scene::SceneManager::GetState();
+		switch (state)
+		{
+			case seri::scene::SceneState::edit:
+				seri::WindowManager::SetWindowShouldCloseToTrue();
+				break;
+			case seri::scene::SceneState::play:
+			case seri::scene::SceneState::paused:
+			default:
+				seri::scene::SceneManager::SetState(seri::scene::SceneState::edit);
+				break;
+		}
+	}
+
 }

@@ -14,7 +14,7 @@ namespace seri::script
 
 		_self = lua.create_table();
 
-		sol::table metatable = LuaScriptManager::GetClass(name);
+		sol::table metatable = LuaScriptManager::GetClass(_name);
 		if (!metatable.valid())
 		{
 			return;
@@ -31,9 +31,7 @@ namespace seri::script
 	{
 		if (!_loaded)
 		{
-			// throw std::runtime_error(fmt::format("could not load lua script: {}", _name));
-			LIB_LOGGER(error, lua_scripting) << "could not load lua script: " << _name;
-			return;
+			throw std::runtime_error("could not load lua script: " + _name);
 		}
 
 		_self["entity"] = entity;
@@ -69,6 +67,11 @@ namespace seri::script
 	void LuaScript::OnDestroy()
 	{
 		Call("OnDestroy");
+	}
+
+	void LuaScript::OnClick()
+	{
+		Call("OnClick");
 	}
 
 	std::vector<ScriptField> LuaScript::GetSerializedFields()
@@ -137,14 +140,14 @@ namespace seri::script
 				case sol::type::userdata:
 					if (!value.is<glm::vec3>())
 					{
-						LIB_LOGGER(warning, lua) << "'" << _name << "' field '" << field.name << "' has unsupported type";
+						LIB_LOGGER(warning, lua_script) << "'" << _name << "' field '" << field.name << "' has unsupported type";
 						continue;
 					}
 					field.type = ScriptField::Type::vec3;
 					field.value = value.as<glm::vec3>();
 					break;
 				default:
-					LIB_LOGGER(warning, lua) << "'" << _name << "' field '" << field.name << "' has unsupported type";
+					LIB_LOGGER(warning, lua_script) << "'" << _name << "' field '" << field.name << "' has unsupported type";
 					continue;
 			}
 

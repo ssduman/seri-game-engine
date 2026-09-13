@@ -4,40 +4,40 @@
 
 namespace seri::script
 {
-	bool ScriptRegistry::Register(std::string_view name, ScriptKind kind, Factory factory)
+	bool ScriptRegistry::Register(std::string_view name, ScriptKind kind, ScriptFactory factory)
 	{
 		std::string key{ name };
 
-		if (GetInstance()._entries.contains(key))
+		if (GetInstance()._scriptEntries.contains(key))
 		{
-			LIB_LOGGER(warning, script) << "'" << key << "' is already registered";
+			LIB_LOGGER(warning, script_registry) << "'" << key << "' is already registered";
 			return false;
 		}
 
-		GetInstance()._entries.emplace(key, Entry{ kind, std::move(factory) });
-		GetInstance()._names.emplace_back(key);
+		GetInstance()._scriptEntries.emplace(key, ScriptEntry{ kind, std::move(factory) });
+		GetInstance()._scriptNames.emplace_back(key);
 
-		LIB_LOGGER(info, script) << "'" << key << "' registered";
+		LIB_LOGGER(info, script_registry) << "'" << key << "' registered";
 
 		return true;
 	}
 
 	void ScriptRegistry::Unregister(const std::string& name)
 	{
-		if (GetInstance()._entries.erase(name) == 0)
+		if (GetInstance()._scriptEntries.erase(name) == 0)
 		{
 			return;
 		}
 
-		std::erase(GetInstance()._names, name);
+		std::erase(GetInstance()._scriptNames, name);
 
-		LIB_LOGGER(info, script) << "'" << name << "' unregistered";
+		LIB_LOGGER(info, script_registry) << "'" << name << "' unregistered";
 	}
 
 	std::unique_ptr<ScriptBase> ScriptRegistry::Create(const std::string& name)
 	{
-		auto it = GetInstance()._entries.find(name);
-		if (it == GetInstance()._entries.end())
+		auto it = GetInstance()._scriptEntries.find(name);
+		if (it == GetInstance()._scriptEntries.end())
 		{
 			return nullptr;
 		}
@@ -47,13 +47,13 @@ namespace seri::script
 
 	bool ScriptRegistry::Contains(const std::string& name)
 	{
-		return GetInstance()._entries.contains(name);
+		return GetInstance()._scriptEntries.contains(name);
 	}
 
 	ScriptKind ScriptRegistry::GetKind(const std::string& name)
 	{
-		auto it = GetInstance()._entries.find(name);
-		if (it == GetInstance()._entries.end())
+		auto it = GetInstance()._scriptEntries.find(name);
+		if (it == GetInstance()._scriptEntries.end())
 		{
 			return ScriptKind::system;
 		}
@@ -63,6 +63,6 @@ namespace seri::script
 
 	const std::vector<std::string>& ScriptRegistry::GetNames()
 	{
-		return GetInstance()._names;
+		return GetInstance()._scriptNames;
 	}
 }

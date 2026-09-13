@@ -5,6 +5,10 @@
 #include "seri/graphic/Graphic.h"
 #include "seri/rendering/render/RenderingManager.h"
 #include "seri/draw/DebugDraw.h"
+#include "seri/input/InputManager.h"
+#include "seri/window/WindowManager.h"
+
+#include <limits>
 
 namespace seri::system
 {
@@ -25,6 +29,113 @@ namespace seri::system
 		for (const auto& child : tree.children)
 		{
 			Collect(child, inScreenCanvas, frame, size, order);
+		}
+
+		UpdateButtons();
+	}
+
+	void UISystem::SetPointerViewport(const glm::vec2& min, const glm::vec2& size, bool enabled)
+	{
+		_pointerViewportMin = min;
+		_pointerViewportSize = size;
+		_pointerViewportSet = true;
+		_pointerEnabled = enabled;
+	}
+
+	bool UISystem::GetPointerPosition(glm::vec2& position)
+	{
+		glm::vec2 min = _pointerViewportMin;
+		glm::vec2 size = _pointerViewportSize;
+
+		if (!_pointerViewportSet)
+		{
+			min = glm::vec2{ 0.0f, 0.0f };
+			size = glm::vec2{ static_cast<float>(WindowManager::GetWidth()), static_cast<float>(WindowManager::GetHeight()) };
+		}
+
+		if (!_pointerEnabled || size.x <= 0.0f || size.y <= 0.0f)
+		{
+			return false;
+		}
+
+		glm::vec2 local = (InputManager::GetCursorPosition() - min) / size;
+		if (local.x < 0.0f || local.x > 1.0f || local.y < 0.0f || local.y > 1.0f)
+		{
+			return false;
+		}
+
+		position = glm::vec2{ (local.x - 0.5f) * _screenSize.x, (0.5f - local.y) * _screenSize.y };
+
+		return true;
+	}
+
+	void UISystem::UpdateButtons()
+	{
+		auto& registry = seri::scene::SceneManager::GetRegistry();
+		auto view = registry.view<seri::component::TransformComponent, seri::component::RectComponent, seri::component::ButtonComponent>();
+
+		bool playing = seri::scene::SceneManager::GetState() == seri::scene::SceneState::play;
+
+		glm::vec2 pointer{ 0.0f, 0.0f };
+		bool hasPointer = playing && GetPointerPosition(pointer);
+
+		entt::entity target = entt::null;
+		int targetOrder = std::numeric_limits<int>::min();
+
+		for (entt::entity entity : view)
+		{
+			auto& transform = view.get<seri::component::TransformComponent>(entity);
+			auto& rect = view.get<seri::component::RectComponent>(entity);
+			auto& button = view.get<seri::component::ButtonComponent>(entity);
+
+			if (!hasPointer || !button.interactable || !transform.isActiveInHierarchy || !IsScreenSpace(entity))
+			{
+				continue;
+			}
+
+			glm::vec4 local = glm::inverse(transform.worldMatrix) * glm::vec4{ pointer, 0.0f, 1.0f };
+			glm::vec2 min = -rect.pivot * rect.resolvedSize;
+			glm::vec2 max = (glm::vec2{ 1.0f, 1.0f } - rect.pivot) * rect.resolvedSize;
+
+			if (local.x < min.x || local.x > max.x || local.y < min.y || local.y > max.y)
+			{
+				continue;
+			}
+
+			int order = GetDrawOrder(entity);
+			if (order >= targetOrder)
+			{
+				target = entity;
+				targetOrder = order;
+			}
+		}
+
+		bool down = playing && InputManager::IsMouseButtonDown(MouseButtonCode::button_left);
+		bool up = playing && InputManager::IsMouseButtonUp(MouseButtonCode::button_left);
+
+		for (entt::entity entity : view)
+		{
+			auto& button = view.get<seri::component::ButtonComponent>(entity);
+
+			button.hovered = entity == target;
+			button.clicked = false;
+
+			if (!playing || !button.interactable)
+			{
+				button.pressed = false;
+				continue;
+			}
+
+			if (down && button.hovered)
+			{
+				button.pressed = true;
+			}
+
+			if (up)
+			{
+				button.clicked = button.pressed && button.hovered;
+				button.pressed = false;
+			}
 		}
 	}
 

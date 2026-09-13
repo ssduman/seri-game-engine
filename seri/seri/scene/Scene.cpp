@@ -49,6 +49,11 @@ namespace seri::scene
 		Serialize(_filePath);
 	}
 
+	void Scene::Reload()
+	{
+		Deserialize(_filePath);
+	}
+
 	void Scene::Serialize(const std::string& file)
 	{
 		YAML::Node root = SerializeToNode();

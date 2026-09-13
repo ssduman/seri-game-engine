@@ -212,6 +212,10 @@ namespace seri::editor
 					seri::component::SpriteRendererComponent::kCompName,
 					});
 			}
+			if (ImGui::MenuItem("Button"))
+			{
+				AddButton(activeScene, parentId);
+			}
 			if (ImGui::MenuItem("Sprite"))
 			{
 				AddEntity(activeScene, parentId, "Sprite", {
@@ -240,7 +244,7 @@ namespace seri::editor
 		}
 	}
 
-	void HierarchyPanel::AddEntity(const std::shared_ptr<seri::scene::Scene>& activeScene, uint64_t parentId, const char* name, std::initializer_list<std::string_view> compNames)
+	entt::entity HierarchyPanel::AddEntity(const std::shared_ptr<seri::scene::Scene>& activeScene, uint64_t parentId, const char* name, std::initializer_list<std::string_view> compNames)
 	{
 		uint64_t entityId = seri::Random::UUID();
 		activeScene->AddEntityAsChild(entityId, parentId, name);
@@ -252,5 +256,48 @@ namespace seri::editor
 		{
 			seri::scene::SceneManager::AddComponent(entity, compName);
 		}
+
+		return entity;
+	}
+
+	void HierarchyPanel::AddButton(const std::shared_ptr<seri::scene::Scene>& activeScene, uint64_t parentId)
+	{
+		auto& registry = seri::scene::SceneManager::GetRegistry();
+
+		entt::entity button = AddEntity(activeScene, parentId, "Button", {
+			seri::component::RectComponent::kCompName,
+			seri::component::SpriteRendererComponent::kCompName,
+			seri::component::ButtonComponent::kCompName,
+			});
+
+		registry.get<seri::component::RectComponent>(button).sizeDelta = { 160.0f, 40.0f };
+
+		for (const auto& metadata : seri::asset::AssetManager::GetAssetsByType(seri::asset::AssetType::texture))
+		{
+			if (metadata.name == seri::literals::kDefaultWhiteTextureName)
+			{
+				registry.get<seri::component::SpriteRendererComponent>(button).textureAssetId = metadata.id;
+				break;
+			}
+		}
+
+		uint64_t buttonId = registry.get<seri::component::IDComponent>(button).id;
+
+		entt::entity label = AddEntity(activeScene, buttonId, "Text", {
+			seri::component::RectComponent::kCompName,
+			seri::component::TextComponent::kCompName,
+			});
+
+		auto& labelRect = registry.get<seri::component::RectComponent>(label);
+		labelRect.anchorMin = { 0.0f, 0.0f };
+		labelRect.anchorMax = { 1.0f, 1.0f };
+		labelRect.sizeDelta = { 0.0f, 0.0f };
+
+		auto& labelText = registry.get<seri::component::TextComponent>(label);
+		labelText.text = "Button";
+		labelText.fontSize = 24.0f;
+		labelText.color = { 0.1f, 0.1f, 0.1f, 1.0f };
+
+		activeScene->SetAsDirty();
 	}
 }
