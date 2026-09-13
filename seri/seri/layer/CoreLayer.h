@@ -161,6 +161,8 @@ namespace seri
 				system::ScriptSystem::LateUpdate(deltaTime);
 			}
 
+			scene::SceneManager::FlushDestroyed();
+
 			system::TransformSystem::Update();
 			system::UISystem::Update();
 			system::CameraSystem::Update();

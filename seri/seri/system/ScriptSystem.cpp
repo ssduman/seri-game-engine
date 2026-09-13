@@ -127,14 +127,15 @@ namespace seri::system
 	{
 		auto& registry = scene::SceneManager::GetRegistry();
 		auto view = registry.view<component::ScriptComponent>();
+		std::vector<entt::entity> entities(view.begin(), view.end());
 
-		for (entt::entity entity : view)
+		for (entt::entity entity : entities)
 		{
-			auto& scriptComponent = view.get<component::ScriptComponent>(entity);
+			auto* scriptComponent = registry.try_get<component::ScriptComponent>(entity);
 
-			if (scriptComponent.dirty)
+			if (scriptComponent != nullptr && scriptComponent->dirty)
 			{
-				RebuildInstances(registry, entity, scriptComponent);
+				RebuildInstances(registry, entity, *scriptComponent);
 			}
 		}
 	}
@@ -148,10 +149,17 @@ namespace seri::system
 
 		auto& registry = scene::SceneManager::GetRegistry();
 		auto view = registry.view<component::ScriptComponent>();
+		std::vector<entt::entity> entities(view.begin(), view.end());
 
-		for (entt::entity entity : view)
+		for (entt::entity entity : entities)
 		{
-			auto& scriptComponent = view.get<component::ScriptComponent>(entity);
+			auto* scriptComponentPtr = registry.try_get<component::ScriptComponent>(entity);
+			if (scriptComponentPtr == nullptr)
+			{
+				continue;
+			}
+
+			auto& scriptComponent = *scriptComponentPtr;
 
 			if (scriptComponent.dirty)
 			{
@@ -234,10 +242,17 @@ namespace seri::system
 
 		auto& registry = scene::SceneManager::GetRegistry();
 		auto view = registry.view<component::ScriptComponent>();
+		std::vector<entt::entity> entities(view.begin(), view.end());
 
-		for (entt::entity entity : view)
+		for (entt::entity entity : entities)
 		{
-			auto& scriptComponent = view.get<component::ScriptComponent>(entity);
+			auto* scriptComponentPtr = registry.try_get<component::ScriptComponent>(entity);
+			if (scriptComponentPtr == nullptr)
+			{
+				continue;
+			}
+
+			auto& scriptComponent = *scriptComponentPtr;
 
 			auto* transform = registry.try_get<component::TransformComponent>(entity);
 			if (transform != nullptr && !transform->isActiveInHierarchy)

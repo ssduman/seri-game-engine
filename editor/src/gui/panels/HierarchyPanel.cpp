@@ -131,6 +131,12 @@ namespace seri::editor
 			{
 				ShowAddMenu(activeScene, child.id);
 
+				if (ImGui::MenuItem("Create Prefab"))
+				{
+					std::filesystem::path folder = ctx.currentAssetFolder.empty() ? seri::asset::AssetManager::GetAssetDirectory() : ctx.currentAssetFolder;
+					seri::asset::AssetManager::CreatePrefab(folder, child.id);
+				}
+
 				if (ImGui::MenuItem("Delete"))
 				{
 					_pendingDeleteEntityId = child.id;

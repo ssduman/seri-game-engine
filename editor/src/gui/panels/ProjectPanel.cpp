@@ -30,6 +30,8 @@ namespace seri::editor
 				return IM_COL32(200, 120, 150, 255);
 			case seri::asset::AssetType::script:
 				return IM_COL32(200, 190, 90, 255);
+			case seri::asset::AssetType::prefab:
+				return IM_COL32(80, 150, 230, 255);
 			default:
 				return IM_COL32(120, 120, 126, 255);
 		}
@@ -52,6 +54,8 @@ namespace seri::editor
 			folder = &root;
 			_currentFolder = root.path;
 		}
+
+		ctx.currentAssetFolder = _currentFolder;
 
 		SyncSelection(ctx, root);
 
@@ -262,6 +266,16 @@ namespace seri::editor
 
 		if (ImGui::BeginPopupContextItem("##item_context"))
 		{
+			if (node.type == seri::asset::AssetType::prefab)
+			{
+				if (ImGui::MenuItem("Instantiate"))
+				{
+					seri::scene::SceneManager::InstantiatePrefab(node.id, 0);
+				}
+
+				ImGui::Separator();
+			}
+
 			if (ImGui::MenuItem("Rename"))
 			{
 				_renamePath = node.path;

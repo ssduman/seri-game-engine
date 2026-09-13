@@ -92,12 +92,19 @@ namespace seri::scene
 		YAML::Node SerializeToNode();
 		bool DeserializeFromNode(const YAML::Node& rootNode);
 
+		YAML::Node SerializeEntityTree(uint64_t rootId);
+		uint64_t InstantiateEntities(const YAML::Node& entitiesNode, uint64_t parentId);
+
 		void GetAllEntityIDs(std::vector<uint64_t>& ids);
 
 		void DeleteEntity(uint64_t id);
 		void AddEntityAsChild(uint64_t id, uint64_t parentId, const std::string& name);
 
 	private:
+		YAML::Node SerializeEntities(const std::vector<uint64_t>& ids);
+
+		SceneTreeNode* FindNode(SceneTreeNode& node, uint64_t id);
+
 		void GetAllEntityIDs(SceneTreeNode& node, std::vector<uint64_t>& ids);
 
 		void DeleteEntity(SceneTreeNode& node, uint64_t id);

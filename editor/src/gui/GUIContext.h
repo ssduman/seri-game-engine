@@ -17,6 +17,7 @@ namespace seri::editor
 		uint64_t selectedEntityId{ 0 };
 		InspectorType inspectorType{ InspectorType::none };
 		seri::asset::AssetTreeNode selectedAsset{};
+		std::filesystem::path currentAssetFolder{};
 
 		bool showHierarchy{ true };
 		bool showScene{ true };

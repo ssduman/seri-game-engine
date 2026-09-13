@@ -41,6 +41,10 @@ namespace seri::scene
 
 		static void ReloadScene();
 
+		static uint64_t InstantiatePrefab(uint64_t prefabAssetId, uint64_t parentId);
+		static void Destroy(uint64_t entityId);
+		static void FlushDestroyed();
+
 		static entt::registry& GetRegistry();
 		static entt::entity CreateEntity();
 		static void DestroyEntity(entt::entity entity);
@@ -127,6 +131,8 @@ namespace seri::scene
 		bool _hasSnapshot{ false };
 		bool _snapshotDirty{ false };
 		bool _reloadRequested{ false };
+
+		std::vector<uint64_t> _pendingDestroyIds{};
 
 	};
 }

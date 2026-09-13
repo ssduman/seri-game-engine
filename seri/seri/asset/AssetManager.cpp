@@ -2,6 +2,8 @@
 
 #include "seri/asset/AssetManager.h"
 #include "seri/font/Font.h"
+#include "seri/scene/Prefab.h"
+#include "seri/scene/SceneManager.h"
 
 #include <yaml-cpp/yaml.h>
 
@@ -306,6 +308,10 @@ namespace seri::asset
 				{
 					assetMetadata.type = seri::asset::AssetType::script;
 				}
+				else if (node.extension == kAssetPrefabExtension)
+				{
+					assetMetadata.type = seri::asset::AssetType::prefab;
+				}
 
 				node.type = assetMetadata.type;
 				_assetMetadataCache[existingId] = assetMetadata;
@@ -479,6 +485,20 @@ namespace seri::asset
 					case seri::asset::AssetType::font:
 						{
 							GetFont(metadata);
+						}
+						break;
+					case seri::asset::AssetType::prefab:
+						{
+							std::shared_ptr<seri::scene::Prefab> prefab = GetAssetByID<seri::scene::Prefab>(metadata.id);
+							if (!prefab)
+							{
+								prefab = std::make_shared<seri::scene::Prefab>();
+								AddAsset(metadata.id, prefab);
+							}
+
+							YAML::Node root = YAML::LoadFile(metadata.source.string());
+							prefab->type = seri::asset::AssetType::prefab;
+							prefab->entities = root["Prefab"]["Entities"];
 						}
 						break;
 					default:
@@ -713,6 +733,43 @@ namespace seri::asset
 		LIB_LOGGER(info, asset) << fmt::format("material created: {}", source.string());
 
 		return material->id;
+	}
+
+	std::filesystem::path asset::AssetManager::CreatePrefab(const std::filesystem::path& folder, uint64_t entityId)
+	{
+		AssetManager& instance = GetInstance();
+
+		auto scene = seri::scene::SceneManager::GetActiveScene();
+		if (!scene->HasEntity(entityId))
+		{
+			return {};
+		}
+
+		entt::entity entity = scene->GetEntityByID(entityId);
+		std::string name = seri::scene::SceneManager::GetRegistry().get<seri::component::IDComponent>(entity).name;
+
+		std::filesystem::path source = instance.GetUniquePath(folder, name, instance.kAssetPrefabExtension);
+
+		seri::asset::IDInfo idInfo{
+			.id = seri::Random::UUID(),
+			.version = "0.1"
+		};
+
+		YAML::Node sourceRoot;
+		sourceRoot["IDInfo"] = seri::asset::IDInfo::Serialize(idInfo);
+		sourceRoot["Prefab"]["Entities"] = scene->SerializeEntityTree(entityId);
+
+		YAML::Node metaRoot;
+		metaRoot["IDInfo"] = seri::asset::IDInfo::Serialize(idInfo);
+
+		instance.WriteAssetFile(source, sourceRoot);
+		instance.WriteAssetFile(instance.GetMetaPath(source), metaRoot);
+
+		instance.UpdateAssetTree();
+
+		LIB_LOGGER(info, asset) << "prefab created: " << source.string();
+
+		return source;
 	}
 
 	std::filesystem::path asset::AssetManager::CreateScript(const std::filesystem::path& folder, const std::string& name)

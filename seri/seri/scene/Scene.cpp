@@ -67,10 +67,82 @@ namespace seri::scene
 
 	YAML::Node Scene::SerializeToNode()
 	{
-		bool wasDirty = _isDirty;
-
 		std::vector<uint64_t> ids{};
 		GetAllEntityIDs(ids);
+
+		YAML::Node root;
+		root["IDComponent"] = seri::component::IDComponent::Serialize(_idComponent);
+		root["SceneComponent"] = seri::component::SceneComponent::Serialize(_sceneComponent);
+		root["Entities"] = SerializeEntities(ids);
+
+		return root;
+	}
+
+	YAML::Node Scene::SerializeEntityTree(uint64_t rootId)
+	{
+		SceneTreeNode* node = FindNode(_sceneTreeRoot, rootId);
+		if (node == nullptr)
+		{
+			return YAML::Node{};
+		}
+
+		std::vector<uint64_t> ids{};
+		GetAllEntityIDs(*node, ids);
+
+		YAML::Node entitiesNode = SerializeEntities(ids);
+		entitiesNode[0]["Entity"]["IDComponent"]["ParentID"] = 0;
+
+		return entitiesNode;
+	}
+
+	uint64_t Scene::InstantiateEntities(const YAML::Node& entitiesNode, uint64_t parentId)
+	{
+		std::unordered_map<uint64_t, uint64_t> idMap{};
+		uint64_t rootId = 0;
+
+		for (const auto& entityItem : entitiesNode)
+		{
+			YAML::Node entityData = entityItem["Entity"];
+
+			seri::component::IDComponent idComp = seri::component::IDComponent::Deserialize(entityData["IDComponent"]);
+
+			uint64_t newId = seri::Random::UUID();
+			auto parentIt = idMap.find(idComp.parentId);
+			uint64_t newParentId = parentIt != idMap.end() ? parentIt->second : parentId;
+
+			idMap[idComp.id] = newId;
+
+			AddEntityAsChild(newId, newParentId, idComp.name);
+			if (!HasEntity(newId))
+			{
+				continue;
+			}
+
+			if (rootId == 0)
+			{
+				rootId = newId;
+			}
+
+			entt::entity entity = GetEntityByID(newId);
+
+			for (const auto& componentNode : entityData)
+			{
+				std::string componentName = componentNode.first.as<std::string>();
+				if (componentName == seri::component::IDComponent::kCompName)
+				{
+					continue;
+				}
+
+				seri::scene::SceneManager::DeserializeComponent(entity, componentNode.second, componentName);
+			}
+		}
+
+		return rootId;
+	}
+
+	YAML::Node Scene::SerializeEntities(const std::vector<uint64_t>& ids)
+	{
+		bool wasDirty = _isDirty;
 
 		YAML::Node entitiesNode;
 		for (uint64_t id : ids)
@@ -90,14 +162,27 @@ namespace seri::scene
 			entitiesNode.push_back(entityNode);
 		}
 
-		YAML::Node root;
-		root["IDComponent"] = seri::component::IDComponent::Serialize(_idComponent);
-		root["SceneComponent"] = seri::component::SceneComponent::Serialize(_sceneComponent);
-		root["Entities"] = entitiesNode;
-
 		_isDirty = wasDirty;
 
-		return root;
+		return entitiesNode;
+	}
+
+	SceneTreeNode* Scene::FindNode(SceneTreeNode& node, uint64_t id)
+	{
+		if (node.id == id)
+		{
+			return &node;
+		}
+
+		for (auto& child : node.children)
+		{
+			if (SceneTreeNode* found = FindNode(child, id))
+			{
+				return found;
+			}
+		}
+
+		return nullptr;
 	}
 
 	void Scene::Deserialize(const std::string& file)

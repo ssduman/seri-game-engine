@@ -4,6 +4,8 @@
 #include "seri/scene/Scene.h"
 #include "seri/system/ScriptSystem.h"
 #include "seri/font/FontManager.h"
+#include "seri/scene/Prefab.h"
+#include "seri/asset/AssetManager.h"
 
 #include <entt/entt.hpp>
 
@@ -53,6 +55,44 @@ namespace seri::scene
 		GetInstance()._reloadRequested = true;
 	}
 
+	uint64_t SceneManager::InstantiatePrefab(uint64_t prefabAssetId, uint64_t parentId)
+	{
+		std::shared_ptr<Prefab> prefab = seri::asset::AssetManager::GetAssetByID<Prefab>(prefabAssetId);
+		if (!prefab || !prefab->entities.IsSequence())
+		{
+			LIB_LOGGER(warning, scene) << "prefab " << prefabAssetId << " not found";
+			return 0;
+		}
+
+		return GetInstance()._activeScene->InstantiateEntities(prefab->entities, parentId);
+	}
+
+	void SceneManager::Destroy(uint64_t entityId)
+	{
+		GetInstance()._pendingDestroyIds.push_back(entityId);
+	}
+
+	void SceneManager::FlushDestroyed()
+	{
+		auto& instance = GetInstance();
+
+		if (instance._pendingDestroyIds.empty())
+		{
+			return;
+		}
+
+		std::vector<uint64_t> ids = std::move(instance._pendingDestroyIds);
+		instance._pendingDestroyIds.clear();
+
+		for (uint64_t id : ids)
+		{
+			if (instance._activeScene->HasEntity(id))
+			{
+				instance._activeScene->DeleteEntity(id);
+			}
+		}
+	}
+
 	entt::registry& SceneManager::GetRegistry()
 	{
 		return SceneManager::GetInstance().registry;
@@ -95,6 +135,8 @@ namespace seri::scene
 
 		if (newState == SceneState::edit)
 		{
+			instance._pendingDestroyIds.clear();
+
 			seri::system::ScriptSystem::Reset();
 
 			if (instance._hasSnapshot)
@@ -194,6 +236,7 @@ namespace seri::scene
 		if (_reloadRequested)
 		{
 			_reloadRequested = false;
+			_pendingDestroyIds.clear();
 
 			seri::system::ScriptSystem::Reset();
 

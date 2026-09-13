@@ -10,6 +10,7 @@
 #include "seri/random/Random.h"
 #include "seri/core/Entity.h"
 #include "seri/core/Application.h"
+#include "seri/asset/AssetManager.h"
 
 #include <sol/sol.hpp>
 
@@ -262,5 +263,49 @@ namespace seri::script
 				return sol::nullopt;
 			};
 		sceneTable["Reload"] = []() { scene::SceneManager::ReloadScene(); };
+		sceneTable["Instantiate"] = [](const std::string& name, sol::optional<seri::Entity> parent) -> sol::optional<seri::Entity>
+			{
+				uint64_t prefabId = 0;
+				for (const auto& metadata : asset::AssetManager::GetAssetsByType(asset::AssetType::prefab))
+				{
+					if (metadata.source.stem().string() == name)
+					{
+						prefabId = metadata.id;
+						break;
+					}
+				}
+
+				if (prefabId == 0)
+				{
+					LIB_LOGGER(warning, lua_bindings) << "prefab '" << name << "' not found";
+					return sol::nullopt;
+				}
+
+				uint64_t parentId = 0;
+				if (parent)
+				{
+					if (auto* id = parent->TryGet<component::IDComponent>())
+					{
+						parentId = id->id;
+					}
+				}
+
+				uint64_t entityId = scene::SceneManager::InstantiatePrefab(prefabId, parentId);
+
+				auto activeScene = scene::SceneManager::GetActiveScene();
+				if (entityId == 0 || !activeScene->HasEntity(entityId))
+				{
+					return sol::nullopt;
+				}
+
+				return seri::Entity{ activeScene->GetEntityByID(entityId), &scene::SceneManager::GetRegistry() };
+			};
+		sceneTable["Destroy"] = [](const seri::Entity& entity)
+			{
+				if (auto* id = entity.TryGet<component::IDComponent>())
+				{
+					scene::SceneManager::Destroy(id->id);
+				}
+			};
 	}
 }

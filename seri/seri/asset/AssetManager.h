@@ -142,6 +142,8 @@ namespace seri::asset
 
 		static std::filesystem::path CreateScript(const std::filesystem::path& folder, const std::string& name);
 
+		static std::filesystem::path CreatePrefab(const std::filesystem::path& folder, uint64_t entityId);
+
 		static std::filesystem::path CreateFolder(const std::filesystem::path& folder, const std::string& name);
 
 		static bool RenameAsset(const std::filesystem::path& path, const std::string& newName);
@@ -193,6 +195,7 @@ namespace seri::asset
 		const char* kAssetFontTTFExtension = "ttf";
 		const char* kAssetFontOTFExtension = "otf";
 		const char* kAssetScriptLuaExtension = "lua";
+		const char* kAssetPrefabExtension = "sprefab";
 
 	protected:
 		friend struct seri::Singleton<AssetManager>;
