@@ -1,12 +1,11 @@
 #include "Seripch.h"
 
-#include "seri/script/ScriptSystem.h"
-#include "seri/script/scripts/RotatorScript.h"
+#include "seri/system/ScriptSystem.h"
 #include "seri/scene/SceneManager.h"
 
 #include <fmt/format.h>
 
-namespace seri::script
+namespace seri::system
 {
 	namespace
 	{
@@ -32,16 +31,16 @@ namespace seri::script
 			return false;
 		}
 
-		void ApplyFieldsTo(const component::ScriptComponent::Entry& entry, ScriptBase& script)
+		void ApplyFieldsTo(const component::ScriptComponent::Entry& entry, script::ScriptBase& script)
 		{
 			if (!entry.fields.IsMap())
 			{
 				return;
 			}
 
-			std::vector<ScriptField> fields = script.GetSerializedFields();
+			std::vector<script::ScriptField> fields = script.GetSerializedFields();
 
-			for (const ScriptField& field : fields)
+			for (const script::ScriptField& field : fields)
 			{
 				const YAML::Node& node = entry.fields[field.name];
 				if (!node || field.ptr == nullptr)
@@ -51,33 +50,33 @@ namespace seri::script
 
 				switch (field.type)
 				{
-					case ScriptField::Type::boolean:
+					case script::ScriptField::Type::boolean:
 						*static_cast<bool*>(field.ptr) = node.as<bool>();
 						break;
-					case ScriptField::Type::integer:
+					case script::ScriptField::Type::integer:
 						*static_cast<int*>(field.ptr) = node.as<int>();
 						break;
-					case ScriptField::Type::floating:
+					case script::ScriptField::Type::floating:
 						*static_cast<float*>(field.ptr) = node.as<float>();
 						break;
-					case ScriptField::Type::vec3:
-					case ScriptField::Type::color3:
+					case script::ScriptField::Type::vec3:
+					case script::ScriptField::Type::color3:
 						*static_cast<glm::vec3*>(field.ptr) = YAMLUtil::Vec3FromYAML(node);
 						break;
-					case ScriptField::Type::text:
+					case script::ScriptField::Type::text:
 						*static_cast<std::string*>(field.ptr) = YAMLUtil::DeepCopyYAMLString(node);
 						break;
 				}
 			}
 		}
 
-		void OverrideFieldsFrom(component::ScriptComponent::Entry& entry, ScriptBase& script)
+		void OverrideFieldsFrom(component::ScriptComponent::Entry& entry, script::ScriptBase& script)
 		{
-			std::vector<ScriptField> fields = script.GetSerializedFields();
+			std::vector<script::ScriptField> fields = script.GetSerializedFields();
 
 			YAML::Node node;
 
-			for (const ScriptField& field : fields)
+			for (const script::ScriptField& field : fields)
 			{
 				if (field.ptr == nullptr)
 				{
@@ -86,20 +85,20 @@ namespace seri::script
 
 				switch (field.type)
 				{
-					case ScriptField::Type::boolean:
+					case script::ScriptField::Type::boolean:
 						node[field.name] = *static_cast<bool*>(field.ptr);
 						break;
-					case ScriptField::Type::integer:
+					case script::ScriptField::Type::integer:
 						node[field.name] = *static_cast<int*>(field.ptr);
 						break;
-					case ScriptField::Type::floating:
+					case script::ScriptField::Type::floating:
 						node[field.name] = *static_cast<float*>(field.ptr);
 						break;
-					case ScriptField::Type::vec3:
-					case ScriptField::Type::color3:
+					case script::ScriptField::Type::vec3:
+					case script::ScriptField::Type::color3:
 						node[field.name] = YAMLUtil::Vec3ToYAML(*static_cast<glm::vec3*>(field.ptr));
 						break;
-					case ScriptField::Type::text:
+					case script::ScriptField::Type::text:
 						node[field.name] = *static_cast<std::string*>(field.ptr);
 						break;
 				}
@@ -116,15 +115,13 @@ namespace seri::script
 			return;
 		}
 
-		ScriptRegistry::Register<RotatorScript>("Rotator");
-
 		scene::SceneManager::GetRegistry()
 			.on_destroy<component::ScriptComponent>()
 			.connect<&ScriptSystem::OnScriptComponentDestroyed>();
 
 		_inited = true;
 
-		LIB_LOGGER(info, script) << fmt::format("inited with {} registered script(s)", ScriptRegistry::GetNames().size());
+		LIB_LOGGER(info, script) << "inited with " << script::ScriptRegistry::GetNames().size() << " registered script(s)";
 	}
 
 	void ScriptSystem::Sync()
@@ -322,7 +319,7 @@ namespace seri::script
 		for (const auto& entry : scriptComponent.entries)
 		{
 			ScriptInstance instance{};
-			instance.script = ScriptRegistry::Create(entry.name);
+			instance.script = script::ScriptRegistry::Create(entry.name);
 
 			if (!instance.script)
 			{
@@ -393,6 +390,49 @@ namespace seri::script
 		}
 	}
 
+	void ScriptSystem::Rebuild(const std::string& name)
+	{
+		auto& registry = scene::SceneManager::GetRegistry();
+		auto view = registry.view<component::ScriptComponent>();
+
+		for (entt::entity entity : view)
+		{
+			auto& scriptComponent = view.get<component::ScriptComponent>(entity);
+
+			for (const auto& entry : scriptComponent.entries)
+			{
+				if (entry.name == name)
+				{
+					scriptComponent.dirty = true;
+					break;
+				}
+			}
+		}
+	}
+
+	script::ScriptBase* ScriptSystem::FindScript(entt::entity entity, const std::string& name)
+	{
+		auto& registry = scene::SceneManager::GetRegistry();
+		auto* scriptComponent = registry.try_get<component::ScriptComponent>(entity);
+
+		auto it = _instances.find(entity);
+		if (!scriptComponent || it == _instances.end())
+		{
+			return nullptr;
+		}
+
+		for (size_t i = 0; i < it->second.size() && i < scriptComponent->entries.size(); i++)
+		{
+			ScriptInstance& instance = it->second[i];
+			if (scriptComponent->entries[i].name == name && instance.script && !instance.faulted)
+			{
+				return instance.script.get();
+			}
+		}
+
+		return nullptr;
+	}
+
 	void ScriptSystem::OverrideFields(entt::entity entity, size_t index)
 	{
 		auto it = _instances.find(entity);
@@ -417,9 +457,9 @@ namespace seri::script
 		OverrideFieldsFrom(scriptComponent->entries[index], *instance.script);
 	}
 
-	std::vector<ScriptField> ScriptSystem::GetSerializedFields(entt::entity entity, size_t index)
+	std::vector<script::ScriptField> ScriptSystem::GetSerializedFields(entt::entity entity, size_t index)
 	{
-		std::vector<ScriptField> fields{};
+		std::vector<script::ScriptField> fields{};
 
 		auto it = _instances.find(entity);
 		if (it == _instances.end() || index >= it->second.size())

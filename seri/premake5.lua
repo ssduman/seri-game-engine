@@ -28,6 +28,10 @@ project "Seri"
     "-IGNORE:4098",
   }
 
+  buildoptions {
+    "/bigobj",
+  }
+
   disablewarnings {
     "4244",
     "4267",

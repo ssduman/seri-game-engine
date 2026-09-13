@@ -302,6 +302,10 @@ namespace seri::asset
 				{
 					assetMetadata.type = seri::asset::AssetType::font;
 				}
+				else if (node.extension == kAssetScriptLuaExtension)
+				{
+					assetMetadata.type = seri::asset::AssetType::script;
+				}
 
 				node.type = assetMetadata.type;
 				_assetMetadataCache[existingId] = assetMetadata;
@@ -709,6 +713,51 @@ namespace seri::asset
 		LIB_LOGGER(info, asset) << fmt::format("material created: {}", source.string());
 
 		return material->id;
+	}
+
+	std::filesystem::path asset::AssetManager::CreateScript(const std::filesystem::path& folder, const std::string& name)
+	{
+		AssetManager& instance = GetInstance();
+
+		std::filesystem::path source = instance.GetUniquePath(folder, name, instance.kAssetScriptLuaExtension);
+
+		std::string className = source.stem().string();
+		std::replace_if(className.begin(), className.end(), [](char c) { return !std::isalnum(static_cast<unsigned char>(c)) && c != '_'; }, '_');
+
+		{
+			std::ofstream fout(source);
+			if (!fout.is_open())
+			{
+				LIB_LOGGER(error, asset) << "could not write " << source.string();
+				return {};
+			}
+
+			fout << fmt::format(
+				"local {0} = {{\n"
+				"    fields = {{}},\n"
+				"}}\n"
+				"\n"
+				"function {0}:OnCreate()\n"
+				"end\n"
+				"\n"
+				"function {0}:OnStart()\n"
+				"end\n"
+				"\n"
+				"function {0}:OnUpdate(dt)\n"
+				"end\n"
+				"\n"
+				"return {0}\n",
+				className
+			);
+		}
+
+		instance.RememberPath(source);
+
+		instance.UpdateAssetTree();
+
+		LIB_LOGGER(info, asset) << "script created: " << source.string();
+
+		return source;
 	}
 
 	std::filesystem::path asset::AssetManager::CreateFolder(const std::filesystem::path& folder, const std::string& name)

@@ -18,6 +18,7 @@ namespace seri::asset
 		scene,
 		prefab,
 		font,
+		script,
 	};
 
 	inline const char* AssetTypeToString(AssetType type)
@@ -33,6 +34,7 @@ namespace seri::asset
 			case AssetType::scene: return "scene";
 			case AssetType::prefab: return "prefab";
 			case AssetType::font: return "font";
+			case AssetType::script: return "script";
 			default: return "unknown";
 		}
 	}

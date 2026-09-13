@@ -14,7 +14,8 @@
 #include "seri/camera/EditorCamera.h"
 #include "seri/event/EventManager.h"
 #include "seri/event/EventDispatcher.h"
-#include "seri/scripting/ScriptingManager.h"
+#include "seri/script/lua/LuaScriptManager.h"
+#include "seri/script/system/SystemScriptManager.h"
 #include "seri/system/LightSystem.h"
 #include "seri/system/CameraSystem.h"
 #include "seri/system/TransformSystem.h"
@@ -25,7 +26,7 @@
 #include "seri/system/TextRendererSystem.h"
 #include "seri/system/AnimatorSystem.h"
 #include "seri/system/SkinnedMeshRendererSystem.h"
-#include "seri/script/ScriptSystem.h"
+#include "seri/system/ScriptSystem.h"
 #include "seri/draw/DebugDraw.h"
 #include "seri/logging/Logger.h"
 
@@ -62,8 +63,9 @@ namespace seri
 			sound::SoundManager::Init("assets/sounds/");
 			scene::SceneManager::Init();
 			asset::AssetManager::StartAssetWatcher();
-			scripting::ScriptingManager::Init();
-			script::ScriptSystem::Init();
+			script::SystemScriptManager::Init();
+			script::LuaScriptManager::Init();
+			system::ScriptSystem::Init();
 			debug::DebugDraw::Init();
 
 			event::EventManager::Subscribe<event::WindowResizeEventData>(
@@ -113,6 +115,7 @@ namespace seri
 
 		~CoreLayer() override
 		{
+			system::ScriptSystem::Reset();
 		}
 
 		void OnPreUpdate() override
@@ -145,15 +148,16 @@ namespace seri
 
 			asset::AssetManager::Update();
 			scene::SceneManager::Update();
+			script::LuaScriptManager::Update();
 
-			script::ScriptSystem::Sync();
+			system::ScriptSystem::Sync();
 
 			bool isPlaying = scene::SceneManager::GetState() == scene::SceneState::play;
 
 			if (isPlaying)
 			{
-				script::ScriptSystem::Update(deltaTime);
-				script::ScriptSystem::LateUpdate(deltaTime);
+				system::ScriptSystem::Update(deltaTime);
+				system::ScriptSystem::LateUpdate(deltaTime);
 			}
 
 			system::TransformSystem::Update();
@@ -171,8 +175,6 @@ namespace seri
 			system::AudioSystem::Update();
 			system::SpriteRendererSystem::Update();
 			system::TextRendererSystem::Update();
-
-			scripting::ScriptingManager::Update();
 
 			debug::DebugDraw::Render(Graphic::GetActiveCamera());
 			debug::DebugDraw::RenderUI(Graphic::GetCameraUI());

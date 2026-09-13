@@ -1,11 +1,11 @@
 #pragma once
 
 #include "seri/component/Components.h"
-#include "seri/script/ScriptBase.h"
+#include "seri/script/system/SystemScript.h"
 
 namespace seri::script
 {
-	class RotatorScript : public ScriptBase
+	class RotatorScript : public SystemScript
 	{
 	public:
 		void OnUpdate(float deltaTime) override

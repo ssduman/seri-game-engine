@@ -12,11 +12,11 @@
 #include <unordered_map>
 #include <vector>
 
-namespace seri::script
+namespace seri::system
 {
 	struct ScriptInstance
 	{
-		std::unique_ptr<ScriptBase> script{ nullptr };
+		std::unique_ptr<script::ScriptBase> script{ nullptr };
 		bool started{ false };
 		bool running{ false };
 		bool faulted{ false };
@@ -38,8 +38,12 @@ namespace seri::script
 		static void SetEnabled(bool enabled);
 		static bool IsEnabled();
 
+		static void Rebuild(const std::string& name);
+
+		static script::ScriptBase* FindScript(entt::entity entity, const std::string& name);
+
 		static void OverrideFields(entt::entity entity, size_t index);
-		static std::vector<ScriptField> GetSerializedFields(entt::entity entity, size_t index);
+		static std::vector<script::ScriptField> GetSerializedFields(entt::entity entity, size_t index);
 
 	private:
 		static void OnScriptComponentDestroyed(entt::registry& registry, entt::entity entity);

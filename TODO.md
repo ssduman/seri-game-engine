@@ -1,7 +1,6 @@
 # TODO
 
 1. tracy profiler
-1. lua scripting improvements
 1. prefab and serialized object
 1. scene gui, skybox
 1. scene view mouse picking and highlighting

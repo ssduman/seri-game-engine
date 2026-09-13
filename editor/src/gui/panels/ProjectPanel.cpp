@@ -28,6 +28,8 @@ namespace seri::editor
 				return IM_COL32(90, 140, 200, 255);
 			case seri::asset::AssetType::font:
 				return IM_COL32(200, 120, 150, 255);
+			case seri::asset::AssetType::script:
+				return IM_COL32(200, 190, 90, 255);
 			default:
 				return IM_COL32(120, 120, 126, 255);
 		}
@@ -328,6 +330,10 @@ namespace seri::editor
 			{
 				_pendingCreateMaterial = true;
 			}
+			if (ImGui::MenuItem("Script"))
+			{
+				_pendingCreateScript = true;
+			}
 
 			ImGui::EndMenu();
 		}
@@ -448,6 +454,18 @@ namespace seri::editor
 			if (id != 0)
 			{
 				_selectedPath = seri::asset::AssetManager::GetAssetMetadata(id).source;
+				_selectionDirty = true;
+			}
+		}
+
+		if (_pendingCreateScript)
+		{
+			_pendingCreateScript = false;
+
+			std::filesystem::path created = seri::asset::AssetManager::CreateScript(_currentFolder, "NewScript");
+			if (!created.empty())
+			{
+				_selectedPath = created;
 				_selectionDirty = true;
 			}
 		}

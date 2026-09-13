@@ -4,8 +4,7 @@
 
 #include "seri/logging/Logger.h"
 #include "seri/script/ScriptBase.h"
-
-#include <fmt/format.h>
+#include "seri/script/system/SystemScript.h"
 
 #include <functional>
 #include <memory>
@@ -25,25 +24,20 @@ namespace seri::script
 		template<typename T>
 		static void Register(std::string_view name)
 		{
-			static_assert(std::is_base_of_v<ScriptBase, T>, "script type must derive from ScriptBase");
+			static_assert(std::is_base_of_v<SystemScript, T>, "script type must derive from SystemScript");
 
-			std::string key{ name };
-
-			if (GetInstance()._factories.contains(key))
-			{
-				LIB_LOGGER(warning, script) << fmt::format("'{}' is already registered", key);
-				return;
-			}
-
-			GetInstance()._factories.emplace(key, []() { return std::unique_ptr<ScriptBase>{ new T{} }; });
-			GetInstance()._names.emplace_back(key);
-
-			LIB_LOGGER(info, script) << fmt::format("'{}' registered", key);
+			Register(name, ScriptKind::system, []() { return std::unique_ptr<ScriptBase>{ new T{} }; });
 		}
+
+		static bool Register(std::string_view name, ScriptKind kind, Factory factory);
+
+		static void Unregister(const std::string& name);
 
 		static std::unique_ptr<ScriptBase> Create(const std::string& name);
 
 		static bool Contains(const std::string& name);
+
+		static ScriptKind GetKind(const std::string& name);
 
 		static const std::vector<std::string>& GetNames();
 
@@ -54,7 +48,13 @@ namespace seri::script
 		~ScriptRegistry() = default;
 
 	private:
-		std::unordered_map<std::string, Factory> _factories{};
+		struct Entry
+		{
+			ScriptKind kind{ ScriptKind::system };
+			Factory factory{};
+		};
+
+		std::unordered_map<std::string, Entry> _entries{};
 		std::vector<std::string> _names{};
 
 	};

@@ -47,6 +47,7 @@ namespace seri::editor
 		bool _openDeletePopup{ false };
 		bool _pendingCreateFolder{ false };
 		bool _pendingCreateMaterial{ false };
+		bool _pendingCreateScript{ false };
 		bool _pendingRescan{ false };
 
 	};

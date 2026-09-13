@@ -33,23 +33,39 @@ namespace seri::editor
 
 		bool picked = false;
 
-		for (const auto& name : seri::script::ScriptRegistry::GetNames())
+		for (seri::script::ScriptKind kind : { seri::script::ScriptKind::system, seri::script::ScriptKind::lua })
 		{
-			if (!Util::ContainsIgnoreCase(name, search))
+			bool hasHeader = false;
+
+			for (const auto& name : seri::script::ScriptRegistry::GetNames())
 			{
-				continue;
+				if (seri::script::ScriptRegistry::GetKind(name) != kind || !Util::ContainsIgnoreCase(name, search))
+				{
+					continue;
+				}
+
+				if (!hasHeader)
+				{
+					ImGui::SeparatorText(kind == seri::script::ScriptKind::lua ? "Lua" : "System");
+					hasHeader = true;
+				}
+
+				ImGui::PushID(name.c_str());
+
+				if (ImGui::Selectable(name.c_str()))
+				{
+					selection = name;
+					picked = true;
+					ImGui::CloseCurrentPopup();
+				}
+
+				ImGui::PopID();
+
+				if (picked)
+				{
+					break;
+				}
 			}
-
-			ImGui::PushID(name.c_str());
-
-			if (ImGui::Selectable(name.c_str()))
-			{
-				selection = name;
-				picked = true;
-				ImGui::CloseCurrentPopup();
-			}
-
-			ImGui::PopID();
 
 			if (picked)
 			{

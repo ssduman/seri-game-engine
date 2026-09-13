@@ -29,7 +29,8 @@
 
 #include "seri/script/ScriptBase.h"
 #include "seri/script/ScriptRegistry.h"
-#include "seri/script/ScriptSystem.h"
+#include "seri/script/system/SystemScript.h"
+#include "seri/system/ScriptSystem.h"
 
 #include "seri/logging/Logger.h"
 #include "seri/logging/LogBuffer.h"

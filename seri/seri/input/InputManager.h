@@ -15,6 +15,7 @@ namespace seri
 		static void Init()
 		{
 			GetInstance()._keys = std::vector<InputAction>(static_cast<int>(KeyCode::len), InputAction::noop);
+			GetInstance()._keysPressing = std::vector<bool>(static_cast<int>(KeyCode::len), false);
 			GetInstance()._mouse = std::vector<InputAction>(static_cast<int>(MouseButtonCode::len), InputAction::noop);
 			GetInstance()._mousePressing = std::vector<bool>(static_cast<int>(MouseButtonCode::len), false);
 
@@ -39,7 +40,21 @@ namespace seri
 
 		static void RegisterKey(KeyCode target, InputAction action)
 		{
-			GetInstance()._keys[static_cast<int>(target)] = action;
+			int index = static_cast<int>(target);
+
+			switch (action)
+			{
+				case seri::InputAction::press:
+					GetInstance()._keysPressing[index] = true;
+					break;
+				case seri::InputAction::release:
+					GetInstance()._keysPressing[index] = false;
+					break;
+				default:
+					break;
+			}
+
+			GetInstance()._keys[index] = action;
 		}
 
 		static void RegisterMouse(MouseButtonCode target, InputAction action)
@@ -85,7 +100,7 @@ namespace seri
 
 		static bool IsKeyPressing(KeyCode target)
 		{
-			return GetInstance()._keys[static_cast<int>(target)] == InputAction::repeat;
+			return GetInstance()._keysPressing[static_cast<int>(target)];
 		}
 
 		static bool IsMouseButtonDown(MouseButtonCode target)
@@ -121,6 +136,7 @@ namespace seri
 
 	private:
 		std::vector<InputAction> _keys{};
+		std::vector<bool> _keysPressing{};
 		std::vector<InputAction> _mouse{};
 		std::vector<bool> _mousePressing{};
 		glm::vec2 _cursorPosition{ 0.0f, 0.0f };

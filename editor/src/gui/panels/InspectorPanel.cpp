@@ -614,7 +614,7 @@ namespace seri::editor
 
 				ImGui::Indent();
 
-				for (const auto& field : seri::script::ScriptSystem::GetSerializedFields(entity, i))
+				for (const auto& field : seri::system::ScriptSystem::GetSerializedFields(entity, i))
 				{
 					bool fieldChanged = false;
 
@@ -647,7 +647,7 @@ namespace seri::editor
 
 					if (fieldChanged)
 					{
-						seri::script::ScriptSystem::OverrideFields(entity, i);
+						seri::system::ScriptSystem::OverrideFields(entity, i);
 						changed = true;
 					}
 				}

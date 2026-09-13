@@ -140,6 +140,8 @@ namespace seri::asset
 
 		static uint64_t CreateMaterial(const std::filesystem::path& folder, const std::string& name);
 
+		static std::filesystem::path CreateScript(const std::filesystem::path& folder, const std::string& name);
+
 		static std::filesystem::path CreateFolder(const std::filesystem::path& folder, const std::string& name);
 
 		static bool RenameAsset(const std::filesystem::path& path, const std::string& newName);
@@ -190,6 +192,7 @@ namespace seri::asset
 		const char* kAssetTextureTGAExtension = "tga";
 		const char* kAssetFontTTFExtension = "ttf";
 		const char* kAssetFontOTFExtension = "otf";
+		const char* kAssetScriptLuaExtension = "lua";
 
 	protected:
 		friend struct seri::Singleton<AssetManager>;

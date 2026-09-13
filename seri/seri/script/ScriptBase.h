@@ -7,6 +7,12 @@
 
 namespace seri::script
 {
+	enum class ScriptKind
+	{
+		system,
+		lua,
+	};
+
 	struct ScriptField
 	{
 		enum class Type

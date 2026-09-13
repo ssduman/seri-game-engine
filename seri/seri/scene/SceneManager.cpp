@@ -2,7 +2,7 @@
 
 #include "seri/scene/SceneManager.h"
 #include "seri/scene/Scene.h"
-#include "seri/script/ScriptSystem.h"
+#include "seri/system/ScriptSystem.h"
 
 #include <entt/entt.hpp>
 
@@ -84,7 +84,7 @@ namespace seri::scene
 
 		if (newState == SceneState::edit)
 		{
-			seri::script::ScriptSystem::Reset();
+			seri::system::ScriptSystem::Reset();
 
 			if (instance._hasSnapshot)
 			{
