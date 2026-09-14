@@ -341,7 +341,7 @@ namespace seri::component
 	AudioComponent AudioComponent::Deserialize(const YAML::Node& node)
 	{
 		AudioComponent component{};
-		component.soundPath = YAMLUtil::GetType<std::string>(node["SoundPath"]);
+		component.soundAssetId = YAMLUtil::GetType<uint64_t>(node["SoundAssetID"]);
 		component.volume = YAMLUtil::GetType<float>(node["Volume"]);
 		component.loop = YAMLUtil::GetType<bool>(node["Loop"]);
 		component.playOnStart = YAMLUtil::GetType<bool>(node["PlayOnStart"]);
@@ -350,7 +350,7 @@ namespace seri::component
 	YAML::Node AudioComponent::Serialize(const AudioComponent& component)
 	{
 		YAML::Node node;
-		node["SoundPath"] = component.soundPath;
+		node["SoundAssetID"] = component.soundAssetId;
 		node["Volume"] = component.volume;
 		node["Loop"] = component.loop;
 		node["PlayOnStart"] = component.playOnStart;

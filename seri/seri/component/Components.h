@@ -310,13 +310,13 @@ namespace seri::component
 	{
 		static constexpr std::string_view kCompName = "AudioComponent";
 
-		std::string soundPath{ "" };
+		uint64_t soundAssetId{ 0 };
 		float volume{ 1.0f };
 		bool loop{ false };
 		bool playOnStart{ true };
 
 		uint64_t handle{ 0 };
-		std::string builtPath{ "" };
+		uint64_t builtSoundAssetId{ 0 };
 		bool started{ false };
 
 		static AudioComponent Deserialize(const YAML::Node& node);

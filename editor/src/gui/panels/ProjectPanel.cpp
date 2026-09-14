@@ -32,6 +32,8 @@ namespace seri::editor
 				return IM_COL32(200, 190, 90, 255);
 			case seri::asset::AssetType::prefab:
 				return IM_COL32(80, 150, 230, 255);
+			case seri::asset::AssetType::sound:
+				return IM_COL32(170, 110, 200, 255);
 			default:
 				return IM_COL32(120, 120, 126, 255);
 		}

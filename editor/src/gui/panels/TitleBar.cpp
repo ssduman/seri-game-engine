@@ -1,5 +1,7 @@
 #include "Editorpch.h"
 
+#include <seri/core/Literals.h>
+
 #include "gui/panels/TitleBar.h"
 #include "gui/EditorWidgets.h"
 
@@ -33,10 +35,11 @@ namespace seri::editor
 
 	void TitleBar::LoadIcon()
 	{
-		std::filesystem::path iconPath = seri::asset::AssetManager::GetAssetDirectory() / "icons" / "seri.png";
-		if (!std::filesystem::exists(iconPath))
+		uint64_t iconId = seri::asset::AssetManager::FindAssetIdByName(seri::literals::kIconName);
+		std::filesystem::path iconPath = seri::asset::AssetManager::GetAssetMetadata(iconId).source;
+		if (iconId == 0 || !std::filesystem::exists(iconPath))
 		{
-			LIB_LOGGER(warning, gui) << fmt::format("editor icon not found: {}", iconPath.string());
+			LIB_LOGGER(warning, gui) << "editor icon not found: " << seri::literals::kIconName;
 			return;
 		}
 

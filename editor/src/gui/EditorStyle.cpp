@@ -17,15 +17,16 @@ namespace seri::editor
 	{
 		auto& io = ImGui::GetIO();
 
-		std::filesystem::path fontPath = seri::asset::AssetManager::GetAssetDirectory() / "fonts" / "Roboto-Regular.ttf";
-		if (std::filesystem::exists(fontPath))
+		uint64_t fontId = seri::asset::AssetManager::FindAssetIdByName(seri::literals::kDefaultFontName);
+		std::filesystem::path fontPath = seri::asset::AssetManager::GetAssetMetadata(fontId).source;
+		if (fontId != 0 && std::filesystem::exists(fontPath))
 		{
 			ImFontConfig config{};
 			io.FontDefault = io.Fonts->AddFontFromFileTTF(fontPath.string().c_str(), 16.0f, &config);
 		}
 		else
 		{
-			LIB_LOGGER(warning, gui) << fmt::format("editor font not found: {}", fontPath.string());
+			LIB_LOGGER(warning, gui) << "editor font not found: " << seri::literals::kDefaultFontName;
 		}
 	}
 

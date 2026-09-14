@@ -115,7 +115,19 @@ namespace seri::script
 		timeTable["frame_count"] = 0;
 
 		sol::table audioTable = lua.create_named_table("Audio");
-		audioTable["Play"] = [](const std::string& path) { sound::SoundManager::Play(path); };
+		audioTable["Play"] = [](const std::string& name)
+			{
+				for (const auto& metadata : asset::AssetManager::GetAssetsByType(asset::AssetType::sound))
+				{
+					if (metadata.source.stem().string() == name)
+					{
+						sound::SoundManager::Play(metadata.id);
+						return;
+					}
+				}
+
+				LIB_LOGGER(warning, lua_bindings) << "sound '" << name << "' not found";
+			};
 
 		sol::table applicationTable = lua.create_named_table("Application");
 		applicationTable["Quit"] = []() { Application::Quit(); };

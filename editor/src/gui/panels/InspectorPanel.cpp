@@ -385,8 +385,14 @@ namespace seri::editor
 			}
 
 			bool changed = false;
+			uint64_t selection = 0;
 
-			changed |= DrawTextInput("Sound", audioComp->soundPath);
+			if (DrawAssetPicker("Sound", audioComp->soundAssetId, seri::asset::AssetType::sound, selection))
+			{
+				audioComp->soundAssetId = selection;
+				changed = true;
+			}
+
 			changed |= DrawFloat("Volume", audioComp->volume, 0.01f, 0.0f, 1.0f);
 			changed |= DrawBool("Loop", audioComp->loop);
 			changed |= DrawBool("Play On Start", audioComp->playOnStart);

@@ -4,10 +4,8 @@
 
 #include "seri/sound/SoundManager.h"
 
-void seri::sound::SoundManager::Init(const char* soundFolderPath)
+void seri::sound::SoundManager::Init()
 {
-	GetInstance()._soundFolderPath = soundFolderPath;
-
 	ma_result result;
 
 	ma_engine_config engineConfig;
@@ -22,11 +20,26 @@ void seri::sound::SoundManager::Init(const char* soundFolderPath)
 	}
 }
 
-void seri::sound::SoundManager::Play(std::string soundFilePath)
+void seri::sound::SoundManager::ClearSounds()
 {
-	ma_result result;
+	GetInstance()._soundPaths.clear();
+}
 
-	result = ma_engine_play_sound(&GetInstance()._engine, (GetInstance()._soundFolderPath + soundFilePath).c_str(), nullptr);
+void seri::sound::SoundManager::AddSound(uint64_t assetId, const std::filesystem::path& path)
+{
+	GetInstance()._soundPaths[assetId] = path;
+}
+
+void seri::sound::SoundManager::Play(uint64_t assetId)
+{
+	std::string fullPath = FindPath(assetId);
+	if (fullPath.empty())
+	{
+		LIB_LOGGER(error, sound) << "sound " << assetId << " not found";
+		return;
+	}
+
+	ma_result result = ma_engine_play_sound(&GetInstance()._engine, fullPath.c_str(), nullptr);
 	if (result != MA_SUCCESS)
 	{
 		LIB_LOGGER(error, sound) << "could not play audio: " << ma_result_description(result);
@@ -34,16 +47,21 @@ void seri::sound::SoundManager::Play(std::string soundFilePath)
 	}
 }
 
-uint64_t seri::sound::SoundManager::Create(const std::string& soundFilePath)
+uint64_t seri::sound::SoundManager::Create(uint64_t assetId)
 {
-	if (soundFilePath.empty())
+	if (assetId == 0)
 	{
 		return 0;
 	}
 
-	auto sound = std::make_unique<ma_sound>();
+	std::string fullPath = FindPath(assetId);
+	if (fullPath.empty())
+	{
+		LIB_LOGGER(error, sound) << "sound " << assetId << " not found";
+		return 0;
+	}
 
-	std::string fullPath = GetInstance()._soundFolderPath + soundFilePath;
+	auto sound = std::make_unique<ma_sound>();
 
 	ma_result result = ma_sound_init_from_file(&GetInstance()._engine, fullPath.c_str(), 0, nullptr, nullptr, sound.get());
 	if (result != MA_SUCCESS)
@@ -122,4 +140,15 @@ ma_sound* seri::sound::SoundManager::Find(uint64_t handle)
 	}
 
 	return it->second.get();
+}
+
+std::string seri::sound::SoundManager::FindPath(uint64_t assetId)
+{
+	auto it = GetInstance()._soundPaths.find(assetId);
+	if (it == GetInstance()._soundPaths.end())
+	{
+		return {};
+	}
+
+	return it->second.string();
 }

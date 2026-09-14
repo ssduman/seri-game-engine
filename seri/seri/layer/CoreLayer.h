@@ -54,13 +54,12 @@ namespace seri
 
 			RenderingManager::Instance()->Init(WindowManager::Instance(), RenderingProperties{});
 
-			ShaderLibrary::Init("assets/shaders/");
 			asset::AssetManager::Init();
 			TimeWrapper::Init();
 			Application::Init();
 			Graphic::Init();
 			InputManager::Init();
-			sound::SoundManager::Init("assets/sounds/");
+			sound::SoundManager::Init();
 			scene::SceneManager::Init();
 			asset::AssetManager::StartAssetWatcher();
 			script::SystemScriptManager::Init();

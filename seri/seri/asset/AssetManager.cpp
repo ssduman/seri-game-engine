@@ -4,6 +4,8 @@
 #include "seri/font/Font.h"
 #include "seri/scene/Prefab.h"
 #include "seri/scene/SceneManager.h"
+#include "seri/shader/ShaderLibrary.h"
+#include "seri/sound/SoundManager.h"
 
 #include <yaml-cpp/yaml.h>
 
@@ -312,6 +314,18 @@ namespace seri::asset
 				{
 					assetMetadata.type = seri::asset::AssetType::prefab;
 				}
+				else if (node.extension == kAssetSoundWAVExtension)
+				{
+					assetMetadata.type = seri::asset::AssetType::sound;
+				}
+				else if (node.extension == kAssetSoundMP3Extension)
+				{
+					assetMetadata.type = seri::asset::AssetType::sound;
+				}
+				else if (node.extension == kAssetSoundFLACExtension)
+				{
+					assetMetadata.type = seri::asset::AssetType::sound;
+				}
 
 				node.type = assetMetadata.type;
 				_assetMetadataCache[existingId] = assetMetadata;
@@ -418,6 +432,20 @@ namespace seri::asset
 			metadataList.push_back(kv.second);
 		}
 
+		seri::ShaderLibrary::Clear();
+		seri::sound::SoundManager::ClearSounds();
+
+		for (const auto& metadata : metadataList)
+		{
+			std::string extension = metadata.source.extension().string();
+			seri::Util::ToLower(extension);
+
+			if (extension == fmt::format(".{}", kAssetShaderGLSLExtension))
+			{
+				seri::ShaderLibrary::AddGLSL(metadata.source);
+			}
+		}
+
 		for (const auto& metadata : metadataList)
 		{
 			try
@@ -469,12 +497,18 @@ namespace seri::asset
 						break;
 					case seri::asset::AssetType::shader:
 						{
+							seri::ShaderLibrary::AddShader(metadata.source);
 							GetShader(metadata);
 						}
 						break;
 					case seri::asset::AssetType::texture:
 						{
 							GetTexture(metadata);
+						}
+						break;
+					case seri::asset::AssetType::sound:
+						{
+							seri::sound::SoundManager::AddSound(metadata.id, metadata.source);
 						}
 						break;
 					case seri::asset::AssetType::mesh:
@@ -924,7 +958,7 @@ namespace seri::asset
 
 	uint64_t asset::AssetManager::FindAssetIdByName(std::string_view name)
 	{
-		for (const auto& kv : _assetMetadataCache)
+		for (const auto& kv : GetInstance()._assetMetadataCache)
 		{
 			if (kv.second.name == name)
 			{

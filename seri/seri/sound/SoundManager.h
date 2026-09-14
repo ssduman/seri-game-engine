@@ -8,6 +8,7 @@
 
 #include <string>
 #include <memory>
+#include <filesystem>
 #include <unordered_map>
 
 namespace seri::sound
@@ -15,11 +16,14 @@ namespace seri::sound
 	class SoundManager : public seri::Singleton<SoundManager>
 	{
 	public:
-		static void Init(const char* soundFolderPath);
+		static void Init();
 
-		static void Play(std::string soundFilePath);
+		static void ClearSounds();
+		static void AddSound(uint64_t assetId, const std::filesystem::path& path);
 
-		static uint64_t Create(const std::string& soundFilePath);
+		static void Play(uint64_t assetId);
+
+		static uint64_t Create(uint64_t assetId);
 		static void Destroy(uint64_t handle);
 
 		static void Start(uint64_t handle);
@@ -50,9 +54,10 @@ namespace seri::sound
 
 	private:
 		static ma_sound* Find(uint64_t handle);
+		static std::string FindPath(uint64_t assetId);
 
 		ma_engine _engine{};
-		std::string _soundFolderPath{};
+		std::unordered_map<uint64_t, std::filesystem::path> _soundPaths{};
 
 		std::unordered_map<uint64_t, std::unique_ptr<ma_sound>> _sounds{};
 		uint64_t _nextHandle{ 1 };

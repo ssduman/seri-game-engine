@@ -5,6 +5,7 @@ namespace seri::literals
 	constexpr const char* kVersion = "0.1";
 	constexpr const char* kEngineName = "Seri Game Engine";
 
+	constexpr const char* kIconName = "seri.png";
 	constexpr const char* kDefaultFontName = "Roboto-Regular.ttf";
 	constexpr const char* kDefaultWhiteTextureName = "default_white.png";
 

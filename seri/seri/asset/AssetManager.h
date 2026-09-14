@@ -129,6 +129,8 @@ namespace seri::asset
 			return "<not_found>";
 		}
 
+		static uint64_t FindAssetIdByName(std::string_view name);
+
 		static seri::asset::AssetMetadata GetAssetMetadata(uint64_t id)
 		{
 			if (GetInstance()._assetMetadataCache.find(id) != GetInstance()._assetMetadataCache.end())
@@ -186,6 +188,7 @@ namespace seri::asset
 		const char* kAssetSceneExtension = "sscene";
 		const char* kAssetMaterialExtension = "smat";
 		const char* kAssetShaderExtension = "sshader";
+		const char* kAssetShaderGLSLExtension = "glsl";
 		const char* kAssetFBXExtension = "fbx";
 		const char* kAssetOBJExtension = "obj";
 		const char* kAssetTexturePNGExtension = "png";
@@ -196,6 +199,9 @@ namespace seri::asset
 		const char* kAssetFontOTFExtension = "otf";
 		const char* kAssetScriptLuaExtension = "lua";
 		const char* kAssetPrefabExtension = "sprefab";
+		const char* kAssetSoundWAVExtension = "wav";
+		const char* kAssetSoundMP3Extension = "mp3";
+		const char* kAssetSoundFLACExtension = "flac";
 
 	protected:
 		friend struct seri::Singleton<AssetManager>;
@@ -209,7 +215,6 @@ namespace seri::asset
 		void ForgetPath(const std::filesystem::path& path);
 		bool IsPendingStable();
 		bool HasPendingChanges();
-		uint64_t FindAssetIdByName(std::string_view name);
 		uint64_t FindAssetIdByPath(const std::filesystem::path& path);
 		std::filesystem::path GetUniquePath(const std::filesystem::path& folder, const std::string& name, const char* extension);
 		std::filesystem::path GetMetaPath(const std::filesystem::path& path);

@@ -30,7 +30,9 @@ namespace seri
 			std::string fsCode{ "" };
 		};
 
-		static void Init(const char* shaderFolderPath);
+		static void Clear();
+		static void AddShader(const std::filesystem::path& path);
+		static void AddGLSL(const std::filesystem::path& path);
 
 		static GLSLInfo& GetGLSL(const std::string& name);
 		static ShaderInfo& Get(const std::string& name);

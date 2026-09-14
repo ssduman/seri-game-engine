@@ -20,15 +20,15 @@ namespace seri::system
 		{
 			auto& audio = view.get<seri::component::AudioComponent>(entity);
 
-			if (audio.soundPath != audio.builtPath)
+			if (audio.soundAssetId != audio.builtSoundAssetId)
 			{
 				if (audio.handle != 0)
 				{
 					seri::sound::SoundManager::Destroy(audio.handle);
 				}
 
-				audio.handle = seri::sound::SoundManager::Create(audio.soundPath);
-				audio.builtPath = audio.soundPath;
+				audio.handle = seri::sound::SoundManager::Create(audio.soundAssetId);
+				audio.builtSoundAssetId = audio.soundAssetId;
 				audio.started = false;
 			}
 
