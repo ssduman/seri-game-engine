@@ -1,7 +1,7 @@
 #include "Editorpch.h"
 
-#include "gui/panels/InspectorPanel.h"
-#include "gui/EditorWidgets.h"
+#include "gui/editor/panels/InspectorPanel.h"
+#include "gui/common/GUIWidgets.h"
 
 namespace seri::editor
 {

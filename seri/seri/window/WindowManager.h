@@ -109,6 +109,11 @@ namespace seri
 			return _windowManager->IsWindowMaximized();
 		}
 
+		static void SetWindowSize(int width, int height)
+		{
+			_windowManager->SetWindowSize(width, height);
+		}
+
 		static void FireEvent(const event::IEventData& data)
 		{
 			_windowManager->FireEvent(data);

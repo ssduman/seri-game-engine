@@ -517,6 +517,11 @@ namespace seri
 			SDL_RestoreWindow(_window);
 		}
 
+		void SetWindowSize(int width, int height) override
+		{
+			SDL_SetWindowSize(_window, width, height);
+		}
+
 		bool IsWindowMaximized() override
 		{
 			return (SDL_GetWindowFlags(_window) & SDL_WINDOW_MAXIMIZED) != 0;

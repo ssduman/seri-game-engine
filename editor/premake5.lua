@@ -44,6 +44,7 @@ project "Editor"
     "glm",
     "imguizmo",
     "lua",
+    "nfd",
     "SDL3",
   }
 

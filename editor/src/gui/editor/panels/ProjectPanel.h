@@ -1,6 +1,6 @@
 #pragma once
 
-#include "gui/GUIContext.h"
+#include "gui/editor/GUIContext.h"
 
 namespace seri::editor
 {

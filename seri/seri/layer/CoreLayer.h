@@ -39,26 +39,10 @@ namespace seri
 		{
 			srand(static_cast<unsigned int>(time(0)));
 
-			LoggerConfig loggerConfig;
-			loggerConfig.level = LogLevel::info;
-			Logger::Init(loggerConfig);
-
-			WindowManager::Instance()->Init(
-				{
-					.windowTitle = "Seri Game Engine - Editor",
-					.isFullscreen = false,
-					.windowWidth = 1600,
-					.windowHeight = 900
-				}
-			);
-
-			RenderingManager::Instance()->Init(WindowManager::Instance(), RenderingProperties{});
-
 			asset::AssetManager::Init();
 			TimeWrapper::Init();
 			Application::Init();
 			Graphic::Init();
-			InputManager::Init();
 			sound::SoundManager::Init();
 			scene::SceneManager::Init();
 			asset::AssetManager::StartAssetWatcher();

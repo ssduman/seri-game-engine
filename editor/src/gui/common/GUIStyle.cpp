@@ -1,6 +1,6 @@
 #include "Editorpch.h"
 
-#include "gui/EditorStyle.h"
+#include "gui/common/GUIStyle.h"
 
 namespace seri::editor
 {
@@ -13,13 +13,11 @@ namespace seri::editor
 		io.ConfigWindowsMoveFromTitleBarOnly = true;
 	}
 
-	void SetFonts()
+	void SetFonts(const std::filesystem::path& fontPath)
 	{
 		auto& io = ImGui::GetIO();
 
-		uint64_t fontId = seri::asset::AssetManager::FindAssetIdByName(seri::literals::kDefaultFontName);
-		std::filesystem::path fontPath = seri::asset::AssetManager::GetAssetMetadata(fontId).source;
-		if (fontId != 0 && std::filesystem::exists(fontPath))
+		if (!fontPath.empty() && std::filesystem::exists(fontPath))
 		{
 			ImFontConfig config{};
 			io.FontDefault = io.Fonts->AddFontFromFileTTF(fontPath.string().c_str(), 16.0f, &config);

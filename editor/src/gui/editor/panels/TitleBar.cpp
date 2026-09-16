@@ -2,8 +2,8 @@
 
 #include <seri/core/Literals.h>
 
-#include "gui/panels/TitleBar.h"
-#include "gui/EditorWidgets.h"
+#include "gui/editor/panels/TitleBar.h"
+#include "gui/common/GUIWidgets.h"
 
 namespace seri::editor
 {

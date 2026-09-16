@@ -90,6 +90,8 @@ namespace seri
 
 		virtual bool IsWindowMaximized() = 0;
 
+		virtual void SetWindowSize(int width, int height) = 0;
+
 		WindowProperties GetWindowProperties()
 		{
 			return _windowProperties;

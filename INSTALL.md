@@ -92,5 +92,6 @@ bootstrap-vcpkg.bat
 * [Boost](https://www.boost.org/)
 * [doctest](https://github.com/doctest/doctest/)
 * [nlohmann-json](https://github.com/nlohmann/json)
+* [Native File Dialog Extended](https://github.com/btzy/nativefiledialog-extended)
 * [vcpkg](https://github.com/microsoft/vcpkg)
 * [Premake](https://github.com/premake/premake-core)

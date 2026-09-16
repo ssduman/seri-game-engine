@@ -1,6 +1,6 @@
 #include "Editorpch.h"
 
-#include "gui/panels/ScenePanel.h"
+#include "gui/editor/panels/ScenePanel.h"
 
 namespace seri::editor
 {

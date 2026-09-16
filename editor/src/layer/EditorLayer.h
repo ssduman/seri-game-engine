@@ -2,7 +2,7 @@
 
 #include <seri/core/Seri.h>
 
-#include "gui/EditorGUI.h"
+#include "gui/editor/EditorGUI.h"
 
 namespace seri::editor
 {
@@ -13,13 +13,6 @@ namespace seri::editor
 		{
 			editorGUI = std::make_shared<EditorGUI>();
 			editorGUI->Init();
-
-			seri::WindowManager::Instance()->AddProcessEventDelegate(
-				[&](const void* event)
-				{
-					editorGUI->ProcessEvent(event);
-				}
-			);
 
 			seri::Application::SetVSyncCount(1);
 			seri::Application::SetTargetFrameRate(30);

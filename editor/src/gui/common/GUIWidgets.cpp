@@ -1,6 +1,6 @@
 #include "Editorpch.h"
 
-#include "gui/EditorWidgets.h"
+#include "gui/common/GUIWidgets.h"
 
 namespace seri::editor
 {

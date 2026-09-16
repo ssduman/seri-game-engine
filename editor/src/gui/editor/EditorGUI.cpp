@@ -1,18 +1,8 @@
 #include "Editorpch.h"
 
-#include "gui/EditorGUI.h"
-#include "gui/EditorStyle.h"
-
-#include <imgui_impl_opengl3.h>
-#include <imgui_freetype.h>
-
-#if defined (SERI_USE_WINDOW_GLFW)
-#include <GLFW/glfw3.h>
-#include <imgui_impl_glfw.h>
-#elif defined (SERI_USE_WINDOW_SDL3)
-#include <SDL3/SDL.h>
-#include <imgui_impl_sdl3.h>
-#endif
+#include "gui/editor/EditorGUI.h"
+#include "gui/common/GUIStyle.h"
+#include "gui/common/GUIBackend.h"
 
 namespace seri::editor
 {
@@ -23,21 +13,7 @@ namespace seri::editor
 
 	EditorGUI::~EditorGUI()
 	{
-		if (ImGui::GetCurrentContext() == nullptr)
-		{
-			LIB_LOGGER(warning, gui) << "unexpected context to destroy";
-			return;
-		}
-
-		ImGui_ImplOpenGL3_Shutdown();
-
-#if defined (SERI_USE_WINDOW_GLFW)
-		ImGui_ImplGlfw_Shutdown();
-#elif defined (SERI_USE_WINDOW_SDL3)
-		ImGui_ImplSDL3_Shutdown();
-#endif
-
-		ImGui::DestroyContext();
+		GUIBackend::Shutdown();
 
 		LIB_LOGGER(info, gui) << "destroyed";
 	}
@@ -47,31 +23,20 @@ namespace seri::editor
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
 
+		uint64_t fontId = seri::asset::AssetManager::FindAssetIdByName(seri::literals::kDefaultFontName);
+
 		SetIO();
-		SetFonts();
+		SetFonts(seri::asset::AssetManager::GetAssetMetadata(fontId).source);
 		SetStyle();
 
 		_titleBar.Init();
 
-#if defined (SERI_USE_WINDOW_GLFW)
-		ImGui_ImplGlfw_InitForOpenGL(static_cast<GLFWwindow*>(seri::WindowManager::GetWindowHandle()), true);
-#elif defined (SERI_USE_WINDOW_SDL3)
-		ImGui_ImplSDL3_InitForOpenGL(static_cast<SDL_Window*>(seri::WindowManager::GetWindowHandle()), seri::WindowManager::GetContext());
-#endif
-
-		ImGui_ImplOpenGL3_Init("#version 460");
+		GUIBackend::Init();
 	}
 
 	void EditorGUI::Update()
 	{
-		ImGui_ImplOpenGL3_NewFrame();
-#if defined (SERI_USE_WINDOW_GLFW)
-		ImGui_ImplGlfw_NewFrame();
-#elif defined (SERI_USE_WINDOW_SDL3)
-		ImGui_ImplSDL3_NewFrame();
-#endif
-
-		ImGui::NewFrame();
+		GUIBackend::NewFrame();
 
 		ImGuizmo::BeginFrame();
 		ImGuizmo::Enable(true);
@@ -86,29 +51,7 @@ namespace seri::editor
 
 	void EditorGUI::Render()
 	{
-		ImGui::Render();
-
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-#if defined (SERI_USE_WINDOW_GLFW)
-		GLFWwindow* backup_current_context = glfwGetCurrentContext();
-		ImGui::UpdatePlatformWindows();
-		ImGui::RenderPlatformWindowsDefault();
-		glfwMakeContextCurrent(backup_current_context);
-#elif defined (SERI_USE_WINDOW_SDL3)
-		SDL_Window* backup_current_window = SDL_GL_GetCurrentWindow();
-		SDL_GLContext backup_current_context = SDL_GL_GetCurrentContext();
-		ImGui::UpdatePlatformWindows();
-		ImGui::RenderPlatformWindowsDefault();
-		SDL_GL_MakeCurrent(backup_current_window, backup_current_context);
-#endif
-	}
-
-	void EditorGUI::ProcessEvent(const void* event)
-	{
-#if defined (SERI_USE_WINDOW_SDL3)
-		ImGui_ImplSDL3_ProcessEvent(static_cast<const SDL_Event*>(event));
-#endif
+		GUIBackend::Render();
 	}
 
 	void EditorGUI::CheckShortcuts()

@@ -1,13 +1,13 @@
 #pragma once
 
-#include "gui/GUIContext.h"
-#include "gui/panels/ConsolePanel.h"
-#include "gui/panels/GamePanel.h"
-#include "gui/panels/HierarchyPanel.h"
-#include "gui/panels/InspectorPanel.h"
-#include "gui/panels/ProjectPanel.h"
-#include "gui/panels/ScenePanel.h"
-#include "gui/panels/TitleBar.h"
+#include "gui/editor/GUIContext.h"
+#include "gui/editor/panels/ConsolePanel.h"
+#include "gui/editor/panels/GamePanel.h"
+#include "gui/editor/panels/HierarchyPanel.h"
+#include "gui/editor/panels/InspectorPanel.h"
+#include "gui/editor/panels/ProjectPanel.h"
+#include "gui/editor/panels/ScenePanel.h"
+#include "gui/editor/panels/TitleBar.h"
 
 namespace seri::editor
 {
@@ -23,8 +23,6 @@ namespace seri::editor
 		void Update() override;
 
 		void Render() override;
-
-		void ProcessEvent(const void* event);
 
 	private:
 		void CheckShortcuts();

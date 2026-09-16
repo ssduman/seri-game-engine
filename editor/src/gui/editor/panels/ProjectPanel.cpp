@@ -1,7 +1,7 @@
 #include "Editorpch.h"
 
-#include "gui/panels/ProjectPanel.h"
-#include "gui/EditorWidgets.h"
+#include "gui/editor/panels/ProjectPanel.h"
+#include "gui/common/GUIWidgets.h"
 
 #include <algorithm>
 
