@@ -6,6 +6,7 @@
 #include "seri/font/FontManager.h"
 #include "seri/scene/Prefab.h"
 #include "seri/asset/AssetManager.h"
+#include "seri/project/ProjectManager.h"
 
 #include <entt/entt.hpp>
 
@@ -38,7 +39,7 @@ namespace seri::scene
 		SceneManager::GetInstance()._activeScene = std::make_shared<Scene>();
 		SceneManager::GetInstance()._activeScene->Init();
 
-		SceneManager::GetInstance()._activeScene->Deserialize("assets/scenes/main.sscene");
+		SceneManager::GetInstance()._activeScene->Deserialize(seri::project::ProjectManager::GetStartupScene().string());
 	}
 
 	void SceneManager::Update()

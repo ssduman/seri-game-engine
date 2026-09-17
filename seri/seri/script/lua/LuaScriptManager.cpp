@@ -6,6 +6,7 @@
 #include "seri/system/ScriptSystem.h"
 #include "seri/script/ScriptRegistry.h"
 #include "seri/asset/AssetManager.h"
+#include "seri/project/ProjectManager.h"
 #include "seri/core/TimeWrapper.h"
 
 #include <sol/sol.hpp>
@@ -69,7 +70,7 @@ namespace seri::script
 
 		lua.open_libraries(sol::lib::base, sol::lib::package, sol::lib::math, sol::lib::table, sol::lib::string, sol::lib::utf8);
 
-		lua["package"]["path"] = fmt::format("{}/?.lua", asset::AssetManager::GetAssetDirectory().generic_string());
+		lua["package"]["path"] = fmt::format("{}/?.lua", project::ProjectManager::GetProjectAssetDirectory().generic_string());
 
 		lua.registry()[kClassesKey] = lua.create_table();
 	}
@@ -157,7 +158,7 @@ namespace seri::script
 		buffer << file.rdbuf();
 
 		std::error_code ec;
-		std::filesystem::path relative = std::filesystem::relative(path, asset::AssetManager::GetWorkingDirectory(), ec);
+		std::filesystem::path relative = std::filesystem::relative(path, project::ProjectManager::GetProjectDirectory(), ec);
 		std::string chunkName = "@" + (ec ? path : relative).generic_string();
 
 		sol::load_result chunk = lua.load(buffer.str(), chunkName);

@@ -522,6 +522,11 @@ namespace seri
 			SDL_SetWindowSize(_window, width, height);
 		}
 
+		void SetWindowTitle(const char* title) override
+		{
+			SDL_SetWindowTitle(_window, title);
+		}
+
 		bool IsWindowMaximized() override
 		{
 			return (SDL_GetWindowFlags(_window) & SDL_WINDOW_MAXIMIZED) != 0;

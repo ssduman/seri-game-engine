@@ -225,6 +225,12 @@ namespace seri::editor
 				return;
 			}
 
+			if (!seri::project::ProjectManager::OpenProject(projectFile, _createError))
+			{
+				LIB_LOGGER(error, launcher) << "could not open created project: " << _createError;
+				return;
+			}
+
 			_createError.clear();
 			_error.clear();
 			_projectPath = projectFile;
@@ -294,10 +300,14 @@ namespace seri::editor
 			return;
 		}
 
+		if (!seri::project::ProjectManager::OpenProject(path, _error))
+		{
+			LIB_LOGGER(error, launcher) << "could not open project " << path.string() << ": " << _error;
+			return;
+		}
+
 		_error.clear();
 		_projectPath = path;
-
-		LIB_LOGGER(info, launcher) << "project selected: " << _projectPath.string();
 	}
 
 	void LauncherGUI::DrawCenteredText(const char* text)
@@ -309,7 +319,7 @@ namespace seri::editor
 	std::filesystem::path LauncherGUI::FindFontPath()
 	{
 		std::error_code ec;
-		for (const auto& entry : std::filesystem::recursive_directory_iterator(seri::asset::AssetManager::GetAssetDirectory(), ec))
+		for (const auto& entry : std::filesystem::recursive_directory_iterator(seri::project::ProjectManager::GetEngineSourceDirectory(), ec))
 		{
 			if (entry.path().filename() == seri::literals::kDefaultFontName)
 			{

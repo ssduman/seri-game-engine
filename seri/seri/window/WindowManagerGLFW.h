@@ -196,6 +196,11 @@ namespace seri
 			glfwSetWindowSize(_window, width, height);
 		}
 
+		void SetWindowTitle(const char* title) override
+		{
+			glfwSetWindowTitle(_window, title);
+		}
+
 		bool IsWindowMaximized() override
 		{
 			return glfwGetWindowAttrib(_window, GLFW_MAXIMIZED) == GLFW_TRUE;

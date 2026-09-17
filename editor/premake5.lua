@@ -34,7 +34,8 @@ project "Editor"
   uses { "Seri" }
 
   postbuildcommands {
-    'xcopy /Q /E /Y /I /D "' .. path.translate(_MAIN_SCRIPT_DIR .. "/editor/assets") .. '" "%{cfg.targetdir}/assets"',
+    'if exist "%{cfg.targetdir}/assets" rmdir /S /Q "%{cfg.targetdir}/assets"',
+    'xcopy /Q /E /Y /I "' .. path.translate(_MAIN_SCRIPT_DIR .. "/editor/assets") .. '" "%{cfg.targetdir}/assets"',
   }
 
   links {

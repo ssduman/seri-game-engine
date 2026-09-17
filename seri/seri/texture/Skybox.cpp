@@ -1,37 +1,18 @@
 #include "Seripch.h"
 
 #include "seri/texture/Skybox.h"
+#include "seri/project/ProjectManager.h"
 
 namespace seri
 {
 	Skybox::Skybox()
 	{
-		_faces = {
-			"assets/textures/skybox/1/right.jpg",
-			"assets/textures/skybox/1/left.jpg",
-			"assets/textures/skybox/1/top.jpg",
-			"assets/textures/skybox/1/bottom.jpg",
-			"assets/textures/skybox/1/front.jpg",
-			"assets/textures/skybox/1/back.jpg",
-		};
+		std::filesystem::path skyboxFolder = seri::project::ProjectManager::GetEngineAssetDirectory() / "textures" / "skybox" / "3";
 
-		_faces = {
-			"assets/textures/skybox/2/px.jpg",
-			"assets/textures/skybox/2/nx.jpg",
-			"assets/textures/skybox/2/py.jpg",
-			"assets/textures/skybox/2/ny.jpg",
-			"assets/textures/skybox/2/pz.jpg",
-			"assets/textures/skybox/2/nz.jpg",
-		};
-
-		_faces = {
-			"assets/textures/skybox/3/px.jpg",
-			"assets/textures/skybox/3/nx.jpg",
-			"assets/textures/skybox/3/py.jpg",
-			"assets/textures/skybox/3/ny.jpg",
-			"assets/textures/skybox/3/pz.jpg",
-			"assets/textures/skybox/3/nz.jpg",
-		};
+		for (const char* face : { "px.jpg", "nx.jpg", "py.jpg", "ny.jpg", "pz.jpg", "nz.jpg" })
+		{
+			_faces.push_back((skyboxFolder / face).string());
+		}
 
 		Init();
 	}

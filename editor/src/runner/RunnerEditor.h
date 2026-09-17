@@ -1,6 +1,7 @@
 #pragma once
 
 #include <seri/core/Seri.h>
+#include <seri/project/ProjectManager.h>
 
 #include "gui/common/GUIBackend.h"
 #include "layer/EditorLayer.h"
@@ -88,6 +89,7 @@ namespace seri::editor
 				return;
 			}
 
+			seri::WindowManager::SetWindowTitle(fmt::format("{} - {}", kWindowTitle, seri::project::ProjectManager::GetName()).c_str());
 			seri::WindowManager::SetWindowSize(kEditorWidth, kEditorHeight);
 			seri::RenderingManager::SetViewport(0, 0, seri::WindowManager::GetWidth(), seri::WindowManager::GetHeight());
 

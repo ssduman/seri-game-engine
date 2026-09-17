@@ -6,6 +6,7 @@
 #include <seri/graphic/Material.h>
 #include <seri/random/Random.h>
 #include <seri/netcode/Socket.h>
+#include <seri/project/ProjectManager.h>
 
 namespace seri::editor
 {
@@ -205,7 +206,7 @@ namespace seri::editor
 			basicShader = seri::ShaderLibrary::Find("basic_2");
 
 			basicTexture = seri::TextureBase::Create();
-			basicTexture->Init(seri::TextureDesc{}, "assets/textures/passage.png");
+			basicTexture->Init(seri::TextureDesc{}, (seri::project::ProjectManager::GetEngineAssetDirectory() / "defaults" / "textures" / "default_checker.png").string());
 
 			basicVertexBuffer_0 = seri::VertexBufferBase::Create(positions);
 			basicVertexBuffer_0->AddElement(
@@ -256,7 +257,7 @@ namespace seri::editor
 			fontMesh = std::make_shared<seri::Mesh>();
 
 			auto texture0 = seri::TextureBase::Create();
-			texture0->Init(seri::TextureDesc{}, "assets/textures/passage.png");
+			texture0->Init(seri::TextureDesc{}, (seri::project::ProjectManager::GetEngineAssetDirectory() / "defaults" / "textures" / "default_checker.png").string());
 
 			materialFont = std::make_shared<seri::Material>();
 			materialFont->SetShader(seri::ShaderLibrary::Find("text"));

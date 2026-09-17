@@ -41,7 +41,9 @@ namespace seri::editor
 
 	void ProjectPanel::Draw(GUIContext& ctx)
 	{
-		seri::asset::AssetTreeNode& root = seri::asset::AssetManager::GetAssetTreeRoot();
+		seri::asset::AssetTreeNode& tree = seri::asset::AssetManager::GetAssetTreeRoot();
+		seri::asset::AssetTreeNode* projectRoot = FindNode(tree, seri::project::ProjectManager::GetProjectAssetDirectory());
+		seri::asset::AssetTreeNode& root = projectRoot ? *projectRoot : tree;
 
 		uint64_t treeVersion = seri::asset::AssetManager::GetAssetTreeVersion();
 		if (_knownTreeVersion != treeVersion)
@@ -91,11 +93,11 @@ namespace seri::editor
 
 	void ProjectPanel::DrawToolbar()
 	{
-		std::filesystem::path root = seri::asset::AssetManager::GetAssetDirectory();
+		std::filesystem::path root = seri::project::ProjectManager::GetProjectAssetDirectory();
 
 		ImGui::AlignTextToFramePadding();
 
-		if (ImGui::SmallButton("assets"))
+		if (ImGui::SmallButton(kRootLabel))
 		{
 			_currentFolder = root;
 		}
@@ -169,9 +171,9 @@ namespace seri::editor
 		}
 
 		std::string label = node.name;
-		if (label.empty())
+		if (node.path == seri::project::ProjectManager::GetProjectAssetDirectory())
 		{
-			label = "assets";
+			label = kRootLabel;
 			ImGui::SetNextItemOpen(true, ImGuiCond_Once);
 		}
 

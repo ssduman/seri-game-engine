@@ -114,6 +114,11 @@ namespace seri
 			_windowManager->SetWindowSize(width, height);
 		}
 
+		static void SetWindowTitle(const char* title)
+		{
+			_windowManager->SetWindowTitle(title);
+		}
+
 		static void FireEvent(const event::IEventData& data)
 		{
 			_windowManager->FireEvent(data);

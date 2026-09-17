@@ -3,6 +3,9 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
+# User
+project/**/assets/engine/
+
 # vcpkg
 vcpkg_installed/
 
@@ -97,7 +100,7 @@ StyleCopReport.xml
 *_h.h
 *.ilk
 *.meta
-*.obj
+# *.obj
 *.iobj
 *.pch
 *.pdb
@@ -120,10 +123,6 @@ StyleCopReport.xml
 *.pidb
 *.svclog
 *.scc
-
-# models
-!editor/assets/models/*.obj
-!misc/misc-assets/models/*.obj
 
 # Chutzpah Test files
 _Chutzpah*
@@ -423,6 +422,3 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
-
-# Asset files
-!editor/assets/**/*.obj

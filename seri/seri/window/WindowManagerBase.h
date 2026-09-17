@@ -92,6 +92,8 @@ namespace seri
 
 		virtual void SetWindowSize(int width, int height) = 0;
 
+		virtual void SetWindowTitle(const char* title) = 0;
+
 		WindowProperties GetWindowProperties()
 		{
 			return _windowProperties;

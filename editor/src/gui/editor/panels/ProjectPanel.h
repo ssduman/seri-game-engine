@@ -30,6 +30,8 @@ namespace seri::editor
 
 		seri::asset::AssetTreeNode* FindNode(seri::asset::AssetTreeNode& node, const std::filesystem::path& path);
 
+		static constexpr const char* kRootLabel = "assets";
+
 		std::filesystem::path _currentFolder{};
 		std::filesystem::path _selectedPath{};
 		std::filesystem::path _renamePath{};

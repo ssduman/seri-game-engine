@@ -15,6 +15,8 @@
 #include "seri/asset/Assets.h"
 #include "seri/asset/AssetManager.h"
 
+#include "seri/project/ProjectManager.h"
+
 #include "seri/component/Components.h"
 
 #include "seri/scene/SceneManager.h"

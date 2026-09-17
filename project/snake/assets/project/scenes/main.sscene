@@ -1,0 +1,54 @@
+IDComponent:
+  ID: 2396969598002710176
+  ParentID: 0
+  Name: main
+SceneComponent:
+  Version: 0.1
+  IsActive: true
+Entities:
+  - Entity:
+      IDComponent:
+        ID: 4682761475057699157
+        ParentID: 0
+        Name: plane
+      TransformComponent:
+        Position: [0, 0, 0]
+        Rotation: [0, 0, 0]
+        Scale: [20, 1, 20]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 7727350781887956022
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 11063561003705071796
+        CastShadow: true
+  - Entity:
+      IDComponent:
+        ID: 2154656740578523534
+        ParentID: 0
+        Name: sun
+      TransformComponent:
+        Position: [0, 0, 0]
+        Rotation: [-45, 0, 0]
+        Scale: [1, 1, 1]
+        IsActive: true
+      DirectionalLightComponent:
+        Intensity: 1
+        Color: [1, 1, 1]
+  - Entity:
+      IDComponent:
+        ID: 16952170087767710005
+        ParentID: 0
+        Name: Camera
+      TransformComponent:
+        Position: [0, 1, 2]
+        Rotation: [-20, 0, 0]
+        Scale: [1, 1, 1]
+        IsActive: true
+      CameraComponent:
+        IsMain: true
+        IsOrtho: false
+        FoV: 60
+        OrthoSize: 5
+        NearPlane: 0.1
+        FarPlane: 1000

@@ -13,6 +13,7 @@
 #include "seri/graphic/Model.h"
 #include "seri/model/ModelImporter.h"
 #include "seri/shader/ShaderBase.h"
+#include "seri/project/ProjectManager.h"
 
 #include <entt/entt.hpp>
 #include <efsw/efsw.hpp>
@@ -87,14 +88,9 @@ namespace seri::asset
 			GetInstance()._fileWatcher->removeWatch(GetInstance()._watchID);
 		}
 
-		static std::filesystem::path GetWorkingDirectory()
-		{
-			return std::filesystem::current_path();
-		}
-
 		static std::filesystem::path GetAssetDirectory()
 		{
-			return GetWorkingDirectory() / GetInstance().kAssetFolder;
+			return seri::project::ProjectManager::GetAssetDirectory();
 		}
 
 		static AssetTreeNode& GetAssetTreeRoot()
@@ -177,8 +173,6 @@ namespace seri::asset
 		void UpdateAssetTree();
 		void LoadAfterUpdate();
 		void BuildAssetTree(AssetTreeNode& node, std::unordered_map<std::string, FileState>& states);
-
-		const char* kAssetFolder = "assets";
 
 		const char* kDefaultShaderName = "pbr.sshader";
 

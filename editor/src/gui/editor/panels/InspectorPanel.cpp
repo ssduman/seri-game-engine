@@ -786,7 +786,7 @@ namespace seri::editor
 		ImGui::Separator();
 
 		std::error_code ec;
-		std::filesystem::path relative = std::filesystem::relative(node.path, seri::asset::AssetManager::GetWorkingDirectory(), ec);
+		std::filesystem::path relative = std::filesystem::relative(node.path, seri::project::ProjectManager::GetProjectDirectory(), ec);
 		std::string path = ec ? node.path.string() : relative.string();
 
 		DrawLabel("Path", path.c_str(), true);
