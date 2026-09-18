@@ -47,7 +47,11 @@ namespace seri::project
 
 		static std::filesystem::path GetEngineSourceDirectory()
 		{
-			return std::filesystem::current_path() / kAssetFolder;
+			std::filesystem::path assets = std::filesystem::current_path() / kAssetFolder;
+			std::filesystem::path engineAssets = assets / kEngineAssetFolder;
+
+			std::error_code ec;
+			return std::filesystem::is_directory(engineAssets, ec) ? engineAssets : assets;
 		}
 
 		static const std::filesystem::path& GetStartupScene()

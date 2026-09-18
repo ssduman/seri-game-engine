@@ -39,6 +39,7 @@ namespace seri::script
 		void OnClick() override;
 
 		std::vector<ScriptField> GetSerializedFields() override;
+		void ApplySerializedFields() override;
 
 		const std::string& GetName() const
 		{

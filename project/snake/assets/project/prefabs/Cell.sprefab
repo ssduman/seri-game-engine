@@ -1,0 +1,26 @@
+IDInfo:
+  ID: 1555315305984354927
+  Version: 0.1
+Prefab:
+  Entities:
+    - Entity:
+        IDComponent:
+          ID: 8718130854364992940
+          ParentID: 0
+          Name: Cell
+        TransformComponent:
+          Position: [0, 0, 0]
+          Rotation: [0, 0, 0]
+          Scale: [1, 1, 1]
+          IsActive: true
+        RectComponent:
+          AnchorMin: [0, 0]
+          AnchorMax: [0, 0]
+          Pivot: [0, 0]
+          AnchoredPosition: [0, 0]
+          SizeDelta: [20, 20]
+        SpriteRendererComponent:
+          TextureAssetID: 9403479199953891817
+          Color: [1, 1, 1, 1]
+          FlipX: false
+          FlipY: false

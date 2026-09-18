@@ -45,6 +45,7 @@ namespace seri::script
 		virtual void OnClick() {}
 
 		virtual std::vector<ScriptField> GetSerializedFields() { return {}; }
+		virtual void ApplySerializedFields() {}
 
 		seri::Entity entity{};
 

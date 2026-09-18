@@ -116,6 +116,11 @@ namespace seri::project
 			return false;
 		}
 
+		if (destination == source)
+		{
+			return true;
+		}
+
 		std::filesystem::path relative = destination.lexically_relative(source);
 		if (!relative.empty() && *relative.begin() != "..")
 		{

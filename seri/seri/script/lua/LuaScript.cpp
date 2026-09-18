@@ -90,6 +90,11 @@ namespace seri::script
 		return fields;
 	}
 
+	void LuaScript::ApplySerializedFields()
+	{
+		SyncFields();
+	}
+
 	void LuaScript::CreateFields(const sol::table& classTable)
 	{
 		sol::object fieldsObject = classTable["fields"];

@@ -68,6 +68,8 @@ namespace seri::system
 						break;
 				}
 			}
+
+			script.ApplySerializedFields();
 		}
 
 		void OverrideFieldsFrom(component::ScriptComponent::Entry& entry, script::ScriptBase& script)
@@ -442,6 +444,8 @@ namespace seri::system
 		{
 			return;
 		}
+
+		instance.script->ApplySerializedFields();
 
 		OverrideFieldsFrom(scriptComponent->entries[index], *instance.script);
 	}

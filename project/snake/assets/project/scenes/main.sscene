@@ -8,47 +8,606 @@ SceneComponent:
 Entities:
   - Entity:
       IDComponent:
-        ID: 4682761475057699157
-        ParentID: 0
-        Name: plane
-      TransformComponent:
-        Position: [0, 0, 0]
-        Rotation: [0, 0, 0]
-        Scale: [20, 1, 20]
-        IsActive: true
-      MeshComponent:
-        MeshAssetID: 7727350781887956022
-      MeshRendererComponent:
-        MaterialAssetIDs:
-          - 11063561003705071796
-        CastShadow: true
-  - Entity:
-      IDComponent:
-        ID: 2154656740578523534
-        ParentID: 0
-        Name: sun
-      TransformComponent:
-        Position: [0, 0, 0]
-        Rotation: [-45, 0, 0]
-        Scale: [1, 1, 1]
-        IsActive: true
-      DirectionalLightComponent:
-        Intensity: 1
-        Color: [1, 1, 1]
-  - Entity:
-      IDComponent:
-        ID: 16952170087767710005
+        ID: 4905556680404763610
         ParentID: 0
         Name: Camera
       TransformComponent:
-        Position: [0, 1, 2]
-        Rotation: [-20, 0, 0]
+        Position: [0, 0, 10]
+        Rotation: [0, 0, 0]
         Scale: [1, 1, 1]
         IsActive: true
       CameraComponent:
         IsMain: true
-        IsOrtho: false
+        IsOrtho: true
         FoV: 60
         OrthoSize: 5
         NearPlane: 0.1
         FarPlane: 1000
+  - Entity:
+      IDComponent:
+        ID: 6242985955647200484
+        ParentID: 0
+        Name: GameManager
+      TransformComponent:
+        Position: [0, 0, 0]
+        Rotation: [0, 0, 0]
+        Scale: [1, 1, 1]
+        IsActive: true
+      ScriptComponent:
+        Scripts:
+          - Name: GameManager
+            Enabled: true
+  - Entity:
+      IDComponent:
+        ID: 7660715109236451215
+        ParentID: 0
+        Name: Canvas
+      TransformComponent:
+        Position: [0, 0, 0]
+        Rotation: [0, 0, 0]
+        Scale: [1, 1, 1]
+        IsActive: true
+      RectComponent:
+        AnchorMin: [0, 0]
+        AnchorMax: [1, 1]
+        Pivot: [0.5, 0.5]
+        AnchoredPosition: [0, 0]
+        SizeDelta: [0, 0]
+      CanvasComponent:
+        Mode: 0
+        SortOrder: 0
+  - Entity:
+      IDComponent:
+        ID: 8025485271909639343
+        ParentID: 7660715109236451215
+        Name: Background
+      TransformComponent:
+        Position: [0, 0, 0]
+        Rotation: [0, 0, 0]
+        Scale: [1, 1, 1]
+        IsActive: true
+      RectComponent:
+        AnchorMin: [0, 0]
+        AnchorMax: [1, 1]
+        Pivot: [0.5, 0.5]
+        AnchoredPosition: [0, 0]
+        SizeDelta: [0, 0]
+      SpriteRendererComponent:
+        TextureAssetID: 9403479199953891817
+        Color: [0.06, 0.07, 0.09, 1]
+        FlipX: false
+        FlipY: false
+  - Entity:
+      IDComponent:
+        ID: 6337917605480561810
+        ParentID: 7660715109236451215
+        Name: MainMenu
+      TransformComponent:
+        Position: [0, 0, 0]
+        Rotation: [0, 0, 0]
+        Scale: [1, 1, 1]
+        IsActive: true
+      RectComponent:
+        AnchorMin: [0, 0]
+        AnchorMax: [1, 1]
+        Pivot: [0.5, 0.5]
+        AnchoredPosition: [0, 0]
+        SizeDelta: [0, 0]
+  - Entity:
+      IDComponent:
+        ID: 482338032114928670
+        ParentID: 6337917605480561810
+        Name: Title
+      TransformComponent:
+        Position: [0, 0, 0]
+        Rotation: [0, 0, 0]
+        Scale: [1, 1, 1]
+        IsActive: true
+      RectComponent:
+        AnchorMin: [0.5, 0.5]
+        AnchorMax: [0.5, 0.5]
+        Pivot: [0.5, 0.5]
+        AnchoredPosition: [0, 120]
+        SizeDelta: [600, 120]
+      TextComponent:
+        FontAssetID: 0
+        Text: SNAKE
+        FontSize: 96
+        LineSpacing: 1
+        Color: [0.35, 0.85, 0.45, 1]
+        AlignH: 1
+        AlignV: 1
+  - Entity:
+      IDComponent:
+        ID: 3760627692269032022
+        ParentID: 6337917605480561810
+        Name: Subtitle
+      TransformComponent:
+        Position: [0, 0, 0]
+        Rotation: [0, 0, 0]
+        Scale: [1, 1, 1]
+        IsActive: true
+      RectComponent:
+        AnchorMin: [0.5, 0.5]
+        AnchorMax: [0.5, 0.5]
+        Pivot: [0.5, 0.5]
+        AnchoredPosition: [0, 50]
+        SizeDelta: [600, 40]
+      TextComponent:
+        FontAssetID: 0
+        Text: Eat the food, grow longer, avoid the walls
+        FontSize: 22
+        LineSpacing: 1
+        Color: [0.6, 0.63, 0.68, 1]
+        AlignH: 1
+        AlignV: 1
+  - Entity:
+      IDComponent:
+        ID: 5860844815660908514
+        ParentID: 6337917605480561810
+        Name: PlayButton
+      TransformComponent:
+        Position: [0, 0, 0]
+        Rotation: [0, 0, 0]
+        Scale: [1, 1, 1]
+        IsActive: true
+      RectComponent:
+        AnchorMin: [0.5, 0.5]
+        AnchorMax: [0.5, 0.5]
+        Pivot: [0.5, 0.5]
+        AnchoredPosition: [0, -30]
+        SizeDelta: [240, 56]
+      SpriteRendererComponent:
+        TextureAssetID: 9403479199953891817
+        Color: [0.3, 0.78, 0.4, 1]
+        FlipX: false
+        FlipY: false
+      ButtonComponent:
+        Interactable: true
+        NormalColor: [1, 1, 1, 1]
+        HoverColor: [0.85, 0.85, 0.85, 1]
+        PressedColor: [0.65, 0.65, 0.65, 1]
+        DisabledColor: [0.5, 0.5, 0.5, 0.5]
+      ScriptComponent:
+        Scripts:
+          - Name: MenuButton
+            Enabled: true
+            Fields:
+              action: play
+  - Entity:
+      IDComponent:
+        ID: 8674601995574264019
+        ParentID: 5860844815660908514
+        Name: Text
+      TransformComponent:
+        Position: [0, 0, 0]
+        Rotation: [0, 0, 0]
+        Scale: [1, 1, 1]
+        IsActive: true
+      RectComponent:
+        AnchorMin: [0, 0]
+        AnchorMax: [1, 1]
+        Pivot: [0.5, 0.5]
+        AnchoredPosition: [0, 0]
+        SizeDelta: [0, 0]
+      TextComponent:
+        FontAssetID: 0
+        Text: Play
+        FontSize: 28
+        LineSpacing: 1
+        Color: [0.08, 0.09, 0.1, 1]
+        AlignH: 1
+        AlignV: 1
+  - Entity:
+      IDComponent:
+        ID: 7782953855352312546
+        ParentID: 6337917605480561810
+        Name: ExitButton
+      TransformComponent:
+        Position: [0, 0, 0]
+        Rotation: [0, 0, 0]
+        Scale: [1, 1, 1]
+        IsActive: true
+      RectComponent:
+        AnchorMin: [0.5, 0.5]
+        AnchorMax: [0.5, 0.5]
+        Pivot: [0.5, 0.5]
+        AnchoredPosition: [0, -100]
+        SizeDelta: [240, 56]
+      SpriteRendererComponent:
+        TextureAssetID: 9403479199953891817
+        Color: [0.55, 0.58, 0.63, 1]
+        FlipX: false
+        FlipY: false
+      ButtonComponent:
+        Interactable: true
+        NormalColor: [1, 1, 1, 1]
+        HoverColor: [0.85, 0.85, 0.85, 1]
+        PressedColor: [0.65, 0.65, 0.65, 1]
+        DisabledColor: [0.5, 0.5, 0.5, 0.5]
+      ScriptComponent:
+        Scripts:
+          - Name: MenuButton
+            Enabled: true
+            Fields:
+              action: exit
+  - Entity:
+      IDComponent:
+        ID: 3265170675850059373
+        ParentID: 7782953855352312546
+        Name: Text
+      TransformComponent:
+        Position: [0, 0, 0]
+        Rotation: [0, 0, 0]
+        Scale: [1, 1, 1]
+        IsActive: true
+      RectComponent:
+        AnchorMin: [0, 0]
+        AnchorMax: [1, 1]
+        Pivot: [0.5, 0.5]
+        AnchoredPosition: [0, 0]
+        SizeDelta: [0, 0]
+      TextComponent:
+        FontAssetID: 0
+        Text: Exit
+        FontSize: 28
+        LineSpacing: 1
+        Color: [0.08, 0.09, 0.1, 1]
+        AlignH: 1
+        AlignV: 1
+  - Entity:
+      IDComponent:
+        ID: 2211618199208356213
+        ParentID: 6337917605480561810
+        Name: MenuHint
+      TransformComponent:
+        Position: [0, 0, 0]
+        Rotation: [0, 0, 0]
+        Scale: [1, 1, 1]
+        IsActive: true
+      RectComponent:
+        AnchorMin: [0.5, 0.5]
+        AnchorMax: [0.5, 0.5]
+        Pivot: [0.5, 0.5]
+        AnchoredPosition: [0, -170]
+        SizeDelta: [600, 30]
+      TextComponent:
+        FontAssetID: 0
+        Text: Press Enter to start
+        FontSize: 18
+        LineSpacing: 1
+        Color: [0.6, 0.63, 0.68, 1]
+        AlignH: 1
+        AlignV: 1
+  - Entity:
+      IDComponent:
+        ID: 2746808574727002385
+        ParentID: 7660715109236451215
+        Name: Game
+      TransformComponent:
+        Position: [0, 0, 0]
+        Rotation: [0, 0, 0]
+        Scale: [1, 1, 1]
+        IsActive: false
+      RectComponent:
+        AnchorMin: [0, 0]
+        AnchorMax: [1, 1]
+        Pivot: [0.5, 0.5]
+        AnchoredPosition: [0, 0]
+        SizeDelta: [0, 0]
+  - Entity:
+      IDComponent:
+        ID: 8966607406846046854
+        ParentID: 2746808574727002385
+        Name: Board
+      TransformComponent:
+        Position: [0, 0, 0]
+        Rotation: [0, 0, 0]
+        Scale: [1, 1, 1]
+        IsActive: true
+      RectComponent:
+        AnchorMin: [0.5, 0.5]
+        AnchorMax: [0.5, 0.5]
+        Pivot: [0.5, 0.5]
+        AnchoredPosition: [0, -15]
+        SizeDelta: [440, 330]
+      SpriteRendererComponent:
+        TextureAssetID: 9403479199953891817
+        Color: [0.12, 0.14, 0.17, 1]
+        FlipX: false
+        FlipY: false
+  - Entity:
+      IDComponent:
+        ID: 8924210197839842044
+        ParentID: 2746808574727002385
+        Name: ScoreText
+      TransformComponent:
+        Position: [0, 0, 0]
+        Rotation: [0, 0, 0]
+        Scale: [1, 1, 1]
+        IsActive: true
+      RectComponent:
+        AnchorMin: [0.5, 0.5]
+        AnchorMax: [0.5, 0.5]
+        Pivot: [0.5, 0.5]
+        AnchoredPosition: [-120, 175]
+        SizeDelta: [220, 40]
+      TextComponent:
+        FontAssetID: 0
+        Text: Score 0
+        FontSize: 26
+        LineSpacing: 1
+        Color: [0.93, 0.94, 0.96, 1]
+        AlignH: 1
+        AlignV: 1
+  - Entity:
+      IDComponent:
+        ID: 8424247027885258185
+        ParentID: 2746808574727002385
+        Name: LevelText
+      TransformComponent:
+        Position: [0, 0, 0]
+        Rotation: [0, 0, 0]
+        Scale: [1, 1, 1]
+        IsActive: true
+      RectComponent:
+        AnchorMin: [0.5, 0.5]
+        AnchorMax: [0.5, 0.5]
+        Pivot: [0.5, 0.5]
+        AnchoredPosition: [120, 175]
+        SizeDelta: [220, 40]
+      TextComponent:
+        FontAssetID: 0
+        Text: Level 1
+        FontSize: 26
+        LineSpacing: 1
+        Color: [0.93, 0.94, 0.96, 1]
+        AlignH: 1
+        AlignV: 1
+  - Entity:
+      IDComponent:
+        ID: 7337121109253247285
+        ParentID: 2746808574727002385
+        Name: HintText
+      TransformComponent:
+        Position: [0, 0, 0]
+        Rotation: [0, 0, 0]
+        Scale: [1, 1, 1]
+        IsActive: true
+      RectComponent:
+        AnchorMin: [0.5, 0.5]
+        AnchorMax: [0.5, 0.5]
+        Pivot: [0.5, 0.5]
+        AnchoredPosition: [0, -205]
+        SizeDelta: [600, 30]
+      TextComponent:
+        FontAssetID: 0
+        Text: WASD or arrow keys to move
+        FontSize: 18
+        LineSpacing: 1
+        Color: [0.6, 0.63, 0.68, 1]
+        AlignH: 1
+        AlignV: 1
+  - Entity:
+      IDComponent:
+        ID: 4757345080506328532
+        ParentID: 7660715109236451215
+        Name: GameOver
+      TransformComponent:
+        Position: [0, 0, 0]
+        Rotation: [0, 0, 0]
+        Scale: [1, 1, 1]
+        IsActive: false
+      RectComponent:
+        AnchorMin: [0, 0]
+        AnchorMax: [1, 1]
+        Pivot: [0.5, 0.5]
+        AnchoredPosition: [0, 0]
+        SizeDelta: [0, 0]
+  - Entity:
+      IDComponent:
+        ID: 615086288887560877
+        ParentID: 4757345080506328532
+        Name: Overlay
+      TransformComponent:
+        Position: [0, 0, 0]
+        Rotation: [0, 0, 0]
+        Scale: [1, 1, 1]
+        IsActive: true
+      RectComponent:
+        AnchorMin: [0, 0]
+        AnchorMax: [1, 1]
+        Pivot: [0.5, 0.5]
+        AnchoredPosition: [0, 0]
+        SizeDelta: [0, 0]
+      SpriteRendererComponent:
+        TextureAssetID: 9403479199953891817
+        Color: [0, 0, 0, 0.7]
+        FlipX: false
+        FlipY: false
+  - Entity:
+      IDComponent:
+        ID: 7492202822254413127
+        ParentID: 4757345080506328532
+        Name: GameOverTitle
+      TransformComponent:
+        Position: [0, 0, 0]
+        Rotation: [0, 0, 0]
+        Scale: [1, 1, 1]
+        IsActive: true
+      RectComponent:
+        AnchorMin: [0.5, 0.5]
+        AnchorMax: [0.5, 0.5]
+        Pivot: [0.5, 0.5]
+        AnchoredPosition: [0, 110]
+        SizeDelta: [600, 90]
+      TextComponent:
+        FontAssetID: 0
+        Text: GAME OVER
+        FontSize: 64
+        LineSpacing: 1
+        Color: [0.92, 0.33, 0.33, 1]
+        AlignH: 1
+        AlignV: 1
+  - Entity:
+      IDComponent:
+        ID: 1364108057757857518
+        ParentID: 4757345080506328532
+        Name: FinalScoreText
+      TransformComponent:
+        Position: [0, 0, 0]
+        Rotation: [0, 0, 0]
+        Scale: [1, 1, 1]
+        IsActive: true
+      RectComponent:
+        AnchorMin: [0.5, 0.5]
+        AnchorMax: [0.5, 0.5]
+        Pivot: [0.5, 0.5]
+        AnchoredPosition: [0, 45]
+        SizeDelta: [600, 40]
+      TextComponent:
+        FontAssetID: 0
+        Text: Score 0   Level 1
+        FontSize: 28
+        LineSpacing: 1
+        Color: [0.93, 0.94, 0.96, 1]
+        AlignH: 1
+        AlignV: 1
+  - Entity:
+      IDComponent:
+        ID: 8825449522783089371
+        ParentID: 4757345080506328532
+        Name: BestScoreText
+      TransformComponent:
+        Position: [0, 0, 0]
+        Rotation: [0, 0, 0]
+        Scale: [1, 1, 1]
+        IsActive: true
+      RectComponent:
+        AnchorMin: [0.5, 0.5]
+        AnchorMax: [0.5, 0.5]
+        Pivot: [0.5, 0.5]
+        AnchoredPosition: [0, 5]
+        SizeDelta: [600, 30]
+      TextComponent:
+        FontAssetID: 0
+        Text: Best 0
+        FontSize: 22
+        LineSpacing: 1
+        Color: [0.6, 0.63, 0.68, 1]
+        AlignH: 1
+        AlignV: 1
+  - Entity:
+      IDComponent:
+        ID: 6612040285648160387
+        ParentID: 4757345080506328532
+        Name: ReplayButton
+      TransformComponent:
+        Position: [0, 0, 0]
+        Rotation: [0, 0, 0]
+        Scale: [1, 1, 1]
+        IsActive: true
+      RectComponent:
+        AnchorMin: [0.5, 0.5]
+        AnchorMax: [0.5, 0.5]
+        Pivot: [0.5, 0.5]
+        AnchoredPosition: [0, -60]
+        SizeDelta: [240, 56]
+      SpriteRendererComponent:
+        TextureAssetID: 9403479199953891817
+        Color: [0.3, 0.78, 0.4, 1]
+        FlipX: false
+        FlipY: false
+      ButtonComponent:
+        Interactable: true
+        NormalColor: [1, 1, 1, 1]
+        HoverColor: [0.85, 0.85, 0.85, 1]
+        PressedColor: [0.65, 0.65, 0.65, 1]
+        DisabledColor: [0.5, 0.5, 0.5, 0.5]
+      ScriptComponent:
+        Scripts:
+          - Name: MenuButton
+            Enabled: true
+            Fields:
+              action: play
+  - Entity:
+      IDComponent:
+        ID: 5623980264521498573
+        ParentID: 6612040285648160387
+        Name: Text
+      TransformComponent:
+        Position: [0, 0, 0]
+        Rotation: [0, 0, 0]
+        Scale: [1, 1, 1]
+        IsActive: true
+      RectComponent:
+        AnchorMin: [0, 0]
+        AnchorMax: [1, 1]
+        Pivot: [0.5, 0.5]
+        AnchoredPosition: [0, 0]
+        SizeDelta: [0, 0]
+      TextComponent:
+        FontAssetID: 0
+        Text: Play Again
+        FontSize: 28
+        LineSpacing: 1
+        Color: [0.08, 0.09, 0.1, 1]
+        AlignH: 1
+        AlignV: 1
+  - Entity:
+      IDComponent:
+        ID: 8002814465247454533
+        ParentID: 4757345080506328532
+        Name: BackButton
+      TransformComponent:
+        Position: [0, 0, 0]
+        Rotation: [0, 0, 0]
+        Scale: [1, 1, 1]
+        IsActive: true
+      RectComponent:
+        AnchorMin: [0.5, 0.5]
+        AnchorMax: [0.5, 0.5]
+        Pivot: [0.5, 0.5]
+        AnchoredPosition: [0, -130]
+        SizeDelta: [240, 56]
+      SpriteRendererComponent:
+        TextureAssetID: 9403479199953891817
+        Color: [0.55, 0.58, 0.63, 1]
+        FlipX: false
+        FlipY: false
+      ButtonComponent:
+        Interactable: true
+        NormalColor: [1, 1, 1, 1]
+        HoverColor: [0.85, 0.85, 0.85, 1]
+        PressedColor: [0.65, 0.65, 0.65, 1]
+        DisabledColor: [0.5, 0.5, 0.5, 0.5]
+      ScriptComponent:
+        Scripts:
+          - Name: MenuButton
+            Enabled: true
+            Fields:
+              action: menu
+  - Entity:
+      IDComponent:
+        ID: 6188355672659533746
+        ParentID: 8002814465247454533
+        Name: Text
+      TransformComponent:
+        Position: [0, 0, 0]
+        Rotation: [0, 0, 0]
+        Scale: [1, 1, 1]
+        IsActive: true
+      RectComponent:
+        AnchorMin: [0, 0]
+        AnchorMax: [1, 1]
+        Pivot: [0.5, 0.5]
+        AnchoredPosition: [0, 0]
+        SizeDelta: [0, 0]
+      TextComponent:
+        FontAssetID: 0
+        Text: Main Menu
+        FontSize: 28
+        LineSpacing: 1
+        Color: [0.08, 0.09, 0.1, 1]
+        AlignH: 1
+        AlignV: 1
