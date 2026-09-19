@@ -44,6 +44,7 @@ project "Editor"
     "efsw",
     "glm",
     "imguizmo",
+    "Jolt",
     "lua",
     "nfd",
     "SDL3",

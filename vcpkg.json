@@ -24,6 +24,7 @@
       ]
     },
     "imguizmo",
+    "joltphysics",
     "lua",
     "miniaudio",
     "nativefiledialog-extended",
@@ -84,6 +85,11 @@
     {
       "name": "imguizmo",
       "version": "1.10"
+    },
+    {
+      "name": "joltphysics",
+      "version": "5.6.0",
+      "port-version": 1
     },
     {
       "name": "lua",

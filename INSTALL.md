@@ -93,5 +93,6 @@ bootstrap-vcpkg.bat
 * [doctest](https://github.com/doctest/doctest/)
 * [nlohmann-json](https://github.com/nlohmann/json)
 * [Native File Dialog Extended](https://github.com/btzy/nativefiledialog-extended)
+* [Jolt Physics](https://github.com/jrouwe/joltphysics)
 * [vcpkg](https://github.com/microsoft/vcpkg)
 * [Premake](https://github.com/premake/premake-core)

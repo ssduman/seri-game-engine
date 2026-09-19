@@ -27,11 +27,14 @@ namespace seri::system
 	public:
 		static void Init();
 
+		static void FixedUpdate(float fixedDeltaTime);
 		static void Update(float deltaTime);
 		static void LateUpdate(float deltaTime);
 
 		static void Sync();
 		static void Reset();
+
+		static void Dispatch(entt::entity entity, const char* stage, const std::function<void(script::ScriptBase&)>& callback);
 
 		static void Defer(std::function<void()> command);
 
@@ -47,6 +50,8 @@ namespace seri::system
 
 	private:
 		static void OnScriptComponentDestroyed(entt::registry& registry, entt::entity entity);
+
+		static void DispatchAll(const char* stage, const std::function<void(script::ScriptBase&)>& callback);
 
 		static void RebuildInstances(entt::registry& registry, entt::entity entity, component::ScriptComponent& scriptComponent);
 		static void DestroyInstances(entt::entity entity);

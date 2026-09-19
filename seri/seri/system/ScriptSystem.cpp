@@ -235,7 +235,29 @@ namespace seri::system
 		}
 	}
 
+	void ScriptSystem::FixedUpdate(float fixedDeltaTime)
+	{
+		DispatchAll("OnFixedUpdate", [&](script::ScriptBase& script) { script.OnFixedUpdate(fixedDeltaTime); });
+	}
+
 	void ScriptSystem::LateUpdate(float deltaTime)
+	{
+		DispatchAll("OnLateUpdate", [&](script::ScriptBase& script) { script.OnLateUpdate(deltaTime); });
+	}
+
+	void ScriptSystem::DispatchAll(const char* stage, const std::function<void(script::ScriptBase&)>& callback)
+	{
+		auto& registry = scene::SceneManager::GetRegistry();
+		auto view = registry.view<component::ScriptComponent>();
+		std::vector<entt::entity> entities(view.begin(), view.end());
+
+		for (entt::entity entity : entities)
+		{
+			Dispatch(entity, stage, callback);
+		}
+	}
+
+	void ScriptSystem::Dispatch(entt::entity entity, const char* stage, const std::function<void(script::ScriptBase&)>& callback)
 	{
 		if (!_enabled)
 		{
@@ -243,43 +265,36 @@ namespace seri::system
 		}
 
 		auto& registry = scene::SceneManager::GetRegistry();
-		auto view = registry.view<component::ScriptComponent>();
-		std::vector<entt::entity> entities(view.begin(), view.end());
 
-		for (entt::entity entity : entities)
+		auto* scriptComponent = registry.try_get<component::ScriptComponent>(entity);
+		if (scriptComponent == nullptr)
 		{
-			auto* scriptComponentPtr = registry.try_get<component::ScriptComponent>(entity);
-			if (scriptComponentPtr == nullptr)
+			return;
+		}
+
+		auto* transform = registry.try_get<component::TransformComponent>(entity);
+		if (transform != nullptr && !transform->isActiveInHierarchy)
+		{
+			return;
+		}
+
+		auto it = _scriptInstances.find(entity);
+		if (it == _scriptInstances.end())
+		{
+			return;
+		}
+
+		std::vector<ScriptInstance>& instances = it->second;
+
+		for (size_t i = 0; i < instances.size(); i++)
+		{
+			ScriptInstance& instance = instances[i];
+			if (!instance.script || instance.faulted || !instance.started || !scriptComponent->entries[i].enabled)
 			{
 				continue;
 			}
 
-			auto& scriptComponent = *scriptComponentPtr;
-
-			auto* transform = registry.try_get<component::TransformComponent>(entity);
-			if (transform != nullptr && !transform->isActiveInHierarchy)
-			{
-				continue;
-			}
-
-			auto it = _scriptInstances.find(entity);
-			if (it == _scriptInstances.end())
-			{
-				continue;
-			}
-
-			std::vector<ScriptInstance>& instances = it->second;
-
-			for (size_t i = 0; i < instances.size(); i++)
-			{
-				ScriptInstance& instance = instances[i];
-				if (!instance.script || instance.faulted || !instance.started || !scriptComponent.entries[i].enabled)
-				{
-					continue;
-				}
-
-				SafeCall(instance, "OnLateUpdate", [&]() { instance.script->OnLateUpdate(deltaTime); });
-			}
+			SafeCall(instance, stage, [&]() { callback(*instance.script); });
 		}
 	}
 

@@ -345,6 +345,37 @@ namespace seri::editor
 		return changed;
 	}
 
+	bool DrawBVec3(const char* label, glm::bvec3& v)
+	{
+		bool changed = false;
+
+		ImGui::PushID(label);
+
+		ImGui::Columns(2, nullptr, false);
+		ImGui::SetColumnWidth(0, 90.0f);
+
+		ImGui::AlignTextToFramePadding();
+		ImGui::TextUnformatted(label);
+		ImGui::NextColumn();
+
+		const char* names[] = { "X", "Y", "Z" };
+
+		for (int i = 0; i < 3; ++i)
+		{
+			changed |= ImGui::Checkbox(names[i], &v[i]);
+
+			if (i < 2)
+			{
+				ImGui::SameLine();
+			}
+		}
+
+		ImGui::Columns(1);
+		ImGui::PopID();
+
+		return changed;
+	}
+
 	bool DrawColorVec3(const char* label, glm::vec3& color, float speed)
 	{
 		bool changed = false;

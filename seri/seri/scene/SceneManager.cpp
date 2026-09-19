@@ -34,6 +34,8 @@ namespace seri::scene
 		RegisterComponent<seri::component::PointLightComponent>();
 		RegisterComponent<seri::component::TextComponent>();
 		RegisterComponent<seri::component::AudioComponent>();
+		RegisterComponent<seri::component::RigidbodyComponent>();
+		RegisterComponent<seri::component::ColliderComponent>();
 		RegisterComponent<seri::component::ScriptComponent>();
 
 		SceneManager::GetInstance()._activeScene = std::make_shared<Scene>();

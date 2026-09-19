@@ -22,6 +22,8 @@ namespace seri::editor
 
 	bool DrawVec3(const char* label, glm::vec3& v, float speed);
 
+	bool DrawBVec3(const char* label, glm::bvec3& v);
+
 	bool DrawColorVec3(const char* label, glm::vec3& color, float speed);
 
 	bool DrawColorVec4(const char* label, glm::vec4& color, float speed);

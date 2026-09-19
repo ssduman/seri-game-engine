@@ -1,5 +1,8 @@
 #include "Editorpch.h"
 
+#include <seri/ui/UIUtil.h>
+#include <seri/physics/PhysicsUtil.h>
+
 #include "gui/editor/panels/InspectorPanel.h"
 #include "gui/common/GUIWidgets.h"
 
@@ -275,14 +278,14 @@ namespace seri::editor
 			bool changed = false;
 
 			static const char* modeNames[] = {
-				seri::component::CanvasRenderModeToString(seri::component::CanvasRenderMode::screen_space),
-				seri::component::CanvasRenderModeToString(seri::component::CanvasRenderMode::world_space),
+				seri::ui::CanvasRenderModeToString(seri::ui::CanvasRenderMode::screen_space),
+				seri::ui::CanvasRenderModeToString(seri::ui::CanvasRenderMode::world_space),
 			};
 
 			int mode = static_cast<int>(canvasComp->mode);
 			if (DrawCombo("Mode", mode, modeNames, IM_ARRAYSIZE(modeNames)))
 			{
-				canvasComp->mode = static_cast<seri::component::CanvasRenderMode>(mode);
+				canvasComp->mode = static_cast<seri::ui::CanvasRenderMode>(mode);
 				changed = true;
 			}
 
@@ -400,6 +403,86 @@ namespace seri::editor
 			if (changed)
 			{
 				scene->SetAsDirty();
+			}
+		}
+
+		if (auto* rigidbodyComp = registry.try_get<seri::component::RigidbodyComponent>(entity))
+		{
+			ScopedChild scopedChild("##RigidbodyComponent", ImVec2(0, 0), childFlags);
+
+			if (DrawComponentHeader("Rigidbody Component"))
+			{
+				removeComp = seri::component::RigidbodyComponent::kCompName;
+			}
+
+			bool changed = false;
+
+			changed |= DrawFloat("Mass", rigidbodyComp->mass, 0.1f, 0.001f, 100000.0f);
+			changed |= DrawFloat("Lin Damping", rigidbodyComp->linearDamping, 0.01f, 0.0f, 100.0f);
+			changed |= DrawFloat("Ang Damping", rigidbodyComp->angularDamping, 0.01f, 0.0f, 100.0f);
+			changed |= DrawFloat("Gravity Scale", rigidbodyComp->gravityScale, 0.05f, -100.0f, 100.0f);
+			changed |= DrawBool("Is Kinematic", rigidbodyComp->isKinematic);
+			changed |= DrawBVec3("Lock Pos", rigidbodyComp->lockPosition);
+			changed |= DrawBVec3("Lock Rot", rigidbodyComp->lockRotation);
+
+			if (changed)
+			{
+				scene->SetAsDirty();
+			}
+		}
+
+		if (auto* colliderComp = registry.try_get<seri::component::ColliderComponent>(entity))
+		{
+			ScopedChild scopedChild("##ColliderComponent", ImVec2(0, 0), childFlags);
+
+			if (DrawComponentHeader("Collider Component"))
+			{
+				removeComp = seri::component::ColliderComponent::kCompName;
+			}
+
+			bool changed = false;
+
+			static const char* shapeNames[] = {
+				seri::physics::ColliderShapeToString(seri::physics::ColliderShape::box),
+				seri::physics::ColliderShapeToString(seri::physics::ColliderShape::sphere),
+				seri::physics::ColliderShapeToString(seri::physics::ColliderShape::capsule),
+			};
+
+			int shape = static_cast<int>(colliderComp->shape);
+			if (DrawCombo("Shape", shape, shapeNames, IM_ARRAYSIZE(shapeNames)))
+			{
+				colliderComp->shape = static_cast<seri::physics::ColliderShape>(shape);
+				changed = true;
+			}
+
+			changed |= DrawBool("Is Trigger", colliderComp->isTrigger);
+			changed |= DrawVec3("Center", colliderComp->center, 0.05f);
+
+			switch (colliderComp->shape)
+			{
+				case seri::physics::ColliderShape::box:
+					changed |= DrawVec3("Size", colliderComp->size, 0.05f);
+					break;
+				case seri::physics::ColliderShape::sphere:
+					changed |= DrawFloat("Radius", colliderComp->radius, 0.01f, 0.001f, 10000.0f);
+					break;
+				case seri::physics::ColliderShape::capsule:
+					changed |= DrawFloat("Radius", colliderComp->radius, 0.01f, 0.001f, 10000.0f);
+					changed |= DrawFloat("Height", colliderComp->height, 0.01f, 0.001f, 10000.0f);
+					break;
+			}
+
+			changed |= DrawFloat("Friction", colliderComp->friction, 0.01f, 0.0f, 10.0f);
+			changed |= DrawFloat("Restitution", colliderComp->restitution, 0.01f, 0.0f, 1.0f);
+
+			if (changed)
+			{
+				scene->SetAsDirty();
+			}
+
+			if (seri::scene::SceneManager::GetState() == seri::scene::SceneState::edit)
+			{
+				seri::system::PhysicsSystem::DrawColliderGizmo(entity);
 			}
 		}
 

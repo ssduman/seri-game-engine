@@ -3,6 +3,8 @@
 #include "seri/util/Util.h"
 #include "seri/util/YAMLUtil.h"
 #include "seri/font/TextMesh.h"
+#include "seri/ui/UIUtil.h"
+#include "seri/physics/PhysicsUtil.h"
 
 #include <entt/entt.hpp>
 #include <yaml-cpp/yaml.h>
@@ -92,27 +94,11 @@ namespace seri::component
 		static YAML::Node Serialize(const SkinnedMeshRendererComponent& component);
 	};
 
-	enum class CanvasRenderMode
-	{
-		screen_space = 0,
-		world_space = 1,
-	};
-
-	inline const char* CanvasRenderModeToString(CanvasRenderMode mode)
-	{
-		switch (mode)
-		{
-			case CanvasRenderMode::screen_space: return "screen space";
-			case CanvasRenderMode::world_space: return "world space";
-			default: return "unknown";
-		}
-	}
-
 	struct CanvasComponent
 	{
 		static constexpr std::string_view kCompName = "CanvasComponent";
 
-		CanvasRenderMode mode{ CanvasRenderMode::screen_space };
+		seri::ui::CanvasRenderMode mode{ seri::ui::CanvasRenderMode::screen_space };
 		int sortOrder{ 0 };
 
 		static CanvasComponent Deserialize(const YAML::Node& node);
@@ -321,6 +307,43 @@ namespace seri::component
 
 		static AudioComponent Deserialize(const YAML::Node& node);
 		static YAML::Node Serialize(const AudioComponent& component);
+	};
+
+	struct RigidbodyComponent
+	{
+		static constexpr std::string_view kCompName = "RigidbodyComponent";
+
+		float mass{ 1.0f };
+		float linearDamping{ 0.0f };
+		float angularDamping{ 0.05f };
+		float gravityScale{ 1.0f };
+		bool isKinematic{ false };
+		glm::bvec3 lockPosition{ false };
+		glm::bvec3 lockRotation{ false };
+
+		bool operator==(const RigidbodyComponent&) const = default;
+
+		static RigidbodyComponent Deserialize(const YAML::Node& node);
+		static YAML::Node Serialize(const RigidbodyComponent& component);
+	};
+
+	struct ColliderComponent
+	{
+		static constexpr std::string_view kCompName = "ColliderComponent";
+
+		seri::physics::ColliderShape shape{ seri::physics::ColliderShape::box };
+		glm::vec3 center{ 0.0f, 0.0f, 0.0f };
+		glm::vec3 size{ 1.0f, 1.0f, 1.0f };
+		float radius{ 0.5f };
+		float height{ 2.0f };
+		float friction{ 0.6f };
+		float restitution{ 0.0f };
+		bool isTrigger{ false };
+
+		bool operator==(const ColliderComponent&) const = default;
+
+		static ColliderComponent Deserialize(const YAML::Node& node);
+		static YAML::Node Serialize(const ColliderComponent& component);
 	};
 
 	struct ScriptComponent

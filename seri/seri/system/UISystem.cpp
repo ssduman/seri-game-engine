@@ -171,7 +171,7 @@ namespace seri::system
 
 		if (auto* canvas = registry.try_get<seri::component::CanvasComponent>(entity))
 		{
-			inScreenCanvas = canvas->mode == seri::component::CanvasRenderMode::screen_space;
+			inScreenCanvas = canvas->mode == seri::ui::CanvasRenderMode::screen_space;
 
 			if (inScreenCanvas)
 			{

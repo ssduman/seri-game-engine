@@ -147,7 +147,7 @@ namespace seri::component
 	CanvasComponent CanvasComponent::Deserialize(const YAML::Node& node)
 	{
 		CanvasComponent component{};
-		component.mode = static_cast<CanvasRenderMode>(YAMLUtil::GetType<int>(node["Mode"]));
+		component.mode = static_cast<seri::ui::CanvasRenderMode>(YAMLUtil::GetType<int>(node["Mode"]));
 		component.sortOrder = YAMLUtil::GetType<int>(node["SortOrder"]);
 		return component;
 	}
@@ -354,6 +354,58 @@ namespace seri::component
 		node["Volume"] = component.volume;
 		node["Loop"] = component.loop;
 		node["PlayOnStart"] = component.playOnStart;
+		return node;
+	}
+
+	RigidbodyComponent RigidbodyComponent::Deserialize(const YAML::Node& node)
+	{
+		RigidbodyComponent component{};
+		component.mass = YAMLUtil::GetType<float>(node["Mass"]);
+		component.linearDamping = YAMLUtil::GetType<float>(node["LinearDamping"]);
+		component.angularDamping = YAMLUtil::GetType<float>(node["AngularDamping"]);
+		component.gravityScale = YAMLUtil::GetType<float>(node["GravityScale"]);
+		component.isKinematic = YAMLUtil::GetType<bool>(node["IsKinematic"]);
+		component.lockPosition = glm::bvec3(YAMLUtil::IVec3FromYAML(node["LockPosition"]));
+		component.lockRotation = glm::bvec3(YAMLUtil::IVec3FromYAML(node["LockRotation"]));
+		return component;
+	}
+	YAML::Node RigidbodyComponent::Serialize(const RigidbodyComponent& component)
+	{
+		YAML::Node node;
+		node["Mass"] = component.mass;
+		node["LinearDamping"] = component.linearDamping;
+		node["AngularDamping"] = component.angularDamping;
+		node["GravityScale"] = component.gravityScale;
+		node["IsKinematic"] = component.isKinematic;
+		node["LockPosition"] = YAMLUtil::IVec3ToYAML(glm::ivec3(component.lockPosition));
+		node["LockRotation"] = YAMLUtil::IVec3ToYAML(glm::ivec3(component.lockRotation));
+		return node;
+	}
+
+	ColliderComponent ColliderComponent::Deserialize(const YAML::Node& node)
+	{
+		ColliderComponent component{};
+		component.shape = static_cast<seri::physics::ColliderShape>(YAMLUtil::GetType<int>(node["Shape"]));
+		component.center = YAMLUtil::Vec3FromYAML(node["Center"]);
+		component.size = YAMLUtil::Vec3FromYAML(node["Size"]);
+		component.radius = YAMLUtil::GetType<float>(node["Radius"]);
+		component.height = YAMLUtil::GetType<float>(node["Height"]);
+		component.friction = YAMLUtil::GetType<float>(node["Friction"]);
+		component.restitution = YAMLUtil::GetType<float>(node["Restitution"]);
+		component.isTrigger = YAMLUtil::GetType<bool>(node["IsTrigger"]);
+		return component;
+	}
+	YAML::Node ColliderComponent::Serialize(const ColliderComponent& component)
+	{
+		YAML::Node node;
+		node["Shape"] = static_cast<int>(component.shape);
+		node["Center"] = YAMLUtil::Vec3ToYAML(component.center);
+		node["Size"] = YAMLUtil::Vec3ToYAML(component.size);
+		node["Radius"] = component.radius;
+		node["Height"] = component.height;
+		node["Friction"] = component.friction;
+		node["Restitution"] = component.restitution;
+		node["IsTrigger"] = component.isTrigger;
 		return node;
 	}
 
