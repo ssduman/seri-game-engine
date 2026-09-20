@@ -3,6 +3,7 @@
 #include "seri/script/lua/LuaBindings.h"
 #include "seri/script/lua/LuaScript.h"
 #include "seri/system/ScriptSystem.h"
+#include "seri/system/PhysicsSystem.h"
 #include "seri/scene/SceneManager.h"
 #include "seri/component/Components.h"
 #include "seri/input/InputManager.h"
@@ -22,6 +23,7 @@ namespace seri::script
 		RegisterCore(lua);
 		RegisterInput(lua);
 		RegisterComponents(lua);
+		RegisterPhysics(lua);
 		RegisterEntity(lua);
 		RegisterScene(lua);
 	}
@@ -111,6 +113,7 @@ namespace seri::script
 
 		sol::table timeTable = lua.create_named_table("Time");
 		timeTable["delta_time"] = 0.0f;
+		timeTable["fixed_delta_time"] = 0.0f;
 		timeTable["time"] = 0.0f;
 		timeTable["frame_count"] = 0;
 
@@ -211,6 +214,82 @@ namespace seri::script
 			"flip_x", &component::SpriteRendererComponent::flipX,
 			"flip_y", &component::SpriteRendererComponent::flipY
 		);
+
+		lua.new_usertype<component::ColliderComponent>(
+			"Collider",
+			sol::no_constructor,
+			"center", &component::ColliderComponent::center,
+			"size", &component::ColliderComponent::size,
+			"radius", &component::ColliderComponent::radius,
+			"height", &component::ColliderComponent::height,
+			"friction", &component::ColliderComponent::friction,
+			"restitution", &component::ColliderComponent::restitution,
+			"is_trigger", &component::ColliderComponent::isTrigger
+		);
+	}
+
+	void LuaBindings::RegisterPhysics(sol::state& lua)
+	{
+		auto rigidbodyField = []<typename T>(T component::RigidbodyComponent::* member)
+			{
+				return sol::property(
+					[member](const RigidbodyHandle& handle)
+					{
+						auto* rigidbody = handle.entity.TryGet<component::RigidbodyComponent>();
+						return rigidbody != nullptr ? rigidbody->*member : T{};
+					},
+					[member](const RigidbodyHandle& handle, T value)
+					{
+						if (auto* rigidbody = handle.entity.TryGet<component::RigidbodyComponent>())
+						{
+							rigidbody->*member = value;
+						}
+					}
+				);
+			};
+
+		lua.new_usertype<RigidbodyHandle>(
+			"Rigidbody",
+			sol::no_constructor,
+			"mass", rigidbodyField(&component::RigidbodyComponent::mass),
+			"linear_damping", rigidbodyField(&component::RigidbodyComponent::linearDamping),
+			"angular_damping", rigidbodyField(&component::RigidbodyComponent::angularDamping),
+			"gravity_scale", rigidbodyField(&component::RigidbodyComponent::gravityScale),
+			"is_kinematic", rigidbodyField(&component::RigidbodyComponent::isKinematic),
+			"velocity", sol::property(
+				[](const RigidbodyHandle& handle) { return system::PhysicsSystem::GetLinearVelocity(handle.entity); },
+				[](const RigidbodyHandle& handle, const glm::vec3& velocity) { system::PhysicsSystem::SetLinearVelocity(handle.entity, velocity); }
+			),
+			"angular_velocity", sol::property(
+				[](const RigidbodyHandle& handle) { return system::PhysicsSystem::GetAngularVelocity(handle.entity); },
+				[](const RigidbodyHandle& handle, const glm::vec3& velocity) { system::PhysicsSystem::SetAngularVelocity(handle.entity, velocity); }
+			),
+			"AddForce", [](const RigidbodyHandle& handle, const glm::vec3& force) { system::PhysicsSystem::AddForce(handle.entity, force); },
+			"AddImpulse", [](const RigidbodyHandle& handle, const glm::vec3& impulse) { system::PhysicsSystem::AddImpulse(handle.entity, impulse); },
+			"AddTorque", [](const RigidbodyHandle& handle, const glm::vec3& torque) { system::PhysicsSystem::AddTorque(handle.entity, torque); }
+		);
+
+		lua.new_usertype<system::RaycastHit>(
+			"RaycastHit",
+			sol::no_constructor,
+			"entity", sol::readonly(&system::RaycastHit::entity),
+			"point", sol::readonly(&system::RaycastHit::point),
+			"normal", sol::readonly(&system::RaycastHit::normal),
+			"distance", sol::readonly(&system::RaycastHit::distance)
+		);
+
+		sol::table physicsTable = lua.create_named_table("Physics");
+		physicsTable["GetGravity"] = []() { return system::PhysicsSystem::GetGravity(); };
+		physicsTable["SetGravity"] = [](const glm::vec3& gravity) { system::PhysicsSystem::SetGravity(gravity); };
+		physicsTable["Raycast"] = [](const glm::vec3& origin, const glm::vec3& direction, sol::optional<float> maxDistance) -> sol::optional<system::RaycastHit>
+			{
+				system::RaycastHit hit{};
+				if (!system::PhysicsSystem::Raycast(origin, direction, maxDistance.value_or(1000.0f), hit))
+				{
+					return sol::nullopt;
+				}
+				return hit;
+			};
 	}
 
 	void LuaBindings::RegisterEntity(sol::state& lua)
@@ -244,6 +323,16 @@ namespace seri::script
 			"button", sol::readonly_property([](const seri::Entity& entity) { return entity.TryGet<component::ButtonComponent>(); }),
 			"text", sol::readonly_property([](const seri::Entity& entity) { return entity.TryGet<component::TextComponent>(); }),
 			"sprite", sol::readonly_property([](const seri::Entity& entity) { return entity.TryGet<component::SpriteRendererComponent>(); }),
+			"collider", sol::readonly_property([](const seri::Entity& entity) { return entity.TryGet<component::ColliderComponent>(); }),
+			"rigidbody", sol::readonly_property([](const seri::Entity& entity) -> sol::optional<RigidbodyHandle>
+				{
+					if (!entity.Has<component::RigidbodyComponent>())
+					{
+						return sol::nullopt;
+					}
+					return RigidbodyHandle{ entity };
+				}
+			),
 			"GetScript", [](const seri::Entity& entity, const std::string& name) -> sol::optional<sol::table>
 			{
 				auto* script = dynamic_cast<LuaScript*>(system::ScriptSystem::FindScript(entity.GetHandle(), name));

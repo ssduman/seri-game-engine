@@ -79,6 +79,7 @@ namespace seri::script
 	{
 		sol::table time = (*_luaState)["Time"];
 		time["delta_time"] = TimeWrapper::GetDeltaTime();
+		time["fixed_delta_time"] = TimeWrapper::GetFixedDeltaTime();
 		time["time"] = TimeWrapper::GetTime();
 		time["frame_count"] = TimeWrapper::GetFrameCount();
 	}

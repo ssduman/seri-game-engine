@@ -44,6 +44,11 @@ namespace seri::script
 		Call("OnStart");
 	}
 
+	void LuaScript::OnFixedUpdate(float fixedDeltaTime)
+	{
+		Call("OnFixedUpdate", fixedDeltaTime);
+	}
+
 	void LuaScript::OnUpdate(float deltaTime)
 	{
 		Call("OnUpdate", deltaTime);
@@ -72,6 +77,26 @@ namespace seri::script
 	void LuaScript::OnClick()
 	{
 		Call("OnClick");
+	}
+
+	void LuaScript::OnCollisionEnter(const seri::Entity& other)
+	{
+		Call("OnCollisionEnter", seri::Entity{ other });
+	}
+
+	void LuaScript::OnCollisionExit(const seri::Entity& other)
+	{
+		Call("OnCollisionExit", seri::Entity{ other });
+	}
+
+	void LuaScript::OnTriggerEnter(const seri::Entity& other)
+	{
+		Call("OnTriggerEnter", seri::Entity{ other });
+	}
+
+	void LuaScript::OnTriggerExit(const seri::Entity& other)
+	{
+		Call("OnTriggerExit", seri::Entity{ other });
 	}
 
 	std::vector<ScriptField> LuaScript::GetSerializedFields()

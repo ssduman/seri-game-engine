@@ -31,12 +31,17 @@ namespace seri::script
 
 		void OnCreate() override;
 		void OnStart() override;
+		void OnFixedUpdate(float fixedDeltaTime) override;
 		void OnUpdate(float deltaTime) override;
 		void OnLateUpdate(float deltaTime) override;
 		void OnEnable() override;
 		void OnDisable() override;
 		void OnDestroy() override;
 		void OnClick() override;
+		void OnCollisionEnter(const seri::Entity& other) override;
+		void OnCollisionExit(const seri::Entity& other) override;
+		void OnTriggerEnter(const seri::Entity& other) override;
+		void OnTriggerExit(const seri::Entity& other) override;
 
 		std::vector<ScriptField> GetSerializedFields() override;
 		void ApplySerializedFields() override;

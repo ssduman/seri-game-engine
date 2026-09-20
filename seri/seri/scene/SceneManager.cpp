@@ -3,6 +3,7 @@
 #include "seri/scene/SceneManager.h"
 #include "seri/scene/Scene.h"
 #include "seri/system/ScriptSystem.h"
+#include "seri/system/PhysicsSystem.h"
 #include "seri/font/FontManager.h"
 #include "seri/scene/Prefab.h"
 #include "seri/asset/AssetManager.h"
@@ -141,6 +142,7 @@ namespace seri::scene
 			instance._pendingDestroyIds.clear();
 
 			seri::system::ScriptSystem::Reset();
+			seri::system::PhysicsSystem::Reset();
 
 			if (instance._hasSnapshot)
 			{
@@ -242,6 +244,7 @@ namespace seri::scene
 			_pendingDestroyIds.clear();
 
 			seri::system::ScriptSystem::Reset();
+			seri::system::PhysicsSystem::Reset();
 
 			if (_hasSnapshot)
 			{

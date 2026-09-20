@@ -27,6 +27,7 @@
 #include "seri/system/AnimatorSystem.h"
 #include "seri/system/SkinnedMeshRendererSystem.h"
 #include "seri/system/ScriptSystem.h"
+#include "seri/system/PhysicsSystem.h"
 #include "seri/draw/DebugDraw.h"
 #include "seri/logging/Logger.h"
 
@@ -49,6 +50,7 @@ namespace seri
 			script::SystemScriptManager::Init();
 			script::LuaScriptManager::Init();
 			system::ScriptSystem::Init();
+			system::PhysicsSystem::Init();
 			debug::DebugDraw::Init();
 
 			event::EventManager::Subscribe<event::WindowResizeEventData>(
@@ -99,6 +101,7 @@ namespace seri
 		~CoreLayer() override
 		{
 			system::ScriptSystem::Reset();
+			system::PhysicsSystem::Shutdown();
 		}
 
 		void OnPreUpdate() override
@@ -128,6 +131,7 @@ namespace seri
 		void OnUpdate() override
 		{
 			float deltaTime = TimeWrapper::GetDeltaTime();
+			float fixedDeltaTime = TimeWrapper::GetFixedDeltaTime();
 
 			Application::Update();
 			asset::AssetManager::Update();
@@ -140,8 +144,20 @@ namespace seri
 
 			if (isPlaying)
 			{
+				system::PhysicsSystem::Sync();
+
+				while (TimeWrapper::TickFixedStep())
+				{
+					system::ScriptSystem::FixedUpdate(fixedDeltaTime);
+					system::PhysicsSystem::Update(fixedDeltaTime);
+				}
+
 				system::ScriptSystem::Update(deltaTime);
 				system::ScriptSystem::LateUpdate(deltaTime);
+			}
+			else
+			{
+				TimeWrapper::ResetFixedStep();
 			}
 
 			scene::SceneManager::FlushDestroyed();

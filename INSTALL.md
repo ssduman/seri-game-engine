@@ -37,6 +37,10 @@ generate.bat
 
 * Open `Seri Game Engine.slnx` with Visual Studio 2026, build and run
 
+### 6. Project
+
+* Select a `sproject` inside `project/` or create a new project
+
 ## Adding package
 
 1. Look up the port and version data for the package from `vcpkg`

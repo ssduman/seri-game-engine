@@ -37,12 +37,17 @@ namespace seri::script
 
 		virtual void OnCreate() {}
 		virtual void OnStart() {}
+		virtual void OnFixedUpdate(float fixedDeltaTime) {}
 		virtual void OnUpdate(float deltaTime) {}
 		virtual void OnLateUpdate(float deltaTime) {}
 		virtual void OnEnable() {}
 		virtual void OnDisable() {}
 		virtual void OnDestroy() {}
 		virtual void OnClick() {}
+		virtual void OnCollisionEnter(const seri::Entity& other) {}
+		virtual void OnCollisionExit(const seri::Entity& other) {}
+		virtual void OnTriggerEnter(const seri::Entity& other) {}
+		virtual void OnTriggerExit(const seri::Entity& other) {}
 
 		virtual std::vector<ScriptField> GetSerializedFields() { return {}; }
 		virtual void ApplySerializedFields() {}
