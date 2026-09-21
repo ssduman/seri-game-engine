@@ -14,7 +14,7 @@ cd <path-to-vcpkg>
 bootstrap-vcpkg.bat
 ```
 
-### 2. Clone this repository
+### 2. Clone Seri Game Engine
 
 ```bat
 git clone https://github.com/ssduman/seri-game-engine
@@ -95,7 +95,6 @@ bootstrap-vcpkg.bat
 * [sol2](https://github.com/ThePhD/sol2)
 * [Boost](https://www.boost.org/)
 * [doctest](https://github.com/doctest/doctest/)
-* [nlohmann-json](https://github.com/nlohmann/json)
 * [Native File Dialog Extended](https://github.com/btzy/nativefiledialog-extended)
 * [Jolt Physics](https://github.com/jrouwe/joltphysics)
 * [vcpkg](https://github.com/microsoft/vcpkg)

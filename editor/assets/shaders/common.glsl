@@ -19,7 +19,7 @@ struct SpotLight
     vec4 direction;
     vec4 color;
     vec4 params;  // x = innerCos, y = outerCos, z = constant, w = linear
-    vec4 params2; // x = quadratic, y/z/w = unused
+    vec4 params2; // x = quadratic, y = shadow index (-1 = none), z/w = unused
 };
 
 struct PointLight
@@ -191,7 +191,12 @@ float ShadowDir(sampler2DShadow shadowMap, vec3 pos, vec3 N, vec3 L)
 
 float ShadowSpot(sampler2DShadow shadowMap, mat4 lightViewProj, vec3 pos, vec3 N, vec3 L)
 {
-    vec4 ls = lightViewProj * vec4(pos, 1.0);
+    // perspective depth is not linear, so bias in world space scaled by distance to the light
+    float dist = (lightViewProj * vec4(pos, 1.0)).w;
+    float NdotL = Saturate(dot(N, L));
+    vec3 biasedPos = pos + N * (dist * 0.004 * (1.0 - NdotL)) + L * (dist * 0.002);
+
+    vec4 ls = lightViewProj * vec4(biasedPos, 1.0);
     vec3 p = ls.xyz / ls.w;
     p = p * 0.5 + 0.5;
 
@@ -200,9 +205,6 @@ float ShadowSpot(sampler2DShadow shadowMap, mat4 lightViewProj, vec3 pos, vec3 N
         return 1.0;
     }
 
-    float bias = 0.001 + 0.003 * (1.0 - max(dot(N, L), 0.0));
-    float depth = p.z - bias;
-
     // 3x3 PCF
     vec2 texelSize = 1.0 / vec2(textureSize(shadowMap, 0));
     float shadow = 0.0;
@@ -210,7 +212,7 @@ float ShadowSpot(sampler2DShadow shadowMap, mat4 lightViewProj, vec3 pos, vec3 N
     {
         for (int y = -1; y <= 1; y++)
         {
-            // shadow += texture(shadowMap, vec3(p.xy + vec2(x, y) * texelSize, depth));
+            shadow += texture(shadowMap, vec3(p.xy + vec2(x, y) * texelSize, p.z));
         }
     }
     return shadow / 9.0;

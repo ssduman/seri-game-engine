@@ -1,0 +1,1579 @@
+IDInfo:
+  ID: 13965391284005906390
+  Version: 0.1
+Model:
+  MaterialCount: 26
+  ImportScale: 0.01
+  Meshes:
+    - MeshIndex: 0
+      MeshName: sponza_00
+      MaterialName: leaf
+      MaterialIndex: 1
+    - MeshIndex: 1
+      MeshName: sponza_01
+      MaterialName: Material__57
+      MaterialIndex: 3
+    - MeshIndex: 2
+      MeshName: sponza_01
+      MaterialName: vase_round
+      MaterialIndex: 2
+    - MeshIndex: 3
+      MeshName: sponza_03
+      MaterialName: Material__298
+      MaterialIndex: 4
+    - MeshIndex: 4
+      MeshName: sponza_05
+      MaterialName: bricks
+      MaterialIndex: 5
+    - MeshIndex: 5
+      MeshName: sponza_06
+      MaterialName: bricks
+      MaterialIndex: 5
+    - MeshIndex: 6
+      MeshName: sponza_07
+      MaterialName: arch
+      MaterialIndex: 6
+    - MeshIndex: 7
+      MeshName: sponza_08
+      MaterialName: ceiling
+      MaterialIndex: 7
+    - MeshIndex: 8
+      MeshName: sponza_09
+      MaterialName: column_a
+      MaterialIndex: 8
+    - MeshIndex: 9
+      MeshName: sponza_10
+      MaterialName: column_a
+      MaterialIndex: 8
+    - MeshIndex: 10
+      MeshName: sponza_11
+      MaterialName: column_a
+      MaterialIndex: 8
+    - MeshIndex: 11
+      MeshName: sponza_12
+      MaterialName: column_a
+      MaterialIndex: 8
+    - MeshIndex: 12
+      MeshName: sponza_13
+      MaterialName: column_a
+      MaterialIndex: 8
+    - MeshIndex: 13
+      MeshName: sponza_14
+      MaterialName: column_a
+      MaterialIndex: 8
+    - MeshIndex: 14
+      MeshName: sponza_15
+      MaterialName: column_a
+      MaterialIndex: 8
+    - MeshIndex: 15
+      MeshName: sponza_16
+      MaterialName: column_a
+      MaterialIndex: 8
+    - MeshIndex: 16
+      MeshName: sponza_17
+      MaterialName: arch
+      MaterialIndex: 6
+    - MeshIndex: 17
+      MeshName: sponza_18
+      MaterialName: floor
+      MaterialIndex: 9
+    - MeshIndex: 18
+      MeshName: sponza_19
+      MaterialName: ceiling
+      MaterialIndex: 7
+    - MeshIndex: 19
+      MeshName: sponza_20
+      MaterialName: arch
+      MaterialIndex: 6
+    - MeshIndex: 20
+      MeshName: sponza_21
+      MaterialName: arch
+      MaterialIndex: 6
+    - MeshIndex: 21
+      MeshName: sponza_22
+      MaterialName: column_c
+      MaterialIndex: 10
+    - MeshIndex: 22
+      MeshName: sponza_23
+      MaterialName: column_c
+      MaterialIndex: 10
+    - MeshIndex: 23
+      MeshName: sponza_24
+      MaterialName: column_c
+      MaterialIndex: 10
+    - MeshIndex: 24
+      MeshName: sponza_25
+      MaterialName: column_c
+      MaterialIndex: 10
+    - MeshIndex: 25
+      MeshName: sponza_26
+      MaterialName: column_c
+      MaterialIndex: 10
+    - MeshIndex: 26
+      MeshName: sponza_27
+      MaterialName: column_c
+      MaterialIndex: 10
+    - MeshIndex: 27
+      MeshName: sponza_28
+      MaterialName: column_c
+      MaterialIndex: 10
+    - MeshIndex: 28
+      MeshName: sponza_29
+      MaterialName: column_c
+      MaterialIndex: 10
+    - MeshIndex: 29
+      MeshName: sponza_30
+      MaterialName: column_c
+      MaterialIndex: 10
+    - MeshIndex: 30
+      MeshName: sponza_31
+      MaterialName: column_c
+      MaterialIndex: 10
+    - MeshIndex: 31
+      MeshName: sponza_32
+      MaterialName: column_c
+      MaterialIndex: 10
+    - MeshIndex: 32
+      MeshName: sponza_33
+      MaterialName: column_c
+      MaterialIndex: 10
+    - MeshIndex: 33
+      MeshName: sponza_34
+      MaterialName: bricks
+      MaterialIndex: 5
+    - MeshIndex: 34
+      MeshName: sponza_35
+      MaterialName: ceiling
+      MaterialIndex: 7
+    - MeshIndex: 35
+      MeshName: sponza_36
+      MaterialName: bricks
+      MaterialIndex: 5
+    - MeshIndex: 36
+      MeshName: sponza_37
+      MaterialName: arch
+      MaterialIndex: 6
+    - MeshIndex: 37
+      MeshName: sponza_38
+      MaterialName: ceiling
+      MaterialIndex: 7
+    - MeshIndex: 38
+      MeshName: sponza_39
+      MaterialName: arch
+      MaterialIndex: 6
+    - MeshIndex: 39
+      MeshName: sponza_40
+      MaterialName: ceiling
+      MaterialIndex: 7
+    - MeshIndex: 40
+      MeshName: sponza_41
+      MaterialName: arch
+      MaterialIndex: 6
+    - MeshIndex: 41
+      MeshName: sponza_42
+      MaterialName: ceiling
+      MaterialIndex: 7
+    - MeshIndex: 42
+      MeshName: sponza_43
+      MaterialName: arch
+      MaterialIndex: 6
+    - MeshIndex: 43
+      MeshName: sponza_44
+      MaterialName: ceiling
+      MaterialIndex: 7
+    - MeshIndex: 44
+      MeshName: sponza_45
+      MaterialName: arch
+      MaterialIndex: 6
+    - MeshIndex: 45
+      MeshName: sponza_46
+      MaterialName: ceiling
+      MaterialIndex: 7
+    - MeshIndex: 46
+      MeshName: sponza_47
+      MaterialName: arch
+      MaterialIndex: 6
+    - MeshIndex: 47
+      MeshName: sponza_48
+      MaterialName: ceiling
+      MaterialIndex: 7
+    - MeshIndex: 48
+      MeshName: sponza_49
+      MaterialName: arch
+      MaterialIndex: 6
+    - MeshIndex: 49
+      MeshName: sponza_50
+      MaterialName: ceiling
+      MaterialIndex: 7
+    - MeshIndex: 50
+      MeshName: sponza_51
+      MaterialName: arch
+      MaterialIndex: 6
+    - MeshIndex: 51
+      MeshName: sponza_52
+      MaterialName: ceiling
+      MaterialIndex: 7
+    - MeshIndex: 52
+      MeshName: sponza_53
+      MaterialName: arch
+      MaterialIndex: 6
+    - MeshIndex: 53
+      MeshName: sponza_54
+      MaterialName: ceiling
+      MaterialIndex: 7
+    - MeshIndex: 54
+      MeshName: sponza_55
+      MaterialName: arch
+      MaterialIndex: 6
+    - MeshIndex: 55
+      MeshName: sponza_56
+      MaterialName: arch
+      MaterialIndex: 6
+    - MeshIndex: 56
+      MeshName: sponza_57
+      MaterialName: arch
+      MaterialIndex: 6
+    - MeshIndex: 57
+      MeshName: sponza_58
+      MaterialName: arch
+      MaterialIndex: 6
+    - MeshIndex: 58
+      MeshName: sponza_59
+      MaterialName: arch
+      MaterialIndex: 6
+    - MeshIndex: 59
+      MeshName: sponza_60
+      MaterialName: arch
+      MaterialIndex: 6
+    - MeshIndex: 60
+      MeshName: sponza_61
+      MaterialName: arch
+      MaterialIndex: 6
+    - MeshIndex: 61
+      MeshName: sponza_62
+      MaterialName: arch
+      MaterialIndex: 6
+    - MeshIndex: 62
+      MeshName: sponza_63
+      MaterialName: arch
+      MaterialIndex: 6
+    - MeshIndex: 63
+      MeshName: sponza_64
+      MaterialName: arch
+      MaterialIndex: 6
+    - MeshIndex: 64
+      MeshName: sponza_65
+      MaterialName: arch
+      MaterialIndex: 6
+    - MeshIndex: 65
+      MeshName: sponza_66
+      MaterialName: bricks
+      MaterialIndex: 5
+    - MeshIndex: 66
+      MeshName: sponza_67
+      MaterialName: arch
+      MaterialIndex: 6
+    - MeshIndex: 67
+      MeshName: sponza_68
+      MaterialName: bricks
+      MaterialIndex: 5
+    - MeshIndex: 68
+      MeshName: sponza_69
+      MaterialName: bricks
+      MaterialIndex: 5
+    - MeshIndex: 69
+      MeshName: sponza_70
+      MaterialName: details
+      MaterialIndex: 11
+    - MeshIndex: 70
+      MeshName: sponza_71
+      MaterialName: details
+      MaterialIndex: 11
+    - MeshIndex: 71
+      MeshName: sponza_71
+      MaterialName: bricks
+      MaterialIndex: 5
+    - MeshIndex: 72
+      MeshName: sponza_72
+      MaterialName: details
+      MaterialIndex: 11
+    - MeshIndex: 73
+      MeshName: sponza_72
+      MaterialName: bricks
+      MaterialIndex: 5
+    - MeshIndex: 74
+      MeshName: sponza_73
+      MaterialName: details
+      MaterialIndex: 11
+    - MeshIndex: 75
+      MeshName: sponza_74
+      MaterialName: details
+      MaterialIndex: 11
+    - MeshIndex: 76
+      MeshName: sponza_75
+      MaterialName: bricks
+      MaterialIndex: 5
+    - MeshIndex: 77
+      MeshName: sponza_76
+      MaterialName: column_c
+      MaterialIndex: 10
+    - MeshIndex: 78
+      MeshName: sponza_77
+      MaterialName: column_c
+      MaterialIndex: 10
+    - MeshIndex: 79
+      MeshName: sponza_78
+      MaterialName: column_c
+      MaterialIndex: 10
+    - MeshIndex: 80
+      MeshName: sponza_79
+      MaterialName: column_c
+      MaterialIndex: 10
+    - MeshIndex: 81
+      MeshName: sponza_80
+      MaterialName: column_c
+      MaterialIndex: 10
+    - MeshIndex: 82
+      MeshName: sponza_81
+      MaterialName: column_c
+      MaterialIndex: 10
+    - MeshIndex: 83
+      MeshName: sponza_82
+      MaterialName: column_c
+      MaterialIndex: 10
+    - MeshIndex: 84
+      MeshName: sponza_83
+      MaterialName: column_c
+      MaterialIndex: 10
+    - MeshIndex: 85
+      MeshName: sponza_84
+      MaterialName: column_c
+      MaterialIndex: 10
+    - MeshIndex: 86
+      MeshName: sponza_85
+      MaterialName: column_c
+      MaterialIndex: 10
+    - MeshIndex: 87
+      MeshName: sponza_86
+      MaterialName: column_c
+      MaterialIndex: 10
+    - MeshIndex: 88
+      MeshName: sponza_87
+      MaterialName: column_c
+      MaterialIndex: 10
+    - MeshIndex: 89
+      MeshName: sponza_88
+      MaterialName: column_c
+      MaterialIndex: 10
+    - MeshIndex: 90
+      MeshName: sponza_89
+      MaterialName: column_c
+      MaterialIndex: 10
+    - MeshIndex: 91
+      MeshName: sponza_90
+      MaterialName: column_c
+      MaterialIndex: 10
+    - MeshIndex: 92
+      MeshName: sponza_91
+      MaterialName: column_c
+      MaterialIndex: 10
+    - MeshIndex: 93
+      MeshName: sponza_92
+      MaterialName: column_c
+      MaterialIndex: 10
+    - MeshIndex: 94
+      MeshName: sponza_93
+      MaterialName: column_c
+      MaterialIndex: 10
+    - MeshIndex: 95
+      MeshName: sponza_94
+      MaterialName: column_c
+      MaterialIndex: 10
+    - MeshIndex: 96
+      MeshName: sponza_95
+      MaterialName: column_c
+      MaterialIndex: 10
+    - MeshIndex: 97
+      MeshName: sponza_96
+      MaterialName: column_c
+      MaterialIndex: 10
+    - MeshIndex: 98
+      MeshName: sponza_97
+      MaterialName: column_c
+      MaterialIndex: 10
+    - MeshIndex: 99
+      MeshName: sponza_98
+      MaterialName: column_c
+      MaterialIndex: 10
+    - MeshIndex: 100
+      MeshName: sponza_99
+      MaterialName: column_c
+      MaterialIndex: 10
+    - MeshIndex: 101
+      MeshName: sponza_100
+      MaterialName: column_c
+      MaterialIndex: 10
+    - MeshIndex: 102
+      MeshName: sponza_101
+      MaterialName: column_c
+      MaterialIndex: 10
+    - MeshIndex: 103
+      MeshName: sponza_102
+      MaterialName: column_c
+      MaterialIndex: 10
+    - MeshIndex: 104
+      MeshName: sponza_103
+      MaterialName: column_c
+      MaterialIndex: 10
+    - MeshIndex: 105
+      MeshName: sponza_104
+      MaterialName: column_c
+      MaterialIndex: 10
+    - MeshIndex: 106
+      MeshName: sponza_105
+      MaterialName: column_c
+      MaterialIndex: 10
+    - MeshIndex: 107
+      MeshName: sponza_106
+      MaterialName: column_c
+      MaterialIndex: 10
+    - MeshIndex: 108
+      MeshName: sponza_107
+      MaterialName: column_c
+      MaterialIndex: 10
+    - MeshIndex: 109
+      MeshName: sponza_108
+      MaterialName: column_c
+      MaterialIndex: 10
+    - MeshIndex: 110
+      MeshName: sponza_109
+      MaterialName: column_c
+      MaterialIndex: 10
+    - MeshIndex: 111
+      MeshName: sponza_110
+      MaterialName: column_c
+      MaterialIndex: 10
+    - MeshIndex: 112
+      MeshName: sponza_111
+      MaterialName: column_c
+      MaterialIndex: 10
+    - MeshIndex: 113
+      MeshName: sponza_112
+      MaterialName: column_c
+      MaterialIndex: 10
+    - MeshIndex: 114
+      MeshName: sponza_113
+      MaterialName: column_c
+      MaterialIndex: 10
+    - MeshIndex: 115
+      MeshName: sponza_114
+      MaterialName: column_c
+      MaterialIndex: 10
+    - MeshIndex: 116
+      MeshName: sponza_115
+      MaterialName: column_c
+      MaterialIndex: 10
+    - MeshIndex: 117
+      MeshName: sponza_116
+      MaterialName: bricks
+      MaterialIndex: 5
+    - MeshIndex: 118
+      MeshName: sponza_117
+      MaterialName: floor
+      MaterialIndex: 9
+    - MeshIndex: 119
+      MeshName: sponza_118
+      MaterialName: column_a
+      MaterialIndex: 8
+    - MeshIndex: 120
+      MeshName: sponza_119
+      MaterialName: column_a
+      MaterialIndex: 8
+    - MeshIndex: 121
+      MeshName: sponza_120
+      MaterialName: column_a
+      MaterialIndex: 8
+    - MeshIndex: 122
+      MeshName: sponza_121
+      MaterialName: column_a
+      MaterialIndex: 8
+    - MeshIndex: 123
+      MeshName: sponza_122
+      MaterialName: arch
+      MaterialIndex: 6
+    - MeshIndex: 124
+      MeshName: sponza_123
+      MaterialName: arch
+      MaterialIndex: 6
+    - MeshIndex: 125
+      MeshName: sponza_124
+      MaterialName: arch
+      MaterialIndex: 6
+    - MeshIndex: 126
+      MeshName: sponza_125
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 127
+      MeshName: sponza_126
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 128
+      MeshName: sponza_127
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 129
+      MeshName: sponza_128
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 130
+      MeshName: sponza_129
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 131
+      MeshName: sponza_130
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 132
+      MeshName: sponza_131
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 133
+      MeshName: sponza_132
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 134
+      MeshName: sponza_133
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 135
+      MeshName: sponza_134
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 136
+      MeshName: sponza_135
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 137
+      MeshName: sponza_136
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 138
+      MeshName: sponza_137
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 139
+      MeshName: sponza_138
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 140
+      MeshName: sponza_139
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 141
+      MeshName: sponza_140
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 142
+      MeshName: sponza_141
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 143
+      MeshName: sponza_142
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 144
+      MeshName: sponza_143
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 145
+      MeshName: sponza_144
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 146
+      MeshName: sponza_145
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 147
+      MeshName: sponza_146
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 148
+      MeshName: sponza_147
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 149
+      MeshName: sponza_148
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 150
+      MeshName: sponza_149
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 151
+      MeshName: sponza_150
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 152
+      MeshName: sponza_151
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 153
+      MeshName: sponza_152
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 154
+      MeshName: sponza_153
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 155
+      MeshName: sponza_154
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 156
+      MeshName: sponza_155
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 157
+      MeshName: sponza_156
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 158
+      MeshName: sponza_157
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 159
+      MeshName: sponza_158
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 160
+      MeshName: sponza_159
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 161
+      MeshName: sponza_160
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 162
+      MeshName: sponza_161
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 163
+      MeshName: sponza_162
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 164
+      MeshName: sponza_163
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 165
+      MeshName: sponza_164
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 166
+      MeshName: sponza_165
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 167
+      MeshName: sponza_166
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 168
+      MeshName: sponza_167
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 169
+      MeshName: sponza_168
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 170
+      MeshName: sponza_169
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 171
+      MeshName: sponza_170
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 172
+      MeshName: sponza_171
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 173
+      MeshName: sponza_172
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 174
+      MeshName: sponza_173
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 175
+      MeshName: sponza_174
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 176
+      MeshName: sponza_175
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 177
+      MeshName: sponza_176
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 178
+      MeshName: sponza_177
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 179
+      MeshName: sponza_178
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 180
+      MeshName: sponza_179
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 181
+      MeshName: sponza_180
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 182
+      MeshName: sponza_181
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 183
+      MeshName: sponza_182
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 184
+      MeshName: sponza_183
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 185
+      MeshName: sponza_184
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 186
+      MeshName: sponza_185
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 187
+      MeshName: sponza_186
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 188
+      MeshName: sponza_187
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 189
+      MeshName: sponza_188
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 190
+      MeshName: sponza_189
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 191
+      MeshName: sponza_190
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 192
+      MeshName: sponza_191
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 193
+      MeshName: sponza_192
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 194
+      MeshName: sponza_193
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 195
+      MeshName: sponza_194
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 196
+      MeshName: sponza_195
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 197
+      MeshName: sponza_196
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 198
+      MeshName: sponza_197
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 199
+      MeshName: sponza_198
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 200
+      MeshName: sponza_199
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 201
+      MeshName: sponza_200
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 202
+      MeshName: sponza_201
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 203
+      MeshName: sponza_202
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 204
+      MeshName: sponza_203
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 205
+      MeshName: sponza_204
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 206
+      MeshName: sponza_205
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 207
+      MeshName: sponza_206
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 208
+      MeshName: sponza_207
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 209
+      MeshName: sponza_208
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 210
+      MeshName: sponza_209
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 211
+      MeshName: sponza_210
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 212
+      MeshName: sponza_211
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 213
+      MeshName: sponza_212
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 214
+      MeshName: sponza_213
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 215
+      MeshName: sponza_214
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 216
+      MeshName: sponza_215
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 217
+      MeshName: sponza_216
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 218
+      MeshName: sponza_217
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 219
+      MeshName: sponza_218
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 220
+      MeshName: sponza_219
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 221
+      MeshName: sponza_220
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 222
+      MeshName: sponza_221
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 223
+      MeshName: sponza_222
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 224
+      MeshName: sponza_223
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 225
+      MeshName: sponza_224
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 226
+      MeshName: sponza_225
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 227
+      MeshName: sponza_226
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 228
+      MeshName: sponza_227
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 229
+      MeshName: sponza_228
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 230
+      MeshName: sponza_229
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 231
+      MeshName: sponza_230
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 232
+      MeshName: sponza_231
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 233
+      MeshName: sponza_232
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 234
+      MeshName: sponza_233
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 235
+      MeshName: sponza_234
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 236
+      MeshName: sponza_235
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 237
+      MeshName: sponza_236
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 238
+      MeshName: sponza_237
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 239
+      MeshName: sponza_238
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 240
+      MeshName: sponza_239
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 241
+      MeshName: sponza_240
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 242
+      MeshName: sponza_241
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 243
+      MeshName: sponza_242
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 244
+      MeshName: sponza_243
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 245
+      MeshName: sponza_244
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 246
+      MeshName: sponza_245
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 247
+      MeshName: sponza_246
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 248
+      MeshName: sponza_247
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 249
+      MeshName: sponza_248
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 250
+      MeshName: sponza_249
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 251
+      MeshName: sponza_250
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 252
+      MeshName: sponza_251
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 253
+      MeshName: sponza_252
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 254
+      MeshName: sponza_253
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 255
+      MeshName: sponza_254
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 256
+      MeshName: sponza_255
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 257
+      MeshName: sponza_256
+      MaterialName: column_b
+      MaterialIndex: 12
+    - MeshIndex: 258
+      MeshName: sponza_257
+      MaterialName: Material__47
+      MaterialIndex: 13
+    - MeshIndex: 259
+      MeshName: sponza_258
+      MaterialName: bricks
+      MaterialIndex: 5
+    - MeshIndex: 260
+      MeshName: sponza_259
+      MaterialName: flagpole
+      MaterialIndex: 14
+    - MeshIndex: 261
+      MeshName: sponza_260
+      MaterialName: flagpole
+      MaterialIndex: 14
+    - MeshIndex: 262
+      MeshName: sponza_261
+      MaterialName: flagpole
+      MaterialIndex: 14
+    - MeshIndex: 263
+      MeshName: sponza_262
+      MaterialName: flagpole
+      MaterialIndex: 14
+    - MeshIndex: 264
+      MeshName: sponza_263
+      MaterialName: flagpole
+      MaterialIndex: 14
+    - MeshIndex: 265
+      MeshName: sponza_264
+      MaterialName: flagpole
+      MaterialIndex: 14
+    - MeshIndex: 266
+      MeshName: sponza_265
+      MaterialName: flagpole
+      MaterialIndex: 14
+    - MeshIndex: 267
+      MeshName: sponza_266
+      MaterialName: flagpole
+      MaterialIndex: 14
+    - MeshIndex: 268
+      MeshName: sponza_267
+      MaterialName: flagpole
+      MaterialIndex: 14
+    - MeshIndex: 269
+      MeshName: sponza_268
+      MaterialName: flagpole
+      MaterialIndex: 14
+    - MeshIndex: 270
+      MeshName: sponza_269
+      MaterialName: flagpole
+      MaterialIndex: 14
+    - MeshIndex: 271
+      MeshName: sponza_270
+      MaterialName: flagpole
+      MaterialIndex: 14
+    - MeshIndex: 272
+      MeshName: sponza_271
+      MaterialName: flagpole
+      MaterialIndex: 14
+    - MeshIndex: 273
+      MeshName: sponza_272
+      MaterialName: flagpole
+      MaterialIndex: 14
+    - MeshIndex: 274
+      MeshName: sponza_273
+      MaterialName: flagpole
+      MaterialIndex: 14
+    - MeshIndex: 275
+      MeshName: sponza_274
+      MaterialName: flagpole
+      MaterialIndex: 14
+    - MeshIndex: 276
+      MeshName: sponza_275
+      MaterialName: leaf
+      MaterialIndex: 1
+    - MeshIndex: 277
+      MeshName: sponza_276
+      MaterialName: leaf
+      MaterialIndex: 1
+    - MeshIndex: 278
+      MeshName: sponza_277
+      MaterialName: leaf
+      MaterialIndex: 1
+    - MeshIndex: 279
+      MeshName: sponza_278
+      MaterialName: leaf
+      MaterialIndex: 1
+    - MeshIndex: 280
+      MeshName: sponza_279
+      MaterialName: leaf
+      MaterialIndex: 1
+    - MeshIndex: 281
+      MeshName: sponza_280
+      MaterialName: leaf
+      MaterialIndex: 1
+    - MeshIndex: 282
+      MeshName: sponza_281
+      MaterialName: leaf
+      MaterialIndex: 1
+    - MeshIndex: 283
+      MeshName: sponza_282
+      MaterialName: fabric_e
+      MaterialIndex: 15
+    - MeshIndex: 284
+      MeshName: sponza_283
+      MaterialName: fabric_d
+      MaterialIndex: 16
+    - MeshIndex: 285
+      MeshName: sponza_284
+      MaterialName: fabric_a
+      MaterialIndex: 17
+    - MeshIndex: 286
+      MeshName: sponza_285
+      MaterialName: fabric_e
+      MaterialIndex: 15
+    - MeshIndex: 287
+      MeshName: sponza_286
+      MaterialName: fabric_d
+      MaterialIndex: 16
+    - MeshIndex: 288
+      MeshName: sponza_287
+      MaterialName: fabric_e
+      MaterialIndex: 15
+    - MeshIndex: 289
+      MeshName: sponza_288
+      MaterialName: fabric_a
+      MaterialIndex: 17
+    - MeshIndex: 290
+      MeshName: sponza_289
+      MaterialName: fabric_d
+      MaterialIndex: 16
+    - MeshIndex: 291
+      MeshName: sponza_290
+      MaterialName: flagpole
+      MaterialIndex: 14
+    - MeshIndex: 292
+      MeshName: sponza_291
+      MaterialName: flagpole
+      MaterialIndex: 14
+    - MeshIndex: 293
+      MeshName: sponza_292
+      MaterialName: flagpole
+      MaterialIndex: 14
+    - MeshIndex: 294
+      MeshName: sponza_293
+      MaterialName: flagpole
+      MaterialIndex: 14
+    - MeshIndex: 295
+      MeshName: sponza_294
+      MaterialName: flagpole
+      MaterialIndex: 14
+    - MeshIndex: 296
+      MeshName: sponza_295
+      MaterialName: flagpole
+      MaterialIndex: 14
+    - MeshIndex: 297
+      MeshName: sponza_296
+      MaterialName: flagpole
+      MaterialIndex: 14
+    - MeshIndex: 298
+      MeshName: sponza_297
+      MaterialName: flagpole
+      MaterialIndex: 14
+    - MeshIndex: 299
+      MeshName: sponza_298
+      MaterialName: flagpole
+      MaterialIndex: 14
+    - MeshIndex: 300
+      MeshName: sponza_299
+      MaterialName: flagpole
+      MaterialIndex: 14
+    - MeshIndex: 301
+      MeshName: sponza_300
+      MaterialName: flagpole
+      MaterialIndex: 14
+    - MeshIndex: 302
+      MeshName: sponza_301
+      MaterialName: flagpole
+      MaterialIndex: 14
+    - MeshIndex: 303
+      MeshName: sponza_302
+      MaterialName: flagpole
+      MaterialIndex: 14
+    - MeshIndex: 304
+      MeshName: sponza_303
+      MaterialName: flagpole
+      MaterialIndex: 14
+    - MeshIndex: 305
+      MeshName: sponza_304
+      MaterialName: flagpole
+      MaterialIndex: 14
+    - MeshIndex: 306
+      MeshName: sponza_305
+      MaterialName: flagpole
+      MaterialIndex: 14
+    - MeshIndex: 307
+      MeshName: sponza_306
+      MaterialName: flagpole
+      MaterialIndex: 14
+    - MeshIndex: 308
+      MeshName: sponza_307
+      MaterialName: flagpole
+      MaterialIndex: 14
+    - MeshIndex: 309
+      MeshName: sponza_308
+      MaterialName: flagpole
+      MaterialIndex: 14
+    - MeshIndex: 310
+      MeshName: sponza_309
+      MaterialName: flagpole
+      MaterialIndex: 14
+    - MeshIndex: 311
+      MeshName: sponza_310
+      MaterialName: flagpole
+      MaterialIndex: 14
+    - MeshIndex: 312
+      MeshName: sponza_311
+      MaterialName: flagpole
+      MaterialIndex: 14
+    - MeshIndex: 313
+      MeshName: sponza_312
+      MaterialName: flagpole
+      MaterialIndex: 14
+    - MeshIndex: 314
+      MeshName: sponza_313
+      MaterialName: flagpole
+      MaterialIndex: 14
+    - MeshIndex: 315
+      MeshName: sponza_314
+      MaterialName: flagpole
+      MaterialIndex: 14
+    - MeshIndex: 316
+      MeshName: sponza_315
+      MaterialName: flagpole
+      MaterialIndex: 14
+    - MeshIndex: 317
+      MeshName: sponza_316
+      MaterialName: flagpole
+      MaterialIndex: 14
+    - MeshIndex: 318
+      MeshName: sponza_317
+      MaterialName: flagpole
+      MaterialIndex: 14
+    - MeshIndex: 319
+      MeshName: sponza_318
+      MaterialName: flagpole
+      MaterialIndex: 14
+    - MeshIndex: 320
+      MeshName: sponza_319
+      MaterialName: flagpole
+      MaterialIndex: 14
+    - MeshIndex: 321
+      MeshName: sponza_320
+      MaterialName: fabric_g
+      MaterialIndex: 18
+    - MeshIndex: 322
+      MeshName: sponza_321
+      MaterialName: fabric_c
+      MaterialIndex: 19
+    - MeshIndex: 323
+      MeshName: sponza_322
+      MaterialName: fabric_f
+      MaterialIndex: 20
+    - MeshIndex: 324
+      MeshName: sponza_323
+      MaterialName: fabric_c
+      MaterialIndex: 19
+    - MeshIndex: 325
+      MeshName: sponza_324
+      MaterialName: fabric_f
+      MaterialIndex: 20
+    - MeshIndex: 326
+      MeshName: sponza_325
+      MaterialName: fabric_c
+      MaterialIndex: 19
+    - MeshIndex: 327
+      MeshName: sponza_326
+      MaterialName: fabric_g
+      MaterialIndex: 18
+    - MeshIndex: 328
+      MeshName: sponza_327
+      MaterialName: fabric_f
+      MaterialIndex: 20
+    - MeshIndex: 329
+      MeshName: sponza_328
+      MaterialName: fabric_c
+      MaterialIndex: 19
+    - MeshIndex: 330
+      MeshName: sponza_329
+      MaterialName: fabric_g
+      MaterialIndex: 18
+    - MeshIndex: 331
+      MeshName: sponza_330
+      MaterialName: chain
+      MaterialIndex: 21
+    - MeshIndex: 332
+      MeshName: sponza_331
+      MaterialName: chain
+      MaterialIndex: 21
+    - MeshIndex: 333
+      MeshName: sponza_332
+      MaterialName: chain
+      MaterialIndex: 21
+    - MeshIndex: 334
+      MeshName: sponza_333
+      MaterialName: chain
+      MaterialIndex: 21
+    - MeshIndex: 335
+      MeshName: sponza_334
+      MaterialName: vase_hanging
+      MaterialIndex: 22
+    - MeshIndex: 336
+      MeshName: sponza_335
+      MaterialName: vase_hanging
+      MaterialIndex: 22
+    - MeshIndex: 337
+      MeshName: sponza_336
+      MaterialName: vase_hanging
+      MaterialIndex: 22
+    - MeshIndex: 338
+      MeshName: sponza_337
+      MaterialName: vase_hanging
+      MaterialIndex: 22
+    - MeshIndex: 339
+      MeshName: sponza_338
+      MaterialName: vase_hanging
+      MaterialIndex: 22
+    - MeshIndex: 340
+      MeshName: sponza_339
+      MaterialName: chain
+      MaterialIndex: 21
+    - MeshIndex: 341
+      MeshName: sponza_340
+      MaterialName: chain
+      MaterialIndex: 21
+    - MeshIndex: 342
+      MeshName: sponza_341
+      MaterialName: chain
+      MaterialIndex: 21
+    - MeshIndex: 343
+      MeshName: sponza_342
+      MaterialName: chain
+      MaterialIndex: 21
+    - MeshIndex: 344
+      MeshName: sponza_343
+      MaterialName: vase_hanging
+      MaterialIndex: 22
+    - MeshIndex: 345
+      MeshName: sponza_344
+      MaterialName: vase_hanging
+      MaterialIndex: 22
+    - MeshIndex: 346
+      MeshName: sponza_345
+      MaterialName: vase_hanging
+      MaterialIndex: 22
+    - MeshIndex: 347
+      MeshName: sponza_346
+      MaterialName: vase_hanging
+      MaterialIndex: 22
+    - MeshIndex: 348
+      MeshName: sponza_347
+      MaterialName: vase_hanging
+      MaterialIndex: 22
+    - MeshIndex: 349
+      MeshName: sponza_348
+      MaterialName: chain
+      MaterialIndex: 21
+    - MeshIndex: 350
+      MeshName: sponza_349
+      MaterialName: chain
+      MaterialIndex: 21
+    - MeshIndex: 351
+      MeshName: sponza_350
+      MaterialName: chain
+      MaterialIndex: 21
+    - MeshIndex: 352
+      MeshName: sponza_351
+      MaterialName: chain
+      MaterialIndex: 21
+    - MeshIndex: 353
+      MeshName: sponza_352
+      MaterialName: vase_hanging
+      MaterialIndex: 22
+    - MeshIndex: 354
+      MeshName: sponza_353
+      MaterialName: vase_hanging
+      MaterialIndex: 22
+    - MeshIndex: 355
+      MeshName: sponza_354
+      MaterialName: vase_hanging
+      MaterialIndex: 22
+    - MeshIndex: 356
+      MeshName: sponza_355
+      MaterialName: vase_hanging
+      MaterialIndex: 22
+    - MeshIndex: 357
+      MeshName: sponza_356
+      MaterialName: vase_hanging
+      MaterialIndex: 22
+    - MeshIndex: 358
+      MeshName: sponza_357
+      MaterialName: chain
+      MaterialIndex: 21
+    - MeshIndex: 359
+      MeshName: sponza_358
+      MaterialName: chain
+      MaterialIndex: 21
+    - MeshIndex: 360
+      MeshName: sponza_359
+      MaterialName: chain
+      MaterialIndex: 21
+    - MeshIndex: 361
+      MeshName: sponza_360
+      MaterialName: chain
+      MaterialIndex: 21
+    - MeshIndex: 362
+      MeshName: sponza_361
+      MaterialName: vase_hanging
+      MaterialIndex: 22
+    - MeshIndex: 363
+      MeshName: sponza_362
+      MaterialName: vase_hanging
+      MaterialIndex: 22
+    - MeshIndex: 364
+      MeshName: sponza_363
+      MaterialName: vase_hanging
+      MaterialIndex: 22
+    - MeshIndex: 365
+      MeshName: sponza_364
+      MaterialName: vase_hanging
+      MaterialIndex: 22
+    - MeshIndex: 366
+      MeshName: sponza_365
+      MaterialName: vase_hanging
+      MaterialIndex: 22
+    - MeshIndex: 367
+      MeshName: sponza_366
+      MaterialName: Material__57
+      MaterialIndex: 3
+    - MeshIndex: 368
+      MeshName: sponza_366
+      MaterialName: vase_round
+      MaterialIndex: 2
+    - MeshIndex: 369
+      MeshName: sponza_367
+      MaterialName: Material__57
+      MaterialIndex: 3
+    - MeshIndex: 370
+      MeshName: sponza_367
+      MaterialName: vase_round
+      MaterialIndex: 2
+    - MeshIndex: 371
+      MeshName: sponza_368
+      MaterialName: Material__57
+      MaterialIndex: 3
+    - MeshIndex: 372
+      MeshName: sponza_368
+      MaterialName: vase_round
+      MaterialIndex: 2
+    - MeshIndex: 373
+      MeshName: sponza_369
+      MaterialName: Material__57
+      MaterialIndex: 3
+    - MeshIndex: 374
+      MeshName: sponza_369
+      MaterialName: vase_round
+      MaterialIndex: 2
+    - MeshIndex: 375
+      MeshName: sponza_370
+      MaterialName: Material__57
+      MaterialIndex: 3
+    - MeshIndex: 376
+      MeshName: sponza_370
+      MaterialName: vase_round
+      MaterialIndex: 2
+    - MeshIndex: 377
+      MeshName: sponza_371
+      MaterialName: Material__57
+      MaterialIndex: 3
+    - MeshIndex: 378
+      MeshName: sponza_371
+      MaterialName: vase_round
+      MaterialIndex: 2
+    - MeshIndex: 379
+      MeshName: sponza_372
+      MaterialName: Material__57
+      MaterialIndex: 3
+    - MeshIndex: 380
+      MeshName: sponza_372
+      MaterialName: vase_round
+      MaterialIndex: 2
+    - MeshIndex: 381
+      MeshName: sponza_373
+      MaterialName: vase
+      MaterialIndex: 23
+    - MeshIndex: 382
+      MeshName: sponza_374
+      MaterialName: vase
+      MaterialIndex: 23
+    - MeshIndex: 383
+      MeshName: sponza_375
+      MaterialName: vase
+      MaterialIndex: 23
+    - MeshIndex: 384
+      MeshName: sponza_376
+      MaterialName: vase
+      MaterialIndex: 23
+    - MeshIndex: 385
+      MeshName: sponza_377
+      MaterialName: Material__25
+      MaterialIndex: 24
+    - MeshIndex: 386
+      MeshName: sponza_377
+      MaterialName: Material__298
+      MaterialIndex: 4
+    - MeshIndex: 387
+      MeshName: sponza_378
+      MaterialName: Material__25
+      MaterialIndex: 24
+    - MeshIndex: 388
+      MeshName: sponza_378
+      MaterialName: Material__298
+      MaterialIndex: 4
+    - MeshIndex: 389
+      MeshName: sponza_379
+      MaterialName: bricks
+      MaterialIndex: 5
+    - MeshIndex: 390
+      MeshName: sponza_380
+      MaterialName: roof
+      MaterialIndex: 25
+    - MeshIndex: 391
+      MeshName: sponza_381
+      MaterialName: roof
+      MaterialIndex: 25
+    - MeshIndex: 392
+      MeshName: sponza_382
+      MaterialName: bricks
+      MaterialIndex: 5

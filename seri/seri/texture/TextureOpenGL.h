@@ -165,17 +165,27 @@ namespace seri
 	private:
 		void Init()
 		{
+			_swizzle = { GL_RED, GL_GREEN, GL_BLUE, GL_ALPHA };
+
 			if (_desc.format == TextureFormat::none)
 			{
-				if (_components == 3)
+				if (_components == 1)
+				{
+					_desc.format = TextureFormat::red__red8ubyte;
+					_swizzle = { GL_RED, GL_RED, GL_RED, GL_ONE };
+				}
+				else if (_components == 2)
+				{
+					_desc.format = TextureFormat::rg__rg8ubyte;
+					_swizzle = { GL_RED, GL_RED, GL_RED, GL_GREEN };
+				}
+				else if (_components == 3)
 				{
 					_desc.format = TextureFormat::rgb__rgb8ubyte;
-					_internalformat = GetInternalFormatOpenGL(_desc.format);
 				}
 				else if (_components == 4)
 				{
 					_desc.format = TextureFormat::rgba__rgba8ubyte;
-					_internalformat = GetInternalFormatOpenGL(_desc.format);
 				}
 			}
 
@@ -220,6 +230,7 @@ namespace seri
 			if (_desc.target != TextureTarget::cube_map)
 			{
 				const GLint border = 0;
+				glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 				glTexImage2D(_target, _desc.mip, _internalformat, _width, _height, border, _format, _dataType, _image);
 
 				GLenum err = glGetError();
@@ -257,6 +268,8 @@ namespace seri
 			glTexParameteri(_target, GL_TEXTURE_COMPARE_FUNC, _compareFunc);
 
 			glTexParameterfv(_target, GL_TEXTURE_BORDER_COLOR, glm::value_ptr(_borderColor));
+
+			glTexParameteriv(_target, GL_TEXTURE_SWIZZLE_RGBA, glm::value_ptr(_swizzle));
 
 			glGenerateMipmap(_target);
 
@@ -360,6 +373,8 @@ namespace seri
 				case seri::TextureFormat::red__red8ubyte: return GL_RED;
 				case seri::TextureFormat::red__red32int: return GL_RED_INTEGER;
 
+				case seri::TextureFormat::rg__rg8ubyte: return GL_RG;
+
 				case seri::TextureFormat::rgb__rgb8ubyte: return GL_RGB;
 				case seri::TextureFormat::rgb__rgb16float: return GL_RGB;
 				case seri::TextureFormat::rgb__rgb32float: return GL_RGB;
@@ -381,6 +396,8 @@ namespace seri
 				case seri::TextureFormat::red__red8ubyte: return GL_R8;
 				case seri::TextureFormat::red__red32int: return GL_R32I;
 
+				case seri::TextureFormat::rg__rg8ubyte: return GL_RG8;
+
 				case seri::TextureFormat::rgb__rgb8ubyte: return GL_RGB8;
 				case seri::TextureFormat::rgb__rgb16float: return GL_RGB16F;
 				case seri::TextureFormat::rgb__rgb32float: return GL_RGB32F;
@@ -401,6 +418,8 @@ namespace seri
 			{
 				case seri::TextureFormat::red__red8ubyte: return GL_UNSIGNED_BYTE;
 				case seri::TextureFormat::red__red32int: return GL_INT;
+
+				case seri::TextureFormat::rg__rg8ubyte: return GL_UNSIGNED_BYTE;
 
 				case seri::TextureFormat::rgb__rgb8ubyte: return GL_UNSIGNED_BYTE;
 				case seri::TextureFormat::rgb__rgb16float: return GL_HALF_FLOAT;
@@ -453,6 +472,7 @@ namespace seri
 		GLenum _compareMode;
 		GLenum _compareFunc;
 		glm::vec4 _borderColor;
+		glm::ivec4 _swizzle;
 
 		TextureDesc _desc;
 		unsigned int _handle{ 0 };

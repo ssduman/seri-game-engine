@@ -4,18 +4,23 @@
 
 ## Roadmap: ##
 
-* [X] FBX Loading and Drawing
-* [X] Skeletal Animation
-* [X] Font Loading and Text Rendering
+* [X] Entity Component System
+* [X] Model Loading and Skeletal Animation
+* [X] UI System and Text Rendering
 * [X] Instancing
+* [X] Forward Rendering
 * [X] Lighting and Shadow
-* [X] Basic Sound
-* [X] Editor GUI
 * [X] PBR
-* [ ] Physics
+* [X] Sound
+* [X] Physics
+* [X] Scripting
+* [X] Editor and Launcher
+* [X] Project System
+* [ ] Particles
+* [ ] Build and Packaging
 * [ ] NetCode
-* [ ] DirectX Support
-* [ ] Scripting
+* [ ] Linux Support
+* [ ] DirectX and Vulkan Support
 
 ## Install: ##
 
@@ -31,6 +36,3 @@
         </td>
     </tr>
 </table>
-
-### Note: ###
-Due to constantly changing engine code, some of the projects may not be compiled at the time.

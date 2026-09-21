@@ -38,6 +38,7 @@ namespace seri::literals
 	constexpr const char* kUniformDiffTexture = "u_diff_texture";
 	constexpr const char* kUniformNormalTexture = "u_normal_texture";
 	constexpr const char* kUniformArmTexture = "u_arm_texture";
+	constexpr const char* kUniformMaskTexture = "u_mask_texture";
 
 	constexpr const char* kUniformSpriteTexture = "u_sprite_texture";
 	constexpr const char* kUniformSpriteColor = "u_sprite_color";

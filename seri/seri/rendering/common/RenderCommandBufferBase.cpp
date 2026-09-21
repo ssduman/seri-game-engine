@@ -233,32 +233,12 @@ namespace seri
 					seri::RenderingManager::SetViewport(0, 0, rt->GetWidth(), rt->GetHeight());
 					seri::RenderingManager::Clear();
 
-					glm::mat4 lightViewProj = seri::RenderingManager::GetDirShadowLightViewProj();
-
-					for (const RenderItem& item : pass.items)
-					{
-						SetState(item.state);
-						item.material->SetMat4(literals::kUniformModel, item.model);
-						item.material->SetMat4(literals::kUniformLightViewProjection, lightViewProj);
-						item.material->Apply();
-
-						if (!item.bones.empty())
-						{
-							auto shader = item.material->GetShader();
-							if (shader && shader->IsActiveForUsing())
-							{
-								shader->SetMat4Array(literals::kUniformBones, item.bones.data(), static_cast<uint32_t>(item.bones.size()));
-							}
-						}
-
-						Draw(item.draw, item.vao);
-					}
+					DrawShadowItems(pass, seri::RenderingManager::GetDirShadowLightViewProj());
 
 					rt->Unbind();
 				}
 
 				// spot light shadows
-				if (false)
 				{
 					int spotShadowCount = seri::RenderingManager::GetSpotShadowCount();
 					for (int i = 0; i < spotShadowCount; i++)
@@ -268,16 +248,7 @@ namespace seri
 						seri::RenderingManager::SetViewport(0, 0, spotShadowRT->GetWidth(), spotShadowRT->GetHeight());
 						seri::RenderingManager::Clear();
 
-						glm::mat4 spotLightViewProj = seri::RenderingManager::GetSpotShadowLightViewProj(i);
-
-						for (const RenderItem& item : pass.items)
-						{
-							SetState(item.state);
-							item.material->SetMat4(literals::kUniformModel, item.model);
-							item.material->SetMat4(literals::kUniformLightViewProjection, spotLightViewProj);
-							item.material->Apply();
-							Draw(item.draw, item.vao);
-						}
+						DrawShadowItems(pass, seri::RenderingManager::GetSpotShadowLightViewProj(i));
 
 						spotShadowRT->Unbind();
 					}
@@ -390,6 +361,28 @@ namespace seri
 		_commands.clear();
 		_statsPrev = _stats;
 		_stats.Reset();
+	}
+
+	void RenderCommandBufferBase::DrawShadowItems(const RenderPass& pass, const glm::mat4& lightViewProj)
+	{
+		for (const RenderItem& item : pass.items)
+		{
+			SetState(item.state);
+			item.material->SetMat4(literals::kUniformModel, item.model);
+			item.material->SetMat4(literals::kUniformLightViewProjection, lightViewProj);
+			item.material->Apply();
+
+			if (!item.bones.empty())
+			{
+				auto shader = item.material->GetShader();
+				if (shader && shader->IsActiveForUsing())
+				{
+					shader->SetMat4Array(literals::kUniformBones, item.bones.data(), static_cast<uint32_t>(item.bones.size()));
+				}
+			}
+
+			Draw(item.draw, item.vao);
+		}
 	}
 
 }

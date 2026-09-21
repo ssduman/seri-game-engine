@@ -7,6 +7,7 @@
 #include "seri/scene/SceneManager.h"
 #include "seri/component/Components.h"
 #include "seri/input/InputManager.h"
+#include "seri/window/WindowManager.h"
 #include "seri/sound/SoundManager.h"
 #include "seri/random/Random.h"
 #include "seri/core/Entity.h"
@@ -134,6 +135,38 @@ namespace seri::script
 
 		sol::table applicationTable = lua.create_named_table("Application");
 		applicationTable["Quit"] = []() { Application::Quit(); };
+
+		sol::table windowTable = lua.create_named_table("Window");
+		windowTable["GetWidth"] = []() { return WindowManager::GetWidth(); };
+		windowTable["GetHeight"] = []() { return WindowManager::GetHeight(); };
+		windowTable["GetAspectRatio"] = []() { return WindowManager::GetAspectRatio(); };
+		windowTable["SetSize"] = [](int width, int height) { WindowManager::SetWindowSize(width, height); };
+		windowTable["SetTitle"] = [](const std::string& title) { WindowManager::SetWindowTitle(title.c_str()); };
+		windowTable["Minimize"] = []() { WindowManager::IconifyWindow(); };
+		windowTable["Maximize"] = []() { WindowManager::MaximizeWindow(); };
+		windowTable["Restore"] = []() { WindowManager::RestoreWindow(); };
+		windowTable["IsMaximized"] = []() { return WindowManager::IsWindowMaximized(); };
+
+		sol::table cursorTable = windowTable.create_named("Cursor");
+		cursorTable["normal"] = static_cast<int>(seri::CursorMode::normal);
+		cursorTable["hidden"] = static_cast<int>(seri::CursorMode::hidden);
+		cursorTable["locked"] = static_cast<int>(seri::CursorMode::disabled);
+		cursorTable["SetMode"] = [](int mode)
+			{
+				if (mode < static_cast<int>(seri::CursorMode::normal) || mode > static_cast<int>(seri::CursorMode::disabled))
+				{
+					LIB_LOGGER(warning, lua_bindings) << "invalid cursor mode " << mode;
+					return;
+				}
+
+				WindowManager::SetCursorMode(static_cast<seri::CursorMode>(mode));
+			};
+		cursorTable["GetPosition"] = []()
+			{
+				auto [x, y] = WindowManager::GetCursorPosition();
+				return glm::vec2{ static_cast<float>(x), static_cast<float>(y) };
+			};
+		cursorTable["SetPosition"] = [](float x, float y) { WindowManager::SetCursorPosition(x, y); };
 	}
 
 	void LuaBindings::RegisterInput(sol::state& lua)

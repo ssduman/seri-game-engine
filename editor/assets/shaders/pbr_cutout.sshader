@@ -1,0 +1,119 @@
+#beg_vs
+
+#version 460 core
+
+layout(location = 0) in vec3 in_vertex;
+layout(location = 1) in vec2 in_uv0;
+layout(location = 2) in vec3 in_normal;
+
+uniform mat4 u_model;
+uniform mat4 u_view;
+uniform mat4 u_projection;
+
+out vec4 sent_pos;
+out vec2 sent_uv;
+out vec3 sent_normal;
+
+void main()
+{
+    sent_uv = in_uv0;
+    sent_pos = u_model * vec4(in_vertex, 1.0);
+    sent_normal = normalize(mat3(transpose(inverse(u_model))) * in_normal);
+
+    gl_Position = u_projection * u_view * sent_pos;
+}
+
+#end_vs
+
+#beg_fs
+
+#version 460 core
+
+#include "common.glsl"
+
+in vec4 sent_pos;
+in vec2 sent_uv;
+in vec3 sent_normal;
+
+uniform vec4 u_camera_pos;
+
+uniform sampler2D u_diff_texture;
+uniform sampler2D u_normal_texture;
+uniform sampler2D u_arm_texture; // R=AO, G=Roughness, B=Metallic
+uniform sampler2D u_mask_texture;
+
+uniform sampler2DShadow u_dir_light_shadow_map;
+uniform sampler2DShadow u_spot_light_shadow_map_0;
+uniform sampler2DShadow u_spot_light_shadow_map_1;
+uniform sampler2DShadow u_spot_light_shadow_map_2;
+uniform sampler2DShadow u_spot_light_shadow_map_3;
+
+out vec4 final_color;
+
+void main()
+{
+    if (texture(u_mask_texture, sent_uv).r < 0.5)
+    {
+        discard;
+    }
+
+    vec3 albedo = texture(u_diff_texture, sent_uv).rgb;
+    albedo = SRGBToLinear(albedo);
+
+    vec3 arm = texture(u_arm_texture, sent_uv).rgb;
+
+    if (dot(arm, arm) < 0.0001)
+    {
+        arm = vec3(1.0, 0.5, 0.0);
+    }
+
+    float ao        = arm.r;
+    float roughness = clamp(arm.g, 0.04, 1.0);
+    float metallic  = arm.b;
+
+    vec3 faceNormal = gl_FrontFacing ? sent_normal : -sent_normal;
+    vec3 N = GetNormal(u_normal_texture, sent_uv, faceNormal, sent_pos.xyz);
+    vec3 V = normalize(u_camera_pos.xyz - sent_pos.xyz);
+
+    vec3 color = vec3(0.0);
+    if (u_dir_light_exist.x == 1)
+    {
+        vec3 L = normalize(-u_dir_light.direction.xyz);
+        float shadow = ShadowDir(u_dir_light_shadow_map, sent_pos.xyz, N, L);
+        color += PBR_Dir_Light(sent_pos.xyz, u_dir_light, N, V, albedo, roughness, metallic) * shadow;
+    }
+    for (int i = 0; i < min(u_spot_light_count.x, MAX_SPOT_LIGHTS); i++)
+    {
+        vec3 spotColor = PBR_Spot_Light(sent_pos.xyz, u_spot_lights[i], N, V, albedo, roughness, metallic);
+
+        int shadowIndex = int(u_spot_lights[i].params2.y);
+        if (shadowIndex >= 0 && shadowIndex < u_spot_light_shadow_count.x)
+        {
+            vec3 L = normalize(u_spot_lights[i].position.xyz - sent_pos.xyz);
+            float shadow = 1.0;
+            if (shadowIndex == 0) shadow = ShadowSpot(u_spot_light_shadow_map_0, u_spot_light_view_proj[0], sent_pos.xyz, N, L);
+            else if (shadowIndex == 1) shadow = ShadowSpot(u_spot_light_shadow_map_1, u_spot_light_view_proj[1], sent_pos.xyz, N, L);
+            else if (shadowIndex == 2) shadow = ShadowSpot(u_spot_light_shadow_map_2, u_spot_light_view_proj[2], sent_pos.xyz, N, L);
+            else if (shadowIndex == 3) shadow = ShadowSpot(u_spot_light_shadow_map_3, u_spot_light_view_proj[3], sent_pos.xyz, N, L);
+            spotColor *= shadow;
+        }
+
+        color += spotColor;
+    }
+    for (int i = 0; i < min(u_point_light_count.x, MAX_POINT_LIGHTS); i++)
+    {
+        color += PBR_Point_Light(sent_pos.xyz, u_point_lights[i], N, V, albedo, roughness, metallic);
+    }
+
+    vec3 ambient = vec3(0.03) * albedo * ao;
+    color += ambient;
+
+    // color = Reinhard(color);
+    color = ACESFilm(color);
+
+    color = LinearToSRGB(color);
+
+    final_color = vec4(color, 1.0);
+}
+
+#end_fs

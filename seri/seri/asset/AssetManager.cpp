@@ -361,8 +361,13 @@ namespace seri::asset
 				}
 				if (_assetCache.find(metadata.id) == _assetCache.end())
 				{
+					seri::TextureDesc desc{};
+					desc.wrapS = seri::TextureWrap::repeat;
+					desc.wrapT = seri::TextureWrap::repeat;
+					desc.minFilter = seri::TextureMinFilter::linear_mipmap_linear;
+
 					std::shared_ptr<seri::TextureBase> texture = seri::TextureBase::Create();
-					texture->Init(seri::TextureDesc{}, metadata.source.string());
+					texture->Init(desc, metadata.source.string());
 					texture->id = metadata.id;
 					_assetCache[metadata.id] = texture;
 				}

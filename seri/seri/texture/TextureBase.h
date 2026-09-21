@@ -19,7 +19,7 @@ namespace seri
 		diff,
 		normal,
 		arm,
-		dir_shadow,
+		dir_shadow = 8,
 		spot_shadow_0,
 		spot_shadow_1,
 		spot_shadow_2,
@@ -32,6 +32,8 @@ namespace seri
 
 		red__red8ubyte,
 		red__red32int,
+
+		rg__rg8ubyte,
 
 		rgb__rgb8ubyte,
 		rgb__rgb16float,

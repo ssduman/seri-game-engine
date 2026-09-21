@@ -26,7 +26,7 @@ namespace seri
 		glm::vec4 direction;
 		glm::vec4 color;
 		glm::vec4 params;  // x=innerCos, y=outerCos, z=constant, w=linear
-		glm::vec4 params2; // x=quadratic, y/z/w=unused
+		glm::vec4 params2; // x=quadratic, y=shadow index (-1 = none), z/w=unused
 	};
 
 	struct UniformBufferPointLight

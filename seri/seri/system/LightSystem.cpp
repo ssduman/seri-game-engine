@@ -57,6 +57,8 @@ namespace seri::system
 			RenderingManager::SetDirShadowLightViewProj(lightViewProj);
 		}
 
+		RenderingManager::SetSpotShadowCount(0);
+
 		auto spotView = registry.view<component::TransformComponent, component::SpotLightComponent>();
 		for (auto entity : spotView)
 		{
@@ -84,7 +86,7 @@ namespace seri::system
 				light.constant,
 				light.linear
 			);
-			spotLight.params2 = glm::vec4(light.quadratic, 0.0f, 0.0f, 0.0f);
+			spotLight.params2 = glm::vec4(light.quadratic, -1.0f, 0.0f, 0.0f);
 
 			// shadow ubo
 			if (light.castShadow && shadowUBO.spotLightShadowCount.x < literals::kMaxSpotLightShadowCount)
@@ -103,6 +105,8 @@ namespace seri::system
 				glm::mat4 lightView = glm::lookAt(GetPosition(transform.worldMatrix), GetPosition(transform.worldMatrix) + forward, up);
 				glm::mat4 lightProj = glm::perspective(fov, 1.0f, nearPlane, farPlane);
 				glm::mat4 lightViewProj = lightProj * lightView;
+
+				spotLight.params2.y = static_cast<float>(shadowUBO.spotLightShadowCount.x);
 
 				shadowUBO.spotLightViewProj[shadowUBO.spotLightShadowCount.x] = lightViewProj;
 				RenderingManager::SetSpotShadowLightViewProj(shadowUBO.spotLightShadowCount.x, lightViewProj);

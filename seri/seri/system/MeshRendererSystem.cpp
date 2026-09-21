@@ -18,13 +18,6 @@ namespace seri::system
 {
 	void MeshRendererSystem::Update()
 	{
-		static std::shared_ptr<Material> shadowMaterial = []()
-			{
-				auto mat = std::make_shared<Material>();
-				mat->SetShader(ShaderLibrary::Find("shadow"));
-				return mat;
-			}();
-
 		auto& registry = seri::scene::SceneManager::GetRegistry();
 
 		auto view = registry.view<
@@ -73,27 +66,56 @@ namespace seri::system
 
 				std::shared_ptr<Material> material = seri::asset::AssetManager::GetAssetByID<Material>(renderer.materialAssetIds[slot]);
 
-				if (!material)
+				if (material)
 				{
-					continue;
+					seri::Graphic::Draw(meshPart, material, transform.worldMatrix);
 				}
 
-				seri::Graphic::Draw(meshPart, material, transform.worldMatrix);
-			}
-
-			if (renderer.castShadow)
-			{
-				for (const auto& meshPart : model->meshes)
+				if (renderer.castShadow)
 				{
 					RenderItem shadowCmd{};
 					shadowCmd.type = PassType::shadow;
 					shadowCmd.name = "shadow";
-					shadowCmd.material = shadowMaterial;
+					shadowCmd.material = GetShadowMaterial(material);
 					shadowCmd.model = transform.worldMatrix * meshPart->transformation;
 					shadowCmd.vao = meshPart->GetVao();
 					seri::RenderingManager::Submit(shadowCmd);
 				}
 			}
 		}
+	}
+
+	std::shared_ptr<Material> MeshRendererSystem::GetShadowMaterial(const std::shared_ptr<Material>& material)
+	{
+		static std::shared_ptr<Material> shadowMaterial = []()
+			{
+				auto mat = std::make_shared<Material>();
+				mat->SetShader(ShaderLibrary::Find("shadow"));
+				return mat;
+			}();
+
+		static std::unordered_map<uint64_t, std::shared_ptr<Material>> cutoutShadowMaterials;
+
+		if (!material)
+		{
+			return shadowMaterial;
+		}
+
+		auto& textures = material->GetTextures();
+		auto it = textures.find(literals::kUniformMaskTexture);
+		if (it == textures.end() || !it->second)
+		{
+			return shadowMaterial;
+		}
+
+		std::shared_ptr<Material>& cutoutMaterial = cutoutShadowMaterials[material->id];
+		if (!cutoutMaterial)
+		{
+			cutoutMaterial = std::make_shared<Material>();
+			cutoutMaterial->SetShader(ShaderLibrary::Find("shadow_cutout"));
+		}
+		cutoutMaterial->SetTexture(literals::kUniformMaskTexture, it->second);
+
+		return cutoutMaterial;
 	}
 }

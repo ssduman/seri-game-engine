@@ -23,6 +23,7 @@ namespace seri
 
 		_material->SetMat4("u_inv_view", glm::inverse(camera->GetView()));
 		_material->SetMat4("u_inv_proj", glm::inverse(camera->GetProjection()));
+		_material->SetMat4("u_view_proj", camera->GetProjection() * camera->GetView());
 		_material->SetFloat3("u_cam_pos", camera->GetCameraProperties().position);
 
 		seri::RenderItem renderItem_grid{};

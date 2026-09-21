@@ -31,6 +31,8 @@ namespace seri
 		RenderingStats GetStats() { return _statsPrev; }
 
 	protected:
+		void DrawShadowItems(const RenderPass& pass, const glm::mat4& lightViewProj);
+
 		std::vector<RenderCommand> _commands{};
 
 		RenderState _statePrev{};

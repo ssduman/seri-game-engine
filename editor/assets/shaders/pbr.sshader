@@ -79,14 +79,15 @@ void main()
     {
         vec3 spotColor = PBR_Spot_Light(sent_pos.xyz, u_spot_lights[i], N, V, albedo, roughness, metallic);
 
-        if (i < u_spot_light_shadow_count.x)
+        int shadowIndex = int(u_spot_lights[i].params2.y);
+        if (shadowIndex >= 0 && shadowIndex < u_spot_light_shadow_count.x)
         {
             vec3 L = normalize(u_spot_lights[i].position.xyz - sent_pos.xyz);
             float shadow = 1.0;
-            if (i == 0) shadow = ShadowSpot(u_spot_light_shadow_map_0, u_spot_light_view_proj[0], sent_pos.xyz, N, L);
-            else if (i == 1) shadow = ShadowSpot(u_spot_light_shadow_map_1, u_spot_light_view_proj[1], sent_pos.xyz, N, L);
-            else if (i == 2) shadow = ShadowSpot(u_spot_light_shadow_map_2, u_spot_light_view_proj[2], sent_pos.xyz, N, L);
-            else if (i == 3) shadow = ShadowSpot(u_spot_light_shadow_map_3, u_spot_light_view_proj[3], sent_pos.xyz, N, L);
+            if (shadowIndex == 0) shadow = ShadowSpot(u_spot_light_shadow_map_0, u_spot_light_view_proj[0], sent_pos.xyz, N, L);
+            else if (shadowIndex == 1) shadow = ShadowSpot(u_spot_light_shadow_map_1, u_spot_light_view_proj[1], sent_pos.xyz, N, L);
+            else if (shadowIndex == 2) shadow = ShadowSpot(u_spot_light_shadow_map_2, u_spot_light_view_proj[2], sent_pos.xyz, N, L);
+            else if (shadowIndex == 3) shadow = ShadowSpot(u_spot_light_shadow_map_3, u_spot_light_view_proj[3], sent_pos.xyz, N, L);
             spotColor *= shadow;
         }
 
