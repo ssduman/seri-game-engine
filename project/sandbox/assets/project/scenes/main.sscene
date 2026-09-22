@@ -12,7 +12,7 @@ Entities:
         ParentID: 0
         Name: Cannon
       TransformComponent:
-        Position: [-0.61311007, 6.1035156e-05, -1.9298136]
+        Position: [0.62820077, 6.1035156e-05, -1.929385]
         Rotation: [0, 89.98022, 0]
         Scale: [0.99999994, 1, 0.99999994]
         IsActive: true
@@ -41,7 +41,7 @@ Entities:
         ParentID: 0
         Name: Spiderman
       TransformComponent:
-        Position: [-1, 0, 2.9802322e-08]
+        Position: [-1, 0, -2.24166]
         Rotation: [0, -0, 0]
         Scale: [1, 1, 1]
         IsActive: true
@@ -60,8 +60,8 @@ Entities:
         ParentID: 0
         Name: Camera
       TransformComponent:
-        Position: [0, 2, 3]
-        Rotation: [-20, 0, 0]
+        Position: [-3.8, 2, 0.8]
+        Rotation: [-20, -60, 0]
         Scale: [1, 1, 1]
         IsActive: true
       CameraComponent:

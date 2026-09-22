@@ -116,6 +116,7 @@ namespace seri
 	{
 		int mip{ 0 };
 		bool flip{ true };
+		float anisotropy{ 1.0f };
 		glm::vec4 borderColor{ 0.0f, 0.0f, 0.0f, 0.0f };
 		TextureSlot slot{ TextureSlot::uv0 };
 		TextureFormat format{ TextureFormat::none };

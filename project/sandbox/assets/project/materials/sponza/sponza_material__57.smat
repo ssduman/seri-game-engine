@@ -13,7 +13,7 @@ Material:
   Float4s: ~
   Mat4s: ~
   Textures:
-    u_arm_texture: 0
+    u_arm_texture: 6759193852096159310
     u_normal_texture: 0
     u_diff_texture: 4467705958935704640
     u_mask_texture: 15025752689579069486

@@ -63,6 +63,17 @@ namespace seri
 	{
 		_shader = shader;
 
+		auto bools = std::move(_bools);
+		auto ints = std::move(_ints);
+		auto int2s = std::move(_int2s);
+		auto int3s = std::move(_int3s);
+		auto int4s = std::move(_int4s);
+		auto floats = std::move(_floats);
+		auto float2s = std::move(_float2s);
+		auto float3s = std::move(_float3s);
+		auto float4s = std::move(_float4s);
+		auto textures = std::move(_textures);
+
 		ClearAll();
 
 		for (const auto& uniform : _shader->GetUniforms())
@@ -70,34 +81,34 @@ namespace seri
 			switch (uniform.type)
 			{
 				case UniformType::bool_type:
-					SetBool(uniform.name, false);
+					SetBool(uniform.name, FindOr(bools, uniform.name, false));
 					break;
 				case UniformType::int_type:
-					SetInt(uniform.name, 0);
+					SetInt(uniform.name, FindOr(ints, uniform.name, 0));
 					break;
 				case UniformType::ivec2_type:
-					SetInt2(uniform.name, glm::ivec2(0));
+					SetInt2(uniform.name, FindOr(int2s, uniform.name, glm::ivec2(0)));
 					break;
 				case UniformType::ivec3_type:
-					SetInt3(uniform.name, glm::ivec3(0));
+					SetInt3(uniform.name, FindOr(int3s, uniform.name, glm::ivec3(0)));
 					break;
 				case UniformType::ivec4_type:
-					SetInt4(uniform.name, glm::ivec4(0));
+					SetInt4(uniform.name, FindOr(int4s, uniform.name, glm::ivec4(0)));
 					break;
 				case UniformType::float_type:
-					SetFloat(uniform.name, 0.0f);
+					SetFloat(uniform.name, FindOr(floats, uniform.name, 0.0f));
 					break;
 				case UniformType::vec2_type:
-					SetFloat2(uniform.name, glm::vec2(0.0f));
+					SetFloat2(uniform.name, FindOr(float2s, uniform.name, glm::vec2(0.0f)));
 					break;
 				case UniformType::vec3_type:
-					SetFloat3(uniform.name, glm::vec3(0.0f));
+					SetFloat3(uniform.name, FindOr(float3s, uniform.name, glm::vec3(0.0f)));
 					break;
 				case UniformType::vec4_type:
-					SetFloat4(uniform.name, glm::vec4(0.0f));
+					SetFloat4(uniform.name, FindOr(float4s, uniform.name, glm::vec4(0.0f)));
 					break;
 				case UniformType::sampler2d_type:
-					SetTexture(uniform.name, nullptr);
+					SetTexture(uniform.name, FindOr(textures, uniform.name, std::shared_ptr<TextureBase>{}));
 					break;
 				default:
 					break;

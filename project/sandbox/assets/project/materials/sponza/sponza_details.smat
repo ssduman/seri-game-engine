@@ -13,7 +13,7 @@ Material:
   Float4s: ~
   Mat4s: ~
   Textures:
-    u_arm_texture: 0
+    u_arm_texture: 162076144579180882
     u_normal_texture: 0
     u_diff_texture: 3550020776928859197
   ShaderID: 6444769152004986813

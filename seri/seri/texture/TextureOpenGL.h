@@ -264,6 +264,13 @@ namespace seri
 			glTexParameteri(_target, GL_TEXTURE_MAG_FILTER, _magFilter);
 			glTexParameteri(_target, GL_TEXTURE_MIN_FILTER, _minFilter);
 
+			if (_desc.anisotropy > 1.0f)
+			{
+				GLfloat maxAnisotropy = 1.0f;
+				glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY, &maxAnisotropy);
+				glTexParameterf(_target, GL_TEXTURE_MAX_ANISOTROPY, std::min(_desc.anisotropy, maxAnisotropy));
+			}
+
 			glTexParameteri(_target, GL_TEXTURE_COMPARE_MODE, _compareMode);
 			glTexParameteri(_target, GL_TEXTURE_COMPARE_FUNC, _compareFunc);
 

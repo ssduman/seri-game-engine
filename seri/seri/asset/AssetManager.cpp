@@ -365,6 +365,7 @@ namespace seri::asset
 					desc.wrapS = seri::TextureWrap::repeat;
 					desc.wrapT = seri::TextureWrap::repeat;
 					desc.minFilter = seri::TextureMinFilter::linear_mipmap_linear;
+					desc.anisotropy = 16.0f;
 
 					std::shared_ptr<seri::TextureBase> texture = seri::TextureBase::Create();
 					texture->Init(desc, metadata.source.string());

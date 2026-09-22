@@ -71,6 +71,13 @@ namespace seri
 		std::vector<TextureSlotInfo> textureIDs{};
 
 	private:
+		template <typename T>
+		static T FindOr(const std::unordered_map<std::string, T>& values, const std::string& name, T fallback)
+		{
+			auto it = values.find(name);
+			return it != values.end() ? it->second : fallback;
+		}
+
 		std::shared_ptr<ShaderBase> _shader;
 
 		std::unordered_map<std::string, bool> _bools;
