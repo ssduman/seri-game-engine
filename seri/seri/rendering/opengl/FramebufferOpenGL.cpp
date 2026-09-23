@@ -62,9 +62,33 @@ namespace seri
 		return 0;
 	}
 
+	std::shared_ptr<TextureBase> FramebufferOpenGL::GetColorTexture(size_t index)
+	{
+		if (index < _colorTextures.size())
+		{
+			return _colorTextures[index];
+		}
+
+		return nullptr;
+	}
+
 	std::shared_ptr<TextureBase> FramebufferOpenGL::GetDepthTexture()
 	{
 		return _depthTexture;
+	}
+
+	void FramebufferOpenGL::BlitDepthTo(const std::shared_ptr<FramebufferBase>& target)
+	{
+		auto* targetOpenGL = static_cast<FramebufferOpenGL*>(target.get());
+
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, _handle);
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, targetOpenGL->_handle);
+		glBlitFramebuffer(
+			0, 0, _desc.width, _desc.height,
+			0, 0, target->GetWidth(), target->GetHeight(),
+			GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT, GL_NEAREST
+		);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
 	void FramebufferOpenGL::Invalidate()

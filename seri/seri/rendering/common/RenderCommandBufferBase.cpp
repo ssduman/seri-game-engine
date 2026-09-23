@@ -2,6 +2,7 @@
 
 #include "seri/rendering/common/RenderCommandBufferBase.h"
 #include "seri/rendering/render/RenderingManager.h"
+#include "seri/shader/ShaderLibrary.h"
 
 #include <algorithm>
 #include <vector>
@@ -20,7 +21,12 @@ namespace seri
 
 		auto editorRT = seri::RenderingManager::GetEditorRT();
 		auto gameRT = seri::RenderingManager::GetGameRT();
+		auto editorSceneRT = seri::RenderingManager::GetEditorSceneRT();
+		auto gameSceneRT = seri::RenderingManager::GetGameSceneRT();
 		auto shadowRT = seri::RenderingManager::GetShadowRT();
+
+		editorSceneRT->Resize(editorRT->GetWidth(), editorRT->GetHeight());
+		gameSceneRT->Resize(gameRT->GetWidth(), gameRT->GetHeight());
 
 		RenderPass passShadow;
 		passShadow.desc.type = PassType::shadow;
@@ -29,18 +35,24 @@ namespace seri
 
 		RenderPass passSkybox;
 		passSkybox.desc.type = PassType::skybox;
-		passSkybox.desc.rt = editorRT;
+		passSkybox.desc.rt = editorSceneRT;
 		passSkybox.desc.camera = activeCamera;
 
 		RenderPass passOpaque;
 		passOpaque.desc.type = PassType::opaque;
-		passOpaque.desc.rt = editorRT;
+		passOpaque.desc.rt = editorSceneRT;
 		passOpaque.desc.camera = activeCamera;
 
 		RenderPass passTransparent;
 		passTransparent.desc.type = PassType::transparent;
-		passTransparent.desc.rt = editorRT;
+		passTransparent.desc.rt = editorSceneRT;
 		passTransparent.desc.camera = activeCamera;
+
+		RenderPass passPost;
+		passPost.desc.type = PassType::post;
+		passPost.desc.rt = editorRT;
+		passPost.desc.source = editorSceneRT;
+		passPost.desc.camera = activeCamera;
 
 		RenderPass passDebug;
 		passDebug.desc.type = PassType::debug;
@@ -57,6 +69,7 @@ namespace seri
 		_frameGraph.AddPass(passSkybox);
 		_frameGraph.AddPass(passOpaque);
 		_frameGraph.AddPass(passTransparent);
+		_frameGraph.AddPass(passPost);
 		_frameGraph.AddPass(passDebug);
 		_frameGraph.AddPass(passUI);
 
@@ -67,18 +80,24 @@ namespace seri
 
 		RenderPass passGameSkybox;
 		passGameSkybox.desc.type = PassType::skybox;
-		passGameSkybox.desc.rt = gameRT;
+		passGameSkybox.desc.rt = gameSceneRT;
 		passGameSkybox.desc.camera = runtimeCamera;
 
 		RenderPass passGameOpaque;
 		passGameOpaque.desc.type = PassType::opaque;
-		passGameOpaque.desc.rt = gameRT;
+		passGameOpaque.desc.rt = gameSceneRT;
 		passGameOpaque.desc.camera = runtimeCamera;
 
 		RenderPass passGameTransparent;
 		passGameTransparent.desc.type = PassType::transparent;
-		passGameTransparent.desc.rt = gameRT;
+		passGameTransparent.desc.rt = gameSceneRT;
 		passGameTransparent.desc.camera = runtimeCamera;
+
+		RenderPass passGamePost;
+		passGamePost.desc.type = PassType::post;
+		passGamePost.desc.rt = gameRT;
+		passGamePost.desc.source = gameSceneRT;
+		passGamePost.desc.camera = runtimeCamera;
 
 		RenderPass passGameUI;
 		passGameUI.desc.type = PassType::ui;
@@ -88,6 +107,7 @@ namespace seri
 		_frameGraph.AddPass(passGameSkybox);
 		_frameGraph.AddPass(passGameOpaque);
 		_frameGraph.AddPass(passGameTransparent);
+		_frameGraph.AddPass(passGamePost);
 		_frameGraph.AddPass(passGameUI);
 	}
 
@@ -220,6 +240,13 @@ namespace seri
 		{
 			auto& rt = pass.desc.rt;
 			auto& cam = pass.desc.camera;
+
+			if (pass.desc.type == PassType::post)
+			{
+				RenderPost(pass);
+				continue;
+			}
+
 			if (!rt || pass.items.empty())
 			{
 				continue;
@@ -264,7 +291,7 @@ namespace seri
 
 			bool wireframe =
 				seri::RenderingManager::GetEditorWireframe() &&
-				rt == seri::RenderingManager::GetEditorRT() &&
+				rt == seri::RenderingManager::GetEditorSceneRT() &&
 				(pass.desc.type == PassType::opaque || pass.desc.type == PassType::transparent);
 
 			rt->Bind();
@@ -361,6 +388,71 @@ namespace seri
 		_commands.clear();
 		_statsPrev = _stats;
 		_stats.Reset();
+	}
+
+	void RenderCommandBufferBase::InitPost()
+	{
+		if (_postMaterial)
+		{
+			return;
+		}
+
+		_postMaterial = std::make_shared<Material>();
+		_postMaterial->SetShader(ShaderLibrary::Find("fxaa"));
+
+		std::vector<glm::vec3> positions{
+			{ -1.0f, -1.0f, 0.0f },
+			{ +3.0f, -1.0f, 0.0f },
+			{ -1.0f, +3.0f, 0.0f },
+		};
+
+		auto vertexBuffer = VertexBufferBase::Create(positions);
+		vertexBuffer->AddElement(
+			{ seri::LayoutLocation::vertex, seri::ShaderDataType::float3_type, false }
+		);
+
+		_postVao = VertexArrayBase::Create();
+		_postVao->AddVertexBuffer(vertexBuffer);
+	}
+
+	void RenderCommandBufferBase::RenderPost(const RenderPass& pass)
+	{
+		auto& source = pass.desc.source;
+		auto& rt = pass.desc.rt;
+
+		if (!source || !rt)
+		{
+			return;
+		}
+
+		InitPost();
+
+		_postMaterial->SetTexture("u_source_texture", source->GetColorTexture(0));
+		_postMaterial->SetFloat2("u_texel_size", glm::vec2{ 1.0f / source->GetWidth(), 1.0f / source->GetHeight() });
+		_postMaterial->SetInt("u_fxaa_enabled", seri::RenderingManager::GetFxaaEnabled() ? 1 : 0);
+
+		RenderState state{};
+		state.depthTestEnabled = false;
+		state.depthWriteEnabled = false;
+		state.blendEnabled = false;
+
+		rt->Bind();
+		seri::RenderingManager::SetViewport(0, 0, rt->GetWidth(), rt->GetHeight());
+		SetState(state);
+		_postMaterial->Apply();
+
+		DrawParams draw{};
+		draw.mode = DrawMode::arrays;
+		draw.count = 3;
+		Draw(draw, _postVao);
+
+		rt->Unbind();
+
+		source->BlitDepthTo(rt);
+
+		TextureBase::UnbindTex2D(0);
+
+		SetState(RenderState{});
 	}
 
 	void RenderCommandBufferBase::DrawShadowItems(const RenderPass& pass, const glm::mat4& lightViewProj)

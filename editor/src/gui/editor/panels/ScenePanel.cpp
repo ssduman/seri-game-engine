@@ -87,6 +87,14 @@ namespace seri::editor
 
 			ImGui::EndCombo();
 		}
+
+		ImGui::SameLine();
+
+		bool fxaaEnabled = seri::RenderingManager::GetFxaaEnabled();
+		if (ImGui::Checkbox("FXAA", &fxaaEnabled))
+		{
+			seri::RenderingManager::SetFxaaEnabled(fxaaEnabled);
+		}
 	}
 
 	void ScenePanel::ControlMove(const ImVec2& imageMin, const ImVec2& imageMax)

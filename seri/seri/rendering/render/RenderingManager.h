@@ -154,6 +154,16 @@ namespace seri
 			return _renderingManager->gameRT;
 		}
 
+		static std::shared_ptr<FramebufferBase> GetEditorSceneRT()
+		{
+			return _renderingManager->editorSceneRT;
+		}
+
+		static std::shared_ptr<FramebufferBase> GetGameSceneRT()
+		{
+			return _renderingManager->gameSceneRT;
+		}
+
 		static std::shared_ptr<FramebufferBase> GetShadowRT()
 		{
 			return _renderingManager->shadowRT;
@@ -217,6 +227,16 @@ namespace seri
 		static void SetEditorWireframe(bool enabled)
 		{
 			_renderingManager->editorWireframe = enabled;
+		}
+
+		static bool GetFxaaEnabled()
+		{
+			return _renderingManager->fxaaEnabled;
+		}
+
+		static void SetFxaaEnabled(bool enabled)
+		{
+			_renderingManager->fxaaEnabled = enabled;
 		}
 
 	private:

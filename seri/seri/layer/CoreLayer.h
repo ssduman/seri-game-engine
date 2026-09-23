@@ -120,6 +120,12 @@ namespace seri
 			RenderingManager::ClearColor();
 			RenderingManager::Clear();
 
+			RenderingManager::GetEditorSceneRT()->Bind();
+			RenderingManager::Clear();
+
+			RenderingManager::GetGameSceneRT()->Bind();
+			RenderingManager::Clear();
+
 			RenderingManager::GetMainRT()->Bind();
 			RenderingManager::ClearColor();
 			RenderingManager::Clear();

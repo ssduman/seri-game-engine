@@ -52,6 +52,8 @@ namespace seri
 		std::shared_ptr<FramebufferBase> mainRT{ nullptr };
 		std::shared_ptr<FramebufferBase> editorRT{ nullptr };
 		std::shared_ptr<FramebufferBase> gameRT{ nullptr };
+		std::shared_ptr<FramebufferBase> editorSceneRT{ nullptr };
+		std::shared_ptr<FramebufferBase> gameSceneRT{ nullptr };
 		std::shared_ptr<FramebufferBase> shadowRT{ nullptr };
 		std::shared_ptr<FramebufferBase> spotShadowRTs[literals::kMaxSpotLightShadowCount];
 
@@ -65,6 +67,8 @@ namespace seri
 		glm::mat4 spotShadowLightViewProjs[literals::kMaxSpotLightShadowCount];
 
 		bool editorWireframe{ false };
+
+		bool fxaaEnabled{ true };
 
 	protected:
 		RenderingProperties _renderingProperties;

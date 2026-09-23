@@ -123,6 +123,7 @@ namespace seri
 		transparent,
 		debug,
 		ui,
+		post,
 	};
 
 	struct RenderState
@@ -233,6 +234,7 @@ namespace seri
 		std::shared_ptr<CameraBase> camera{ nullptr };
 
 		std::shared_ptr<FramebufferBase> rt{ nullptr };
+		std::shared_ptr<FramebufferBase> source{ nullptr };
 	};
 
 	struct DrawParams

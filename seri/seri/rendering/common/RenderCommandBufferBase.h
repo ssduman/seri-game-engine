@@ -33,12 +33,18 @@ namespace seri
 	protected:
 		void DrawShadowItems(const RenderPass& pass, const glm::mat4& lightViewProj);
 
+		void InitPost();
+		void RenderPost(const RenderPass& pass);
+
 		std::vector<RenderCommand> _commands{};
 
 		RenderState _statePrev{};
 		RenderingStats _stats{};
 		RenderingStats _statsPrev{};
 		FrameGraph _frameGraph{};
+
+		std::shared_ptr<Material> _postMaterial{ nullptr };
+		std::shared_ptr<VertexArrayBase> _postVao{ nullptr };
 
 	};
 }
