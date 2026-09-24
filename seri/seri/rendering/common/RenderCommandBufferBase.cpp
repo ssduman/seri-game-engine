@@ -400,6 +400,9 @@ namespace seri
 		_postMaterial = std::make_shared<Material>();
 		_postMaterial->SetShader(ShaderLibrary::Find("fxaa"));
 
+		_depthViewMaterial = std::make_shared<Material>();
+		_depthViewMaterial->SetShader(ShaderLibrary::Find("depth_view"));
+
 		std::vector<glm::vec3> positions{
 			{ -1.0f, -1.0f, 0.0f },
 			{ +3.0f, -1.0f, 0.0f },
@@ -427,9 +430,28 @@ namespace seri
 
 		InitPost();
 
-		_postMaterial->SetTexture("u_source_texture", source->GetColorTexture(0));
-		_postMaterial->SetFloat2("u_texel_size", glm::vec2{ 1.0f / source->GetWidth(), 1.0f / source->GetHeight() });
-		_postMaterial->SetInt("u_fxaa_enabled", seri::RenderingManager::GetFxaaEnabled() ? 1 : 0);
+		bool depthView = seri::RenderingManager::GetEditorDepthView() && rt == seri::RenderingManager::GetEditorRT();
+
+		std::shared_ptr<Material> material = depthView ? _depthViewMaterial : _postMaterial;
+
+		if (depthView)
+		{
+			glm::vec2 cameraPlanes{ 0.1f, 1000.0f };
+			if (pass.desc.camera)
+			{
+				const CameraProperties& cameraProperties = pass.desc.camera->GetCameraProperties();
+				cameraPlanes = glm::vec2{ cameraProperties.nearPlane, cameraProperties.farPlane };
+			}
+
+			material->SetTexture("u_depth_texture", source->GetDepthTexture());
+			material->SetFloat2("u_camera_planes", cameraPlanes);
+		}
+		else
+		{
+			material->SetTexture("u_source_texture", source->GetColorTexture(0));
+			material->SetFloat2("u_texel_size", glm::vec2{ 1.0f / source->GetWidth(), 1.0f / source->GetHeight() });
+			material->SetInt("u_fxaa_enabled", seri::RenderingManager::GetFxaaEnabled() ? 1 : 0);
+		}
 
 		RenderState state{};
 		state.depthTestEnabled = false;
@@ -439,7 +461,7 @@ namespace seri
 		rt->Bind();
 		seri::RenderingManager::SetViewport(0, 0, rt->GetWidth(), rt->GetHeight());
 		SetState(state);
-		_postMaterial->Apply();
+		material->Apply();
 
 		DrawParams draw{};
 		draw.mode = DrawMode::arrays;

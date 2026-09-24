@@ -229,6 +229,16 @@ namespace seri
 			_renderingManager->editorWireframe = enabled;
 		}
 
+		static bool GetEditorDepthView()
+		{
+			return _renderingManager->editorDepthView;
+		}
+
+		static void SetEditorDepthView(bool enabled)
+		{
+			_renderingManager->editorDepthView = enabled;
+		}
+
 		static bool GetFxaaEnabled()
 		{
 			return _renderingManager->fxaaEnabled;

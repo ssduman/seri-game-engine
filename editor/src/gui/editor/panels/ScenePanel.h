@@ -27,6 +27,7 @@ namespace seri::editor
 		{
 			shaded,
 			wireframe,
+			depth,
 		};
 
 		void ShowOptions();
@@ -43,7 +44,7 @@ namespace seri::editor
 		GizmoOperation _gizmoOperation{ GizmoOperation::translate };
 		ShadingMode _shadingMode{ ShadingMode::shaded };
 
-		static constexpr int kShadingModeCount = 2;
+		static constexpr int kShadingModeCount = 3;
 
 		static const char* kShadingModeNames[kShadingModeCount];
 

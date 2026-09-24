@@ -7,6 +7,7 @@ namespace seri::editor
 	const char* ScenePanel::kShadingModeNames[ScenePanel::kShadingModeCount] = {
 		"Shaded",
 		"Wireframe",
+		"Depth",
 	};
 
 	void ScenePanel::Draw(GUIContext& ctx)
@@ -82,6 +83,7 @@ namespace seri::editor
 				{
 					_shadingMode = static_cast<ShadingMode>(i);
 					seri::RenderingManager::SetEditorWireframe(_shadingMode == ShadingMode::wireframe);
+					seri::RenderingManager::SetEditorDepthView(_shadingMode == ShadingMode::depth);
 				}
 			}
 

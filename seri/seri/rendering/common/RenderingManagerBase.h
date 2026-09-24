@@ -67,6 +67,7 @@ namespace seri
 		glm::mat4 spotShadowLightViewProjs[literals::kMaxSpotLightShadowCount];
 
 		bool editorWireframe{ false };
+		bool editorDepthView{ false };
 
 		bool fxaaEnabled{ true };
 

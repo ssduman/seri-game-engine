@@ -44,6 +44,7 @@ namespace seri
 		FrameGraph _frameGraph{};
 
 		std::shared_ptr<Material> _postMaterial{ nullptr };
+		std::shared_ptr<Material> _depthViewMaterial{ nullptr };
 		std::shared_ptr<VertexArrayBase> _postVao{ nullptr };
 
 	};
