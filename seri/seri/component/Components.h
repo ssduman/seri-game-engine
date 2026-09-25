@@ -2,6 +2,7 @@
 
 #include "seri/util/Util.h"
 #include "seri/util/YAMLUtil.h"
+#include "seri/util/ComponentUtil.h"
 #include "seri/font/TextMesh.h"
 #include "seri/ui/UIUtil.h"
 #include "seri/physics/PhysicsUtil.h"
@@ -56,6 +57,10 @@ namespace seri::component
 
 		std::string version{ "0.0" };
 		bool isActive{ true };
+
+		seri::util::BackgroundMode backgroundMode{ seri::util::BackgroundMode::color };
+		glm::vec3 backgroundColor{ 0.2f, 0.2f, 0.2f };
+		uint64_t skyboxAssetId{ 0 };
 
 		static SceneComponent Deserialize(const YAML::Node& node);
 		static YAML::Node Serialize(const SceneComponent& component);

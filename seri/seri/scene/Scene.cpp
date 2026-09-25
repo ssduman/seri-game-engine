@@ -18,13 +18,19 @@ namespace seri::scene
 {
 	void Scene::Init()
 	{
-		_skybox = std::make_shared<seri::Skybox>();
 		_infiniteGrid = std::make_shared<seri::InfiniteGrid>();
 	}
 
 	void Scene::Update()
 	{
-		_skybox->Update();
+		if (_sceneComponent.backgroundMode == seri::util::BackgroundMode::skybox)
+		{
+			if (auto skybox = seri::asset::AssetManager::GetAssetByID<seri::Skybox>(_sceneComponent.skyboxAssetId))
+			{
+				skybox->Update();
+			}
+		}
+
 		_infiniteGrid->Update();
 	}
 

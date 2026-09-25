@@ -28,6 +28,8 @@ namespace seri::editor
 
 		void DrawAssetFont(GUIContext& ctx);
 
+		void DrawAssetSkybox(GUIContext& ctx);
+
 		bool DrawComponentHeader(const char* title);
 
 		void ShowComponentPickerPopup(GUIContext& ctx);

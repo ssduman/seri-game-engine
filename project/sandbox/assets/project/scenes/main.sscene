@@ -5,6 +5,10 @@ IDComponent:
 SceneComponent:
   Version: 0.1
   IsActive: true
+  Environment:
+    BackgroundMode: 0
+    BackgroundColor: [0.2, 0.2, 0.2]
+    SkyboxAssetID: 17488517795270221424
 Entities:
   - Entity:
       IDComponent:

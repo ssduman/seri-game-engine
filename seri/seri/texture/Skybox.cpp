@@ -1,19 +1,11 @@
 #include "Seripch.h"
 
 #include "seri/texture/Skybox.h"
-#include "seri/project/ProjectManager.h"
 
 namespace seri
 {
 	Skybox::Skybox()
 	{
-		std::filesystem::path skyboxFolder = seri::project::ProjectManager::GetEngineAssetDirectory() / "textures" / "skybox" / "3";
-
-		for (const char* face : { "px.jpg", "nx.jpg", "py.jpg", "ny.jpg", "pz.jpg", "nz.jpg" })
-		{
-			_faces.push_back((skyboxFolder / face).string());
-		}
-
 		Init();
 	}
 
@@ -24,17 +16,29 @@ namespace seri
 
 	void Skybox::Init()
 	{
-		_texture = TextureBase::Create();
+		type = seri::asset::AssetType::skybox;
+
 		_material = std::make_shared<Material>();
 		_material->SetShader(ShaderLibrary::Find("skybox"));
-		_material->SetTexture("u_skybox", _texture);
 
 		SetDefaultPositions();
 		LoadCubemap();
 	}
 
+	void Skybox::SetFaces(std::vector<std::string> faces)
+	{
+		_faces = std::move(faces);
+
+		LoadCubemap();
+	}
+
 	void Skybox::Update()
 	{
+		if (!_texture)
+		{
+			return;
+		}
+
 		seri::RenderItem renderItem_skybox{};
 		renderItem_skybox.type = PassType::skybox;
 		renderItem_skybox.name = "skybox";
@@ -103,11 +107,21 @@ namespace seri
 
 	void Skybox::LoadCubemap(bool flip)
 	{
+		_texture = nullptr;
+
+		if (_faces.empty())
+		{
+			return;
+		}
+
 		if (_faces.size() != 6)
 		{
 			LIB_LOGGER(error, skybox) << "there should be exactly 6 textures for skybox";
 			return;
 		}
+
+		_texture = TextureBase::Create();
+		_material->SetTexture("u_skybox", _texture);
 
 		TextureDesc desc{};
 		desc.flip = flip;

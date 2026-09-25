@@ -40,7 +40,7 @@ namespace seri::scene
 			return _idComponent;
 		}
 
-		seri::component::SceneComponent GetSceneComponent()
+		seri::component::SceneComponent& GetSceneComponent()
 		{
 			return _sceneComponent;
 		}
@@ -114,7 +114,6 @@ namespace seri::scene
 		std::string _filePath{ "" };
 		bool _isDirty{ false };
 
-		std::shared_ptr<seri::Skybox> _skybox;
 		std::shared_ptr<seri::InfiniteGrid> _infiniteGrid;
 
 		seri::component::IDComponent _idComponent;

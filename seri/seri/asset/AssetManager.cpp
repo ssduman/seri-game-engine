@@ -143,6 +143,27 @@ namespace seri::asset
 					WriteAssetFile(metadata.meta, root);
 				}
 				break;
+			case seri::asset::AssetType::skybox:
+				{
+					std::shared_ptr<Skybox> skybox = GetAssetByID<Skybox>(id);
+					if (!skybox)
+					{
+						LIB_LOGGER(error, asset) << fmt::format("could not found skybox {} to save", id);
+						break;
+					}
+
+					seri::asset::IDInfo idInfo{
+						.id = id,
+						.version = "0.1"
+					};
+
+					YAML::Node root;
+					root["IDInfo"] = seri::asset::IDInfo::Serialize(idInfo);
+					root["Skybox"] = seri::asset::SkyboxAsset::Serialize(skybox);
+
+					WriteAssetFile(metadata.source, root);
+				}
+				break;
 			default:
 				break;
 		}
@@ -265,6 +286,10 @@ namespace seri::asset
 				else if (node.extension == kAssetMaterialExtension)
 				{
 					assetMetadata.type = seri::asset::AssetType::material;
+				}
+				else if (node.extension == kAssetSkyboxExtension)
+				{
+					assetMetadata.type = seri::asset::AssetType::skybox;
 				}
 				else if (node.extension == kAssetShaderExtension)
 				{
@@ -550,6 +575,26 @@ namespace seri::asset
 				LIB_LOGGER(error, asset) << fmt::format("loading asset {} failed: {}", metadata.source.string(), e.what());
 			}
 		}
+
+		for (const auto& metadata : metadataList)
+		{
+			if (metadata.type != seri::asset::AssetType::skybox || GetAssetByID<Skybox>(metadata.id))
+			{
+				continue;
+			}
+
+			try
+			{
+				YAML::Node root = YAML::LoadFile(metadata.source.string());
+				std::shared_ptr<Skybox> skybox = seri::asset::SkyboxAsset::Deserialize(root["Skybox"]);
+				AddAsset(metadata.id, skybox);
+				LoadSkybox(skybox);
+			}
+			catch (const std::exception& e)
+			{
+				LIB_LOGGER(error, asset) << "loading skybox " << metadata.source.string() << " failed: " << e.what();
+			}
+		}
 	}
 
 	void asset::AssetManager::Update()
@@ -773,6 +818,56 @@ namespace seri::asset
 		LIB_LOGGER(info, asset) << fmt::format("material created: {}", source.string());
 
 		return material->id;
+	}
+
+	uint64_t asset::AssetManager::CreateSkybox(const std::filesystem::path& folder, const std::string& name)
+	{
+		AssetManager& instance = GetInstance();
+
+		std::filesystem::path source = instance.GetUniquePath(folder, name, instance.kAssetSkyboxExtension);
+
+		std::shared_ptr<Skybox> skybox = std::make_shared<Skybox>();
+		skybox->id = seri::Random::UUID();
+
+		seri::asset::IDInfo idInfo{
+			.id = skybox->id,
+			.version = "0.1"
+		};
+
+		YAML::Node sourceRoot;
+		sourceRoot["IDInfo"] = seri::asset::IDInfo::Serialize(idInfo);
+		sourceRoot["Skybox"] = seri::asset::SkyboxAsset::Serialize(skybox);
+
+		YAML::Node metaRoot;
+		metaRoot["IDInfo"] = seri::asset::IDInfo::Serialize(idInfo);
+
+		instance.WriteAssetFile(source, sourceRoot);
+		instance.WriteAssetFile(instance.GetMetaPath(source), metaRoot);
+
+		instance._assetCache[skybox->id] = skybox;
+
+		instance.UpdateAssetTree();
+
+		LIB_LOGGER(info, asset) << "skybox created: " << source.string();
+
+		return skybox->id;
+	}
+
+	void asset::AssetManager::LoadSkybox(const std::shared_ptr<Skybox>& skybox)
+	{
+		std::vector<std::string> faces{};
+		for (uint64_t faceId : skybox->faceIds)
+		{
+			seri::asset::AssetMetadata metadata = GetAssetMetadata(faceId);
+			if (metadata.type != seri::asset::AssetType::texture)
+			{
+				skybox->SetFaces({});
+				return;
+			}
+			faces.push_back(metadata.source.string());
+		}
+
+		skybox->SetFaces(std::move(faces));
 	}
 
 	std::filesystem::path asset::AssetManager::CreatePrefab(const std::filesystem::path& folder, uint64_t entityId)

@@ -337,4 +337,33 @@ namespace seri::asset
 
 		return asset;
 	}
+
+	YAML::Node SkyboxAsset::Serialize(const std::shared_ptr<Skybox>& asset)
+	{
+		YAML::Node facesNode;
+		for (uint64_t faceId : asset->faceIds)
+		{
+			facesNode.push_back(faceId);
+		}
+
+		YAML::Node root;
+		root["FaceIDs"] = facesNode;
+		return root;
+	}
+
+	std::shared_ptr<Skybox> SkyboxAsset::Deserialize(const YAML::Node& root)
+	{
+		std::shared_ptr<Skybox> asset = std::make_shared<Skybox>();
+
+		const YAML::Node& facesNode = root["FaceIDs"];
+		if (facesNode && facesNode.IsSequence())
+		{
+			for (size_t i = 0; i < asset->faceIds.size() && i < facesNode.size(); i++)
+			{
+				asset->faceIds[i] = YAMLUtil::GetType<uint64_t>(facesNode[i]);
+			}
+		}
+
+		return asset;
+	}
 }

@@ -34,6 +34,8 @@ namespace seri::editor
 				return IM_COL32(80, 150, 230, 255);
 			case seri::asset::AssetType::sound:
 				return IM_COL32(170, 110, 200, 255);
+			case seri::asset::AssetType::skybox:
+				return IM_COL32(110, 190, 220, 255);
 			default:
 				return IM_COL32(120, 120, 126, 255);
 		}
@@ -348,6 +350,10 @@ namespace seri::editor
 			{
 				_pendingCreateMaterial = true;
 			}
+			if (ImGui::MenuItem("Skybox"))
+			{
+				_pendingCreateSkybox = true;
+			}
 			if (ImGui::MenuItem("Script"))
 			{
 				_pendingCreateScript = true;
@@ -469,6 +475,18 @@ namespace seri::editor
 			_pendingCreateMaterial = false;
 
 			uint64_t id = seri::asset::AssetManager::CreateMaterial(_currentFolder, "new_material");
+			if (id != 0)
+			{
+				_selectedPath = seri::asset::AssetManager::GetAssetMetadata(id).source;
+				_selectionDirty = true;
+			}
+		}
+
+		if (_pendingCreateSkybox)
+		{
+			_pendingCreateSkybox = false;
+
+			uint64_t id = seri::asset::AssetManager::CreateSkybox(_currentFolder, "new_skybox");
 			if (id != 0)
 			{
 				_selectedPath = seri::asset::AssetManager::GetAssetMetadata(id).source;

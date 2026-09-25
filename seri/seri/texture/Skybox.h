@@ -1,6 +1,7 @@
 #pragma once
 
 #include "seri/util/Util.h"
+#include "seri/asset/AssetBase.h"
 #include "seri/camera/CameraBase.h"
 #include "seri/graphic/Graphic.h"
 #include "seri/graphic/Material.h"
@@ -8,9 +9,11 @@
 #include "seri/shader/ShaderLibrary.h"
 #include "seri/rendering/render/RenderingManager.h"
 
+#include <array>
+
 namespace seri
 {
-	class Skybox
+	class Skybox : public seri::asset::AssetBase
 	{
 	public:
 		Skybox();
@@ -18,6 +21,10 @@ namespace seri
 
 		void Init();
 		void Update();
+
+		void SetFaces(std::vector<std::string> faces);
+
+		std::array<uint64_t, 6> faceIds{};
 
 	private:
 		void SetDefaultPositions();

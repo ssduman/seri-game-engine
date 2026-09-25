@@ -52,20 +52,65 @@ namespace seri::editor
 		auto scene = seri::scene::SceneManager::GetActiveScene();
 
 		auto idComponent = scene->GetIDComponent();
-		{
-			ImGui::Text("id: %llu", idComponent.id);
-			ImGui::Text("parent id: %llu", idComponent.parentId);
-			ImGui::Text("name: %s", idComponent.name.c_str());
+		auto& sceneComponent = scene->GetSceneComponent();
 
+		ImGuiChildFlags childFlags = ImGuiChildFlags_Borders | ImGuiChildFlags_AutoResizeY;
+
+		{
+			ScopedChild scopedChild("##SceneInfo", ImVec2(0, 0), childFlags);
+
+			ImGui::TextUnformatted("Scene");
 			ImGui::Separator();
+
+			DrawLabel("Name", idComponent.name.c_str(), false);
+			DrawLabel("ID", std::to_string(idComponent.id).c_str(), true);
+			DrawLabel("Version", sceneComponent.version.c_str(), true);
+			DrawLabel("Active", sceneComponent.isActive ? "true" : "false", true);
 		}
 
-		auto sceneComponent = scene->GetSceneComponent();
 		{
-			ImGui::Text("version: %s", sceneComponent.version.c_str());
-			ImGui::Text("active: %s", sceneComponent.isActive ? "true" : "false");
+			ScopedChild scopedChild("##SceneEnvironment", ImVec2(0, 0), childFlags);
 
+			ImGui::TextUnformatted("Environment");
 			ImGui::Separator();
+
+			bool changed = false;
+
+			static const char* backgroundNames[] = {
+				seri::util::BackgroundModeToString(seri::util::BackgroundMode::skybox),
+				seri::util::BackgroundModeToString(seri::util::BackgroundMode::color),
+			};
+
+			int background = static_cast<int>(sceneComponent.backgroundMode);
+			if (DrawCombo("Background", background, backgroundNames, IM_ARRAYSIZE(backgroundNames)))
+			{
+				sceneComponent.backgroundMode = static_cast<seri::util::BackgroundMode>(background);
+				changed = true;
+			}
+
+			switch (sceneComponent.backgroundMode)
+			{
+				case seri::util::BackgroundMode::skybox:
+					{
+						uint64_t selection = 0;
+						if (DrawAssetPicker("Skybox", sceneComponent.skyboxAssetId, seri::asset::AssetType::skybox, selection))
+						{
+							sceneComponent.skyboxAssetId = selection;
+							changed = true;
+						}
+					}
+					break;
+				case seri::util::BackgroundMode::color:
+					{
+						changed |= DrawColorVec3("Color", sceneComponent.backgroundColor, 0.01f);
+					}
+					break;
+			}
+
+			if (changed)
+			{
+				scene->SetAsDirty();
+			}
 		}
 	}
 
@@ -851,6 +896,11 @@ namespace seri::editor
 					DrawAssetFont(ctx);
 				}
 				break;
+			case seri::asset::AssetType::skybox:
+				{
+					DrawAssetSkybox(ctx);
+				}
+				break;
 			default:
 				break;
 		}
@@ -882,7 +932,7 @@ namespace seri::editor
 
 		DrawLabel("ID", std::to_string(node.id).c_str(), true);
 
-		if (node.type == seri::asset::AssetType::material || node.type == seri::asset::AssetType::mesh)
+		if (node.type == seri::asset::AssetType::material || node.type == seri::asset::AssetType::mesh || node.type == seri::asset::AssetType::skybox)
 		{
 			if (ImGui::Button("Save Asset", ImVec2(-1, 0)))
 			{
@@ -1233,6 +1283,95 @@ namespace seri::editor
 		}
 
 		ShowEditorImage(atlas, size, /*flip*/ false);
+	}
+
+	void InspectorPanel::DrawAssetSkybox(GUIContext& ctx)
+	{
+		constexpr float previewSize = 56.0f;
+		constexpr float labelWidth = 150.0f;
+
+		auto asset = seri::asset::AssetManager::GetAssetByID<seri::Skybox>(ctx.selectedAsset.id);
+		if (!asset)
+		{
+			ImGui::TextDisabled("skybox not loaded");
+			return;
+		}
+
+		ScopedChild scopedChild("##AssetSkybox", ImVec2(0, 0), ImGuiChildFlags_Borders | ImGuiChildFlags_AutoResizeY);
+
+		ImGui::TextUnformatted("Faces");
+		ImGui::Separator();
+
+		static const char* faceNames[] = { "Right +X", "Left -X", "Top +Y", "Bottom -Y", "Front +Z", "Back -Z" };
+
+		bool changed = false;
+
+		for (size_t i = 0; i < asset->faceIds.size(); i++)
+		{
+			uint64_t& faceId = asset->faceIds[i];
+			auto texture = seri::asset::AssetManager::GetAssetByID<seri::TextureBase>(faceId);
+
+			ImGui::PushID(static_cast<int>(i));
+
+			ImGui::Columns(2, nullptr, false);
+			ImGui::SetColumnWidth(0, labelWidth);
+			ImGui::AlignTextToFramePadding();
+			ImGui::TextUnformatted(faceNames[i]);
+
+			if (texture)
+			{
+				ImGui::TextDisabled("%s", seri::asset::AssetManager::GetAssetName(faceId).c_str());
+			}
+
+			ImGui::NextColumn();
+
+			bool clicked = false;
+			if (texture)
+			{
+				clicked = ShowEditorImageButton(texture, previewSize);
+			}
+			else
+			{
+				ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetStyleColorVec4(ImGuiCol_FrameBg));
+				ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImGui::GetStyleColorVec4(ImGuiCol_FrameBgHovered));
+				ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImGui::GetStyleColorVec4(ImGuiCol_FrameBgActive));
+
+				clicked = ImGui::Button("none", ImVec2(previewSize, previewSize));
+
+				ImGui::PopStyleColor(3);
+			}
+			if (clicked)
+			{
+				ImGui::OpenPopup("AssetPickerPopup");
+			}
+
+			bool selected = false;
+			uint64_t selection = 0;
+			if (ShowEditorAssetPickerPopup(seri::asset::AssetType::texture, selected, selection) && selected)
+			{
+				faceId = selection;
+				changed = true;
+			}
+
+			if (texture)
+			{
+				ImGui::SameLine();
+				if (ImGui::SmallButton("X"))
+				{
+					faceId = 0;
+					changed = true;
+				}
+			}
+
+			ImGui::Columns(1);
+			ImGui::Spacing();
+			ImGui::PopID();
+		}
+
+		if (changed)
+		{
+			seri::asset::AssetManager::LoadSkybox(asset);
+		}
 	}
 
 	void InspectorPanel::DrawAssetMesh(GUIContext& ctx)

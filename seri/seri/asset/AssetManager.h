@@ -138,6 +138,10 @@ namespace seri::asset
 
 		static uint64_t CreateMaterial(const std::filesystem::path& folder, const std::string& name);
 
+		static uint64_t CreateSkybox(const std::filesystem::path& folder, const std::string& name);
+
+		static void LoadSkybox(const std::shared_ptr<Skybox>& skybox);
+
 		static std::filesystem::path CreateScript(const std::filesystem::path& folder, const std::string& name);
 
 		static std::filesystem::path CreatePrefab(const std::filesystem::path& folder, uint64_t entityId);
@@ -181,6 +185,7 @@ namespace seri::asset
 		const char* kAssetMetaExtension = "smeta";
 		const char* kAssetSceneExtension = "sscene";
 		const char* kAssetMaterialExtension = "smat";
+		const char* kAssetSkyboxExtension = "sskybox";
 		const char* kAssetShaderExtension = "sshader";
 		const char* kAssetShaderGLSLExtension = "glsl";
 		const char* kAssetFBXExtension = "fbx";

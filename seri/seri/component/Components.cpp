@@ -50,13 +50,28 @@ namespace seri::component
 		SceneComponent component{};
 		component.version = YAMLUtil::DeepCopyYAMLString(node["Version"]);
 		component.isActive = YAMLUtil::GetType<bool>(node["IsActive"]);
+
+		if (node["Environment"])
+		{
+			const YAML::Node& environmentNode = node["Environment"];
+			component.backgroundMode = static_cast<seri::util::BackgroundMode>(YAMLUtil::GetType<int>(environmentNode["BackgroundMode"]));
+			component.backgroundColor = YAMLUtil::Vec3FromYAML(environmentNode["BackgroundColor"]);
+			component.skyboxAssetId = YAMLUtil::GetType<uint64_t>(environmentNode["SkyboxAssetID"]);
+		}
+
 		return component;
 	}
 	YAML::Node SceneComponent::Serialize(const SceneComponent& component)
 	{
+		YAML::Node environmentNode;
+		environmentNode["BackgroundMode"] = static_cast<int>(component.backgroundMode);
+		environmentNode["BackgroundColor"] = YAMLUtil::Vec3ToYAML(component.backgroundColor);
+		environmentNode["SkyboxAssetID"] = component.skyboxAssetId;
+
 		YAML::Node node;
 		node["Version"] = component.version;
 		node["IsActive"] = component.isActive;
+		node["Environment"] = environmentNode;
 		return node;
 	}
 

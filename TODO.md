@@ -2,7 +2,6 @@
 
 1. tracy profiler
 1. serialized object
-1. scene gui, scene skybox
 1. scene view mouse picking and highlighting
 1. frustum culling, sorting and batching
 1. particles

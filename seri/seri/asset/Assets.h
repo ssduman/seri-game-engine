@@ -5,6 +5,7 @@
 #include "seri/graphic/Model.h"
 #include "seri/graphic/Material.h"
 #include "seri/model/ModelImporter.h"
+#include "seri/texture/Skybox.h"
 
 namespace seri::asset
 {
@@ -30,6 +31,13 @@ namespace seri::asset
 		static YAML::Node Serialize(const std::shared_ptr<Model>& model);
 
 		static std::shared_ptr<Model> Deserialize(const YAML::Node& root, seri::asset::AssetMetadata metadata);
+	};
+
+	struct SkyboxAsset
+	{
+		static YAML::Node Serialize(const std::shared_ptr<Skybox>& asset);
+
+		static std::shared_ptr<Skybox> Deserialize(const YAML::Node& root);
 	};
 
 }

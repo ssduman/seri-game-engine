@@ -87,8 +87,8 @@ namespace seri
 			cameraPropertiesEditor.height = static_cast<float>(RenderingManager::GetEditorRT()->GetHeight());
 			cameraPropertiesEditor.isOrtho = false;
 			cameraPropertiesEditor.aspect = RenderingManager::GetEditorRT()->GetAspectRatio();
-			cameraPropertiesEditor.position = { 0.0f, 4.0f, 6.0f };
-			cameraPropertiesEditor.rotation = Util::ToQuaternion({ -30.0f, 0.0f, 0.0f });
+			cameraPropertiesEditor.position = { -3.8f, 2.0f, 0.8f };
+			cameraPropertiesEditor.rotation = Util::ToQuaternion({ -20.0f, -60.0f, 0.0f });
 			auto cameraEditor = std::make_shared<EditorCamera>(cameraPropertiesEditor);
 			cameraEditor->Init();
 
@@ -119,6 +119,9 @@ namespace seri
 			RenderingManager::GetGameRT()->Bind();
 			RenderingManager::ClearColor();
 			RenderingManager::Clear();
+
+			glm::vec3 backgroundColor = scene::SceneManager::GetActiveScene()->GetSceneComponent().backgroundColor;
+			RenderingManager::ClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, 1.0f);
 
 			RenderingManager::GetEditorSceneRT()->Bind();
 			RenderingManager::Clear();
