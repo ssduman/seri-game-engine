@@ -71,6 +71,8 @@ namespace seri
 
 		bool fxaaEnabled{ true };
 
+		bool gameViewVisible{ true };
+
 	protected:
 		RenderingProperties _renderingProperties;
 

@@ -33,6 +33,8 @@ namespace seri
 
 	void Application::WaitForTargetFrameRate()
 	{
+		SERI_PROFILER_ZONE_SCOPED_C(DimGray);
+
 		auto& instance = GetInstance();
 
 		if (instance._vSyncCount != 0)

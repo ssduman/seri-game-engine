@@ -33,6 +33,8 @@ namespace seri
 	protected:
 		void DrawShadowItems(const RenderPass& pass, const glm::mat4& lightViewProj);
 
+		static const char* GetPassName(PassType type);
+
 		void InitPost();
 		void RenderPost(const RenderPass& pass);
 

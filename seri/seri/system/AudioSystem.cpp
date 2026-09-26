@@ -10,6 +10,8 @@ namespace seri::system
 {
 	void AudioSystem::Update()
 	{
+		SERI_PROFILER_ZONE_SCOPED;
+
 		auto& registry = seri::scene::SceneManager::GetRegistry();
 
 		bool isPlaying = seri::scene::SceneManager::GetState() == seri::scene::SceneState::play;

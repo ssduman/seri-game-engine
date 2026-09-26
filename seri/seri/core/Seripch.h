@@ -30,3 +30,5 @@
 #include <boost/log/sources/severity_feature.hpp>
 #include <boost/log/sources/severity_logger.hpp>
 #include <boost/log/utility/manipulators/add_value.hpp>
+
+#include "seri/profiling/Profiler.h"

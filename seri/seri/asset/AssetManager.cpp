@@ -599,6 +599,8 @@ namespace seri::asset
 
 	void asset::AssetManager::Update()
 	{
+		SERI_PROFILER_ZONE_SCOPED;
+
 		AssetManager& instance = GetInstance();
 
 		bool rescan = false;

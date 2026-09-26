@@ -10,6 +10,8 @@ namespace seri::system
 {
 	void CameraSystem::Update()
 	{
+		SERI_PROFILER_ZONE_SCOPED;
+
 		entt::entity entity = FindMainCameraEntity();
 		if (entity == entt::null)
 		{

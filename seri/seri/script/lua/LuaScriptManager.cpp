@@ -34,6 +34,8 @@ namespace seri::script
 
 	void LuaScriptManager::Update()
 	{
+		SERI_PROFILER_ZONE_SCOPED;
+
 		LuaScriptManager& instance = GetInstance();
 
 		instance.UpdateTime();

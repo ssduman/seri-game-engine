@@ -14,6 +14,8 @@ namespace seri::system
 {
 	void UISystem::Update()
 	{
+		SERI_PROFILER_ZONE_SCOPED;
+
 		_uiEntityDrawOrders.clear();
 		_screenSize = ResolveScreenSize();
 

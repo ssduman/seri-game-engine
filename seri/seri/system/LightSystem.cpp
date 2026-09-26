@@ -7,6 +7,8 @@ namespace seri::system
 {
 	void LightSystem::Update()
 	{
+		SERI_PROFILER_ZONE_SCOPED;
+
 		const auto& registry = scene::SceneManager::GetRegistry();
 
 		UniformBufferLight outUBO{};

@@ -47,6 +47,8 @@ namespace seri::scene
 
 	void SceneManager::Update()
 	{
+		SERI_PROFILER_ZONE_SCOPED;
+
 		auto& instance = GetInstance();
 
 		instance.TryReload();

@@ -14,6 +14,7 @@
 #include "seri/model/ModelImporter.h"
 #include "seri/shader/ShaderBase.h"
 #include "seri/project/ProjectManager.h"
+#include "seri/profiling/Profiler.h"
 
 #include <entt/entt.hpp>
 #include <efsw/efsw.hpp>
@@ -159,6 +160,8 @@ namespace seri::asset
 		template<typename T>
 		static std::shared_ptr<T> GetAssetByID(uint64_t id)
 		{
+			SERI_PROFILER_ZONE_SCOPED;
+
 			if (GetInstance()._assetCache.find(id) != GetInstance()._assetCache.end())
 			{
 				return std::dynamic_pointer_cast<T>(GetInstance()._assetCache[id]);

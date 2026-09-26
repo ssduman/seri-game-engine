@@ -144,6 +144,8 @@ namespace seri::system
 
 	void ScriptSystem::Update(float deltaTime)
 	{
+		SERI_PROFILER_ZONE_SCOPED;
+
 		if (!_enabled)
 		{
 			return;
@@ -237,11 +239,15 @@ namespace seri::system
 
 	void ScriptSystem::FixedUpdate(float fixedDeltaTime)
 	{
+		SERI_PROFILER_ZONE_SCOPED;
+
 		DispatchAll("OnFixedUpdate", [&](script::ScriptBase& script) { script.OnFixedUpdate(fixedDeltaTime); });
 	}
 
 	void ScriptSystem::LateUpdate(float deltaTime)
 	{
+		SERI_PROFILER_ZONE_SCOPED;
+
 		DispatchAll("OnLateUpdate", [&](script::ScriptBase& script) { script.OnLateUpdate(deltaTime); });
 	}
 

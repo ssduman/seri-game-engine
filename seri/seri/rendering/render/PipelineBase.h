@@ -6,6 +6,7 @@
 #include "seri/rendering/render/RenderingUtil.h"
 #include "seri/rendering/common/BufferBase.h"
 #include "seri/rendering/common/VertexArrayBase.h"
+#include "seri/profiling/Profiler.h"
 #include "seri/rendering/common/FramebufferBase.h"
 
 namespace seri
@@ -296,6 +297,8 @@ namespace seri
 
 		void AddItem(RenderItem item)
 		{
+			SERI_PROFILER_ZONE_SCOPED;
+
 			for (auto& pass : passes)
 			{
 				if (pass.desc.type == item.type)

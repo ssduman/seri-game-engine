@@ -112,12 +112,20 @@ namespace seri
 				return;
 			}
 
-			glUseProgram(_program);
+			if (_boundProgram != _program)
+			{
+				glUseProgram(_program);
+				_boundProgram = _program;
+			}
 		}
 
 		void Unbind() override
 		{
-			glUseProgram(0);
+			if (_boundProgram != 0)
+			{
+				glUseProgram(0);
+				_boundProgram = 0;
+			}
 		}
 
 		void Release() override
@@ -350,6 +358,8 @@ namespace seri
 		unsigned int _program{ 0 };
 
 		std::unordered_map<std::string, int> _locations{};
+
+		inline static unsigned int _boundProgram{ 0 };
 
 	};
 }

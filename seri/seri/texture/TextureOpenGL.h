@@ -4,6 +4,8 @@
 
 #include <glad/gl.h>
 
+#include <array>
+
 namespace seri
 {
 	class TextureOpenGL : public TextureBase
@@ -87,8 +89,7 @@ namespace seri
 
 		void Bind(int slot) override
 		{
-			glActiveTexture(GL_TEXTURE0 + slot);
-			glBindTexture(_target, _handle);
+			BindToSlot(slot, _target, _handle);
 		}
 
 		void Unbind() override
@@ -98,8 +99,7 @@ namespace seri
 
 		void Unbind(int slot) override
 		{
-			glActiveTexture(GL_TEXTURE0 + slot);
-			glBindTexture(_target, 0);
+			BindToSlot(slot, _target, 0);
 		}
 
 		void Clear(int val) override
@@ -158,11 +158,39 @@ namespace seri
 
 		static void UnbindTex2DImpl(int slot)
 		{
-			glActiveTexture(GL_TEXTURE0 + slot);
-			glBindTexture(GL_TEXTURE_2D, 0);
+			BindToSlot(slot, GL_TEXTURE_2D, 0);
 		}
 
 	private:
+		struct BoundTexture
+		{
+			GLenum target{ 0 };
+			GLuint handle{ 0 };
+		};
+
+		static void BindToSlot(int slot, GLenum target, GLuint handle)
+		{
+			if (_activeSlot != slot)
+			{
+				glActiveTexture(GL_TEXTURE0 + slot);
+				_activeSlot = slot;
+			}
+
+			if (slot < 0 || slot >= static_cast<int>(_boundTextures.size()))
+			{
+				glBindTexture(target, handle);
+				return;
+			}
+
+			BoundTexture& bound = _boundTextures[slot];
+			if (bound.target != target || bound.handle != handle)
+			{
+				glBindTexture(target, handle);
+				bound.target = target;
+				bound.handle = handle;
+			}
+		}
+
 		void Init()
 		{
 			_swizzle = { GL_RED, GL_GREEN, GL_BLUE, GL_ALPHA };
@@ -217,6 +245,14 @@ namespace seri
 		{
 			if (_handle > 0)
 			{
+				for (BoundTexture& bound : _boundTextures)
+				{
+					if (bound.handle == _handle)
+					{
+						bound = {};
+					}
+				}
+
 				glDeleteTextures(1, &_handle);
 				_handle = 0;
 			}
@@ -483,6 +519,9 @@ namespace seri
 
 		TextureDesc _desc;
 		unsigned int _handle{ 0 };
+
+		inline static int _activeSlot{ -1 };
+		inline static std::array<BoundTexture, 32> _boundTextures{};
 
 	};
 }

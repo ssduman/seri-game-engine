@@ -6,6 +6,8 @@ namespace seri
 {
 	void RenderCommandBufferOpenGL::Draw(DrawParams draw, const std::shared_ptr<VertexArrayBase>& vao)
 	{
+		SERI_PROFILER_ZONE_SCOPED;
+
 		_stats.drawCalls += 1;
 
 		vao->Bind();

@@ -57,6 +57,8 @@ namespace seri
 
 	void Graphic::Draw(const std::shared_ptr<Mesh>& mesh, const std::shared_ptr<Material>& material, const glm::mat4& trs, PassType passType, int sortOrder)
 	{
+		SERI_PROFILER_ZONE_SCOPED;
+
 		material->SetFloat4(literals::kUniformColor, glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f });
 
 		RenderItem cmd{};

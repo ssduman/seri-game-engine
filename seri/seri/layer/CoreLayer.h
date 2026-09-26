@@ -52,6 +52,7 @@ namespace seri
 			system::ScriptSystem::Init();
 			system::PhysicsSystem::Init();
 			debug::DebugDraw::Init();
+			profiling::Profiler::Init();
 
 			event::EventManager::Subscribe<event::WindowResizeEventData>(
 				[](const event::WindowResizeEventData& data) -> bool
@@ -116,9 +117,12 @@ namespace seri
 			RenderingManager::ClearColor();
 			RenderingManager::Clear();
 
-			RenderingManager::GetGameRT()->Bind();
-			RenderingManager::ClearColor();
-			RenderingManager::Clear();
+			if (RenderingManager::GetGameViewVisible())
+			{
+				RenderingManager::GetGameRT()->Bind();
+				RenderingManager::ClearColor();
+				RenderingManager::Clear();
+			}
 
 			glm::vec3 backgroundColor = scene::SceneManager::GetActiveScene()->GetSceneComponent().backgroundColor;
 			RenderingManager::ClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, 1.0f);
@@ -126,8 +130,11 @@ namespace seri
 			RenderingManager::GetEditorSceneRT()->Bind();
 			RenderingManager::Clear();
 
-			RenderingManager::GetGameSceneRT()->Bind();
-			RenderingManager::Clear();
+			if (RenderingManager::GetGameViewVisible())
+			{
+				RenderingManager::GetGameSceneRT()->Bind();
+				RenderingManager::Clear();
+			}
 
 			RenderingManager::GetMainRT()->Bind();
 			RenderingManager::ClearColor();

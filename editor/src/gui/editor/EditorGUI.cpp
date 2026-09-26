@@ -36,6 +36,8 @@ namespace seri::editor
 
 	void EditorGUI::Update()
 	{
+		SERI_PROFILER_ZONE_SCOPED;
+
 		GUIBackend::NewFrame();
 
 		ImGuizmo::BeginFrame();
@@ -51,6 +53,8 @@ namespace seri::editor
 
 	void EditorGUI::Render()
 	{
+		SERI_PROFILER_ZONE_SCOPED;
+
 		GUIBackend::Render();
 	}
 

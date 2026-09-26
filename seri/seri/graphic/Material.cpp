@@ -118,6 +118,8 @@ namespace seri
 
 	void Material::Apply()
 	{
+		SERI_PROFILER_ZONE_SCOPED;
+
 		if (!_shader || !_shader->IsActiveForUsing())
 		{
 			return;
@@ -173,11 +175,6 @@ namespace seri
 		for (auto& kv : _mats)
 		{
 			_shader->SetMat4(kv.first, kv.second);
-		}
-
-		for (int i = 0; i < _textures.size(); i++)
-		{
-			TextureBase::UnbindTex2D(i);
 		}
 
 		for (auto& kv : _textures)

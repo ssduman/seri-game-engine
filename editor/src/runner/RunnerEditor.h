@@ -2,6 +2,7 @@
 
 #include <seri/core/Seri.h>
 #include <seri/project/ProjectManager.h>
+#include <seri/profiling/Profiler.h>
 
 #include "gui/common/GUIBackend.h"
 #include "layer/EditorLayer.h"
@@ -61,6 +62,8 @@ namespace seri::editor
 			layerManager.OnUpdate();
 			layerManager.OnRender();
 			layerManager.OnPostUpdate();
+
+			SERI_PROFILER_FRAME_END_MARK;
 		}
 
 		void RunLauncher(std::filesystem::path& projectPath)

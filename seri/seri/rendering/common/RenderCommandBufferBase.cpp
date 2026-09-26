@@ -73,7 +73,7 @@ namespace seri
 		_frameGraph.AddPass(passDebug);
 		_frameGraph.AddPass(passUI);
 
-		if (runtimeCamera == nullptr)
+		if (runtimeCamera == nullptr || !seri::RenderingManager::GetGameViewVisible())
 		{
 			return;
 		}
@@ -200,44 +200,52 @@ namespace seri
 
 	void RenderCommandBufferBase::Execute()
 	{
-		for (const RenderCommand& cmd : _commands)
+		SERI_PROFILER_ZONE_SCOPED;
+
 		{
-			auto& rt = cmd.rt;
-			auto& cam = cmd.camera;
+			SERI_PROFILER_ZONE_SCOPED_N("Commands");
 
-			rt->Bind();
-
-			SetState(cmd.state);
-
-			if (cmd.noop)
+			for (const RenderCommand& cmd : _commands)
 			{
+				auto& rt = cmd.rt;
+				auto& cam = cmd.camera;
+
+				rt->Bind();
+
+				SetState(cmd.state);
+
+				if (cmd.noop)
+				{
+					rt->Unbind();
+					continue;
+				}
+
+				seri::RenderingManager::SetViewport(0, 0, rt->GetWidth(), rt->GetHeight());
+
+				glm::vec4 camPos = cam->GetPosition();
+				glm::mat4 view = cam->GetView();
+				glm::mat4 projection = cam->GetProjection();
+
+				RenderPass pass{};
+				pass.desc.camera = cam;
+				OnPassChanged(pass);
+
+				cmd.material->SetMat4(literals::kUniformModel, cmd.model);
+				cmd.material->SetMat4(literals::kUniformView, view);
+				cmd.material->SetMat4(literals::kUniformProjection, projection);
+				cmd.material->SetFloat4(literals::kUniformCameraPos, camPos);
+				cmd.material->Apply();
+
+				Draw(cmd.draw, cmd.vao);
+
 				rt->Unbind();
-				continue;
 			}
-
-			seri::RenderingManager::SetViewport(0, 0, rt->GetWidth(), rt->GetHeight());
-
-			glm::vec4 camPos = cam->GetPosition();
-			glm::mat4 view = cam->GetView();
-			glm::mat4 projection = cam->GetProjection();
-
-			RenderPass pass{};
-			pass.desc.camera = cam;
-			OnPassChanged(pass);
-
-			cmd.material->SetMat4(literals::kUniformModel, cmd.model);
-			cmd.material->SetMat4(literals::kUniformView, view);
-			cmd.material->SetMat4(literals::kUniformProjection, projection);
-			cmd.material->SetFloat4(literals::kUniformCameraPos, camPos);
-			cmd.material->Apply();
-
-			Draw(cmd.draw, cmd.vao);
-
-			rt->Unbind();
 		}
 
 		for (const RenderPass& pass : _frameGraph.passes)
 		{
+			SERI_PROFILER_ZONE_TRANSIENT(GetPassName(pass.desc.type));
+
 			auto& rt = pass.desc.rt;
 			auto& cam = pass.desc.camera;
 
@@ -349,20 +357,25 @@ namespace seri
 
 				SetState(cmd.state);
 
-				if (pass.desc.type == PassType::skybox)
 				{
-					cmd.material->SetMat4(literals::kUniformViewSkybox, glm::mat4(glm::mat3(view)));
+					SERI_PROFILER_ZONE_SCOPED_N("SetUniforms");
+
+					if (pass.desc.type == PassType::skybox)
+					{
+						cmd.material->SetMat4(literals::kUniformViewSkybox, glm::mat4(glm::mat3(view)));
+					}
+
+					cmd.material->SetMat4(literals::kUniformModel, cmd.model);
+					cmd.material->SetMat4(literals::kUniformView, view);
+					cmd.material->SetMat4(literals::kUniformProjection, projection);
+					cmd.material->SetFloat4(literals::kUniformCameraPos, camPos);
+					cmd.material->SetInt(literals::kUniformDirLightShadowMap, static_cast<int>(seri::TextureSlotName::dir_shadow));
+					cmd.material->SetInt(literals::kUniformSpotLightShadowMap0, static_cast<int>(seri::TextureSlotName::spot_shadow_0));
+					cmd.material->SetInt(literals::kUniformSpotLightShadowMap1, static_cast<int>(seri::TextureSlotName::spot_shadow_1));
+					cmd.material->SetInt(literals::kUniformSpotLightShadowMap2, static_cast<int>(seri::TextureSlotName::spot_shadow_2));
+					cmd.material->SetInt(literals::kUniformSpotLightShadowMap3, static_cast<int>(seri::TextureSlotName::spot_shadow_3));
 				}
 
-				cmd.material->SetMat4(literals::kUniformModel, cmd.model);
-				cmd.material->SetMat4(literals::kUniformView, view);
-				cmd.material->SetMat4(literals::kUniformProjection, projection);
-				cmd.material->SetFloat4(literals::kUniformCameraPos, camPos);
-				cmd.material->SetInt(literals::kUniformDirLightShadowMap, static_cast<int>(seri::TextureSlotName::dir_shadow));
-				cmd.material->SetInt(literals::kUniformSpotLightShadowMap0, static_cast<int>(seri::TextureSlotName::spot_shadow_0));
-				cmd.material->SetInt(literals::kUniformSpotLightShadowMap1, static_cast<int>(seri::TextureSlotName::spot_shadow_1));
-				cmd.material->SetInt(literals::kUniformSpotLightShadowMap2, static_cast<int>(seri::TextureSlotName::spot_shadow_2));
-				cmd.material->SetInt(literals::kUniformSpotLightShadowMap3, static_cast<int>(seri::TextureSlotName::spot_shadow_3));
 				cmd.material->Apply();
 
 				if (!cmd.bones.empty())
@@ -420,6 +433,8 @@ namespace seri
 
 	void RenderCommandBufferBase::RenderPost(const RenderPass& pass)
 	{
+		SERI_PROFILER_ZONE_SCOPED;
+
 		auto& source = pass.desc.source;
 		auto& rt = pass.desc.rt;
 
@@ -479,6 +494,8 @@ namespace seri
 
 	void RenderCommandBufferBase::DrawShadowItems(const RenderPass& pass, const glm::mat4& lightViewProj)
 	{
+		SERI_PROFILER_ZONE_SCOPED;
+
 		for (const RenderItem& item : pass.items)
 		{
 			SetState(item.state);
@@ -497,6 +514,21 @@ namespace seri
 
 			Draw(item.draw, item.vao);
 		}
+	}
+
+	const char* RenderCommandBufferBase::GetPassName(PassType type)
+	{
+		switch (type)
+		{
+			case PassType::shadow: return "shadow";
+			case PassType::skybox: return "skybox";
+			case PassType::opaque: return "opaque";
+			case PassType::transparent: return "transparent";
+			case PassType::debug: return "debug";
+			case PassType::ui: return "ui";
+			case PassType::post: return "post";
+		}
+		return "unknown";
 	}
 
 }

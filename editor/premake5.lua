@@ -72,6 +72,7 @@ project "Editor"
     defines { "NDEBUG" }
     runtime "Release"
     optimize "On"
+    symbols "On"
     libdirs {
       "%{LibDir.vcpkg}",
     }

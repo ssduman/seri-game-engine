@@ -22,6 +22,8 @@ project "Seri"
     "FMT_SHARED",
     "ASSIMP_DLL",
     "BOOST_LOG_DYN_LINK",
+    "TRACY_ENABLE",
+    "TRACY_ON_DEMAND",
   }
 
   linkoptions {
@@ -46,11 +48,13 @@ project "Seri"
 
   externalincludedirs {
     "%{IncludeDir.vcpkg}",
+    "%{IncludeDir.tracy}",
   }
   externalwarnings "Off"
 
   links {
     "glad",
+    "tracy",
   }
 
   filter "system:windows"
@@ -66,6 +70,7 @@ project "Seri"
     defines { "NDEBUG" }
     runtime "Release"
     optimize "On"
+    symbols "On"
 
   usage "PUBLIC"
     includedirs {
@@ -74,6 +79,7 @@ project "Seri"
 
     externalincludedirs {
       "%{IncludeDir.vcpkg}",
+      "%{IncludeDir.tracy}",
     }
     externalwarnings "Off"
 
@@ -84,6 +90,8 @@ project "Seri"
       "FMT_SHARED",
       "ASSIMP_DLL",
       "BOOST_LOG_DYN_LINK",
+      "TRACY_ENABLE",
+      "TRACY_ON_DEMAND",
     }
 
   usage "INTERFACE"

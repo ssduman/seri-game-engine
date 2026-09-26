@@ -8,6 +8,7 @@ boost_ver_debug = "vc145-mt-gd-x64-1_92"
 IncludeDir = {}
 IncludeDir["vcpkg"] = vcpkg_root .. "/include"
 IncludeDir["glad"] = "%{wks.location}/seri/third_party/glad/include"
+IncludeDir["tracy"] = "%{wks.location}/seri/third_party/tracy"
 
 LibDir = {}
 LibDir["vcpkg"] = vcpkg_root .. "/lib"
@@ -54,4 +55,5 @@ workspace "Seri Game Engine"
 
   group "Dependencies"
     include "seri/third_party/glad"
+    include "seri/third_party/tracy"
   group ""

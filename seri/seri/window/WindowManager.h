@@ -1,6 +1,7 @@
 #pragma once
 
 #include "seri/window/WindowManagerBase.h"
+#include "seri/profiling/Profiler.h"
 
 #include <memory>
 
@@ -36,6 +37,8 @@ namespace seri
 
 		static void SwapBuffers()
 		{
+			SERI_PROFILER_ZONE_SCOPED_C(DimGray);
+
 			_windowManager->SwapBuffers();
 		}
 

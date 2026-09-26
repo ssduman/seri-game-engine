@@ -18,6 +18,8 @@ namespace seri::system
 {
 	void MeshRendererSystem::Update()
 	{
+		SERI_PROFILER_ZONE_SCOPED;
+
 		auto& registry = seri::scene::SceneManager::GetRegistry();
 
 		auto view = registry.view<
@@ -73,6 +75,8 @@ namespace seri::system
 
 				if (renderer.castShadow)
 				{
+					SERI_PROFILER_ZONE_SCOPED_N("SubmitShadow");
+
 					RenderItem shadowCmd{};
 					shadowCmd.type = PassType::shadow;
 					shadowCmd.name = "shadow";
@@ -87,6 +91,8 @@ namespace seri::system
 
 	std::shared_ptr<Material> MeshRendererSystem::GetShadowMaterial(const std::shared_ptr<Material>& material)
 	{
+		SERI_PROFILER_ZONE_SCOPED;
+
 		static std::shared_ptr<Material> shadowMaterial = []()
 			{
 				auto mat = std::make_shared<Material>();

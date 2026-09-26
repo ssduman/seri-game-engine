@@ -1,8 +1,8 @@
 # Install
 
 * Packages declared in `vcpkg.json` are built into `vcpkg_installed/` folder inside this repository with `vcpkg`
-* Only project that distributed with this project is `glad`
-* Only binary that distributed with this project is `Premake`
+* Packages that distributed with this project are: `glad`, `tracy`
+* Binaries that distributed with this project are: `Premake`
 
 ## Fresh install
 
@@ -97,5 +97,6 @@ bootstrap-vcpkg.bat
 * [doctest](https://github.com/doctest/doctest/)
 * [Native File Dialog Extended](https://github.com/btzy/nativefiledialog-extended)
 * [Jolt Physics](https://github.com/jrouwe/joltphysics)
+* [Tracy Profiler](https://github.com/wolfpld/tracy)
 * [vcpkg](https://github.com/microsoft/vcpkg)
 * [Premake](https://github.com/premake/premake-core)

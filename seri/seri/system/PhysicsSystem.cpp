@@ -130,6 +130,8 @@ namespace seri::system
 
 	void PhysicsSystem::Update(float fixedDeltaTime)
 	{
+		SERI_PROFILER_ZONE_SCOPED;
+
 		Sync();
 		MoveKinematicBodies(fixedDeltaTime);
 

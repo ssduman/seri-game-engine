@@ -249,6 +249,16 @@ namespace seri
 			_renderingManager->fxaaEnabled = enabled;
 		}
 
+		static bool GetGameViewVisible()
+		{
+			return _renderingManager->gameViewVisible;
+		}
+
+		static void SetGameViewVisible(bool visible)
+		{
+			_renderingManager->gameViewVisible = visible;
+		}
+
 	private:
 		static std::unique_ptr<RenderingManagerBase> _renderingManager;
 		static std::unique_ptr<RenderCommandBufferBase> _renderCommandBuffer;

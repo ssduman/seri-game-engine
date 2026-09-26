@@ -7,6 +7,8 @@ namespace seri::system
 {
 	void TransformSystem::Update()
 	{
+		SERI_PROFILER_ZONE_SCOPED;
+
 		const auto& registry = seri::scene::SceneManager::GetRegistry();
 		const auto& tree = seri::scene::SceneManager::GetActiveScene()->GetSceneTreeRoot();
 

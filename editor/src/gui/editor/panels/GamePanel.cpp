@@ -18,6 +18,7 @@ namespace seri::editor
 	void GamePanel::Update(GUIContext& ctx)
 	{
 		seri::system::UISystem::SetPointerViewport({ 0.0f, 0.0f }, { 0.0f, 0.0f }, false);
+		seri::RenderingManager::SetGameViewVisible(false);
 
 		seri::scene::SceneState state = seri::scene::SceneManager::GetState();
 		if (state == _statePrev)
@@ -91,6 +92,8 @@ namespace seri::editor
 		{
 			return;
 		}
+
+		seri::RenderingManager::SetGameViewVisible(true);
 
 		ImVec2 viewMin = ImGui::GetCursorScreenPos();
 		ImVec2 viewMax = ImVec2(viewMin.x + viewSize.x, viewMin.y + viewSize.y);

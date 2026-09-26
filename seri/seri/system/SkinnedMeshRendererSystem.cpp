@@ -17,6 +17,8 @@ namespace seri::system
 {
 	void SkinnedMeshRendererSystem::Update()
 	{
+		SERI_PROFILER_ZONE_SCOPED;
+
 		static std::shared_ptr<Material> shadowMaterial = []()
 			{
 				auto mat = std::make_shared<Material>();

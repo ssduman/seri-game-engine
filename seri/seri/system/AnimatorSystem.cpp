@@ -15,6 +15,8 @@ namespace seri::system
 {
 	void AnimatorSystem::Update()
 	{
+		SERI_PROFILER_ZONE_SCOPED;
+
 		auto& registry = seri::scene::SceneManager::GetRegistry();
 
 		auto view = registry.view<
