@@ -1,8 +1,8 @@
-# Seri Game Engine #
+# <img src="editor/assets/icons/seri.png" alt="seri" height="32" align="absmiddle"> Seri Game Engine #
 
 * A 2D/3D OpenGL Game Engine.
 
-## Roadmap: ##
+## Roadmap ##
 
 * [X] Entity Component System
 * [X] Model Loading and Skeletal Animation
@@ -23,11 +23,11 @@
 * [ ] Linux Support
 * [ ] DirectX and Vulkan Support
 
-## Install: ##
+## Install ##
 
 * See [Install](INSTALL.md)
 
-## Images: ##
+## Images ##
 <table>
     <tr>
         <td align="center">

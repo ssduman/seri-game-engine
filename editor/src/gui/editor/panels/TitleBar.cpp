@@ -48,21 +48,6 @@ namespace seri::editor
 
 		_icon = seri::TextureBase::Create();
 		_icon->Init(desc, iconPath.string());
-
-		int width, height, components;
-		if (void* pixels = seri::TextureBase::LoadTexture(iconPath.string(), width, height, components, false))
-		{
-			if (components == 4)
-			{
-				seri::WindowManager::SetWindowIcon(width, height, static_cast<const unsigned char*>(pixels));
-			}
-			else
-			{
-				LIB_LOGGER(warning, gui) << "editor icon has unsupported number of components: " << components;
-			}
-
-			seri::TextureBase::UnloadTexture(pixels);
-		}
 	}
 
 	void TitleBar::Draw(GUIContext& ctx)

@@ -13,6 +13,7 @@ project "Editor"
   files {
     "src/**.h",
     "src/**.cpp",
+    "resources/**.rc",
   }
 
   linkoptions {

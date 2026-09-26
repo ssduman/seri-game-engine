@@ -294,12 +294,10 @@ namespace seri::system
 
 	glm::vec2 UISystem::ResolveScreenSize()
 	{
-		for (const auto& rt : { seri::RenderingManager::GetGameRT(), seri::RenderingManager::GetEditorRT() })
+		auto rt = seri::RenderingManager::GetGameViewVisible() ? seri::RenderingManager::GetGameRT() : seri::RenderingManager::GetEditorRT();
+		if (rt && rt->GetWidth() > 0 && rt->GetHeight() > 0)
 		{
-			if (rt && rt->GetWidth() > 0 && rt->GetHeight() > 0)
-			{
-				return glm::vec2{ static_cast<float>(rt->GetWidth()), static_cast<float>(rt->GetHeight()) };
-			}
+			return glm::vec2{ static_cast<float>(rt->GetWidth()), static_cast<float>(rt->GetHeight()) };
 		}
 
 		return glm::vec2{ 1920.0f, 1080.0f };
