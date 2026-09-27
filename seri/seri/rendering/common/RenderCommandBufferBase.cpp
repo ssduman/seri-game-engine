@@ -129,54 +129,54 @@ namespace seri
 		_commands.emplace_back(renderCommand);
 	}
 
-	void RenderCommandBufferBase::SetState(const RenderState& state)
+	void RenderCommandBufferBase::SetState(const RenderState& state, bool force)
 	{
-		if (RenderState::IsBlendChanged(state, _statePrev))
+		if (force || RenderState::IsBlendChanged(state, _statePrev))
 		{
 			seri::RenderingManager::SetBlend(state.blendEnabled, state.blendFactorSrc, state.blendFactorDst);
 		}
 
-		if (RenderState::IsFrontFaceChanged(state, _statePrev))
+		if (force || RenderState::IsFrontFaceChanged(state, _statePrev))
 		{
 			seri::RenderingManager::SetFrontFace(state.frontFace);
 		}
 
-		if (RenderState::IsCullFaceChanged(state, _statePrev))
+		if (force || RenderState::IsCullFaceChanged(state, _statePrev))
 		{
 			seri::RenderingManager::SetCullFace(state.cullFaceEnabled, state.cullFace);
 		}
 
-		if (RenderState::IsDepthFuncChanged(state, _statePrev))
+		if (force || RenderState::IsDepthFuncChanged(state, _statePrev))
 		{
 			seri::RenderingManager::SetDepthFunc(state.depthTestEnabled, state.depthFunc);
 		}
 
-		if (RenderState::IsDepthWriteChanged(state, _statePrev))
+		if (force || RenderState::IsDepthWriteChanged(state, _statePrev))
 		{
 			seri::RenderingManager::SetDepthWrite(state.depthWriteEnabled);
 		}
 
-		if (RenderState::IsStencilFuncChanged(state, _statePrev))
+		if (force || RenderState::IsStencilFuncChanged(state, _statePrev))
 		{
 			seri::RenderingManager::SetStencilFunc(state.stencilTestEnabled, state.stencilFunc, state.stencilRef, state.stencilMaskAND);
 		}
 
-		if (RenderState::IsStencilOpChanged(state, _statePrev))
+		if (force || RenderState::IsStencilOpChanged(state, _statePrev))
 		{
 			seri::RenderingManager::SetStencilOp(state.stencilSfail, state.stencilDPfail, state.stencilDPpass);
 		}
 
-		if (RenderState::IsStencilMaskChanged(state, _statePrev))
+		if (force || RenderState::IsStencilMaskChanged(state, _statePrev))
 		{
 			seri::RenderingManager::SetStencilMask(state.stencilMask);
 		}
 
-		if (RenderState::IsLineWidthChanged(state, _statePrev))
+		if (force || RenderState::IsLineWidthChanged(state, _statePrev))
 		{
 			seri::RenderingManager::SetLineWidth(state.lineWidth);
 		}
 
-		if (RenderState::IsPointSizeChanged(state, _statePrev))
+		if (force || RenderState::IsPointSizeChanged(state, _statePrev))
 		{
 			seri::RenderingManager::SetPointSize(state.pointSize);
 		}

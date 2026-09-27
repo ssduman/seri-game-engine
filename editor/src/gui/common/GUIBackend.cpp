@@ -1,8 +1,8 @@
 #include "Editorpch.h"
 
 #include "gui/common/GUIBackend.h"
-
-#include <imgui_impl_opengl3.h>
+#include "gui/common/GUIRendererSeri.h"
+#include "gui/common/GUIRendererImGui.h"
 
 #if defined (SERI_USE_WINDOW_GLFW)
 #include <GLFW/glfw3.h>
@@ -14,7 +14,7 @@
 
 namespace seri::editor
 {
-	void GUIBackend::Init()
+	void GUIBackend::Init(GUIRendererBackend rendererBackend)
 	{
 #if defined (SERI_USE_WINDOW_GLFW)
 		ImGui_ImplGlfw_InitForOpenGL(static_cast<GLFWwindow*>(seri::WindowManager::GetWindowHandle()), true);
@@ -22,7 +22,23 @@ namespace seri::editor
 		ImGui_ImplSDL3_InitForOpenGL(static_cast<SDL_Window*>(seri::WindowManager::GetWindowHandle()), seri::WindowManager::GetContext());
 #endif
 
-		ImGui_ImplOpenGL3_Init("#version 460");
+		switch (rendererBackend)
+		{
+			case GUIRendererBackend::imgui:
+				{
+					_renderer = std::make_unique<GUIRendererImGui>();
+				}
+				break;
+			case GUIRendererBackend::seri:
+				{
+					_renderer = std::make_unique<GUIRendererSeri>();
+				}
+				break;
+			default:
+				throw std::runtime_error("unexpected gui renderer backend type");
+		}
+
+		_renderer->Init();
 	}
 
 	void GUIBackend::Shutdown()
@@ -33,7 +49,8 @@ namespace seri::editor
 			return;
 		}
 
-		ImGui_ImplOpenGL3_Shutdown();
+		_renderer->Shutdown();
+		_renderer = nullptr;
 
 #if defined (SERI_USE_WINDOW_GLFW)
 		ImGui_ImplGlfw_Shutdown();
@@ -46,7 +63,7 @@ namespace seri::editor
 
 	void GUIBackend::NewFrame()
 	{
-		ImGui_ImplOpenGL3_NewFrame();
+		_renderer->NewFrame();
 
 #if defined (SERI_USE_WINDOW_GLFW)
 		ImGui_ImplGlfw_NewFrame();
@@ -61,7 +78,7 @@ namespace seri::editor
 	{
 		ImGui::Render();
 
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+		_renderer->RenderDrawData(ImGui::GetDrawData());
 
 #if defined (SERI_USE_WINDOW_GLFW)
 		GLFWwindow* backup_current_context = glfwGetCurrentContext();

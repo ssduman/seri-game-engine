@@ -22,7 +22,7 @@ namespace seri
 		void End();
 		void Submit(RenderItem renderItem);
 		void Submit(RenderCommand renderCommand);
-		void SetState(const RenderState& state);
+		void SetState(const RenderState& state, bool force = false);
 		void OnPassChanged(const RenderPass& renderPass);
 		void Execute();
 

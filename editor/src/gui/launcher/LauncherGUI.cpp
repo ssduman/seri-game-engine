@@ -40,7 +40,7 @@ namespace seri::editor
 		SetFonts(FindFontPath());
 		SetStyle();
 
-		GUIBackend::Init();
+		GUIBackend::Init(GUIRendererBackend::imgui);
 
 		if (NFD_Init() == NFD_OKAY)
 		{

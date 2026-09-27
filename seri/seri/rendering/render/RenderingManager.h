@@ -94,6 +94,21 @@ namespace seri
 			_renderingManager->SetPolygonMode(polygonMode);
 		}
 
+		static void SetScissor(bool enabled, int x = 0, int y = 0, int width = 0, int height = 0)
+		{
+			_renderingManager->SetScissor(enabled, x, y, width, height);
+		}
+
+		static void SetState(const RenderState& state, bool force = false)
+		{
+			_renderCommandBuffer->SetState(state, force);
+		}
+
+		static void Draw(const DrawParams& draw, const std::shared_ptr<VertexArrayBase>& vao)
+		{
+			_renderCommandBuffer->Draw(draw, vao);
+		}
+
 		static void Init()
 		{
 			_renderCommandBuffer->Init();

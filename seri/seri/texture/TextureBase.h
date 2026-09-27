@@ -167,6 +167,8 @@ namespace seri
 
 		virtual void LoadCubeMap(const std::vector<std::string>& faces) = 0;
 
+		virtual void UpdateData(const void* data, int x, int y, int width, int height, int rowLength = 0) = 0;
+
 		int GetWidth() { return _width; }
 		int GetHeight() { return _height; }
 		int GetComponents() { return _components; }
@@ -177,6 +179,7 @@ namespace seri
 		static void UnloadTexture(void* image);
 		static void WriteTexture(const std::string& path, const void* data, int width, int height, int components, bool flip);
 
+		static void BindTex2D(int slot, uint32_t handle);
 		static void UnbindTex2D(int slot);
 		static std::shared_ptr<TextureBase> Create();
 

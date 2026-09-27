@@ -8,6 +8,7 @@ namespace seri
 	{
 		switch (type)
 		{
+			case ShaderDataType::ubyte4_type: return GL_UNSIGNED_BYTE;
 			case ShaderDataType::int_type: return GL_INT;
 			case ShaderDataType::int2_type: return GL_INT;
 			case ShaderDataType::int3_type: return GL_INT;
@@ -75,6 +76,7 @@ namespace seri
 
 			switch (element.type)
 			{
+				case ShaderDataType::ubyte4_type:
 				case ShaderDataType::int_type:
 				case ShaderDataType::int2_type:
 				case ShaderDataType::int3_type:

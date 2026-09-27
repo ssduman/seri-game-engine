@@ -156,6 +156,21 @@ namespace seri
 			Unbind();
 		}
 
+		void UpdateData(const void* data, int x, int y, int width, int height, int rowLength = 0) override
+		{
+			Bind();
+			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+			glPixelStorei(GL_UNPACK_ROW_LENGTH, rowLength);
+			glTexSubImage2D(_target, 0, x, y, width, height, _format, _dataType, data);
+			glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+			Unbind();
+		}
+
+		static void BindTex2DImpl(int slot, GLuint handle)
+		{
+			BindToSlot(slot, GL_TEXTURE_2D, handle);
+		}
+
 		static void UnbindTex2DImpl(int slot)
 		{
 			BindToSlot(slot, GL_TEXTURE_2D, 0);

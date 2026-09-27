@@ -41,6 +41,7 @@ namespace seri
 
 	enum class ShaderDataType
 	{
+		ubyte4_type,
 		int_type,
 		int2_type,
 		int3_type,
@@ -176,11 +177,12 @@ namespace seri
 		{
 			switch (type)
 			{
-				case ShaderDataType::int_type: return 4;
+				case ShaderDataType::ubyte4_type: return 1 * 4;
+				case ShaderDataType::int_type: return 4 * 1;
 				case ShaderDataType::int2_type: return 4 * 2;
 				case ShaderDataType::int3_type: return 4 * 3;
 				case ShaderDataType::int4_type: return 4 * 4;
-				case ShaderDataType::float_type: return 4;
+				case ShaderDataType::float_type: return 4 * 1;
 				case ShaderDataType::float2_type: return 4 * 2;
 				case ShaderDataType::float3_type: return 4 * 3;
 				case ShaderDataType::float4_type: return 4 * 4;
@@ -195,6 +197,7 @@ namespace seri
 		{
 			switch (type)
 			{
+				case ShaderDataType::ubyte4_type: return 4;
 				case ShaderDataType::int_type: return 1;
 				case ShaderDataType::int2_type: return 2;
 				case ShaderDataType::int3_type: return 3;

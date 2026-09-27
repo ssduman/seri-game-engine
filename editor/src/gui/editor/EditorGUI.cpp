@@ -31,7 +31,7 @@ namespace seri::editor
 
 		_titleBar.Init();
 
-		GUIBackend::Init();
+		GUIBackend::Init(GUIRendererBackend::imgui);
 	}
 
 	void EditorGUI::Update()

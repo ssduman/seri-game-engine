@@ -11,6 +11,7 @@
 #include <ImGuizmo.h>
 
 #include <memory>
+#include <stdexcept>
 #include <string>
 #include <vector>
 #include <unordered_map>

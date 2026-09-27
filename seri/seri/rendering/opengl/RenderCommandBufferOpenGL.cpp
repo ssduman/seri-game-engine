@@ -27,7 +27,7 @@ namespace seri
 				break;
 			case DrawMode::elements:
 				{
-					uint32_t indexCount = vao->GetIndexBuffer()->GetCount();
+					uint32_t indexCount = draw.count > 0 ? draw.count : vao->GetIndexBuffer()->GetCount();
 
 					_stats.triangles += indexCount / 3;
 

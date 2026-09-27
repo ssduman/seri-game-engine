@@ -49,6 +49,8 @@ namespace seri
 
 		virtual void SetPolygonMode(PolygonMode polygonMode) = 0;
 
+		virtual void SetScissor(bool enabled, int x = 0, int y = 0, int width = 0, int height = 0) = 0;
+
 		std::shared_ptr<FramebufferBase> mainRT{ nullptr };
 		std::shared_ptr<FramebufferBase> editorRT{ nullptr };
 		std::shared_ptr<FramebufferBase> gameRT{ nullptr };

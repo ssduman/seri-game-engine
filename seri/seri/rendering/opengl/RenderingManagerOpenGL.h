@@ -245,6 +245,19 @@ namespace seri
 			glPolygonMode(GL_FRONT_AND_BACK, GetPolygonMode(polygonMode));
 		}
 
+		void SetScissor(bool enabled, int x = 0, int y = 0, int width = 0, int height = 0) override
+		{
+			if (enabled)
+			{
+				glEnable(GL_SCISSOR_TEST);
+				glScissor(x, y, width, height);
+			}
+			else
+			{
+				glDisable(GL_SCISSOR_TEST);
+			}
+		}
+
 	protected:
 		void LoadGlad(std::unique_ptr<WindowManagerBase>& windowManager)
 		{
