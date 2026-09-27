@@ -1,12 +1,12 @@
 #include "Editorpch.h"
 
-#include "RunnerEditor.h"
+#include "Runner.h"
 
 int main(int argc, char* argv[])
 {
 	try
 	{
-		seri::editor::RunnerEditor{}(argc, argv);
+		seri::editor::Runner{}(argc, argv);
 	}
 	catch (const std::exception& ex)
 	{

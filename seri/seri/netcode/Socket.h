@@ -1,23 +1,13 @@
 #pragma once
 
-#include "seri/logging/Logger.h"
-
-#ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
-#endif
-
-#include <cstring>
-#include <winsock2.h>
-#include <ws2tcpip.h>
-
-#pragma comment(lib, "ws2_32.lib")
+#include <memory>
 
 namespace seri::netcode
 {
 	enum SocketType
 	{
-		udp = IPPROTO_UDP,
-		tcp = IPPROTO_TCP,
+		udp,
+		tcp,
 	};
 
 	struct RemoteEndpoint
@@ -29,145 +19,19 @@ namespace seri::netcode
 	class Socket
 	{
 	public:
-		Socket(SocketType st)
-		{
-			if (WSAStartup(MAKEWORD(2, 2), &_wsaData) != 0)
-			{
-				_success = false;
-				LIB_LOGGER(error, netcode) << "WSAStartup failed";
-				return;
-			}
+		virtual ~Socket() = default;
 
-			_sockfd = socket(AF_INET, SOCK_DGRAM, st);
-			if (_sockfd == INVALID_SOCKET)
-			{
-				LIB_LOGGER(error, netcode) << "socket creation failed";
-				WSACleanup();
-				return;
-			}
+		virtual bool Bind(RemoteEndpoint re) = 0;
 
-			static u_long mode = 1; // 1 = non-blocking
-			ioctlsocket(_sockfd, FIONBIO, &mode);
+		virtual bool Connect(RemoteEndpoint re) = 0;
 
-			_success = true;
-		}
+		virtual bool Available() = 0;
 
-		~Socket()
-		{
-			if (_success)
-			{
-				closesocket(_sockfd);
-				WSACleanup();
-			}
-		}
+		virtual void Listen(int maxListener = 1) = 0;
 
-		bool Bind(RemoteEndpoint re)
-		{
-			if (!_success)
-			{
-				return false;
-			}
+		virtual void SendToServer() = 0;
 
-			_serverAddr.sin_family = AF_INET;
-			_serverAddr.sin_port = htons(re.port);
-			_serverAddr.sin_addr.s_addr = INADDR_ANY; // inet_addr(re.ip);
-
-			InetPton(AF_INET, (const WCHAR*)re.ip, &_serverAddr.sin_addr.s_addr);
-
-			if (bind(_sockfd, (sockaddr*)&_serverAddr, sizeof(_serverAddr)) == SOCKET_ERROR)
-			{
-				_success = false;
-				LIB_LOGGER(error, netcode) << "bind failed";
-				closesocket(_sockfd);
-				WSACleanup();
-				return false;
-			}
-
-			LIB_LOGGER(info, netcode) << "server is running on port: " << re.port;
-
-			return true;
-		}
-
-		bool Connect(RemoteEndpoint re)
-		{
-			if (!_success)
-			{
-				return false;
-			}
-
-			_serverAddr.sin_family = AF_INET;
-			_serverAddr.sin_port = htons(re.port);
-
-			inet_pton(AF_INET, re.ip, &_serverAddr.sin_addr.s_addr);
-
-			LIB_LOGGER(info, netcode) << "client connected to port: " << re.port;
-
-			return true;
-		}
-
-		bool Available()
-		{
-			sockaddr_in clientAddr{};
-
-			char temp[1];
-			int clientLen = sizeof(clientAddr);
-			int res = recvfrom(_sockfd, temp, 1, MSG_PEEK, (sockaddr*)&clientAddr, &clientLen);
-			if (res == SOCKET_ERROR)
-			{
-				int err = WSAGetLastError();
-				return err == WSAEWOULDBLOCK ? false : true;
-			}
-			return true;
-		}
-
-		void Listen(int maxListener = 1)
-		{
-			sockaddr_in clientAddr{};
-
-			if (Available())
-			{
-				int clientLen = sizeof(clientAddr);
-				int recvLen = recvfrom(_sockfd, _buffer, sizeof(_buffer), 0, (sockaddr*)&clientAddr, &clientLen);
-				if (recvLen == SOCKET_ERROR)
-				{
-					LIB_LOGGER(info, netcode) << "recvfrom failed";
-					return;
-				}
-
-				char ipStr[INET_ADDRSTRLEN];
-				inet_ntop(AF_INET, &(clientAddr.sin_addr), ipStr, INET_ADDRSTRLEN);
-				int port = ntohs(clientAddr.sin_port);
-
-				LIB_LOGGER(info, netcode) << "message from: " << ipStr << ":" << port << ", received: " << recvLen;
-
-				Send(clientAddr);
-			}
-		}
-
-		void Send(const sockaddr_in& clientAddr)
-		{
-			std::string reply = "pong!";
-			int clientLen = sizeof(clientAddr);
-			sendto(_sockfd, reply.c_str(), reply.length(), 0, (sockaddr*)&clientAddr, clientLen);
-		}
-
-		void SendToServer()
-		{
-			std::string reply = "ping!";
-			int clientLen = sizeof(_serverAddr);
-			sendto(_sockfd, reply.c_str(), reply.length(), 0, (sockaddr*)&_serverAddr, clientLen);
-		}
-
-	private:
-		bool _success{ false };
-
-		WSADATA _wsaData;
-		SOCKET _sockfd{ 0 };
-
-		sockaddr_in _serverAddr{};
-
-		char _buffer[65536]{};
+		static std::unique_ptr<Socket> Create(SocketType st);
 
 	};
-
 }

@@ -26,6 +26,10 @@ Entities:
         MaterialAssetIDs:
           - 16756991584035094998
         CastShadow: true
+      ScriptComponent:
+        Scripts:
+          - Name: TestBehaviour
+            Enabled: true
   - Entity:
       IDComponent:
         ID: 7583628060710826251

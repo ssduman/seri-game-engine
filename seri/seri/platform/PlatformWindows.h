@@ -1,25 +1,23 @@
-#include "Seripch.h"
+#pragma once
 
-#include "seri/core/Seri.h"
-
-#if defined (SERI_USE_WINDOW_GLFW)
-
-#include "seri/window/WindowManagerGLFW.h"
+#include "seri/platform/Platform.h"
+#include "seri/logging/Logger.h"
 
 #include <windows.h>
+#include <timeapi.h>
 #include <dwmapi.h>
 
-#define GLFW_EXPOSE_NATIVE_WIN32
-#include <GLFW/glfw3native.h>
+#include <string>
 
+#pragma comment(lib, "winmm.lib")
 #pragma comment(lib, "user32.lib")
 #pragma comment(lib, "dwmapi.lib")
 
-namespace seri
+namespace seri::platform
 {
 	struct NativeTitleBarState
 	{
-		WindowManagerGLFW* windowManager{ nullptr };
+		std::function<bool(int x, int y)> hitTest;
 		WNDPROC prevWindowProc{ nullptr };
 	};
 
@@ -85,7 +83,7 @@ namespace seri
 					if (bottom) return HTBOTTOM;
 				}
 
-				if (state->windowManager->GetHitTestTitleBar(point.x, point.y))
+				if (state->hitTest && state->hitTest(point.x, point.y))
 				{
 					return HTCAPTION;
 				}
@@ -104,15 +102,61 @@ namespace seri
 		return CallWindowProcW(state->prevWindowProc, hwnd, msg, wParam, lParam);
 	}
 
-	void WindowManagerGLFW::EnableCustomTitleBarNative()
+	std::filesystem::path GetExecutablePath()
 	{
-		HWND hwnd = glfwGetWin32Window(_window);
-		if (!hwnd || GetWindowLongPtrW(hwnd, GWLP_USERDATA) != 0)
+		std::wstring buffer(32768, L'\0');
+		DWORD length = GetModuleFileNameW(nullptr, buffer.data(), static_cast<DWORD>(buffer.size()));
+		buffer.resize(length);
+		return std::filesystem::path{ buffer };
+	}
+
+	const char* GetSharedLibraryExtension()
+	{
+		return ".dll";
+	}
+
+	void BeginHighResolutionTimer()
+	{
+		timeBeginPeriod(1);
+	}
+
+	void EndHighResolutionTimer()
+	{
+		timeEndPeriod(1);
+	}
+
+	bool EnableConsoleColor()
+	{
+		HANDLE handle = GetStdHandle(STD_ERROR_HANDLE);
+		if (handle == nullptr || handle == INVALID_HANDLE_VALUE)
+		{
+			return false;
+		}
+
+		DWORD mode = 0;
+		if (!GetConsoleMode(handle, &mode))
+		{
+			return false;
+		}
+
+		return SetConsoleMode(handle, mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING) != 0;
+	}
+
+	void EnableCustomTitleBar(void* nativeWindow, const std::function<bool(int x, int y)>& hitTest)
+	{
+		HWND hwnd = static_cast<HWND>(nativeWindow);
+		if (!hwnd)
 		{
 			return;
 		}
 
-		auto state = new NativeTitleBarState{ this, reinterpret_cast<WNDPROC>(GetWindowLongPtrW(hwnd, GWLP_WNDPROC)) };
+		if (auto state = reinterpret_cast<NativeTitleBarState*>(GetWindowLongPtrW(hwnd, GWLP_USERDATA)))
+		{
+			state->hitTest = hitTest;
+			return;
+		}
+
+		auto state = new NativeTitleBarState{ hitTest, reinterpret_cast<WNDPROC>(GetWindowLongPtrW(hwnd, GWLP_WNDPROC)) };
 		SetWindowLongPtrW(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(state));
 		SetWindowLongPtrW(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(TitleBarWindowProc));
 
@@ -121,8 +165,6 @@ namespace seri
 
 		SetWindowPos(hwnd, nullptr, 0, 0, 0, 0, SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
 
-		LIB_LOGGER(info, window) << "custom title bar enabled";
+		LIB_LOGGER(info, platform) << "custom title bar enabled";
 	}
 }
-
-#endif

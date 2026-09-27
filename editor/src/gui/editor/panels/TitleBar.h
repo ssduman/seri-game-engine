@@ -22,6 +22,8 @@ namespace seri::editor
 
 		void ShowPlayControls();
 
+		void Build();
+
 		bool ShowButton(const char* id, float width, const ImVec4& hoveredColor, const ImVec4& activeColor);
 
 		std::shared_ptr<seri::TextureBase> _icon;

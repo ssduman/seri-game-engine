@@ -23,6 +23,8 @@ namespace seri
 
 		void BlitDepthTo(const std::shared_ptr<FramebufferBase>& target) override;
 
+		void BlitColorToScreen(uint32_t width, uint32_t height) override;
+
 		void Invalidate() override;
 
 		void Resize(uint32_t width, uint32_t height) override;

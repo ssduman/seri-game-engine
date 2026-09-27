@@ -1,6 +1,6 @@
 #pragma once
-#pragma warning(disable: 4100)
 
+#include "seri/util/Util.h"
 #include "seri/input/InputManager.h"
 #include "seri/window/WindowManagerBase.h"
 
@@ -8,6 +8,7 @@
 #include <SDL3/SDL_opengl.h>
 
 #include <string>
+#include <vector>
 #include <utility>
 #include <stdexcept>
 
@@ -85,8 +86,12 @@ namespace seri
 		std::pair<double, double> GetCursorPosition() override
 		{
 			float mouseXPosition, mouseYPosition;
-			SDL_GetMouseState(&mouseXPosition, &mouseYPosition);
-			return { mouseXPosition, mouseYPosition };
+			SDL_GetGlobalMouseState(&mouseXPosition, &mouseYPosition);
+
+			int windowXPosition, windowYPosition;
+			SDL_GetWindowPosition(_window, &windowXPosition, &windowYPosition);
+
+			return { mouseXPosition - windowXPosition, mouseYPosition - windowYPosition };
 		}
 
 		void SetCursorPosition(double xpos, double ypos) override
@@ -174,10 +179,6 @@ namespace seri
 						{
 							int w = event.window.data1;
 							int h = event.window.data2;
-
-							SetViewport(0, 0, w, h);
-
-							FireEvent(event::WindowResizeEventData{ w, h });
 
 							//LIB_LOGGER(info, window) << "sdl event: window resized: " << w << ", " << h;
 						}
@@ -315,12 +316,10 @@ namespace seri
 					case SDL_EVENT_KEY_DOWN:
 						{
 							int scancode = event.key.scancode;
-							int key = event.key.key;
 							int mods = event.key.mod;
-							bool down = event.key.down;
 							bool repeat = event.key.repeat;
 
-							KeyCode keyEnum = GetKeyCodeEnum(key);
+							KeyCode keyEnum = GetKeyCodeEnum(event.key.scancode);
 							InputAction actionEnum = repeat ? InputAction::repeat : InputAction::press;
 							std::vector<InputModifier> modsVector;
 							FillModsVector(mods, modsVector);
@@ -341,12 +340,9 @@ namespace seri
 					case SDL_EVENT_KEY_UP:
 						{
 							int scancode = event.key.scancode;
-							int key = event.key.key;
 							int mods = event.key.mod;
-							bool down = event.key.down;
-							bool repeat = event.key.repeat;
 
-							KeyCode keyEnum = GetKeyCodeEnum(key);
+							KeyCode keyEnum = GetKeyCodeEnum(event.key.scancode);
 							InputAction actionEnum = InputAction::release;
 							std::vector<InputModifier> modsVector;
 							FillModsVector(mods, modsVector);
@@ -366,7 +362,31 @@ namespace seri
 						break;
 					case SDL_EVENT_TEXT_INPUT:
 						{
-							LIB_LOGGER(info, window) << "sdl event: text input";
+							std::vector<uint32_t> codepoints;
+							Util::DecodeUTF8(event.text.text, codepoints);
+
+							for (uint32_t codepoint : codepoints)
+							{
+								std::vector<InputModifier> modsVector;
+								FillModsVector(SDL_GetModState(), modsVector);
+
+								FireEvent(event::CharacterEventData{ codepoint });
+								FireEvent(event::CharacterModsEventData{ codepoint, std::move(modsVector) });
+							}
+						}
+						break;
+					case SDL_EVENT_DROP_FILE:
+						{
+							_dropPaths.emplace_back(event.drop.data);
+						}
+						break;
+					case SDL_EVENT_DROP_COMPLETE:
+						{
+							if (!_dropPaths.empty())
+							{
+								FireEvent(event::WindowDropEventData{ std::move(_dropPaths) });
+								_dropPaths.clear();
+							}
 						}
 						break;
 					default:
@@ -404,7 +424,10 @@ namespace seri
 
 		const char* GetClipboard() override
 		{
-			return SDL_GetClipboardText();
+			char* text = SDL_GetClipboardText();
+			_clipboard = text ? text : "";
+			SDL_free(text);
+			return _clipboard.c_str();
 		}
 
 		void SetClipboard(const char* str) override
@@ -440,15 +463,28 @@ namespace seri
 			_context = SDL_GL_CreateContext(_window);
 			if (!_context)
 			{
-				LIB_LOGGER(error, window) << "sdl gl create context error: " + std::string(SDL_GetError());
-				SDL_DestroyWindow(_window);
-				SDL_Quit();
+				throw std::runtime_error("[window] sdl gl create context error: " + std::string(SDL_GetError()));
 			}
 		}
 
 		void SetCustomTitleBar(const TitleBarHitTestDelegate& titleBarHitTestFunc) override
 		{
 			_titleBarHitTestFunc = titleBarHitTestFunc;
+
+			SDL_WindowFlags flags = SDL_GetWindowFlags(_window);
+			if ((flags & SDL_WINDOW_BORDERLESS) == 0 && (flags & SDL_WINDOW_MAXIMIZED) == 0)
+			{
+				int top = 0, left = 0, bottom = 0, right = 0;
+				SDL_GetWindowBordersSize(_window, &top, &left, &bottom, &right);
+
+				int x, y, width, height;
+				SDL_GetWindowPosition(_window, &x, &y);
+				SDL_GetWindowSize(_window, &width, &height);
+
+				SDL_SetWindowBordered(_window, false);
+				SDL_SetWindowPosition(_window, x - left, y - top);
+				SDL_SetWindowSize(_window, width + left + right, height + top + bottom);
+			}
 
 			SDL_SetWindowBordered(_window, false);
 			SDL_SetWindowHitTest(_window,
@@ -566,44 +602,137 @@ namespace seri
 
 			if (!_window)
 			{
-				LIB_LOGGER(error, window) << "sdl window creating error: " + std::string(SDL_GetError());
-				SDL_Quit();
+				throw std::runtime_error("[window] sdl window creating error: " + std::string(SDL_GetError()));
 			}
+
+			SDL_GetWindowSizeInPixels(_window, &_windowProperties.windowWidth, &_windowProperties.windowHeight);
+
+			SDL_StartTextInput(_window);
 
 			LIB_LOGGER(info, window) << "sdl window created";
 		}
 
-		KeyCode GetKeyCodeEnum(int key)
+		KeyCode GetKeyCodeEnum(SDL_Scancode scancode)
 		{
-			switch (key)
+			switch (scancode)
 			{
-				case SDLK_A: return KeyCode::a;
-				case SDLK_B: return KeyCode::b;
-				case SDLK_C: return KeyCode::c;
-				case SDLK_D: return KeyCode::d;
-				case SDLK_E: return KeyCode::e;
-				case SDLK_F: return KeyCode::f;
-				case SDLK_G: return KeyCode::g;
-				case SDLK_H: return KeyCode::h;
-				case SDLK_I: return KeyCode::i;
-				case SDLK_J: return KeyCode::j;
-				case SDLK_K: return KeyCode::k;
-				case SDLK_L: return KeyCode::l;
-				case SDLK_M: return KeyCode::m;
-				case SDLK_N: return KeyCode::n;
-				case SDLK_O: return KeyCode::o;
-				case SDLK_P: return KeyCode::p;
-				case SDLK_Q: return KeyCode::q;
-				case SDLK_R: return KeyCode::r;
-				case SDLK_S: return KeyCode::s;
-				case SDLK_T: return KeyCode::t;
-				case SDLK_U: return KeyCode::u;
-				case SDLK_V: return KeyCode::v;
-				case SDLK_W: return KeyCode::w;
-				case SDLK_X: return KeyCode::x;
-				case SDLK_Y: return KeyCode::x;
-				case SDLK_Z: return KeyCode::z;
-				case SDLK_ESCAPE: return KeyCode::escape;
+				case SDL_SCANCODE_UP: return KeyCode::up;
+				case SDL_SCANCODE_DOWN: return KeyCode::down;
+				case SDL_SCANCODE_LEFT: return KeyCode::left;
+				case SDL_SCANCODE_RIGHT: return KeyCode::right;
+				case SDL_SCANCODE_0: return KeyCode::number_0;
+				case SDL_SCANCODE_1: return KeyCode::number_1;
+				case SDL_SCANCODE_2: return KeyCode::number_2;
+				case SDL_SCANCODE_3: return KeyCode::number_3;
+				case SDL_SCANCODE_4: return KeyCode::number_4;
+				case SDL_SCANCODE_5: return KeyCode::number_5;
+				case SDL_SCANCODE_6: return KeyCode::number_6;
+				case SDL_SCANCODE_7: return KeyCode::number_7;
+				case SDL_SCANCODE_8: return KeyCode::number_8;
+				case SDL_SCANCODE_9: return KeyCode::number_9;
+				case SDL_SCANCODE_A: return KeyCode::a;
+				case SDL_SCANCODE_B: return KeyCode::b;
+				case SDL_SCANCODE_C: return KeyCode::c;
+				case SDL_SCANCODE_D: return KeyCode::d;
+				case SDL_SCANCODE_E: return KeyCode::e;
+				case SDL_SCANCODE_F: return KeyCode::f;
+				case SDL_SCANCODE_G: return KeyCode::g;
+				case SDL_SCANCODE_H: return KeyCode::h;
+				case SDL_SCANCODE_I: return KeyCode::i;
+				case SDL_SCANCODE_J: return KeyCode::j;
+				case SDL_SCANCODE_K: return KeyCode::k;
+				case SDL_SCANCODE_L: return KeyCode::l;
+				case SDL_SCANCODE_M: return KeyCode::m;
+				case SDL_SCANCODE_N: return KeyCode::n;
+				case SDL_SCANCODE_O: return KeyCode::o;
+				case SDL_SCANCODE_P: return KeyCode::p;
+				case SDL_SCANCODE_Q: return KeyCode::q;
+				case SDL_SCANCODE_R: return KeyCode::r;
+				case SDL_SCANCODE_S: return KeyCode::s;
+				case SDL_SCANCODE_T: return KeyCode::t;
+				case SDL_SCANCODE_U: return KeyCode::u;
+				case SDL_SCANCODE_V: return KeyCode::v;
+				case SDL_SCANCODE_W: return KeyCode::w;
+				case SDL_SCANCODE_X: return KeyCode::x;
+				case SDL_SCANCODE_Y: return KeyCode::y;
+				case SDL_SCANCODE_Z: return KeyCode::z;
+				case SDL_SCANCODE_COMMA: return KeyCode::comma;
+				case SDL_SCANCODE_EQUALS: return KeyCode::equal;
+				case SDL_SCANCODE_MINUS: return KeyCode::minus;
+				case SDL_SCANCODE_SLASH: return KeyCode::slash;
+				case SDL_SCANCODE_PERIOD: return KeyCode::period;
+				case SDL_SCANCODE_SEMICOLON: return KeyCode::semicolon;
+				case SDL_SCANCODE_BACKSLASH: return KeyCode::backslash;
+				case SDL_SCANCODE_APOSTROPHE: return KeyCode::apostrophe;
+				case SDL_SCANCODE_GRAVE: return KeyCode::grave_accent;
+				case SDL_SCANCODE_LEFTBRACKET: return KeyCode::left_bracket;
+				case SDL_SCANCODE_RIGHTBRACKET: return KeyCode::right_bracket;
+				case SDL_SCANCODE_END: return KeyCode::end;
+				case SDL_SCANCODE_TAB: return KeyCode::tab;
+				case SDL_SCANCODE_HOME: return KeyCode::home;
+				case SDL_SCANCODE_APPLICATION: return KeyCode::menu;
+				case SDL_SCANCODE_DELETE: return KeyCode::del;
+				case SDL_SCANCODE_PAUSE: return KeyCode::pause;
+				case SDL_SCANCODE_RETURN: return KeyCode::enter;
+				case SDL_SCANCODE_SPACE: return KeyCode::space;
+				case SDL_SCANCODE_INSERT: return KeyCode::insert;
+				case SDL_SCANCODE_ESCAPE: return KeyCode::escape;
+				case SDL_SCANCODE_PAGEUP: return KeyCode::page_up;
+				case SDL_SCANCODE_NUMLOCKCLEAR: return KeyCode::num_lock;
+				case SDL_SCANCODE_PAGEDOWN: return KeyCode::page_down;
+				case SDL_SCANCODE_CAPSLOCK: return KeyCode::caps_lock;
+				case SDL_SCANCODE_BACKSPACE: return KeyCode::backspace;
+				case SDL_SCANCODE_SCROLLLOCK: return KeyCode::scroll_lock;
+				case SDL_SCANCODE_PRINTSCREEN: return KeyCode::print_screen;
+				case SDL_SCANCODE_LALT: return KeyCode::left_alt;
+				case SDL_SCANCODE_LSHIFT: return KeyCode::left_shift;
+				case SDL_SCANCODE_LGUI: return KeyCode::left_super;
+				case SDL_SCANCODE_LCTRL: return KeyCode::left_control;
+				case SDL_SCANCODE_RALT: return KeyCode::right_alt;
+				case SDL_SCANCODE_RSHIFT: return KeyCode::right_shift;
+				case SDL_SCANCODE_RGUI: return KeyCode::right_super;
+				case SDL_SCANCODE_RCTRL: return KeyCode::right_control;
+				case SDL_SCANCODE_F1: return KeyCode::f1;
+				case SDL_SCANCODE_F2: return KeyCode::f2;
+				case SDL_SCANCODE_F3: return KeyCode::f3;
+				case SDL_SCANCODE_F4: return KeyCode::f4;
+				case SDL_SCANCODE_F5: return KeyCode::f5;
+				case SDL_SCANCODE_F6: return KeyCode::f6;
+				case SDL_SCANCODE_F7: return KeyCode::f7;
+				case SDL_SCANCODE_F8: return KeyCode::f8;
+				case SDL_SCANCODE_F9: return KeyCode::f9;
+				case SDL_SCANCODE_F10: return KeyCode::f10;
+				case SDL_SCANCODE_F11: return KeyCode::f11;
+				case SDL_SCANCODE_F12: return KeyCode::f12;
+				case SDL_SCANCODE_F13: return KeyCode::f13;
+				case SDL_SCANCODE_F14: return KeyCode::f14;
+				case SDL_SCANCODE_F15: return KeyCode::f15;
+				case SDL_SCANCODE_F16: return KeyCode::f16;
+				case SDL_SCANCODE_F17: return KeyCode::f17;
+				case SDL_SCANCODE_F18: return KeyCode::f18;
+				case SDL_SCANCODE_F19: return KeyCode::f19;
+				case SDL_SCANCODE_F20: return KeyCode::f20;
+				case SDL_SCANCODE_F21: return KeyCode::f21;
+				case SDL_SCANCODE_F22: return KeyCode::f22;
+				case SDL_SCANCODE_F23: return KeyCode::f23;
+				case SDL_SCANCODE_F24: return KeyCode::f24;
+				case SDL_SCANCODE_KP_0: return KeyCode::kp_0;
+				case SDL_SCANCODE_KP_1: return KeyCode::kp_1;
+				case SDL_SCANCODE_KP_2: return KeyCode::kp_2;
+				case SDL_SCANCODE_KP_3: return KeyCode::kp_3;
+				case SDL_SCANCODE_KP_4: return KeyCode::kp_4;
+				case SDL_SCANCODE_KP_5: return KeyCode::kp_5;
+				case SDL_SCANCODE_KP_6: return KeyCode::kp_6;
+				case SDL_SCANCODE_KP_7: return KeyCode::kp_7;
+				case SDL_SCANCODE_KP_8: return KeyCode::kp_8;
+				case SDL_SCANCODE_KP_9: return KeyCode::kp_9;
+				case SDL_SCANCODE_KP_PLUS: return KeyCode::kp_add;
+				case SDL_SCANCODE_KP_ENTER: return KeyCode::kp_enter;
+				case SDL_SCANCODE_KP_EQUALS: return KeyCode::kp_equal;
+				case SDL_SCANCODE_KP_DIVIDE: return KeyCode::kp_divide;
+				case SDL_SCANCODE_KP_PERIOD: return KeyCode::kp_decimal;
+				case SDL_SCANCODE_KP_MULTIPLY: return KeyCode::kp_multiply;
+				case SDL_SCANCODE_KP_MINUS: return KeyCode::kp_subtract;
 				default: return KeyCode::unknown;
 			}
 		}
@@ -642,11 +771,15 @@ namespace seri
 
 		SDL_Window* _window{ nullptr };
 
-		SDL_GLContext _context;
+		SDL_GLContext _context{ nullptr };
 
 		bool _shouldClose{ false };
 
 		TitleBarHitTestDelegate _titleBarHitTestFunc;
+
+		std::string _clipboard;
+
+		std::vector<std::string> _dropPaths;
 
 	};
 }

@@ -54,6 +54,8 @@ namespace seri
 
 		virtual void BlitDepthTo(const std::shared_ptr<FramebufferBase>& target) = 0;
 
+		virtual void BlitColorToScreen(uint32_t width, uint32_t height) = 0;
+
 		uint32_t GetWidth()
 		{
 			return _desc.width;

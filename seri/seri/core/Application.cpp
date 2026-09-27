@@ -3,32 +3,20 @@
 #include "seri/core/Application.h"
 #include "seri/scene/SceneManager.h"
 #include "seri/window/WindowManager.h"
+#include "seri/platform/Platform.h"
 
 #include <thread>
-
-#ifdef SERI_WINDOWS
-
-#include <windows.h>
-#include <timeapi.h>
-
-#pragma comment(lib, "winmm.lib")
-
-#endif
 
 namespace seri
 {
 	Application::Application()
 	{
-#ifdef SERI_WINDOWS
-		timeBeginPeriod(1);
-#endif
+		platform::BeginHighResolutionTimer();
 	}
 
 	Application::~Application()
 	{
-#ifdef SERI_WINDOWS
-		timeEndPeriod(1);
-#endif
+		platform::EndHighResolutionTimer();
 	}
 
 	void Application::WaitForTargetFrameRate()

@@ -1,10 +1,16 @@
 #pragma once
-#pragma warning(disable: 4100)
 
+#include "seri/core/Core.h"
 #include "seri/input/InputManager.h"
 #include "seri/window/WindowManagerBase.h"
+#include "seri/platform/Platform.h"
+
+#if defined (SERI_WINDOWS)
+#define GLFW_EXPOSE_NATIVE_WIN32
+#endif
 
 #include <GLFW/glfw3.h>
+#include <GLFW/glfw3native.h>
 
 #include <utility>
 #include <stdexcept>
@@ -165,9 +171,7 @@ namespace seri
 
 		void SetCustomTitleBar(const TitleBarHitTestDelegate& titleBarHitTestFunc) override
 		{
-			_titleBarHitTestFunc = titleBarHitTestFunc;
-
-			EnableCustomTitleBarNative();
+			platform::EnableCustomTitleBar(GetNativeWindowHandle(), titleBarHitTestFunc);
 		}
 
 		void SetWindowIcon(int width, int height, const unsigned char* pixels) override
@@ -206,13 +210,15 @@ namespace seri
 			return glfwGetWindowAttrib(_window, GLFW_MAXIMIZED) == GLFW_TRUE;
 		}
 
-		bool GetHitTestTitleBar(int x, int y)
-		{
-			return _titleBarHitTestFunc && _titleBarHitTestFunc(x, y);
-		}
-
 	private:
-		void EnableCustomTitleBarNative();
+		void* GetNativeWindowHandle()
+		{
+#if defined (SERI_WINDOWS)
+			return glfwGetWin32Window(_window);
+#else
+			static_assert(false, "native window handle not supported on this platform");
+#endif
+		}
 
 		void InitGLFW()
 		{
@@ -226,6 +232,8 @@ namespace seri
 
 		void CreateWindowGLFW()
 		{
+			SetOpenGLHints();
+
 			glfwWindowHint(GLFW_DEPTH_BITS, 24);
 			glfwWindowHint(GLFW_STENCIL_BITS, 8);
 
@@ -237,8 +245,19 @@ namespace seri
 					throw std::runtime_error("[window] getting glfw monitor failed");
 				}
 
-				int monXPos, monYPos;
-				glfwGetMonitorWorkarea(glfwMonitor, &monXPos, &monYPos, &_windowProperties.windowWidth, &_windowProperties.windowHeight);
+				const GLFWvidmode* videoMode = glfwGetVideoMode(glfwMonitor);
+				if (!videoMode)
+				{
+					throw std::runtime_error("[window] getting glfw video mode failed");
+				}
+
+				glfwWindowHint(GLFW_RED_BITS, videoMode->redBits);
+				glfwWindowHint(GLFW_GREEN_BITS, videoMode->greenBits);
+				glfwWindowHint(GLFW_BLUE_BITS, videoMode->blueBits);
+				glfwWindowHint(GLFW_REFRESH_RATE, videoMode->refreshRate);
+
+				_windowProperties.windowWidth = videoMode->width;
+				_windowProperties.windowHeight = videoMode->height;
 				_window = glfwCreateWindow(_windowProperties.windowWidth, _windowProperties.windowHeight, _windowProperties.windowTitle, glfwMonitor, nullptr);
 			}
 			else
@@ -476,6 +495,20 @@ namespace seri
 		{
 			switch (key)
 			{
+				case GLFW_KEY_UP: return KeyCode::up;
+				case GLFW_KEY_DOWN: return KeyCode::down;
+				case GLFW_KEY_LEFT: return KeyCode::left;
+				case GLFW_KEY_RIGHT: return KeyCode::right;
+				case GLFW_KEY_0: return KeyCode::number_0;
+				case GLFW_KEY_1: return KeyCode::number_1;
+				case GLFW_KEY_2: return KeyCode::number_2;
+				case GLFW_KEY_3: return KeyCode::number_3;
+				case GLFW_KEY_4: return KeyCode::number_4;
+				case GLFW_KEY_5: return KeyCode::number_5;
+				case GLFW_KEY_6: return KeyCode::number_6;
+				case GLFW_KEY_7: return KeyCode::number_7;
+				case GLFW_KEY_8: return KeyCode::number_8;
+				case GLFW_KEY_9: return KeyCode::number_9;
 				case GLFW_KEY_A: return KeyCode::a;
 				case GLFW_KEY_B: return KeyCode::b;
 				case GLFW_KEY_C: return KeyCode::c;
@@ -500,9 +533,85 @@ namespace seri
 				case GLFW_KEY_V: return KeyCode::v;
 				case GLFW_KEY_W: return KeyCode::w;
 				case GLFW_KEY_X: return KeyCode::x;
-				case GLFW_KEY_Y: return KeyCode::x;
+				case GLFW_KEY_Y: return KeyCode::y;
 				case GLFW_KEY_Z: return KeyCode::z;
+				case GLFW_KEY_COMMA: return KeyCode::comma;
+				case GLFW_KEY_EQUAL: return KeyCode::equal;
+				case GLFW_KEY_MINUS: return KeyCode::minus;
+				case GLFW_KEY_SLASH: return KeyCode::slash;
+				case GLFW_KEY_PERIOD: return KeyCode::period;
+				case GLFW_KEY_SEMICOLON: return KeyCode::semicolon;
+				case GLFW_KEY_BACKSLASH: return KeyCode::backslash;
+				case GLFW_KEY_APOSTROPHE: return KeyCode::apostrophe;
+				case GLFW_KEY_GRAVE_ACCENT: return KeyCode::grave_accent;
+				case GLFW_KEY_LEFT_BRACKET: return KeyCode::left_bracket;
+				case GLFW_KEY_RIGHT_BRACKET: return KeyCode::right_bracket;
+				case GLFW_KEY_END: return KeyCode::end;
+				case GLFW_KEY_TAB: return KeyCode::tab;
+				case GLFW_KEY_HOME: return KeyCode::home;
+				case GLFW_KEY_MENU: return KeyCode::menu;
+				case GLFW_KEY_DELETE: return KeyCode::del;
+				case GLFW_KEY_PAUSE: return KeyCode::pause;
+				case GLFW_KEY_ENTER: return KeyCode::enter;
+				case GLFW_KEY_SPACE: return KeyCode::space;
+				case GLFW_KEY_INSERT: return KeyCode::insert;
 				case GLFW_KEY_ESCAPE: return KeyCode::escape;
+				case GLFW_KEY_PAGE_UP: return KeyCode::page_up;
+				case GLFW_KEY_NUM_LOCK: return KeyCode::num_lock;
+				case GLFW_KEY_PAGE_DOWN: return KeyCode::page_down;
+				case GLFW_KEY_CAPS_LOCK: return KeyCode::caps_lock;
+				case GLFW_KEY_BACKSPACE: return KeyCode::backspace;
+				case GLFW_KEY_SCROLL_LOCK: return KeyCode::scroll_lock;
+				case GLFW_KEY_PRINT_SCREEN: return KeyCode::print_screen;
+				case GLFW_KEY_LEFT_ALT: return KeyCode::left_alt;
+				case GLFW_KEY_LEFT_SHIFT: return KeyCode::left_shift;
+				case GLFW_KEY_LEFT_SUPER: return KeyCode::left_super;
+				case GLFW_KEY_LEFT_CONTROL: return KeyCode::left_control;
+				case GLFW_KEY_RIGHT_ALT: return KeyCode::right_alt;
+				case GLFW_KEY_RIGHT_SHIFT: return KeyCode::right_shift;
+				case GLFW_KEY_RIGHT_SUPER: return KeyCode::right_super;
+				case GLFW_KEY_RIGHT_CONTROL: return KeyCode::right_control;
+				case GLFW_KEY_F1: return KeyCode::f1;
+				case GLFW_KEY_F2: return KeyCode::f2;
+				case GLFW_KEY_F3: return KeyCode::f3;
+				case GLFW_KEY_F4: return KeyCode::f4;
+				case GLFW_KEY_F5: return KeyCode::f5;
+				case GLFW_KEY_F6: return KeyCode::f6;
+				case GLFW_KEY_F7: return KeyCode::f7;
+				case GLFW_KEY_F8: return KeyCode::f8;
+				case GLFW_KEY_F9: return KeyCode::f9;
+				case GLFW_KEY_F10: return KeyCode::f10;
+				case GLFW_KEY_F11: return KeyCode::f11;
+				case GLFW_KEY_F12: return KeyCode::f12;
+				case GLFW_KEY_F13: return KeyCode::f13;
+				case GLFW_KEY_F14: return KeyCode::f14;
+				case GLFW_KEY_F15: return KeyCode::f15;
+				case GLFW_KEY_F16: return KeyCode::f16;
+				case GLFW_KEY_F17: return KeyCode::f17;
+				case GLFW_KEY_F18: return KeyCode::f18;
+				case GLFW_KEY_F19: return KeyCode::f19;
+				case GLFW_KEY_F20: return KeyCode::f20;
+				case GLFW_KEY_F21: return KeyCode::f21;
+				case GLFW_KEY_F22: return KeyCode::f22;
+				case GLFW_KEY_F23: return KeyCode::f23;
+				case GLFW_KEY_F24: return KeyCode::f24;
+				case GLFW_KEY_KP_0: return KeyCode::kp_0;
+				case GLFW_KEY_KP_1: return KeyCode::kp_1;
+				case GLFW_KEY_KP_2: return KeyCode::kp_2;
+				case GLFW_KEY_KP_3: return KeyCode::kp_3;
+				case GLFW_KEY_KP_4: return KeyCode::kp_4;
+				case GLFW_KEY_KP_5: return KeyCode::kp_5;
+				case GLFW_KEY_KP_6: return KeyCode::kp_6;
+				case GLFW_KEY_KP_7: return KeyCode::kp_7;
+				case GLFW_KEY_KP_8: return KeyCode::kp_8;
+				case GLFW_KEY_KP_9: return KeyCode::kp_9;
+				case GLFW_KEY_KP_ADD: return KeyCode::kp_add;
+				case GLFW_KEY_KP_ENTER: return KeyCode::kp_enter;
+				case GLFW_KEY_KP_EQUAL: return KeyCode::kp_equal;
+				case GLFW_KEY_KP_DIVIDE: return KeyCode::kp_divide;
+				case GLFW_KEY_KP_DECIMAL: return KeyCode::kp_decimal;
+				case GLFW_KEY_KP_MULTIPLY: return KeyCode::kp_multiply;
+				case GLFW_KEY_KP_SUBTRACT: return KeyCode::kp_subtract;
 				default: return KeyCode::unknown;
 			}
 		}
@@ -564,8 +673,6 @@ namespace seri
 		}
 
 		GLFWwindow* _window{ nullptr };
-
-		TitleBarHitTestDelegate _titleBarHitTestFunc;
 
 	};
 }

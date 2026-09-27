@@ -271,9 +271,9 @@ namespace seri::editor
 				instancedTRSs.push_back(seri::Util::GetTRS({ 1.0f + i % 20, i / 20, -1.0f }, { 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f }));
 			}
 
-			//udpSocketServer = std::make_unique<seri::netcode::Socket>(seri::netcode::SocketType::udp);
+			//udpSocketServer = seri::netcode::Socket::Create(seri::netcode::SocketType::udp);
 			//udpSocketServer->Bind({ "localhost", 5200 });
-			//udpSocketClient = std::make_unique<seri::netcode::Socket>(seri::netcode::SocketType::udp);
+			//udpSocketClient = seri::netcode::Socket::Create(seri::netcode::SocketType::udp);
 			//udpSocketClient->Connect({ "127.0.0.1", 5200 });
 		}
 

@@ -1,8 +1,8 @@
 #include "Seripch.h"
 
-#include "seri/core/Core.h"
 #include "seri/logging/LogBuffer.h"
 #include "seri/logging/Logger.h"
+#include "seri/platform/Platform.h"
 
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/log/attributes/attribute_set.hpp>
@@ -14,10 +14,6 @@
 #include <boost/log/expressions.hpp>
 #include <boost/log/utility/setup/console.hpp>
 #include <boost/make_shared.hpp>
-
-#ifdef SERI_WINDOWS
-#include <windows.h>
-#endif
 
 namespace seri
 {
@@ -167,28 +163,7 @@ namespace seri
 
 	void Logger::EnableColor()
 	{
-		GetInstance()._colorEnabled = false;
-
-#ifdef SERI_WINDOWS
-		HANDLE handle = GetStdHandle(STD_ERROR_HANDLE);
-		if (handle == nullptr || handle == INVALID_HANDLE_VALUE)
-		{
-			return;
-		}
-
-		DWORD mode = 0;
-		if (!GetConsoleMode(handle, &mode))
-		{
-			return;
-		}
-
-		if (!SetConsoleMode(handle, mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING))
-		{
-			return;
-		}
-
-		GetInstance()._colorEnabled = true;
-#endif
+		GetInstance()._colorEnabled = platform::EnableConsoleColor();
 	}
 
 	const char* Logger::ToColor(LogLevel level)

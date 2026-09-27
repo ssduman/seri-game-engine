@@ -5,6 +5,10 @@ IDComponent:
 SceneComponent:
   Version: 0.1
   IsActive: true
+  Environment:
+    BackgroundMode: 1
+    BackgroundColor: [0.2, 0.2, 0.2]
+    SkyboxAssetID: 0
 Entities:
   - Entity:
       IDComponent:
@@ -47,15 +51,15 @@ Entities:
         Rotation: [0, 0, 0]
         Scale: [1, 1, 1]
         IsActive: true
+      CanvasComponent:
+        Mode: 0
+        SortOrder: 0
       RectComponent:
         AnchorMin: [0, 0]
         AnchorMax: [1, 1]
         Pivot: [0.5, 0.5]
         AnchoredPosition: [0, 0]
         SizeDelta: [0, 0]
-      CanvasComponent:
-        Mode: 0
-        SortOrder: 0
   - Entity:
       IDComponent:
         ID: 8025485271909639343
@@ -157,17 +161,17 @@ Entities:
         Pivot: [0.5, 0.5]
         AnchoredPosition: [0, -30]
         SizeDelta: [240, 56]
-      SpriteRendererComponent:
-        TextureAssetID: 9403479199953891817
-        Color: [0.3, 0.78, 0.4, 1]
-        FlipX: false
-        FlipY: false
       ButtonComponent:
         Interactable: true
         NormalColor: [1, 1, 1, 1]
         HoverColor: [0.85, 0.85, 0.85, 1]
         PressedColor: [0.65, 0.65, 0.65, 1]
         DisabledColor: [0.5, 0.5, 0.5, 0.5]
+      SpriteRendererComponent:
+        TextureAssetID: 9403479199953891817
+        Color: [0.3, 0.78, 0.4, 1]
+        FlipX: false
+        FlipY: false
       ScriptComponent:
         Scripts:
           - Name: MenuButton
@@ -214,17 +218,17 @@ Entities:
         Pivot: [0.5, 0.5]
         AnchoredPosition: [0, -100]
         SizeDelta: [240, 56]
-      SpriteRendererComponent:
-        TextureAssetID: 9403479199953891817
-        Color: [0.55, 0.58, 0.63, 1]
-        FlipX: false
-        FlipY: false
       ButtonComponent:
         Interactable: true
         NormalColor: [1, 1, 1, 1]
         HoverColor: [0.85, 0.85, 0.85, 1]
         PressedColor: [0.65, 0.65, 0.65, 1]
         DisabledColor: [0.5, 0.5, 0.5, 0.5]
+      SpriteRendererComponent:
+        TextureAssetID: 9403479199953891817
+        Color: [0.55, 0.58, 0.63, 1]
+        FlipX: false
+        FlipY: false
       ScriptComponent:
         Scripts:
           - Name: MenuButton
@@ -513,17 +517,17 @@ Entities:
         Pivot: [0.5, 0.5]
         AnchoredPosition: [0, -60]
         SizeDelta: [240, 56]
-      SpriteRendererComponent:
-        TextureAssetID: 9403479199953891817
-        Color: [0.3, 0.78, 0.4, 1]
-        FlipX: false
-        FlipY: false
       ButtonComponent:
         Interactable: true
         NormalColor: [1, 1, 1, 1]
         HoverColor: [0.85, 0.85, 0.85, 1]
         PressedColor: [0.65, 0.65, 0.65, 1]
         DisabledColor: [0.5, 0.5, 0.5, 0.5]
+      SpriteRendererComponent:
+        TextureAssetID: 9403479199953891817
+        Color: [0.3, 0.78, 0.4, 1]
+        FlipX: false
+        FlipY: false
       ScriptComponent:
         Scripts:
           - Name: MenuButton
@@ -570,17 +574,17 @@ Entities:
         Pivot: [0.5, 0.5]
         AnchoredPosition: [0, -130]
         SizeDelta: [240, 56]
-      SpriteRendererComponent:
-        TextureAssetID: 9403479199953891817
-        Color: [0.55, 0.58, 0.63, 1]
-        FlipX: false
-        FlipY: false
       ButtonComponent:
         Interactable: true
         NormalColor: [1, 1, 1, 1]
         HoverColor: [0.85, 0.85, 0.85, 1]
         PressedColor: [0.65, 0.65, 0.65, 1]
         DisabledColor: [0.5, 0.5, 0.5, 0.5]
+      SpriteRendererComponent:
+        TextureAssetID: 9403479199953891817
+        Color: [0.55, 0.58, 0.63, 1]
+        FlipX: false
+        FlipY: false
       ScriptComponent:
         Scripts:
           - Name: MenuButton

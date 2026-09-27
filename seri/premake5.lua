@@ -35,6 +35,7 @@ project "Seri"
   }
 
   disablewarnings {
+    "4100",
     "4244",
     "4267",
     "4312",

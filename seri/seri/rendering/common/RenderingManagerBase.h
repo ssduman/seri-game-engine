@@ -73,6 +73,8 @@ namespace seri
 
 		bool gameViewVisible{ true };
 
+		bool editorViewVisible{ true };
+
 	protected:
 		RenderingProperties _renderingProperties;
 

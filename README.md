@@ -1,8 +1,8 @@
-# <img src="editor/assets/icons/seri.png" alt="seri" height="32" align="absmiddle"> Seri Game Engine #
+# <img src="editor/assets/icons/seri.png" alt="seri" height="40" align="absmiddle"> Seri Game Engine
 
-* A 2D/3D OpenGL Game Engine.
+* A game engine
 
-## Roadmap ##
+## Roadmap
 
 * [X] Entity Component System
 * [X] Model Loading and Skeletal Animation
@@ -16,18 +16,18 @@
 * [X] Scripting
 * [X] Editor and Launcher
 * [X] Project System
+* [X] Build and Packaging
 * [ ] Post Process
 * [ ] Particles
-* [ ] Build and Packaging
 * [ ] NetCode
 * [ ] Linux Support
 * [ ] DirectX and Vulkan Support
 
-## Install ##
+## Install
 
 * See [Install](INSTALL.md)
 
-## Images ##
+## Images
 <table>
     <tr>
         <td align="center">

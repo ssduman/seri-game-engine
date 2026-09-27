@@ -4,6 +4,7 @@
 
 #include "gui/editor/panels/TitleBar.h"
 #include "gui/common/GUIWidgets.h"
+#include "project/ProjectBuilder.h"
 
 namespace seri::editor
 {
@@ -106,8 +107,10 @@ namespace seri::editor
 	{
 		if (ImGui::BeginMenu("File"))
 		{
-			if (ImGui::MenuItem("Noop", "Noop"))
+			bool canBuild = seri::scene::SceneManager::GetState() == seri::scene::SceneState::edit;
+			if (ImGui::MenuItem("Build", nullptr, false, canBuild))
 			{
+				Build();
 			}
 
 			ImGui::EndMenu();
@@ -327,6 +330,23 @@ namespace seri::editor
 		);
 
 		drawList->AddText(textPos, ImGui::GetColorU32(ImGuiCol_Text), stateText);
+	}
+
+	void TitleBar::Build()
+	{
+		std::filesystem::path location;
+		if (!ProjectBuilder::PickLocation(location))
+		{
+			return;
+		}
+
+		Save();
+
+		std::string error;
+		if (!ProjectBuilder::Build(location, error))
+		{
+			LIB_LOGGER(error, build) << "build failed: " << error;
+		}
 	}
 
 	bool TitleBar::ShowButton(const char* id, float width, const ImVec4& hoveredColor, const ImVec4& activeColor)

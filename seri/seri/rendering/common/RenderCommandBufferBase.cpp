@@ -66,12 +66,16 @@ namespace seri
 
 		_frameGraph.Clear();
 		_frameGraph.AddPass(passShadow);
-		_frameGraph.AddPass(passSkybox);
-		_frameGraph.AddPass(passOpaque);
-		_frameGraph.AddPass(passTransparent);
-		_frameGraph.AddPass(passPost);
-		_frameGraph.AddPass(passDebug);
-		_frameGraph.AddPass(passUI);
+
+		if (seri::RenderingManager::GetEditorViewVisible())
+		{
+			_frameGraph.AddPass(passSkybox);
+			_frameGraph.AddPass(passOpaque);
+			_frameGraph.AddPass(passTransparent);
+			_frameGraph.AddPass(passPost);
+			_frameGraph.AddPass(passDebug);
+			_frameGraph.AddPass(passUI);
+		}
 
 		if (runtimeCamera == nullptr || !seri::RenderingManager::GetGameViewVisible())
 		{

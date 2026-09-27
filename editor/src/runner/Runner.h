@@ -1,6 +1,8 @@
 #pragma once
 
 #include <seri/core/Seri.h>
+#include <seri/layer/PlayerLayer.h>
+#include <seri/platform/Platform.h>
 #include <seri/project/ProjectManager.h>
 #include <seri/profiling/Profiler.h>
 
@@ -11,16 +13,33 @@
 
 namespace seri::editor
 {
-	class RunnerEditor : public seri::IRunner
+	class Runner : public seri::IRunner
 	{
 	public:
-		RunnerEditor() = default;
-
-		~RunnerEditor() override = default;
+		Runner() = default;
+		~Runner() override = default;
 
 		void operator()(int argc, char* argv[])
 		{
-			InitPlatform();
+			seri::LoggerConfig loggerConfig;
+			loggerConfig.level = seri::LogLevel::info;
+			seri::Logger::Init(loggerConfig);
+
+			std::filesystem::path playerProjectPath = FindPlayerProject();
+			if (!playerProjectPath.empty())
+			{
+				RunPlayer(playerProjectPath);
+				return;
+			}
+
+			InitPlatform(
+				{
+					.windowTitle = kWindowTitle,
+					.isFullscreen = kIsFullscreen,
+					.windowWidth = kLauncherWidth,
+					.windowHeight = kLauncherHeight
+				}
+			);
 
 			std::filesystem::path projectPath;
 
@@ -29,22 +48,19 @@ namespace seri::editor
 		}
 
 	private:
-		void InitPlatform()
+		std::filesystem::path FindPlayerProject()
 		{
-			seri::LoggerConfig loggerConfig;
-			loggerConfig.level = seri::LogLevel::info;
-			seri::Logger::Init(loggerConfig);
+			std::filesystem::path projectPath = seri::platform::GetExecutablePath().replace_extension(seri::project::ProjectManager::kProjectExtension);
 
+			std::error_code ec;
+			return std::filesystem::is_regular_file(projectPath, ec) ? projectPath : std::filesystem::path{};
+		}
+
+		void InitPlatform(const seri::WindowProperties& windowProperties)
+		{
 			seri::InputManager::Init();
 
-			seri::WindowManager::Instance()->Init(
-				{
-					.windowTitle = kWindowTitle,
-					.isFullscreen = kIsFullscreen,
-					.windowWidth = kLauncherWidth,
-					.windowHeight = kLauncherHeight
-				}
-			);
+			seri::WindowManager::Instance()->Init(windowProperties);
 
 			seri::WindowManager::Instance()->AddProcessEventDelegate(
 				[](const void* event)
@@ -109,6 +125,41 @@ namespace seri::editor
 			}
 
 			LIB_LOGGER(info, editor) << "seri game engine - editor loop stopped";
+		}
+
+		void RunPlayer(const std::filesystem::path& projectPath)
+		{
+			std::filesystem::current_path(projectPath.parent_path());
+
+			InitPlatform(
+				{
+					.windowTitle = kWindowTitle,
+					.isFullscreen = true
+				}
+			);
+
+			std::string error;
+			if (!seri::project::ProjectManager::OpenProject(projectPath, error))
+			{
+				LIB_LOGGER(error, player) << "could not open project " << projectPath.string() << ": " << error;
+				return;
+			}
+
+			seri::WindowManager::SetWindowTitle(seri::project::ProjectManager::GetName().c_str());
+			seri::RenderingManager::SetViewport(0, 0, seri::WindowManager::GetWidth(), seri::WindowManager::GetHeight());
+
+			seri::LayerManager playerLayerManager{};
+			playerLayerManager.AddLayer(std::make_shared<seri::CoreLayer>());
+			playerLayerManager.AddLayer(std::make_shared<seri::PlayerLayer>());
+
+			LIB_LOGGER(info, player) << "seri game engine - player loop starting";
+
+			while (!seri::WindowManager::GetWindowShouldClose())
+			{
+				RunFrame(playerLayerManager);
+			}
+
+			LIB_LOGGER(info, player) << "seri game engine - player loop stopped";
 		}
 
 		inline static const char* kWindowTitle = "Seri Game Engine";

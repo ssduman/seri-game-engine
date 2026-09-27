@@ -16,3 +16,4 @@ A 2D/3D OpenGL game engine written in C++20, featuring an ECS architecture, PBR 
 - Never edit anything under vcpkg_installed/ folder
 - Prefer functions to be inside a struct or class over free functions
 - Try to avoid using fmt while logging.
+- Do not edit third party libraries under seri/third_party/

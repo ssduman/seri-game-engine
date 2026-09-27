@@ -259,6 +259,16 @@ namespace seri
 			_renderingManager->gameViewVisible = visible;
 		}
 
+		static bool GetEditorViewVisible()
+		{
+			return _renderingManager->editorViewVisible;
+		}
+
+		static void SetEditorViewVisible(bool visible)
+		{
+			_renderingManager->editorViewVisible = visible;
+		}
+
 	private:
 		static std::unique_ptr<RenderingManagerBase> _renderingManager;
 		static std::unique_ptr<RenderCommandBufferBase> _renderCommandBuffer;

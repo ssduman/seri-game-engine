@@ -91,6 +91,18 @@ namespace seri
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
+	void FramebufferOpenGL::BlitColorToScreen(uint32_t width, uint32_t height)
+	{
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, _handle);
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+		glBlitFramebuffer(
+			0, 0, _desc.width, _desc.height,
+			0, 0, width, height,
+			GL_COLOR_BUFFER_BIT, GL_LINEAR
+		);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+
 	void FramebufferOpenGL::Invalidate()
 	{
 		if (_handle > 0)

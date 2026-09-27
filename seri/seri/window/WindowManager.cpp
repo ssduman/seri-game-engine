@@ -3,10 +3,6 @@
 #include "seri/core/Seri.h"
 #include "seri/window/WindowManager.h"
 
-#ifdef __linux__
-static_assert(false, "linux platform not supported");
-#elif _WIN32
-
 #if defined (SERI_USE_WINDOW_GLFW)
 
 #include "seri/window/WindowManagerGLFW.h"
@@ -21,8 +17,4 @@ std::unique_ptr<seri::WindowManagerBase> seri::WindowManager::_windowManager = s
 
 static_assert(false, "unknown window type");
 
-#endif
-
-#else
-static_assert(false, "unknown platform");
 #endif

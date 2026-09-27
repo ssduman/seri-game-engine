@@ -25,6 +25,11 @@ namespace seri::project
 			return GetInstance()._idComponent.name;
 		}
 
+		static const std::filesystem::path& GetProjectFile()
+		{
+			return GetInstance()._projectFile;
+		}
+
 		static const std::filesystem::path& GetProjectDirectory()
 		{
 			return GetInstance()._projectDirectory;
