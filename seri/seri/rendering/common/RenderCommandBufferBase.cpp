@@ -328,8 +328,7 @@ namespace seri
 					shadowDepthTex->Bind(static_cast<int>(seri::TextureSlotName::dir_shadow));
 				}
 
-				int spotShadowCount = seri::RenderingManager::GetSpotShadowCount();
-				for (int i = 0; i < spotShadowCount; i++)
+				for (int i = 0; i < literals::kMaxSpotLightShadowCount; i++)
 				{
 					const auto& spotShadowDepthTex = seri::RenderingManager::GetSpotShadowRT(i)->GetDepthTexture();
 					if (spotShadowDepthTex)
