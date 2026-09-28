@@ -124,7 +124,10 @@ namespace seri
 				RenderingManager::Clear();
 			}
 
-			glm::vec3 backgroundColor = scene::SceneManager::GetActiveScene()->GetSceneComponent().backgroundColor;
+			const component::SceneComponent& sceneComponent = scene::SceneManager::GetActiveScene()->GetSceneComponent();
+			RenderingManager::SetPostProcessSettings(sceneComponent.postProcess);
+
+			glm::vec3 backgroundColor = sceneComponent.backgroundColor;
 			RenderingManager::ClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, 1.0f);
 
 			RenderingManager::GetEditorSceneRT()->Bind();

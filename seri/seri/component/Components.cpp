@@ -59,6 +59,20 @@ namespace seri::component
 			component.skyboxAssetId = YAMLUtil::GetType<uint64_t>(environmentNode["SkyboxAssetID"]);
 		}
 
+		if (node["PostProcess"])
+		{
+			const YAML::Node& postNode = node["PostProcess"];
+			component.postProcess.fxaaEnabled = YAMLUtil::GetType<bool>(postNode["FxaaEnabled"]);
+			component.postProcess.colorAdjustEnabled = YAMLUtil::GetType<bool>(postNode["ColorAdjustEnabled"]);
+			component.postProcess.brightness = YAMLUtil::GetType<float>(postNode["Brightness"]);
+			component.postProcess.contrast = YAMLUtil::GetType<float>(postNode["Contrast"]);
+			component.postProcess.saturation = YAMLUtil::GetType<float>(postNode["Saturation"]);
+			component.postProcess.vignetteEnabled = YAMLUtil::GetType<bool>(postNode["VignetteEnabled"]);
+			component.postProcess.vignetteIntensity = YAMLUtil::GetType<float>(postNode["VignetteIntensity"]);
+			component.postProcess.vignetteSmoothness = YAMLUtil::GetType<float>(postNode["VignetteSmoothness"]);
+			component.postProcess.vignetteColor = YAMLUtil::Vec3FromYAML(postNode["VignetteColor"]);
+		}
+
 		return component;
 	}
 	YAML::Node SceneComponent::Serialize(const SceneComponent& component)
@@ -68,10 +82,22 @@ namespace seri::component
 		environmentNode["BackgroundColor"] = YAMLUtil::Vec3ToYAML(component.backgroundColor);
 		environmentNode["SkyboxAssetID"] = component.skyboxAssetId;
 
+		YAML::Node postNode;
+		postNode["FxaaEnabled"] = component.postProcess.fxaaEnabled;
+		postNode["ColorAdjustEnabled"] = component.postProcess.colorAdjustEnabled;
+		postNode["Brightness"] = component.postProcess.brightness;
+		postNode["Contrast"] = component.postProcess.contrast;
+		postNode["Saturation"] = component.postProcess.saturation;
+		postNode["VignetteEnabled"] = component.postProcess.vignetteEnabled;
+		postNode["VignetteIntensity"] = component.postProcess.vignetteIntensity;
+		postNode["VignetteSmoothness"] = component.postProcess.vignetteSmoothness;
+		postNode["VignetteColor"] = YAMLUtil::Vec3ToYAML(component.postProcess.vignetteColor);
+
 		YAML::Node node;
 		node["Version"] = component.version;
 		node["IsActive"] = component.isActive;
 		node["Environment"] = environmentNode;
+		node["PostProcess"] = postNode;
 		return node;
 	}
 

@@ -112,6 +112,40 @@ namespace seri::editor
 				scene->SetAsDirty();
 			}
 		}
+
+		{
+			ScopedChild scopedChild("##ScenePostProcess", ImVec2(0, 0), childFlags);
+
+			ImGui::TextUnformatted("Post Process");
+			ImGui::Separator();
+
+			bool changed = false;
+
+			auto& post = sceneComponent.postProcess;
+
+			changed |= DrawBool("FXAA", post.fxaaEnabled);
+
+			changed |= DrawBool("Color Adjust", post.colorAdjustEnabled);
+			if (post.colorAdjustEnabled)
+			{
+				changed |= DrawFloat("Brightness", post.brightness, 0.01f, -1.0f, 1.0f);
+				changed |= DrawFloat("Contrast", post.contrast, 0.01f, 0.0f, 2.0f);
+				changed |= DrawFloat("Saturation", post.saturation, 0.01f, 0.0f, 2.0f);
+			}
+
+			changed |= DrawBool("Vignette", post.vignetteEnabled);
+			if (post.vignetteEnabled)
+			{
+				changed |= DrawFloat("Intensity", post.vignetteIntensity, 0.01f, 0.0f, 1.0f);
+				changed |= DrawFloat("Smoothness", post.vignetteSmoothness, 0.01f, 0.01f, 1.0f);
+				changed |= DrawColorVec3("Color", post.vignetteColor, 0.01f);
+			}
+
+			if (changed)
+			{
+				scene->SetAsDirty();
+			}
+		}
 	}
 
 	void InspectorPanel::DrawEntity(GUIContext& ctx)

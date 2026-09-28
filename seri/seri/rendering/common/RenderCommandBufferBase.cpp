@@ -415,7 +415,7 @@ namespace seri
 		}
 
 		_postMaterial = std::make_shared<Material>();
-		_postMaterial->SetShader(ShaderLibrary::Find("fxaa"));
+		_postMaterial->SetShader(ShaderLibrary::Find("post"));
 
 		_depthViewMaterial = std::make_shared<Material>();
 		_depthViewMaterial->SetShader(ShaderLibrary::Find("depth_view"));
@@ -467,9 +467,23 @@ namespace seri
 		}
 		else
 		{
+			const PostProcessSettings& settings = seri::RenderingManager::GetPostProcessSettings();
+			bool enabled = rt != seri::RenderingManager::GetEditorRT() || seri::RenderingManager::GetEditorPostProcessEnabled();
+
 			material->SetTexture("u_source_texture", source->GetColorTexture(0));
 			material->SetFloat2("u_texel_size", glm::vec2{ 1.0f / source->GetWidth(), 1.0f / source->GetHeight() });
-			material->SetInt("u_fxaa_enabled", seri::RenderingManager::GetFxaaEnabled() ? 1 : 0);
+
+			material->SetInt("u_fxaa_enabled", enabled && settings.fxaaEnabled ? 1 : 0);
+
+			material->SetInt("u_color_adjust_enabled", enabled && settings.colorAdjustEnabled ? 1 : 0);
+			material->SetFloat("u_brightness", settings.brightness);
+			material->SetFloat("u_contrast", settings.contrast);
+			material->SetFloat("u_saturation", settings.saturation);
+
+			material->SetInt("u_vignette_enabled", enabled && settings.vignetteEnabled ? 1 : 0);
+			material->SetFloat("u_vignette_intensity", settings.vignetteIntensity);
+			material->SetFloat("u_vignette_smoothness", settings.vignetteSmoothness);
+			material->SetFloat3("u_vignette_color", settings.vignetteColor);
 		}
 
 		RenderState state{};

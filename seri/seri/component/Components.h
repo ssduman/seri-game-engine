@@ -6,6 +6,7 @@
 #include "seri/font/TextMesh.h"
 #include "seri/ui/UIUtil.h"
 #include "seri/physics/PhysicsUtil.h"
+#include "seri/rendering/render/RenderingData.h"
 
 #include <entt/entt.hpp>
 #include <yaml-cpp/yaml.h>
@@ -61,6 +62,8 @@ namespace seri::component
 		seri::util::BackgroundMode backgroundMode{ seri::util::BackgroundMode::color };
 		glm::vec3 backgroundColor{ 0.2f, 0.2f, 0.2f };
 		uint64_t skyboxAssetId{ 0 };
+
+		seri::PostProcessSettings postProcess{};
 
 		static SceneComponent Deserialize(const YAML::Node& node);
 		static YAML::Node Serialize(const SceneComponent& component);

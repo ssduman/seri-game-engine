@@ -9,6 +9,16 @@ SceneComponent:
     BackgroundMode: 1
     BackgroundColor: [0.2, 0.2, 0.2]
     SkyboxAssetID: 0
+  PostProcess:
+    FxaaEnabled: true
+    ColorAdjustEnabled: false
+    Brightness: 0
+    Contrast: 1
+    Saturation: 1
+    VignetteEnabled: false
+    VignetteIntensity: 0.3
+    VignetteSmoothness: 0.5
+    VignetteColor: [0, 0, 0]
 Entities:
   - Entity:
       IDComponent:

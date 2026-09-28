@@ -29,6 +29,16 @@ uniform sampler2D u_source_texture;
 uniform vec2 u_texel_size;
 uniform int u_fxaa_enabled;
 
+uniform int u_color_adjust_enabled;
+uniform float u_brightness;
+uniform float u_contrast;
+uniform float u_saturation;
+
+uniform int u_vignette_enabled;
+uniform float u_vignette_intensity;
+uniform float u_vignette_smoothness;
+uniform vec3 u_vignette_color;
+
 out vec4 final_color;
 
 const float FXAA_REDUCE_MIN = 1.0 / 128.0;
@@ -83,16 +93,36 @@ vec3 Fxaa()
     return (lumaB < lumaMin || lumaB > lumaMax) ? rgbA : rgbB;
 }
 
+vec3 ColorAdjust(vec3 color)
+{
+    color += u_brightness;
+    color = (color - 0.5) * u_contrast + 0.5;
+    color = mix(vec3(Luma(color)), color, u_saturation);
+    return color;
+}
+
+vec3 Vignette(vec3 color)
+{
+    vec2 d = abs(sent_uv - 0.5) * u_vignette_intensity * 3.0;
+    float factor = pow(clamp(1.0 - dot(d, d), 0.0, 1.0), max(u_vignette_smoothness * 5.0, 0.001));
+    return color * mix(u_vignette_color, vec3(1.0), factor);
+}
+
 void main()
 {
-    if (u_fxaa_enabled == 1)
+    vec3 color = u_fxaa_enabled == 1 ? Fxaa() : texture(u_source_texture, sent_uv).rgb;
+
+    if (u_color_adjust_enabled == 1)
     {
-        final_color = vec4(Fxaa(), 1.0);
+        color = ColorAdjust(color);
     }
-    else
+
+    if (u_vignette_enabled == 1)
     {
-        final_color = texture(u_source_texture, sent_uv);
+        color = Vignette(color);
     }
+
+    final_color = vec4(clamp(color, 0.0, 1.0), 1.0);
 }
 
 #end_fs

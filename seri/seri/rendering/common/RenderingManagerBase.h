@@ -71,7 +71,9 @@ namespace seri
 		bool editorWireframe{ false };
 		bool editorDepthView{ false };
 
-		bool fxaaEnabled{ true };
+		bool editorPostProcessEnabled{ true };
+
+		PostProcessSettings postProcessSettings{};
 
 		bool gameViewVisible{ true };
 

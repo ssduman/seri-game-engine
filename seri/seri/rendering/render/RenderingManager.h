@@ -254,14 +254,24 @@ namespace seri
 			_renderingManager->editorDepthView = enabled;
 		}
 
-		static bool GetFxaaEnabled()
+		static bool GetEditorPostProcessEnabled()
 		{
-			return _renderingManager->fxaaEnabled;
+			return _renderingManager->editorPostProcessEnabled;
 		}
 
-		static void SetFxaaEnabled(bool enabled)
+		static void SetEditorPostProcessEnabled(bool enabled)
 		{
-			_renderingManager->fxaaEnabled = enabled;
+			_renderingManager->editorPostProcessEnabled = enabled;
+		}
+
+		static const PostProcessSettings& GetPostProcessSettings()
+		{
+			return _renderingManager->postProcessSettings;
+		}
+
+		static void SetPostProcessSettings(const PostProcessSettings& settings)
+		{
+			_renderingManager->postProcessSettings = settings;
 		}
 
 		static bool GetGameViewVisible()

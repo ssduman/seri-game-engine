@@ -65,4 +65,19 @@ namespace seri
 		glm::mat4 spotLightViewProj[literals::kMaxSpotLightShadowCount];
 		glm::ivec4 spotLightShadowCount{ 0 };
 	};
+
+	struct PostProcessSettings
+	{
+		bool fxaaEnabled{ true };
+
+		bool colorAdjustEnabled{ false };
+		float brightness{ 0.0f };
+		float contrast{ 1.0f };
+		float saturation{ 1.0f };
+
+		bool vignetteEnabled{ false };
+		float vignetteIntensity{ 0.3f };
+		float vignetteSmoothness{ 0.5f };
+		glm::vec3 vignetteColor{ 0.0f, 0.0f, 0.0f };
+	};
 }

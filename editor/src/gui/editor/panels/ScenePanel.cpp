@@ -92,10 +92,10 @@ namespace seri::editor
 
 		ImGui::SameLine();
 
-		bool fxaaEnabled = seri::RenderingManager::GetFxaaEnabled();
-		if (ImGui::Checkbox("FXAA", &fxaaEnabled))
+		bool postProcessEnabled = seri::RenderingManager::GetEditorPostProcessEnabled();
+		if (ImGui::Checkbox("Post Process", &postProcessEnabled))
 		{
-			seri::RenderingManager::SetFxaaEnabled(fxaaEnabled);
+			seri::RenderingManager::SetEditorPostProcessEnabled(postProcessEnabled);
 		}
 	}
 
