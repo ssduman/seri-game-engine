@@ -21,7 +21,8 @@ project "Seri"
     "FMT_UNICODE=0",
     "FMT_SHARED",
     "ASSIMP_DLL",
-    "BOOST_LOG_DYN_LINK",
+    "SPDLOG_COMPILED_LIB",
+    "SPDLOG_SHARED_LIB",
     "TRACY_ENABLE",
     "TRACY_ON_DEMAND",
   }
@@ -90,7 +91,8 @@ project "Seri"
       "FMT_UNICODE=0",
       "FMT_SHARED",
       "ASSIMP_DLL",
-      "BOOST_LOG_DYN_LINK",
+      "SPDLOG_COMPILED_LIB",
+      "SPDLOG_SHARED_LIB",
       "TRACY_ENABLE",
       "TRACY_ON_DEMAND",
     }
@@ -103,10 +105,8 @@ project "Seri"
         "%{LibDir.vcpkg_debug}",
       }
       links {
-        "%{Lib.boost_log_debug}",
-        "%{Lib.boost_log_setup_debug}",
-        "%{Lib.boost_thread_debug}",
         "fmtd",
+        "spdlogd",
       }
       postbuildcommands {
         'xcopy /Q /Y /I /D "' .. path.translate(BinDir.vcpkg_debug .. "/*.dll") .. '" "%{cfg.targetdir}/"',
@@ -117,10 +117,8 @@ project "Seri"
         "%{LibDir.vcpkg}",
       }
       links {
-        "%{Lib.boost_log}",
-        "%{Lib.boost_log_setup}",
-        "%{Lib.boost_thread}",
         "fmt",
+        "spdlog",
       }
       postbuildcommands {
         'xcopy /Q /Y /I /D "' .. path.translate(BinDir.vcpkg .. "/*.dll") .. '" "%{cfg.targetdir}/"',

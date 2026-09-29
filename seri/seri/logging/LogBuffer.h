@@ -2,9 +2,7 @@
 
 #include "seri/logging/Logger.h"
 
-#include <boost/log/sinks/basic_sink_backend.hpp>
-#include <boost/log/sinks/frontend_requirements.hpp>
-#include <boost/log/sinks/sync_frontend.hpp>
+#include <spdlog/sinks/base_sink.h>
 
 #include <deque>
 #include <mutex>
@@ -56,11 +54,13 @@ namespace seri
 		size_t _capacity{ 4096 };
 	};
 
-	class LogBufferBackend : public boost::log::sinks::basic_formatted_sink_backend<char, boost::log::sinks::synchronized_feeding>
+	class LogBufferSink : public spdlog::sinks::base_sink<std::mutex>
 	{
 	public:
-		void consume(const boost::log::record_view& record, const string_type& message);
-	};
+		explicit LogBufferSink(spdlog::pattern_time_type timeType);
 
-	using LogBufferSink = boost::log::sinks::synchronous_sink<LogBufferBackend>;
+	protected:
+		void sink_it_(const spdlog::details::log_msg& msg) override;
+		void flush_() override;
+	};
 }

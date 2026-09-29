@@ -2,9 +2,6 @@ outputdir = "%{cfg.buildcfg}-%{cfg.architecture}"
 
 vcpkg_root = _MAIN_SCRIPT_DIR .. "/vcpkg_installed/" .. "x64-windows"
 
-boost_ver = "vc145-mt-x64-1_92"
-boost_ver_debug = "vc145-mt-gd-x64-1_92"
-
 IncludeDir = {}
 IncludeDir["vcpkg"] = vcpkg_root .. "/include"
 IncludeDir["glad"] = "%{wks.location}/seri/third_party/glad/include"
@@ -21,12 +18,6 @@ BinDir["vcpkg_debug"] = vcpkg_root .. "/debug/bin"
 Lib = {}
 Lib["assimp"] = "assimp-vc145-mt"
 Lib["assimp_debug"] = "assimp-vc145-mtd"
-Lib["boost_log"] = "boost_log-" .. boost_ver
-Lib["boost_log_debug"] = "boost_log-" .. boost_ver_debug
-Lib["boost_log_setup"] = "boost_log_setup-" .. boost_ver
-Lib["boost_log_setup_debug"] = "boost_log_setup-" .. boost_ver_debug
-Lib["boost_thread"] = "boost_thread-" .. boost_ver
-Lib["boost_thread_debug"] = "boost_thread-" .. boost_ver_debug
 
 workspace "Seri Game Engine"
   architecture "x86_64"

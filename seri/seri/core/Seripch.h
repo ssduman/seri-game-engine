@@ -25,10 +25,6 @@
 #include <yaml-cpp/yaml.h>
 #include <fmt/format.h>
 
-#include <boost/log/sources/global_logger_storage.hpp>
-#include <boost/log/sources/record_ostream.hpp>
-#include <boost/log/sources/severity_feature.hpp>
-#include <boost/log/sources/severity_logger.hpp>
-#include <boost/log/utility/manipulators/add_value.hpp>
+#include <spdlog/common.h>
 
 #include "seri/profiling/Profiler.h"

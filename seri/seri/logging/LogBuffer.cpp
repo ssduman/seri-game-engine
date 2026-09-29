@@ -2,9 +2,7 @@
 
 #include "seri/logging/LogBuffer.h"
 
-#include <boost/date_time/posix_time/posix_time.hpp>
-#include <boost/log/attributes/current_thread_id.hpp>
-#include <boost/log/expressions.hpp>
+#include <spdlog/pattern_formatter.h>
 
 namespace seri
 {
@@ -52,68 +50,31 @@ namespace seri
 		GetInstance()._capacity = capacity == 0 ? 1 : capacity;
 	}
 
-	void LogBufferBackend::consume(const boost::log::record_view& record, const string_type& message)
+	LogBufferSink::LogBufferSink(spdlog::pattern_time_type timeType)
+		: spdlog::sinks::base_sink<std::mutex>(std::make_unique<spdlog::pattern_formatter>("%H:%M:%S.%e", timeType, ""))
 	{
+	}
+
+	void LogBufferSink::sink_it_(const spdlog::details::log_msg& msg)
+	{
+		spdlog::memory_buf_t timeStamp;
+		formatter_->format(msg, timeStamp);
+
 		LogEntry entry;
 
-		entry.message = message;
-
-		auto severity = boost::log::extract<LogLevel>("Severity", record);
-		entry.level = severity ? severity.get() : LogLevel::none;
-
-		auto timeStamp = boost::log::extract<boost::posix_time::ptime>("TimeStamp", record);
-		if (timeStamp)
-		{
-			boost::posix_time::time_duration timeOfDay = timeStamp.get().time_of_day();
-
-			int milliseconds = static_cast<int>(
-				timeOfDay.fractional_seconds() / (boost::posix_time::time_duration::ticks_per_second() / 1000)
-			);
-
-			char buffer[16];
-			snprintf(
-				buffer, sizeof(buffer), "%02d:%02d:%02d.%03d",
-				static_cast<int>(timeOfDay.hours()),
-				static_cast<int>(timeOfDay.minutes()),
-				static_cast<int>(timeOfDay.seconds()),
-				milliseconds
-			);
-
-			entry.timeStamp = buffer;
-		}
-
-		auto threadId = boost::log::extract<boost::log::attributes::current_thread_id::value_type>("ThreadID", record);
-		if (threadId)
-		{
-			std::ostringstream stream;
-			stream << threadId.get();
-			entry.threadId = stream.str();
-		}
-
-		auto module = boost::log::extract<std::string>("Module", record);
-		if (module)
-		{
-			entry.module = module.get();
-		}
-
-		auto file = boost::log::extract<std::string>("File", record);
-		if (file)
-		{
-			entry.file = file.get();
-		}
-
-		auto function = boost::log::extract<std::string>("Function", record);
-		if (function)
-		{
-			entry.function = function.get();
-		}
-
-		auto line = boost::log::extract<unsigned int>("Line", record);
-		if (line)
-		{
-			entry.line = line.get();
-		}
+		entry.level = Logger::FromSpdlogLevel(msg.level);
+		entry.line = static_cast<unsigned int>(msg.source.line);
+		entry.timeStamp.assign(timeStamp.data(), timeStamp.size());
+		entry.threadId = std::to_string(msg.thread_id);
+		entry.module.assign(msg.logger_name.data(), msg.logger_name.size());
+		entry.file = msg.source.filename ? msg.source.filename : "";
+		entry.function = msg.source.funcname ? msg.source.funcname : "";
+		entry.message.assign(msg.payload.data(), msg.payload.size());
 
 		LogBuffer::Push(std::move(entry));
+	}
+
+	void LogBufferSink::flush_()
+	{
 	}
 }

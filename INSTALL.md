@@ -93,7 +93,7 @@ bootstrap-vcpkg.bat
 * [efsw](https://github.com/SpartanJ/efsw)
 * [Lua](https://github.com/lua/lua)
 * [sol2](https://github.com/ThePhD/sol2)
-* [Boost](https://www.boost.org/)
+* [spdlog](https://github.com/gabime/spdlog)
 * [doctest](https://github.com/doctest/doctest/)
 * [Native File Dialog Extended](https://github.com/btzy/nativefiledialog-extended)
 * [Jolt Physics](https://github.com/jrouwe/joltphysics)

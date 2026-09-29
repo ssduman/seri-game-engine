@@ -1,12 +1,11 @@
 #pragma once
 
-#include <boost/log/sources/global_logger_storage.hpp>
-#include <boost/log/sources/record_ostream.hpp>
-#include <boost/log/sources/severity_feature.hpp>
-#include <boost/log/sources/severity_logger.hpp>
-#include <boost/log/utility/manipulators/add_value.hpp>
+#include <spdlog/common.h>
 
+#include <memory>
+#include <sstream>
 #include <string>
+#include <string_view>
 
 namespace seri
 {
@@ -40,9 +39,7 @@ namespace seri
 		size_t bufferCapacity{ 4096 };
 	};
 
-	using SeriLogger = boost::log::sources::severity_logger_mt<LogLevel>;
-
-	BOOST_LOG_INLINE_GLOBAL_LOGGER_DEFAULT(GlobalLogger, SeriLogger);
+	class SeriLogger;
 
 	class Logger
 	{
@@ -52,9 +49,15 @@ namespace seri
 
 		static void SetLogLevel(LogLevel level);
 
+		static bool ShouldLog(LogLevel level);
+		static void Log(LogLevel level, const char* module, const char* file, int line, const char* function, std::string_view message);
+
 		static LogLevel FromString(const char*);
 		static const char* ToString(LogLevel level);
 		static const char* ToString3(LogLevel level);
+
+		static spdlog::level::level_enum ToSpdlogLevel(LogLevel level);
+		static LogLevel FromSpdlogLevel(spdlog::level::level_enum level);
 
 		static constexpr const char* TrimPath(const char* path)
 		{
@@ -78,11 +81,6 @@ namespace seri
 		Logger& operator=(Logger&& other) = default;
 		Logger& operator=(const Logger& other) = delete;
 
-		static void FormatRecord(const boost::log::record_view& record, boost::log::formatting_ostream& stream);
-
-		static void EnableColor();
-		static const char* ToColor(LogLevel level);
-
 		static Logger& GetInstance()
 		{
 			static Logger instance;
@@ -90,22 +88,37 @@ namespace seri
 		}
 
 		LoggerConfig _config{};
-		std::locale _timeStampLocale{};
+		std::shared_ptr<SeriLogger> _logger;
 		bool _inited{ false };
-		bool _colorEnabled{ false };
+	};
+
+	class LogStream
+	{
+	public:
+		LogStream(LogLevel level, const char* module, const char* file, int line, const char* function);
+		~LogStream();
+
+		std::ostream& Stream();
+
+	private:
+		LogStream(LogStream&& other) = delete;
+		LogStream(const LogStream& other) = delete;
+		LogStream& operator=(LogStream&& other) = delete;
+		LogStream& operator=(const LogStream& other) = delete;
+
+		LogLevel _level{ LogLevel::none };
+		const char* _module{ "" };
+		const char* _file{ "" };
+		int _line{ 0 };
+		const char* _function{ "" };
+		std::ostringstream _stream;
 	};
 }
 
-#define LOGGER_ATTRIBUTES \
-	::boost::log::add_value("File", ::seri::Logger::TrimPath(__FILE__)) \
-		<< ::boost::log::add_value("Line", static_cast<unsigned int>(__LINE__)) \
-		<< ::boost::log::add_value("Function", static_cast<const char*>(__FUNCTION__))
-
 #define LOGGER(level) \
-	BOOST_LOG_STREAM_SEV(::seri::GlobalLogger::get(), ::seri::LogLevel::level) \
-		<< LOGGER_ATTRIBUTES
+	if (!::seri::Logger::ShouldLog(::seri::LogLevel::level)) {} else \
+		::seri::LogStream(::seri::LogLevel::level, "", ::seri::Logger::TrimPath(__FILE__), __LINE__, __FUNCTION__).Stream()
 
 #define LIB_LOGGER(level, module) \
-	BOOST_LOG_STREAM_SEV(::seri::GlobalLogger::get(), ::seri::LogLevel::level) \
-		<< ::boost::log::add_value("Module", #module) \
-		<< LOGGER_ATTRIBUTES
+	if (!::seri::Logger::ShouldLog(::seri::LogLevel::level)) {} else \
+		::seri::LogStream(::seri::LogLevel::level, #module, ::seri::Logger::TrimPath(__FILE__), __LINE__, __FUNCTION__).Stream()
