@@ -1,3 +1,6 @@
+v0.1.1
+- Used spdlog instead of Boost.Log
+
 v0.1.0
 - Entity Component System
 - Model loading and skeletal animation
