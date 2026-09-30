@@ -1,3 +1,7 @@
+v0.1.2
+- Fixed texture creating in OpenGL
+- Added more logs and debug context for OpenGL
+
 v0.1.1
 - Used spdlog instead of Boost.Log
 
