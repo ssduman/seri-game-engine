@@ -82,6 +82,8 @@ namespace seri::project
 
 		std::filesystem::path FindOrCreateStartupScene(const std::filesystem::path& projectDirectory);
 
+		static YAML::Node CreateEntityNode(const std::string& name, const seri::component::TransformComponent& transform, std::string_view compName, const YAML::Node& compNode);
+
 		static void WriteYAML(const std::filesystem::path& path, const YAML::Node& root);
 
 		seri::component::IDComponent _idComponent{};

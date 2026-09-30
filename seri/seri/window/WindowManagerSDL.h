@@ -455,6 +455,7 @@ namespace seri
 			SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
 			SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 6);
 			SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+			SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, _windowProperties.isOpenGLDebugContext ? SDL_GL_CONTEXT_DEBUG_FLAG : 0);
 			SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 		}
 

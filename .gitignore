@@ -9,6 +9,9 @@ project/**/assets/engine/
 # vcpkg
 vcpkg_installed/
 
+# Package
+/package/
+
 # ini
 imgui.ini
 

@@ -290,6 +290,14 @@ namespace seri
 			LIB_LOGGER(info, rendering) << "version: " << GetGLString(GL_VERSION);
 			LIB_LOGGER(info, rendering) << "renderer: " << GetGLString(GL_RENDERER);
 			LIB_LOGGER(info, rendering) << "shading language version: " << GetGLString(GL_SHADING_LANGUAGE_VERSION);
+			LIB_LOGGER(info, rendering) << "debug context: " << (IsDebugContext() ? "true" : "false");
+		}
+
+		bool IsDebugContext()
+		{
+			GLint contextFlags = 0;
+			glGetIntegerv(GL_CONTEXT_FLAGS, &contextFlags);
+			return (contextFlags & GL_CONTEXT_FLAG_DEBUG_BIT) != 0;
 		}
 
 		void CheckOpenGLError()
@@ -398,11 +406,27 @@ namespace seri
 				};
 
 			glEnable(GL_DEBUG_OUTPUT);
+			if (IsDebugContext())
+			{
+				glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+			}
 			glDebugMessageCallback(
 				[](GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
 				{
 					if (severity == GL_DEBUG_SEVERITY_NOTIFICATION)
 					{
+						return;
+					}
+
+					if (type == GL_DEBUG_TYPE_ERROR)
+					{
+						LIB_LOGGER(error, rendering) << "gl error, id: " << id << ", message: " << message;
+						return;
+					}
+
+					if (type == GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR)
+					{
+						LIB_LOGGER(warning, rendering) << "gl undefined behavior, id: " << id << ", message: " << message;
 						return;
 					}
 

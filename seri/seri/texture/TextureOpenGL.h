@@ -329,7 +329,10 @@ namespace seri
 
 			glTexParameteriv(_target, GL_TEXTURE_SWIZZLE_RGBA, glm::value_ptr(_swizzle));
 
-			glGenerateMipmap(_target);
+			if (_minFilter != GL_LINEAR && _minFilter != GL_NEAREST)
+			{
+				glGenerateMipmap(_target);
+			}
 
 			Unbind();
 			UnloadTexture(_image);

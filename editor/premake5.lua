@@ -55,7 +55,10 @@ project "Editor"
     systemversion "latest"
 
   filter { "configurations:Debug" }
-    defines { "DEBUG" }
+    defines {
+      "DEBUG",
+      "SERI_OPENGL_DEBUG_CONTEXT=true",
+    }
     runtime "Debug"
     symbols "On"
     editandcontinue "Off"
@@ -70,7 +73,10 @@ project "Editor"
     }
 
   filter { "configurations:Release" }
-    defines { "NDEBUG" }
+    defines {
+      "NDEBUG",
+      "SERI_OPENGL_DEBUG_CONTEXT=false",
+    }
     runtime "Release"
     optimize "On"
     symbols "On"

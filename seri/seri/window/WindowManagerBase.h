@@ -16,6 +16,7 @@ namespace seri
 		bool isFullscreen = false;
 		int windowWidth = 1280;
 		int windowHeight = 720;
+		bool isOpenGLDebugContext = false;
 	};
 
 	enum CursorMode

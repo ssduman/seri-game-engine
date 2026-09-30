@@ -37,7 +37,8 @@ namespace seri::editor
 					.windowTitle = kWindowTitle,
 					.isFullscreen = kIsFullscreen,
 					.windowWidth = kLauncherWidth,
-					.windowHeight = kLauncherHeight
+					.windowHeight = kLauncherHeight,
+					.isOpenGLDebugContext = kIsRendererDebugContext
 				}
 			);
 
@@ -134,7 +135,8 @@ namespace seri::editor
 			InitPlatform(
 				{
 					.windowTitle = kWindowTitle,
-					.isFullscreen = true
+					.isFullscreen = true,
+					.isOpenGLDebugContext = kIsRendererDebugContext
 				}
 			);
 
@@ -164,6 +166,7 @@ namespace seri::editor
 
 		inline static const char* kWindowTitle = "Seri Game Engine";
 		inline static constexpr bool kIsFullscreen = false;
+		inline static constexpr bool kIsRendererDebugContext = SERI_OPENGL_DEBUG_CONTEXT;
 		inline static constexpr int kLauncherWidth = 720;
 		inline static constexpr int kLauncherHeight = 420;
 		inline static constexpr int kEditorWidth = 1600;

@@ -182,11 +182,44 @@ namespace seri::project
 		root[std::string{ seri::component::SceneComponent::kCompName }] = seri::component::SceneComponent::Serialize(seri::component::SceneComponent{ .version = "0.1" });
 		root["Entities"] = YAML::Node(YAML::NodeType::Sequence);
 
+		root["Entities"].push_back(CreateEntityNode(
+			"Camera",
+			seri::component::TransformComponent{ .position = { 0.0f, 2.0f, 6.0f }, .rotation = { -15.0f, 0.0f, 0.0f } },
+			seri::component::CameraComponent::kCompName,
+			seri::component::CameraComponent::Serialize(seri::component::CameraComponent{})
+		));
+
+		root["Entities"].push_back(CreateEntityNode(
+			"Directional Light",
+			seri::component::TransformComponent{ .position = { 0.0f, 3.0f, 0.0f }, .rotation = { -65.0f, -30.0f, 0.0f } },
+			seri::component::DirectionalLightComponent::kCompName,
+			seri::component::DirectionalLightComponent::Serialize(seri::component::DirectionalLightComponent{})
+		));
+
 		WriteYAML(scenePath, root);
 
 		LIB_LOGGER(info, project) << "default scene created: " << scenePath.string();
 
 		return scenePath;
+	}
+
+	YAML::Node ProjectManager::CreateEntityNode(const std::string& name, const seri::component::TransformComponent& transform, std::string_view compName, const YAML::Node& compNode)
+	{
+		seri::component::IDComponent idComponent{
+			.id = seri::Random::UUID(),
+			.parentId = 0,
+			.name = name,
+		};
+
+		YAML::Node entityData;
+		entityData[std::string{ seri::component::IDComponent::kCompName }] = seri::component::IDComponent::Serialize(idComponent);
+		entityData[std::string{ seri::component::TransformComponent::kCompName }] = seri::component::TransformComponent::Serialize(transform);
+		entityData[std::string{ compName }] = compNode;
+
+		YAML::Node entityNode;
+		entityNode["Entity"] = entityData;
+
+		return entityNode;
 	}
 
 	void ProjectManager::WriteYAML(const std::filesystem::path& path, const YAML::Node& root)
