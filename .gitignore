@@ -21,6 +21,9 @@ imgui.ini
 *.vcxproj
 *.vcxproj.filters
 
+# gmake files
+Makefile
+
 # User-specific files
 *.rsuser
 *.suo

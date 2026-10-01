@@ -13,17 +13,6 @@ project "Editor"
   files {
     "src/**.h",
     "src/**.cpp",
-    "resources/**.rc",
-  }
-
-  linkoptions {
-    "-IGNORE:4098",
-  }
-
-  disablewarnings {
-    "4244",
-    "4267",
-    "4312",
   }
 
   includedirs {
@@ -34,14 +23,7 @@ project "Editor"
 
   uses { "Seri" }
 
-  postbuildcommands {
-    'if exist "%{cfg.targetdir}/assets" rmdir /S /Q "%{cfg.targetdir}/assets"',
-    'xcopy /Q /E /Y /I "' .. path.translate(_MAIN_SCRIPT_DIR .. "/editor/assets") .. '" "%{cfg.targetdir}/assets"',
-  }
-
   links {
-    "opengl32.lib",
-    "glfw3dll",
     "efsw",
     "glm",
     "imguizmo",
@@ -53,6 +35,37 @@ project "Editor"
 
   filter "system:windows"
     systemversion "latest"
+    files {
+      "resources/**.rc",
+    }
+    linkoptions {
+      "-IGNORE:4098",
+    }
+    disablewarnings {
+      "4244",
+      "4267",
+      "4312",
+    }
+    links {
+      "opengl32.lib",
+      "glfw3dll",
+    }
+    postbuildcommands {
+      'if exist "%{cfg.targetdir}/assets" rmdir /S /Q "%{cfg.targetdir}/assets"',
+      'xcopy /Q /E /Y /I "' .. path.translate(_MAIN_SCRIPT_DIR .. "/editor/assets") .. '" "%{cfg.targetdir}/assets"',
+    }
+
+  filter "system:linux"
+    linkoptions {
+      "-Wl,-rpath,'$$ORIGIN'",
+    }
+    links {
+      "glfw",
+    }
+    postbuildcommands {
+      'rm -rf "%{cfg.targetdir}/assets"',
+      'cp -r "' .. _MAIN_SCRIPT_DIR .. '/editor/assets" "%{cfg.targetdir}/assets"',
+    }
 
   filter { "configurations:Debug" }
     defines {
@@ -81,10 +94,10 @@ project "Editor"
     optimize "On"
     symbols "On"
     libdirs {
-      "%{LibDir.vcpkg}",
+      "%{LibDir.vcpkg_release}",
     }
     links {
-      "%{Lib.assimp}",
+      "%{Lib.assimp_release}",
       "freetype",
       "imgui",
       "yaml-cpp",

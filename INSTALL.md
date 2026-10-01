@@ -24,18 +24,19 @@ cd seri-game-engine
 ### 3. Install packages
 
 ```bat
-set "VCPKG_ROOT=<path-to-vcpkg>" && install.bat
+set "VCPKG_ROOT=<path-to-vcpkg>" && seri install
 ```
 
 ### 4. Generate solution
 
 ```bat
-generate.bat
+seri generate
 ```
 
 ### 5. Build
 
-* Open `Seri Game Engine.slnx` with Visual Studio 2026, build and run
+* Open `Seri Game Engine.slnx` with Visual Studio 2026 and build
+* Or build from the command line with `seri build` (Debug) or `seri build --config=release`, add `--rebuild` to clean first
 
 ### 6. Project
 
@@ -47,7 +48,7 @@ generate.bat
 
 2. Add it to `dependencies` and `overrides` fields in `vcpkg.json`
 
-3. Reinstall with `install.bat` and update `Premake`
+3. Reinstall with `seri install` and update `Premake`
 
 ## Upgrade
 
@@ -63,7 +64,7 @@ bootstrap-vcpkg.bat
 
 3. Look up the new versions and ports of each packages you want to upgrade
 
-4. Re-run `install.bat`
+4. Re-run `seri install`
 
 ## Removing package
 
@@ -73,7 +74,7 @@ bootstrap-vcpkg.bat
 
 3. Delete all related settings from `Premake`
 
-4. Re-run `install.bat`
+4. Re-run `seri install`
 
 ## Dependencies ##
 

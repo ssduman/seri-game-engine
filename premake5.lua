@@ -1,6 +1,10 @@
 outputdir = "%{cfg.buildcfg}-%{cfg.architecture}"
 
-vcpkg_root = _MAIN_SCRIPT_DIR .. "/vcpkg_installed/" .. "x64-windows"
+is_windows = os.target() == "windows"
+
+vcpkg_triplet = is_windows and "x64-windows" or "x64-linux-dynamic"
+vcpkg_root = _MAIN_SCRIPT_DIR .. "/vcpkg_installed/" .. vcpkg_triplet
+vcpkg_bin = is_windows and "bin" or "lib"
 
 IncludeDir = {}
 IncludeDir["vcpkg"] = vcpkg_root .. "/include"
@@ -8,16 +12,22 @@ IncludeDir["glad"] = "%{wks.location}/seri/third_party/glad/include"
 IncludeDir["tracy"] = "%{wks.location}/seri/third_party/tracy"
 
 LibDir = {}
-LibDir["vcpkg"] = vcpkg_root .. "/lib"
+LibDir["vcpkg_release"] = vcpkg_root .. "/lib"
 LibDir["vcpkg_debug"] = vcpkg_root .. "/debug/lib"
 
 BinDir = {}
-BinDir["vcpkg"] = vcpkg_root .. "/bin"
-BinDir["vcpkg_debug"] = vcpkg_root .. "/debug/bin"
+BinDir["vcpkg_release"] = vcpkg_root .. "/" .. vcpkg_bin
+BinDir["vcpkg_debug"] = vcpkg_root .. "/debug/" .. vcpkg_bin
 
 Lib = {}
-Lib["assimp"] = "assimp-vc145-mt"
-Lib["assimp_debug"] = "assimp-vc145-mtd"
+Lib["assimp_release"] = is_windows and "assimp-vc145-mt" or "assimp"
+Lib["assimp_debug"] = is_windows and "assimp-vc145-mtd" or "assimpd"
+
+include "script/actions/install.lua"
+include "script/actions/generate.lua"
+include "script/actions/build.lua"
+include "script/actions/package.lua"
+include "script/actions/help.lua"
 
 workspace "Seri Game Engine"
   architecture "x86_64"

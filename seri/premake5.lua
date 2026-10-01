@@ -27,21 +27,6 @@ project "Seri"
     "TRACY_ON_DEMAND",
   }
 
-  linkoptions {
-    "-IGNORE:4098",
-  }
-
-  buildoptions {
-    "/bigobj",
-  }
-
-  disablewarnings {
-    "4100",
-    "4244",
-    "4267",
-    "4312",
-  }
-
   includedirs {
     "%{wks.location}/seri",
     "seri/core",
@@ -61,6 +46,18 @@ project "Seri"
 
   filter "system:windows"
     systemversion "latest"
+    linkoptions {
+      "-IGNORE:4098",
+    }
+    buildoptions {
+      "/bigobj",
+    }
+    disablewarnings {
+      "4100",
+      "4244",
+      "4267",
+      "4312",
+    }
 
   filter { "configurations:Debug" }
     defines { "DEBUG" }
@@ -100,6 +97,14 @@ project "Seri"
   usage "INTERFACE"
     links { "Seri" }
 
+    filter "system:linux"
+      links {
+        "glad",
+        "tracy",
+        "dl",
+        "pthread",
+      }
+
     filter { "configurations:Debug" }
       libdirs {
         "%{LibDir.vcpkg_debug}",
@@ -108,18 +113,32 @@ project "Seri"
         "fmtd",
         "spdlogd",
       }
-      postbuildcommands {
-        'xcopy /Q /Y /I /D "' .. path.translate(BinDir.vcpkg_debug .. "/*.dll") .. '" "%{cfg.targetdir}/"',
-      }
 
     filter { "configurations:Release" }
       libdirs {
-        "%{LibDir.vcpkg}",
+        "%{LibDir.vcpkg_release}",
       }
       links {
         "fmt",
         "spdlog",
       }
+
+    filter { "system:windows", "configurations:Debug" }
       postbuildcommands {
-        'xcopy /Q /Y /I /D "' .. path.translate(BinDir.vcpkg .. "/*.dll") .. '" "%{cfg.targetdir}/"',
+        'xcopy /Q /Y /I /D "' .. path.translate(BinDir.vcpkg_debug .. "/*.dll") .. '" "%{cfg.targetdir}/"',
+      }
+
+    filter { "system:windows", "configurations:Release" }
+      postbuildcommands {
+        'xcopy /Q /Y /I /D "' .. path.translate(BinDir.vcpkg_release .. "/*.dll") .. '" "%{cfg.targetdir}/"',
+      }
+
+    filter { "system:linux", "configurations:Debug" }
+      postbuildcommands {
+        'cp -a -u "' .. BinDir.vcpkg_debug .. '"/*.so* "%{cfg.targetdir}/"',
+      }
+
+    filter { "system:linux", "configurations:Release" }
+      postbuildcommands {
+        'cp -a -u "' .. BinDir.vcpkg_release .. '"/*.so* "%{cfg.targetdir}/"',
       }
