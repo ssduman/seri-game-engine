@@ -64,10 +64,14 @@ namespace seri::editor
 
 			for (const auto& entry : std::filesystem::directory_iterator(executablePath.parent_path()))
 			{
-				if (entry.is_regular_file() && entry.path().extension() == seri::platform::GetSharedLibraryExtension())
+				if (entry.is_directory() || !ShouldCopyToBuild(entry.path(), executablePath))
 				{
-					std::filesystem::copy_file(entry.path(), outputDirectory / entry.path().filename(), std::filesystem::copy_options::overwrite_existing);
+					continue;
 				}
+
+				std::filesystem::path destination = outputDirectory / entry.path().filename();
+				std::filesystem::remove(destination);
+				std::filesystem::copy(entry.path(), destination, std::filesystem::copy_options::copy_symlinks);
 			}
 
 			std::filesystem::copy(
@@ -115,5 +119,10 @@ namespace seri::editor
 		}
 
 		return true;
+	}
+
+	bool ProjectBuilder::ShouldCopyToBuild(const std::filesystem::path& path, const std::filesystem::path& executablePath)
+	{
+		return path != executablePath && path.extension() != ".pdb" && path.filename() != "imgui.ini";
 	}
 }

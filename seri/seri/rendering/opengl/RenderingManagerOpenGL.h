@@ -261,7 +261,7 @@ namespace seri
 	protected:
 		void LoadGlad(std::unique_ptr<WindowManagerBase>& windowManager)
 		{
-			int version = gladLoadGL(static_cast<GLADloadfunc>(windowManager->GetOpenGLProcAddress()));
+			int version = gladLoadGL(reinterpret_cast<GLADloadfunc>(windowManager->GetOpenGLProcAddress()));
 			if (version == 0)
 			{
 				throw std::runtime_error("[rendering] glad load error");

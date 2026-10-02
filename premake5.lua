@@ -1,6 +1,7 @@
-outputdir = "%{cfg.buildcfg}-%{cfg.architecture}"
-
 is_windows = os.target() == "windows"
+
+platform_name = is_windows and "win" or "linux"
+outputdir = platform_name .. "-%{cfg.buildcfg:lower()}-x64"
 
 vcpkg_triplet = is_windows and "x64-windows" or "x64-linux-dynamic"
 vcpkg_root = _MAIN_SCRIPT_DIR .. "/vcpkg_installed/" .. vcpkg_triplet

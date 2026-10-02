@@ -5,7 +5,15 @@
 
 #ifdef __linux__
 
-static_assert(false, "linux platform not supported");
+#include "seri/netcode/SocketLinux.h"
+
+namespace seri::netcode
+{
+	std::unique_ptr<Socket> Socket::Create(SocketType st)
+	{
+		return std::make_unique<SocketLinux>(st);
+	}
+}
 
 #elif _WIN32
 

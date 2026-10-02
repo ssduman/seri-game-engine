@@ -7,8 +7,6 @@ namespace seri::platform
 {
 	std::filesystem::path GetExecutablePath();
 
-	const char* GetSharedLibraryExtension();
-
 	void BeginHighResolutionTimer();
 
 	void EndHighResolutionTimer();

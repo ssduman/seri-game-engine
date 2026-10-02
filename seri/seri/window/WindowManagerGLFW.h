@@ -154,7 +154,7 @@ namespace seri
 
 		void* GetOpenGLProcAddress() override
 		{
-			return glfwGetProcAddress;
+			return reinterpret_cast<void*>(glfwGetProcAddress);
 		}
 
 		void SetOpenGLHints() override
@@ -217,7 +217,7 @@ namespace seri
 #if defined (SERI_WINDOWS)
 			return glfwGetWin32Window(_window);
 #else
-			static_assert(false, "native window handle not supported on this platform");
+			return nullptr;
 #endif
 		}
 

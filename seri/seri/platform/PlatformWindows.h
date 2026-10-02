@@ -110,11 +110,6 @@ namespace seri::platform
 		return std::filesystem::path{ buffer };
 	}
 
-	const char* GetSharedLibraryExtension()
-	{
-		return ".dll";
-	}
-
 	void BeginHighResolutionTimer()
 	{
 		timeBeginPeriod(1);

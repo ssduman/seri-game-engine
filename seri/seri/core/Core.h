@@ -6,11 +6,9 @@
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX
 
-#elif defined linux
+#elif defined __linux__
 
 #define SERI_LINUX
-
-static_assert(false, "linux not supported");
 
 #endif
 

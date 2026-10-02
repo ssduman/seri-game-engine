@@ -29,6 +29,7 @@ namespace seri::editor
 			if (!playerProjectPath.empty())
 			{
 				RunPlayer(playerProjectPath);
+				ShutdownPlatform();
 				return;
 			}
 
@@ -46,6 +47,8 @@ namespace seri::editor
 
 			RunLauncher(projectPath);
 			RunEditor(projectPath);
+
+			ShutdownPlatform();
 		}
 
 	private:
@@ -71,6 +74,13 @@ namespace seri::editor
 			);
 
 			seri::RenderingManager::Instance()->Init(seri::WindowManager::Instance(), seri::RenderingProperties{});
+		}
+
+		void ShutdownPlatform()
+		{
+			seri::asset::AssetManager::ClearCache();
+			seri::RenderingManager::Instance().reset();
+			seri::WindowManager::Instance().reset();
 		}
 
 		void RunFrame(seri::LayerManager& layerManager)

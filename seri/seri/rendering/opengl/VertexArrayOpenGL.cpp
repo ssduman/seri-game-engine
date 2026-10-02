@@ -89,7 +89,7 @@ namespace seri
 							element.GetCount(),
 							GetShaderDataTypeOpenGL(element.type),
 							layout.GetStride(),
-							(const void*)element.GetOffset()
+							(const void*)(uintptr_t)element.GetOffset()
 						);
 					}
 					break;
@@ -106,7 +106,7 @@ namespace seri
 							GetShaderDataTypeOpenGL(element.type),
 							element.normalized ? GL_TRUE : GL_FALSE,
 							layout.GetStride(),
-							(const void*)element.GetOffset()
+							(const void*)(uintptr_t)element.GetOffset()
 						);
 					}
 					break;

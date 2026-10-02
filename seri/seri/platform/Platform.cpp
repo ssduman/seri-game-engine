@@ -5,7 +5,7 @@
 
 #ifdef __linux__
 
-static_assert(false, "linux platform not supported");
+#include "seri/platform/PlatformLinux.h"
 
 #elif _WIN32
 

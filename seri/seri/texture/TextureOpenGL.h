@@ -179,8 +179,8 @@ namespace seri
 	private:
 		struct BoundTexture
 		{
-			GLenum target{ 0 };
-			GLuint handle{ 0 };
+			GLenum target;
+			GLuint handle;
 		};
 
 		static void BindToSlot(int slot, GLenum target, GLuint handle)

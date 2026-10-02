@@ -6,20 +6,27 @@ local function copyFile(source, destination)
   end
 end
 
+local function removeDir(dir)
+  if os.host() == "windows" then
+    os.rmdir(dir)
+  else
+    os.execute(string.format('rm -rf "%s"', dir))
+  end
+end
+
 newaction {
   trigger = "package",
-  description = "Zip the release Editor build into package/",
+  description = "Archive the release Editor build into package/",
   execute = function()
-    if os.host() ~= "windows" then
-      error("package is only supported on windows for now", 0)
-    end
+    local isWindows = os.host() == "windows"
+    local executable = isWindows and "Editor.exe" or "Editor"
 
-    local releaseDir = path.join(_MAIN_SCRIPT_DIR, "bin/Release-x86_64/Editor")
+    local releaseDir = path.join(_MAIN_SCRIPT_DIR, "bin", platform_name .. "-release-x64", "Editor")
     local packageDir = path.join(_MAIN_SCRIPT_DIR, "package")
 
     print("=== checking release build...")
-    if not os.isfile(path.join(releaseDir, "Editor.exe")) then
-      error(path.join(releaseDir, "Editor.exe") .. " not found, build release first", 0)
+    if not os.isfile(path.join(releaseDir, executable)) then
+      error(path.join(releaseDir, executable) .. " not found, build release first", 0)
     end
 
     print("=== reading version...")
@@ -28,62 +35,80 @@ newaction {
     if not version then
       error("version not found", 0)
     end
-    local stageDir = path.join(packageDir, "seri-game-engine-x64-v" .. version)
-    local zipFile = stageDir .. ".zip"
+    local stageDir = path.join(packageDir, "seri-game-engine-" .. platform_name .. "-x64-v" .. version)
+    local archiveFile = stageDir .. (isWindows and ".zip" or ".tar.gz")
     print("=== version is " .. version)
 
-    print("=== finding visual studio runtimes...")
-    local vswhere = path.join(os.getenv("ProgramFiles(x86)"), "Microsoft Visual Studio/Installer/vswhere.exe")
-    if not os.isfile(vswhere) then
-      error("vswhere not found", 0)
+    local crtDir
+    if isWindows then
+      print("=== finding visual studio runtimes...")
+      local vswhere = path.join(os.getenv("ProgramFiles(x86)"), "Microsoft Visual Studio/Installer/vswhere.exe")
+      if not os.isfile(vswhere) then
+        error("vswhere not found", 0)
+      end
+      local vsDir = os.outputof('"' .. vswhere .. '" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath')
+      if not vsDir or vsDir == "" then
+        error("visual studio with c++ tools not found", 0)
+      end
+      local redistVersion = (io.readfile(path.join(vsDir, "VC/Auxiliary/Build/Microsoft.VCRedistVersion.default.txt")) or ""):match("^%s*(.-)%s*$")
+      crtDir = os.matchdirs(path.join(vsDir, "VC/Redist/MSVC", redistVersion, "x64/Microsoft.VC*.CRT"))[1]
+      if not crtDir then
+        error("runtime folder not found for redist version " .. redistVersion, 0)
+      end
+      print("=== runtimes found at " .. crtDir)
     end
-    local vsDir = os.outputof('"' .. vswhere .. '" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath')
-    if not vsDir or vsDir == "" then
-      error("visual studio with c++ tools not found", 0)
-    end
-    local redistVersion = (io.readfile(path.join(vsDir, "VC/Auxiliary/Build/Microsoft.VCRedistVersion.default.txt")) or ""):match("^%s*(.-)%s*$")
-    local crtDir = os.matchdirs(path.join(vsDir, "VC/Redist/MSVC", redistVersion, "x64/Microsoft.VC*.CRT"))[1]
-    if not crtDir then
-      error("runtime folder not found for redist version " .. redistVersion, 0)
-    end
-    print("=== runtimes found at " .. crtDir)
 
     print("=== preparing package folder...")
-    os.rmdir(stageDir)
+    removeDir(stageDir)
     if os.isdir(stageDir) then
       error("could not clean " .. stageDir .. ", is a file in it open?", 0)
     end
-    os.remove(zipFile)
-    if os.isfile(zipFile) then
-      error("could not replace " .. zipFile .. ", is it open?", 0)
+    os.remove(archiveFile)
+    if os.isfile(archiveFile) then
+      error("could not replace " .. archiveFile .. ", is it open?", 0)
     end
 
     print("=== copying release files...")
-    copyFile(path.join(releaseDir, "Editor.exe"), path.join(stageDir, "Editor.exe"))
-    local dlls = os.matchfiles(path.join(releaseDir, "*.dll"))
-    if #dlls == 0 then
-      error("no dlls found in " .. releaseDir, 0)
-    end
-    for _, file in ipairs(dlls) do
-      copyFile(file, path.join(stageDir, path.getname(file)))
+    copyFile(path.join(releaseDir, executable), path.join(stageDir, executable))
+    if isWindows then
+      local dlls = os.matchfiles(path.join(releaseDir, "*.dll"))
+      if #dlls == 0 then
+        error("no dlls found in " .. releaseDir, 0)
+      end
+      for _, file in ipairs(dlls) do
+        copyFile(file, path.join(stageDir, path.getname(file)))
+      end
+    else
+      if not os.execute(string.format('strip --strip-debug "%s"', path.join(stageDir, executable))) then
+        error("could not strip " .. executable, 0)
+      end
+      if #os.matchfiles(path.join(releaseDir, "*.so*")) == 0 then
+        error("no shared libraries found in " .. releaseDir, 0)
+      end
+      if not os.execute(string.format('cp -a "%s"/*.so* "%s/"', releaseDir, stageDir)) then
+        error("could not copy shared libraries", 0)
+      end
     end
     for _, file in ipairs(os.matchfiles(path.join(releaseDir, "assets/**"))) do
       copyFile(file, path.join(stageDir, path.getrelative(releaseDir, file)))
     end
 
-    print("=== copying runtimes...")
-    for _, name in ipairs({ "msvcp140.dll", "vcruntime140.dll", "vcruntime140_1.dll" }) do
-      copyFile(path.join(crtDir, name), path.join(stageDir, name))
+    if isWindows then
+      print("=== copying runtimes...")
+      for _, name in ipairs({ "msvcp140.dll", "vcruntime140.dll", "vcruntime140_1.dll" }) do
+        copyFile(path.join(crtDir, name), path.join(stageDir, name))
+      end
     end
 
-    print("=== zipping...")
-    if not os.execute(string.format('tar -a -c -f "%s" -C "%s" *', zipFile, stageDir)) then
-      error("zip failed", 0)
+    print("=== archiving...")
+    local archiveCommand = isWindows and 'tar -a -c -f "%s" -C "%s" *' or 'tar -czf "%s" -C "%s" .'
+    if not os.execute(string.format(archiveCommand, archiveFile, stageDir)) then
+      error("archive failed", 0)
     end
-    print("=== zipped to " .. zipFile)
+    print("=== archived to " .. archiveFile)
 
     print("=== cleaning copied files...")
-    os.rmdir(stageDir)
+    removeDir(stageDir)
     if os.isdir(stageDir) then
       error("could not delete " .. stageDir, 0)
     end

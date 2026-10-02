@@ -175,6 +175,11 @@ namespace seri::asset
 			GetInstance()._assetCache[id] = asset;
 		}
 
+		static void ClearCache()
+		{
+			GetInstance()._assetCache.clear();
+		}
+
 		void Save();
 		void InitDefaultAssets();
 		void UpdateAssetTree();
@@ -183,7 +188,7 @@ namespace seri::asset
 
 		const char* kDefaultShaderName = "pbr.sshader";
 
-		static const int kRescanDelayMs = 400;
+		static constexpr int kRescanDelayMs = 400;
 
 		const char* kAssetMetaExtension = "smeta";
 		const char* kAssetSceneExtension = "sscene";

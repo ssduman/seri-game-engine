@@ -15,5 +15,7 @@ namespace seri::editor
 	private:
 		static bool CheckOutputDirectory(const std::filesystem::path& outputDirectory, std::string& error);
 
+		static bool ShouldCopyToBuild(const std::filesystem::path& path, const std::filesystem::path& executablePath);
+
 	};
 }

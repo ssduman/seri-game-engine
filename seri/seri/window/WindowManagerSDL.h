@@ -447,7 +447,7 @@ namespace seri
 
 		void* GetOpenGLProcAddress() override
 		{
-			return SDL_GL_GetProcAddress;
+			return reinterpret_cast<void*>(SDL_GL_GetProcAddress);
 		}
 
 		void SetOpenGLHints() override
