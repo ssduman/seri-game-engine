@@ -18,9 +18,9 @@
 * [X] Project System
 * [X] Build and Packaging
 * [X] Post Process
+* [X] Linux Support
 * [ ] Particles
 * [ ] NetCode
-* [ ] Linux Support
 * [ ] DirectX and Vulkan Support
 
 ## Install

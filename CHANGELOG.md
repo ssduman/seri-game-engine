@@ -1,3 +1,6 @@
+v0.1.3
+* Fixed Linux build
+
 v0.1.2
 * Fixed texture creating in OpenGL
 * Added more logs and debug context for OpenGL

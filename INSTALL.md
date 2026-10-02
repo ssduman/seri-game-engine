@@ -4,15 +4,16 @@
 * Packages that distributed with this project are: `glad`, `tracy`
 * Binaries that distributed with this project are: `Premake`
 
-## Fresh install
+## Windows and Linux
 
 ### 1. Get vcpkg
 
 ```bat
 git clone https://github.com/microsoft/vcpkg
 cd <path-to-vcpkg>
-bootstrap-vcpkg.bat
 ```
+* For Linux: `./bootstrap-vcpkg.sh`
+* For Windows: `bootstrap-vcpkg.bat`
 
 ### 2. Clone Seri Game Engine
 
@@ -23,58 +24,26 @@ cd seri-game-engine
 
 ### 3. Install packages
 
-```bat
-set "VCPKG_ROOT=<path-to-vcpkg>" && seri install
-```
+* For Linux: `VCPKG_ROOT=<path-to-vcpkg> ./seri.sh install`
+* For Windows: `set "VCPKG_ROOT=<path-to-vcpkg>" && seri.bat install`
 
-### 4. Generate solution
+### 4. Generate solution or gmake
 
-```bat
-seri generate
-```
+* For Linux: `./seri.sh generate`
+* For Windows: `seri.bat generate`
 
 ### 5. Build
 
-* Open `Seri Game Engine.slnx` with Visual Studio 2026 and build
-* Or build from the command line with `seri build` (Debug) or `seri build --config=release`, add `--rebuild` to clean first
+* Open `Seri Game Engine.slnx`
+* For Linux: `seri.bat build`
+* For Windows: `./seri.sh build`
+    - Debug is default
+    - `--config=[debug|release]`
+    - `--rebuild` to rebuild
 
 ### 6. Project
 
 * Select a `sproject` inside `project/` or create a new project
-
-## Adding package
-
-1. Look up the port and version data for the package from `vcpkg`
-
-2. Add it to `dependencies` and `overrides` fields in `vcpkg.json`
-
-3. Reinstall with `seri install` and update `Premake`
-
-## Upgrade
-
-1. Update your `vcpkg` clone and re-bootstrap
-
-```bat
-cd <path-to-vcpkg>
-git pull
-bootstrap-vcpkg.bat
-```
-
-2. Get the commit SHA to put in `vcpkg.json` for the new baseline
-
-3. Look up the new versions and ports of each packages you want to upgrade
-
-4. Re-run `seri install`
-
-## Removing package
-
-1. Delete it from `vcpkg.json` entirely
-
-2. Delete it from `vcpkg_installed/`
-
-3. Delete all related settings from `Premake`
-
-4. Re-run `seri install`
 
 ## Dependencies ##
 

@@ -2,7 +2,7 @@
 
 namespace seri::literals
 {
-	constexpr const char* kVersion = "0.1.2";
+	constexpr const char* kVersion = "0.1.3";
 	constexpr const char* kEngineName = "Seri Game Engine";
 
 	constexpr const char* kIconName = "seri.png";
