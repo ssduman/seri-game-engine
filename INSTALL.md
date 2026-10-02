@@ -1,14 +1,20 @@
 # Install
 
 * Packages declared in `vcpkg.json` are built into `vcpkg_installed/` folder inside this repository with `vcpkg`
-* Packages that distributed with this project are: `glad`, `tracy`
-* Binaries that distributed with this project are: `Premake`
+* Packages distributed with this project: `glad`, `tracy`
+* Binaries distributed with this project: `Premake`
+
+## Actions
+
+* Utility actions
+* For Linux: `./seri.sh  help`
+* For Windows: `seri.bat help`
 
 ## Windows and Linux
 
 ### 1. Get vcpkg
 
-```bat
+```
 git clone https://github.com/microsoft/vcpkg
 cd <path-to-vcpkg>
 ```
@@ -17,7 +23,7 @@ cd <path-to-vcpkg>
 
 ### 2. Clone Seri Game Engine
 
-```bat
+```
 git clone https://github.com/ssduman/seri-game-engine
 cd seri-game-engine
 ```
@@ -27,16 +33,16 @@ cd seri-game-engine
 * For Linux: `VCPKG_ROOT=<path-to-vcpkg> ./seri.sh install`
 * For Windows: `set "VCPKG_ROOT=<path-to-vcpkg>" && seri.bat install`
 
-### 4. Generate solution or gmake
+### 4. Generate Visual Studio solution or Makefiles
 
 * For Linux: `./seri.sh generate`
 * For Windows: `seri.bat generate`
 
 ### 5. Build
 
-* Open `Seri Game Engine.slnx`
-* For Linux: `seri.bat build`
-* For Windows: `./seri.sh build`
+* Open `Seri Game Engine.slnx` or
+* For Linux: `./seri.sh build`
+* For Windows: `seri.bat build`
     - Debug is default
     - `--config=[debug|release]`
     - `--rebuild` to rebuild

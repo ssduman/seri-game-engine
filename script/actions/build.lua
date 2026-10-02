@@ -18,6 +18,10 @@ newaction {
   trigger = "build",
   description = "Build all projects, --config=debug (default) or --config=release, --rebuild to clean first",
   execute = function()
+    if #_ARGS > 0 then
+      error("unexpected argument '" .. _ARGS[1] .. "', options start with two dashes, for example --config=release", 0)
+    end
+
     local config = _OPTIONS["config"]
     local rebuild = _OPTIONS["rebuild"] ~= nil
     print("=== " .. (rebuild and "rebuilding " or "building ") .. config)
