@@ -7,7 +7,7 @@
 ## Actions
 
 * Utility actions
-* For Linux: `./seri.sh  help`
+* For Linux: `./seri.sh help`
 * For Windows: `seri.bat help`
 
 ## Windows and Linux
