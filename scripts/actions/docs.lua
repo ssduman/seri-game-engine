@@ -8,10 +8,16 @@ newaction {
       "editor/assets/icons/seri.png",
       "docs/images/editor.png",
       "docs/images/launcher.png",
+      "docs/images/launcher-create.png",
       "docs/images/snake-editor.png",
       "docs/images/snake-game.png",
       "docs/images/knockdown-editor.png",
       "docs/images/knockdown-game.png",
+    }
+    local fonts = {
+      "fonts/Inter/Inter-VariableFont_opsz,wght.ttf",
+      "fonts/Cascadia_Mono/CascadiaMono-VariableFont_wght.ttf",
+      "fonts/Cascadia_Mono/CascadiaMono-Italic-VariableFont_wght.ttf",
     }
 
     if not engine_version then
@@ -70,7 +76,7 @@ newaction {
           releaseDate = date
         end
         version = escape(version)
-        table.insert(changelogHtml, string.format('  <section>\n    <h2 id="%s">%s <time datetime="%s-%s-%s">%s</time></h2>\n    <ul>', version, version, year, month, day, date))
+        table.insert(changelogHtml, string.format('  <section>\n    <h2 id="%s"><a href="https://github.com/ssduman/seri-game-engine/releases/tag/%s">%s</a> <time datetime="%s-%s-%s">%s</time></h2>\n    <ul>', version, version, version, year, month, day, date))
         inList = true
       end
     end
@@ -113,6 +119,13 @@ newaction {
       local ok, err = os.copyfile(path.join(_MAIN_SCRIPT_DIR, image), path.join(outDir, "images", path.getname(image)))
       if not ok then
         error("could not copy " .. image .. ": " .. tostring(err), 0)
+      end
+    end
+    for _, font in ipairs(fonts) do
+      os.mkdir(path.join(outDir, path.getdirectory(font)))
+      local ok, err = os.copyfile(path.join(siteDir, font), path.join(outDir, font))
+      if not ok then
+        error("could not copy " .. font .. ": " .. tostring(err), 0)
       end
     end
 

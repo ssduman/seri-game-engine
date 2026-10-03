@@ -1,3 +1,27 @@
+@font-face {
+  font-family: "Inter";
+  src: url("fonts/Inter/Inter-VariableFont_opsz,wght.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Cascadia Mono";
+  src: url("fonts/Cascadia_Mono/CascadiaMono-VariableFont_wght.ttf") format("truetype");
+  font-weight: 200 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Cascadia Mono";
+  src: url("fonts/Cascadia_Mono/CascadiaMono-Italic-VariableFont_wght.ttf") format("truetype");
+  font-weight: 200 700;
+  font-style: italic;
+  font-display: swap;
+}
+
 :root {
   --bg: #121418;
   --surface: #1a1d23;
@@ -57,7 +81,7 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font: 16px/1.65 system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, sans-serif;
+  font: 16px/1.65 "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -76,7 +100,7 @@ img {
 }
 
 code, pre {
-  font-family: ui-monospace, "Cascadia Code", Consolas, "Liberation Mono", Menlo, monospace;
+  font-family: "Cascadia Mono", ui-monospace, "Cascadia Code", Consolas, "Liberation Mono", Menlo, monospace;
 }
 
 code {
@@ -350,17 +374,11 @@ h3 {
   font-size: 0.95rem;
 }
 
-.gallery {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  align-items: start;
-}
-
+.gallery,
 .split {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
-  gap: 32px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 20px;
   align-items: start;
 }
 
@@ -462,6 +480,10 @@ h3 {
 
 .changelog h2 {
   margin-top: 32px;
+}
+
+.changelog h2 a {
+  color: inherit;
 }
 
 .changelog h2 time {
