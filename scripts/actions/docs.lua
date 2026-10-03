@@ -33,26 +33,52 @@ newaction {
     local escape = function(text)
       return (text:gsub("[&<>]", { ["&"] = "&amp;", ["<"] = "&lt;", [">"] = "&gt;" }))
     end
+    local months = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" }
     local changelogHtml = {}
+    local releaseDate
     local inList = false
+    local unreleased = false
     for line in changelog:gmatch("[^\r\n]+") do
       local item = line:match("^%*%s+(.-)%s*$")
       if item then
-        if not inList then
+        if not inList and not unreleased then
           error("CHANGELOG.md has an entry before any version: " .. line, 0)
         end
-        table.insert(changelogHtml, "      <li>" .. escape(item) .. "</li>")
+        if inList then
+          table.insert(changelogHtml, "      <li>" .. escape(item) .. "</li>")
+        end
+      elseif line:match("^%s*Unreleased%s*$") then
+        if inList then
+          table.insert(changelogHtml, "    </ul>\n  </section>")
+          inList = false
+        end
+        unreleased = true
       elseif line:match("%S") then
         if inList then
           table.insert(changelogHtml, "    </ul>\n  </section>")
         end
-        local version = escape(line:match("^%s*(.-)%s*$"))
-        table.insert(changelogHtml, string.format('  <section>\n    <h2 id="%s">%s</h2>\n    <ul>', version, version))
+        unreleased = false
+        local version, year, month, day = line:match("^%s*(%S+)%s+%-%s+(%d%d%d%d)%-(%d%d)%-(%d%d)%s*$")
+        if not version or not months[tonumber(month)] then
+          error("CHANGELOG.md version line needs a YYYY-MM-DD date, for example v0.2.0 - 2026-10-03: " .. line, 0)
+        end
+        local date = tonumber(day) .. " " .. months[tonumber(month)] .. " " .. year
+        if not releaseDate then
+          if version ~= "v" .. engine_version then
+            error("CHANGELOG.md newest version " .. version .. " does not match engine version v" .. engine_version, 0)
+          end
+          releaseDate = date
+        end
+        version = escape(version)
+        table.insert(changelogHtml, string.format('  <section>\n    <h2 id="%s">%s <time datetime="%s-%s-%s">%s</time></h2>\n    <ul>', version, version, year, month, day, date))
         inList = true
       end
     end
     if inList then
       table.insert(changelogHtml, "    </ul>\n  </section>")
+    end
+    if not releaseDate then
+      error("CHANGELOG.md has no versions", 0)
     end
     changelogHtml = table.concat(changelogHtml, "\n")
 
@@ -74,6 +100,7 @@ newaction {
         :gsub("{{header}}", function() return pageHeader end)
         :gsub("{{footer}}", function() return footer end)
         :gsub("{{version}}", engine_version)
+        :gsub("{{date}}", releaseDate)
         :gsub("{{changelog}}", function() return changelogHtml end)
       io.writefile(path.join(outDir, name), page)
     end
