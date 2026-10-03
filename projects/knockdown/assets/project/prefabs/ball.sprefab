@@ -1,0 +1,38 @@
+IDInfo:
+  ID: 1874272746746548605
+  Version: 0.1
+Prefab:
+  Entities:
+    - Entity:
+        IDComponent:
+          ID: 8491409104939498627
+          ParentID: 0
+          Name: Ball
+        TransformComponent:
+          Position: [0, 0, 0]
+          Rotation: [0, 0, 0]
+          Scale: [0.5, 0.5, 0.5]
+          IsActive: true
+        MeshComponent:
+          MeshAssetID: 9078063403449755195
+        MeshRendererComponent:
+          MaterialAssetIDs:
+            - 10551499445486510564
+          CastShadow: true
+        ColliderComponent:
+          Shape: 1
+          Center: [0, 0, 0]
+          Size: [1, 1, 1]
+          Radius: 0.5
+          Height: 2
+          Friction: 0.5
+          Restitution: 0.3
+          IsTrigger: false
+        RigidbodyComponent:
+          Mass: 3
+          LinearDamping: 0
+          AngularDamping: 0.05
+          GravityScale: 1
+          IsKinematic: false
+          LockPosition: [0, 0, 0]
+          LockRotation: [0, 0, 0]

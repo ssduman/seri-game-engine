@@ -1,2 +1,2 @@
 @echo off
-"%~dp0script\premake5\premake5.exe" %*
+"%~dp0scripts\premake5\premake5.exe" %*

@@ -49,7 +49,7 @@ cd seri-game-engine
 
 ### 6. Project
 
-* Select a `sproject` inside `project/` or create a new project
+* Select a `sproject` inside `projects/` or create a new project
 
 ## Dependencies ##
 

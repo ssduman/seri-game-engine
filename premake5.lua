@@ -26,12 +26,12 @@ Lib = {}
 Lib["assimp_release"] = is_windows and "assimp-vc145-mt" or "assimp"
 Lib["assimp_debug"] = is_windows and "assimp-vc145-mtd" or "assimpd"
 
-include "script/actions/install.lua"
-include "script/actions/generate.lua"
-include "script/actions/build.lua"
-include "script/actions/package.lua"
-include "script/actions/docs.lua"
-include "script/actions/help.lua"
+include "scripts/actions/install.lua"
+include "scripts/actions/generate.lua"
+include "scripts/actions/build.lua"
+include "scripts/actions/package.lua"
+include "scripts/actions/docs.lua"
+include "scripts/actions/help.lua"
 
 workspace "Seri Game Engine"
   architecture "x86_64"

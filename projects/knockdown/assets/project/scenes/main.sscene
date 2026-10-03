@@ -1,0 +1,2088 @@
+IDComponent:
+  ID: 10215759833630122414
+  ParentID: 0
+  Name: main
+SceneComponent:
+  Version: 0.1
+  IsActive: true
+  Environment:
+    BackgroundMode: 1
+    BackgroundColor: [0.18, 0.2, 0.24]
+    SkyboxAssetID: 0
+  PostProcess:
+    FxaaEnabled: true
+    ColorAdjustEnabled: false
+    Brightness: 0
+    Contrast: 1
+    Saturation: 1
+    VignetteEnabled: false
+    VignetteIntensity: 0.3
+    VignetteSmoothness: 0.5
+    VignetteColor: [0, 0, 0]
+Entities:
+  - Entity:
+      IDComponent:
+        ID: 3533770693683335021
+        ParentID: 0
+        Name: Camera
+      TransformComponent:
+        Position: [0, 2.6, 9]
+        Rotation: [-8, 0, 0]
+        Scale: [1, 1, 1]
+        IsActive: true
+      CameraComponent:
+        IsMain: true
+        IsOrtho: false
+        FoV: 60
+        OrthoSize: 5
+        NearPlane: 0.1
+        FarPlane: 1000
+      ScriptComponent:
+        Scripts:
+          - Name: Launcher
+            Enabled: true
+  - Entity:
+      IDComponent:
+        ID: 13277966713892674995
+        ParentID: 0
+        Name: Sun
+      TransformComponent:
+        Position: [0, 0, 0]
+        Rotation: [-45, -30, 0]
+        Scale: [1, 1, 1]
+        IsActive: true
+      DirectionalLightComponent:
+        Intensity: 2.5
+        Color: [1, 0.97, 0.92]
+  - Entity:
+      IDComponent:
+        ID: 7274963132903100541
+        ParentID: 0
+        Name: Fill Light
+      TransformComponent:
+        Position: [0, 5, 7]
+        Rotation: [0, 0, 0]
+        Scale: [1, 1, 1]
+        IsActive: true
+      PointLightComponent:
+        Range: 25
+        Intensity: 1.5
+        Color: [0.85, 0.9, 1]
+  - Entity:
+      IDComponent:
+        ID: 3860109588526810746
+        ParentID: 0
+        Name: Ground
+      TransformComponent:
+        Position: [0, -0.5, 0]
+        Rotation: [0, 0, 0]
+        Scale: [12, 1, 12]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 15032708023389870811
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+  - Entity:
+      IDComponent:
+        ID: 8507001438742786403
+        ParentID: 0
+        Name: KillZone
+      TransformComponent:
+        Position: [0, -8, 0]
+        Rotation: [0, 0, 0]
+        Scale: [100, 2, 100]
+        IsActive: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: true
+      ScriptComponent:
+        Scripts:
+          - Name: KillZone
+            Enabled: true
+  - Entity:
+      IDComponent:
+        ID: 12117642407544101565
+        ParentID: 0
+        Name: Blocks
+      TransformComponent:
+        Position: [0, 0, 0]
+        Rotation: [0, 0, 0]
+        Scale: [1, 1, 1]
+        IsActive: true
+  - Entity:
+      IDComponent:
+        ID: 4804099193777643235
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [-3.405, 0.4, -1.405]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 476125058928645518
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 8160452823151872186
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [-3.405, 0.4, -0.595]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 476125058928645518
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 13838475631620919955
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [-2.595, 0.4, -1.405]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 476125058928645518
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 8115151277108035413
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [-2.595, 0.4, -0.595]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 476125058928645518
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 12729103678134625990
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [-3.405, 1.202, -1.405]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 476125058928645518
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 13615815107444215053
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [-3.405, 1.202, -0.595]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 476125058928645518
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 4690300353870970994
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [-2.595, 1.202, -1.405]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 476125058928645518
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 17768793474411299169
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [-2.595, 1.202, -0.595]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 476125058928645518
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 6472612958067085206
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [-3.405, 2.004, -1.405]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 476125058928645518
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 2904377038471602360
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [-3.405, 2.004, -0.595]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 476125058928645518
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 13837782720476886964
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [-2.595, 2.004, -1.405]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 476125058928645518
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 7841035944590500682
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [-2.595, 2.004, -0.595]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 476125058928645518
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 16197917766175843486
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [-3.405, 2.806, -1.405]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 476125058928645518
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 7595888654862460687
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [-3.405, 2.806, -0.595]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 476125058928645518
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 6779068837502973592
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [-2.595, 2.806, -1.405]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 476125058928645518
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 2091843473805105252
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [-2.595, 2.806, -0.595]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 476125058928645518
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 3564879294283685983
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [-0.405, 0.4, -1.405]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 15483916144148586151
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 11360728461900908579
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [-0.405, 0.4, -0.595]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 15483916144148586151
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 3953307443317097083
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [0.405, 0.4, -1.405]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 15483916144148586151
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 10251956179089195192
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [0.405, 0.4, -0.595]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 15483916144148586151
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 10464832639408540418
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [-0.405, 1.202, -1.405]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 15483916144148586151
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 312034723038546444
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [-0.405, 1.202, -0.595]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 15483916144148586151
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 14637704958566849201
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [0.405, 1.202, -1.405]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 15483916144148586151
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 6907328155263748293
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [0.405, 1.202, -0.595]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 15483916144148586151
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 3546811724869160790
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [-0.405, 2.004, -1.405]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 15483916144148586151
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 11585494269604808178
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [-0.405, 2.004, -0.595]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 15483916144148586151
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 1667022744437053445
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [0.405, 2.004, -1.405]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 15483916144148586151
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 13936236146425229811
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [0.405, 2.004, -0.595]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 15483916144148586151
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 2941307574580840011
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [-0.405, 2.806, -1.405]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 15483916144148586151
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 2640236106172491169
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [-0.405, 2.806, -0.595]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 15483916144148586151
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 13393507595431186078
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [0.405, 2.806, -1.405]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 15483916144148586151
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 2936832603458236331
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [0.405, 2.806, -0.595]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 15483916144148586151
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 17684282310512499819
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [-0.405, 3.608, -1.405]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 15483916144148586151
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 7035736799742572258
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [-0.405, 3.608, -0.595]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 15483916144148586151
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 14870007106393289202
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [0.405, 3.608, -1.405]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 15483916144148586151
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 17662566219321340145
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [0.405, 3.608, -0.595]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 15483916144148586151
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 11728731228079689289
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [-0.405, 4.41, -1.405]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 15483916144148586151
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 15789389049811820569
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [-0.405, 4.41, -0.595]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 15483916144148586151
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 8155100286541257271
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [0.405, 4.41, -1.405]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 15483916144148586151
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 1734619589080415702
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [0.405, 4.41, -0.595]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 15483916144148586151
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 1463709066706254515
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [2.595, 0.4, -1.405]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 14919150664025255693
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 863382094784806403
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [2.595, 0.4, -0.595]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 14919150664025255693
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 16805756189231434708
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [3.405, 0.4, -1.405]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 14919150664025255693
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 7568188392154001346
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [3.405, 0.4, -0.595]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 14919150664025255693
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 4315898156549563764
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [2.595, 1.202, -1.405]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 14919150664025255693
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 3151346021439347521
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [2.595, 1.202, -0.595]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 14919150664025255693
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 15053337435114847152
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [3.405, 1.202, -1.405]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 14919150664025255693
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 4209694278996843018
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [3.405, 1.202, -0.595]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 14919150664025255693
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 10902212365335821903
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [2.595, 2.004, -1.405]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 14919150664025255693
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 5388862058983707782
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [2.595, 2.004, -0.595]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 14919150664025255693
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 9250948992796941794
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [3.405, 2.004, -1.405]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 14919150664025255693
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 1470122223140600519
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [3.405, 2.004, -0.595]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 14919150664025255693
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 17846991579821896570
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [2.595, 2.806, -1.405]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 14919150664025255693
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 11188869810476498625
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [2.595, 2.806, -0.595]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 14919150664025255693
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 5270777925776201076
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [3.405, 2.806, -1.405]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 14919150664025255693
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 9226894399373898210
+        ParentID: 12117642407544101565
+        Name: Block
+      TransformComponent:
+        Position: [3.405, 2.806, -0.595]
+        Rotation: [0, 0, 0]
+        Scale: [0.8, 0.8, 0.8]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 12713997205820908683
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 14919150664025255693
+        CastShadow: true
+      ColliderComponent:
+        Shape: 0
+        Center: [0, 0, 0]
+        Size: [1, 1, 1]
+        Radius: 0.5
+        Height: 2
+        Friction: 0.6
+        Restitution: 0
+        IsTrigger: false
+      RigidbodyComponent:
+        Mass: 1
+        LinearDamping: 0
+        AngularDamping: 0.05
+        GravityScale: 1
+        IsKinematic: false
+        LockPosition: [0, 0, 0]
+        LockRotation: [0, 0, 0]
+  - Entity:
+      IDComponent:
+        ID: 13203032675182197374
+        ParentID: 0
+        Name: Canvas
+      TransformComponent:
+        Position: [0, 0, 0]
+        Rotation: [0, 0, 0]
+        Scale: [1, 1, 1]
+        IsActive: true
+      CanvasComponent:
+        Mode: 0
+        SortOrder: 0
+      RectComponent:
+        AnchorMin: [0, 0]
+        AnchorMax: [1, 1]
+        Pivot: [0.5, 0.5]
+        AnchoredPosition: [0, 0]
+        SizeDelta: [0, 0]
+  - Entity:
+      IDComponent:
+        ID: 12057494610379039366
+        ParentID: 13203032675182197374
+        Name: KnockedText
+      TransformComponent:
+        Position: [0, 0, 0]
+        Rotation: [0, 0, 0]
+        Scale: [1, 1, 1]
+        IsActive: true
+      RectComponent:
+        AnchorMin: [0, 1]
+        AnchorMax: [0, 1]
+        Pivot: [0, 1]
+        AnchoredPosition: [24, -20]
+        SizeDelta: [320, 40]
+      TextComponent:
+        FontAssetID: 0
+        Text: Knocked 0
+        FontSize: 28
+        LineSpacing: 1
+        Color: [0.95, 0.96, 0.98, 1]
+        AlignH: 0
+        AlignV: 1
+  - Entity:
+      IDComponent:
+        ID: 7527325168071825902
+        ParentID: 13203032675182197374
+        Name: BallsText
+      TransformComponent:
+        Position: [0, 0, 0]
+        Rotation: [0, 0, 0]
+        Scale: [1, 1, 1]
+        IsActive: true
+      RectComponent:
+        AnchorMin: [0, 1]
+        AnchorMax: [0, 1]
+        Pivot: [0, 1]
+        AnchoredPosition: [24, -60]
+        SizeDelta: [320, 40]
+      TextComponent:
+        FontAssetID: 0
+        Text: Balls 0
+        FontSize: 28
+        LineSpacing: 1
+        Color: [0.95, 0.96, 0.98, 1]
+        AlignH: 0
+        AlignV: 1
+  - Entity:
+      IDComponent:
+        ID: 7246561504836890043
+        ParentID: 13203032675182197374
+        Name: HintText
+      TransformComponent:
+        Position: [0, 0, 0]
+        Rotation: [0, 0, 0]
+        Scale: [1, 1, 1]
+        IsActive: true
+      RectComponent:
+        AnchorMin: [0.5, 0]
+        AnchorMax: [0.5, 0]
+        Pivot: [0.5, 0]
+        AnchoredPosition: [0, 16]
+        SizeDelta: [900, 32]
+      TextComponent:
+        FontAssetID: 0
+        Text: WASD / arrows aim   Space fire   R reset
+        FontSize: 20
+        LineSpacing: 1
+        Color: [0.95, 0.96, 0.98, 0.75]
+        AlignH: 1
+        AlignV: 1
+  - Entity:
+      IDComponent:
+        ID: 14130095794778522455
+        ParentID: 13203032675182197374
+        Name: Crosshair
+      TransformComponent:
+        Position: [0, 0, 0]
+        Rotation: [0, 0, 0]
+        Scale: [1, 1, 1]
+        IsActive: true
+      RectComponent:
+        AnchorMin: [0.5, 0.5]
+        AnchorMax: [0.5, 0.5]
+        Pivot: [0.5, 0.5]
+        AnchoredPosition: [0, 0]
+        SizeDelta: [6, 6]
+      SpriteRendererComponent:
+        TextureAssetID: 9403479199953891817
+        Color: [1, 1, 1, 0.9]
+        FlipX: false
+        FlipY: false

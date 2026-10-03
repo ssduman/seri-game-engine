@@ -5,7 +5,7 @@ newaction {
     local wrapper = os.host() == "windows" and "seri" or "./seri.sh"
 
     local names = {}
-    for _, file in ipairs(os.matchfiles(path.join(_MAIN_SCRIPT_DIR, "script/actions/*.lua"))) do
+    for _, file in ipairs(os.matchfiles(path.join(_MAIN_SCRIPT_DIR, "scripts/actions/*.lua"))) do
       table.insert(names, path.getbasename(file))
     end
     table.sort(names)

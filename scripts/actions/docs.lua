@@ -10,6 +10,8 @@ newaction {
       "docs/images/launcher.png",
       "docs/images/snake-editor.png",
       "docs/images/snake-game.png",
+      "docs/images/knockdown-editor.png",
+      "docs/images/knockdown-game.png",
     }
 
     if not engine_version then
