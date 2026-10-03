@@ -9,9 +9,6 @@ project/**/assets/engine/
 # vcpkg
 vcpkg_installed/
 
-# Package
-/package/
-
 # ini
 imgui.ini
 
@@ -43,6 +40,7 @@ mono_crash.*
 # Build results
 [Ii]ntermediate/
 [Bb]uild/
+[Pp]ackage/
 [Bb]in-int/
 [Cc]make-build*/
 [Oo]ut/

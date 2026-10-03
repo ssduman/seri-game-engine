@@ -1,0 +1,29 @@
+PROJECT_NAME           = "Seri Game Engine"
+PROJECT_BRIEF          = "C++ reference"
+PROJECT_LOGO           = editor/assets/icons/seri.png
+PROJECT_ICON           = editor/assets/icons/seri.png
+OUTPUT_DIRECTORY       = bin/docs
+HTML_OUTPUT            = api
+GENERATE_LATEX         = NO
+
+INPUT                  = seri/seri docs/api/mainpage.md
+EXCLUDE                = seri/seri/third_party
+FILE_PATTERNS          = *.h *.cpp
+RECURSIVE              = YES
+USE_MDFILE_AS_MAINPAGE = docs/api/mainpage.md
+FULL_PATH_NAMES        = YES
+STRIP_FROM_PATH        = .
+STRIP_FROM_INC_PATH    = seri
+
+EXTRACT_ALL            = YES
+EXTRACT_STATIC         = YES
+SOURCE_BROWSER         = YES
+HAVE_DOT               = NO
+
+GENERATE_TREEVIEW      = YES
+HTML_COLORSTYLE        = AUTO_DARK
+HTML_COLORSTYLE_HUE    = 42
+HTML_EXTRA_STYLESHEET  = docs/api/extra.css
+
+QUIET                  = YES
+WARN_IF_UNDOCUMENTED   = NO

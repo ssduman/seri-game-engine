@@ -23,21 +23,19 @@ newaction {
 
     local releaseDir = path.join(_MAIN_SCRIPT_DIR, "bin", platform_name .. "-release-x64", "Editor")
     local packageDir = path.join(_MAIN_SCRIPT_DIR, "package")
+    
+    if not engine_version then
+      error("version not found", 0)
+    end
+    print("=== version is " .. engine_version)
 
     print("=== checking release build...")
     if not os.isfile(path.join(releaseDir, executable)) then
       error(path.join(releaseDir, executable) .. " not found, build release first", 0)
     end
 
-    print("=== reading version...")
-    local literals = io.readfile(path.join(_MAIN_SCRIPT_DIR, "seri/seri/core/Literals.h")) or ""
-    local version = literals:match('kVersion%s*=%s*"([^"]+)"')
-    if not version then
-      error("version not found", 0)
-    end
-    local stageDir = path.join(packageDir, "seri-game-engine-" .. platform_name .. "-x64-v" .. version)
+    local stageDir = path.join(packageDir, "seri-game-engine-" .. platform_name .. "-x64-v" .. engine_version)
     local archiveFile = stageDir .. (isWindows and ".zip" or ".tar.gz")
-    print("=== version is " .. version)
 
     local crtDir
     if isWindows then
@@ -101,8 +99,9 @@ newaction {
     end
 
     print("=== archiving...")
-    local archiveCommand = isWindows and 'tar -a -c -f "%s" -C "%s" *' or 'tar -czf "%s" -C "%s" .'
-    if not os.execute(string.format(archiveCommand, archiveFile, stageDir)) then
+    local archiveCommand = isWindows and '""%s" -a -c -f "%s" -C "%s" *"' or '%s -czf "%s" -C "%s" .'
+    local tar = isWindows and path.join(os.getenv("SystemRoot"), "System32/tar.exe") or "tar"
+    if not os.execute(string.format(archiveCommand, tar, archiveFile, stageDir)) then
       error("archive failed", 0)
     end
     print("=== archived to " .. archiveFile)

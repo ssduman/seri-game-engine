@@ -3,6 +3,8 @@ is_windows = os.target() == "windows"
 platform_name = is_windows and "win" or "linux"
 outputdir = platform_name .. "-%{cfg.buildcfg:lower()}-x64"
 
+engine_version = (io.readfile(_MAIN_SCRIPT_DIR .. "/seri/seri/core/Literals.h") or ""):match('kVersion%s*=%s*"([^"]+)"')
+
 vcpkg_triplet = is_windows and "x64-windows" or "x64-linux-dynamic"
 vcpkg_root = _MAIN_SCRIPT_DIR .. "/vcpkg_installed/" .. vcpkg_triplet
 vcpkg_bin = is_windows and "bin" or "lib"
@@ -28,6 +30,7 @@ include "script/actions/install.lua"
 include "script/actions/generate.lua"
 include "script/actions/build.lua"
 include "script/actions/package.lua"
+include "script/actions/docs.lua"
 include "script/actions/help.lua"
 
 workspace "Seri Game Engine"
@@ -46,13 +49,6 @@ workspace "Seri Game Engine"
 
   group "Test"
     include "test"
-  group ""
-
-  group "Misc"
-    -- include "misc/misc"
-    -- include "misc/maze"
-    -- include "misc/snake"
-    -- include "misc/tetris"
   group ""
 
   group "Dependencies"

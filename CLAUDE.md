@@ -4,7 +4,6 @@ A 2D/3D OpenGL game engine written in C++20, featuring an ECS architecture, PBR 
 
 ## Rules
 
-- Ignore misc/ folder.
 - Only use ASCII characters.
 - Do not write comment unless stricly necessary.
 - Do not overengineer things, do what asked.

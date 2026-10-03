@@ -1,0 +1,543 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lua Scripting Reference - Seri Game Engine</title>
+<meta name="description" content="Reference for writing gameplay scripts in Lua for the Seri Game Engine.">
+<link rel="icon" type="image/png" href="images/seri.png">
+<link rel="stylesheet" href="style.css">
+<script src="site.js" defer></script>
+</head>
+<body>
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="index.html"><img src="images/seri.png" alt="">Seri Game Engine</a>
+    <nav>
+      <a href="lua.html" aria-current="page">Lua scripting</a>
+      <a href="api/index.html">C++ API</a>
+      <a class="github" href="https://github.com/ssduman/seri-game-engine" aria-label="GitHub repository">
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/></svg>
+        <span class="github-stars"><span class="github-count">0</span><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Zm0 2.445L6.615 5.5a.75.75 0 0 1-.564.41l-3.097.45 2.24 2.184a.75.75 0 0 1 .216.664l-.528 3.084 2.769-1.456a.75.75 0 0 1 .698 0l2.77 1.456-.53-3.084a.75.75 0 0 1 .216-.664l2.24-2.183-3.096-.45a.75.75 0 0 1-.564-.41L8 2.694Z"/></svg></span>
+      </a>
+    </nav>
+  </div>
+</header>
+
+<main class="container doc">
+  <aside class="toc">
+    <p>Basics</p>
+    <a href="#scripts">Scripts</a>
+    <a href="#fields">Fields</a>
+    <a href="#callbacks">Callbacks</a>
+    <a href="#modules">Modules and libraries</a>
+    <a href="#keys">Key and Mouse</a>
+    <p>Engine</p>
+    <a href="#scene">Scene</a>
+    <a href="#entity">Entity</a>
+    <a href="#input">Input</a>
+    <a href="#time">Time</a>
+    <a href="#physics">Physics</a>
+    <a href="#audio">Audio</a>
+    <a href="#window">Window</a>
+    <a href="#application">Application</a>
+    <a href="#log">Log</a>
+    <p>Components</p>
+    <a href="#transform">Transform</a>
+    <a href="#rect">Rect</a>
+    <a href="#button">Button</a>
+    <a href="#text">Text</a>
+    <a href="#sprite">Sprite</a>
+    <a href="#collider">Collider</a>
+    <a href="#rigidbody">Rigidbody</a>
+    <p>Math</p>
+    <a href="#vectors">Vec2, Vec3, Vec4</a>
+    <a href="#random">Random</a>
+    <p>More</p>
+    <a href="#examples">Examples</a>
+  </aside>
+
+  <div class="doc-body">
+    <h1>Lua scripting reference</h1>
+
+    <section>
+      <h2 id="scripts">Scripts</h2>
+      <p>Scripts are written in Lua 5.5. A script is a <code>.lua</code> file in the project's <code>assets</code> folder. The file name is the script name, so <code>assets/project/scripts/Mover.lua</code> defines a script called <code>Mover</code>. The file returns a table, the script class, and the engine calls the functions defined on it. A file can also define a global table with the same name instead of returning one.</p>
+      <p>Attach a script to an entity with the <strong>Script Component</strong> in the inspector. Each entity gets its own instance: inside a callback, <code>self</code> is that instance and <code>self.entity</code> is the <a href="#entity">Entity</a> it is attached to. An entity can run several scripts.</p>
+      <p>Entries in the class's <code>fields</code> table are shown in the inspector, where each entity can override them, and are copied onto the instance, so the script below reads its speed as <code>self.speed</code>. All <a href="#callbacks">callbacks</a> are optional, and scripts on inactive entities receive none.</p>
+<pre><code class="language-lua">local Mover = {
+    fields = {
+        speed = 2.0,
+    },
+}
+
+function Mover:OnStart()
+    print("moving", self.entity.name, "at", self.speed)
+end
+
+function Mover:OnUpdate(dt)
+    local transform = self.entity.transform
+    transform.position = transform.position + Vec3(0, 0, -1) * (self.speed * dt)
+end
+
+return Mover</code></pre>
+    </section>
+
+    <section>
+      <h2 id="fields">Fields</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Default value</th><th>Inspector field</th></tr></thead>
+          <tbody>
+            <tr><td><code>true</code></td><td>Checkbox</td></tr>
+            <tr><td><code>3</code></td><td>Integer</td></tr>
+            <tr><td><code>2.0</code></td><td>Float. Write <code>2.0</code>, not <code>2</code>, to get a float field.</td></tr>
+            <tr><td><code>"play"</code></td><td>Text</td></tr>
+            <tr><td><code>Vec3(0, 1, 0)</code></td><td>Three floats</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2 id="callbacks">Callbacks</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Callback</th><th>When it runs</th></tr></thead>
+          <tbody>
+            <tr><td><code>OnCreate()</code></td><td>The instance was created and <code>self.entity</code> is set.</td></tr>
+            <tr><td><code>OnEnable()</code></td><td>The script became enabled. On the first frame this comes before <code>OnStart</code>.</td></tr>
+            <tr><td><code>OnStart()</code></td><td>Once, before the first <code>OnUpdate</code> of the instance.</td></tr>
+            <tr><td><code>OnFixedUpdate(dt)</code></td><td>Every fixed step, before physics. <code>dt</code> is the fixed step in seconds.</td></tr>
+            <tr><td><code>OnUpdate(dt)</code></td><td>Every frame. <code>dt</code> is the frame time in seconds.</td></tr>
+            <tr><td><code>OnLateUpdate(dt)</code></td><td>Every frame, after every script's <code>OnUpdate</code>. Use it for cameras that follow other entities.</td></tr>
+            <tr><td><code>OnClick()</code></td><td>The entity's <a href="#button">Button</a> was clicked. Runs before <code>OnUpdate</code> in the same frame.</td></tr>
+            <tr><td><code>OnCollisionEnter(other)</code></td><td>The entity's collider started touching another collider. <code>other</code> is the other Entity.</td></tr>
+            <tr><td><code>OnCollisionExit(other)</code></td><td>The colliders stopped touching.</td></tr>
+            <tr><td><code>OnTriggerEnter(other)</code></td><td>Like <code>OnCollisionEnter</code>, when either collider is a trigger.</td></tr>
+            <tr><td><code>OnTriggerExit(other)</code></td><td>Like <code>OnCollisionExit</code>, when either collider is a trigger.</td></tr>
+            <tr><td><code>OnDisable()</code></td><td>The script was disabled, or is being destroyed while enabled.</td></tr>
+            <tr><td><code>OnDestroy()</code></td><td>The instance is being destroyed: the entity was removed, play mode stopped or the script was reloaded.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2 id="modules">Modules and libraries</h2>
+      <p><code>require</code> looks in the project's <code>assets/project</code> folder, so <code>require("scripts.util")</code> loads <code>assets/project/scripts/util.lua</code>. Every <code>.lua</code> file in the assets is also registered as a script, so a module shows up in the script list too.</p>
+      <p>The standard libraries loaded are <code>base</code>, <code>package</code>, <code>math</code>, <code>table</code>, <code>string</code> and <code>utf8</code>. <code>io</code>, <code>os</code>, <code>coroutine</code> and <code>debug</code> are not available.</p>
+    </section>
+
+    <section>
+      <h2 id="keys">Key and Mouse</h2>
+      <h3>Key</h3>
+      <div class="keys">
+        <code>a</code> to <code>z</code>
+        <code>number_0</code> to <code>number_9</code>
+        <code>f1</code> to <code>f24</code>
+        <code>kp_0</code> to <code>kp_9</code>
+      </div>
+      <div class="keys">
+        <code>up</code><code>down</code><code>left</code><code>right</code>
+        <code>space</code><code>enter</code><code>escape</code><code>tab</code><code>backspace</code>
+        <code>insert</code><code>del</code><code>home</code><code>end</code><code>page_up</code><code>page_down</code>
+        <code>left_shift</code><code>right_shift</code><code>left_control</code><code>right_control</code>
+        <code>left_alt</code><code>right_alt</code><code>left_super</code><code>right_super</code>
+        <code>caps_lock</code><code>num_lock</code><code>scroll_lock</code><code>print_screen</code><code>pause</code><code>menu</code>
+        <code>comma</code><code>period</code><code>slash</code><code>backslash</code><code>semicolon</code><code>apostrophe</code>
+        <code>grave_accent</code><code>minus</code><code>equal</code><code>left_bracket</code><code>right_bracket</code>
+        <code>kp_add</code><code>kp_subtract</code><code>kp_multiply</code><code>kp_divide</code><code>kp_decimal</code><code>kp_enter</code><code>kp_equal</code>
+      </div>
+      <h3>Mouse</h3>
+      <div class="keys">
+        <code>button_left</code><code>button_right</code><code>button_middle</code>
+        <code>button_4</code> to <code>button_8</code>
+      </div>
+    </section>
+
+    <section>
+      <h2 id="scene">Scene</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Member</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>Scene.Find(name)</code></td><td>Returns the first entity named <code>name</code>, or <code>nil</code>.</td></tr>
+            <tr><td><code>Scene.Instantiate(prefab, parent)</code></td><td>Creates an instance of the prefab whose file name, without extension, is <code>prefab</code>. <code>parent</code> is an optional Entity. Returns the new entity, or <code>nil</code> if the prefab is not found.</td></tr>
+            <tr><td><code>Scene.Destroy(entity)</code></td><td>Destroys the entity.</td></tr>
+            <tr><td><code>Scene.Reload()</code></td><td>Reloads the active scene.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2 id="entity">Entity</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Member</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>entity.name</code></td><td>Name shown in the hierarchy. Read only.</td></tr>
+            <tr><td><code>entity.active</code></td><td>Whether the entity is active. Setting it to <code>false</code> also deactivates its children.</td></tr>
+            <tr><td><code>entity.transform</code></td><td>The <a href="#transform">Transform</a>, or <code>nil</code>.</td></tr>
+            <tr><td><code>entity.rect</code></td><td>The <a href="#rect">Rect</a> of a UI element, or <code>nil</code>.</td></tr>
+            <tr><td><code>entity.button</code></td><td>The <a href="#button">Button</a>, or <code>nil</code>.</td></tr>
+            <tr><td><code>entity.text</code></td><td>The <a href="#text">Text</a>, or <code>nil</code>.</td></tr>
+            <tr><td><code>entity.sprite</code></td><td>The <a href="#sprite">Sprite</a>, or <code>nil</code>.</td></tr>
+            <tr><td><code>entity.collider</code></td><td>The <a href="#collider">Collider</a>, or <code>nil</code>.</td></tr>
+            <tr><td><code>entity.rigidbody</code></td><td>The <a href="#rigidbody">Rigidbody</a>, or <code>nil</code>.</td></tr>
+            <tr><td><code>entity:IsValid()</code></td><td>Returns <code>false</code> once the entity has been destroyed.</td></tr>
+            <tr><td><code>entity:GetScript(name)</code></td><td>Returns the instance of the script <code>name</code> on this entity, or <code>nil</code>. Use it to read another script's fields or call its functions.</td></tr>
+            <tr><td><code>a == b</code></td><td>True when both refer to the same entity.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2 id="input">Input</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Member</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>Input.GetKey(key)</code></td><td><code>true</code> while the key is held down. <code>key</code> is a <a href="#keys">Key</a> value such as <code>Key.space</code>.</td></tr>
+            <tr><td><code>Input.GetKeyDown(key)</code></td><td><code>true</code> in the frame the key was pressed.</td></tr>
+            <tr><td><code>Input.GetKeyUp(key)</code></td><td><code>true</code> in the frame the key was released.</td></tr>
+            <tr><td><code>Input.GetMouseButton(button)</code></td><td><code>true</code> while the mouse button is held down. <code>button</code> is a <a href="#keys">Mouse</a> value such as <code>Mouse.button_left</code>.</td></tr>
+            <tr><td><code>Input.GetMouseButtonDown(button)</code></td><td><code>true</code> in the frame the button was pressed.</td></tr>
+            <tr><td><code>Input.GetMouseButtonUp(button)</code></td><td><code>true</code> in the frame the button was released.</td></tr>
+            <tr><td><code>Input.GetMousePosition()</code></td><td>Cursor position in window pixels, as a Vec2.</td></tr>
+            <tr><td><code>Input.GetScrollDelta()</code></td><td>Scroll wheel movement in this frame, as a Vec2.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2 id="time">Time</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Member</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>Time.delta_time</code></td><td>Seconds since the previous frame.</td></tr>
+            <tr><td><code>Time.fixed_delta_time</code></td><td>Length of a fixed step in seconds.</td></tr>
+            <tr><td><code>Time.time</code></td><td>Seconds since the application started.</td></tr>
+            <tr><td><code>Time.frame_count</code></td><td>Number of frames since the application started.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2 id="physics">Physics</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Member</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>Physics.Raycast(origin, direction, max_distance)</code></td><td>Casts a ray from <code>origin</code> along <code>direction</code> (both Vec3). <code>max_distance</code> is optional and defaults to 1000. Returns a RaycastHit, or <code>nil</code> when nothing was hit.</td></tr>
+            <tr><td><code>Physics.GetGravity()</code></td><td>Returns the gravity as a Vec3.</td></tr>
+            <tr><td><code>Physics.SetGravity(gravity)</code></td><td>Sets the gravity.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <h3 id="raycasthit">RaycastHit</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Member</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>hit.entity</code></td><td>The Entity that was hit.</td></tr>
+            <tr><td><code>hit.point</code></td><td>Hit position, Vec3.</td></tr>
+            <tr><td><code>hit.normal</code></td><td>Surface normal at the hit, Vec3.</td></tr>
+            <tr><td><code>hit.distance</code></td><td>Distance from the origin.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2 id="audio">Audio</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Member</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>Audio.Play(name)</code></td><td>Plays the sound asset whose file name, without extension, is <code>name</code>. Logs a warning if it is not found.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2 id="window">Window</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Member</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>Window.GetWidth()</code></td><td>Window width in pixels.</td></tr>
+            <tr><td><code>Window.GetHeight()</code></td><td>Window height in pixels.</td></tr>
+            <tr><td><code>Window.GetAspectRatio()</code></td><td>Width divided by height.</td></tr>
+            <tr><td><code>Window.SetSize(width, height)</code></td><td>Resizes the window.</td></tr>
+            <tr><td><code>Window.SetTitle(title)</code></td><td>Sets the window title.</td></tr>
+            <tr><td><code>Window.Minimize()</code></td><td>Minimizes the window.</td></tr>
+            <tr><td><code>Window.Maximize()</code></td><td>Maximizes the window.</td></tr>
+            <tr><td><code>Window.Restore()</code></td><td>Restores a minimized or maximized window.</td></tr>
+            <tr><td><code>Window.IsMaximized()</code></td><td>Whether the window is maximized.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <h3 id="cursor">Window.Cursor</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Member</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>Window.Cursor.SetMode(mode)</code></td><td>Sets the cursor mode to <code>Window.Cursor.normal</code>, <code>Window.Cursor.hidden</code> or <code>Window.Cursor.locked</code>. A locked cursor is hidden and kept in the window, for mouse look.</td></tr>
+            <tr><td><code>Window.Cursor.GetPosition()</code></td><td>Cursor position in window pixels, as a Vec2.</td></tr>
+            <tr><td><code>Window.Cursor.SetPosition(x, y)</code></td><td>Moves the cursor.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2 id="application">Application</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Member</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>Application.Quit()</code></td><td>Quits the game. In the editor it stops play mode instead.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2 id="log">Log</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Member</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>print(...)</code></td><td>Logs its arguments as info, separated by spaces.</td></tr>
+            <tr><td><code>Log.Info(message)</code></td><td>Logs a string as info.</td></tr>
+            <tr><td><code>Log.Warning(message)</code></td><td>Logs a string as a warning.</td></tr>
+            <tr><td><code>Log.Error(message)</code></td><td>Logs a string as an error.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2 id="transform">Transform</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Member</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>position</code></td><td>Vec3, relative to the parent.</td></tr>
+            <tr><td><code>rotation</code></td><td>Vec3 of Euler angles in degrees, relative to the parent: pitch, yaw and roll. Yaw 0 faces -Z.</td></tr>
+            <tr><td><code>scale</code></td><td>Vec3, relative to the parent.</td></tr>
+            <tr><td><code>active</code></td><td>Same as <code>entity.active</code>.</td></tr>
+            <tr><td><code>active_in_hierarchy</code></td><td><code>false</code> when the entity or one of its parents is inactive. Read only.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2 id="rect">Rect</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Member</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>anchor_min</code></td><td>Vec2 from 0 to 1. Lower corner of the anchors in the parent.</td></tr>
+            <tr><td><code>anchor_max</code></td><td>Vec2 from 0 to 1. Upper corner of the anchors in the parent.</td></tr>
+            <tr><td><code>pivot</code></td><td>Vec2 from 0 to 1. The point of the element that is placed.</td></tr>
+            <tr><td><code>anchored_position</code></td><td>Vec2 in pixels. Offset of the pivot from its place between the anchors.</td></tr>
+            <tr><td><code>size_delta</code></td><td>Vec2 in pixels. Added to the distance between the anchors to get the size. With equal anchors it is the size.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2 id="button">Button</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Member</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>interactable</code></td><td>Whether the button reacts to the mouse.</td></tr>
+            <tr><td><code>normal_color</code></td><td>Color when idle.</td></tr>
+            <tr><td><code>hover_color</code></td><td>Color under the cursor.</td></tr>
+            <tr><td><code>pressed_color</code></td><td>Color while held.</td></tr>
+            <tr><td><code>disabled_color</code></td><td>Color when not interactable.</td></tr>
+            <tr><td><code>hovered</code></td><td>Whether the cursor is over the button. Read only.</td></tr>
+            <tr><td><code>pressed</code></td><td>Whether the button is held down. Read only.</td></tr>
+            <tr><td><code>clicked</code></td><td><code>true</code> in the frame the button was clicked. Read only.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2 id="text">Text</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Member</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>text</code></td><td>The string to show.</td></tr>
+            <tr><td><code>color</code></td><td>Vec4 color.</td></tr>
+            <tr><td><code>font_size</code></td><td>Font size.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2 id="sprite">Sprite</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Member</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>color</code></td><td>Vec4 tint.</td></tr>
+            <tr><td><code>flip_x</code></td><td>Mirror horizontally.</td></tr>
+            <tr><td><code>flip_y</code></td><td>Mirror vertically.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2 id="collider">Collider</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Member</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>center</code></td><td>Vec3 offset from the entity.</td></tr>
+            <tr><td><code>size</code></td><td>Vec3 size of a box.</td></tr>
+            <tr><td><code>radius</code></td><td>Radius of a sphere or capsule.</td></tr>
+            <tr><td><code>height</code></td><td>Height of a capsule.</td></tr>
+            <tr><td><code>friction</code></td><td>Surface friction.</td></tr>
+            <tr><td><code>restitution</code></td><td>Bounciness.</td></tr>
+            <tr><td><code>is_trigger</code></td><td>A trigger reports overlaps with <code>OnTriggerEnter</code> and <code>OnTriggerExit</code> instead of colliding.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2 id="rigidbody">Rigidbody</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Member</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>mass</code></td><td>Mass.</td></tr>
+            <tr><td><code>linear_damping</code></td><td>How fast linear velocity slows down.</td></tr>
+            <tr><td><code>angular_damping</code></td><td>How fast angular velocity slows down.</td></tr>
+            <tr><td><code>gravity_scale</code></td><td>Multiplier for gravity on this body.</td></tr>
+            <tr><td><code>is_kinematic</code></td><td>A kinematic body is moved by its transform and is not pushed by forces.</td></tr>
+            <tr><td><code>velocity</code></td><td>Linear velocity, Vec3.</td></tr>
+            <tr><td><code>angular_velocity</code></td><td>Angular velocity, Vec3.</td></tr>
+            <tr><td><code>rigidbody:AddForce(force)</code></td><td>Applies a Vec3 force for this step.</td></tr>
+            <tr><td><code>rigidbody:AddImpulse(impulse)</code></td><td>Applies a Vec3 impulse, an instant change in momentum.</td></tr>
+            <tr><td><code>rigidbody:AddTorque(torque)</code></td><td>Applies a Vec3 torque for this step.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2 id="vectors">Vec2, Vec3, Vec4</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Member</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>a.x</code>, <code>a.y</code>, <code>a.z</code>, <code>a.w</code></td><td>Components. Vec2 has <code>x</code> and <code>y</code>, Vec3 adds <code>z</code> and Vec4 adds <code>w</code>.</td></tr>
+            <tr><td><code>Vec3()</code></td><td>All components 0.</td></tr>
+            <tr><td><code>Vec3(s)</code></td><td>All components <code>s</code>.</td></tr>
+            <tr><td><code>Vec3(x, y, z)</code></td><td>Given components. <code>Vec2(x, y)</code> and <code>Vec4(x, y, z, w)</code> work the same way.</td></tr>
+            <tr><td><code>a + b</code>, <code>a - b</code>, <code>-a</code></td><td>Component-wise.</td></tr>
+            <tr><td><code>a * b</code>, <code>a / b</code></td><td>Component-wise with another vector, or with a number. <code>2 * a</code> also works.</td></tr>
+            <tr><td><code>a == b</code></td><td>True when all components are equal.</td></tr>
+            <tr><td><code>tostring(a)</code></td><td>Text such as <code>(1, 2, 3)</code>.</td></tr>
+            <tr><td><code>a:Length()</code></td><td>Length of the vector.</td></tr>
+            <tr><td><code>a:Normalized()</code></td><td>Vector with length 1 in the same direction. A zero vector is returned unchanged.</td></tr>
+            <tr><td><code>a:Dot(b)</code></td><td>Dot product.</td></tr>
+            <tr><td><code>a:Distance(b)</code></td><td>Distance between two points.</td></tr>
+            <tr><td><code>a:Lerp(b, t)</code></td><td>Linear interpolation from <code>a</code> to <code>b</code>.</td></tr>
+            <tr><td><code>a:Cross(b)</code></td><td>Cross product. Vec3 only.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2 id="random">Random</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Member</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>Random.Range(min, max)</code></td><td>Random number between <code>min</code> and <code>max</code>.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2 id="examples">Examples</h2>
+      <h3>A menu button that talks to another script</h3>
+<pre><code class="language-lua">local MenuButton = {
+    fields = {
+        action = "play",
+    },
+}
+
+function MenuButton:OnClick()
+    if self.action == "exit" then
+        Application.Quit()
+        return
+    end
+
+    local manager = Scene.Find("GameManager")
+    local game = manager and manager:GetScript("GameManager")
+    if not game then
+        Log.Warning("GameManager script not found")
+        return
+    end
+
+    if self.action == "play" then
+        game:StartGame()
+    elseif self.action == "menu" then
+        game:ShowMenu()
+    end
+end
+
+return MenuButton</code></pre>
+
+      <h3>Creating UI from a prefab</h3>
+<pre><code class="language-lua">function GameManager:CreateCell(x, y, color)
+    local entity = Scene.Instantiate("Cell", self.board)
+    entity.rect.size_delta = Vec2(self.cell_size - 2, self.cell_size - 2)
+    entity.sprite.color = color
+    entity.rect.anchored_position = Vec2(x * self.cell_size, y * self.cell_size)
+    return entity
+end</code></pre>
+
+      <h3>Updating text</h3>
+<pre><code class="language-lua">function GameManager:OnStart()
+    self.score = 0
+    self.score_text = Scene.Find("ScoreText")
+end
+
+function GameManager:AddScore(points)
+    self.score = self.score + points
+    self.score_text.text.text = string.format("Score %d", self.score)
+end</code></pre>
+    </section>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <span>Seri Game Engine v{{version}} &middot; MIT license</span>
+    <span><a href="index.html">Home</a> &middot; <a href="api/index.html">C++ API</a> &middot; <a href="https://github.com/ssduman/seri-game-engine">GitHub</a></span>
+  </div>
+</footer>
+</body>
+</html>

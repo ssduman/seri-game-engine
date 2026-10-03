@@ -31,7 +31,7 @@
 <table>
     <tr>
         <td align="center">
-            <img src="misc/images/editor.png" alt="editor">
+            <img src="docs/images/editor.png" alt="editor">
             <br />
             <i> editor <i>
         </td>

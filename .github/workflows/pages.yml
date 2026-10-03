@@ -1,0 +1,43 @@
+name: Pages
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Build and deploy
+    runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    env:
+      DOXYGEN_VERSION: 1.18.0
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install doxygen
+        run: |
+          curl -sL "https://github.com/doxygen/doxygen/releases/download/Release_${DOXYGEN_VERSION//./_}/doxygen-${DOXYGEN_VERSION}.linux.bin.tar.gz" | tar xz -C "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/doxygen-${DOXYGEN_VERSION}/bin" >> "$GITHUB_PATH"
+
+      - name: Build site
+        run: ./seri.sh docs
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: bin/docs
+
+      - id: deployment
+        uses: actions/deploy-pages@v5
