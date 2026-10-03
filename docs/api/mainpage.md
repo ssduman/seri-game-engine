@@ -3,7 +3,7 @@
 This is the reference for the engine library in `seri/seri`, generated from the sources with Doxygen.
 Use the tree on the left, or the search box, to browse namespaces, classes and files.
 
-[Website](../index.html) | [Lua scripting reference](../lua.html) | [Source on GitHub](https://github.com/ssduman/seri-game-engine)
+[Website](../index.html) | [Lua scripting reference](../lua.html) | [Changelog](../changelog.html) | [Source on GitHub](https://github.com/ssduman/seri-game-engine)
 
 ## Where to start
 

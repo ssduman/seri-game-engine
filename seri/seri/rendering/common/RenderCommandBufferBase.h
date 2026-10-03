@@ -38,6 +38,12 @@ namespace seri
 		void InitPost();
 		void RenderPost(const RenderPass& pass);
 
+		void InitPicking();
+		void RenderPicking(const RenderPass& pass);
+
+		void InitOutline();
+		void RenderOutline(const RenderPass& pass);
+
 		std::vector<RenderCommand> _commands{};
 
 		RenderState _statePrev{};
@@ -48,6 +54,11 @@ namespace seri
 		std::shared_ptr<Material> _postMaterial{ nullptr };
 		std::shared_ptr<Material> _depthViewMaterial{ nullptr };
 		std::shared_ptr<VertexArrayBase> _postVao{ nullptr };
+
+		std::shared_ptr<Material> _pickingMaterial{ nullptr };
+		std::shared_ptr<Material> _pickingSkinnedMaterial{ nullptr };
+
+		std::shared_ptr<Material> _outlineMaterial{ nullptr };
 
 	};
 }

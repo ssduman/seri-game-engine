@@ -1,0 +1,30 @@
+#beg_vs
+
+#version 460 core
+
+layout(location = 0) in vec3 in_vertex;
+
+uniform mat4 u_model;
+uniform mat4 u_view_projection;
+
+void main()
+{
+    gl_Position = u_view_projection * u_model * vec4(in_vertex, 1.0);
+}
+
+#end_vs
+
+#beg_fs
+
+#version 460 core
+
+uniform int u_entity_id;
+
+layout(location = 0) out int out_entity_id;
+
+void main()
+{
+    out_entity_id = u_entity_id;
+}
+
+#end_fs

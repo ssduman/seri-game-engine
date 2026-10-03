@@ -91,7 +91,8 @@ namespace seri::system
 				text.material,
 				transform.worldMatrix,
 				isUI ? PassType::ui : PassType::transparent,
-				isUI ? UISystem::GetDrawOrder(entity) : 0
+				isUI ? UISystem::GetDrawOrder(entity) : 0,
+				entity
 			);
 		}
 	}

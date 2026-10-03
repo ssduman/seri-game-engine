@@ -21,7 +21,16 @@ namespace seri::editor
 			flags |= ImGuiTreeNodeFlags_Selected;
 		}
 
-		ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+		if (ctx.revealSelectedEntity)
+		{
+			CollectRevealEntityIds(activeScene, ctx.selectedEntityId);
+			ImGui::SetNextItemOpen(true);
+		}
+		else
+		{
+			ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+		}
+
 		bool open = ImGui::TreeNodeEx("##SceneRoot", flags, "%s", sceneName.c_str());
 
 		bool clicked = ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen();
@@ -49,6 +58,9 @@ namespace seri::editor
 
 			ImGui::TreePop();
 		}
+
+		ctx.revealSelectedEntity = false;
+		_revealEntityIds.clear();
 
 		if (ImGui::BeginPopupContextWindow("##HierarchyContext", ImGuiPopupFlags_MouseButtonRight | ImGuiPopupFlags_NoOpenOverItems))
 		{
@@ -112,6 +124,11 @@ namespace seri::editor
 				_pendingExpandEntityId = 0;
 			}
 
+			if (_revealEntityIds.contains(child.id))
+			{
+				ImGui::SetNextItemOpen(true);
+			}
+
 			auto* idComponent = seri::scene::SceneManager::GetRegistry().try_get<seri::component::IDComponent>(entity);
 			if (!idComponent)
 			{
@@ -121,6 +138,11 @@ namespace seri::editor
 			std::string label = idComponent->name;
 
 			bool open = ImGui::TreeNodeEx((void*)(intptr_t)child.id, flags, "%s", label.c_str());
+
+			if (ctx.revealSelectedEntity && ctx.selectedEntityId == child.id && !ImGui::IsItemVisible())
+			{
+				ImGui::SetScrollHereY(0.5f);
+			}
 
 			if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
 			{
@@ -151,6 +173,26 @@ namespace seri::editor
 
 				ImGui::TreePop();
 			}
+		}
+	}
+
+	void HierarchyPanel::CollectRevealEntityIds(const std::shared_ptr<seri::scene::Scene>& activeScene, uint64_t entityId)
+	{
+		auto& registry = seri::scene::SceneManager::GetRegistry();
+
+		_revealEntityIds.clear();
+
+		entt::entity entity = activeScene->GetEntityByID(entityId);
+		while (entity != entt::null)
+		{
+			auto* idComponent = registry.try_get<seri::component::IDComponent>(entity);
+			if (!idComponent || idComponent->parentId == 0)
+			{
+				break;
+			}
+
+			_revealEntityIds.insert(idComponent->parentId);
+			entity = activeScene->GetEntityByID(idComponent->parentId);
 		}
 	}
 

@@ -83,7 +83,7 @@ namespace seri::system
 					continue;
 				}
 
-				seri::Graphic::Draw(mesh, material, transform.worldMatrix);
+				seri::Graphic::Draw(mesh, material, transform.worldMatrix, PassType::opaque, 0, entity);
 			}
 
 			if (renderer.castShadow)

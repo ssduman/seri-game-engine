@@ -56,6 +56,7 @@ namespace seri
 		std::shared_ptr<FramebufferBase> gameRT{ nullptr };
 		std::shared_ptr<FramebufferBase> editorSceneRT{ nullptr };
 		std::shared_ptr<FramebufferBase> gameSceneRT{ nullptr };
+		std::shared_ptr<FramebufferBase> pickingRT{ nullptr };
 		std::shared_ptr<FramebufferBase> shadowRT{ nullptr };
 		std::shared_ptr<FramebufferBase> spotShadowRTs[literals::kMaxSpotLightShadowCount];
 
@@ -72,6 +73,8 @@ namespace seri
 		bool editorDepthView{ false };
 
 		bool editorPostProcessEnabled{ true };
+
+		entt::entity editorSelectedEntity{ entt::null };
 
 		PostProcessSettings postProcessSettings{};
 

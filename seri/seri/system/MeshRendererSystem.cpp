@@ -70,7 +70,7 @@ namespace seri::system
 
 				if (material)
 				{
-					seri::Graphic::Draw(meshPart, material, transform.worldMatrix);
+					seri::Graphic::Draw(meshPart, material, transform.worldMatrix, PassType::opaque, 0, entity);
 				}
 
 				if (renderer.castShadow)

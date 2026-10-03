@@ -16,7 +16,7 @@ end
 
 newaction {
   trigger = "package",
-  description = "Archive the release Editor build into package/",
+  description = "Rebuild release and archive the Editor build into package/",
   execute = function()
     local isWindows = os.host() == "windows"
     local executable = isWindows and "Editor.exe" or "Editor"
@@ -29,9 +29,11 @@ newaction {
     end
     print("=== version is " .. engine_version)
 
+    Build.run("release", true)
+
     print("=== checking release build...")
     if not os.isfile(path.join(releaseDir, executable)) then
-      error(path.join(releaseDir, executable) .. " not found, build release first", 0)
+      error(path.join(releaseDir, executable) .. " not found", 0)
     end
 
     local stageDir = path.join(packageDir, "seri-game-engine-" .. platform_name .. "-x64-v" .. engine_version)

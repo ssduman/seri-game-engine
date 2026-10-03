@@ -18,8 +18,11 @@ namespace seri::editor
 
 		void AddButton(const std::shared_ptr<seri::scene::Scene>& activeScene, uint64_t parentId);
 
+		void CollectRevealEntityIds(const std::shared_ptr<seri::scene::Scene>& activeScene, uint64_t entityId);
+
 		uint64_t _pendingDeleteEntityId{ 0 };
 		uint64_t _pendingExpandEntityId{ 0 };
+		std::unordered_set<uint64_t> _revealEntityIds{};
 
 	};
 }

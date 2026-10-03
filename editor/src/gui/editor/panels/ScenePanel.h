@@ -30,7 +30,7 @@ namespace seri::editor
 			depth,
 		};
 
-		void ShowOptions();
+		void ShowOptions(GUIContext& ctx);
 
 		void ControlMove(const ImVec2& imageMin, const ImVec2& imageMax);
 
@@ -38,7 +38,9 @@ namespace seri::editor
 
 		void ShowGizmo(const ImVec2& imageMin, const ImVec2& imageSize);
 
-		void ShowEntityGizmo(GUIContext& ctx, const ImVec2& imageMin, const ImVec2& imageSize);
+		bool ShowEntityGizmo(GUIContext& ctx, const ImVec2& imageMin, const ImVec2& imageSize);
+
+		void PickEntity(GUIContext& ctx, const ImVec2& imageMin, const ImVec2& imageMax, bool gizmoHovered);
 
 		GizmoSpace _gizmoSpace{ GizmoSpace::local };
 		GizmoOperation _gizmoOperation{ GizmoOperation::translate };

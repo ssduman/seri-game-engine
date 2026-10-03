@@ -55,7 +55,7 @@ namespace seri
 		}
 	}
 
-	void Graphic::Draw(const std::shared_ptr<Mesh>& mesh, const std::shared_ptr<Material>& material, const glm::mat4& trs, PassType passType, int sortOrder)
+	void Graphic::Draw(const std::shared_ptr<Mesh>& mesh, const std::shared_ptr<Material>& material, const glm::mat4& trs, PassType passType, int sortOrder, entt::entity entity)
 	{
 		SERI_PROFILER_ZONE_SCOPED;
 
@@ -68,6 +68,7 @@ namespace seri
 		cmd.model = trs * mesh->transformation;
 		cmd.vao = mesh->GetVao();
 		cmd.sortOrder = sortOrder;
+		cmd.entity = entity;
 
 		if (passType == PassType::ui)
 		{

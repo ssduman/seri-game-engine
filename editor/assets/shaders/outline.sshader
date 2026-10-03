@@ -1,0 +1,61 @@
+#beg_vs
+
+#version 460 core
+
+const vec2 k_verts[3] = vec2[](
+    vec2(-1.0, -1.0),
+    vec2( 3.0, -1.0),
+    vec2(-1.0,  3.0)
+);
+
+void main()
+{
+    gl_Position = vec4(k_verts[gl_VertexID], 0.0, 1.0);
+}
+
+#end_vs
+
+#beg_fs
+
+#version 460 core
+
+uniform isampler2D u_id_texture;
+uniform int u_selected_id;
+
+out vec4 final_color;
+
+const int k_outline_width = 4;
+const vec4 k_outline_color = vec4(1.0, 0.55, 0.1, 1.0);
+
+void main()
+{
+    ivec2 size = textureSize(u_id_texture, 0);
+    ivec2 pixel = ivec2(gl_FragCoord.xy);
+
+    if (texelFetch(u_id_texture, pixel, 0).r == u_selected_id)
+    {
+        discard;
+    }
+
+    for (int y = -k_outline_width; y <= k_outline_width; y++)
+    {
+        for (int x = -k_outline_width; x <= k_outline_width; x++)
+        {
+            if (x * x + y * y > k_outline_width * k_outline_width)
+            {
+                continue;
+            }
+
+            ivec2 neighbor = clamp(pixel + ivec2(x, y), ivec2(0), size - 1);
+            if (texelFetch(u_id_texture, neighbor, 0).r == u_selected_id)
+            {
+                final_color = k_outline_color;
+                return;
+            }
+        }
+    }
+
+    discard;
+}
+
+#end_fs

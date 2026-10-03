@@ -85,6 +85,30 @@ namespace seri
 
 				editorSceneRT = FramebufferBase::Create(sceneFramebufferDesc);
 				gameSceneRT = FramebufferBase::Create(sceneFramebufferDesc);
+
+				TextureDesc textureDescPicking{};
+				textureDescPicking.format = TextureFormat::red__red32int;
+				textureDescPicking.wrapS = TextureWrap::clamp_to_edge;
+				textureDescPicking.wrapR = TextureWrap::clamp_to_edge;
+				textureDescPicking.wrapT = TextureWrap::clamp_to_edge;
+				textureDescPicking.magFilter = TextureMagFilter::nearest;
+				textureDescPicking.minFilter = TextureMinFilter::nearest;
+
+				TextureDesc textureDescPickingDepth{};
+				textureDescPickingDepth.format = TextureFormat::depth__depth24;
+				textureDescPickingDepth.wrapS = TextureWrap::clamp_to_edge;
+				textureDescPickingDepth.wrapR = TextureWrap::clamp_to_edge;
+				textureDescPickingDepth.wrapT = TextureWrap::clamp_to_edge;
+				textureDescPickingDepth.magFilter = TextureMagFilter::nearest;
+				textureDescPickingDepth.minFilter = TextureMinFilter::nearest;
+
+				FramebufferDesc pickingFramebufferDesc{};
+				pickingFramebufferDesc.width = 1280;
+				pickingFramebufferDesc.height = 720;
+				pickingFramebufferDesc.fixedAspectRatio = false;
+				pickingFramebufferDesc.AddAttachments({ textureDescPicking, textureDescPickingDepth });
+
+				pickingRT = FramebufferBase::Create(pickingFramebufferDesc);
 			}
 
 			// shadow

@@ -25,6 +25,11 @@ namespace seri
 
 		void BlitColorToScreen(uint32_t width, uint32_t height) override;
 
+		void ClearColorAttachment(size_t index, int value) override;
+		void ClearDepthAttachment(float value) override;
+
+		int ReadPixel(size_t index, int x, int y) override;
+
 		void Invalidate() override;
 
 		void Resize(uint32_t width, uint32_t height) override;

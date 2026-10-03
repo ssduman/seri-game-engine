@@ -15,9 +15,12 @@ namespace seri::editor
 	struct GUIContext
 	{
 		uint64_t selectedEntityId{ 0 };
+		bool revealSelectedEntity{ false };
 		InspectorType inspectorType{ InspectorType::none };
 		seri::asset::AssetTreeNode selectedAsset{};
 		std::filesystem::path currentAssetFolder{};
+
+		bool showGizmos{ true };
 
 		bool showHierarchy{ true };
 		bool showScene{ true };

@@ -12,7 +12,16 @@ namespace seri::editor
 
 	void ScenePanel::Draw(GUIContext& ctx)
 	{
-		ShowOptions();
+		auto activeScene = seri::scene::SceneManager::GetActiveScene();
+
+		entt::entity selectedEntity = entt::null;
+		if (ctx.showGizmos && ctx.inspectorType == InspectorType::entity && activeScene->HasEntity(ctx.selectedEntityId))
+		{
+			selectedEntity = activeScene->GetEntityByID(ctx.selectedEntityId);
+		}
+		seri::RenderingManager::SetEditorSelectedEntity(selectedEntity);
+
+		ShowOptions(ctx);
 
 		ImGui::Separator();
 
@@ -61,17 +70,23 @@ namespace seri::editor
 			ImVec2(1, 0)
 		);
 
-		if (seri::scene::SceneManager::GetState() == seri::scene::SceneState::edit)
+		bool gizmoHovered = false;
+
+		if (ctx.showGizmos && seri::scene::SceneManager::GetState() == seri::scene::SceneState::edit)
 		{
 			ShowGizmo(imageMin, imageSize);
-			ShowEntityGizmo(ctx, imageMin, imageSize);
+			bool entityGizmoShown = ShowEntityGizmo(ctx, imageMin, imageSize);
 			ShowGizmoToolbar(imageMin);
+
+			gizmoHovered = ImGuizmo::IsViewManipulateHovered() || (entityGizmoShown && ImGuizmo::IsOver());
 		}
+
+		PickEntity(ctx, imageMin, imageMax, gizmoHovered);
 
 		ControlMove(imageMin, imageMax);
 	}
 
-	void ScenePanel::ShowOptions()
+	void ScenePanel::ShowOptions(GUIContext& ctx)
 	{
 		ImGui::SetNextItemWidth(140.0f);
 
@@ -97,6 +112,10 @@ namespace seri::editor
 		{
 			seri::RenderingManager::SetEditorPostProcessEnabled(postProcessEnabled);
 		}
+
+		ImGui::SameLine();
+
+		ImGui::Checkbox("Gizmos", &ctx.showGizmos);
 	}
 
 	void ScenePanel::ControlMove(const ImVec2& imageMin, const ImVec2& imageMax)
@@ -270,18 +289,18 @@ namespace seri::editor
 		ImGuizmo::PopID();
 	}
 
-	void ScenePanel::ShowEntityGizmo(GUIContext& ctx, const ImVec2& imageMin, const ImVec2& imageSize)
+	bool ScenePanel::ShowEntityGizmo(GUIContext& ctx, const ImVec2& imageMin, const ImVec2& imageSize)
 	{
 		if (ctx.inspectorType != InspectorType::entity || ctx.selectedEntityId == 0)
 		{
-			return;
+			return false;
 		}
 
 		auto activeScene = seri::scene::SceneManager::GetActiveScene();
 
 		if (seri::system::UISystem::IsScreenSpace(activeScene->GetEntityByID(ctx.selectedEntityId)))
 		{
-			return;
+			return false;
 		}
 
 		ImGuizmo::MODE mode = ImGuizmo::WORLD;
@@ -323,7 +342,7 @@ namespace seri::editor
 		auto* transformComp = registry.try_get<seri::component::TransformComponent>(entity);
 		if (idComp == nullptr || transformComp == nullptr)
 		{
-			return;
+			return false;
 		}
 
 		glm::mat4 parentWorld{ 1.0f };
@@ -366,5 +385,46 @@ namespace seri::editor
 		}
 
 		ImGuizmo::PopID();
+
+		return true;
+	}
+
+	void ScenePanel::PickEntity(GUIContext& ctx, const ImVec2& imageMin, const ImVec2& imageMax, bool gizmoHovered)
+	{
+		if (gizmoHovered || !ImGui::IsWindowHovered() || !ImGui::IsMouseClicked(ImGuiMouseButton_Left) || ImGui::IsMouseDown(ImGuiMouseButton_Right))
+		{
+			return;
+		}
+
+		ImVec2 mouse = ImGui::GetMousePos();
+		if (mouse.x < imageMin.x || mouse.x >= imageMax.x || mouse.y < imageMin.y || mouse.y >= imageMax.y)
+		{
+			return;
+		}
+
+		auto pickingRT = seri::RenderingManager::GetPickingRT();
+		int width = static_cast<int>(pickingRT->GetWidth());
+		int height = static_cast<int>(pickingRT->GetHeight());
+
+		int x = static_cast<int>((mouse.x - imageMin.x) / (imageMax.x - imageMin.x) * width);
+		int y = static_cast<int>((imageMax.y - mouse.y) / (imageMax.y - imageMin.y) * height);
+
+		int value = pickingRT->ReadPixel(0, std::clamp(x, 0, width - 1), std::clamp(y, 0, height - 1));
+
+		auto entity = static_cast<entt::entity>(static_cast<uint32_t>(value));
+		auto& registry = seri::scene::SceneManager::GetRegistry();
+
+		auto* idComp = registry.valid(entity) ? registry.try_get<seri::component::IDComponent>(entity) : nullptr;
+		if (idComp != nullptr)
+		{
+			ctx.selectedEntityId = idComp->id;
+			ctx.inspectorType = InspectorType::entity;
+			ctx.revealSelectedEntity = true;
+		}
+		else if (ctx.inspectorType == InspectorType::entity)
+		{
+			ctx.selectedEntityId = 0;
+			ctx.inspectorType = InspectorType::none;
+		}
 	}
 }

@@ -338,6 +338,7 @@ namespace seri
 
 				case GL_SAMPLER_CUBE: return UniformType::cubemap_type;
 				case GL_SAMPLER_2D: return UniformType::sampler2d_type;
+				case GL_INT_SAMPLER_2D: return UniformType::sampler2d_type;
 
 				default: return UniformType::unknown_type;
 			}

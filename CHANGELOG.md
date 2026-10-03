@@ -1,3 +1,6 @@
+v0.2.0
+* Added mouse picking and outline to scene
+
 v0.1.3
 * Fixed Linux build
 

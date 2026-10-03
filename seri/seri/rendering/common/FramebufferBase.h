@@ -56,6 +56,11 @@ namespace seri
 
 		virtual void BlitColorToScreen(uint32_t width, uint32_t height) = 0;
 
+		virtual void ClearColorAttachment(size_t index, int value) = 0;
+		virtual void ClearDepthAttachment(float value) = 0;
+
+		virtual int ReadPixel(size_t index, int x, int y) = 0;
+
 		uint32_t GetWidth()
 		{
 			return _desc.width;

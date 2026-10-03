@@ -25,6 +25,37 @@ newaction {
     end
     print("=== doxygen " .. doxygenVersion:match("^%S+"))
 
+    print("=== reading changelog...")
+    local changelog = io.readfile(path.join(_MAIN_SCRIPT_DIR, "CHANGELOG.md"))
+    if not changelog then
+      error("CHANGELOG.md not found", 0)
+    end
+    local escape = function(text)
+      return (text:gsub("[&<>]", { ["&"] = "&amp;", ["<"] = "&lt;", [">"] = "&gt;" }))
+    end
+    local changelogHtml = {}
+    local inList = false
+    for line in changelog:gmatch("[^\r\n]+") do
+      local item = line:match("^%*%s+(.-)%s*$")
+      if item then
+        if not inList then
+          error("CHANGELOG.md has an entry before any version: " .. line, 0)
+        end
+        table.insert(changelogHtml, "      <li>" .. escape(item) .. "</li>")
+      elseif line:match("%S") then
+        if inList then
+          table.insert(changelogHtml, "    </ul>\n  </section>")
+        end
+        local version = escape(line:match("^%s*(.-)%s*$"))
+        table.insert(changelogHtml, string.format('  <section>\n    <h2 id="%s">%s</h2>\n    <ul>', version, version))
+        inList = true
+      end
+    end
+    if inList then
+      table.insert(changelogHtml, "    </ul>\n  </section>")
+    end
+    changelogHtml = table.concat(changelogHtml, "\n")
+
     print("=== preparing " .. outDir .. "...")
     os.rmdir(outDir)
     if os.isdir(outDir) then
@@ -33,9 +64,18 @@ newaction {
     os.mkdir(path.join(outDir, "images"))
 
     print("=== copying pages...")
+    local header = io.readfile(path.join(siteDir, "partials/header.html")):gsub("%s+$", "")
+    local footer = io.readfile(path.join(siteDir, "partials/footer.html")):gsub("%s+$", "")
     for _, file in ipairs(os.matchfiles(path.join(siteDir, "*.html"))) do
-      local page = io.readfile(file):gsub("{{version}}", engine_version)
-      io.writefile(path.join(outDir, path.getname(file)), page)
+      local name = path.getname(file)
+      local link = 'href="' .. name .. '"'
+      local pageHeader = header:gsub(link:gsub("%p", "%%%0"), link .. ' aria-current="page"')
+      local page = io.readfile(file)
+        :gsub("{{header}}", function() return pageHeader end)
+        :gsub("{{footer}}", function() return footer end)
+        :gsub("{{version}}", engine_version)
+        :gsub("{{changelog}}", function() return changelogHtml end)
+      io.writefile(path.join(outDir, name), page)
     end
     for _, pattern in ipairs({ "*.css", "*.js" }) do
       for _, file in ipairs(os.matchfiles(path.join(siteDir, pattern))) do

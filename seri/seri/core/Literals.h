@@ -2,7 +2,7 @@
 
 namespace seri::literals
 {
-	constexpr const char* kVersion = "0.1.3";
+	constexpr const char* kVersion = "0.2.0";
 	constexpr const char* kEngineName = "Seri Game Engine";
 
 	constexpr const char* kIconName = "seri.png";
@@ -20,6 +20,7 @@ namespace seri::literals
 	constexpr const char* kUniformViewSkybox = "u_view_skybox";
 	constexpr const char* kUniformViewProjection = "u_view_projection";
 	constexpr const char* kUniformLightViewProjection = "u_light_view_projection";
+	constexpr const char* kUniformEntityId = "u_entity_id";
 
 	constexpr const char* kUniformDirLight = "u_dir_light";
 	constexpr const char* kUniformDirLightExists = "u_dir_light_exists";

@@ -103,6 +103,28 @@ namespace seri
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
+	void FramebufferOpenGL::ClearColorAttachment(size_t index, int value)
+	{
+		glClearBufferiv(GL_COLOR, static_cast<GLint>(index), &value);
+	}
+
+	void FramebufferOpenGL::ClearDepthAttachment(float value)
+	{
+		glClearBufferfv(GL_DEPTH, 0, &value);
+	}
+
+	int FramebufferOpenGL::ReadPixel(size_t index, int x, int y)
+	{
+		int value = -1;
+
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, _handle);
+		glReadBuffer(GL_COLOR_ATTACHMENT0 + static_cast<GLenum>(index));
+		glReadPixels(x, y, 1, 1, GL_RED_INTEGER, GL_INT, &value);
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+
+		return value;
+	}
+
 	void FramebufferOpenGL::Invalidate()
 	{
 		if (_handle > 0)

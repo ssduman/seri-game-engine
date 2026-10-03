@@ -9,6 +9,8 @@
 #include "seri/profiling/Profiler.h"
 #include "seri/rendering/common/FramebufferBase.h"
 
+#include <entt/entt.hpp>
+
 namespace seri
 {
 	enum class DataType
@@ -125,6 +127,8 @@ namespace seri
 		debug,
 		ui,
 		post,
+		picking,
+		outline,
 	};
 
 	struct RenderState
@@ -279,6 +283,8 @@ namespace seri
 		std::vector<glm::mat4> bones{};
 
 		int sortOrder{ 0 };
+
+		entt::entity entity{ entt::null };
 	};
 
 	struct RenderPass
@@ -299,9 +305,13 @@ namespace seri
 		{
 			SERI_PROFILER_ZONE_SCOPED;
 
+			bool pickable =
+				item.entity != entt::null &&
+				(item.type == PassType::opaque || item.type == PassType::transparent);
+
 			for (auto& pass : passes)
 			{
-				if (pass.desc.type == item.type)
+				if (pass.desc.type == item.type || (pass.desc.type == PassType::picking && pickable))
 				{
 					pass.items.emplace_back(item);
 				}

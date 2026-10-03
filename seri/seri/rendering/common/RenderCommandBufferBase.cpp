@@ -23,10 +23,12 @@ namespace seri
 		auto gameRT = seri::RenderingManager::GetGameRT();
 		auto editorSceneRT = seri::RenderingManager::GetEditorSceneRT();
 		auto gameSceneRT = seri::RenderingManager::GetGameSceneRT();
+		auto pickingRT = seri::RenderingManager::GetPickingRT();
 		auto shadowRT = seri::RenderingManager::GetShadowRT();
 
 		editorSceneRT->Resize(editorRT->GetWidth(), editorRT->GetHeight());
 		gameSceneRT->Resize(gameRT->GetWidth(), gameRT->GetHeight());
+		pickingRT->Resize(editorRT->GetWidth(), editorRT->GetHeight());
 
 		RenderPass passShadow;
 		passShadow.desc.type = PassType::shadow;
@@ -64,6 +66,17 @@ namespace seri
 		passUI.desc.rt = editorRT;
 		passUI.desc.camera = uiCamera;
 
+		RenderPass passPicking;
+		passPicking.desc.type = PassType::picking;
+		passPicking.desc.rt = pickingRT;
+		passPicking.desc.camera = activeCamera;
+
+		RenderPass passOutline;
+		passOutline.desc.type = PassType::outline;
+		passOutline.desc.rt = editorRT;
+		passOutline.desc.source = pickingRT;
+		passOutline.desc.camera = activeCamera;
+
 		_frameGraph.Clear();
 		_frameGraph.AddPass(passShadow);
 
@@ -72,7 +85,9 @@ namespace seri
 			_frameGraph.AddPass(passSkybox);
 			_frameGraph.AddPass(passOpaque);
 			_frameGraph.AddPass(passTransparent);
+			_frameGraph.AddPass(passPicking);
 			_frameGraph.AddPass(passPost);
+			_frameGraph.AddPass(passOutline);
 			_frameGraph.AddPass(passDebug);
 			_frameGraph.AddPass(passUI);
 		}
@@ -256,6 +271,18 @@ namespace seri
 			if (pass.desc.type == PassType::post)
 			{
 				RenderPost(pass);
+				continue;
+			}
+
+			if (pass.desc.type == PassType::picking)
+			{
+				RenderPicking(pass);
+				continue;
+			}
+
+			if (pass.desc.type == PassType::outline)
+			{
+				RenderOutline(pass);
 				continue;
 			}
 
@@ -509,6 +536,122 @@ namespace seri
 		SetState(RenderState{});
 	}
 
+	void RenderCommandBufferBase::InitPicking()
+	{
+		if (_pickingMaterial)
+		{
+			return;
+		}
+
+		_pickingMaterial = std::make_shared<Material>();
+		_pickingMaterial->SetShader(ShaderLibrary::Find("picking"));
+
+		_pickingSkinnedMaterial = std::make_shared<Material>();
+		_pickingSkinnedMaterial->SetShader(ShaderLibrary::Find("picking_skinned"));
+	}
+
+	void RenderCommandBufferBase::RenderPicking(const RenderPass& pass)
+	{
+		SERI_PROFILER_ZONE_SCOPED;
+
+		auto& rt = pass.desc.rt;
+		auto& cam = pass.desc.camera;
+
+		if (!rt || !cam)
+		{
+			return;
+		}
+
+		InitPicking();
+
+		RenderState state{};
+		state.blendEnabled = false;
+
+		rt->Bind();
+		seri::RenderingManager::SetViewport(0, 0, rt->GetWidth(), rt->GetHeight());
+		SetState(state);
+
+		rt->ClearColorAttachment(0, -1);
+		rt->ClearDepthAttachment(1.0f);
+
+		glm::mat4 viewProjection = cam->GetProjection() * cam->GetView();
+
+		for (const RenderItem& item : pass.items)
+		{
+			const std::shared_ptr<Material>& material = item.bones.empty() ? _pickingMaterial : _pickingSkinnedMaterial;
+
+			material->SetMat4(literals::kUniformModel, item.model);
+			material->SetMat4(literals::kUniformViewProjection, viewProjection);
+			material->SetInt(literals::kUniformEntityId, static_cast<int>(entt::to_integral(item.entity)));
+			material->Apply();
+
+			if (!item.bones.empty())
+			{
+				auto shader = material->GetShader();
+				if (shader && shader->IsActiveForUsing())
+				{
+					shader->SetMat4Array(literals::kUniformBones, item.bones.data(), static_cast<uint32_t>(item.bones.size()));
+				}
+			}
+
+			Draw(item.draw, item.vao);
+		}
+
+		rt->Unbind();
+	}
+
+	void RenderCommandBufferBase::InitOutline()
+	{
+		if (_outlineMaterial)
+		{
+			return;
+		}
+
+		_outlineMaterial = std::make_shared<Material>();
+		_outlineMaterial->SetShader(ShaderLibrary::Find("outline"));
+	}
+
+	void RenderCommandBufferBase::RenderOutline(const RenderPass& pass)
+	{
+		SERI_PROFILER_ZONE_SCOPED;
+
+		auto& source = pass.desc.source;
+		auto& rt = pass.desc.rt;
+
+		entt::entity selectedEntity = seri::RenderingManager::GetEditorSelectedEntity();
+
+		if (!source || !rt || selectedEntity == entt::null)
+		{
+			return;
+		}
+
+		InitPost();
+		InitOutline();
+
+		_outlineMaterial->SetTexture("u_id_texture", source->GetColorTexture(0));
+		_outlineMaterial->SetInt("u_selected_id", static_cast<int>(entt::to_integral(selectedEntity)));
+
+		RenderState state{};
+		state.depthTestEnabled = false;
+		state.depthWriteEnabled = false;
+
+		rt->Bind();
+		seri::RenderingManager::SetViewport(0, 0, rt->GetWidth(), rt->GetHeight());
+		SetState(state);
+		_outlineMaterial->Apply();
+
+		DrawParams draw{};
+		draw.mode = DrawMode::arrays;
+		draw.count = 3;
+		Draw(draw, _postVao);
+
+		rt->Unbind();
+
+		TextureBase::UnbindTex2D(0);
+
+		SetState(RenderState{});
+	}
+
 	void RenderCommandBufferBase::DrawShadowItems(const RenderPass& pass, const glm::mat4& lightViewProj)
 	{
 		SERI_PROFILER_ZONE_SCOPED;
@@ -544,6 +687,8 @@ namespace seri
 			case PassType::debug: return "debug";
 			case PassType::ui: return "ui";
 			case PassType::post: return "post";
+			case PassType::picking: return "picking";
+			case PassType::outline: return "outline";
 		}
 		return "unknown";
 	}

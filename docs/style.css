@@ -50,6 +50,7 @@
 
 html {
   scroll-behavior: smooth;
+  scrollbar-gutter: stable;
 }
 
 body {
@@ -449,6 +450,27 @@ h3 {
 .doc-body h2,
 .doc-body h3 {
   scroll-margin-top: 101px;
+}
+
+.changelog {
+  padding-top: 40px;
+}
+
+.changelog section {
+  padding-bottom: 0;
+}
+
+.changelog h2 {
+  margin-top: 32px;
+}
+
+.changelog ul {
+  padding-left: 22px;
+  margin: 0;
+}
+
+.changelog li {
+  margin-bottom: 4px;
 }
 
 .table-wrap {

@@ -400,7 +400,7 @@ namespace seri::editor
 				scene->SetAsDirty();
 			}
 
-			if (seri::scene::SceneManager::GetState() == seri::scene::SceneState::edit)
+			if (ctx.showGizmos && seri::scene::SceneManager::GetState() == seri::scene::SceneState::edit)
 			{
 				seri::system::UISystem::DrawRectGizmo(entity);
 			}
@@ -559,7 +559,7 @@ namespace seri::editor
 				scene->SetAsDirty();
 			}
 
-			if (seri::scene::SceneManager::GetState() == seri::scene::SceneState::edit)
+			if (ctx.showGizmos && seri::scene::SceneManager::GetState() == seri::scene::SceneState::edit)
 			{
 				seri::system::PhysicsSystem::DrawColliderGizmo(entity);
 			}
@@ -619,7 +619,7 @@ namespace seri::editor
 				scene->SetAsDirty();
 			}
 
-			if (seri::scene::SceneManager::GetState() == seri::scene::SceneState::edit)
+			if (ctx.showGizmos && seri::scene::SceneManager::GetState() == seri::scene::SceneState::edit)
 			{
 				seri::system::CameraSystem::DrawFrustumGizmo(entity);
 			}
@@ -644,7 +644,7 @@ namespace seri::editor
 				scene->SetAsDirty();
 			}
 
-			if (seri::scene::SceneManager::GetState() == seri::scene::SceneState::edit)
+			if (ctx.showGizmos && seri::scene::SceneManager::GetState() == seri::scene::SceneState::edit)
 			{
 				seri::system::LightSystem::DrawDirectionalLightGizmo(entity);
 			}
@@ -672,7 +672,7 @@ namespace seri::editor
 				scene->SetAsDirty();
 			}
 
-			if (seri::scene::SceneManager::GetState() == seri::scene::SceneState::edit)
+			if (ctx.showGizmos && seri::scene::SceneManager::GetState() == seri::scene::SceneState::edit)
 			{
 				seri::system::LightSystem::DrawSpotLightGizmo(entity);
 			}
@@ -698,7 +698,7 @@ namespace seri::editor
 				scene->SetAsDirty();
 			}
 
-			if (seri::scene::SceneManager::GetState() == seri::scene::SceneState::edit)
+			if (ctx.showGizmos && seri::scene::SceneManager::GetState() == seri::scene::SceneState::edit)
 			{
 				seri::system::LightSystem::DrawPointLightGizmo(entity);
 			}

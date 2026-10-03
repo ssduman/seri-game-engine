@@ -179,6 +179,11 @@ namespace seri
 			return _renderingManager->gameSceneRT;
 		}
 
+		static std::shared_ptr<FramebufferBase> GetPickingRT()
+		{
+			return _renderingManager->pickingRT;
+		}
+
 		static std::shared_ptr<FramebufferBase> GetShadowRT()
 		{
 			return _renderingManager->shadowRT;
@@ -262,6 +267,16 @@ namespace seri
 		static void SetEditorPostProcessEnabled(bool enabled)
 		{
 			_renderingManager->editorPostProcessEnabled = enabled;
+		}
+
+		static entt::entity GetEditorSelectedEntity()
+		{
+			return _renderingManager->editorSelectedEntity;
+		}
+
+		static void SetEditorSelectedEntity(entt::entity entity)
+		{
+			_renderingManager->editorSelectedEntity = entity;
 		}
 
 		static const PostProcessSettings& GetPostProcessSettings()
