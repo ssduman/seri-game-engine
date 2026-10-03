@@ -83,9 +83,10 @@ namespace seri::editor
 			ImGui::Dummy(ImVec2(iconSize, 0.0f));
 
 			ImGui::TextUnformatted("Seri");
+			ImGui::TextDisabled("v%s", seri::literals::kVersion);
+			ImGui::Separator();
 			ImGui::TextDisabled("%s", seri::project::ProjectManager::GetName().c_str());
-
-			ImGui::Dummy(ImVec2(6.0f, 0.0f));
+			ImGui::Separator();
 
 			_menusMinX = ImGui::GetCursorPosX();
 			ShowMenus(ctx);
