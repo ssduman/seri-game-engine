@@ -18,7 +18,6 @@
     <a href="#scripts">Scripts</a>
     <a href="#fields">Fields</a>
     <a href="#callbacks">Callbacks</a>
-    <a href="#modules">Modules and libraries</a>
     <a href="#keys">Key and Mouse</a>
     <p>Engine</p>
     <a href="#scene">Scene</a>
@@ -50,9 +49,9 @@
 
     <section>
       <h2 id="scripts">Scripts</h2>
-      <p>Scripts are written in Lua 5.5. A script is a <code>.lua</code> file in the project's <code>assets</code> folder. The file name is the script name, so <code>assets/project/scripts/Mover.lua</code> defines a script called <code>Mover</code>. The file returns a table, the script class, and the engine calls the functions defined on it. A file can also define a global table with the same name instead of returning one.</p>
-      <p>Attach a script to an entity with the <strong>Script Component</strong> in the inspector. Each entity gets its own instance: inside a callback, <code>self</code> is that instance and <code>self.entity</code> is the <a href="#entity">Entity</a> it is attached to. An entity can run several scripts.</p>
-      <p>Entries in the class's <code>fields</code> table are shown in the inspector, where each entity can override them, and are copied onto the instance, so the script below reads its speed as <code>self.speed</code>. All <a href="#callbacks">callbacks</a> are optional, and scripts on inactive entities receive none.</p>
+      <p>Scripts are written in Lua 5.5. The file name is the script name. Lua script returns the script class and the engine calls callbacks functions defined on it. All <a href="#callbacks">callbacks</a> are optional and scripts on inactive entities receive nothing.</p>
+      <p>Attach a script to an entity with the <strong>Script Component</strong> in the inspector. Reach the <a href="#entity">entity</a> that the script attached to with <code>self.entity</code>. An entity can have more than one Lua scripts.</p>
+      <p>Entries in the class's <code>fields</code> table are serialized to inspector then back to the script. Read speed field as <code>self.speed</code>.</p>
 <pre><code class="language-lua">local Mover = {
     fields = {
         speed = 2.0,
@@ -75,13 +74,13 @@ return Mover</code></pre>
       <h2 id="fields">Fields</h2>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Default value</th><th>Inspector field</th></tr></thead>
+          <thead><tr><th>Value</th><th>Inspector</th></tr></thead>
           <tbody>
+            <tr><td><code>0</code></td><td>Integer</td></tr>
+            <tr><td><code>0.0</code></td><td>Float</td></tr>
             <tr><td><code>true</code></td><td>Checkbox</td></tr>
-            <tr><td><code>3</code></td><td>Integer</td></tr>
-            <tr><td><code>2.0</code></td><td>Float. Write <code>2.0</code>, not <code>2</code>, to get a float field.</td></tr>
-            <tr><td><code>"play"</code></td><td>Text</td></tr>
-            <tr><td><code>Vec3(0, 1, 0)</code></td><td>Three floats</td></tr>
+            <tr><td><code>"text"</code></td><td>Text</td></tr>
+            <tr><td><code>Vec3(0, 0, 0)</code></td><td>Vector</td></tr>
           </tbody>
         </table>
       </div>
@@ -93,28 +92,22 @@ return Mover</code></pre>
         <table>
           <thead><tr><th>Callback</th><th>When it runs</th></tr></thead>
           <tbody>
-            <tr><td><code>OnCreate()</code></td><td>The instance was created and <code>self.entity</code> is set.</td></tr>
-            <tr><td><code>OnEnable()</code></td><td>The script became enabled. On the first frame this comes before <code>OnStart</code>.</td></tr>
-            <tr><td><code>OnStart()</code></td><td>Once, before the first <code>OnUpdate</code> of the instance.</td></tr>
-            <tr><td><code>OnFixedUpdate(dt)</code></td><td>Every fixed step, before physics. <code>dt</code> is the fixed step in seconds.</td></tr>
-            <tr><td><code>OnUpdate(dt)</code></td><td>Every frame. <code>dt</code> is the frame time in seconds.</td></tr>
-            <tr><td><code>OnLateUpdate(dt)</code></td><td>Every frame, after every script's <code>OnUpdate</code>. Use it for cameras that follow other entities.</td></tr>
-            <tr><td><code>OnClick()</code></td><td>The entity's <a href="#button">Button</a> was clicked. Runs before <code>OnUpdate</code> in the same frame.</td></tr>
-            <tr><td><code>OnCollisionEnter(other)</code></td><td>The entity's collider started touching another collider. <code>other</code> is the other Entity.</td></tr>
+            <tr><td><code>OnCreate()</code></td><td>The instance was created.</td></tr>
+            <tr><td><code>OnEnable()</code></td><td>The script became enabled.</td></tr>
+            <tr><td><code>OnStart()</code></td><td>Once, before the first <code>OnUpdate</code>.</td></tr>
+            <tr><td><code>OnUpdate(dt)</code></td><td>Every frame</td></tr>
+            <tr><td><code>OnLateUpdate(dt)</code></td><td>Every frame, after <code>OnUpdate</code>.</td></tr>
+            <tr><td><code>OnFixedUpdate(fixed_dt)</code></td><td>Every fixed step, before physics.</td></tr>
+            <tr><td><code>OnClick()</code></td><td>The entity's <a href="#button">Button</a> was clicked.</td></tr>
+            <tr><td><code>OnCollisionEnter(other)</code></td><td>The collider started touching another collider.</td></tr>
             <tr><td><code>OnCollisionExit(other)</code></td><td>The colliders stopped touching.</td></tr>
-            <tr><td><code>OnTriggerEnter(other)</code></td><td>Like <code>OnCollisionEnter</code>, when either collider is a trigger.</td></tr>
-            <tr><td><code>OnTriggerExit(other)</code></td><td>Like <code>OnCollisionExit</code>, when either collider is a trigger.</td></tr>
-            <tr><td><code>OnDisable()</code></td><td>The script was disabled, or is being destroyed while enabled.</td></tr>
-            <tr><td><code>OnDestroy()</code></td><td>The instance is being destroyed: the entity was removed, play mode stopped or the script was reloaded.</td></tr>
+            <tr><td><code>OnTriggerEnter(other)</code></td><td>The trigger started touching another collider or trigger.</td></tr>
+            <tr><td><code>OnTriggerExit(other)</code></td><td>The trigger stopped touching another collider or trigger.</td></tr>
+            <tr><td><code>OnDisable()</code></td><td>The script was disabled.</td></tr>
+            <tr><td><code>OnDestroy()</code></td><td>The instance is being destroyed.</td></tr>
           </tbody>
         </table>
       </div>
-    </section>
-
-    <section>
-      <h2 id="modules">Modules and libraries</h2>
-      <p><code>require</code> looks in the project's <code>assets/project</code> folder, so <code>require("scripts.util")</code> loads <code>assets/project/scripts/util.lua</code>. Every <code>.lua</code> file in the assets is also registered as a script, so a module shows up in the script list too.</p>
-      <p>The standard libraries loaded are <code>base</code>, <code>package</code>, <code>math</code>, <code>table</code>, <code>string</code> and <code>utf8</code>. <code>io</code>, <code>os</code>, <code>coroutine</code> and <code>debug</code> are not available.</p>
     </section>
 
     <section>
@@ -150,8 +143,8 @@ return Mover</code></pre>
         <table>
           <thead><tr><th>Member</th><th>Description</th></tr></thead>
           <tbody>
-            <tr><td><code>Scene.Find(name)</code></td><td>Returns the first entity named <code>name</code>, or <code>nil</code>.</td></tr>
-            <tr><td><code>Scene.Instantiate(prefab, parent)</code></td><td>Creates an instance of the prefab whose file name, without extension, is <code>prefab</code>. <code>parent</code> is an optional Entity. Returns the new entity, or <code>nil</code> if the prefab is not found.</td></tr>
+            <tr><td><code>Scene.Find(name)</code></td><td>Returns the first entity named <code>name</code> or <code>nil</code>.</td></tr>
+            <tr><td><code>Scene.Instantiate(prefab, parent)</code></td><td>Creates an instance of the prefab whose file name is <code>prefab</code>. <code>parent</code> is an optional Entity.</td></tr>
             <tr><td><code>Scene.Destroy(entity)</code></td><td>Destroys the entity.</td></tr>
             <tr><td><code>Scene.Reload()</code></td><td>Reloads the active scene.</td></tr>
           </tbody>
@@ -167,15 +160,15 @@ return Mover</code></pre>
           <tbody>
             <tr><td><code>entity.name</code></td><td>Name shown in the hierarchy. Read only.</td></tr>
             <tr><td><code>entity.active</code></td><td>Whether the entity is active. Setting it to <code>false</code> also deactivates its children.</td></tr>
-            <tr><td><code>entity.transform</code></td><td>The <a href="#transform">Transform</a>, or <code>nil</code>.</td></tr>
-            <tr><td><code>entity.rect</code></td><td>The <a href="#rect">Rect</a> of a UI element, or <code>nil</code>.</td></tr>
-            <tr><td><code>entity.button</code></td><td>The <a href="#button">Button</a>, or <code>nil</code>.</td></tr>
-            <tr><td><code>entity.text</code></td><td>The <a href="#text">Text</a>, or <code>nil</code>.</td></tr>
-            <tr><td><code>entity.sprite</code></td><td>The <a href="#sprite">Sprite</a>, or <code>nil</code>.</td></tr>
-            <tr><td><code>entity.collider</code></td><td>The <a href="#collider">Collider</a>, or <code>nil</code>.</td></tr>
-            <tr><td><code>entity.rigidbody</code></td><td>The <a href="#rigidbody">Rigidbody</a>, or <code>nil</code>.</td></tr>
+            <tr><td><code>entity.transform</code></td><td>The <a href="#transform">Transform</a> or <code>nil</code>.</td></tr>
+            <tr><td><code>entity.rect</code></td><td>The <a href="#rect">Rect</a> of a UI element or <code>nil</code>.</td></tr>
+            <tr><td><code>entity.button</code></td><td>The <a href="#button">Button</a> or <code>nil</code>.</td></tr>
+            <tr><td><code>entity.text</code></td><td>The <a href="#text">Text</a> or <code>nil</code>.</td></tr>
+            <tr><td><code>entity.sprite</code></td><td>The <a href="#sprite">Sprite</a> or <code>nil</code>.</td></tr>
+            <tr><td><code>entity.collider</code></td><td>The <a href="#collider">Collider</a> or <code>nil</code>.</td></tr>
+            <tr><td><code>entity.rigidbody</code></td><td>The <a href="#rigidbody">Rigidbody</a> or <code>nil</code>.</td></tr>
             <tr><td><code>entity:IsValid()</code></td><td>Returns <code>false</code> once the entity has been destroyed.</td></tr>
-            <tr><td><code>entity:GetScript(name)</code></td><td>Returns the instance of the script <code>name</code> on this entity, or <code>nil</code>. Use it to read another script's fields or call its functions.</td></tr>
+            <tr><td><code>entity:GetScript(name)</code></td><td>Returns the instance of the script <code>name</code> on this entity or <code>nil</code>.</td></tr>
             <tr><td><code>a == b</code></td><td>True when both refer to the same entity.</td></tr>
           </tbody>
         </table>
@@ -188,14 +181,14 @@ return Mover</code></pre>
         <table>
           <thead><tr><th>Member</th><th>Description</th></tr></thead>
           <tbody>
-            <tr><td><code>Input.GetKey(key)</code></td><td><code>true</code> while the key is held down. <code>key</code> is a <a href="#keys">Key</a> value such as <code>Key.space</code>.</td></tr>
+            <tr><td><code>Input.GetKey(key)</code></td><td><code>true</code> while the key is held down.</td></tr>
             <tr><td><code>Input.GetKeyDown(key)</code></td><td><code>true</code> in the frame the key was pressed.</td></tr>
             <tr><td><code>Input.GetKeyUp(key)</code></td><td><code>true</code> in the frame the key was released.</td></tr>
-            <tr><td><code>Input.GetMouseButton(button)</code></td><td><code>true</code> while the mouse button is held down. <code>button</code> is a <a href="#keys">Mouse</a> value such as <code>Mouse.button_left</code>.</td></tr>
+            <tr><td><code>Input.GetMouseButton(button)</code></td><td><code>true</code> while the mouse button is held down.</td></tr>
             <tr><td><code>Input.GetMouseButtonDown(button)</code></td><td><code>true</code> in the frame the button was pressed.</td></tr>
             <tr><td><code>Input.GetMouseButtonUp(button)</code></td><td><code>true</code> in the frame the button was released.</td></tr>
-            <tr><td><code>Input.GetMousePosition()</code></td><td>Cursor position in window pixels, as a Vec2.</td></tr>
-            <tr><td><code>Input.GetScrollDelta()</code></td><td>Scroll wheel movement in this frame, as a Vec2.</td></tr>
+            <tr><td><code>Input.GetMousePosition()</code></td><td>Cursor position in window pixels as Vec2.</td></tr>
+            <tr><td><code>Input.GetScrollDelta()</code></td><td>Scroll wheel movement in this frame as Vec2.</td></tr>
           </tbody>
         </table>
       </div>
@@ -222,8 +215,8 @@ return Mover</code></pre>
         <table>
           <thead><tr><th>Member</th><th>Description</th></tr></thead>
           <tbody>
-            <tr><td><code>Physics.Raycast(origin, direction, max_distance)</code></td><td>Casts a ray from <code>origin</code> along <code>direction</code> (both Vec3). <code>max_distance</code> is optional and defaults to 1000. Returns a RaycastHit, or <code>nil</code> when nothing was hit.</td></tr>
-            <tr><td><code>Physics.GetGravity()</code></td><td>Returns the gravity as a Vec3.</td></tr>
+            <tr><td><code>Physics.Raycast(origin, direction, max_distance)</code></td><td>Casts a ray from <code>origin</code> along <code>direction</code>. Returns <code>RaycastHit</code> or <code>nil</code>.</td></tr>
+            <tr><td><code>Physics.GetGravity()</code></td><td>Returns the gravity as Vec3.</td></tr>
             <tr><td><code>Physics.SetGravity(gravity)</code></td><td>Sets the gravity.</td></tr>
           </tbody>
         </table>
@@ -233,10 +226,10 @@ return Mover</code></pre>
         <table>
           <thead><tr><th>Member</th><th>Description</th></tr></thead>
           <tbody>
-            <tr><td><code>hit.entity</code></td><td>The Entity that was hit.</td></tr>
-            <tr><td><code>hit.point</code></td><td>Hit position, Vec3.</td></tr>
-            <tr><td><code>hit.normal</code></td><td>Surface normal at the hit, Vec3.</td></tr>
-            <tr><td><code>hit.distance</code></td><td>Distance from the origin.</td></tr>
+            <tr><td><code>raycast_hit.entity</code></td><td>The Entity that was hit.</td></tr>
+            <tr><td><code>raycast_hit.point</code></td><td>Hit position as Vec3.</td></tr>
+            <tr><td><code>raycast_hit.normal</code></td><td>Surface normal at the hit as Vec3.</td></tr>
+            <tr><td><code>raycast_hit.distance</code></td><td>Distance from the origin.</td></tr>
           </tbody>
         </table>
       </div>
@@ -248,7 +241,7 @@ return Mover</code></pre>
         <table>
           <thead><tr><th>Member</th><th>Description</th></tr></thead>
           <tbody>
-            <tr><td><code>Audio.Play(name)</code></td><td>Plays the sound asset whose file name, without extension, is <code>name</code>. Logs a warning if it is not found.</td></tr>
+            <tr><td><code>Audio.Play(name)</code></td><td>Plays the sound asset whose file name is <code>name</code>.</td></tr>
           </tbody>
         </table>
       </div>
@@ -277,8 +270,8 @@ return Mover</code></pre>
         <table>
           <thead><tr><th>Member</th><th>Description</th></tr></thead>
           <tbody>
-            <tr><td><code>Window.Cursor.SetMode(mode)</code></td><td>Sets the cursor mode to <code>Window.Cursor.normal</code>, <code>Window.Cursor.hidden</code> or <code>Window.Cursor.locked</code>. A locked cursor is hidden and kept in the window, for mouse look.</td></tr>
-            <tr><td><code>Window.Cursor.GetPosition()</code></td><td>Cursor position in window pixels, as a Vec2.</td></tr>
+            <tr><td><code>Window.Cursor.SetMode(mode)</code></td><td>Sets the cursor mode to <code>Window.Cursor.normal</code>, <code>Window.Cursor.hidden</code> or <code>Window.Cursor.locked</code>.</td></tr>
+            <tr><td><code>Window.Cursor.GetPosition()</code></td><td>Cursor position in window pixels as Vec2.</td></tr>
             <tr><td><code>Window.Cursor.SetPosition(x, y)</code></td><td>Moves the cursor.</td></tr>
           </tbody>
         </table>
@@ -303,7 +296,7 @@ return Mover</code></pre>
         <table>
           <thead><tr><th>Member</th><th>Description</th></tr></thead>
           <tbody>
-            <tr><td><code>print(...)</code></td><td>Logs its arguments as info, separated by spaces.</td></tr>
+            <tr><td><code>print(...)</code></td><td>Logs its arguments as info with separated by spaces.</td></tr>
             <tr><td><code>Log.Info(message)</code></td><td>Logs a string as info.</td></tr>
             <tr><td><code>Log.Warning(message)</code></td><td>Logs a string as a warning.</td></tr>
             <tr><td><code>Log.Error(message)</code></td><td>Logs a string as an error.</td></tr>
@@ -319,7 +312,7 @@ return Mover</code></pre>
           <thead><tr><th>Member</th><th>Description</th></tr></thead>
           <tbody>
             <tr><td><code>position</code></td><td>Vec3, relative to the parent.</td></tr>
-            <tr><td><code>rotation</code></td><td>Vec3 of Euler angles in degrees, relative to the parent: pitch, yaw and roll. Yaw 0 faces -Z.</td></tr>
+            <tr><td><code>rotation</code></td><td>Vec3 of Euler angles in degrees, relative to the parent.</td></tr>
             <tr><td><code>scale</code></td><td>Vec3, relative to the parent.</td></tr>
             <tr><td><code>active</code></td><td>Same as <code>entity.active</code>.</td></tr>
             <tr><td><code>active_in_hierarchy</code></td><td><code>false</code> when the entity or one of its parents is inactive. Read only.</td></tr>
@@ -338,7 +331,7 @@ return Mover</code></pre>
             <tr><td><code>anchor_max</code></td><td>Vec2 from 0 to 1. Upper corner of the anchors in the parent.</td></tr>
             <tr><td><code>pivot</code></td><td>Vec2 from 0 to 1. The point of the element that is placed.</td></tr>
             <tr><td><code>anchored_position</code></td><td>Vec2 in pixels. Offset of the pivot from its place between the anchors.</td></tr>
-            <tr><td><code>size_delta</code></td><td>Vec2 in pixels. Added to the distance between the anchors to get the size. With equal anchors it is the size.</td></tr>
+            <tr><td><code>size_delta</code></td><td>Vec2 in pixels. Added to the distance between the anchors to get the size.</td></tr>
           </tbody>
         </table>
       </div>
@@ -350,7 +343,7 @@ return Mover</code></pre>
         <table>
           <thead><tr><th>Member</th><th>Description</th></tr></thead>
           <tbody>
-            <tr><td><code>interactable</code></td><td>Whether the button reacts to the mouse.</td></tr>
+            <tr><td><code>interactable</code></td><td>Whether the button reacts.</td></tr>
             <tr><td><code>normal_color</code></td><td>Color when idle.</td></tr>
             <tr><td><code>hover_color</code></td><td>Color under the cursor.</td></tr>
             <tr><td><code>pressed_color</code></td><td>Color while held.</td></tr>
@@ -369,7 +362,7 @@ return Mover</code></pre>
         <table>
           <thead><tr><th>Member</th><th>Description</th></tr></thead>
           <tbody>
-            <tr><td><code>text</code></td><td>The string to show.</td></tr>
+            <tr><td><code>text</code></td><td>The string.</td></tr>
             <tr><td><code>color</code></td><td>Vec4 color.</td></tr>
             <tr><td><code>font_size</code></td><td>Font size.</td></tr>
           </tbody>
@@ -403,7 +396,7 @@ return Mover</code></pre>
             <tr><td><code>height</code></td><td>Height of a capsule.</td></tr>
             <tr><td><code>friction</code></td><td>Surface friction.</td></tr>
             <tr><td><code>restitution</code></td><td>Bounciness.</td></tr>
-            <tr><td><code>is_trigger</code></td><td>A trigger reports overlaps with <code>OnTriggerEnter</code> and <code>OnTriggerExit</code> instead of colliding.</td></tr>
+            <tr><td><code>is_trigger</code></td><td>A trigger reports overlaps instead of colliding.</td></tr>
           </tbody>
         </table>
       </div>
@@ -420,8 +413,8 @@ return Mover</code></pre>
             <tr><td><code>angular_damping</code></td><td>How fast angular velocity slows down.</td></tr>
             <tr><td><code>gravity_scale</code></td><td>Multiplier for gravity on this body.</td></tr>
             <tr><td><code>is_kinematic</code></td><td>A kinematic body is moved by its transform and is not pushed by forces.</td></tr>
-            <tr><td><code>velocity</code></td><td>Linear velocity, Vec3.</td></tr>
-            <tr><td><code>angular_velocity</code></td><td>Angular velocity, Vec3.</td></tr>
+            <tr><td><code>velocity</code></td><td>Linear velocity as Vec3.</td></tr>
+            <tr><td><code>angular_velocity</code></td><td>Angular velocity as Vec3.</td></tr>
             <tr><td><code>rigidbody:AddForce(force)</code></td><td>Applies a Vec3 force for this step.</td></tr>
             <tr><td><code>rigidbody:AddImpulse(impulse)</code></td><td>Applies a Vec3 impulse, an instant change in momentum.</td></tr>
             <tr><td><code>rigidbody:AddTorque(torque)</code></td><td>Applies a Vec3 torque for this step.</td></tr>
@@ -436,20 +429,20 @@ return Mover</code></pre>
         <table>
           <thead><tr><th>Member</th><th>Description</th></tr></thead>
           <tbody>
-            <tr><td><code>a.x</code>, <code>a.y</code>, <code>a.z</code>, <code>a.w</code></td><td>Components. Vec2 has <code>x</code> and <code>y</code>, Vec3 adds <code>z</code> and Vec4 adds <code>w</code>.</td></tr>
-            <tr><td><code>Vec3()</code></td><td>All components 0.</td></tr>
-            <tr><td><code>Vec3(s)</code></td><td>All components <code>s</code>.</td></tr>
-            <tr><td><code>Vec3(x, y, z)</code></td><td>Given components. <code>Vec2(x, y)</code> and <code>Vec4(x, y, z, w)</code> work the same way.</td></tr>
+            <tr><td><code>a.x</code>, <code>a.y</code>, <code>a.z</code>, <code>a.w</code></td><td>Components.</td></tr>
+            <tr><td><code>Vec3()</code></td><td>All components to 0.</td></tr>
+            <tr><td><code>Vec3(s)</code></td><td>All components to <code>s</code>.</td></tr>
+            <tr><td><code>Vec3(x, y, z)</code></td><td>All components to given ones.</td></tr>
             <tr><td><code>a + b</code>, <code>a - b</code>, <code>-a</code></td><td>Component-wise.</td></tr>
-            <tr><td><code>a * b</code>, <code>a / b</code></td><td>Component-wise with another vector, or with a number. <code>2 * a</code> also works.</td></tr>
+            <tr><td><code>a * b</code>, <code>a / b</code></td><td>Component-wise with another vector or with a number.</td></tr>
             <tr><td><code>a == b</code></td><td>True when all components are equal.</td></tr>
             <tr><td><code>tostring(a)</code></td><td>Text such as <code>(1, 2, 3)</code>.</td></tr>
             <tr><td><code>a:Length()</code></td><td>Length of the vector.</td></tr>
-            <tr><td><code>a:Normalized()</code></td><td>Vector with length 1 in the same direction. A zero vector is returned unchanged.</td></tr>
+            <tr><td><code>a:Normalized()</code></td><td>Vector with length 1 in the same direction.</td></tr>
             <tr><td><code>a:Dot(b)</code></td><td>Dot product.</td></tr>
             <tr><td><code>a:Distance(b)</code></td><td>Distance between two points.</td></tr>
             <tr><td><code>a:Lerp(b, t)</code></td><td>Linear interpolation from <code>a</code> to <code>b</code>.</td></tr>
-            <tr><td><code>a:Cross(b)</code></td><td>Cross product. Vec3 only.</td></tr>
+            <tr><td><code>a:Cross(b)</code></td><td>Cross product.</td></tr>
           </tbody>
         </table>
       </div>

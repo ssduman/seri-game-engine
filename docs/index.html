@@ -15,11 +15,10 @@
 <main>
   <section class="hero container">
     <h1>Seri Game Engine</h1>
-    <p class="lead">A 2D and 3D game engine written in C++20 on OpenGL 4.6. It has an entity component system, PBR rendering with shadows, Jolt physics, Lua scripting and an editor for building and shipping games.</p>
+    <p class="lead">A 2D/3D game engine written in C++20 on OpenGL with entity-component system, PBR rendering, shadows, Jolt physics, Lua scripting and fully-featured editor for building and shipping games.</p>
     <div class="actions">
       <a class="button primary" href="https://github.com/ssduman/seri-game-engine/releases/download/v{{version}}/seri-game-engine-win-x64-v{{version}}.zip">Download for Windows</a>
       <a class="button" href="https://github.com/ssduman/seri-game-engine/releases/download/v{{version}}/seri-game-engine-linux-x64-v{{version}}.tar.gz">Download for Linux</a>
-      <a class="button" href="https://github.com/ssduman/seri-game-engine">View source</a>
     </div>
     <figure class="shot hero-shot">
       <img src="images/editor.png" width="1616" height="939" alt="Seri Game Engine Editor">
@@ -31,11 +30,11 @@
     <div class="grid">
       <article class="card">
         <h3>Entity component system</h3>
-        <p>Scenes are EnTT registries of entities with transform, renderer, light, camera, UI, physics and script components, saved as YAML.</p>
+        <p>Scene is entities of EnTT with transform, light, camera, UI, physics and script components that serialized as YAML.</p>
       </article>
       <article class="card">
         <h3>Rendering</h3>
-        <p>Forward renderer with PBR materials, directional, point and spot lights, shadow mapping, skybox, instancing, FXAA and post processing.</p>
+        <p>Forward renderer with PBR, directional, point and spot lights, shadow mapping, skybox, instancing and post process.</p>
       </article>
       <article class="card">
         <h3>Models and animation</h3>
@@ -47,7 +46,7 @@
       </article>
       <article class="card">
         <h3>Lua scripting</h3>
-        <p>Lua 5.5 scripts with lifecycle callbacks, fields you can edit in the inspector, and hot reload when you save.</p>
+        <p>Lua scripts with lifecycle callbacks, fields and hot reload support.</p>
       </article>
       <article class="card">
         <h3>UI and text</h3>
@@ -55,15 +54,15 @@
       </article>
       <article class="card">
         <h3>Editor</h3>
-        <p>Dear ImGui editor with docking panels, hierarchy, inspector, project browser, console, gizmos, scene and game views, and play mode.</p>
+        <p>Dear ImGui editor with docking panels, hierarchy, inspector, project browser, console, gizmos, scene and game view.</p>
       </article>
       <article class="card">
         <h3>Projects and builds</h3>
-        <p>A launcher to create and open projects, prefabs, audio through miniaudio, and File &gt; Build to export a standalone game.</p>
+        <p>Launcher to create and open projects, prefabs, and export to standalone game.</p>
       </article>
       <article class="card">
         <h3>Tooling</h3>
-        <p>Tracy profiler zones, OpenGL debug output, and premake actions to install, build, package and document the engine.</p>
+        <p>Tracy profiler and premake actions to install, build, package and document the engine.</p>
       </article>
     </div>
   </section>
@@ -73,7 +72,7 @@
     <div class="gallery">
       <figure class="shot">
         <img src="images/launcher.png" width="722" height="452" alt="The launcher" loading="lazy">
-        <figcaption>The launcher creates and opens projects.</figcaption>
+        <figcaption>Launcher creates and opens projects.</figcaption>
       </figure>
     </div>
   </section>
@@ -110,9 +109,9 @@
     <h2>Scripting</h2>
     <div class="split">
       <div>
-        <p>Gameplay is written in Lua. A script is a table with callbacks such as <code>OnStart</code>, <code>OnUpdate</code> and <code>OnTriggerEnter</code>. Entries in its <code>fields</code> table show up in the inspector, so each entity can tune them without touching code.</p>
-        <p>Scripts reach the scene, input, physics, audio and UI through a small set of globals.</p>
-        <p><a class="button" href="lua.html">Read the Lua reference</a></p>
+        <p>Gameplay is written in Lua. A Lua script is a table with callbacks such as <code>OnStart</code>, <code>OnUpdate</code> and entries in its <code>fields</code> table.</p>
+        <p>Scripts can reach scene, input, physics, audio and UI through a set of exposed utility functions.</p>
+        <p><a class="button" href="lua.html">Lua scripting</a></p>
       </div>
 <pre><code class="language-lua">local Mover = {
     fields = {
@@ -143,9 +142,9 @@ return Mover</code></pre>
       <div>
         <h3>Download</h3>
         <ol class="steps">
-          <li>Download the archive for your platform from the <a href="https://github.com/ssduman/seri-game-engine/releases/latest">latest release</a>.</li>
+          <li>Download from <a href="https://github.com/ssduman/seri-game-engine/releases/latest">latest release</a>.</li>
           <li>Extract it and run <code>Editor.exe</code> on Windows or <code>./Editor</code> on Linux.</li>
-          <li>Create a project in the launcher, or open one of the samples in the <a href="https://github.com/ssduman/seri-game-engine/tree/master/projects">projects folder</a> of the repository.</li>
+          <li>Create a project in the launcher or open one of the sample project in the <a href="https://github.com/ssduman/seri-game-engine/tree/master/projects">projects folder</a>.</li>
         </ol>
       </div>
       <div>
