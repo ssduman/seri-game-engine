@@ -1,3 +1,8 @@
+Unreleased
+* Fixed gizmo and picking overleap issue
+* Improved animation playing and clip selection
+* Fixed normal calculation
+
 v0.2.1 - 2026-10-04
 * Added version string to titlebar
 * Supported moving entity in hierarcy panel

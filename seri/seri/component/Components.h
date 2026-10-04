@@ -202,6 +202,9 @@ namespace seri::component
 		bool loop{ true };
 		float speed{ 1.0f };
 
+		uint64_t clipAssetId{ 0 };
+		int clipIndex{ 0 };
+
 		float time{ 0.0f };
 
 		static AnimatorComponent Deserialize(const YAML::Node& node);

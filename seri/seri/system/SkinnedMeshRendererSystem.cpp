@@ -1,5 +1,6 @@
 #include "Seripch.h"
 #include "seri/system/SkinnedMeshRendererSystem.h"
+#include "seri/system/AnimatorSystem.h"
 
 #include "seri/util/Util.h"
 #include "seri/scene/SceneManager.h"
@@ -60,10 +61,13 @@ namespace seri::system
 				continue;
 			}
 
-			if (model->GetAnimationDuration() > 0.0)
+			auto* animator = registry.try_get<seri::component::AnimatorComponent>(entity);
+
+			const Animation* clip = AnimatorSystem::GetClip(animator, model);
+
+			if (clip && clip->GetDuration() > 0.0)
 			{
-				auto* animator = registry.try_get<seri::component::AnimatorComponent>(entity);
-				model->UpdateAnimations(animator ? animator->time : 0.0f);
+				model->UpdateAnimations(*clip, animator ? animator->time : 0.0f);
 			}
 
 			int slotCount = static_cast<int>(renderer.materialAssetIds.size());

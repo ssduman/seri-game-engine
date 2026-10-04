@@ -104,6 +104,16 @@ namespace seri
 		double durationInTick{};
 		double tickPerSecond{};
 		std::unordered_map<std::string, NodeAnimation> nodeAnimations;
+
+		double GetDuration() const
+		{
+			if (tickPerSecond <= 0.0)
+			{
+				return 0.0;
+			}
+
+			return durationInTick / tickPerSecond;
+		}
 	};
 
 	class Mesh
@@ -124,7 +134,6 @@ namespace seri
 		std::vector<TangentData> tangentData{};
 
 		NodeData nodeData{};
-		Animation animation{};
 
 		std::unordered_map<int, Bone> bones{};
 		std::vector<VertexBoneData> bonesForVertices{};
@@ -135,6 +144,7 @@ namespace seri
 		std::unordered_map<std::string, int> boneNameToIndexMap{};
 
 		glm::mat4 transformation{ 1.0f };
+		glm::mat4 inverseNodeTransform{ 1.0f };
 
 		int materialIndex{ 0 };
 		std::string materialName{ "" };
@@ -169,7 +179,7 @@ namespace seri
 			tangentData.insert(tangentData.end(), data.begin(), data.end());
 		}
 
-		void UpdateAnimation(double time)
+		void UpdateAnimation(const Animation& animation, double time)
 		{
 			auto timeInTicks = time * animation.tickPerSecond;
 
@@ -177,19 +187,20 @@ namespace seri
 			animTime = static_cast<float>(animTimeInTick) / static_cast<float>(animation.tickPerSecond);
 			//LIB_LOGGER(info, mesh) << "time: " << time << ", localAnimationTime: " << localAnimationTime;
 
-			UpdateAnimation(nodeData, glm::mat4{ 1.0f });
+			UpdateAnimation(animation, nodeData, glm::mat4{ 1.0f });
 		}
 
-		void UpdateAnimation(const NodeData& node, const glm::mat4& parentTransform)
+		void UpdateAnimation(const Animation& animation, const NodeData& node, const glm::mat4& parentTransform)
 		{
 			std::string nodeName = node.name;
 
 			glm::mat4 trs = node.transformation;
 
 			{
-				if (animation.nodeAnimations.find(nodeName) != animation.nodeAnimations.end())
+				auto nodeAnimIt = animation.nodeAnimations.find(nodeName);
+				if (nodeAnimIt != animation.nodeAnimations.end())
 				{
-					const NodeAnimation& nodeAnim = animation.nodeAnimations[nodeName];
+					const NodeAnimation& nodeAnim = nodeAnimIt->second;
 
 					if (nodeAnim.nodeName != nodeName)
 					{
@@ -219,7 +230,7 @@ namespace seri
 					}
 					else
 					{
-						bones.at(boneIndex).transform = globalTransform * bones.at(boneIndex).offsetMatrix;
+						bones.at(boneIndex).transform = inverseNodeTransform * globalTransform * bones.at(boneIndex).offsetMatrix;
 					}
 				}
 			}
@@ -233,7 +244,7 @@ namespace seri
 
 			for (const NodeData& child : node.children)
 			{
-				UpdateAnimation(child, globalTransform);
+				UpdateAnimation(animation, child, globalTransform);
 			}
 		}
 

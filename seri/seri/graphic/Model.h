@@ -28,6 +28,7 @@ namespace seri
 		int materialCount{ 0 };
 		float importScale{ 1.0f };
 		std::vector<std::shared_ptr<Mesh>> meshes{};
+		std::vector<Animation> animations{};
 
 		void SetImportScale(float scale)
 		{
@@ -53,31 +54,22 @@ namespace seri
 			}
 		}
 
-		void UpdateAnimations(double time)
+		void UpdateAnimations(const Animation& animation, double time)
 		{
 			for (const auto& mesh : meshes)
 			{
-				mesh->UpdateAnimation(time);
+				mesh->UpdateAnimation(animation, time);
 			}
 		}
 
-		double GetAnimationDuration() const
+		const Animation* GetAnimation(int index) const
 		{
-			double duration = 0.0;
-			for (const auto& mesh : meshes)
+			if (index < 0 || index >= static_cast<int>(animations.size()))
 			{
-				if (mesh->animation.tickPerSecond <= 0.0)
-				{
-					continue;
-				}
-
-				double meshDuration = mesh->animation.durationInTick / mesh->animation.tickPerSecond;
-				if (meshDuration > duration)
-				{
-					duration = meshDuration;
-				}
+				return nullptr;
 			}
-			return duration;
+
+			return &animations[index];
 		}
 
 	private:

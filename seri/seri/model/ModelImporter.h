@@ -51,7 +51,7 @@ namespace seri
 
 		void LoadBones(const aiMesh* ai_mesh, std::shared_ptr<Mesh>& mesh);
 
-		Animation LoadAnimations(const aiScene* ai_scene);
+		std::vector<Animation> LoadAnimations(const aiScene* ai_scene);
 
 		NodeAnimation LoadNodeAnimation(const aiNodeAnim* ai_node_anim);
 

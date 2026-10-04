@@ -148,7 +148,14 @@ vec3 GetNormal(sampler2D normalMap, vec2 texCoords, vec3 N, vec3 fragPos)
     vec2 st1 = dFdx(texCoords);
     vec2 st2 = dFdy(texCoords);
 
-    vec3 T = normalize(Q1 * st2.t - Q2 * st1.t);
+    vec3 T = Q1 * st2.t - Q2 * st1.t;
+
+    if (dot(T, T) < 1e-20)
+    {
+        return N;
+    }
+
+    T = normalize(T);
     vec3 B = normalize(cross(N, T));
     T *= (st1.s * st2.t - st2.s * st1.t) < 0.0 ? -1.0 : 1.0;
     mat3 TBN = mat3(T, B, N);

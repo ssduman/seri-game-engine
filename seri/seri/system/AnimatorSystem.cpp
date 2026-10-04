@@ -38,12 +38,14 @@ namespace seri::system
 
 			std::shared_ptr<Model> model = seri::asset::AssetManager::GetAssetByID<Model>(renderer.meshAssetId);
 
-			if (!model)
+			const Animation* clip = GetClip(&animator, model);
+
+			if (!clip)
 			{
 				continue;
 			}
 
-			double duration = model->GetAnimationDuration();
+			double duration = clip->GetDuration();
 
 			if (duration <= 0.0)
 			{
@@ -68,5 +70,17 @@ namespace seri::system
 				animator.time = glm::clamp(animator.time, 0.0f, static_cast<float>(duration));
 			}
 		}
+	}
+
+	const Animation* AnimatorSystem::GetClip(const seri::component::AnimatorComponent* animator, const std::shared_ptr<Model>& model)
+	{
+		if (!animator || animator->clipAssetId == 0)
+		{
+			return model ? model->GetAnimation(animator ? animator->clipIndex : 0) : nullptr;
+		}
+
+		std::shared_ptr<Model> source = seri::asset::AssetManager::GetAssetByID<Model>(animator->clipAssetId);
+
+		return source ? source->GetAnimation(animator->clipIndex) : nullptr;
 	}
 }

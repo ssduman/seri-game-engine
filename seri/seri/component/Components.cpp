@@ -267,6 +267,14 @@ namespace seri::component
 		component.playing = YAMLUtil::GetType<bool>(node["Playing"]);
 		component.loop = YAMLUtil::GetType<bool>(node["Loop"]);
 		component.speed = YAMLUtil::GetType<float>(node["Speed"]);
+		if (node["ClipAssetID"])
+		{
+			component.clipAssetId = YAMLUtil::GetType<uint64_t>(node["ClipAssetID"]);
+		}
+		if (node["ClipIndex"])
+		{
+			component.clipIndex = YAMLUtil::GetType<int>(node["ClipIndex"]);
+		}
 		return component;
 	}
 	YAML::Node AnimatorComponent::Serialize(const AnimatorComponent& component)
@@ -275,6 +283,8 @@ namespace seri::component
 		node["Playing"] = component.playing;
 		node["Loop"] = component.loop;
 		node["Speed"] = component.speed;
+		node["ClipAssetID"] = component.clipAssetId;
+		node["ClipIndex"] = component.clipIndex;
 		return node;
 	}
 

@@ -339,6 +339,16 @@ namespace seri::editor
 				changed = true;
 			}
 
+			if (skinnedModel && skinnedModel->materialCount != static_cast<int>(skinnedMeshRendererComp->materialAssetIds.size()))
+			{
+				ImGui::SameLine();
+				if (ImGui::Button("Fit"))
+				{
+					skinnedMeshRendererComp->materialAssetIds.resize(skinnedModel->materialCount, 0);
+					changed = true;
+				}
+			}
+
 			if (changed)
 			{
 				scene->SetAsDirty();
@@ -575,10 +585,50 @@ namespace seri::editor
 			}
 
 			bool changed = false;
+			uint64_t selection = 0;
 
 			changed |= DrawBool("Playing", animatorComp->playing);
 			changed |= DrawBool("Loop", animatorComp->loop);
 			changed |= DrawFloat("Speed", animatorComp->speed, 0.05f, -10.0f, 10.0f);
+
+			if (DrawAssetPicker("Clip Asset", animatorComp->clipAssetId, seri::asset::AssetType::mesh, selection))
+			{
+				animatorComp->clipAssetId = selection;
+				animatorComp->clipIndex = 0;
+				changed = true;
+			}
+
+			uint64_t clipSourceId = animatorComp->clipAssetId;
+			if (clipSourceId == 0)
+			{
+				if (auto* skinnedComp = registry.try_get<seri::component::SkinnedMeshRendererComponent>(entity))
+				{
+					clipSourceId = skinnedComp->meshAssetId;
+				}
+			}
+
+			auto clipSource = seri::asset::AssetManager::GetAssetByID<seri::Model>(clipSourceId);
+			if (clipSource && !clipSource->animations.empty())
+			{
+				std::vector<std::string> clipNames;
+				std::vector<const char*> clipNamePtrs;
+				clipNames.reserve(clipSource->animations.size());
+				for (size_t i = 0; i < clipSource->animations.size(); i++)
+				{
+					clipNames.emplace_back(fmt::format("{}: {}", i, clipSource->animations[i].name));
+				}
+				for (const auto& clipName : clipNames)
+				{
+					clipNamePtrs.push_back(clipName.c_str());
+				}
+
+				changed |= DrawCombo("Clip", animatorComp->clipIndex, clipNamePtrs.data(), static_cast<int>(clipNamePtrs.size()));
+
+				if (const seri::Animation* clip = clipSource->GetAnimation(animatorComp->clipIndex))
+				{
+					DrawLabel("Duration", fmt::format("{:.3f}", clip->GetDuration()).c_str(), true);
+				}
+			}
 
 			DrawLabel("Time", fmt::format("{:.3f}", animatorComp->time).c_str(), true);
 
@@ -1424,6 +1474,7 @@ namespace seri::editor
 
 		DrawLabel("Meshes", std::to_string(asset->meshes.size()).c_str(), true);
 		DrawLabel("Materials", std::to_string(asset->materialCount).c_str(), true);
+		DrawLabel("Animations", std::to_string(asset->animations.size()).c_str(), true);
 
 		float importScale = asset->importScale;
 		if (DrawFloat("Scale", importScale, 0.01f, 0.0001f, 1000.0f, "%.4f"))

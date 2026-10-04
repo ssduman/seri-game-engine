@@ -8,6 +8,8 @@
 #include <string>
 #include <filesystem>
 
+#include <assimp/config.h>
+
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 
@@ -30,11 +32,12 @@ namespace seri
 	std::shared_ptr<Model> ModelImporter::Load(const std::string& modelPath)
 	{
 		Assimp::Importer ai_importer;
+		ai_importer.SetPropertyBool(AI_CONFIG_IMPORT_FBX_PRESERVE_PIVOTS, false);
 
 		const aiScene* ai_scene = ai_importer.ReadFile(modelPath, FlagBuilder());
-		if (!ai_scene || ai_scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !ai_scene->mRootNode)
+		if (!ai_scene || !ai_scene->mRootNode || (ai_scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE && !ai_scene->HasAnimations()))
 		{
-			LIB_LOGGER(error, model) << fmt::format("read model path '{}' failed: {}", modelPath, ai_importer.GetErrorString());
+			LIB_LOGGER(error, model) << "read model path '" << modelPath << "' failed: " << ai_importer.GetErrorString();
 			return nullptr;
 		}
 
@@ -64,24 +67,26 @@ namespace seri
 
 		NodeData nodeData = ProcessNode(ai_scene, ai_scene->mRootNode, model);
 
-		Animation animation = LoadAnimations(ai_scene);
+		model->animations = LoadAnimations(ai_scene);
 
 		for (auto& mesh : model->meshes)
 		{
 			mesh->transformation = globalTransformation * mesh->transformation;
+			mesh->inverseNodeTransform = glm::inverse(mesh->transformation);
 			mesh->nodeData = nodeData;
-			mesh->animation = animation;
 			mesh->boneNameToIndexMap = _boneNameToIndexMap;
 			mesh->Build();
 		}
 
 		std::string hasSkel = ai_scene->HasSkeletons() ? "y" : "n";
-		std::string hasAnim = ai_scene->HasAnimations() ? "y" : "n";
 
-		LOGGER(info) << fmt::format(
-			"[model] loaded '{}', mesh: {}, mat: {}, tri: {}, anim: {}, skeleton: {}",
-			modelName, model->meshes.size(), model->materialCount, triCount, hasAnim, hasSkel
-		);
+		LIB_LOGGER(info, model) <<
+			"loaded '" << modelName <<
+			"', mesh: " << model->meshes.size() <<
+			", mat: " << model->materialCount <<
+			", tri: " << triCount <<
+			", anim: " << model->animations.size() <<
+			", skeleton: " << hasSkel;
 
 		return model;
 	}
@@ -357,7 +362,7 @@ namespace seri
 		}
 	}
 
-	Animation ModelImporter::LoadAnimations(const aiScene* ai_scene)
+	std::vector<Animation> ModelImporter::LoadAnimations(const aiScene* ai_scene)
 	{
 		if (!ai_scene->HasAnimations())
 		{
@@ -365,9 +370,10 @@ namespace seri
 			return {};
 		}
 
-		Animation animation{};
+		std::vector<Animation> animations;
 
 		unsigned int numAnims = ai_scene->mNumAnimations;
+		animations.reserve(numAnims);
 
 		for (unsigned int i = 0; i < numAnims; ++i)
 		{
@@ -378,6 +384,7 @@ namespace seri
 			auto tickPerSec = ai_animation->mTicksPerSecond;
 			float duration = static_cast<float>(durInTick) / static_cast<float>(tickPerSec);
 
+			Animation& animation = animations.emplace_back();
 			animation.name = animName;
 			animation.durationInTick = durInTick;
 			animation.tickPerSecond = tickPerSec;
@@ -397,14 +404,14 @@ namespace seri
 				animation.nodeAnimations[nodeName] = LoadNodeAnimation(ai_node_anim);
 			}
 
-			LOGGER(info) <<
-				"[model] anim: " << animName << ", duration: " << duration << ", has " <<
+			LIB_LOGGER(info, model) <<
+				"anim: " << animName << ", duration: " << duration << ", has " <<
 				ai_animation->mNumChannels << " skeletal, " <<
 				ai_animation->mNumMeshChannels << " mesh channels, " <<
 				ai_animation->mNumMorphMeshChannels << " morph mesh";
 		}
 
-		return animation;
+		return animations;
 	}
 
 	NodeAnimation ModelImporter::LoadNodeAnimation(const aiNodeAnim* ai_node_anim)
@@ -485,7 +492,7 @@ namespace seri
 
 		if (ai_mesh->mNumAnimMeshes > 0)
 		{
-			LIB_LOGGER(info, model) << fmt::format("mesh '{}', blend shape count: {} loaded", ai_mesh->mName.C_Str(), ai_mesh->mNumAnimMeshes);
+			LIB_LOGGER(info, model) << "mesh '" << ai_mesh->mName.C_Str() << "', blend shape count: " << ai_mesh->mNumAnimMeshes << " loaded";
 		}
 	}
 

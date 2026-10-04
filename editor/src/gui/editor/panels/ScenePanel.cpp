@@ -75,10 +75,10 @@ namespace seri::editor
 		if (ctx.showGizmos && seri::scene::SceneManager::GetState() == seri::scene::SceneState::edit)
 		{
 			ShowGizmo(imageMin, imageSize);
-			bool entityGizmoShown = ShowEntityGizmo(ctx, imageMin, imageSize);
+			bool entityGizmoHovered = ShowEntityGizmo(ctx, imageMin, imageSize);
 			ShowGizmoToolbar(imageMin);
 
-			gizmoHovered = ImGuizmo::IsViewManipulateHovered() || (entityGizmoShown && ImGuizmo::IsOver());
+			gizmoHovered = ImGuizmo::IsViewManipulateHovered() || entityGizmoHovered;
 		}
 
 		PickEntity(ctx, imageMin, imageMax, gizmoHovered);
@@ -384,9 +384,11 @@ namespace seri::editor
 			scene->SetAsDirty();
 		}
 
+		bool hovered = ImGuizmo::IsOver();
+
 		ImGuizmo::PopID();
 
-		return true;
+		return hovered;
 	}
 
 	void ScenePanel::PickEntity(GUIContext& ctx, const ImVec2& imageMin, const ImVec2& imageMax, bool gizmoHovered)
