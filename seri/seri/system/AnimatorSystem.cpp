@@ -38,49 +38,79 @@ namespace seri::system
 
 			std::shared_ptr<Model> model = seri::asset::AssetManager::GetAssetByID<Model>(renderer.meshAssetId);
 
-			const Animation* clip = GetClip(&animator, model);
+			if (animator.activeClipAssetId != animator.clipAssetId || animator.activeClipIndex != animator.clipIndex)
+			{
+				if (animator.activeClipIndex >= 0)
+				{
+					animator.previousClipAssetId = animator.activeClipAssetId;
+					animator.previousClipIndex = animator.fadeDuration > 0.0f ? animator.activeClipIndex : -1;
+					animator.previousTime = animator.time;
+					animator.fadeTime = 0.0f;
+					animator.time = 0.0f;
+				}
 
+				animator.activeClipAssetId = animator.clipAssetId;
+				animator.activeClipIndex = animator.clipIndex;
+			}
+
+			const Animation* clip = GetClip(animator.clipAssetId, animator.clipIndex, model);
 			if (!clip)
 			{
 				continue;
 			}
 
-			double duration = clip->GetDuration();
+			float step = animator.playing ? deltaTime * animator.speed : 0.0f;
 
-			if (duration <= 0.0)
-			{
-				continue;
-			}
+			animator.time = WrapTime(animator.time + step, clip->GetDuration(), animator.loop);
 
-			if (animator.playing)
+			if (animator.previousClipIndex >= 0)
 			{
-				animator.time += deltaTime * animator.speed;
-			}
+				const Animation* previous = GetClip(animator.previousClipAssetId, animator.previousClipIndex, model);
 
-			if (animator.loop)
-			{
-				animator.time = static_cast<float>(std::fmod(animator.time, duration));
-				if (animator.time < 0.0f)
+				animator.fadeTime += animator.playing ? deltaTime : 0.0f;
+
+				if (!previous || animator.fadeTime >= animator.fadeDuration)
 				{
-					animator.time += static_cast<float>(duration);
+					animator.previousClipIndex = -1;
 				}
-			}
-			else
-			{
-				animator.time = glm::clamp(animator.time, 0.0f, static_cast<float>(duration));
+				else
+				{
+					animator.previousTime = WrapTime(animator.previousTime + step, previous->GetDuration(), animator.loop);
+				}
 			}
 		}
 	}
 
-	const Animation* AnimatorSystem::GetClip(const seri::component::AnimatorComponent* animator, const std::shared_ptr<Model>& model)
+	const Animation* AnimatorSystem::GetClip(uint64_t clipAssetId, int clipIndex, const std::shared_ptr<Model>& model)
 	{
-		if (!animator || animator->clipAssetId == 0)
+		if (clipAssetId == 0)
 		{
-			return model ? model->GetAnimation(animator ? animator->clipIndex : 0) : nullptr;
+			return model ? model->GetAnimation(clipIndex) : nullptr;
 		}
 
-		std::shared_ptr<Model> source = seri::asset::AssetManager::GetAssetByID<Model>(animator->clipAssetId);
+		std::shared_ptr<Model> source = seri::asset::AssetManager::GetAssetByID<Model>(clipAssetId);
 
-		return source ? source->GetAnimation(animator->clipIndex) : nullptr;
+		return source ? source->GetAnimation(clipIndex) : nullptr;
+	}
+
+	float AnimatorSystem::WrapTime(float time, double duration, bool loop)
+	{
+		if (duration <= 0.0)
+		{
+			return 0.0f;
+		}
+
+		if (!loop)
+		{
+			return glm::clamp(time, 0.0f, static_cast<float>(duration));
+		}
+
+		float wrapped = static_cast<float>(std::fmod(time, duration));
+		if (wrapped < 0.0f)
+		{
+			wrapped += static_cast<float>(duration);
+		}
+
+		return wrapped;
 	}
 }

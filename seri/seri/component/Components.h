@@ -201,11 +201,19 @@ namespace seri::component
 		bool playing{ true };
 		bool loop{ true };
 		float speed{ 1.0f };
+		float fadeDuration{ 0.25f };
 
 		uint64_t clipAssetId{ 0 };
 		int clipIndex{ 0 };
 
 		float time{ 0.0f };
+
+		uint64_t activeClipAssetId{ 0 };
+		int activeClipIndex{ -1 };
+		uint64_t previousClipAssetId{ 0 };
+		int previousClipIndex{ -1 };
+		float previousTime{ 0.0f };
+		float fadeTime{ 0.0f };
 
 		static AnimatorComponent Deserialize(const YAML::Node& node);
 		static YAML::Node Serialize(const AnimatorComponent& component);

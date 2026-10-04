@@ -116,6 +116,12 @@ namespace seri
 		}
 	};
 
+	struct AnimationSample
+	{
+		const Animation* animation{ nullptr };
+		double timeInTick{ 0.0 };
+	};
+
 	class Mesh
 	{
 	public:
@@ -179,40 +185,43 @@ namespace seri
 			tangentData.insert(tangentData.end(), data.begin(), data.end());
 		}
 
-		void UpdateAnimation(const Animation& animation, double time)
+		void UpdateAnimation(const Animation& animation, double time, const Animation* previous, double previousTime, float weight)
 		{
-			auto timeInTicks = time * animation.tickPerSecond;
+			AnimationSample current{ &animation, time * animation.tickPerSecond };
+			AnimationSample blendFrom{ previous, previous ? previousTime * previous->tickPerSecond : 0.0 };
 
-			animTimeInTick = std::fmod(timeInTicks, animation.durationInTick);
-			animTime = static_cast<float>(animTimeInTick) / static_cast<float>(animation.tickPerSecond);
-			//LIB_LOGGER(info, mesh) << "time: " << time << ", localAnimationTime: " << localAnimationTime;
-
-			UpdateAnimation(animation, nodeData, glm::mat4{ 1.0f });
+			UpdateAnimation(nodeData, glm::mat4{ 1.0f }, current, blendFrom, weight);
 		}
 
-		void UpdateAnimation(const Animation& animation, const NodeData& node, const glm::mat4& parentTransform)
+		void UpdateAnimation(const NodeData& node, const glm::mat4& parentTransform, const AnimationSample& current, const AnimationSample& previous, float weight)
 		{
-			std::string nodeName = node.name;
+			const std::string& nodeName = node.name;
 
 			glm::mat4 trs = node.transformation;
 
+			const NodeAnimation* currentAnim = FindNodeAnimation(current, nodeName);
+			const NodeAnimation* previousAnim = FindNodeAnimation(previous, nodeName);
+
+			if (currentAnim || previousAnim)
 			{
-				auto nodeAnimIt = animation.nodeAnimations.find(nodeName);
-				if (nodeAnimIt != animation.nodeAnimations.end())
+				glm::vec3 position;
+				glm::quat rotation;
+				glm::vec3 scale;
+				SampleNode(node, currentAnim, current.timeInTick, position, rotation, scale);
+
+				if (previous.animation && weight < 1.0f)
 				{
-					const NodeAnimation& nodeAnim = nodeAnimIt->second;
+					glm::vec3 previousPosition;
+					glm::quat previousRotation;
+					glm::vec3 previousScale;
+					SampleNode(node, previousAnim, previous.timeInTick, previousPosition, previousRotation, previousScale);
 
-					if (nodeAnim.nodeName != nodeName)
-					{
-						LIB_LOGGER(error, mesh) << "bone anim name mismatch: " << nodeAnim.nodeName << ", " << nodeName;
-					}
-
-					glm::vec3 position = InterpolatePosition(nodeAnim);
-					glm::quat rotation = InterpolateRotation(nodeAnim);
-					glm::vec3 scale = InterpolateScale(nodeAnim);
-
-					trs = Util::GetTRS(position, rotation, scale);
+					position = glm::mix(previousPosition, position, weight);
+					rotation = glm::slerp(previousRotation, rotation, weight);
+					scale = glm::mix(previousScale, scale, weight);
 				}
+
+				trs = Util::GetTRS(position, rotation, scale);
 			}
 
 			glm::mat4 globalTransform = parentTransform * trs;
@@ -244,7 +253,7 @@ namespace seri
 
 			for (const NodeData& child : node.children)
 			{
-				UpdateAnimation(animation, child, globalTransform);
+				UpdateAnimation(child, globalTransform, current, previous, weight);
 			}
 		}
 
@@ -773,22 +782,53 @@ namespace seri
 		}
 
 	private:
-		glm::vec3 InterpolatePosition(const NodeAnimation& nodeAnim)
+		static const NodeAnimation* FindNodeAnimation(const AnimationSample& sample, const std::string& nodeName)
+		{
+			if (!sample.animation)
+			{
+				return nullptr;
+			}
+
+			auto it = sample.animation->nodeAnimations.find(nodeName);
+			return it != sample.animation->nodeAnimations.end() ? &it->second : nullptr;
+		}
+
+		static void SampleNode(const NodeData& node, const NodeAnimation* nodeAnim, double timeInTick, glm::vec3& position, glm::quat& rotation, glm::vec3& scale)
+		{
+			if (!nodeAnim)
+			{
+				glm::vec3 skew;
+				glm::vec4 perspective;
+				glm::decompose(node.transformation, scale, rotation, position, skew, perspective);
+				return;
+			}
+
+			position = InterpolatePosition(*nodeAnim, timeInTick);
+			rotation = InterpolateRotation(*nodeAnim, timeInTick);
+			scale = InterpolateScale(*nodeAnim, timeInTick);
+		}
+
+		static glm::vec3 InterpolatePosition(const NodeAnimation& nodeAnim, double timeInTick)
 		{
 			if (nodeAnim.positions.empty())
 			{
 				return glm::vec3{ 0.0f, 0.0f, 0.0f };
 			}
 
-			if (nodeAnim.positions.size() == 1)
+			if (nodeAnim.positions.size() == 1 || timeInTick <= nodeAnim.positions.front().timeInTick)
 			{
-				return nodeAnim.positions[0].position;
+				return nodeAnim.positions.front().position;
+			}
+
+			if (timeInTick >= nodeAnim.positions.back().timeInTick)
+			{
+				return nodeAnim.positions.back().position;
 			}
 
 			unsigned int prevIndex = 0;
 			for (unsigned int i = 0; i < nodeAnim.positions.size() - 1; i++)
 			{
-				if (animTimeInTick < nodeAnim.positions[i + 1].timeInTick)
+				if (timeInTick < nodeAnim.positions[i + 1].timeInTick)
 				{
 					prevIndex = i;
 					break;
@@ -800,7 +840,7 @@ namespace seri
 			auto t1 = nodeAnim.positions[prevIndex].timeInTick;
 			auto t2 = nodeAnim.positions[nextIndex].timeInTick;
 
-			float ratio = (animTimeInTick - t1) / static_cast<float>(t2 - t1);
+			float ratio = static_cast<float>((timeInTick - t1) / (t2 - t1));
 			ratio = glm::clamp(ratio, 0.0f, 1.0f);
 
 			const glm::vec3& beg = nodeAnim.positions[prevIndex].position;
@@ -809,22 +849,27 @@ namespace seri
 			return glm::mix(beg, end, ratio);
 		}
 
-		glm::quat InterpolateRotation(const NodeAnimation& nodeAnim)
+		static glm::quat InterpolateRotation(const NodeAnimation& nodeAnim, double timeInTick)
 		{
 			if (nodeAnim.rotations.empty())
 			{
 				return glm::quat{ 1.0f, 0.0f, 0.0f, 0.0f };
 			}
 
-			if (nodeAnim.rotations.size() == 1)
+			if (nodeAnim.rotations.size() == 1 || timeInTick <= nodeAnim.rotations.front().timeInTick)
 			{
-				return nodeAnim.rotations[0].quaternion;
+				return glm::normalize(nodeAnim.rotations.front().quaternion);
+			}
+
+			if (timeInTick >= nodeAnim.rotations.back().timeInTick)
+			{
+				return glm::normalize(nodeAnim.rotations.back().quaternion);
 			}
 
 			unsigned int prevIndex = 0;
 			for (unsigned int i = 0; i < nodeAnim.rotations.size() - 1; i++)
 			{
-				if (animTimeInTick < nodeAnim.rotations[i + 1].timeInTick)
+				if (timeInTick < nodeAnim.rotations[i + 1].timeInTick)
 				{
 					prevIndex = i;
 					break;
@@ -836,7 +881,7 @@ namespace seri
 			auto t1 = nodeAnim.rotations[prevIndex].timeInTick;
 			auto t2 = nodeAnim.rotations[nextIndex].timeInTick;
 
-			float ratio = (animTimeInTick - t1) / static_cast<float>(t2 - t1);
+			float ratio = static_cast<float>((timeInTick - t1) / (t2 - t1));
 			ratio = glm::clamp(ratio, 0.0f, 1.0f);
 
 			const glm::quat& beg = nodeAnim.rotations[prevIndex].quaternion;
@@ -848,22 +893,27 @@ namespace seri
 			return glm::slerp(begNorm, endNorm, ratio);
 		}
 
-		glm::vec3 InterpolateScale(const NodeAnimation& nodeAnim)
+		static glm::vec3 InterpolateScale(const NodeAnimation& nodeAnim, double timeInTick)
 		{
 			if (nodeAnim.scales.empty())
 			{
 				return glm::vec3{ 1.0f, 1.0f, 1.0f };
 			}
 
-			if (nodeAnim.scales.size() == 1)
+			if (nodeAnim.scales.size() == 1 || timeInTick <= nodeAnim.scales.front().timeInTick)
 			{
-				return nodeAnim.scales[0].scale;
+				return nodeAnim.scales.front().scale;
+			}
+
+			if (timeInTick >= nodeAnim.scales.back().timeInTick)
+			{
+				return nodeAnim.scales.back().scale;
 			}
 
 			unsigned int prevIndex = 0;
 			for (unsigned int i = 0; i < nodeAnim.scales.size() - 1; i++)
 			{
-				if (animTimeInTick < nodeAnim.scales[i + 1].timeInTick)
+				if (timeInTick < nodeAnim.scales[i + 1].timeInTick)
 				{
 					prevIndex = i;
 					break;
@@ -875,7 +925,7 @@ namespace seri
 			auto t1 = nodeAnim.scales[prevIndex].timeInTick;
 			auto t2 = nodeAnim.scales[nextIndex].timeInTick;
 
-			float ratio = (animTimeInTick - t1) / static_cast<float>(t2 - t1);
+			float ratio = static_cast<float>((timeInTick - t1) / (t2 - t1));
 			ratio = glm::clamp(ratio, 0.0f, 1.0f);
 
 			const glm::vec3& beg = nodeAnim.scales[prevIndex].scale;
@@ -893,9 +943,6 @@ namespace seri
 		std::shared_ptr<VertexBufferBase> _vbo_tan{ nullptr };
 		std::shared_ptr<VertexBufferBase> _vbo_skin{ nullptr };
 		std::shared_ptr<VertexBufferBase> _vbo_instanced{ nullptr };
-
-		float animTime{ 0.0f };
-		double animTimeInTick{ 0.0 };
 
 	};
 }

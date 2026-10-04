@@ -590,6 +590,7 @@ namespace seri::editor
 			changed |= DrawBool("Playing", animatorComp->playing);
 			changed |= DrawBool("Loop", animatorComp->loop);
 			changed |= DrawFloat("Speed", animatorComp->speed, 0.05f, -10.0f, 10.0f);
+			changed |= DrawFloat("Fade", animatorComp->fadeDuration, 0.01f, 0.0f, 10.0f);
 
 			if (DrawAssetPicker("Clip Asset", animatorComp->clipAssetId, seri::asset::AssetType::mesh, selection))
 			{

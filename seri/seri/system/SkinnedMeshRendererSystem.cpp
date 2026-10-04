@@ -63,11 +63,20 @@ namespace seri::system
 
 			auto* animator = registry.try_get<seri::component::AnimatorComponent>(entity);
 
-			const Animation* clip = AnimatorSystem::GetClip(animator, model);
+			const Animation* clip = animator ? AnimatorSystem::GetClip(animator->clipAssetId, animator->clipIndex, model) : model->GetAnimation(0);
 
 			if (clip && clip->GetDuration() > 0.0)
 			{
-				model->UpdateAnimations(*clip, animator ? animator->time : 0.0f);
+				const Animation* previous = nullptr;
+				float weight = 1.0f;
+
+				if (animator && animator->previousClipIndex >= 0 && animator->fadeDuration > 0.0f)
+				{
+					previous = AnimatorSystem::GetClip(animator->previousClipAssetId, animator->previousClipIndex, model);
+					weight = glm::clamp(animator->fadeTime / animator->fadeDuration, 0.0f, 1.0f);
+				}
+
+				model->UpdateAnimations(*clip, animator ? animator->time : 0.0f, previous, animator ? animator->previousTime : 0.0f, weight);
 			}
 
 			int slotCount = static_cast<int>(renderer.materialAssetIds.size());

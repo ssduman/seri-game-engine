@@ -54,11 +54,11 @@ namespace seri
 			}
 		}
 
-		void UpdateAnimations(const Animation& animation, double time)
+		void UpdateAnimations(const Animation& animation, double time, const Animation* previous, double previousTime, float weight)
 		{
 			for (const auto& mesh : meshes)
 			{
-				mesh->UpdateAnimation(animation, time);
+				mesh->UpdateAnimation(animation, time, previous, previousTime, weight);
 			}
 		}
 

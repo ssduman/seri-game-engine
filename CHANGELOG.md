@@ -2,6 +2,7 @@ Unreleased
 * Fixed gizmo and picking overleap issue
 * Improved animation playing and clip selection
 * Fixed normal calculation
+* Implemented blending between two animation clips
 
 v0.2.1 - 2026-10-04
 * Added version string to titlebar
