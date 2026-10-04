@@ -15,9 +15,9 @@ newaction {
       "docs/images/knockdown-game.png",
     }
     local fonts = {
-      "fonts/Inter/Inter-VariableFont_opsz,wght.ttf",
-      "fonts/Cascadia_Mono/CascadiaMono-VariableFont_wght.ttf",
-      "fonts/Cascadia_Mono/CascadiaMono-Italic-VariableFont_wght.ttf",
+      "fonts/Inter/Inter-VariableFont.woff2",
+      "fonts/Cascadia_Mono/CascadiaMono-VariableFont.woff2",
+      "fonts/Cascadia_Mono/CascadiaMono-Italic-VariableFont.woff2",
     }
 
     if not engine_version then

@@ -1,25 +1,25 @@
 @font-face {
   font-family: "Inter";
-  src: url("fonts/Inter/Inter-VariableFont_opsz,wght.ttf") format("truetype");
+  src: url("fonts/Inter/Inter-VariableFont.woff2") format("woff2");
   font-weight: 100 900;
   font-style: normal;
-  font-display: swap;
+  font-display: block;
 }
 
 @font-face {
   font-family: "Cascadia Mono";
-  src: url("fonts/Cascadia_Mono/CascadiaMono-VariableFont_wght.ttf") format("truetype");
+  src: url("fonts/Cascadia_Mono/CascadiaMono-VariableFont.woff2") format("woff2");
   font-weight: 200 700;
   font-style: normal;
-  font-display: swap;
+  font-display: block;
 }
 
 @font-face {
   font-family: "Cascadia Mono";
-  src: url("fonts/Cascadia_Mono/CascadiaMono-Italic-VariableFont_wght.ttf") format("truetype");
+  src: url("fonts/Cascadia_Mono/CascadiaMono-Italic-VariableFont.woff2") format("woff2");
   font-weight: 200 700;
   font-style: italic;
-  font-display: swap;
+  font-display: block;
 }
 
 :root {
