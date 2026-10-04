@@ -30,6 +30,7 @@ namespace seri::editor
 		SetStyle();
 
 		_titleBar.Init();
+		_projectPanel.Init();
 
 		GUIBackend::Init(GUIRendererBackend::imgui);
 	}
@@ -44,6 +45,7 @@ namespace seri::editor
 		ImGuizmo::Enable(true);
 
 		_consolePanel.Update();
+		_projectPanel.Update();
 		_gamePanel.Update(_context);
 
 		DrawLayout();

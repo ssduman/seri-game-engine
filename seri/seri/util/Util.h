@@ -83,7 +83,7 @@ namespace seri
 
 		static glm::mat4 GetIdentityMatrix();
 
-		static void Decompose(const glm::mat4& matrix, glm::vec3& pos, glm::vec3& euler, glm::vec3& scale);
+		static bool Decompose(const glm::mat4& matrix, glm::vec3& pos, glm::vec3& euler, glm::vec3& scale);
 
 		static std::string ReadFileAtPath(const char* path);
 

@@ -41,6 +41,45 @@ namespace seri::editor
 		}
 	}
 
+	ProjectPanel::~ProjectPanel()
+	{
+		seri::event::EventManager::Unsubscribe(_dropHandle);
+	}
+
+	void ProjectPanel::Init()
+	{
+		_dropHandle = seri::event::EventManager::Subscribe<seri::event::WindowDropEventData>(
+			[this](const seri::event::WindowDropEventData& data) -> bool
+			{
+				for (const auto& path : data.paths)
+				{
+					_pendingImports.emplace_back(std::u8string{ path.begin(), path.end() });
+				}
+
+				return false;
+			}
+		);
+	}
+
+	void ProjectPanel::Update()
+	{
+		if (_pendingImports.empty())
+		{
+			return;
+		}
+
+		std::filesystem::path folder = _currentFolder.empty() ? seri::project::ProjectManager::GetProjectAssetDirectory() : _currentFolder;
+
+		std::vector<std::filesystem::path> imported = seri::asset::AssetManager::ImportAssets(folder, _pendingImports);
+		_pendingImports.clear();
+
+		if (!imported.empty())
+		{
+			_selectedPath = imported.back();
+			_selectionDirty = true;
+		}
+	}
+
 	void ProjectPanel::Draw(GUIContext& ctx)
 	{
 		seri::asset::AssetTreeNode& tree = seri::asset::AssetManager::GetAssetTreeRoot();

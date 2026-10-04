@@ -99,6 +99,7 @@ namespace seri::scene
 
 		void DeleteEntity(uint64_t id);
 		void AddEntityAsChild(uint64_t id, uint64_t parentId, const std::string& name);
+		bool MoveEntity(uint64_t id, uint64_t parentId);
 
 	private:
 		YAML::Node SerializeEntities(const std::vector<uint64_t>& ids);

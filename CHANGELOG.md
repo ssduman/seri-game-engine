@@ -1,5 +1,7 @@
 Unreleased
 * Added version string to titlebar
+* Supported moving entity in hierarcy panel
+* Supported asset dropping to project panel
 
 v0.2.0 - 2026-10-03
 * Added mouse picking and outline to scene

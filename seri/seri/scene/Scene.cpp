@@ -351,4 +351,58 @@ namespace seri::scene
 		}
 	}
 
+	bool Scene::MoveEntity(uint64_t id, uint64_t parentId)
+	{
+		SceneTreeNode* node = FindNode(_sceneTreeRoot, id);
+		if (node == nullptr || node->parentId == parentId || FindNode(*node, parentId) != nullptr)
+		{
+			return false;
+		}
+
+		SceneTreeNode* oldParent = FindNode(_sceneTreeRoot, node->parentId);
+		if (oldParent == nullptr || (parentId != 0 && !HasEntity(parentId)))
+		{
+			return false;
+		}
+
+		auto& registry = seri::scene::SceneManager::GetRegistry();
+		entt::entity entity = GetEntityByID(id);
+
+		auto& transform = registry.get<seri::component::TransformComponent>(entity);
+		if (!registry.all_of<seri::component::RectComponent>(entity))
+		{
+			glm::mat4 oldParentWorld = node->parentId != 0 ? registry.get<seri::component::TransformComponent>(GetEntityByID(node->parentId)).worldMatrix : glm::mat4{ 1.0f };
+			glm::mat4 newParentWorld = parentId != 0 ? registry.get<seri::component::TransformComponent>(GetEntityByID(parentId)).worldMatrix : glm::mat4{ 1.0f };
+			glm::mat4 local = glm::inverse(newParentWorld) * oldParentWorld * Util::GetTRS(transform.position, transform.rotation, transform.scale);
+
+			glm::vec3 position;
+			glm::vec3 rotation;
+			glm::vec3 scale;
+			if (glm::determinant(newParentWorld) != 0.0f && Util::Decompose(local, position, rotation, scale))
+			{
+				transform.position = position;
+				if (glm::abs(glm::dot(Util::ToQuaternion(rotation), Util::ToQuaternion(transform.rotation))) < 0.999999f)
+				{
+					transform.rotation = rotation;
+				}
+				if (glm::length(scale - transform.scale) > 0.0001f)
+				{
+					transform.scale = scale;
+				}
+			}
+		}
+
+		registry.get<seri::component::IDComponent>(entity).parentId = parentId;
+
+		SceneTreeNode moved = std::move(*node);
+		moved.parentId = parentId;
+		std::erase_if(oldParent->children, [id](const SceneTreeNode& child) { return child.id == id; });
+
+		FindNode(_sceneTreeRoot, parentId)->children.push_back(std::move(moved));
+
+		SetAsDirty();
+
+		return true;
+	}
+
 }

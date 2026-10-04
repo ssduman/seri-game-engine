@@ -981,6 +981,76 @@ namespace seri::asset
 		return target;
 	}
 
+	std::vector<std::filesystem::path> asset::AssetManager::ImportAssets(const std::filesystem::path& folder, const std::vector<std::filesystem::path>& sources)
+	{
+		AssetManager& instance = GetInstance();
+
+		std::filesystem::path metaExtension = fmt::format(".{}", instance.kAssetMetaExtension);
+		std::vector<std::filesystem::path> imported;
+
+		for (const auto& source : sources)
+		{
+			std::error_code ec;
+			if (!std::filesystem::exists(source, ec) || source.extension() == metaExtension)
+			{
+				continue;
+			}
+
+			std::filesystem::path relative = std::filesystem::weakly_canonical(folder, ec).lexically_relative(std::filesystem::weakly_canonical(source, ec));
+			if (!relative.empty() && *relative.begin() != "..")
+			{
+				LIB_LOGGER(warning, asset) << "cannot import a folder into itself: " << source.string();
+				continue;
+			}
+
+			std::filesystem::path target = folder / source.filename();
+
+			int index = 1;
+			while (std::filesystem::exists(target))
+			{
+				std::filesystem::path name = source.stem();
+				name += " " + std::to_string(index);
+				name += source.extension();
+				target = folder / name;
+				index++;
+			}
+
+			std::filesystem::copy(source, target, std::filesystem::copy_options::recursive, ec);
+			if (ec)
+			{
+				LIB_LOGGER(error, asset) << "could not import " << source.string() << ": " << ec.message();
+				std::filesystem::remove_all(target, ec);
+				continue;
+			}
+
+			if (std::filesystem::is_directory(target, ec))
+			{
+				std::vector<std::filesystem::path> metas;
+				for (const auto& entry : std::filesystem::recursive_directory_iterator(target, ec))
+				{
+					if (entry.path().extension() == metaExtension)
+					{
+						metas.push_back(entry.path());
+					}
+				}
+
+				for (const auto& meta : metas)
+				{
+					std::filesystem::remove(meta, ec);
+				}
+			}
+
+			imported.push_back(target);
+		}
+
+		if (!imported.empty())
+		{
+			instance.UpdateAssetTree();
+		}
+
+		return imported;
+	}
+
 	bool asset::AssetManager::RenameAsset(const std::filesystem::path& path, const std::string& newName)
 	{
 		AssetManager& instance = GetInstance();

@@ -73,13 +73,19 @@ namespace seri
 		return glm::mat4{ 1.0f };
 	}
 
-	void Util::Decompose(const glm::mat4& matrix, glm::vec3& pos, glm::vec3& euler, glm::vec3& scale)
+	bool Util::Decompose(const glm::mat4& matrix, glm::vec3& pos, glm::vec3& euler, glm::vec3& scale)
 	{
 		glm::vec3 skew;
 		glm::vec4 perspective;
 		glm::quat rot;
-		glm::decompose(matrix, scale, rot, pos, skew, perspective);
+		if (!glm::decompose(matrix, scale, rot, pos, skew, perspective))
+		{
+			return false;
+		}
+
 		euler = glm::degrees(glm::eulerAngles(rot));
+
+		return true;
 	}
 
 	std::string Util::ReadFileAtPath(const char* path)

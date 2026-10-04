@@ -149,6 +149,8 @@ namespace seri::asset
 
 		static std::filesystem::path CreateFolder(const std::filesystem::path& folder, const std::string& name);
 
+		static std::vector<std::filesystem::path> ImportAssets(const std::filesystem::path& folder, const std::vector<std::filesystem::path>& sources);
+
 		static bool RenameAsset(const std::filesystem::path& path, const std::string& newName);
 
 		static bool DeleteAsset(const std::filesystem::path& path);

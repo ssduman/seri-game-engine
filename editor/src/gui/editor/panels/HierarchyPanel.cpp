@@ -7,6 +7,7 @@ namespace seri::editor
 	void HierarchyPanel::Draw(GUIContext& ctx)
 	{
 		auto activeScene = seri::scene::SceneManager::GetActiveScene();
+
 		std::string sceneName = fmt::format("{}{}", activeScene->GetName(), (activeScene->IsDirty() ? "*" : ""));
 		seri::scene::SceneTreeNode& sceneTreeRoot = activeScene->GetSceneTreeRoot();
 
@@ -40,6 +41,12 @@ namespace seri::editor
 			ctx.inspectorType = InspectorType::scene;
 		}
 
+		if (ImGui::BeginDragDropTarget())
+		{
+			AcceptEntityDrop(0);
+			ImGui::EndDragDropTarget();
+		}
+
 		if (ImGui::BeginPopupContextItem())
 		{
 			ShowAddMenu(activeScene, 0);
@@ -61,6 +68,25 @@ namespace seri::editor
 
 		ctx.revealSelectedEntity = false;
 		_revealEntityIds.clear();
+
+		ImRect emptyRect = ImGui::GetCurrentWindow()->InnerRect;
+		emptyRect.Min.y = ImGui::GetCursorScreenPos().y;
+
+		if (emptyRect.Min.y < emptyRect.Max.y && ImGui::BeginDragDropTargetCustom(emptyRect, ImGui::GetID("##HierarchyDrop")))
+		{
+			AcceptEntityDrop(0);
+			ImGui::EndDragDropTarget();
+		}
+
+		if (_pendingMoveEntityId != 0)
+		{
+			if (activeScene->MoveEntity(_pendingMoveEntityId, _pendingMoveParentId))
+			{
+				_pendingExpandEntityId = _pendingMoveParentId;
+			}
+
+			_pendingMoveEntityId = 0;
+		}
 
 		if (ImGui::BeginPopupContextWindow("##HierarchyContext", ImGuiPopupFlags_MouseButtonRight | ImGuiPopupFlags_NoOpenOverItems))
 		{
@@ -149,6 +175,19 @@ namespace seri::editor
 				selectedId = child.id;
 			}
 
+			if (ImGui::BeginDragDropSource())
+			{
+				ImGui::SetDragDropPayload(kEntityPayloadType, &child.id, sizeof(uint64_t));
+				ImGui::TextUnformatted(label.c_str());
+				ImGui::EndDragDropSource();
+			}
+
+			if (ImGui::BeginDragDropTarget())
+			{
+				AcceptEntityDrop(child.id);
+				ImGui::EndDragDropTarget();
+			}
+
 			if (ImGui::BeginPopupContextItem())
 			{
 				ShowAddMenu(activeScene, child.id);
@@ -193,6 +232,15 @@ namespace seri::editor
 
 			_revealEntityIds.insert(idComponent->parentId);
 			entity = activeScene->GetEntityByID(idComponent->parentId);
+		}
+	}
+
+	void HierarchyPanel::AcceptEntityDrop(uint64_t parentId)
+	{
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(kEntityPayloadType))
+		{
+			_pendingMoveEntityId = *static_cast<const uint64_t*>(payload->Data);
+			_pendingMoveParentId = parentId;
 		}
 	}
 

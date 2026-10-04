@@ -7,6 +7,12 @@ namespace seri::editor
 	class ProjectPanel
 	{
 	public:
+		~ProjectPanel();
+
+		void Init();
+
+		void Update();
+
 		void Draw(GUIContext& ctx);
 
 	private:
@@ -39,6 +45,10 @@ namespace seri::editor
 
 		std::string _renameBuffer{};
 		std::string _search{};
+
+		std::vector<std::filesystem::path> _pendingImports{};
+
+		seri::event::EventHandle _dropHandle{ 0 };
 
 		uint64_t _knownTreeVersion{ 0 };
 
