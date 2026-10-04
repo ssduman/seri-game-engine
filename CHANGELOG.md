@@ -1,4 +1,4 @@
-Unreleased
+v0.2.1 - 2026-10-04
 * Added version string to titlebar
 * Supported moving entity in hierarcy panel
 * Supported asset dropping to project panel
