@@ -10,6 +10,7 @@ namespace seri::editor
 		scene,
 		entity,
 		asset,
+		animation_state_machine,
 	};
 
 	struct GUIContext
@@ -20,6 +21,10 @@ namespace seri::editor
 		seri::asset::AssetTreeNode selectedAsset{};
 		std::filesystem::path currentAssetFolder{};
 
+		uint64_t asmAssetId{ 0 };
+		int asmNodeIndex{ -1 };
+		int asmTransitionIndex{ -1 };
+
 		bool showGizmos{ true };
 
 		bool showHierarchy{ true };
@@ -28,6 +33,8 @@ namespace seri::editor
 		bool showInspector{ true };
 		bool showConsole{ true };
 		bool showProject{ true };
+		bool showASM{ false };
+		bool focusASM{ false };
 		bool resetLayout{ false };
 	};
 }

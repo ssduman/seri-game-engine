@@ -13,6 +13,8 @@ newaction {
       "docs/images/snake-game.png",
       "docs/images/knockdown-editor.png",
       "docs/images/knockdown-game.png",
+      "docs/images/locomotion-asm.png",
+      "docs/images/locomotion-game.png",
     }
     local fonts = {
       "fonts/Inter/Inter-VariableFont.woff2",

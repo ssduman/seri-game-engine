@@ -1,0 +1,46 @@
+IDInfo:
+  ID: 14214865008897723646
+  Version: 0.1
+ASM:
+  EntryState: Idle
+  AnyStatePosition: [-240, -120]
+  Parameters:
+    - Name: speed
+      Type: float
+      Value: 0
+  States:
+    - Name: Idle
+      ClipAssetID: 10881561862178809789
+      Clip: Armature|Idle_Loop
+      Loop: true
+      Speed: 1
+      Position: [-31, -120]
+    - Name: Walking
+      ClipAssetID: 10881561862178809789
+      Clip: Armature|Walk_Loop
+      Loop: true
+      Speed: 1.2
+      Position: [-31, 18]
+  Transitions:
+    - From: Any
+      To: Idle
+      Fade: 0.25
+      ExitTime: true
+      Conditions:
+        []
+    - From: Idle
+      To: Walking
+      Fade: 0.25
+      ExitTime: false
+      Conditions:
+        - Parameter: speed
+          Op: greater
+          Value: 0.1
+    - From: Walking
+      To: Idle
+      Fade: 0.25
+      ExitTime: false
+      Conditions:
+        - Parameter: speed
+          Op: less
+          Value: 0.1

@@ -99,6 +99,7 @@ namespace seri::editor
 		ImGui::DockBuilderDockWindow("Hierarchy", dockLeft);
 		ImGui::DockBuilderDockWindow("Game", dockCenter);
 		ImGui::DockBuilderDockWindow("Scene", dockCenter);
+		ImGui::DockBuilderDockWindow("ASM", dockCenter);
 		ImGui::DockBuilderDockWindow("Inspector", dockRight);
 		ImGui::DockBuilderDockWindow("Project", dockBottom);
 		ImGui::DockBuilderDockWindow("Console", dockBottomRight);
@@ -158,7 +159,14 @@ namespace seri::editor
 		{
 			if (ImGui::Begin("Inspector", &_context.showInspector))
 			{
-				_inspectorPanel.Draw(_context);
+				if (_context.inspectorType == InspectorType::animation_state_machine)
+				{
+					_asmPanel.DrawInspector(_context);
+				}
+				else
+				{
+					_inspectorPanel.Draw(_context);
+				}
 			}
 			ImGui::End();
 		}
@@ -227,6 +235,27 @@ namespace seri::editor
 			if (ImGui::Begin("Console", &_context.showConsole))
 			{
 				_consolePanel.Draw();
+			}
+			ImGui::End();
+		}
+
+		if (_context.showASM)
+		{
+			if (_context.focusASM)
+			{
+				ImGui::SetNextWindowFocus();
+				_context.focusASM = false;
+			}
+
+			ImGuiWindow* sceneWindow = ImGui::FindWindowByName("Scene");
+			if (sceneWindow && sceneWindow->DockId != 0)
+			{
+				ImGui::SetNextWindowDockID(sceneWindow->DockId, ImGuiCond_FirstUseEver);
+			}
+
+			if (ImGui::Begin("ASM", &_context.showASM))
+			{
+				_asmPanel.Draw(_context);
 			}
 			ImGui::End();
 		}

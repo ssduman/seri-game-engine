@@ -302,6 +302,12 @@ namespace seri::editor
 			{
 				_currentFolder = node.path;
 			}
+			else if (node.type == seri::asset::AssetType::animation_state_machine && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+			{
+				ctx.asmAssetId = node.id;
+				ctx.showASM = true;
+				ctx.focusASM = true;
+			}
 		}
 
 		if (ImGui::IsItemClicked(ImGuiMouseButton_Right))

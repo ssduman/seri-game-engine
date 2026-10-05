@@ -4,6 +4,8 @@
 #include <vector>
 #include <cstdint>
 
+#include <glm/glm.hpp>
+
 namespace seri::animation
 {
 	enum class AnimatorMode
@@ -58,6 +60,7 @@ namespace seri::animation
 		std::string clip{ "" };
 		bool loop{ true };
 		float speed{ 1.0f };
+		glm::vec2 position{ 0.0f, 0.0f };
 	};
 
 	struct AnimatorTransition

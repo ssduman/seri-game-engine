@@ -1,6 +1,7 @@
 #pragma once
 
 #include "gui/editor/GUIContext.h"
+#include "gui/editor/panels/ASMPanel.h"
 #include "gui/editor/panels/ConsolePanel.h"
 #include "gui/editor/panels/GamePanel.h"
 #include "gui/editor/panels/HierarchyPanel.h"
@@ -40,6 +41,7 @@ namespace seri::editor
 		InspectorPanel _inspectorPanel;
 		ProjectPanel _projectPanel;
 		ConsolePanel _consolePanel;
+		ASMPanel _asmPanel;
 
 	};
 }

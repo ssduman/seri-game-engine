@@ -5,7 +5,7 @@
 ## Roadmap
 
 * [X] Entity Component System
-* [X] Model Loading and Skeletal Animation
+* [X] Model Loading, Skeletal Animation and ASM
 * [X] UI System and Text Rendering
 * [X] Instancing
 * [X] Forward Rendering

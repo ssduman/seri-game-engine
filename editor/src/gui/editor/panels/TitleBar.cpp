@@ -134,6 +134,7 @@ namespace seri::editor
 			ImGui::MenuItem("Inspector", nullptr, &ctx.showInspector);
 			ImGui::MenuItem("Project", nullptr, &ctx.showProject);
 			ImGui::MenuItem("Console", nullptr, &ctx.showConsole);
+			ImGui::MenuItem("ASM", nullptr, &ctx.showASM);
 
 			ImGui::Separator();
 

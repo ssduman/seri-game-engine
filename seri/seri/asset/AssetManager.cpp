@@ -164,6 +164,29 @@ namespace seri::asset
 					WriteAssetFile(metadata.source, root);
 				}
 				break;
+			case seri::asset::AssetType::animation_state_machine:
+				{
+					std::shared_ptr<seri::animation::AnimationStateMachine> asmAsset = GetAssetByID<seri::animation::AnimationStateMachine>(id);
+					if (!asmAsset)
+					{
+						LIB_LOGGER(error, asset) << "could not found asm " << id << " to save";
+						break;
+					}
+
+					seri::asset::IDInfo idInfo{
+						.id = id,
+						.version = "0.1"
+					};
+
+					YAML::Node root;
+					root["IDInfo"] = seri::asset::IDInfo::Serialize(idInfo);
+					root["ASM"] = seri::asset::AnimationStateMachineAsset::Serialize(asmAsset);
+
+					WriteAssetFile(metadata.source, root);
+
+					asmAsset->dirty = false;
+				}
+				break;
 			default:
 				break;
 		}
@@ -572,6 +595,12 @@ namespace seri::asset
 						break;
 					case seri::asset::AssetType::animation_state_machine:
 						{
+							std::shared_ptr<seri::animation::AnimationStateMachine> cached = GetAssetByID<seri::animation::AnimationStateMachine>(metadata.id);
+							if (cached && cached->dirty)
+							{
+								break;
+							}
+
 							YAML::Node root = YAML::LoadFile(metadata.source.string());
 							AddAsset(metadata.id, seri::asset::AnimationStateMachineAsset::Deserialize(root["ASM"]));
 						}

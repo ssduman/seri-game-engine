@@ -1,7 +1,7 @@
-Unreleased
+v0.3.0 - 2026-10-05
+* Fixed normal calculation
 * Fixed gizmo and picking overleap issue
 * Improved animation playing and clip selection
-* Fixed normal calculation
 * Implemented blending between two animation clips
 * Implemented animation state machine
 

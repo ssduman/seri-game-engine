@@ -657,6 +657,13 @@ namespace seri::editor
 					changed = true;
 				}
 
+				if (animatorComp->asmAssetId != 0 && ImGui::Button("Open in ASM", ImVec2(-1, 0)))
+				{
+					ctx.asmAssetId = animatorComp->asmAssetId;
+					ctx.showASM = true;
+					ctx.focusASM = true;
+				}
+
 				DrawLabel("State", seri::system::AnimatorSystem::GetStateName(*animatorComp).c_str(), true);
 			}
 
@@ -1013,6 +1020,16 @@ namespace seri::editor
 			case seri::asset::AssetType::skybox:
 				{
 					DrawAssetSkybox(ctx);
+				}
+				break;
+			case seri::asset::AssetType::animation_state_machine:
+				{
+					if (ImGui::Button("Open in ASM", ImVec2(-1, 0)))
+					{
+						ctx.asmAssetId = ctx.selectedAsset.id;
+						ctx.showASM = true;
+						ctx.focusASM = true;
+					}
 				}
 				break;
 			default:

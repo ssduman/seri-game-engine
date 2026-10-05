@@ -3,6 +3,7 @@ IDInfo:
   Version: 0.1
 ASM:
   EntryState: Idle
+  AnyStatePosition: [-180, -170]
   Parameters:
     - Name: speed
       Type: float
@@ -15,29 +16,46 @@ ASM:
       Value: 0
   States:
     - Name: Idle
+      ClipAssetID: 0
       Clip: Armature|Idle_Loop
       Loop: true
+      Speed: 1
+      Position: [-180, 0]
     - Name: Walk
+      ClipAssetID: 0
       Clip: Armature|Walk_Loop
       Loop: true
+      Speed: 1
+      Position: [-180, 170]
     - Name: Run
+      ClipAssetID: 0
       Clip: Armature|Sprint_Loop
       Loop: true
+      Speed: 1
+      Position: [40, 170]
     - Name: JumpStart
+      ClipAssetID: 0
       Clip: Armature|Jump_Start
       Loop: false
       Speed: 1.8
+      Position: [40, -170]
     - Name: JumpLoop
+      ClipAssetID: 0
       Clip: Armature|Jump_Loop
       Loop: true
+      Speed: 1
+      Position: [240, -60]
     - Name: JumpLand
+      ClipAssetID: 0
       Clip: Armature|Jump_Land
       Loop: false
       Speed: 1.5
+      Position: [240, 80]
   Transitions:
     - From: Idle
       To: Run
       Fade: 0.2
+      ExitTime: false
       Conditions:
         - Parameter: speed
           Op: greater
@@ -45,6 +63,7 @@ ASM:
     - From: Idle
       To: Walk
       Fade: 0.2
+      ExitTime: false
       Conditions:
         - Parameter: speed
           Op: greater
@@ -52,6 +71,7 @@ ASM:
     - From: Walk
       To: Idle
       Fade: 0.2
+      ExitTime: false
       Conditions:
         - Parameter: speed
           Op: less
@@ -59,6 +79,7 @@ ASM:
     - From: Walk
       To: Run
       Fade: 0.2
+      ExitTime: false
       Conditions:
         - Parameter: speed
           Op: greater
@@ -66,6 +87,7 @@ ASM:
     - From: Run
       To: Idle
       Fade: 0.2
+      ExitTime: false
       Conditions:
         - Parameter: speed
           Op: less
@@ -73,6 +95,7 @@ ASM:
     - From: Run
       To: Walk
       Fade: 0.2
+      ExitTime: false
       Conditions:
         - Parameter: speed
           Op: less
@@ -80,57 +103,81 @@ ASM:
     - From: Any
       To: JumpStart
       Fade: 0.1
+      ExitTime: false
       Conditions:
         - Parameter: jump
+          Op: equals
+          Value: 1
     - From: JumpStart
       To: Run
       Fade: 0.2
+      ExitTime: false
       Conditions:
         - Parameter: land
+          Op: equals
+          Value: 1
         - Parameter: speed
           Op: greater
           Value: 2.5
     - From: JumpStart
       To: Walk
       Fade: 0.2
+      ExitTime: false
       Conditions:
         - Parameter: land
+          Op: equals
+          Value: 1
         - Parameter: speed
           Op: greater
           Value: 0.1
     - From: JumpStart
       To: JumpLand
       Fade: 0.1
+      ExitTime: false
       Conditions:
         - Parameter: land
+          Op: equals
+          Value: 1
     - From: JumpStart
       To: JumpLoop
       Fade: 0.2
       ExitTime: true
+      Conditions:
+        []
     - From: JumpLoop
       To: Run
       Fade: 0.2
+      ExitTime: false
       Conditions:
         - Parameter: land
+          Op: equals
+          Value: 1
         - Parameter: speed
           Op: greater
           Value: 2.5
     - From: JumpLoop
       To: Walk
       Fade: 0.2
+      ExitTime: false
       Conditions:
         - Parameter: land
+          Op: equals
+          Value: 1
         - Parameter: speed
           Op: greater
           Value: 0.1
     - From: JumpLoop
       To: JumpLand
       Fade: 0.1
+      ExitTime: false
       Conditions:
         - Parameter: land
+          Op: equals
+          Value: 1
     - From: JumpLand
       To: Run
       Fade: 0.25
+      ExitTime: false
       Conditions:
         - Parameter: speed
           Op: greater
@@ -138,6 +185,7 @@ ASM:
     - From: JumpLand
       To: Walk
       Fade: 0.25
+      ExitTime: false
       Conditions:
         - Parameter: speed
           Op: greater
@@ -146,3 +194,5 @@ ASM:
       To: Idle
       Fade: 0.2
       ExitTime: true
+      Conditions:
+        []

@@ -371,6 +371,7 @@ namespace seri::asset
 	{
 		YAML::Node root;
 		root["EntryState"] = asset->entryState;
+		root["AnyStatePosition"] = YAMLUtil::Vec2ToYAML(asset->anyStatePosition);
 
 		YAML::Node parametersNode{ YAML::NodeType::Sequence };
 		for (const auto& parameter : asset->parameters)
@@ -392,6 +393,7 @@ namespace seri::asset
 			stateNode["Clip"] = state.clip;
 			stateNode["Loop"] = state.loop;
 			stateNode["Speed"] = state.speed;
+			stateNode["Position"] = YAMLUtil::Vec2ToYAML(state.position);
 			statesNode.push_back(stateNode);
 		}
 		root["States"] = statesNode;
@@ -437,6 +439,11 @@ namespace seri::asset
 			asset->entryState = YAMLUtil::DeepCopyYAMLString(root["EntryState"]);
 		}
 
+		if (root["AnyStatePosition"])
+		{
+			asset->anyStatePosition = YAMLUtil::Vec2FromYAML(root["AnyStatePosition"]);
+		}
+
 		for (const auto& parameterNode : root["Parameters"])
 		{
 			seri::animation::AnimatorParameter& parameter = asset->parameters.emplace_back();
@@ -467,6 +474,15 @@ namespace seri::asset
 			if (stateNode["Speed"])
 			{
 				state.speed = YAMLUtil::GetType<float>(stateNode["Speed"]);
+			}
+			if (stateNode["Position"])
+			{
+				state.position = YAMLUtil::Vec2FromYAML(stateNode["Position"]);
+			}
+			else
+			{
+				int index = static_cast<int>(asset->states.size()) - 1;
+				state.position = { 220.0f * (index % 4), 100.0f * (index / 4) };
 			}
 		}
 

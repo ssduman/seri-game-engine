@@ -23,6 +23,8 @@ namespace seri::animation
 		std::vector<AnimatorParameter> parameters{};
 		std::vector<AnimatorState> states{};
 		std::vector<AnimatorTransition> transitions{};
+		glm::vec2 anyStatePosition{ -240.0f, -120.0f };
+		bool dirty{ false };
 
 		int FindState(const std::string& name) const
 		{
