@@ -20,24 +20,26 @@ namespace seri::asset
 		font,
 		script,
 		sound,
+		animation_state_machine,
 	};
 
 	inline const char* AssetTypeToString(AssetType type)
 	{
 		switch (type)
 		{
-			case AssetType::none: return "none";
-			case AssetType::material: return "material";
-			case AssetType::shader: return "shader";
-			case AssetType::texture: return "texture";
-			case AssetType::mesh: return "mesh";
-			case AssetType::skybox: return "skybox";
-			case AssetType::scene: return "scene";
-			case AssetType::prefab: return "prefab";
-			case AssetType::font: return "font";
-			case AssetType::script: return "script";
-			case AssetType::sound: return "sound";
-			default: return "unknown";
+			case AssetType::none: return "None";
+			case AssetType::material: return "Material";
+			case AssetType::shader: return "Shader";
+			case AssetType::texture: return "Texture";
+			case AssetType::mesh: return "Mesh";
+			case AssetType::skybox: return "Skybox";
+			case AssetType::scene: return "Scene";
+			case AssetType::prefab: return "Prefab";
+			case AssetType::font: return "Font";
+			case AssetType::script: return "Script";
+			case AssetType::sound: return "Sound";
+			case AssetType::animation_state_machine: return "Animation State Machine";
+			default: return "Unknown";
 		}
 	}
 

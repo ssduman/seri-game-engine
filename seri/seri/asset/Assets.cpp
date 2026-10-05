@@ -366,4 +366,138 @@ namespace seri::asset
 
 		return asset;
 	}
+
+	YAML::Node AnimationStateMachineAsset::Serialize(const std::shared_ptr<seri::animation::AnimationStateMachine>& asset)
+	{
+		YAML::Node root;
+		root["EntryState"] = asset->entryState;
+
+		YAML::Node parametersNode{ YAML::NodeType::Sequence };
+		for (const auto& parameter : asset->parameters)
+		{
+			YAML::Node parameterNode;
+			parameterNode["Name"] = parameter.name;
+			parameterNode["Type"] = seri::animation::AnimatorParameterTypeToString(parameter.type);
+			parameterNode["Value"] = parameter.value;
+			parametersNode.push_back(parameterNode);
+		}
+		root["Parameters"] = parametersNode;
+
+		YAML::Node statesNode{ YAML::NodeType::Sequence };
+		for (const auto& state : asset->states)
+		{
+			YAML::Node stateNode;
+			stateNode["Name"] = state.name;
+			stateNode["ClipAssetID"] = state.clipAssetId;
+			stateNode["Clip"] = state.clip;
+			stateNode["Loop"] = state.loop;
+			stateNode["Speed"] = state.speed;
+			statesNode.push_back(stateNode);
+		}
+		root["States"] = statesNode;
+
+		YAML::Node transitionsNode{ YAML::NodeType::Sequence };
+		for (const auto& transition : asset->transitions)
+		{
+			YAML::Node transitionNode;
+			transitionNode["From"] = transition.from;
+			transitionNode["To"] = transition.to;
+			transitionNode["Fade"] = transition.fade;
+			transitionNode["ExitTime"] = transition.exitTime;
+
+			YAML::Node conditionsNode{ YAML::NodeType::Sequence };
+			for (const auto& condition : transition.conditions)
+			{
+				YAML::Node conditionNode;
+				conditionNode["Parameter"] = condition.parameter;
+				conditionNode["Op"] = seri::animation::AnimatorConditionOpToString(condition.op);
+				conditionNode["Value"] = condition.value;
+				conditionsNode.push_back(conditionNode);
+			}
+			transitionNode["Conditions"] = conditionsNode;
+
+			transitionsNode.push_back(transitionNode);
+		}
+		root["Transitions"] = transitionsNode;
+
+		return root;
+	}
+
+	std::shared_ptr<seri::animation::AnimationStateMachine> AnimationStateMachineAsset::Deserialize(const YAML::Node& root)
+	{
+		std::shared_ptr<seri::animation::AnimationStateMachine> asset = std::make_shared<seri::animation::AnimationStateMachine>();
+
+		if (!root || !root.IsMap())
+		{
+			return asset;
+		}
+
+		if (root["EntryState"])
+		{
+			asset->entryState = YAMLUtil::DeepCopyYAMLString(root["EntryState"]);
+		}
+
+		for (const auto& parameterNode : root["Parameters"])
+		{
+			seri::animation::AnimatorParameter& parameter = asset->parameters.emplace_back();
+			parameter.name = YAMLUtil::DeepCopyYAMLString(parameterNode["Name"]);
+			if (parameterNode["Type"])
+			{
+				parameter.type = seri::animation::AnimatorParameterTypeFromString(YAMLUtil::DeepCopyYAMLString(parameterNode["Type"]));
+			}
+			if (parameterNode["Value"])
+			{
+				parameter.value = YAMLUtil::GetType<float>(parameterNode["Value"]);
+			}
+		}
+
+		for (const auto& stateNode : root["States"])
+		{
+			seri::animation::AnimatorState& state = asset->states.emplace_back();
+			state.name = YAMLUtil::DeepCopyYAMLString(stateNode["Name"]);
+			state.clip = YAMLUtil::DeepCopyYAMLString(stateNode["Clip"]);
+			if (stateNode["ClipAssetID"])
+			{
+				state.clipAssetId = YAMLUtil::GetType<uint64_t>(stateNode["ClipAssetID"]);
+			}
+			if (stateNode["Loop"])
+			{
+				state.loop = YAMLUtil::GetType<bool>(stateNode["Loop"]);
+			}
+			if (stateNode["Speed"])
+			{
+				state.speed = YAMLUtil::GetType<float>(stateNode["Speed"]);
+			}
+		}
+
+		for (const auto& transitionNode : root["Transitions"])
+		{
+			seri::animation::AnimatorTransition& transition = asset->transitions.emplace_back();
+			transition.from = YAMLUtil::DeepCopyYAMLString(transitionNode["From"]);
+			transition.to = YAMLUtil::DeepCopyYAMLString(transitionNode["To"]);
+			if (transitionNode["Fade"])
+			{
+				transition.fade = YAMLUtil::GetType<float>(transitionNode["Fade"]);
+			}
+			if (transitionNode["ExitTime"])
+			{
+				transition.exitTime = YAMLUtil::GetType<bool>(transitionNode["ExitTime"]);
+			}
+			for (const auto& conditionNode : transitionNode["Conditions"])
+			{
+				seri::animation::AnimatorCondition& condition = transition.conditions.emplace_back();
+				condition.parameter = YAMLUtil::DeepCopyYAMLString(conditionNode["Parameter"]);
+				if (conditionNode["Op"])
+				{
+					condition.op = seri::animation::AnimatorConditionOpFromString(YAMLUtil::DeepCopyYAMLString(conditionNode["Op"]));
+				}
+				if (conditionNode["Value"])
+				{
+					condition.value = YAMLUtil::GetType<float>(conditionNode["Value"]);
+				}
+			}
+		}
+
+		return asset;
+	}
 }

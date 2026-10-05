@@ -60,6 +60,7 @@ namespace seri::editor
 		bool _pendingCreateFolder{ false };
 		bool _pendingCreateMaterial{ false };
 		bool _pendingCreateSkybox{ false };
+		bool _pendingCreateASM{ false };
 		bool _pendingCreateScript{ false };
 		bool _pendingRescan{ false };
 

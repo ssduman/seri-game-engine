@@ -279,17 +279,31 @@ namespace seri::component
 		{
 			component.clipIndex = YAMLUtil::GetType<int>(node["ClipIndex"]);
 		}
+		if (node["ASMAssetID"])
+		{
+			component.asmAssetId = YAMLUtil::GetType<uint64_t>(node["ASMAssetID"]);
+		}
+		if (node["Mode"])
+		{
+			component.mode = static_cast<seri::animation::AnimatorMode>(YAMLUtil::GetType<int>(node["Mode"]));
+		}
+		else if (component.asmAssetId != 0)
+		{
+			component.mode = seri::animation::AnimatorMode::animation_state_machine;
+		}
 		return component;
 	}
 	YAML::Node AnimatorComponent::Serialize(const AnimatorComponent& component)
 	{
 		YAML::Node node;
+		node["Mode"] = static_cast<int>(component.mode);
 		node["Playing"] = component.playing;
 		node["Loop"] = component.loop;
 		node["Speed"] = component.speed;
 		node["FadeDuration"] = component.fadeDuration;
 		node["ClipAssetID"] = component.clipAssetId;
 		node["ClipIndex"] = component.clipIndex;
+		node["ASMAssetID"] = component.asmAssetId;
 		return node;
 	}
 

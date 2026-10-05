@@ -4,6 +4,7 @@
 #include "seri/script/lua/LuaScript.h"
 #include "seri/system/ScriptSystem.h"
 #include "seri/system/PhysicsSystem.h"
+#include "seri/system/AnimatorSystem.h"
 #include "seri/scene/SceneManager.h"
 #include "seri/component/Components.h"
 #include "seri/input/InputManager.h"
@@ -259,27 +260,41 @@ namespace seri::script
 			"restitution", &component::ColliderComponent::restitution,
 			"is_trigger", &component::ColliderComponent::isTrigger
 		);
+
+		lua.new_usertype<component::AnimatorComponent>(
+			"Animator",
+			sol::no_constructor,
+			"playing", &component::AnimatorComponent::playing,
+			"speed", &component::AnimatorComponent::speed,
+			"SetFloat", [](component::AnimatorComponent& animator, const std::string& name, float value) { system::AnimatorSystem::SetParameter(animator, name, value); },
+			"SetBool", [](component::AnimatorComponent& animator, const std::string& name, bool value) { system::AnimatorSystem::SetParameter(animator, name, value ? 1.0f : 0.0f); },
+			"SetTrigger", [](component::AnimatorComponent& animator, const std::string& name) { system::AnimatorSystem::SetParameter(animator, name, 1.0f); },
+			"GetFloat", [](const component::AnimatorComponent& animator, const std::string& name) { return system::AnimatorSystem::GetParameter(animator, name); },
+			"GetBool", [](const component::AnimatorComponent& animator, const std::string& name) { return system::AnimatorSystem::GetParameter(animator, name) != 0.0f; },
+			"GetState", [](const component::AnimatorComponent& animator) { return system::AnimatorSystem::GetStateName(animator); },
+			"Play", [](component::AnimatorComponent& animator, const std::string& name, sol::optional<float> fade) { system::AnimatorSystem::Play(animator, name, fade.value_or(animator.fadeDuration)); }
+		);
 	}
 
 	void LuaBindings::RegisterPhysics(sol::state& lua)
 	{
-		auto rigidbodyField = []<typename T>(T component::RigidbodyComponent::* member)
-			{
-				return sol::property(
-					[member](const RigidbodyHandle& handle)
+		auto rigidbodyField = []<typename T>(T component::RigidbodyComponent:: * member)
+		{
+			return sol::property(
+				[member](const RigidbodyHandle& handle)
+				{
+					auto* rigidbody = handle.entity.TryGet<component::RigidbodyComponent>();
+					return rigidbody != nullptr ? rigidbody->*member : T{};
+				},
+				[member](const RigidbodyHandle& handle, T value)
+				{
+					if (auto* rigidbody = handle.entity.TryGet<component::RigidbodyComponent>())
 					{
-						auto* rigidbody = handle.entity.TryGet<component::RigidbodyComponent>();
-						return rigidbody != nullptr ? rigidbody->*member : T{};
-					},
-					[member](const RigidbodyHandle& handle, T value)
-					{
-						if (auto* rigidbody = handle.entity.TryGet<component::RigidbodyComponent>())
-						{
-							rigidbody->*member = value;
-						}
+						rigidbody->*member = value;
 					}
-				);
-			};
+				}
+			);
+		};
 
 		lua.new_usertype<RigidbodyHandle>(
 			"Rigidbody",
@@ -357,6 +372,7 @@ namespace seri::script
 			"text", sol::readonly_property([](const seri::Entity& entity) { return entity.TryGet<component::TextComponent>(); }),
 			"sprite", sol::readonly_property([](const seri::Entity& entity) { return entity.TryGet<component::SpriteRendererComponent>(); }),
 			"collider", sol::readonly_property([](const seri::Entity& entity) { return entity.TryGet<component::ColliderComponent>(); }),
+			"animator", sol::readonly_property([](const seri::Entity& entity) { return entity.TryGet<component::AnimatorComponent>(); }),
 			"rigidbody", sol::readonly_property([](const seri::Entity& entity) -> sol::optional<RigidbodyHandle>
 				{
 					if (!entity.Has<component::RigidbodyComponent>())

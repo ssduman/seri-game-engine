@@ -1,0 +1,148 @@
+IDInfo:
+  ID: 1651210045073589977
+  Version: 0.1
+ASM:
+  EntryState: Idle
+  Parameters:
+    - Name: speed
+      Type: float
+      Value: 0
+    - Name: jump
+      Type: trigger
+      Value: 0
+    - Name: land
+      Type: trigger
+      Value: 0
+  States:
+    - Name: Idle
+      Clip: Armature|Idle_Loop
+      Loop: true
+    - Name: Walk
+      Clip: Armature|Walk_Loop
+      Loop: true
+    - Name: Run
+      Clip: Armature|Sprint_Loop
+      Loop: true
+    - Name: JumpStart
+      Clip: Armature|Jump_Start
+      Loop: false
+      Speed: 1.8
+    - Name: JumpLoop
+      Clip: Armature|Jump_Loop
+      Loop: true
+    - Name: JumpLand
+      Clip: Armature|Jump_Land
+      Loop: false
+      Speed: 1.5
+  Transitions:
+    - From: Idle
+      To: Run
+      Fade: 0.2
+      Conditions:
+        - Parameter: speed
+          Op: greater
+          Value: 2.5
+    - From: Idle
+      To: Walk
+      Fade: 0.2
+      Conditions:
+        - Parameter: speed
+          Op: greater
+          Value: 0.1
+    - From: Walk
+      To: Idle
+      Fade: 0.2
+      Conditions:
+        - Parameter: speed
+          Op: less
+          Value: 0.1
+    - From: Walk
+      To: Run
+      Fade: 0.2
+      Conditions:
+        - Parameter: speed
+          Op: greater
+          Value: 2.5
+    - From: Run
+      To: Idle
+      Fade: 0.2
+      Conditions:
+        - Parameter: speed
+          Op: less
+          Value: 0.1
+    - From: Run
+      To: Walk
+      Fade: 0.2
+      Conditions:
+        - Parameter: speed
+          Op: less
+          Value: 2.5
+    - From: Any
+      To: JumpStart
+      Fade: 0.1
+      Conditions:
+        - Parameter: jump
+    - From: JumpStart
+      To: Run
+      Fade: 0.2
+      Conditions:
+        - Parameter: land
+        - Parameter: speed
+          Op: greater
+          Value: 2.5
+    - From: JumpStart
+      To: Walk
+      Fade: 0.2
+      Conditions:
+        - Parameter: land
+        - Parameter: speed
+          Op: greater
+          Value: 0.1
+    - From: JumpStart
+      To: JumpLand
+      Fade: 0.1
+      Conditions:
+        - Parameter: land
+    - From: JumpStart
+      To: JumpLoop
+      Fade: 0.2
+      ExitTime: true
+    - From: JumpLoop
+      To: Run
+      Fade: 0.2
+      Conditions:
+        - Parameter: land
+        - Parameter: speed
+          Op: greater
+          Value: 2.5
+    - From: JumpLoop
+      To: Walk
+      Fade: 0.2
+      Conditions:
+        - Parameter: land
+        - Parameter: speed
+          Op: greater
+          Value: 0.1
+    - From: JumpLoop
+      To: JumpLand
+      Fade: 0.1
+      Conditions:
+        - Parameter: land
+    - From: JumpLand
+      To: Run
+      Fade: 0.25
+      Conditions:
+        - Parameter: speed
+          Op: greater
+          Value: 2.5
+    - From: JumpLand
+      To: Walk
+      Fade: 0.25
+      Conditions:
+        - Parameter: speed
+          Op: greater
+          Value: 0.1
+    - From: JumpLand
+      To: Idle
+      Fade: 0.2
+      ExitTime: true

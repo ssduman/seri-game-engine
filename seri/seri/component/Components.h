@@ -6,6 +6,7 @@
 #include "seri/font/TextMesh.h"
 #include "seri/ui/UIUtil.h"
 #include "seri/physics/PhysicsUtil.h"
+#include "seri/animation/AnimationUtil.h"
 #include "seri/rendering/render/RenderingData.h"
 
 #include <entt/entt.hpp>
@@ -14,6 +15,7 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <unordered_map>
 
 namespace seri
 {
@@ -198,6 +200,7 @@ namespace seri::component
 	{
 		static constexpr std::string_view kCompName = "AnimatorComponent";
 
+		seri::animation::AnimatorMode mode{ seri::animation::AnimatorMode::clip };
 		bool playing{ true };
 		bool loop{ true };
 		float speed{ 1.0f };
@@ -205,15 +208,17 @@ namespace seri::component
 
 		uint64_t clipAssetId{ 0 };
 		int clipIndex{ 0 };
+		uint64_t asmAssetId{ 0 };
 
-		float time{ 0.0f };
-
-		uint64_t activeClipAssetId{ 0 };
-		int activeClipIndex{ -1 };
-		uint64_t previousClipAssetId{ 0 };
-		int previousClipIndex{ -1 };
-		float previousTime{ 0.0f };
+		std::unordered_map<std::string, float> parameters{};
+		seri::animation::AnimatorPlayback current{};
+		seri::animation::AnimatorPlayback previous{};
 		float fadeTime{ 0.0f };
+		float fadeLength{ 0.0f };
+		uint64_t activeAsmAssetId{ 0 };
+		int stateIndex{ -1 };
+		std::string requestedPlay{ "" };
+		float requestedFade{ 0.0f };
 
 		static AnimatorComponent Deserialize(const YAML::Node& node);
 		static YAML::Node Serialize(const AnimatorComponent& component);

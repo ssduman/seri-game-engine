@@ -39,6 +39,7 @@
     <a href="#sprite">Sprite</a>
     <a href="#collider">Collider</a>
     <a href="#rigidbody">Rigidbody</a>
+    <a href="#animator">Animator</a>
     <p>Math</p>
     <a href="#vectors">Vec2, Vec3, Vec4</a>
     <a href="#random">Random</a>
@@ -169,6 +170,7 @@ return Mover</code></pre>
             <tr><td><code>entity.sprite</code></td><td>The <a href="#sprite">Sprite</a> or <code>nil</code>.</td></tr>
             <tr><td><code>entity.collider</code></td><td>The <a href="#collider">Collider</a> or <code>nil</code>.</td></tr>
             <tr><td><code>entity.rigidbody</code></td><td>The <a href="#rigidbody">Rigidbody</a> or <code>nil</code>.</td></tr>
+            <tr><td><code>entity.animator</code></td><td>The <a href="#animator">Animator</a> or <code>nil</code>.</td></tr>
             <tr><td><code>entity:IsValid()</code></td><td>Returns <code>false</code> once the entity has been destroyed.</td></tr>
             <tr><td><code>entity:GetScript(name)</code></td><td>Returns the instance of the script <code>name</code> on this entity or <code>nil</code>.</td></tr>
             <tr><td><code>a == b</code></td><td>True when both refer to the same entity.</td></tr>
@@ -420,6 +422,26 @@ return Mover</code></pre>
             <tr><td><code>rigidbody:AddForce(force)</code></td><td>Applies a Vec3 force for this step.</td></tr>
             <tr><td><code>rigidbody:AddImpulse(impulse)</code></td><td>Applies a Vec3 impulse, an instant change in momentum.</td></tr>
             <tr><td><code>rigidbody:AddTorque(torque)</code></td><td>Applies a Vec3 torque for this step.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2 id="animator">Animator</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Member</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>playing</code></td><td>Whether time advances.</td></tr>
+            <tr><td><code>speed</code></td><td>Playback speed multiplier.</td></tr>
+            <tr><td><code>animator:SetFloat(name, value)</code></td><td>Sets a float parameter.</td></tr>
+            <tr><td><code>animator:SetBool(name, value)</code></td><td>Sets a bool parameter.</td></tr>
+            <tr><td><code>animator:SetTrigger(name)</code></td><td>Sets a trigger.</td></tr>
+            <tr><td><code>animator:GetFloat(name)</code></td><td>Returns a parameter value.</td></tr>
+            <tr><td><code>animator:GetBool(name)</code></td><td>Returns a parameter as a bool.</td></tr>
+            <tr><td><code>animator:GetState()</code></td><td>Returns the current state name.</td></tr>
+            <tr><td><code>animator:Play(name, fade)</code></td><td>Fades to the state <code>name</code> over <code>fade</code> seconds. In clip mode, <code>name</code> is a clip name.</td></tr>
           </tbody>
         </table>
       </div>

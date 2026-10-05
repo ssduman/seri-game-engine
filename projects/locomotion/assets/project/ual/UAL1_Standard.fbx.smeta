@@ -1,0 +1,15 @@
+IDInfo:
+  ID: 10881561862178809789
+  Version: 0.1
+Model:
+  MaterialCount: 2
+  ImportScale: 1
+  Meshes:
+    - MeshIndex: 0
+      MeshName: Mannequin.001
+      MaterialName: M_Main
+      MaterialIndex: 0
+    - MeshIndex: 1
+      MeshName: Mannequin.001
+      MaterialName: M_Joints
+      MaterialIndex: 1

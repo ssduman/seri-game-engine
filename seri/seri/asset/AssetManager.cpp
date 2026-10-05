@@ -291,6 +291,10 @@ namespace seri::asset
 				{
 					assetMetadata.type = seri::asset::AssetType::skybox;
 				}
+				else if (node.extension == kAssetASMExtension)
+				{
+					assetMetadata.type = seri::asset::AssetType::animation_state_machine;
+				}
 				else if (node.extension == kAssetShaderExtension)
 				{
 					assetMetadata.type = seri::asset::AssetType::shader;
@@ -564,6 +568,12 @@ namespace seri::asset
 							YAML::Node root = YAML::LoadFile(metadata.source.string());
 							prefab->type = seri::asset::AssetType::prefab;
 							prefab->entities = root["Prefab"]["Entities"];
+						}
+						break;
+					case seri::asset::AssetType::animation_state_machine:
+						{
+							YAML::Node root = YAML::LoadFile(metadata.source.string());
+							AddAsset(metadata.id, seri::asset::AnimationStateMachineAsset::Deserialize(root["ASM"]));
 						}
 						break;
 					default:
@@ -853,6 +863,39 @@ namespace seri::asset
 		LIB_LOGGER(info, asset) << "skybox created: " << source.string();
 
 		return skybox->id;
+	}
+
+	uint64_t asset::AssetManager::CreateASM(const std::filesystem::path& folder, const std::string& name)
+	{
+		AssetManager& instance = GetInstance();
+
+		std::filesystem::path source = instance.GetUniquePath(folder, name, instance.kAssetASMExtension);
+
+		std::shared_ptr<seri::animation::AnimationStateMachine> asmAsset = std::make_shared<seri::animation::AnimationStateMachine>();
+		asmAsset->id = seri::Random::UUID();
+
+		seri::asset::IDInfo idInfo{
+			.id = asmAsset->id,
+			.version = "0.1"
+		};
+
+		YAML::Node sourceRoot;
+		sourceRoot["IDInfo"] = seri::asset::IDInfo::Serialize(idInfo);
+		sourceRoot["ASM"] = seri::asset::AnimationStateMachineAsset::Serialize(asmAsset);
+
+		YAML::Node metaRoot;
+		metaRoot["IDInfo"] = seri::asset::IDInfo::Serialize(idInfo);
+
+		instance.WriteAssetFile(source, sourceRoot);
+		instance.WriteAssetFile(instance.GetMetaPath(source), metaRoot);
+
+		instance._assetCache[asmAsset->id] = asmAsset;
+
+		instance.UpdateAssetTree();
+
+		LIB_LOGGER(info, asset) << "asm created: " << source.string();
+
+		return asmAsset->id;
 	}
 
 	void asset::AssetManager::LoadSkybox(const std::shared_ptr<Skybox>& skybox)

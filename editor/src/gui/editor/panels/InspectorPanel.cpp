@@ -2,6 +2,7 @@
 
 #include <seri/ui/UIUtil.h>
 #include <seri/physics/PhysicsUtil.h>
+#include <seri/system/AnimatorSystem.h>
 
 #include "gui/editor/panels/InspectorPanel.h"
 #include "gui/common/GUIWidgets.h"
@@ -587,8 +588,25 @@ namespace seri::editor
 			bool changed = false;
 			uint64_t selection = 0;
 
+			static const char* modeNames[] = {
+				seri::animation::AnimatorModeToString(seri::animation::AnimatorMode::clip),
+				seri::animation::AnimatorModeToString(seri::animation::AnimatorMode::animation_state_machine),
+			};
+
+			int mode = static_cast<int>(animatorComp->mode);
+			if (DrawCombo("Mode", mode, modeNames, IM_ARRAYSIZE(modeNames)))
+			{
+				animatorComp->mode = static_cast<seri::animation::AnimatorMode>(mode);
+				changed = true;
+			}
+
 			changed |= DrawBool("Playing", animatorComp->playing);
-			changed |= DrawBool("Loop", animatorComp->loop);
+
+			if (animatorComp->mode == seri::animation::AnimatorMode::clip)
+			{
+				changed |= DrawBool("Loop", animatorComp->loop);
+			}
+
 			changed |= DrawFloat("Speed", animatorComp->speed, 0.05f, -10.0f, 10.0f);
 			changed |= DrawFloat("Fade", animatorComp->fadeDuration, 0.01f, 0.0f, 10.0f);
 
@@ -609,7 +627,7 @@ namespace seri::editor
 			}
 
 			auto clipSource = seri::asset::AssetManager::GetAssetByID<seri::Model>(clipSourceId);
-			if (clipSource && !clipSource->animations.empty())
+			if (animatorComp->mode == seri::animation::AnimatorMode::clip && clipSource && !clipSource->animations.empty())
 			{
 				std::vector<std::string> clipNames;
 				std::vector<const char*> clipNamePtrs;
@@ -631,7 +649,18 @@ namespace seri::editor
 				}
 			}
 
-			DrawLabel("Time", fmt::format("{:.3f}", animatorComp->time).c_str(), true);
+			if (animatorComp->mode == seri::animation::AnimatorMode::animation_state_machine)
+			{
+				if (DrawAssetPicker("ASM", animatorComp->asmAssetId, seri::asset::AssetType::animation_state_machine, selection))
+				{
+					animatorComp->asmAssetId = selection;
+					changed = true;
+				}
+
+				DrawLabel("State", seri::system::AnimatorSystem::GetStateName(*animatorComp).c_str(), true);
+			}
+
+			DrawLabel("Time", fmt::format("{:.3f}", animatorComp->current.time).c_str(), true);
 
 			if (changed)
 			{

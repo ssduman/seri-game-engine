@@ -1,0 +1,128 @@
+IDComponent:
+  ID: 4457012830669881986
+  ParentID: 0
+  Name: main
+SceneComponent:
+  Version: 0.1
+  IsActive: true
+  Environment:
+    BackgroundMode: 1
+    BackgroundColor: [0.2, 0.2, 0.2]
+    SkyboxAssetID: 0
+  PostProcess:
+    FxaaEnabled: true
+    ColorAdjustEnabled: false
+    Brightness: 0
+    Contrast: 1
+    Saturation: 1
+    VignetteEnabled: false
+    VignetteIntensity: 0.3
+    VignetteSmoothness: 0.5
+    VignetteColor: [0, 0, 0]
+Entities:
+  - Entity:
+      IDComponent:
+        ID: 446522808363392977
+        ParentID: 0
+        Name: Camera
+      TransformComponent:
+        Position: [0, 2, 6]
+        Rotation: [-15, 0, 0]
+        Scale: [1, 1, 1]
+        IsActive: true
+      CameraComponent:
+        IsMain: true
+        IsOrtho: false
+        FoV: 60
+        OrthoSize: 5
+        NearPlane: 0.1
+        FarPlane: 1000
+  - Entity:
+      IDComponent:
+        ID: 17640360700830275636
+        ParentID: 0
+        Name: Directional Light
+      TransformComponent:
+        Position: [0, 3, 0]
+        Rotation: [-50, 0, 0]
+        Scale: [1, 1, 1]
+        IsActive: true
+      DirectionalLightComponent:
+        Intensity: 2.7
+        Color: [1, 1, 1]
+  - Entity:
+      IDComponent:
+        ID: 5106291916375551505
+        ParentID: 0
+        Name: Plane
+      TransformComponent:
+        Position: [0, 0.01, 0]
+        Rotation: [0, -0, 0]
+        Scale: [10, 1, 10]
+        IsActive: true
+      MeshComponent:
+        MeshAssetID: 7727350781887956022
+      MeshRendererComponent:
+        MaterialAssetIDs:
+          - 11670456806958747865
+        CastShadow: true
+  - Entity:
+      IDComponent:
+        ID: 9990310330202026769
+        ParentID: 0
+        Name: UAL1
+      TransformComponent:
+        Position: [-0.75, -1.4901161e-08, 4.0963968e-10]
+        Rotation: [0, 180, 0]
+        Scale: [0.99999994, 1, 0.99999994]
+        IsActive: true
+      SkinnedMeshRendererComponent:
+        MeshAssetID: 10881561862178809789
+        MaterialAssetIDs:
+          - 4598935580520637217
+          - 4598935580520637217
+        CastShadow: true
+      AnimatorComponent:
+        Mode: 1
+        Playing: true
+        Loop: true
+        Speed: 1
+        FadeDuration: 0.25
+        ClipAssetID: 10881561862178809789
+        ClipIndex: 36
+        ASMAssetID: 1651210045073589977
+      ScriptComponent:
+        Scripts:
+          - Name: PlayerController
+            Enabled: true
+            Fields:
+              gravity: 12
+              jump_speed: 4
+              run_speed: 5
+              turn_speed: 540
+              walk_speed: 1
+  - Entity:
+      IDComponent:
+        ID: 4696425135133532129
+        ParentID: 0
+        Name: UAL2
+      TransformComponent:
+        Position: [0.75, 0, 0]
+        Rotation: [0, 180, 0]
+        Scale: [1, 1, 1]
+        IsActive: true
+      SkinnedMeshRendererComponent:
+        MeshAssetID: 10881561862178809789
+        MaterialAssetIDs:
+          - 4598935580520637217
+          - 4598935580520637217
+        CastShadow: true
+      AnimatorComponent:
+        Mode: 0
+        Playing: true
+        Loop: true
+        Speed: 1
+        FadeDuration: 0.25
+        ClipAssetID: 10881561862178809789
+        ClipIndex: 3
+        ASMAssetID: 0

@@ -6,6 +6,7 @@
 #include "seri/graphic/Material.h"
 #include "seri/model/ModelImporter.h"
 #include "seri/texture/Skybox.h"
+#include "seri/animation/AnimationStateMachine.h"
 
 namespace seri::asset
 {
@@ -38,6 +39,13 @@ namespace seri::asset
 		static YAML::Node Serialize(const std::shared_ptr<Skybox>& asset);
 
 		static std::shared_ptr<Skybox> Deserialize(const YAML::Node& root);
+	};
+
+	struct AnimationStateMachineAsset
+	{
+		static YAML::Node Serialize(const std::shared_ptr<seri::animation::AnimationStateMachine>& asset);
+
+		static std::shared_ptr<seri::animation::AnimationStateMachine> Deserialize(const YAML::Node& root);
 	};
 
 }

@@ -23,12 +23,12 @@ namespace seri::editor
 	{
 		if (node.isFolder)
 		{
-			return "folder";
+			return "Folder";
 		}
 
 		if (node.type == seri::asset::AssetType::none)
 		{
-			return "file";
+			return "File";
 		}
 
 		return seri::asset::AssetTypeToString(node.type);

@@ -72,6 +72,19 @@ namespace seri
 			return &animations[index];
 		}
 
+		int FindAnimation(const std::string& name) const
+		{
+			for (size_t i = 0; i < animations.size(); i++)
+			{
+				if (animations[i].name == name)
+				{
+					return static_cast<int>(i);
+				}
+			}
+
+			return -1;
+		}
+
 	private:
 
 	};
